@@ -63,5 +63,33 @@
       "Volatility"
     ]
   },
-  "ItemSoundSetId": "ISS_Weapons_Wood"
+  "ItemSoundSetId": "ISS_Weapons_Wood",
+  "Recipe": {
+    "BenchRequirement": [
+      {
+        "Id": "Arcanebench",
+        "Categories": [
+          "Arcane_Hexcode"
+        ]
+      }
+    ],
+    "Input": [
+      {
+        "ItemId": "Ingredient_Life_Essence_Concentrated",
+        "Quantity": 1
+      },
+      {
+        "ItemId": "Ingredient_Bar_Silver",
+        "Quantity": 8
+      },
+      {
+        "ItemId": "Rock_Gem_Emerald",
+        "Quantity": 1
+      },
+      {
+        "ItemId": "Ingredient_Bar_Thorium",
+        "Quantity": 8
+      }
+    ]
+  }
 }

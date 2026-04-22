@@ -63,5 +63,32 @@
       "Volatility"
     ]
   },
-  "ItemSoundSetId": "ISS_Weapons_Wood"
+  "ItemSoundSetId": "ISS_Weapons_Wood",
+  "Recipe": {
+    "BenchRequirement": [
+      {
+        "Id": "Arcanebench",
+        "Categories": [
+          "Arcane_Hexcode"
+        ]
+      }
+    ],
+    "Input": [
+      {
+        "ItemId": "Rock_Gem_Diamond"
+      },
+      {
+        "ItemId": "Ingredient_Bar_Silver",
+        "Quantity": 8
+      },
+      {
+        "ItemId": "Rock_Gem_Ruby",
+        "Quantity": 3
+      },
+      {
+        "ItemId": "Ingredient_Bar_Adamantite",
+        "Quantity": 8
+      }
+    ]
+  }
 }

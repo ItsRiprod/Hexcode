@@ -28,3 +28,9 @@ hexstaff.basic.mithril.name=Mithril Hex Staff
 hexstaff.basic.mithril.description=Weighs less than thought. Elder-crafters tuned each rod to a single chord.
 hexstaff.basic.onyxium.name=Onyxium Hex Staff
 hexstaff.basic.onyxium.description=Carved from the hollow between stars. Whoever carries it is already partway gone.
+
+ingredient.essence.fire_concentrated=Greater Essence of Fire
+ingredient.essence.ice_concentrated=Greater Essence of Ice
+ingredient.essence.void_concentrated=Greater Essence of Void
+
+

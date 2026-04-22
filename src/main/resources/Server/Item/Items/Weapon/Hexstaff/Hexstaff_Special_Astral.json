@@ -67,5 +67,36 @@
     ]
   },
   "ItemSoundSetId": "ISS_Weapons_Wood",
-  "MaxStack": 1
+  "MaxStack": 1,
+  "Recipe": {
+    "BenchRequirement": [
+      {
+        "Categories": [
+          "Arcane_Hexcode"
+        ],
+        "Id": "Arcanebench"
+      }
+    ],
+    "Input": [
+      {
+        "ItemId": "Ingredient_Void_Essence_Greater"
+      },
+      {
+        "ItemId": "Ingredient_Bar_Silver",
+        "Quantity": 8
+      },
+      {
+        "ItemId": "Ingredient_Bar_Gold",
+        "Quantity": 20
+      },
+      {
+        "ItemId": "Ingredient_Voidheart",
+        "Quantity": 15
+      },
+      {
+        "ItemId": "Wood_Poisoned_Trunk",
+        "Quantity": 100
+      }
+    ]
+  }
 }

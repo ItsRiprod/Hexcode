@@ -67,5 +67,37 @@
     ]
   },
   "ItemSoundSetId": "ISS_Weapons_Wood",
-  "MaxStack": 1
+  "MaxStack": 1,
+  "Recipe": {
+    "BenchRequirement": [
+      {
+        "Id": "Arcanebench",
+        "Categories": [
+          "Arcane_Hexcode"
+        ]
+      }
+    ],
+    "Input": [
+      {
+        "ItemId": "Ingredient_Fire_Essence_Concentrated",
+        "Quantity": 1
+      },
+      {
+        "ItemId": "Ingredient_Bar_Silver",
+        "Quantity": 8
+      },
+      {
+        "ItemId": "Ingredient_Bar_Gold",
+        "Quantity": 20
+      },
+      {
+        "ItemId": "Ingredient_Fabric_Scrap_Cindercloth",
+        "Quantity": 100
+      },
+      {
+        "ItemId": "Rock_Gem_Ruby",
+        "Quantity": 5
+      }
+    ]
+  }
 }
