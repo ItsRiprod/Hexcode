@@ -13,9 +13,9 @@ import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
-import com.riprod.hexcode.core.state.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.utils.CleanupUtils;
 
 import it.unimi.dsi.fastutil.floats.FloatArrayList;

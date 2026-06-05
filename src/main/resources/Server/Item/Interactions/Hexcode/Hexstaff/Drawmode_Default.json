@@ -1,0 +1,13 @@
+{
+  "Type": "HexDrawMode",
+  "Forks": {
+    "Primary": "Draw"
+  },
+  "CancelOnItemChange": true,
+  "AllowIndefiniteHold": true,
+  "Effects": {
+    "ItemAnimationId": "HexCrafting_Enter",
+    "ClearAnimationOnFinish": true
+  },
+  "CancelOnOtherClick": false
+}

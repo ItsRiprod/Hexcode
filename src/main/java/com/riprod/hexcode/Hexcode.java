@@ -9,10 +9,15 @@ import com.riprod.hexcode.builtin.eventListeners.HexStateDiagnosticListener;
 import com.riprod.hexcode.builtin.glyphs.levitate.LevitateStackComponent;
 import com.riprod.hexcode.builtin.glyphs.scale.components.ScaleStackComponent;
 import com.riprod.hexcode.command.HexcodeCommand;
-import com.riprod.hexcode.core.common.block.component.UnbreakableBlockComponent;
-import com.riprod.hexcode.core.common.block.event.BlockBreakEvent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.construct.system.MountOrphanReaperSystem;
+import com.riprod.hexcode.core.common.drawing.DrawingSlotLockEvent;
+import com.riprod.hexcode.core.common.drawing.DrawingSystem;
+import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponent;
+import com.riprod.hexcode.core.common.drawing.interactions.HexDraw;
+import com.riprod.hexcode.core.common.drawing.interactions.HexDrawMode;
+import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
+import com.riprod.hexcode.core.common.drawing.registry.TemplateAsset;
 import com.riprod.hexcode.core.common.effect.GlyphEffectSystem;
 import com.riprod.hexcode.core.common.execution.component.BlockHexRoot;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
@@ -44,6 +49,7 @@ import com.riprod.hexcode.core.common.hover.system.HoverableSpatialSystem;
 import com.riprod.hexcode.core.common.imbuement.asset.EssenceAsset;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.obelisk.component.ObeliskBlockComponent;
+import com.riprod.hexcode.core.common.obelisk.events.ObeliskBreakEvent;
 import com.riprod.hexcode.core.common.triggers.registry.FireTriggerSystem;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerListenerRegistry;
 import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerRegistry;
@@ -65,11 +71,6 @@ import com.riprod.hexcode.core.state.crafting.component.SlotComponent;
 import com.riprod.hexcode.core.state.crafting.handlers.node.NodeRouter;
 import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.state.crafting.session.SessionTickSystem;
-import com.riprod.hexcode.core.state.drawing.DrawingSlotLockEvent;
-import com.riprod.hexcode.core.state.drawing.DrawingSystem;
-import com.riprod.hexcode.core.state.drawing.component.HexcasterDrawingComponent;
-import com.riprod.hexcode.core.state.drawing.registry.ShapeAsset;
-import com.riprod.hexcode.core.state.drawing.registry.TemplateAsset;
 import com.riprod.hexcode.core.state.idle.IdleSystem;
 import com.riprod.hexcode.interaction.HexStateChange;
 import com.riprod.hexcode.interaction.HexHold;
@@ -344,7 +345,7 @@ public class Hexcode extends JavaPlugin {
 
         entityStoreRegistry.registerSystem(new HexTick());
         entityStoreRegistry.registerSystem(new PedestalBlockEvent());
-        entityStoreRegistry.registerSystem(new BlockBreakEvent());
+        entityStoreRegistry.registerSystem(new ObeliskBreakEvent());
         entityStoreRegistry.registerSystem(new DrawingSlotLockEvent());
         entityStoreRegistry.registerSystem(new StaffUnequipEvent());
         entityStoreRegistry.registerSystem(new DebugTickSystem());
@@ -393,10 +394,6 @@ public class Hexcode extends JavaPlugin {
                         ImbuedBlockComponent.CODEC);
         ImbuedBlockComponent.setComponentType(imbuedBlockComponentType);
 
-        ComponentType<ChunkStore, UnbreakableBlockComponent> unbreakableComponentType = chunkStoreRegistry
-                .registerComponent(UnbreakableBlockComponent.class, UnbreakableBlockComponent::new);
-        UnbreakableBlockComponent.setComponentType(unbreakableComponentType);
-
         chunkStoreRegistry.registerSystem(new PedestalPlaceEvent());
         chunkStoreRegistry.registerSystem(new ImbuedBlockTickSystem());
 
@@ -422,7 +419,6 @@ public class Hexcode extends JavaPlugin {
 
         StateRouter.registerState(HexState.IDLE, new IdleSystem());
         StateRouter.registerState(HexState.CASTING, new CastingSystem());
-        StateRouter.registerState(HexState.DRAWING, new DrawingSystem());
         StateRouter.registerState(HexState.CRAFTING, new CraftingSystem());
 
     }
@@ -433,6 +429,8 @@ public class Hexcode extends JavaPlugin {
         Interaction.CODEC.register("HexStateChange", HexStateChange.class, HexStateChange.CODEC);
         Interaction.CODEC.register("HexHold", HexHold.class, HexHold.CODEC);
         Interaction.CODEC.register("HexMode", HexMode.class, HexMode.CODEC);
+        Interaction.CODEC.register("HexDraw", HexDraw.class, HexDraw.CODEC);
+        Interaction.CODEC.register("HexDrawMode", HexDrawMode.class, HexDrawMode.CODEC);
         Interaction.CODEC.register("HexModeExit", HexModeExit.class, HexModeExit.CODEC);
         Interaction.CODEC.register("PedestalInteraction", PedestalInteraction.class, PedestalInteraction.CODEC);
         Interaction.CODEC.register("HexItemCondition", HexItemCondition.class, HexItemCondition.CODEC);

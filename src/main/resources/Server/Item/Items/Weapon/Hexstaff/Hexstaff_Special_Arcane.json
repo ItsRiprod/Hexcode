@@ -93,5 +93,25 @@
         "Id": "Arcanebench"
       }
     ]
+  },
+  "InteractionConfig": {
+    "Priorities": {
+      "Secondary": {
+        "MainHand": 10
+      }
+    },
+    "UseDistance": {
+      "Creative": 10
+    }
+  },
+  "Interactions": {
+    "Secondary": "Hexstaff_Drawmode"
+  },
+  "InteractionVars": {
+    "Drawmode": {
+      "Interactions": [
+        "Drawmode_Arcane"
+      ]
+    }
   }
 }

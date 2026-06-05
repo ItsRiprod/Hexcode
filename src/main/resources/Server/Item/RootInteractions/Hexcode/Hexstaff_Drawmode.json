@@ -1,0 +1,19 @@
+{
+  "RequireNewClick": false,
+  "ClickQueuingTimeout": 0.1,
+  "Cooldown": {
+    "Cooldown": 0.5
+  },
+  "Interactions": [
+    {
+      "Type": "Replace",
+      "Var": "Drawmode",
+      "DefaultOk": true,
+      "DefaultValue": {
+        "Interactions": [
+          "Drawmode_Default"
+        ]
+      }
+    }
+  ]
+}

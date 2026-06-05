@@ -1,0 +1,17 @@
+{
+  "Type": "HexDraw",
+  "AllowIndefiniteHold": true,
+  "Effects": {
+    "ItemAnimationId": "HexCasting_Primary"
+  },
+  "Next": {
+    "0.0": {
+      "Type": "Simple",
+      "RunTime": 0,
+      "Effects": {
+        "ItemAnimationId": "HexCasting_Active",
+        "ClearAnimationOnFinish": true
+      }
+    }
+  }
+}

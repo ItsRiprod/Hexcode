@@ -5,9 +5,9 @@ import java.util.List;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.event.IEvent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.state.drawing.component.DrawnShapeComponent;
 
 public class GlyphDrawnEvent implements IEvent<Void> {
 

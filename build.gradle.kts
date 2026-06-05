@@ -11,12 +11,13 @@ val javaVersion = 25
 
 repositories {
     mavenCentral()
+    maven("https://www.cursemaven.com/")
     maven("https://maven.hytale-modding.info/releases") {
         name = "HytaleModdingReleases"
     }
 }
 
-val shaded by configurations.creating
+val shadowBundle by configurations.creating
 
 dependencies {
     compileOnly(libs.jetbrains.annotations)
@@ -25,14 +26,15 @@ dependencies {
     compileOnly(fileTree("lib/") { include("*.jar") })
 
     // patcher is bundled into hexcode's output jar via the Shadow plugin
-    shaded(files("deps/Patchly-3.1.1.jar"))
-    implementation(files("deps/Patchly-3.1.1.jar"))
+    shadowBundle("curse.maven:patchly-1550889:8188362")
+    implementation("curse.maven:patchly-1550889:8188362")
+
 }
 
 tasks.shadowJar {
     archiveClassifier.set("")
     mergeServiceFiles()
-    configurations = listOf(shaded)
+    configurations = listOf(shadowBundle)
     relocate("com.riprod.patchly", "com.riprod.hexcode.shaded.patchly")
 }
 

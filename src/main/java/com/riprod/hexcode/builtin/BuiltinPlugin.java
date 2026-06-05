@@ -29,6 +29,7 @@ import com.riprod.hexcode.core.common.triggers.component.TriggerListenerComponen
 import com.riprod.hexcode.core.common.triggers.registry.ManualTrigger;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerListenerRegistry;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerRegistry;
+import com.riprod.hexcode.core.state.casting.registery.CastingStyleRegistry;
 import com.riprod.hexcode.core.common.triggers.handler.TriggerConstructHandler;
 import com.riprod.hexcode.builtin.glyphs.absolute.AbsoluteGlyph;
 import com.riprod.hexcode.builtin.glyphs.add.AddGlyph;
@@ -133,7 +134,6 @@ import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerRegistry;
-import com.riprod.hexcode.core.state.casting.registery.CastingStyleRegistry;
 
 public class BuiltinPlugin extends JavaPlugin {
 

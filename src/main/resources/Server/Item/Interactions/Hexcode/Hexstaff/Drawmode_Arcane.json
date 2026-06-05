@@ -1,0 +1,11 @@
+{
+  "Type": "HexDrawMode",
+  "Parent": "Drawmode_Default",
+  "Effects": {
+    "Particles": [
+      {
+        "SystemId": "Fire_HexStaff_Aura"
+      }
+    ]
+  }
+}

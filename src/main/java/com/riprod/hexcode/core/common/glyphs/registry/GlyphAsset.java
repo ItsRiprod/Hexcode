@@ -22,8 +22,8 @@ import com.hypixel.hytale.codec.schema.metadata.ui.UIButton;
 import com.hypixel.hytale.codec.schema.metadata.ui.UICreateButtons;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
-import com.riprod.hexcode.core.state.drawing.component.DrawnShapeComponent;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 

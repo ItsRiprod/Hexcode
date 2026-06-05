@@ -17,11 +17,11 @@ import com.hypixel.hytale.protocol.packets.player.SetMovementStates;
 import com.hypixel.hytale.protocol.packets.player.UpdateMovementSettings;
 import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
 import com.hypixel.hytale.server.core.io.PacketHandler;
+import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponent;
+import com.riprod.hexcode.core.common.drawing.system.InterfaceManager;
 import com.riprod.hexcode.core.common.hexcaster.component.HexcasterComponent;
 import com.riprod.hexcode.core.state.casting.component.HexcasterCastingComponent;
 import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.state.drawing.component.HexcasterDrawingComponent;
-import com.riprod.hexcode.core.state.drawing.system.InterfaceManager;
 import com.riprod.hexcode.state.HexState;
 
 public class HexResetCommand extends AbstractPlayerCommand {
