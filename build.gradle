@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '9.4.2'
+    id 'com.azuredoom.hytale-tools' version '1.0.38'
+}
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+    maven { url "https://www.cursemaven.com" }
+}
+
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
+
+base {
+    archivesName = 'Hexcode'
+}
+
+configurations {
+    shadowBundle
+    implementation.extendsFrom(shadowBundle)
+}
+
+dependencies {
+    compileOnly libs.jetbrains.annotations
+    compileOnly libs.jspecify
+    shadowBundle('curse.maven:patchly-1550889:8188362')
+}
+
+hytaleTools {
+    javaVersion = project.java_version as Integer
+    hytaleVersion = project.hytale_version.toString()
+    manifestServerVersion = project.manifestServerVersion.toString()
+    manifestGroup = project.manifest_group.toString()
+    modId = project.mod_id.toString()
+    modDescription = project.mod_description.toString()
+    modUrl = project.mod_url.toString()
+    mainClass = project.main_class.toString()
+    modCredits = project.mod_credits.toString()
+    manifestDependencies = project.manifest_dependencies.toString()
+    manifestOptionalDependencies = project.manifest_opt_dependencies.toString()
+    curseforgeId = project.curseforgeID.toString()
+    disabledByDefault = project.disabled_by_default.toString().toBoolean()
+    includesPack = project.includes_pack.toString().toBoolean()
+    patchline = project.patchline.toString()
+
+    debugEnabled = true
+    debugSuspend = false
+
+    requireDcevm = true
+} 
+
+shadowJar {
+    archiveClassifier.set('')
+    mergeServiceFiles()
+    configurations = [project.configurations.shadowBundle]
+    relocate('com.riprod.patchly', 'com.riprod.hexcode.shaded.patchly')
+}
+
+tasks.build {
+    dependsOn("shadowJar")
+}
+

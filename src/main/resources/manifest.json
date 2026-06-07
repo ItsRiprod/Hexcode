@@ -1,20 +1,25 @@
 {
-  "Group": "${plugin_group}",
-  "Name": "${plugin_name}",
-  "Version": "${plugin_version}",
-  "Description": "${plugin_description}",
-  "Authors": [
-    {
-      "Name": "${plugin_author}"
+    "Group": "com.riprod",
+    "Name": "Hexcode",
+    "Version": "0.8.6",
+    "Description": "Magic By Design.",
+    "Authors": [
+        {
+            "Name": "Riprod"
+        }
+    ],
+    "Website": "https://modtale.net/mod/hexcode",
+    "ServerVersion": ">=0.5.0 <0.6.0",
+    "Dependencies": {
+        
+    },
+    "OptionalDependencies": {
+        "Riprod:Patchly": "*"
+    },
+    "DisabledByDefault": false,
+    "IncludesAssetPack": true,
+    "Main": "com.riprod.hexcode.Hexcode",
+    "UpdateChecker": {
+        "CurseForge": "1414678"
     }
-  ],
-  "Website": "${plugin_website}",
-  "ServerVersion": "${server_version}",
-  "Dependencies": {},
-  "OptionalDependencies": {
-    "Riprod:Patchly": "*"
-  },
-  "DisabledByDefault": false,
-  "IncludesAssetPack": true,
-  "Main": "${plugin_main_entrypoint}"
 }
