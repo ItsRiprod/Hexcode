@@ -27,6 +27,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class EnsnareConstructHandler implements ConstructHandler<NoState> {
 
@@ -84,45 +85,25 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
             if (tc == null) continue;
 
             Vector3d entityPos = tc.getPosition();
-            SpikeEntry nearestSpike = findNearestSpike(entityPos, ensnare.getSpikes());
+            SpikeEntry nearestSpike = ensnare.findNearestSpike(entityPos, SPIKE_HIT_RADIUS_SQ);
             if (nearestSpike == null) continue;
 
             applyDamage(buffer, targetRef, ensnare.getSpikeDamage());
             ensnare.recordDamage(targetId);
             EnsnareStyle.renderSpikeDamage(nearestSpike.getPosition(), status.getHexContext(), buffer);
 
-            fireOnHit(status, targetRef, targetId);
+            fireOnHit(status, ctx, targetRef, targetId);
         }
     }
 
-    private void fireOnHit(HexStatus<NoState> status, Ref<EntityStore> targetRef, UUID targetId) {
+    private void fireOnHit(HexStatus<NoState> status, ConstructTickContext ctx,
+            Ref<EntityStore> targetRef, UUID targetId) {
         Glyph triggering = status.getTriggeringGlyph();
         if (triggering == null) return;
-        HexContext hc = status.getHexContext();
+        HexContext hc = status.getHexContext().branch();
+        hc.updateRuntimeAccessors(ctx.getBuffer());
         triggering.writeDefaultOutput(new EntityVar(targetId, targetRef), hc);
         HexExecuter.continueExecution(triggering.getNextLinks(), hc);
-    }
-
-    private SpikeEntry findNearestSpike(Vector3d entityPos, List<SpikeEntry> spikes) {
-        SpikeEntry nearest = null;
-        double nearestDistSq = Double.MAX_VALUE;
-
-        for (SpikeEntry spike : spikes) {
-            Vector3d spikePos = spike.getPosition();
-            double dx = entityPos.x - spikePos.x;
-            double dz = entityPos.z - spikePos.z;
-            double distSq = dx * dx + dz * dz;
-
-            if (distSq < nearestDistSq && distSq <= SPIKE_HIT_RADIUS_SQ) {
-                double dy = entityPos.y - spikePos.y;
-                if (dy >= -0.5 && dy <= 1.5) {
-                    nearestDistSq = distSq;
-                    nearest = spike;
-                }
-            }
-        }
-
-        return nearest;
     }
 
     private static void applyDamage(CommandBuffer<EntityStore> buffer,
@@ -141,10 +122,13 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
     }
 
     private void removeSpikes(EnsnareComponent ensnare, HexStatus<NoState> status, CommandBuffer<EntityStore> buffer) {
+        List<Ref<EntityStore>> particleRecipients = VfxUtil.collectParticleRecipients(
+                ensnare.getCenter(), ensnare.getRadius() + 25.0, buffer);
         for (SpikeEntry spike : ensnare.getSpikes()) {
             Ref<EntityStore> spikeRef = spike.getEntityRef();
             if (spikeRef != null && spikeRef.isValid()) {
-                EnsnareStyle.renderSpikeDespawn(spike.getPosition(), status.getHexContext(), buffer);
+                EnsnareStyle.renderSpikeDespawn(
+                        spike.getPosition(), status.getHexContext(), buffer, particleRecipients);
                 Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
                 buffer.removeEntity(spikeRef, holder, RemoveReason.REMOVE);
             }

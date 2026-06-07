@@ -189,6 +189,7 @@ public class VolatilityTracker {
         copy.volatilityMultiplier = this.volatilityMultiplier;
         copy.magicPowerMultiplier = this.magicPowerMultiplier;
         copy.executionId = this.executionId;
+        copy.glyphUsageMap = new HashMap<>(this.glyphUsageMap);
         copy.slotKey = this.slotKey;
         return copy;
     }

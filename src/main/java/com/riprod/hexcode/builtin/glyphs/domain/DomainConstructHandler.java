@@ -47,7 +47,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         String[] links = immediate.getLinks();
         if (links == null || links.length == 0) return;
         HexContext hexContext = status.getHexContext();
-        hexContext.UpdateAccessor(ctx.getBuffer());
+        hexContext.updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(java.util.Arrays.asList(links), hexContext);
     }
 
@@ -123,7 +123,8 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
 
                     Glyph triggering = status.getTriggeringGlyph();
                     if (triggering != null) {
-                        HexContext hexCtx = status.getHexContext();
+                        HexContext hexCtx = status.getHexContext().branch();
+                        hexCtx.updateRuntimeAccessors(ctx.getBuffer());
                         triggering.writeDefaultOutput(
                                 new EntityVar(uuid.getUuid(), ref), hexCtx);
                         HexExecuter.continueExecution(triggering.getNextLinks(), hexCtx);
@@ -211,8 +212,13 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
                 if (otherTransform == null)
                     continue;
 
-                double dist = new Vector3d(selfCenter).sub(otherTransform.getPosition()).length();
-                if (dist < self.getRadius() + other.getRadius()) {
+                Vector3d otherPos = otherTransform.getPosition();
+                double dx = selfCenter.x - otherPos.x;
+                double dy = selfCenter.y - otherPos.y;
+                double dz = selfCenter.z - otherPos.z;
+                double combinedRadius = self.getRadius() + other.getRadius();
+                double distSq = dx * dx + dy * dy + dz * dz;
+                if (distSq < combinedRadius * combinedRadius) {
                     if (self.getPower() <= other.getPower()) {
                         nowContested[0] = true;
                         return;

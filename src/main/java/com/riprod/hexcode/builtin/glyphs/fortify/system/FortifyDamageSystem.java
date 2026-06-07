@@ -47,9 +47,6 @@ public class FortifyDamageSystem extends DamageEventSystem {
             float original = damage.getAmount();
             float reduced = Math.max(MIN_DAMAGE_FLOOR, original - state.getDamageReduction());
             damage.setAmount(reduced);
-
-            LOGGER.atInfo().log("fortify: reduced damage %.2f -> %.2f (%.2f flat reduction)",
-                    original, reduced, state.getDamageReduction());
         } catch (Exception e) {
             LOGGER.atSevere().log("[hexcode] FortifyDamageSystem failed: %s", e.getMessage());
         }

@@ -29,6 +29,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.hypixel.hytale.server.core.entity.reference.PersistentRef;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class AreaGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -77,10 +78,14 @@ public class AreaGlyph implements GlyphHandler {
 
         boolean blocksLinked = hasLinks(glyph, AreaGlyphSlots.BLOCKS);
         boolean entitiesLinked = hasLinks(glyph, AreaGlyphSlots.ENTITIES);
+        List<Ref<EntityStore>> particleRecipients = blocksLinked || entitiesLinked
+                ? VfxUtil.collectParticleRecipients(center, radius + 25.0, accessor)
+                : null;
 
         if (blocksLinked) {
             for (Vector3i pos : gatherBlocks(center, radius, accessor)) {
-                AreaStyle.renderHit(new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5), hexContext, accessor);
+                AreaStyle.renderHit(new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5),
+                        hexContext, accessor, particleRecipients);
                 HexContext copy = hexContext.branch();
                 glyph.writeOutput(new BlockVar(pos), copy);
                 HexExecuter.continueFromSlot(glyph, AreaGlyphSlots.BLOCKS, copy);
@@ -93,7 +98,7 @@ public class AreaGlyph implements GlyphHandler {
                 if (entRef != null && entRef.isValid()) {
                     TransformComponent t = accessor.getComponent(entRef, TransformComponent.getComponentType());
                     if (t != null) {
-                        AreaStyle.renderHit(t.getPosition(), hexContext, accessor);
+                        AreaStyle.renderHit(t.getPosition(), hexContext, accessor, particleRecipients);
                     }
                 }
                 HexContext copy = hexContext.branch();

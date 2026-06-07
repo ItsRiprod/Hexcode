@@ -46,7 +46,7 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         if (links == null || links.length == 0)
             return;
         HexContext hexContext = status.getHexContext();
-        hexContext.UpdateAccessor(ctx.getBuffer());
+        hexContext.updateRuntimeAccessors(ctx.getBuffer());
         UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
                 .getUuid();
 
@@ -109,7 +109,8 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
 
             Glyph triggering = status.getTriggeringGlyph();
             if (triggering != null && !nextLinks.isEmpty()) {
-                HexContext hexCtx = status.getHexContext();
+                HexContext hexCtx = status.getHexContext().branch();
+                hexCtx.updateRuntimeAccessors(ctx.getBuffer());
                 triggering.writeDefaultOutput(
                         new EntityVar(uuid.getUuid(), ref), hexCtx);
                 HexExecuter.continueExecution(nextLinks, hexCtx);
@@ -125,7 +126,7 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         GlaciateState state = status.getState();
         if (state == null) return;
         HexContext hexContext = status.getHexContext();
-        hexContext.UpdateAccessor(ctx.getBuffer());
+        hexContext.updateRuntimeAccessors(ctx.getBuffer());
         // chain-after-melt fires once for the Next slot in addition to the per-hit fires from onTick
         HexExecuter.continueExecution(state.getNextGlyphIds(), hexContext);
     }

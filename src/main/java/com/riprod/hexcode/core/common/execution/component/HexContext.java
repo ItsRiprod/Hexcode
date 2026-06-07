@@ -99,7 +99,7 @@ public class HexContext {
         branch.volatilityTracker = this.volatilityTracker;
         branch.executionId = this.executionId;
         branch.variables = new HashMap<>(this.variables);
-        branch.style = this.style;
+        branch.style = this.style != null ? this.style.clone() : null;
         branch.manaCost = this.manaCost;
         branch.manaMultiplier = this.manaMultiplier;
         branch.defaultVariable = this.defaultVariable;
@@ -123,6 +123,11 @@ public class HexContext {
 
     public void UpdateChunkAccessor(ComponentAccessor<ChunkStore> newChunkAccessor) {
         this.chunkAccessor = newChunkAccessor;
+    }
+
+    public void updateRuntimeAccessors(CommandBuffer<EntityStore> buffer) {
+        this.accessor = buffer;
+        this.chunkAccessor = buffer.getExternalData().getWorld().getChunkStore().getStore();
     }
 
     // === root + caster ref ===

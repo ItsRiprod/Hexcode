@@ -53,7 +53,7 @@ public class HexProjectileBounceInteraction extends SimpleInteraction {
 
             CommandBuffer<EntityStore> buffer = ctx.getCommandBuffer();
             Ref<EntityStore> projectileRef = ctx.getEntity();
-            if (buffer == null || projectileRef == null || !projectileRef.isValid()) {
+            if (buffer == null || !projectileRef.isValid()) {
                 ctx.getState().state = InteractionState.Finished;
                 return;
             }
@@ -62,13 +62,12 @@ public class HexProjectileBounceInteraction extends SimpleInteraction {
             HexContext hexContext = state != null ? state.getHexContext() : null;
 
             Vector4d hitLocation = ctx.getMetaStore().getMetaObject(Interaction.HIT_LOCATION);
-            if (hitLocation == null || hexContext == null || state == null) {
+            if (hitLocation == null || hexContext == null) {
                 ctx.getState().state = InteractionState.Finished;
                 return;
             }
             Vector3d hitPos = new Vector3d(hitLocation.x, hitLocation.y, hitLocation.z);
             HexVar resultVar = new BlockVar(new Vector3i((int) Math.floor(hitPos.x), (int) Math.floor(hitPos.y), (int) Math.floor(hitPos.z)));
-            ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
             Glyph triggering = state.getTriggeringGlyph();
 
             if (triggering == null) {
@@ -84,11 +83,9 @@ public class HexProjectileBounceInteraction extends SimpleInteraction {
                 return;
             }
 
-            hexContext.UpdateAccessor(buffer);
+            hexContext.updateRuntimeAccessors(buffer);
 
-            if (hitPos != null) {
-                ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
-            }
+            ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
 
             triggering.writeOutput(resultVar, hexContext);
 

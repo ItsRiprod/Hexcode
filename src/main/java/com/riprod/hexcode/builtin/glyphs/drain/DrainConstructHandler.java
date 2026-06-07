@@ -99,7 +99,7 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
             DrainStyle.renderComplete(tc.getPosition(), state.getColors(), ctx.getBuffer());
         }
 
-        status.getHexContext().UpdateAccessor(ctx.getBuffer());
+        status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
 
         LOGGER.atInfo().log("drain: completed (%.2f drained)", state.getDrainedSoFar());

@@ -2,7 +2,7 @@ package com.riprod.hexcode.core.common.triggers.registry;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,6 +17,9 @@ public final class TriggerRegistry {
     }
 
     public static void register(@Nonnull Trigger trigger) {
+        if (triggers.containsKey(trigger.getId())) {
+            throw new IllegalArgumentException("duplicate trigger id: " + trigger.getId());
+        }
         triggers.put(trigger.getId(), trigger);
     }
 
@@ -27,12 +30,12 @@ public final class TriggerRegistry {
 
     @Nonnull
     public static Collection<Trigger> all() {
-        return triggers.values();
+        return List.copyOf(triggers.values());
     }
 
     @Nonnull
     public static Set<String> keys() {
-        return new HashSet<>(triggers.keySet());
+        return Set.copyOf(triggers.keySet());
     }
 
     public static boolean isProfileSlotEligible(@Nonnull String id) {

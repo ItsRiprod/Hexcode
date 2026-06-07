@@ -42,7 +42,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
         if (links == null || links.length == 0)
             return;
         HexContext hexContext = status.getHexContext();
-        hexContext.UpdateAccessor(ctx.getBuffer());
+        hexContext.updateRuntimeAccessors(ctx.getBuffer());
         UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
                 .getUuid();
 
@@ -159,7 +159,8 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
 
         Glyph triggering = status.getTriggeringGlyph();
         if (triggering != null) {
-            HexContext hexCtx = status.getHexContext();
+            HexContext hexCtx = status.getHexContext().branch();
+            hexCtx.updateRuntimeAccessors(ctx.getBuffer());
             if (entityTransform != null) {
                 ConjureStyle.renderTrigger(entityTransform.getPosition(),
                         hexCtx, ctx.getBuffer());

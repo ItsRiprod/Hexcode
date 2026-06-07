@@ -36,7 +36,7 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
         cleanup(status, ctx);
         ScaleState state = status.getState();
         if (state == null) return;
-        status.getHexContext().UpdateAccessor(ctx.getBuffer());
+        status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
         LOGGER.atInfo().log("scale: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }

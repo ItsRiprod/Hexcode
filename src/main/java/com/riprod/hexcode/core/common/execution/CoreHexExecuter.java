@@ -1,10 +1,8 @@
 package com.riprod.hexcode.core.common.execution;
 
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.HexCastEvent;
@@ -28,18 +26,13 @@ public class CoreHexExecuter {
     }
 
     public static void cast(HexContext context, CommandBuffer<EntityStore> buffer) {
-        ComponentAccessor<ChunkStore> chunkAccessor = buffer.getExternalData().getWorld().getChunkStore().getStore();
-        context.UpdateAccessor(buffer);
-        context.UpdateChunkAccessor(chunkAccessor);
+        context.updateRuntimeAccessors(buffer);
         if (context.getStyle() == null) context.setStyle(HexStyleAsset.empty());
         buffer.invoke(new HexCastEvent(context));
     }
 
     public static void runPostGate(HexContext context, CommandBuffer<EntityStore> buffer) {
-        if (context.getAccessor() == null) {
-            context.UpdateAccessor(buffer);
-            context.UpdateChunkAccessor(buffer.getExternalData().getWorld().getChunkStore().getStore());
-        }
+        context.updateRuntimeAccessors(buffer);
 
         if (context.getHexRoot() == null) {
             HytaleServer.get().getEventBus().dispatchFor(GlyphFizzleEvent.class)

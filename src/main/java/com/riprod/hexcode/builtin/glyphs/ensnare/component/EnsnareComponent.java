@@ -23,6 +23,7 @@ public class EnsnareComponent implements Component<EntityStore> {
     private float spikeDamage;
     private float damageCooldownSeconds;
     private Map<UUID, Float> lastDamageTimeMap;
+    private transient Map<Long, List<SpikeEntry>> spikesByCell;
     private Vector3d center;
     private double radius;
 
@@ -51,6 +52,41 @@ public class EnsnareComponent implements Component<EntityStore> {
 
     public List<SpikeEntry> getSpikes() {
         return spikes;
+    }
+
+    public SpikeEntry findNearestSpike(Vector3d entityPos, double hitRadiusSq) {
+        if (entityPos == null || spikes == null || spikes.isEmpty()) return null;
+
+        ensureSpikeIndex();
+
+        SpikeEntry nearest = null;
+        double nearestDistSq = Double.MAX_VALUE;
+        int cellX = (int) Math.floor(entityPos.x);
+        int cellZ = (int) Math.floor(entityPos.z);
+
+        for (int x = cellX - 1; x <= cellX + 1; x++) {
+            for (int z = cellZ - 1; z <= cellZ + 1; z++) {
+                List<SpikeEntry> bucket = spikesByCell.get(cellKey(x, z));
+                if (bucket == null) continue;
+
+                for (SpikeEntry spike : bucket) {
+                    Vector3d spikePos = spike.getPosition();
+                    double dx = entityPos.x - spikePos.x;
+                    double dz = entityPos.z - spikePos.z;
+                    double distSq = dx * dx + dz * dz;
+
+                    if (distSq < nearestDistSq && distSq <= hitRadiusSq) {
+                        double dy = entityPos.y - spikePos.y;
+                        if (dy >= -0.5 && dy <= 1.5) {
+                            nearestDistSq = distSq;
+                            nearest = spike;
+                        }
+                    }
+                }
+            }
+        }
+
+        return nearest;
     }
 
     public float getDurationSeconds() {
@@ -82,13 +118,38 @@ public class EnsnareComponent implements Component<EntityStore> {
     }
 
     public boolean canDamageTarget(UUID targetId) {
+        ensureDamageMap();
         Float lastTime = lastDamageTimeMap.get(targetId);
         if (lastTime == null) return true;
         return (elapsedSeconds - lastTime) >= damageCooldownSeconds;
     }
 
     public void recordDamage(UUID targetId) {
+        ensureDamageMap();
         lastDamageTimeMap.put(targetId, elapsedSeconds);
+    }
+
+    private void ensureDamageMap() {
+        if (lastDamageTimeMap == null) {
+            lastDamageTimeMap = new HashMap<>();
+        }
+    }
+
+    private void ensureSpikeIndex() {
+        if (spikesByCell != null) return;
+
+        spikesByCell = new HashMap<>();
+        for (SpikeEntry spike : spikes) {
+            if (spike == null || spike.getPosition() == null) continue;
+            Vector3d spikePos = spike.getPosition();
+            int cellX = (int) Math.floor(spikePos.x);
+            int cellZ = (int) Math.floor(spikePos.z);
+            spikesByCell.computeIfAbsent(cellKey(cellX, cellZ), key -> new ArrayList<>()).add(spike);
+        }
+    }
+
+    private static long cellKey(int x, int z) {
+        return ((long) x << 32) ^ (z & 0xffffffffL);
     }
 
     @Nonnull
@@ -101,7 +162,7 @@ public class EnsnareComponent implements Component<EntityStore> {
         copy.spikeDamage = this.spikeDamage;
         copy.damageCooldownSeconds = this.damageCooldownSeconds;
         copy.lastDamageTimeMap = this.lastDamageTimeMap != null ? new HashMap<>(this.lastDamageTimeMap) : null;
-        copy.center = this.center;
+        copy.center = this.center != null ? new Vector3d(this.center) : null;
         copy.radius = this.radius;
         return copy;
     }
