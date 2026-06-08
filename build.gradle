@@ -74,13 +74,3 @@ tasks.build {
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
-
-tasks.named("updatePluginManifest").configure {
-    doLast {
-        def manifestFile = file("src/main/resources/manifest.json")
-        if (!manifestFile.exists()) return
-        manifestFile.text = manifestFile.text
-                .replaceAll(/"Dependencies": \{\s*\}/, '"Dependencies": {}')
-                .replaceAll(/"OptionalDependencies": \{\s*\}/, '"OptionalDependencies": {}')
-    }
-}
