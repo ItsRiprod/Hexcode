@@ -1,5 +1,10 @@
 # Hexcode
 
+[![Discord](https://img.shields.io/discord/1486567272792457319?logo=discord&logoColor=white&label=Discord&color=5865F2)](https://discord.hexcodec.com)
+[![CurseForge](https://img.shields.io/curseforge/dt/1448311?logo=curseforge&logoColor=white&label=CurseForge&color=F16436)](https://mod.hexcodec.com)
+[![Docs](https://img.shields.io/badge/Docs-Read-2088FF?logo=readthedocs&logoColor=white)](https://docs.hexcodec.com)
+[![GitHub](https://img.shields.io/badge/GitHub-Source-181717?logo=github&logoColor=white)](https://github.com/itsriprod/hexcode)
+
 Hexcode is a component-based spellcasting system. 
 
 If you are looking for how to play hexcode, look to https://docs.hexcodec.com/ for the full documentation with guides, videos, and lists

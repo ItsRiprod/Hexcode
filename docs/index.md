@@ -5,6 +5,10 @@ published: true
 draft: false
 ---
 ![image](https://media.forgecdn.net/attachments/description/1448311/description_24df6807-f0ae-457a-a068-9cbaf45f3e11.png)
+[![Discord](https://img.shields.io/discord/1486567272792457319?logo=discord&logoColor=white&label=Discord&color=5865F2)](https://discord.hexcodec.com)
+[![CurseForge](https://img.shields.io/curseforge/dt/1448311?logo=curseforge&logoColor=white&label=CurseForge&color=F16436)](https://mod.hexcodec.com)
+[![Docs](https://img.shields.io/badge/Docs-Read-2088FF?logo=readthedocs&logoColor=white)](https://docs.hexcodec.com)
+[![GitHub](https://img.shields.io/badge/GitHub-Source-181717?logo=github&logoColor=white)](https://github.com/itsriprod/hexcode)
 
 _Join the discord [here](https://discord.hexcodec.com/) to report bugs, give suggestions, and shape the future of magic_
 
