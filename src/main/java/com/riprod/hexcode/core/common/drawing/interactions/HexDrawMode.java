@@ -33,7 +33,7 @@ public class HexDrawMode extends ChargingInteraction {
             .add()
             .build();
 
-    private static final float COMMIT_DELAY = 2.0F;
+    private static final float COMMIT_DELAY = 5.0F;
     private static final float NO_DEADLINE = -1.0F;
 
     private static final MetaKey<Float> COMMIT_DEADLINE = Interaction.META_REGISTRY.registerMetaObject(i -> NO_DEADLINE);
@@ -85,7 +85,7 @@ public class HexDrawMode extends ChargingInteraction {
 
         PlayerRef pr = commandBuffer.getComponent(playerRef, PlayerRef.getComponentType());
         if (pr != null) {
-            pr.sendMessage(Message.raw("[hexcode] draw committed (2s idle)"));
+            pr.sendMessage(Message.raw("[hexcode] draw committed (5s idle)"));
         }
     }
 }

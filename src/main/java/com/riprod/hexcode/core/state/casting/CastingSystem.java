@@ -63,9 +63,8 @@ import com.riprod.hexcode.utils.LatencyUtil;
 
 public class CastingSystem extends HexcodeManager {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final float FINALIZE_BASE_SECONDS = 0.35f;
+    private static final float FINALIZE_BASE_SECONDS = 0.65f;
     private static final float FINALIZE_PING_FACTOR = 2.0f;
-    private static final float FINALIZE_MAX_SECONDS = 1.5f;
 
     @Override
     public void firstTick(Ref<EntityStore> ref, HexcasterComponent comp,
@@ -505,11 +504,10 @@ public class CastingSystem extends HexcodeManager {
         return InteractionState.Finished;
     }
 
-    // snapshot a ping-scaled finalize window once so jitter can't wobble the auto-commit timer
     private void openFinalizeWindow(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref,
             HexcasterCastingComponent castingComp) {
         float pingS = LatencyUtil.pingMillis(accessor, ref) / 1000f;
-        float delay = Math.min(FINALIZE_MAX_SECONDS, FINALIZE_BASE_SECONDS + pingS * FINALIZE_PING_FACTOR);
+        float delay = FINALIZE_BASE_SECONDS + pingS * FINALIZE_PING_FACTOR;
         castingComp.setFinalizeDelaySeconds(delay);
         castingComp.setFinalizeTimer(0f);
         castingComp.setDraftSubState(DraftSubState.AwaitingFinalize);
