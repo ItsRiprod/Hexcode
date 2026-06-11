@@ -37,7 +37,7 @@ public class DelayConstructHandler implements ConstructHandler<DelayState> {
             if (tc != null) {
                 DelayStyle.renderExpiry(tc.getPosition(), state.getColors(), buffer);
             }
-            status.getHexContext().UpdateAccessor(buffer);
+            status.getHexContext().updateRuntimeAccessors(buffer);
             HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
         }
 
@@ -50,7 +50,7 @@ public class DelayConstructHandler implements ConstructHandler<DelayState> {
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
 
         if (status.getState().isCustom()) {
-            buffer.tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE); // remove if custom 
+            buffer.tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
         }
     }
 

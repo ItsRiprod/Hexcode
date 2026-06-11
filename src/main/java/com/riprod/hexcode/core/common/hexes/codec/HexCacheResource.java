@@ -45,8 +45,6 @@ public final class HexCacheResource implements Resource<EntityStore> {
         Hex hex = r.getHex();
         if (hex == null)
             return null;
-        // HexCodec.deserialize already ran HexUtils.repair; cache the
-        // canonical post-repair form, hand callers a private clone.
         cache.put(data, hex);
         return hex.clone();
     }
@@ -62,8 +60,6 @@ public final class HexCacheResource implements Resource<EntityStore> {
     @Nullable
     @Override
     public Resource<EntityStore> clone() {
-        // resources are per-store. clone returns a fresh empty cache for
-        // the new store; copying entries across stores would have no value.
         return new HexCacheResource();
     }
 }

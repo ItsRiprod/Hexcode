@@ -235,8 +235,8 @@ public class GlyphComponent implements Component<EntityStore> {
         copy.selfRef = this.selfRef;
         copy.hexRef = this.hexRef;
         copy.flags = this.flags.isEmpty() ? EnumSet.noneOf(GlyphFlags.class) : EnumSet.copyOf(this.flags);
-        copy.visualOffset = this.visualOffset;
-        copy.slotEntityRefs = new ArrayList<>();
+        copy.visualOffset = this.visualOffset != null ? new Vector3f(this.visualOffset) : null;
+        copy.slotEntityRefs = new ArrayList<>(this.slotEntityRefs);
         return copy;
     }
 

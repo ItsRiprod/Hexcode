@@ -10,14 +10,13 @@ import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
-import com.hypixel.hytale.logger.HytaleLogger;
 
 public class HoverableSpatialSystem extends SpatialSystem<EntityStore> {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-
     private static ResourceType<EntityStore, SpatialResource<Ref<EntityStore>, EntityStore>> resourceType;
 
-    public static final Query<EntityStore> QUERY = Query.and(HoverableComponent.getComponentType());
+    public static final Query<EntityStore> QUERY = Query.and(
+            HoverableComponent.getComponentType(),
+            TransformComponent.getComponentType());
 
     public HoverableSpatialSystem(
             ResourceType<EntityStore, SpatialResource<Ref<EntityStore>, EntityStore>> resourceType) {
@@ -36,11 +35,7 @@ public class HoverableSpatialSystem extends SpatialSystem<EntityStore> {
 
     @Override
     public Vector3d getPosition(ArchetypeChunk<EntityStore> chunk, int index) {
-        try {
-            return chunk.getComponent(index, TransformComponent.getComponentType()).getPosition();
-        } catch (Exception e) {
-            LOGGER.atSevere().log("[hexcode] HoverableSpatialSystem.getPosition failed: %s", e.getMessage());
-            return new Vector3d(0, 0, 0);
-        }
+        TransformComponent transform = chunk.getComponent(index, TransformComponent.getComponentType());
+        return transform != null ? transform.getPosition() : new Vector3d(0, 0, 0);
     }
 }

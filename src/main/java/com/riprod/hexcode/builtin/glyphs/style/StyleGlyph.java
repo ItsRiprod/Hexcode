@@ -1,9 +1,12 @@
 package com.riprod.hexcode.builtin.glyphs.style;
 
+import javax.annotation.Nullable;
+
 import com.hypixel.hytale.component.ComponentAccessor;
 import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.core.common.execution.component.HexColors;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -77,11 +80,9 @@ public class StyleGlyph implements GlyphHandler {
     public void execute(Glyph glyph, HexContext hexContext) {
         if (hexContext.getStyle() == null) hexContext.setStyle(HexStyleAsset.empty());
 
-        // step 1 — apply linked glyph's overridable style fields
         HexStyleAsset linkedStyle = resolveLinkedGlyphStyle(glyph, hexContext);
         if (linkedStyle != null) hexContext.getStyle().applyOverride(linkedStyle);
 
-        // step 2 — explicit RGBA inputs win over the linked style's color
         if (hasAnyColorInput(glyph)) {
             double[] rgba = resolveRgba(glyph, hexContext);
             hexContext.setColors(toHexColorsOverride(rgba));
@@ -90,7 +91,7 @@ public class StyleGlyph implements GlyphHandler {
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 
-    private static @javax.annotation.Nullable HexStyleAsset resolveLinkedGlyphStyle(Glyph glyph, HexContext hexContext) {
+    private static @Nullable HexStyleAsset resolveLinkedGlyphStyle(Glyph glyph, HexContext hexContext) {
         Slot styleSlot = glyph.getSlots().get(StyleGlyphSlots.STYLE);
         if (styleSlot == null) return null;
         String linkedId = styleSlot.getFirstLink();
@@ -110,14 +111,13 @@ public class StyleGlyph implements GlyphHandler {
                 && glyph.getSlots().get(StyleGlyphSlots.B).getFirstLink() != null;
     }
 
-    private static com.riprod.hexcode.core.common.execution.component.HexColors toHexColorsOverride(double[] rgba) {
-        com.riprod.hexcode.core.common.execution.component.HexColors c =
-                new com.riprod.hexcode.core.common.execution.component.HexColors();
+    private static HexColors toHexColorsOverride(double[] rgba) {
+        HexColors c = new HexColors();
         c.setOverride(rgba[0] / 255.0, rgba[1] / 255.0, rgba[2] / 255.0, rgba[3] / 255.0);
         return c;
     }
 
     private static double clamp(double v, double lo, double hi) {
-        return v < lo ? lo : v > hi ? hi : v;
+        return v < lo ? lo : Math.min(v, hi);
     }
 }

@@ -2,6 +2,7 @@ package com.riprod.hexcode.core.common.glyphs.registry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,11 +95,11 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     }
 
     public List<DrawnShapeComponent> getShapes() {
-        return this.shapes;
+        return Collections.unmodifiableList(this.shapes);
     }
 
     public Map<String, SlotAsset> getSlots() {
-        return this.slots;
+        return Collections.unmodifiableMap(this.slots);
     }
 
     public SlotAsset getSlot(String key) {
@@ -106,7 +107,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     }
 
     public Set<String> getSlotKeys() {
-        return this.slots.keySet();
+        return Collections.unmodifiableSet(this.slots.keySet());
     }
 
     public boolean hasSlot(String key) {

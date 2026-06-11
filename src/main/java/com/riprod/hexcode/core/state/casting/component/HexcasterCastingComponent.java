@@ -6,8 +6,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.jline.console.impl.Builtins.Command;
-
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
@@ -37,8 +35,8 @@ public class HexcasterCastingComponent implements Component<EntityStore> {
     public enum DraftSubState { Idle, Drawing, AwaitingFinalize }
 
     private transient DraftSubState draftSubState = DraftSubState.Idle;
-    private transient FloatArrayList currentStrokePoints = new FloatArrayList();
-    private transient List<DrawnShapeComponent> pendingShapes = new ArrayList<>();
+    private final transient FloatArrayList currentStrokePoints = new FloatArrayList();
+    private final transient List<DrawnShapeComponent> pendingShapes = new ArrayList<>();
     private transient float finalizeTimer = 0f;
     private transient float finalizeDelaySeconds = 0f;
     private transient long strokeStartMillis = 0L;

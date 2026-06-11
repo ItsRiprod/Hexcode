@@ -16,6 +16,9 @@ public class ConstructRegistry {
     }
 
     public static void register(@Nonnull String id, @Nonnull ConstructHandler<?> handler) {
+        if (handlers.containsKey(id)) {
+            throw new IllegalArgumentException("duplicate construct handler id: " + id);
+        }
         handlers.put(id, handler);
     }
 
@@ -26,6 +29,6 @@ public class ConstructRegistry {
 
     @Nonnull
     public static Map<String, ConstructHandler<?>> getAll() {
-        return new HashMap<>(handlers);
+        return Map.copyOf(handlers);
     }
 }

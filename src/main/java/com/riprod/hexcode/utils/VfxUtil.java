@@ -2,12 +2,12 @@ package com.riprod.hexcode.utils;
 
 import javax.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.spatial.SpatialResource;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.modules.entity.EntityModule;
 import org.joml.Matrix4d;
@@ -29,8 +29,6 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 public class VfxUtil {
-  private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-
   private VfxUtil() {
   }
 
@@ -75,22 +73,32 @@ public class VfxUtil {
 
   public static void spawnSecondary(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
       Vector3d pos, ComponentAccessor<EntityStore> accessor) {
+    spawnSecondary(overrides, glyphAsset, pos, accessor, null);
+  }
+
+  public static void spawnSecondary(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
+      Vector3d pos, ComponentAccessor<EntityStore> accessor, @Nullable List<Ref<EntityStore>> recipients) {
     HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
     if (glyphStyle == null)
       return;
     Color tint = resolveColor(overrides != null ? overrides.getSecondaryColor() : null, glyphStyle.getSecondaryColor());
-    spawnConfigured(glyphStyle.getSecondaryParticle(), pos, tint, accessor);
+    spawnConfigured(glyphStyle.getSecondaryParticle(), pos, tint, accessor, recipients);
     if (glyphStyle.getSecondarySound() != null)
       sound(glyphStyle.getSecondarySound(), pos, accessor);
   }
 
   public static void spawnTertiary(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
       Vector3d pos, ComponentAccessor<EntityStore> accessor) {
+    spawnTertiary(overrides, glyphAsset, pos, accessor, null);
+  }
+
+  public static void spawnTertiary(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
+      Vector3d pos, ComponentAccessor<EntityStore> accessor, @Nullable List<Ref<EntityStore>> recipients) {
     HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
     if (glyphStyle == null)
       return;
     Color tint = resolveColor(overrides != null ? overrides.getSecondaryColor() : null, glyphStyle.getSecondaryColor());
-    spawnConfigured(glyphStyle.getTertiaryParticle(), pos, tint, accessor);
+    spawnConfigured(glyphStyle.getTertiaryParticle(), pos, tint, accessor, recipients);
     if (glyphStyle.getTertiarySound() != null)
       sound(glyphStyle.getTertiarySound(), pos, accessor);
   }
@@ -113,8 +121,24 @@ public class VfxUtil {
     return override != null ? override : fallback;
   }
 
+  public static List<Ref<EntityStore>> collectParticleRecipients(Vector3d pos, double radius,
+      ComponentAccessor<EntityStore> accessor) {
+    SpatialResource<Ref<EntityStore>, EntityStore> playerSpatialResource = accessor
+        .getResource(EntityModule.get().getPlayerSpatialResourceType());
+    List<Ref<EntityStore>> playerRefs = SpatialResource.getThreadLocalReferenceList();
+    playerRefs.clear();
+    playerSpatialResource.getSpatialStructure().collect(pos, radius, playerRefs);
+    return new ArrayList<>(playerRefs);
+  }
+
   private static void spawnConfigured(@Nullable ModelParticle particle, Vector3d pos,
       @Nullable Color tint, ComponentAccessor<EntityStore> accessor) {
+    spawnConfigured(particle, pos, tint, accessor, null);
+  }
+
+  private static void spawnConfigured(@Nullable ModelParticle particle, Vector3d pos,
+      @Nullable Color tint, ComponentAccessor<EntityStore> accessor,
+      @Nullable List<Ref<EntityStore>> recipients) {
     if (particle == null || particle.getSystemId() == null)
       return;
     Color effective = tint != null ? tint : particle.getColor();
@@ -122,10 +146,9 @@ public class VfxUtil {
       ParticleUtil.spawnParticleEffect(particle.getSystemId(), pos, accessor);
       return;
     }
-    SpatialResource<Ref<EntityStore>, EntityStore> playerSpatialResource = accessor
-        .getResource(EntityModule.get().getPlayerSpatialResourceType());
-    List<Ref<EntityStore>> playerRefs = SpatialResource.getThreadLocalReferenceList();
-    playerSpatialResource.getSpatialStructure().collect(pos, 25.0, playerRefs);
+    List<Ref<EntityStore>> playerRefs = recipients != null
+        ? recipients
+        : collectParticleRecipients(pos, 25.0, accessor);
     ParticleUtil.spawnParticleEffect(particle.getSystemId(), pos, 0.0f, 0.0f, 0.0f, 1.0f, effective, playerRefs,
         accessor);
   }

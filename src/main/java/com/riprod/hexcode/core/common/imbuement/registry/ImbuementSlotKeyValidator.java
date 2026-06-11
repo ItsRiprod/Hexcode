@@ -11,10 +11,6 @@ import com.hypixel.hytale.codec.validation.Validator;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerRegistry;
 
-// validator wired late onto ImbuementProfileAsset.slots — fails the build when
-// a profile declares a slot key that no registered Trigger answers to. only
-// runs for SlotMode.Trigger profiles; FreeForm profiles (books, blocks)
-// short-circuit before this validator is consulted.
 public final class ImbuementSlotKeyValidator implements Validator<Map<String, SlotAsset>> {
 
     public static final ImbuementSlotKeyValidator INSTANCE = new ImbuementSlotKeyValidator();

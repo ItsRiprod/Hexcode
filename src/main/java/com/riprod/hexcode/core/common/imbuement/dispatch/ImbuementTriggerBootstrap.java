@@ -12,6 +12,7 @@ import com.riprod.hexcode.core.common.triggers.component.TriggerEvent;
 import com.riprod.hexcode.core.common.triggers.component.TriggerSubscription;
 import com.riprod.hexcode.core.common.triggers.handler.TriggerCallback;
 import com.riprod.hexcode.core.common.triggers.registry.Trigger;
+import com.riprod.hexcode.core.common.triggers.registry.TriggerListenerRegistry;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerRegistry;
 
 public final class ImbuementTriggerBootstrap {
@@ -29,7 +30,7 @@ public final class ImbuementTriggerBootstrap {
     private ImbuementTriggerBootstrap() {
     }
 
-    public static void register(@Nonnull com.riprod.hexcode.core.common.triggers.registry.TriggerListenerRegistry registry) {
+    public static void register(@Nonnull TriggerListenerRegistry registry) {
         for (Trigger trigger : TriggerRegistry.all()) {
             if (trigger.getSource() == Trigger.Source.MANUAL) continue;
             CastRootDispatcher dispatcher = DISPATCHERS.get(trigger.getSource());

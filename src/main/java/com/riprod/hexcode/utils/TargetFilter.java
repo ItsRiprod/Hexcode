@@ -23,8 +23,12 @@ public class TargetFilter {
             List<Ref<EntityStore>> candidates, ComponentAccessor<EntityStore> accessor) {
 
         Transform look = TargetUtil.getLook(looker, accessor);
-        Vector3d rayStart = look.getPosition();
-        Vector3d rayDir = look.getDirection();
+        return getSmallestTarget(look.getPosition(), look.getDirection(), candidates, accessor, Double.MAX_VALUE);
+    }
+
+    @Nullable
+    public static Ref<EntityStore> getSmallestTarget(Vector3d rayStart, Vector3d rayDir,
+            List<Ref<EntityStore>> candidates, ComponentAccessor<EntityStore> accessor, double maxRange) {
 
         double firstTMax = Double.MAX_VALUE;
         double firstTMin = Double.MAX_VALUE;
@@ -36,7 +40,7 @@ public class TargetFilter {
             }
 
             double tMin = rayEntryDistance(ref, rayStart, rayDir, accessor);
-            if (tMin < 0) {
+            if (tMin < 0 || tMin > maxRange) {
                 continue;
             }
 
@@ -60,7 +64,7 @@ public class TargetFilter {
             }
 
             double tMin = rayEntryDistance(ref, rayStart, rayDir, accessor);
-            if (tMin < 0 || tMin > firstTMax) {
+            if (tMin < 0 || tMin > firstTMax || tMin > maxRange) {
                 continue;
             }
 

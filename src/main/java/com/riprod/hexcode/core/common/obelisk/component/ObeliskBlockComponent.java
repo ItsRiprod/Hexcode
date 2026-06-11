@@ -77,6 +77,7 @@ public class ObeliskBlockComponent implements Component<ChunkStore> {
         ObeliskBlockComponent copy = new ObeliskBlockComponent();
         copy.power = this.power;
         copy.handlerId = this.handlerId;
+        copy.registeredPedestalLoc = this.registeredPedestalLoc != null ? new Vector3i(this.registeredPedestalLoc) : null;
         return copy;
     }
 }

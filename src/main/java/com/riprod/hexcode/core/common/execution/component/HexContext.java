@@ -1,9 +1,12 @@
 package com.riprod.hexcode.core.common.execution.component;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.Nullable;
 
@@ -13,9 +16,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIDisplayMode;
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -32,15 +33,16 @@ public class HexContext {
     private float manaMultiplier = 1.0f;
     @Nullable private HexStyleAsset style;
     @Nullable private HexVar defaultVariable;
+    private String defaultSlot = Glyph.DEFAULT_SLOT;
     @Nullable private String castSlotKey;
     private float castDecayRate = 0f;
     private Map<String, HexVar> variables = new HashMap<>();
     @Nullable
     private UUID executionId;
 
-    // === transient fields (runtime-injected; not codec'd) ===
+    // === transient fields ===
     private transient CommandBuffer<EntityStore> accessor;
-    private transient ComponentAccessor<ChunkStore> chunkAccessor;
+    private transient Deque<String> resolutionStack = new ArrayDeque<>();
 
     public HexContext() {
     }
@@ -55,8 +57,6 @@ public class HexContext {
         setVolatilityTracker(volatilityTracker);
     }
 
-    // === overlay: copy non-default fields from another state into this one.
-    //     volatility-overlay rules live on VolatilityTracker.applyOverridesFrom. ===
     public HexContext applyNonDefaultsFrom(@Nullable HexContext other) {
         if (other == null) return this;
         if (other.hex != null) this.hex = other.hex;
@@ -70,7 +70,6 @@ public class HexContext {
         return this;
     }
 
-    // === full deep-copy clone, used by ImbuementData.copy() and similar ===
     public static HexContext cloneState(HexContext src) {
         if (src == null) return null;
         HexContext copy = new HexContext();
@@ -81,6 +80,7 @@ public class HexContext {
         copy.manaMultiplier = src.manaMultiplier;
         copy.style = src.style != null ? src.style.clone() : null;
         copy.defaultVariable = src.defaultVariable;
+        copy.defaultSlot = src.defaultSlot;
         copy.castSlotKey = src.castSlotKey;
         copy.castDecayRate = src.castDecayRate;
         copy.variables = new HashMap<>(src.variables);
@@ -88,27 +88,26 @@ public class HexContext {
         return copy;
     }
 
-    // === branch: shares execution-time refs (root/accessor/hex/tracker/executionId),
-    //     copies variables for parallel sub-execution ===
     public HexContext branch() {
         HexContext branch = new HexContext();
         branch.root = this.root;
         branch.accessor = this.accessor;
-        branch.chunkAccessor = this.chunkAccessor;
         branch.hex = this.hex;
         branch.volatilityTracker = this.volatilityTracker;
         branch.executionId = this.executionId;
-        branch.variables = new HashMap<>(this.variables);
-        branch.style = this.style;
+        branch.variables = this.variables;
+        branch.style = this.style != null ? this.style.clone() : null;
         branch.manaCost = this.manaCost;
         branch.manaMultiplier = this.manaMultiplier;
         branch.defaultVariable = this.defaultVariable;
         branch.castSlotKey = this.castSlotKey;
         branch.castDecayRate = this.castDecayRate;
+        String slot = "$d_" + Long.toHexString(ThreadLocalRandom.current().nextLong());
+        branch.variables.put(slot, this.variables.get(this.defaultSlot));
+        branch.defaultSlot = slot;
         return branch;
     }
 
-    // === accessor injection (runtime, post-construction) ===
     public CommandBuffer<EntityStore> getAccessor() {
         return accessor;
     }
@@ -117,12 +116,24 @@ public class HexContext {
         this.accessor = newAccessor;
     }
 
-    public ComponentAccessor<ChunkStore> getChunkAccessor() {
-        return chunkAccessor;
+    public boolean isResolving(String glyphId) {
+        return resolutionStack.contains(glyphId);
     }
 
-    public void UpdateChunkAccessor(ComponentAccessor<ChunkStore> newChunkAccessor) {
-        this.chunkAccessor = newChunkAccessor;
+    public void pushResolving(String glyphId) {
+        resolutionStack.push(glyphId);
+    }
+
+    public void popResolving() {
+        resolutionStack.pop();
+    }
+
+    public int resolutionDepth() {
+        return resolutionStack.size();
+    }
+
+    public void updateRuntimeAccessors(CommandBuffer<EntityStore> buffer) {
+        this.accessor = buffer;
     }
 
     // === root + caster ref ===
@@ -140,7 +151,6 @@ public class HexContext {
         return root != null ? root.getSourceRef() : null;
     }
 
-    // === hex (single field; codec compresses to string on the wire) ===
     @Nullable
     public Hex getHex() {
         return hex;
@@ -154,7 +164,6 @@ public class HexContext {
         return hex.get(id);
     }
 
-    // === variables ===
     public Map<String, HexVar> getVariables() {
         return variables;
     }
@@ -171,7 +180,6 @@ public class HexContext {
         this.variables.put(slot, value);
     }
 
-    // === volatility ===
     @Nullable
     public VolatilityTracker getVolatilityTracker() {
         return volatilityTracker;
@@ -212,7 +220,6 @@ public class HexContext {
         return getPowerMultiplier();
     }
 
-    // === mana ===
     public float getManaMultiplier() {
         return manaMultiplier;
     }
@@ -233,7 +240,6 @@ public class HexContext {
         return manaCost;
     }
 
-    // === style (full inline object; codec preserves all fields across serialize) ===
     @Nullable
     public HexStyleAsset getStyle() {
         return style;
@@ -243,8 +249,6 @@ public class HexContext {
         this.style = style;
     }
 
-    // compat abstraction over style.{primaryColor, secondaryColor, alpha}.
-    // never null — synthesizes a default-alpha (1.0) HexColors when style is absent.
     public HexColors getColors() {
         HexColors c = new HexColors();
         if (style != null) {
@@ -263,7 +267,6 @@ public class HexContext {
         style.setAlpha(colors.getPrimaryAlpha());
     }
 
-    // === default variable + slot-bound cast metadata ===
     @Nullable
     public HexVar getDefaultVariable() {
         return defaultVariable;
@@ -271,6 +274,14 @@ public class HexContext {
 
     public void setDefaultVariable(@Nullable HexVar defaultVariable) {
         this.defaultVariable = defaultVariable;
+    }
+
+    public String getDefaultSlot() {
+        return defaultSlot != null ? defaultSlot : Glyph.DEFAULT_SLOT;
+    }
+
+    public void setDefaultSlot(String defaultSlot) {
+        this.defaultSlot = defaultSlot;
     }
 
     @Nullable
@@ -294,7 +305,6 @@ public class HexContext {
         return executionId;
     }
 
-    // === debug walk ===
     public void toStringWalk(String id, StringBuilder sb, String prefix, boolean last, Set<String> visited) {
         Glyph node = hex.get(id);
         String connector = last ? "└── " : "├── ";
@@ -326,7 +336,6 @@ public class HexContext {
         visited.remove(id);
     }
 
-    // === codec ===
     public static final BuilderCodec<HexContext> CODEC = BuilderCodec
             .builder(HexContext.class, HexContext::new)
             .append(new KeyedCodec<>("Hex", HexFieldCodec.IMBUE),
@@ -356,6 +365,11 @@ public class HexContext {
             .append(new KeyedCodec<>("DefaultVariable", HexVar.CODEC),
                     (c, v) -> c.defaultVariable = v,
                     c -> c.defaultVariable)
+            .add()
+            .append(new KeyedCodec<>("DefaultSlot", Codec.STRING),
+                    (c, v) -> c.defaultSlot = v,
+                    c -> c.defaultSlot)
+            .metadata(UIDisplayMode.HIDDEN)
             .add()
             .append(new KeyedCodec<>("CastSlotKey", Codec.STRING),
                     (c, v) -> c.castSlotKey = v,

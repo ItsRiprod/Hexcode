@@ -1,5 +1,6 @@
 package com.riprod.hexcode.core.common.obelisk.registry;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,9 @@ public class ObeliskHandlerRegistry {
     }
 
     public static void register(@Nonnull String id, @Nonnull ObeliskInterface handler) {
+        if (handlers.containsKey(id)) {
+            throw new IllegalArgumentException("duplicate obelisk handler id: " + id);
+        }
         handlers.put(id, handler);
     }
 
@@ -26,6 +30,6 @@ public class ObeliskHandlerRegistry {
 
     @Nonnull
     public static Map<String, ObeliskInterface> getAll() {
-        return new HashMap<>(handlers);
+        return Collections.unmodifiableMap(new HashMap<>(handlers));
     }
 }

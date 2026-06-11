@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,10 @@ public class GlyphRegistry {
     }
 
     public static void register(@Nonnull GlyphHandler glyph) {
+        GlyphHandler existing = glyphs.get(glyph.getId());
+        if (existing != null) {
+            throw new IllegalArgumentException("duplicate glyph handler id: " + glyph.getId());
+        }
         glyphs.put(glyph.getId(), glyph);
         // todo later: finish the implementation of the config system
     }
@@ -34,6 +39,6 @@ public class GlyphRegistry {
 
     @Nonnull
     public static Map<String, GlyphHandler> getAll() {
-        return new HashMap<>(glyphs);
+        return Collections.unmodifiableMap(new HashMap<>(glyphs));
     }
 }

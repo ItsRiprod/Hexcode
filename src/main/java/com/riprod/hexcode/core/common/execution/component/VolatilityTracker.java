@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -17,10 +19,6 @@ public class VolatilityTracker {
     private float magicPowerMultiplier;
     private UUID executionId;
     private Map<String, Integer> glyphUsageMap = new HashMap<>();
-    // identity of the slot this cast is bound to. null = staff cast (counts toward
-    // the player's maxCharges cap). non-null = slot-bound cast (one per slot key
-    // per player; a new cast on the same key fizzles the previous). cancelAll
-    // dispels regardless of this field.
     @javax.annotation.Nullable
     private String slotKey;
 
@@ -123,12 +121,12 @@ public class VolatilityTracker {
         this.executionId = executionId;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public String getSlotKey() {
         return slotKey;
     }
 
-    public void setSlotKey(@javax.annotation.Nullable String slotKey) {
+    public void setSlotKey(@Nullable String slotKey) {
         this.slotKey = slotKey;
     }
 
@@ -160,11 +158,6 @@ public class VolatilityTracker {
             .add()
             .build();
 
-    // overlay: merge another tracker's non-default fields into this one.
-    // - non-zero startingBudget overrides (resets remainingBudget too)
-    // - non-1.0 multipliers compound (multiplicative)
-    // - executionId / slotKey / glyphUsageMap intentionally NOT overlaid;
-    //   they're per-cast identity, not configuration.
     public VolatilityTracker applyOverridesFrom(VolatilityTracker other) {
         if (other == null) return this;
         if (other.startingBudget > 0f) {
@@ -187,6 +180,7 @@ public class VolatilityTracker {
         copy.volatilityMultiplier = this.volatilityMultiplier;
         copy.magicPowerMultiplier = this.magicPowerMultiplier;
         copy.executionId = this.executionId;
+        copy.glyphUsageMap = new HashMap<>(this.glyphUsageMap);
         copy.slotKey = this.slotKey;
         return copy;
     }

@@ -35,6 +35,7 @@ import com.riprod.hexcode.core.common.hover.component.HoverableType;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.core.state.crafting.component.NodeComponent;
 import com.riprod.hexcode.core.state.crafting.component.SlotComponent;
+import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.state.crafting.utils.RadialPositionUtil;
 
 public class SlotNodeHandler extends BaseSlotHandler {
@@ -147,7 +148,7 @@ public class SlotNodeHandler extends BaseSlotHandler {
     }
 
     public void despawn(CommandBuffer<EntityStore> accessor,
-            com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent session) {
+            HexcodeSessionComponent session) {
         // intentionally a no-op
     }
 }

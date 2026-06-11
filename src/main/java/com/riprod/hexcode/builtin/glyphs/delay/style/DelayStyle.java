@@ -27,7 +27,7 @@ public class DelayStyle {
 
     public static void render(HexContext hexContext) {
         Vector3d casterPos = HexVarUtil.position(
-                hexContext.getVariable(Glyph.DEFAULT_SLOT), hexContext.getAccessor());
+                hexContext.getVariable(hexContext.getDefaultSlot()), hexContext.getAccessor());
         if (casterPos == null) return;
 
         HexStyleAsset overrides = hexContext.getStyle();

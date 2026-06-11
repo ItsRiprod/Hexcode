@@ -32,7 +32,7 @@ public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
         cleanup(ctx);
         FortifyState state = status.getState();
         if (state == null) return;
-        status.getHexContext().UpdateAccessor(ctx.getBuffer());
+        status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
         LOGGER.atInfo().log("fortify: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }

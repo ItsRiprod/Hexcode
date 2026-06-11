@@ -108,7 +108,6 @@ public static final String ID = "Halt";
             LOGGER.atWarning().log("halt: could not halt entity: %s", e.getMessage());
         }
 
-        // duration > 0 defers Next via construct onEnd; instant halt fires Next now
         if (duration <= 0) {
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
         }

@@ -16,8 +16,6 @@ import com.riprod.hexcode.builtin.triggers.TriggerKey;
 import com.riprod.hexcode.core.common.triggers.component.TriggerEvent;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerListenerRegistry;
 
-// fires ON_DEATH when DeathComponent is added to any entity. subject = deceased,
-// payload exposes killer via Damage.EntitySource if available.
 public class DeathTriggerSource extends DeathSystems.OnDeathSystem {
 
     @Override

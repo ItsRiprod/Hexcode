@@ -32,7 +32,7 @@ public class IgniteConstructHandler implements ConstructHandler<IgniteState> {
         cleanup(ctx);
         IgniteState state = status.getState();
         if (state == null) return;
-        status.getHexContext().UpdateAccessor(ctx.getBuffer());
+        status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
         LOGGER.atInfo().log("ignite: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }

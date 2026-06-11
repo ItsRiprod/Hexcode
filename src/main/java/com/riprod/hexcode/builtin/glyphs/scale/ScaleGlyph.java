@@ -227,7 +227,6 @@ public class ScaleGlyph implements GlyphHandler {
                     accessor, targetRef, hexContext, glyph, ScaleGlyph.ID, state);
 
             ScaleStyle.renderApply(spawnPos, hexContext, accessor);
-            // next defers to construct.onEnd
         } catch (Exception e) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Cannot apply scale", e);

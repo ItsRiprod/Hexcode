@@ -62,7 +62,7 @@ public static final String ID = "Gust";
         Vector3d center = HexVarUtil.position(centerVar, hexContext.getAccessor());
         if (center == null) {
             center = HexVarUtil.position(
-                    hexContext.getVariable(Glyph.DEFAULT_SLOT), hexContext.getAccessor());
+                    hexContext.getVariable(hexContext.getDefaultSlot()), hexContext.getAccessor());
         }
         if (center == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -97,7 +97,7 @@ public static final String ID = "Gust";
                 config,
                 null,
                 accessor,
-                hexContext.getChunkAccessor());
+                accessor.getExternalData().getWorld().getChunkStore().getStore());
 
         GustGlyphStyle.render(center, radius, hexContext, accessor);
 

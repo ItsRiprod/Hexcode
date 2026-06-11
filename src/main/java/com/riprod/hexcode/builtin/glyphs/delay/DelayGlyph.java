@@ -60,6 +60,7 @@ public class DelayGlyph implements GlyphHandler {
             World world = hexContext.getAccessor().getExternalData().getWorld();
             if (1.0f / world.getTps() > seconds) {
                 HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+                return;
             }
         }
 
@@ -70,7 +71,7 @@ public class DelayGlyph implements GlyphHandler {
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        HexVar defaultVar = hexContext.getVariable(Glyph.DEFAULT_SLOT);
+        HexVar defaultVar = hexContext.getVariable(hexContext.getDefaultSlot());
         Vector3d spawnPos = HexVarUtil.position(defaultVar, accessor);
         if (spawnPos == null) {
             Ref<EntityStore> casterRef = hexContext.getCasterRef();
