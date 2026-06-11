@@ -89,15 +89,15 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         UUIDComponent targetUuid = ctx.getBuffer().getComponent(
                 targetRef, UUIDComponent.getComponentType());
         Glyph triggeringGlyph = status.getTriggeringGlyph();
+        HexContext branchContext = hexContext.branch();
+        branchContext.updateRuntimeAccessors(ctx.getBuffer());
 
-        if (targetRef != null && targetRef.isValid() && targetUuid != null
-                && triggeringGlyph != null) {
+        if (targetRef.isValid() && targetUuid != null && triggeringGlyph != null) {
             triggeringGlyph.writeOutput(
-                    new EntityVar(targetUuid.getUuid(), targetRef), hexContext);
+                    new EntityVar(targetUuid.getUuid(), targetRef), branchContext);
         }
 
-        hexContext.UpdateAccessor(ctx.getBuffer());
-        HexExecuter.continueExecution(List.of(branch), hexContext);
+        HexExecuter.continueExecution(List.of(branch), branchContext);
 
         state.advanceBranch();
         state.setHasFired(true);

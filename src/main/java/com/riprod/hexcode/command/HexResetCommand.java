@@ -2,6 +2,8 @@ package com.riprod.hexcode.command;
 
 import javax.annotation.Nonnull;
 
+import com.hypixel.hytale.component.Component;
+import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
@@ -102,7 +104,6 @@ public class HexResetCommand extends AbstractPlayerCommand {
             PlayerRef pr = store.getComponent(ref, PlayerRef.getComponentType());
             if (pr == null) return;
             PacketHandler handler = pr.getPacketHandler();
-            if (handler == null) return;
             handler.writeNoCache(new SetMovementStates(new SavedMovementStates(false)));
             mm.applyDefaultSettings();
             handler.writeNoCache(new UpdateMovementSettings(mm.getSettings()));
@@ -116,9 +117,9 @@ public class HexResetCommand extends AbstractPlayerCommand {
         } catch (Exception ignored) {}
     }
 
-    private <T extends com.hypixel.hytale.component.Component<EntityStore>> void tryRemoveComponent(
+    private <T extends Component<EntityStore>> void tryRemoveComponent(
             Store<EntityStore> store, Ref<EntityStore> ref,
-            com.hypixel.hytale.component.ComponentType<EntityStore, T> type) {
+            ComponentType<EntityStore, T> type) {
         try {
             store.removeComponent(ref, type);
         } catch (Exception ignored) {}

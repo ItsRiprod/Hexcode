@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -119,12 +121,12 @@ public class VolatilityTracker {
         this.executionId = executionId;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public String getSlotKey() {
         return slotKey;
     }
 
-    public void setSlotKey(@javax.annotation.Nullable String slotKey) {
+    public void setSlotKey(@Nullable String slotKey) {
         this.slotKey = slotKey;
     }
 
@@ -178,6 +180,7 @@ public class VolatilityTracker {
         copy.volatilityMultiplier = this.volatilityMultiplier;
         copy.magicPowerMultiplier = this.magicPowerMultiplier;
         copy.executionId = this.executionId;
+        copy.glyphUsageMap = new HashMap<>(this.glyphUsageMap);
         copy.slotKey = this.slotKey;
         return copy;
     }

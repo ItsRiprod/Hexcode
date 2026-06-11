@@ -11,6 +11,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
@@ -27,15 +28,16 @@ import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.hypixel.hytale.server.core.entity.reference.PersistentRef;
-import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class AreaGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    
     @Override
-public String getId() { return ID; };
+    public String getId() { return ID; };
 
-public static final String ID = "Area";
+    public static final String ID = "Area";
 
     private static final double DEFAULT_RADIUS = 5.0;
     private static final float VOLATILITY_COST_MULTIPLIER = 1.67f;
@@ -76,10 +78,14 @@ public static final String ID = "Area";
 
         boolean blocksLinked = hasLinks(glyph, AreaGlyphSlots.BLOCKS);
         boolean entitiesLinked = hasLinks(glyph, AreaGlyphSlots.ENTITIES);
+        List<Ref<EntityStore>> particleRecipients = blocksLinked || entitiesLinked
+                ? VfxUtil.collectParticleRecipients(center, radius + 25.0, accessor)
+                : null;
 
         if (blocksLinked) {
             for (Vector3i pos : gatherBlocks(center, radius, accessor)) {
-                AreaStyle.renderHit(new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5), hexContext, accessor);
+                AreaStyle.renderHit(new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5),
+                        hexContext, accessor, particleRecipients);
                 HexContext copy = hexContext.branch();
                 glyph.writeOutput(new BlockVar(pos), copy);
                 HexExecuter.continueFromSlot(glyph, AreaGlyphSlots.BLOCKS, copy);
@@ -90,11 +96,9 @@ public static final String ID = "Area";
             for (PersistentRef ref : gatherEntities(center, radius, hexContext)) {
                 Ref<EntityStore> entRef = ref.getEntity(accessor);
                 if (entRef != null && entRef.isValid()) {
-                    com.hypixel.hytale.server.core.modules.entity.component.TransformComponent t =
-                            accessor.getComponent(entRef,
-                                    com.hypixel.hytale.server.core.modules.entity.component.TransformComponent.getComponentType());
+                    TransformComponent t = accessor.getComponent(entRef, TransformComponent.getComponentType());
                     if (t != null) {
-                        AreaStyle.renderHit(t.getPosition(), hexContext, accessor);
+                        AreaStyle.renderHit(t.getPosition(), hexContext, accessor, particleRecipients);
                     }
                 }
                 HexContext copy = hexContext.branch();

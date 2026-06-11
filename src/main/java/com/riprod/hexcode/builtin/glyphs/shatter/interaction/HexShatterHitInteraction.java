@@ -64,7 +64,7 @@ public class HexShatterHitInteraction extends SimpleInteraction {
             }
 
             HexContext hexContext = state.getHexContext();
-            hexContext.UpdateAccessor(buffer);
+            hexContext.updateRuntimeAccessors(buffer);
 
             Ref<EntityStore> targetRef = ctx.getMetaStore().getMetaObject(Interaction.TARGET_ENTITY);
             Vector4d hitLocation = ctx.getMetaStore().getMetaObject(Interaction.HIT_LOCATION);

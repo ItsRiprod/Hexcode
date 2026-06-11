@@ -7,7 +7,13 @@ import com.riprod.hexcode.builtin.eventListeners.GlyphDiagnosticListener;
 import com.riprod.hexcode.builtin.eventListeners.HexCastDiagnosticListener;
 import com.riprod.hexcode.builtin.eventListeners.HexStateDiagnosticListener;
 import com.riprod.hexcode.builtin.glyphs.levitate.LevitateStackComponent;
+import com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileBounceInteraction;
+import com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileHitInteraction;
+import com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileMissInteraction;
 import com.riprod.hexcode.builtin.glyphs.scale.components.ScaleStackComponent;
+import com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterBounceInteraction;
+import com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterHitInteraction;
+import com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterMissInteraction;
 import com.riprod.hexcode.command.HexcodeCommand;
 import com.riprod.hexcode.core.common.block.component.UnbreakableBlockComponent;
 import com.riprod.hexcode.core.common.block.event.BlockBreakEvent;
@@ -447,23 +453,23 @@ public class Hexcode extends JavaPlugin {
         Interaction.CODEC.register("HexItemCondition", HexItemCondition.class, HexItemCondition.CODEC);
         Interaction.CODEC.register("HexAbility", HexAbility.class, HexAbility.CODEC);
         Interaction.CODEC.register("HexProjectileHit",
-                com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileHitInteraction.class,
-                com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileHitInteraction.CODEC);
+                HexProjectileHitInteraction.class,
+                HexProjectileHitInteraction.CODEC);
         Interaction.CODEC.register("HexProjectileMiss",
-                com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileMissInteraction.class,
-                com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileMissInteraction.CODEC);
+                HexProjectileMissInteraction.class,
+                HexProjectileMissInteraction.CODEC);
         Interaction.CODEC.register("HexProjectileBounce",
-                com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileBounceInteraction.class,
-                com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileBounceInteraction.CODEC);
+                HexProjectileBounceInteraction.class,
+                HexProjectileBounceInteraction.CODEC);
         Interaction.CODEC.register("HexShatterHit",
-                com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterHitInteraction.class,
-                com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterHitInteraction.CODEC);
+                HexShatterHitInteraction.class,
+                HexShatterHitInteraction.CODEC);
         Interaction.CODEC.register("HexShatterMiss",
-                com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterMissInteraction.class,
-                com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterMissInteraction.CODEC);
+                HexShatterMissInteraction.class,
+                HexShatterMissInteraction.CODEC);
         Interaction.CODEC.register("HexShatterBounce",
-                com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterBounceInteraction.class,
-                com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterBounceInteraction.CODEC);
+                HexShatterBounceInteraction.class,
+                HexShatterBounceInteraction.CODEC);
 
     }
 

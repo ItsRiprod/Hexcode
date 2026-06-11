@@ -1,8 +1,8 @@
 package com.riprod.hexcode.builtin.glyphs.beam;
 
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.util.TrigMathUtil;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Transform;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -22,9 +22,12 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.TargetFilter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BeamGlyph implements GlyphHandler {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     @Override
 public String getId() { return ID; };
 
@@ -63,8 +66,8 @@ public static final String ID = "Beam";
         double ny = dlen > 1e-9 ? direction.y / dlen : 0;
         double nz = dlen > 1e-9 ? direction.z / dlen : 0;
         float yaw = TrigMathUtil.atan2((float) -nx, (float) -nz);
-        float pitch = (float) Math.asin(Math.max(-1.0, Math.min(1.0, ny)));
-        com.hypixel.hytale.math.vector.Rotation3f rotation = new com.hypixel.hytale.math.vector.Rotation3f(pitch, yaw, 0f);
+        float pitch = (float) Math.asin(Math.clamp(ny, -1.0, 1.0));
+        Rotation3f rotation = new Rotation3f(pitch, yaw, 0f);
         Transform transform = new Transform(new Vector3d(origin), rotation);
 
         Vector3d blockHitLocation = TargetUtil.getTargetLocation(transform, blockId -> blockId != 0,
@@ -81,10 +84,12 @@ public static final String ID = "Beam";
         EntityVar sourceEntityVar = HexVarUtil.resolveEntityVar(posVar, hexContext);
         if (sourceEntityVar != null) {
             Ref<EntityStore> sourceRef = sourceEntityVar.getRef(hexContext.getAccessor());
-            if (sourceRef != null && sourceRef.isValid()
-                    && hexContext.getAccessor().getComponent(sourceRef,
-                            com.hypixel.hytale.server.core.modules.entity.component.HeadRotation.getComponentType()) != null) {
-                entityHit = TargetUtil.getTargetEntity(sourceRef, (float) beamLength, hexContext.getAccessor());
+            if (sourceRef != null && sourceRef.isValid()) {
+                List<Ref<EntityStore>> candidates = new ArrayList<>(
+                        TargetUtil.getAllEntitiesInSphere(origin, beamLength, hexContext.getAccessor()));
+                candidates.removeIf(ref -> ref == null || ref.equals(sourceRef));
+                entityHit = TargetFilter.getSmallestTarget(origin, new Vector3d(direction).normalize(),
+                        candidates, hexContext.getAccessor(), beamLength);
                 if (entityHit != null) {
                     Vector3d entityPos = hexContext.getAccessor().getComponent(entityHit,
                             TransformComponent.getComponentType()).getPosition();

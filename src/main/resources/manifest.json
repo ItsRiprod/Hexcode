@@ -10,9 +10,7 @@
     ],
     "Website": "https://modtale.net/mod/hexcode",
     "ServerVersion": ">=0.5.0 <0.6.0",
-    "Dependencies": {
-        
-    },
+    "Dependencies": {},
     "OptionalDependencies": {
         "Riprod:Patchly": "*"
     },

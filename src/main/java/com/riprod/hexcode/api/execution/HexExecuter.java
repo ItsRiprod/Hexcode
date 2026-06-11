@@ -1,7 +1,6 @@
 package com.riprod.hexcode.api.execution;
 
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
@@ -25,7 +24,7 @@ public class HexExecuter {
      * @param buffer
      */
     public static void cast(HexContext context, CommandBuffer<EntityStore> buffer) {
-        context.UpdateAccessor(buffer);
+        context.updateRuntimeAccessors(buffer);
         if (context.getStyle() == null) context.setStyle(HexStyleAsset.empty());
         buffer.invoke(new HexCastEvent(context));
     }

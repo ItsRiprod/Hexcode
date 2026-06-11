@@ -64,6 +64,7 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
             activeTrackers = new ArrayList<>();
         if (tracker == null)
             return;
+        pruneCompletedTrackers();
         activeTrackers.add(tracker);
     }
 
@@ -100,6 +101,7 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
 
     public void fizzleSlot(@Nonnull String slotKey) {
         if (activeTrackers == null || activeTrackers.isEmpty()) return;
+        pruneCompletedTrackers();
         for (VolatilityTracker t : activeTrackers) {
             if (t == null) continue;
             if (slotKey.equals(t.getSlotKey()) && t.getRemainingBudget() > 0f) {
@@ -195,6 +197,11 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
         copy.castCount = this.castCount;
         copy.cumulativeDecay = this.cumulativeDecay;
         copy.holdingPrimary = this.holdingPrimary;
+        copy.dependencies = new HashMap<>();
+        for (Map.Entry<UUID, List<Ref<EntityStore>>> entry : this.dependencies.entrySet()) {
+            copy.dependencies.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+        copy.activeTrackers = this.activeTrackers != null ? new ArrayList<>(this.activeTrackers) : new ArrayList<>();
         return copy;
     }
 }

@@ -60,6 +60,7 @@ public class DelayGlyph implements GlyphHandler {
             World world = hexContext.getAccessor().getExternalData().getWorld();
             if (1.0f / world.getTps() > seconds) {
                 HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+                return;
             }
         }
 

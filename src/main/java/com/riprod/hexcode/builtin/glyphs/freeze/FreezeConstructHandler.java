@@ -37,7 +37,7 @@ public class FreezeConstructHandler implements ConstructHandler<FreezeState> {
         cleanup(status, ctx);
         FreezeState state = status.getState();
         if (state == null) return;
-        status.getHexContext().UpdateAccessor(ctx.getBuffer());
+        status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
         LOGGER.atInfo().log("freeze: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -63,10 +64,6 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
         HexUtils.compress(expected);
 
         String serialized = HexCodec.serialize(active);
-        if (serialized == null) {
-            send(playerRef, "serialize returned null");
-            return;
-        }
         send(playerRef, "serialized: " + serialized.length() + " chars");
         send(playerRef, serialized);
 
@@ -87,7 +84,7 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
         }
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     private static String structuralDiff(Hex a, Hex b) {
         if (a.getGlyphs().size() != b.getGlyphs().size()) {
             return "glyph count: " + a.getGlyphs().size() + " vs " + b.getGlyphs().size();
@@ -103,7 +100,7 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
 
         Integer aFirst = aPos.get(a.getFirstGlyphId());
         Integer bFirst = bPos.get(b.getFirstGlyphId());
-        if (aFirst == null || bFirst == null || !aFirst.equals(bFirst)) {
+        if (aFirst == null || !aFirst.equals(bFirst)) {
             return "first glyph canonical index mismatch";
         }
 
@@ -149,7 +146,7 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
                 for (int k = 0; k < linksA.length; k++) {
                     Integer la = aPos.get(linksA[k]);
                     Integer lb = bPos.get(linksB[k]);
-                    if (la == null || lb == null || !la.equals(lb)) {
+                    if (la == null || !la.equals(lb)) {
                         return "[" + i + "] slot '" + name + "' link[" + k + "] canonical index: "
                                 + la + " vs " + lb;
                     }
@@ -168,7 +165,7 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
                 if (firstId.equals(glyphs.get(i).getId())) {
                     if (i != 0) {
                         Glyph first = glyphs.remove(i);
-                        glyphs.add(0, first);
+                        glyphs.addFirst(first);
                     }
                     break;
                 }

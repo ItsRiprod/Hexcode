@@ -96,7 +96,7 @@ public class HexContext {
         branch.volatilityTracker = this.volatilityTracker;
         branch.executionId = this.executionId;
         branch.variables = this.variables;
-        branch.style = this.style;
+        branch.style = this.style != null ? this.style.clone() : null;
         branch.manaCost = this.manaCost;
         branch.manaMultiplier = this.manaMultiplier;
         branch.defaultVariable = this.defaultVariable;
@@ -132,6 +132,11 @@ public class HexContext {
         return resolutionStack.size();
     }
 
+    public void updateRuntimeAccessors(CommandBuffer<EntityStore> buffer) {
+        this.accessor = buffer;
+    }
+
+    // === root + caster ref ===
     @Nullable
     public HexRoot getHexRoot() {
         return root;

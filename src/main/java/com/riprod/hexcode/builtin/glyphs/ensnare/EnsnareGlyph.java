@@ -109,6 +109,7 @@ public static final String ID = "Ensnare";
                     "Missing asset " + SPIKE_MODEL);
             return;
         }
+        Model spikeModel = Model.createScaledModel(modelAsset, SPIKE_SCALE);
 
         List<SpikeEntry> spikes = new ArrayList<>();
         int intRadius = (int) Math.ceil(radius);
@@ -138,7 +139,7 @@ public static final String ID = "Ensnare";
                 Vector3f rotation = new Vector3f(0, yaw, 0);
 
                 Ref<EntityStore> spikeRef = spawnSpikeEntity(
-                        spikePos, rotation, modelAsset, accessor);
+                        spikePos, rotation, spikeModel, accessor);
                 if (spikeRef != null) {
                     spikes.add(new SpikeEntry(spikePos, spikeRef));
                 }
@@ -171,9 +172,7 @@ public static final String ID = "Ensnare";
     }
 
     private Ref<EntityStore> spawnSpikeEntity(Vector3d position, Vector3f rotation,
-            ModelAsset modelAsset, CommandBuffer<EntityStore> accessor) {
-        Model model = Model.createScaledModel(modelAsset, SPIKE_SCALE);
-
+            Model model, CommandBuffer<EntityStore> accessor) {
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
         holder.addComponent(TransformComponent.getComponentType(),
                 new TransformComponent(new Vector3d(position), new Rotation3f(rotation.x, rotation.y, rotation.z)));

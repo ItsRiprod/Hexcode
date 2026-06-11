@@ -60,7 +60,7 @@ public class HexShatterMissInteraction extends SimpleInteraction {
             }
 
             HexContext hexContext = state.getHexContext();
-            hexContext.UpdateAccessor(buffer);
+            hexContext.updateRuntimeAccessors(buffer);
 
             Vector4d hitLocation = ctx.getMetaStore().getMetaObject(Interaction.HIT_LOCATION);
             Vector3d hitPos = hitLocation != null

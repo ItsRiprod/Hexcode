@@ -34,7 +34,7 @@ public final class HexResumeCallback {
                                         @Nullable BiFunction<CommandBuffer<EntityStore>, Object, HexVar> projection) {
         return (buffer, sub, event) -> {
             try {
-                hexContext.UpdateAccessor(buffer);
+                hexContext.updateRuntimeAccessors(buffer);
 
                 if (projection != null) {
                     HexVar projected = projection.apply(buffer, event.payload());

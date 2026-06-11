@@ -37,4 +37,3 @@ Anything in `./builtin` is the implementation of the stuff setup in `./core`. Yo
 
 
 More will be added here later as the public api is developed. As hexcode is in beta, writing much more about integration here will result in stale documentation down the road. 
-

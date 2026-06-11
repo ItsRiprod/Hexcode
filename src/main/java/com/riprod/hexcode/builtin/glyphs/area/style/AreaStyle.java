@@ -1,6 +1,7 @@
 package com.riprod.hexcode.builtin.glyphs.area.style;
 
 import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.component.Ref;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -14,6 +15,7 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.utils.VfxUtil;
+import java.util.List;
 
 public class AreaStyle {
 
@@ -48,8 +50,13 @@ public class AreaStyle {
 
     public static void renderHit(Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
+        renderHit(pos, ctx, accessor, null);
+    }
+
+    public static void renderHit(Vector3d pos, HexContext ctx,
+            ComponentAccessor<EntityStore> accessor, List<Ref<EntityStore>> recipients) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnSecondary(overrides, asset(), pos, accessor, recipients);
     }
 
     private static Vector3f resolveColor(HexStyleAsset overrides) {

@@ -43,7 +43,7 @@ public class ProjectileConstructHandler implements ConstructHandler<NoState> {
         if (links == null || links.length == 0)
             return;
         HexContext hexContext = status.getHexContext();
-        hexContext.UpdateAccessor(ctx.getBuffer());
+        hexContext.updateRuntimeAccessors(ctx.getBuffer());
         UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
                 .getUuid();
 

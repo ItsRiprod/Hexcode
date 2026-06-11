@@ -27,9 +27,7 @@ public class CoreHexExecuter {
     }
 
     public static void runPostGate(HexContext context, CommandBuffer<EntityStore> buffer) {
-        if (context.getAccessor() == null) {
-            context.UpdateAccessor(buffer);
-        }
+        context.updateRuntimeAccessors(buffer);
 
         if (context.getHexRoot() == null) {
             HytaleServer.get().getEventBus().dispatchFor(GlyphFizzleEvent.class)
