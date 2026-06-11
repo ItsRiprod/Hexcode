@@ -28,22 +28,18 @@ public class SeekerObelisk implements ObeliskInterface {
 
         HoverableComponent hoverable = buffer.getComponent(hoveredRef, HoverableComponent.getComponentType());
         Message description = hoverable != null ? hoverable.getHintText("description") : null;
-
-        LOGGER.atInfo().log("Showing hover for Seeker Obelisk. Title: %s, Description: %s", title, description);
         HudController.showInfo(buffer, playerRef, title, description);
     }
 
     @Override
     public void onUnhover(CommandBuffer<EntityStore> buffer, Ref<EntityStore> playerRef,
             Ref<EntityStore> unhoveredRef, ObeliskBlockComponent obelisk) {
-        LOGGER.atInfo().log("Hiding hover for Seeker Obelisk.");
         HudController.hideInfo(buffer, playerRef);
     }
 
     @Override
     public void onExitCrafting(CommandBuffer<EntityStore> buffer, Ref<EntityStore> playerRef,
             ObeliskBlockComponent obelisk) {
-        LOGGER.atInfo().log("Exiting crafting for Seeker Obelisk. Tearing down HUD.");
         HudController.clearHud(buffer, playerRef);
     }
 }
