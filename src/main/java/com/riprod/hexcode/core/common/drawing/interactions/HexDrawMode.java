@@ -20,6 +20,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.cli
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
+/** @deprecated - in progress and deferred for the time being */
 public class HexDrawMode extends ChargingInteraction {
 
     @Nonnull

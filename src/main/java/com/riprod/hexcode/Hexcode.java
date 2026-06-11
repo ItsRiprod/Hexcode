@@ -435,6 +435,7 @@ public class Hexcode extends JavaPlugin {
         StateRouter.registerState(HexState.IDLE, new IdleSystem());
         StateRouter.registerState(HexState.CASTING, new CastingSystem());
         StateRouter.registerState(HexState.CRAFTING, new CraftingSystem());
+        StateRouter.registerState(HexState.DRAWING, new DrawingSystem());
 
     }
 

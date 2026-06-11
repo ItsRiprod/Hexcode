@@ -3,25 +3,21 @@ package com.riprod.hexcode.core.common.drawing;
 import java.util.List;
 
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.time.TimeResource;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.CraftingEvent;
 import com.riprod.hexcode.api.event.GlyphDrawnEvent;
-import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponent;
 import com.riprod.hexcode.core.common.drawing.system.GlyphCreationManager;
@@ -51,7 +47,7 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 
-public class DrawingSystem {
+public class DrawingSystem extends HexcodeManager {
   private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
   private static ShapeDetector shapeDetector = new DollarOneFixedDetector();
@@ -64,14 +60,16 @@ public class DrawingSystem {
     shapeDetector = detector;
   }
 
-  public static void firstTick(Ref<EntityStore> ref, HexcasterComponent hexcaster,
+  @Override
+  public void firstTick(Ref<EntityStore> ref, HexcasterComponent hexcaster,
       Store<EntityStore> store, CommandBuffer<EntityStore> buffer,
       HexState previousState) {
     HexcasterDrawingComponent drawingComponent = new HexcasterDrawingComponent();
     buffer.putComponent(ref, HexcasterDrawingComponent.getComponentType(), drawingComponent);
   }
 
-  public static void lastTick(Ref<EntityStore> ref, HexcasterComponent comp,
+  @Override
+  public void lastTick(Ref<EntityStore> ref, HexcasterComponent comp,
       Store<EntityStore> store, CommandBuffer<EntityStore> buffer,
       HexState nextState) {
 
@@ -137,7 +135,7 @@ public class DrawingSystem {
     drawingComp.clear(buffer);
   }
 
-  public static void tick0(Ref<EntityStore> ref, HexcasterComponent comp, float dt,
+  public void tick0(Ref<EntityStore> ref, HexcasterComponent comp, float dt,
       Store<EntityStore> store, CommandBuffer<EntityStore> buffer) {
 
     HexcasterDrawingComponent drawingComp = buffer.getComponent(ref, HexcasterDrawingComponent.getComponentType());
@@ -147,11 +145,11 @@ public class DrawingSystem {
     InterfaceManager.createIndicator(buffer, ref, drawingComp);
   }
 
-  public static void onPlayerJoin(Ref<EntityStore> playerRef, HexcasterComponent comp,
+  public void onPlayerJoin(Ref<EntityStore> playerRef, HexcasterComponent comp,
       Store<EntityStore> store, CommandBuffer<EntityStore> buffer) {
   }
 
-  public static void onPlayerLeave(Ref<EntityStore> ref, HexcasterComponent comp,
+  public void onPlayerLeave(Ref<EntityStore> ref, HexcasterComponent comp,
       Store<EntityStore> store, CommandBuffer<EntityStore> buffer) {
     HexcasterDrawingComponent drawingComp = buffer.getComponent(ref, HexcasterDrawingComponent.getComponentType());
     if (drawingComp == null)
@@ -159,7 +157,7 @@ public class DrawingSystem {
     drawingComp.clear(buffer);
   }
 
-  public static InteractionState enterInteraction(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref,
+  public InteractionState enterInteraction(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref,
       HexcasterComponent comp) {
 
     HexcasterDrawingComponent drawingComp = accessor.getComponent(ref, HexcasterDrawingComponent.getComponentType());
@@ -176,7 +174,7 @@ public class DrawingSystem {
     return InteractionState.NotFinished;
   }
 
-  public static InteractionState tickInteraction(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref, float dt,
+  public InteractionState tickInteraction(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref, float dt,
       HexcasterComponent comp) {
 
     HexcasterDrawingComponent drawingComp = accessor.getComponent(ref, HexcasterDrawingComponent.getComponentType());
@@ -199,7 +197,7 @@ public class DrawingSystem {
     return InteractionState.NotFinished;
   }
 
-  public static InteractionState exitInteraction(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref,
+  public InteractionState exitInteraction(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref,
       HexcasterComponent comp) {
 
     HexcasterDrawingComponent drawingComp = accessor.getComponent(ref, HexcasterDrawingComponent.getComponentType());

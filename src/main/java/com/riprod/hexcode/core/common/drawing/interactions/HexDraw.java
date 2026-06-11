@@ -26,6 +26,7 @@ import com.riprod.hexcode.state.StateRouter;
 
 import it.unimi.dsi.fastutil.floats.Float2ObjectOpenHashMap;
 
+/** @deprecated - in progress and deferred for the time being */
 public class HexDraw extends ChargingInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
@@ -83,9 +84,9 @@ public class HexDraw extends ChargingInteraction {
             }
 
             if (firstRun) {
-                ctx.getState().state = DrawingSystem.enterInteraction(commandBuffer, playerRef, hexcaster);
+                // ctx.getState().state = DrawingSystem.enterInteraction(commandBuffer, playerRef, hexcaster);
             } else {
-                ctx.getState().state = DrawingSystem.tickInteraction(commandBuffer, playerRef, dt, hexcaster);
+                // ctx.getState().state = DrawingSystem.tickInteraction(commandBuffer, playerRef, dt, hexcaster);
             }
 
             super.tick0(firstRun, dt, type, ctx, cooldown);
