@@ -74,7 +74,6 @@ public final class ImbuedBlockActivator {
             return new ActivationOutcome(ActivationStatus.EXECUTION_FAILED, base);
         }
 
-        // snapshot — block may be broken before next tick; capture immutable copy
         ImbuementData baseSnapshot = base.copy();
         BlockHexRoot hexRoot = new BlockHexRoot(blockPos, capacity);
         VolatilityTracker tracker = new VolatilityTracker(hexRoot.resolveVolatility(), 1.0f, 1.0f);

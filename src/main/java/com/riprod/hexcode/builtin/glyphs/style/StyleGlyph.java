@@ -77,11 +77,9 @@ public class StyleGlyph implements GlyphHandler {
     public void execute(Glyph glyph, HexContext hexContext) {
         if (hexContext.getStyle() == null) hexContext.setStyle(HexStyleAsset.empty());
 
-        // step 1 — apply linked glyph's overridable style fields
         HexStyleAsset linkedStyle = resolveLinkedGlyphStyle(glyph, hexContext);
         if (linkedStyle != null) hexContext.getStyle().applyOverride(linkedStyle);
 
-        // step 2 — explicit RGBA inputs win over the linked style's color
         if (hasAnyColorInput(glyph)) {
             double[] rgba = resolveRgba(glyph, hexContext);
             hexContext.setColors(toHexColorsOverride(rgba));

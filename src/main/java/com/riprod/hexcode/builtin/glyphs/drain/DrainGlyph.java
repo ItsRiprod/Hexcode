@@ -78,7 +78,6 @@ public static final String ID = "Drain";
             drainPercent = 15.0f;
         }
 
-        // HP-source gate: only allow HP drain if the source IS the caster
         if (sourceStatIndex == DefaultEntityStatTypes.getHealth()) {
             UUIDComponent srcUuid = hexContext.getAccessor().getComponent(
                     targetRef, UUIDComponent.getComponentType());
@@ -91,7 +90,6 @@ public static final String ID = "Drain";
             }
         }
 
-        // destination entity (default = caster). destination stat is always mana
         HexVar destVar = glyph.readSlot(DrainGlyphSlots.DESTINATION, hexContext);
         Ref<EntityStore> destRef = hexContext.getCasterRef();
         EntityVar destEntityVar = HexVarUtil.resolveEntityVar(destVar, hexContext);

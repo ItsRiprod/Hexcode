@@ -1,13 +1,12 @@
 package com.riprod.hexcode.api.execution;
 
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.HytaleServer;
-import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.HexCastEvent;
+import com.riprod.hexcode.core.common.execution.CoreHexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -26,9 +25,7 @@ public class HexExecuter {
      * @param buffer
      */
     public static void cast(HexContext context, CommandBuffer<EntityStore> buffer) {
-        ComponentAccessor<ChunkStore> chunkAccessor = buffer.getExternalData().getWorld().getChunkStore().getStore();
         context.UpdateAccessor(buffer);
-        context.UpdateChunkAccessor(chunkAccessor);
         if (context.getStyle() == null) context.setStyle(HexStyleAsset.empty());
         buffer.invoke(new HexCastEvent(context));
     }
@@ -72,6 +69,6 @@ public class HexExecuter {
     }
 
     public static void continueExecution(List<String> nextGlyphs, HexContext hexContext) {
-        HexExecuter.continueExecution(nextGlyphs, hexContext);
+        CoreHexExecuter.continueExecution(nextGlyphs, hexContext);
     }
 }

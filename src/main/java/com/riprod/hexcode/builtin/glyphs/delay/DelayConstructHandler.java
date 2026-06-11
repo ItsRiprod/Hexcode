@@ -50,7 +50,7 @@ public class DelayConstructHandler implements ConstructHandler<DelayState> {
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
 
         if (status.getState().isCustom()) {
-            buffer.tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE); // remove if custom 
+            buffer.tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
         }
     }
 

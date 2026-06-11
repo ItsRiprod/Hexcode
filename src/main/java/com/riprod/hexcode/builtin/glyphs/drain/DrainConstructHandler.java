@@ -35,14 +35,12 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
         EntityStatValue sourceStat = statMap.get(state.getSourceStatIndex());
         if (sourceStat == null) return true;
 
-        // stop when source bottoms (keep 1 HP if draining health)
         if (state.getSourceStatIndex() == DefaultEntityStatTypes.getHealth()) {
             if (sourceStat.get() <= 1.0f) return true;
         } else {
             if (sourceStat.get() <= 0) return true;
         }
 
-        // stop when destination mana is full
         Ref<EntityStore> destRef = state.getDestEntityRef();
         int manaIndex = DefaultEntityStatTypes.getMana();
         EntityStatMap destStatMap = null;
@@ -107,7 +105,6 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
 
     @Override
     public void onAbort(HexStatus<DrainState> status, ConstructTickContext ctx) {
-        // counterspell / budget exhaustion: chain suppressed.
         DrainState state = status.getState();
         LOGGER.atInfo().log("drain: terminated early (%.2f drained); chain suppressed",
                 state != null ? state.getDrainedSoFar() : 0f);

@@ -10,7 +10,6 @@ import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBeha
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.BlockHarvestUtils;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -27,15 +26,17 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ErodeGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    @Override
-public String getId() { return ID; };
 
-public static final String ID = "Erode";
+    @Override
+    public String getId() {
+        return ID;
+    };
+
+    public static final String ID = "Erode";
 
     private static final String ERODE_EFFECT_ID = "Hexcode_Erode";
     private static final double DEFAULT_AMOUNT = 5.0;
@@ -51,7 +52,8 @@ public static final String ID = "Erode";
     @Override
     public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
         VolatilityTracker tracker = hexContext.getVolatilityTracker();
-        if (tracker == null) return true;
+        if (tracker == null)
+            return true;
 
         double amount = HexVarUtil.numberOrDefault(
                 glyph.readSlot(ErodeGlyphSlots.AMOUNT, hexContext), DEFAULT_AMOUNT);
@@ -86,7 +88,8 @@ public static final String ID = "Erode";
             applyToEntities(entityVar, vulnerabilityMultiplier, durationSeconds, glyph, hexContext, accessor);
         } else {
             BlockVar blockVar = HexVarUtil.resolveBlockVar(targets, hexContext);
-            if (blockVar != null) applyToBlocks(blockVar, amount, hexContext, accessor);
+            if (blockVar != null)
+                applyToBlocks(blockVar, amount, hexContext, accessor);
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
         }
     }
@@ -95,7 +98,8 @@ public static final String ID = "Erode";
             float durationSeconds, Glyph glyph, HexContext hexContext,
             CommandBuffer<EntityStore> accessor) {
         Ref<EntityStore> ref = entityVar.getRef(accessor);
-        if (ref == null || !ref.isValid()) return;
+        if (ref == null || !ref.isValid())
+            return;
 
         EntityEffect erodeEffect = EntityEffect.getAssetMap().getAsset(ERODE_EFFECT_ID);
         if (erodeEffect == null) {
@@ -110,7 +114,6 @@ public static final String ID = "Erode";
                     OverlapBehavior.OVERWRITE, accessor);
         }
 
-        // refresh existing Erode status if present, else apply a fresh one
         ErodeState existing = ConstructStateUtil.findState(
                 accessor, ref, ErodeGlyph.ID, ErodeState.class);
         if (existing != null) {
@@ -135,12 +138,14 @@ public static final String ID = "Erode";
     private void applyToBlocks(BlockVar blockVar, double amount,
             HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         Vector3i pos = blockVar.getValue();
-        if (pos == null) return;
+        if (pos == null)
+            return;
 
         ChunkStore chunkStore = accessor.getExternalData().getWorld().getChunkStore();
         long chunkIndex = ChunkUtil.indexChunkFromBlock(pos.x, pos.z);
         Ref<ChunkStore> chunkRef = chunkStore.getChunkReference(chunkIndex);
-        if (chunkRef == null || !chunkRef.isValid()) return;
+        if (chunkRef == null || !chunkRef.isValid())
+            return;
 
         int tier = amountToTier(amount);
         String toolId = TOOL_ASSET_PREFIX + tier;

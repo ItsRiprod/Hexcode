@@ -26,9 +26,6 @@ public class OutputGlyph implements GlyphHandler {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        // color is best-effort cosmetic; forwarding is the structural contract.
-        // splice/mixin usage (Interfere/Resonate) wires Output without a color input,
-        // so we must never let a missing/invalid color abort the chain.
         HexVar colorInput = glyph.readSlot(OutputGlyphSlots.COLOR, hexContext);
         applyColor(colorInput, hexContext);
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);

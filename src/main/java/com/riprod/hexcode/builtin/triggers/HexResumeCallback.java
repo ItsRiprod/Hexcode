@@ -39,7 +39,7 @@ public final class HexResumeCallback {
                 if (projection != null) {
                     HexVar projected = projection.apply(buffer, event.payload());
                     if (projected != null) {
-                        hexContext.setVariable(Glyph.DEFAULT_SLOT, projected);
+                        hexContext.setVariable(hexContext.getDefaultSlot(), projected);
                     }
                 }
 

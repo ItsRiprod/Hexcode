@@ -25,7 +25,6 @@ public class ForceGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     public static final String ID = "Force";
 
-    // keeps resulting upward velocity below ~32 m/s gravity-cutoff threshold
     private static final double MAX_Y_VELOCITY = 25.0;
     
     @Override

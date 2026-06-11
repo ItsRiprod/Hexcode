@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.logger.HytaleLogger;
+
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -15,6 +17,7 @@ import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
 
 public class ObeliskDispatcher {
+    private static HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     private ObeliskDispatcher() {
     }

@@ -1,4 +1,4 @@
 glyph.collected=New Glyph Discovered: {memoryTitle}
 glyph.undiscovered.tooltipText=An undiscovered glyph memory.
 glyph.descriptionBody=<i><color is="#9a8fd0">experimentations done with magic</color></i>\n\n<color is="#c5c8d6">{glyphDescription}</color>{slotDefinitions}\n\n\nDiscovered Experimentally
-glyph.slotEntry=\n\n<color is="#6fc2c9"><b>{slotName}</b></color><color is="#8a8a9c">:\n{slotDescription}</color>
+glyph.slotEntry=\n<color is="#6fc2c9"><b>{slotName}</b></color><color is="#8a8a9c">: {slotDescription}</color>

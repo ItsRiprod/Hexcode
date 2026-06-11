@@ -28,21 +28,11 @@ import com.riprod.hexcode.core.common.imbuement.payload.EntityHitPayload;
 import com.riprod.hexcode.core.common.triggers.component.TriggerEvent;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerListenerRegistry;
 
-// damage-side imbuement triggers. mirrors FlockMembershipSystems pattern at
-// com.hypixel.hytale.server.flock.FlockMembershipSystems lines 451 / 494.
-//
-// idle cost: zero. damage events are combat-only, and OnDamageReceivedSystem
-// uses an archetype query that the ECS framework filters at chunk-iteration
-// level — non-marked entities never reach the handler.
 public final class EntityHitEventSource {
 
     private EntityHitEventSource() {
     }
 
-    // attacker side: fires OnAttack (melee EntitySource) or OnShoot
-    // (ProjectileSource) when an entity with ImbuedHotbarMarker deals damage.
-    // archetype is empty because damage events iterate the target; we filter
-    // by attacker marker via a single component lookup per event.
     public static final class OnDamageDealtSystem extends DamageEventSystem {
 
         @Nullable
@@ -87,10 +77,6 @@ public final class EntityHitEventSource {
         }
     }
 
-    // target side: fires Block (if BLOCKED is set and target has imbued held
-    // weapon) or Attacked (any other entity-source damage). archetype-filtered
-    // on ImbuedArmorMarker for Attacked; ImbuedHotbarMarker is checked
-    // per-event for the Block branch.
     public static final class OnDamageReceivedSystem extends DamageEventSystem {
 
         private final Query<EntityStore> query = ImbuedArmorMarker.getComponentType();
