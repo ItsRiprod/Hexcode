@@ -13,18 +13,10 @@ import com.hypixel.hytale.server.core.plugin.PluginManager;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.patchly.PatchManager;
 
-// generates a flat white png per glyph, but only when one does not already exist
-// at the target path in any loaded pack. an existing image (in any pack) acts as
-// an override and is never regenerated. mirrors ShapeTemplateStore's pack handling.
-//
-// writes into the first writable, non-synthetic pack; if none is writable (e.g. the
-// mod ships as an immutable jar), it creates and registers its own synthetic pack
-// under mods/ the way patchly does for its override pack.
 public final class GlyphIconStore {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
-    // matches GlyphMemory.getIconPath() -> UI/Custom/Pages/Memories/glyphs/<id>.png
     private static final String ICONS_SUBPATH = "Common/UI/Custom/Pages/Memories/glyphs";
     private static final String SYNTHETIC_SUFFIX = "_GlyphIcons";
 
@@ -80,8 +72,6 @@ public final class GlyphIconStore {
             }
         });
 
-        // register our synthetic pack only after the icons exist on disk, so the
-        // registration scan indexes them in one pass
         if (target.register && counts[0] > 0) {
             try {
                 AssetModule.get().registerPack(target.packName, target.root, manifest,
@@ -109,8 +99,6 @@ public final class GlyphIconStore {
         return false;
     }
 
-    // first non-immutable pack that is not patchly's synthetic override pack (that
-    // pack is wiped on every rebuildAndApply); otherwise our own synthetic pack
     @Nullable
     private static Target resolveTarget(PluginManifest manifest) {
         for (AssetPack pack : AssetModule.get().getAssetPacks()) {
@@ -122,9 +110,6 @@ public final class GlyphIconStore {
         return prepareSyntheticPack(manifest);
     }
 
-    // creates (but does not yet register) a writable pack dir under mods/, mirroring
-    // how patchly lays out its override pack. a directory pack is mutable as long as
-    // it has no CommonAssetsIndex.hashes file, which we never create.
     @Nullable
     private static Target prepareSyntheticPack(PluginManifest manifest) {
         String name = manifest.getGroup() + ":" + manifest.getName() + SYNTHETIC_SUFFIX;

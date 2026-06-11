@@ -13,11 +13,6 @@ import com.riprod.hexcode.builtin.triggers.TriggerKey;
 import com.riprod.hexcode.core.common.triggers.component.TriggerEvent;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerListenerRegistry;
 
-// fires ON_CAST whenever a HexCastEvent is invoked. subject = caster.
-// re-entry safe: the trigger glyph spawns a sustain construct and registers
-// via AbstractTriggerGlyph before this source observes the event, so a cast
-// that contains an OnCast glyph won't recursively fire on its own creation.
-// the one-shot nature of the subscription prevents infinite chains in practice.
 public class CastTriggerSource extends WorldEventSystem<EntityStore, HexCastEvent> {
 
     public CastTriggerSource() {

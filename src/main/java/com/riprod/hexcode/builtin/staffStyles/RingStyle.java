@@ -14,7 +14,7 @@ public class RingStyle implements CastingStyle {
 
     public static final String ID = "ring";
     private static final float DEFAULT_DISTANCE = 3.0f;
-    private static final float RING_PITCH = 0.0f; // Horizontal ring at eye level
+    private static final float RING_PITCH = 0.0f;
 
     @Nonnull
     @Override
@@ -34,7 +34,7 @@ public class RingStyle implements CastingStyle {
         float angleStep = (float) (2 * Math.PI / glyphCount);
 
         for (int i = 0; i < glyphCount; i++) {
-            float yaw = angleStep * i + lookYaw; // Full 360° around the player
+            float yaw = angleStep * i + lookYaw;
             positions.add(new Rotation3f(RING_PITCH, yaw, DEFAULT_DISTANCE));
         }
 

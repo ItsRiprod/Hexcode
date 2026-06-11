@@ -37,8 +37,6 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         Glyph triggering = status.getTriggeringGlyph();
         if (triggering == null)
             return;
-        // Immediate slot is intentionally read off the triggering glyph and is NOT
-        // routed through state.nextGlyphIds — Splicer never rewires Immediate.
         Slot immediate = triggering.getSlot(GlaciateGlyphSlots.IMMEDIATE);
         if (immediate == null)
             return;
@@ -50,7 +48,7 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
                 .getUuid();
 
-        hexContext.setVariable(Glyph.DEFAULT_SLOT, new EntityVar(entityId, ctx.getEntityRef()));
+        hexContext.setVariable(hexContext.getDefaultSlot(), new EntityVar(entityId, ctx.getEntityRef()));
         HexExecuter.continueExecution(Arrays.asList(links), hexContext);
     }
 

@@ -80,13 +80,11 @@ public static final String ID = "Growth";
         EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
         if (entityVar != null) {
             applyToEntity(entityVar, amount, glyph, hexContext, accessor);
-            // entity branch defers Next until construct expiry
             return;
         }
 
         BlockVar blockVar = HexVarUtil.resolveBlockVar(targets, hexContext);
         if (blockVar != null) applyToBlock(blockVar, amount, hexContext, accessor);
-        // block branch is instantaneous farming; fire Next now
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 

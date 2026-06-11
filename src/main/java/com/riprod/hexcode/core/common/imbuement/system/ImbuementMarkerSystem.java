@@ -20,10 +20,6 @@ import com.riprod.hexcode.core.common.imbuement.ImbuementMetadata;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuedArmorMarker;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuedHotbarMarker;
 
-// reactive marker maintenance. fires on every InventoryChangeEvent; if the
-// changed inventory is the player's hotbar or armor, scans the affected
-// container and ensures the appropriate marker matches the imbuement state.
-// idle gameplay = zero invocations (no inventory changes = no events).
 public final class ImbuementMarkerSystem extends EntityEventSystem<EntityStore, InventoryChangeEvent> {
 
     public ImbuementMarkerSystem() {

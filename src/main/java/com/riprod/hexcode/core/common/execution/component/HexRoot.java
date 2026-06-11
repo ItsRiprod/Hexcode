@@ -11,8 +11,6 @@ import javax.annotation.Nullable;
 
 public interface HexRoot {
 
-    // registry-dispatched codec across HexRoot subtypes (mirror HexVar pattern).
-    // subtype codecs register at startup: HexRoot.CODEC.register("Player", PlayerHexRoot.class, PlayerHexRoot.CODEC).
     CodecMapCodec<HexRoot> CODEC = new CodecMapCodec<>("Type");
     BuilderCodec<HexRoot> BASE_CODEC = BuilderCodec.abstractBuilder(HexRoot.class).build();
 
@@ -23,9 +21,6 @@ public interface HexRoot {
     float getCurrentMana(ComponentAccessor<EntityStore> accessor);
     boolean addMana(float amount, ComponentAccessor<EntityStore> accessor);
 
-    // self-described default-variable for casts that didn't set one explicitly.
-    // PlayerHexRoot returns EntityVar(player); BlockHexRoot returns BlockVar(pos);
-    // future root types return their own HexVar subtype.
     @Nullable
     HexVar getRootVar(HexContext ctx);
 

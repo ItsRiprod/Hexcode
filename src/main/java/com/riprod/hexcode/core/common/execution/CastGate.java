@@ -20,6 +20,12 @@ public final class CastGate {
     private CastGate() {
     }
 
+    /**
+     * 
+     * @param buffer
+     * @param context
+     * @return
+     */
     public static boolean admit(@Nonnull CommandBuffer<EntityStore> buffer, @Nonnull HexContext context) {
         if (!(context.getHexRoot() instanceof PlayerHexRoot playerRoot)) {
             return true;

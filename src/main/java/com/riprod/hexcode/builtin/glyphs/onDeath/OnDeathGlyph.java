@@ -28,7 +28,6 @@ public class OnDeathGlyph extends AbstractTriggerGlyph {
 
     @Override
     protected BiFunction<CommandBuffer<EntityStore>, Object, HexVar> payloadProjection() {
-        // expose the killer (when known) so the resumed chain can act on them.
         return (buffer, payload) -> {
             if (!(payload instanceof DeathPayload dp)) return null;
             Ref<EntityStore> killer = dp.killer();
