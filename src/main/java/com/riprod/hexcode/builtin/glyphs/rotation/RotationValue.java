@@ -72,7 +72,6 @@ public class RotationValue implements GlyphHandler {
             glyph.writeOutput(result, hexContext);
         }
 
-        // effect mode: if a target is wired, apply rotation to it
         if (result instanceof RotationVar rotVar && rotVar.getValue() != null) {
             HexVar target = glyph.readSlot(RotationValueSlots.TARGET, hexContext);
             EntityVar entityVar = HexVarUtil.resolveEntityVar(target, hexContext);
@@ -94,7 +93,6 @@ public class RotationValue implements GlyphHandler {
         if (ref == null || !ref.isValid())
             return;
 
-        // projectile path: re-aim velocity while preserving speed
         if (VelocityUtil.isProjectile(ref, hexContext.getAccessor())) {
             applyToProjectile(ref, rotation, hexContext);
             return;
@@ -163,7 +161,6 @@ public class RotationValue implements GlyphHandler {
                 return;
             Rotation yaw = quarter(rotation.y);
             int rotationIndex = RotationTuple.index(yaw, Rotation.None, Rotation.None);
-            // preserve block-entity state, skip particles, skip filler churn
             int settings = 0x02 | 0x04 | 0x10;
             world.getChunk(ChunkUtil.indexChunkFromBlock(pos.x, pos.z))
                     .setBlock(pos.x, pos.y, pos.z, blockId, blockType, rotationIndex, 0, settings);

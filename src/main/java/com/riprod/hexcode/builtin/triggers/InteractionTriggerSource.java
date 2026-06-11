@@ -48,8 +48,6 @@ public final class InteractionTriggerSource {
 
         world.execute(() -> {
             Store<EntityStore> store = playerEntityRef.getStore();
-            // fast-path: skip the entire imbuement chain for unimbued players.
-            // archetype-filter equivalent at the packet entry point.
             if (store.getComponent(playerEntityRef, ImbuedHotbarMarker.getComponentType()) == null) return;
             UUIDComponent uuidComp = store.getComponent(playerEntityRef, UUIDComponent.getComponentType());
             if (uuidComp == null) return;

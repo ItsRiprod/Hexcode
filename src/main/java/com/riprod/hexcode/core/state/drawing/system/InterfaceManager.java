@@ -275,19 +275,19 @@ public class InterfaceManager {
 
   public static Color getColorFromQuality(float quality) {
     if (quality < 0.30f) {
-      return new Color((byte) 255, (byte) 50, (byte) 50); // red - Bad
+      return new Color((byte) 255, (byte) 50, (byte) 50);
     } else if (quality < 0.40f) {
-      return new Color((byte) 255, (byte) 140, (byte) 30); // orange - Mediocre
+      return new Color((byte) 255, (byte) 140, (byte) 30);
     } else if (quality < 0.50f) {
-      return new Color((byte) 255, (byte) 220, (byte) 30); // yellow - Decent
+      return new Color((byte) 255, (byte) 220, (byte) 30);
     } else if (quality < 0.60f) {
-      return new Color((byte) 180, (byte) 255, (byte) 50); // yellow-green - Okay
+      return new Color((byte) 180, (byte) 255, (byte) 50); 
     } else if (quality < 0.70f) {
-      return new Color((byte) 50, (byte) 220, (byte) 50); // green - Good
+      return new Color((byte) 50, (byte) 220, (byte) 50); 
     } else if (quality < 0.85f) {
-      return new Color((byte) 50, (byte) 180, (byte) 255); // cyan - Great
+      return new Color((byte) 50, (byte) 180, (byte) 255); 
     } else {
-      return new Color((byte) 180, (byte) 80, (byte) 255); // purple - Superb
+      return new Color((byte) 180, (byte) 80, (byte) 255);
     }
   }
 }

@@ -86,11 +86,9 @@ public class FortifyGlyph implements GlyphHandler {
         EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
         if (entityVar != null) {
             applyToEntities(glyph, entityVar, damageReduction, (float) duration, hexContext, accessor);
-            // entity branch fires Next on construct expiry, not now
         } else {
             BlockVar blockVar = HexVarUtil.resolveBlockVar(targets, hexContext);
             if (blockVar != null) applyToBlocks(blockVar, amount, hexContext, accessor);
-            // block branch is one-shot; fire Next immediately
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
         }
     }

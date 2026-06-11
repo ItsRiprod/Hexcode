@@ -25,8 +25,7 @@ public class Glyph {
     public static final String NEXT_SLOT = "Next";
     public static final String DEFAULT_SLOT = "0";
 
-    private static final int MAX_RESOLVE_DEPTH = 1028;
-    private static final ThreadLocal<Integer> resolveDepth = ThreadLocal.withInitial(() -> 0);
+    private static final int MAX_RESOLVE_DEPTH = 64;
 
     private String glyphId;
     private String id;
@@ -153,8 +152,7 @@ public class Glyph {
 
     @Nullable
     public HexVar readSlot(String key, HexContext hexContext, @Nullable HexVar javaDefault) {
-        int depth = resolveDepth.get();
-        if (depth >= MAX_RESOLVE_DEPTH)
+        if (hexContext.resolutionDepth() >= MAX_RESOLVE_DEPTH)
             return null;
 
         Slot slot = slots.get(key);
@@ -170,27 +168,30 @@ public class Glyph {
         if (handler == null)
             return resolveAssetDefault(key, hexContext, javaDefault);
 
-        resolveDepth.set(depth + 1);
+        if (hexContext.isResolving(linked.getId()))
+            return new NumberVar(0.0);
+
+        hexContext.pushResolving(linked.getId());
         try {
             HexVar v = handler.readValue(linked, hexContext);
             return v != null ? v : resolveAssetDefault(key, hexContext, javaDefault);
         } finally {
-            resolveDepth.set(depth);
+            hexContext.popResolving();
         }
     }
 
     public void writeOutput(HexVar value, HexContext hexContext) {
-        hexContext.setVariable(DEFAULT_SLOT, value);
+        hexContext.setVariable(hexContext.getDefaultSlot(), value);
         hexContext.setVariable(this.id, value);
     }
 
     public void writeOutput(HexVar defaultSlotValue, HexVar selfValue, HexContext hexContext) {
-        hexContext.setVariable(DEFAULT_SLOT, defaultSlotValue);
+        hexContext.setVariable(hexContext.getDefaultSlot(), defaultSlotValue);
         hexContext.setVariable(this.id, selfValue);
     }
 
     public void writeDefaultOutput(HexVar value, HexContext hexContext) {
-        hexContext.setVariable(DEFAULT_SLOT, value);
+        hexContext.setVariable(hexContext.getDefaultSlot(), value);
     }
 
     public void writeSelfOutput(HexVar value, HexContext hexContext) {
@@ -206,7 +207,7 @@ public class Glyph {
             return new NumberVar(defaultNum);
         if (javaDefault != null)
             return javaDefault;
-        HexVar slotZero = hexContext.getVariable(DEFAULT_SLOT);
+        HexVar slotZero = hexContext.getVariable(hexContext.getDefaultSlot());
         if (slotZero != null)
             return slotZero;
         return new NumberVar(0.0);
@@ -231,8 +232,7 @@ public class Glyph {
         if (links.length == 0)
             return List.of();
 
-        int depth = resolveDepth.get();
-        if (depth >= MAX_RESOLVE_DEPTH)
+        if (hexContext.resolutionDepth() >= MAX_RESOLVE_DEPTH)
             return List.of();
 
         List<HexVar> resolved = new ArrayList<>(links.length);
@@ -244,13 +244,18 @@ public class Glyph {
             if (handler == null)
                 continue;
 
-            resolveDepth.set(depth + 1);
+            if (hexContext.isResolving(linked.getId())) {
+                resolved.add(new NumberVar(0.0));
+                continue;
+            }
+
+            hexContext.pushResolving(linked.getId());
             try {
                 HexVar value = handler.readValue(linked, hexContext);
                 if (value != null)
                     resolved.add(value);
             } finally {
-                resolveDepth.set(depth);
+                hexContext.popResolving();
             }
         }
         return resolved;

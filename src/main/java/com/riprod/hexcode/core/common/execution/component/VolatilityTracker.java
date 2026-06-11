@@ -19,11 +19,7 @@ public class VolatilityTracker {
     private float magicPowerMultiplier;
     private UUID executionId;
     private Map<String, Integer> glyphUsageMap = new HashMap<>();
-    // identity of the slot this cast is bound to. null = staff cast (counts toward
-    // the player's maxCharges cap). non-null = slot-bound cast (one per slot key
-    // per player; a new cast on the same key fizzles the previous). cancelAll
-    // dispels regardless of this field.
-    @Nullable
+    @javax.annotation.Nullable
     private String slotKey;
 
     public VolatilityTracker(float startingBudget, float volatilityMultiplier) {
@@ -162,11 +158,6 @@ public class VolatilityTracker {
             .add()
             .build();
 
-    // overlay: merge another tracker's non-default fields into this one.
-    // - non-zero startingBudget overrides (resets remainingBudget too)
-    // - non-1.0 multipliers compound (multiplicative)
-    // - executionId / slotKey / glyphUsageMap intentionally NOT overlaid;
-    //   they're per-cast identity, not configuration.
     public VolatilityTracker applyOverridesFrom(VolatilityTracker other) {
         if (other == null) return this;
         if (other.startingBudget > 0f) {

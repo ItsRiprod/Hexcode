@@ -68,17 +68,12 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
         activeTrackers.add(tracker);
     }
 
-    // drops trackers whose budget has reached 0. natural end state for any
-    // spell (it either consumed all volatility or was cancelled to 0).
     public void pruneCompletedTrackers() {
         if (activeTrackers == null || activeTrackers.isEmpty())
             return;
         activeTrackers.removeIf(t -> t == null || t.getRemainingBudget() <= 0f);
     }
 
-    // active staff-pool spell count. slot-bound casts (slotKey != null) are
-    // excluded so they don't contend with staff casts for the maxCharges cap.
-    // prunes completed trackers first so callers see the live count.
     public int getActiveCount() {
         pruneCompletedTrackers();
         if (activeTrackers == null) return 0;
@@ -89,8 +84,6 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
         return n;
     }
 
-    // evicts the oldest staff-pool tracker (slotKey == null). slot-bound
-    // trackers are skipped so imbued casts are never evicted by the staff cap.
     public void evictOldest() {
         if (activeTrackers == null || activeTrackers.isEmpty())
             return;
@@ -106,10 +99,6 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
         }
     }
 
-    // sets the budget to 0 on any active tracker tagged with the given slot key.
-    // used by CastGate to enforce one-cast-per-slot semantics for slot-bound
-    // casts (a new Primary fizzles the previous Primary, etc.). pruning happens
-    // lazily on the next getActiveCount call.
     public void fizzleSlot(@Nonnull String slotKey) {
         if (activeTrackers == null || activeTrackers.isEmpty()) return;
         pruneCompletedTrackers();

@@ -113,7 +113,6 @@ public class PedestalEntity {
 
         Item item = stack.getItem();
 
-        // priority 1: profile.displayModelOverride
         if (profile != null) {
             String override = profile.getDisplayModelOverride();
             if (override != null && !override.isEmpty()) {
@@ -122,24 +121,18 @@ public class PedestalEntity {
             }
         }
 
-        // priority 2: item.getModel() (Tools / non-block items: HexBook, etc.)
         String itemModel = item.getModel();
         if (itemModel != null && !itemModel.isEmpty()) {
             attachCustomModel(pedestal, holder, itemModel, item.getTexture(), anchorId, scale);
             return;
         }
 
-        // priority 3: block-type item — render via ItemComponent so the client uses
-        // its built-in dropped-item renderer (correct block geometry + textures).
-        // PreventPickup keeps it from being scooped up by the player pickup system.
         if (item.hasBlockType()) {
             holder.addComponent(ItemComponent.getComponentType(), new ItemComponent(stack));
             holder.addComponent(PreventPickup.getComponentType(), PreventPickup.INSTANCE);
             return;
         }
 
-        // last resort: try BlockType lookup directly (covers items where hasBlockType
-        // is false but a BlockType still exists under the item id)
         BlockType blockType = BlockType.getAssetMap().getAsset(item.getBlockId());
         if (blockType != null) {
             String blockModel = blockType.getCustomModel();

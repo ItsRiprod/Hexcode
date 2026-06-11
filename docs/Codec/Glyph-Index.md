@@ -396,12 +396,6 @@ Rounds A to the nearest whole number. Preserves type: Positions and Rotations ar
 
 ---
 
-### \[|◯|\] Round
-
-Rounds A to the nearest whole number. Preserves type: Positions and Rotations are rounded component-wise. Entities, Blocks and Colors pass through unchanged.
-
----
-
 ### \[<\>◯\] Dot Product
 
 Derives the dot product of two vectors. Will convert a number to a vector (i.e. 1 = (1, 1, 1)) or a rotation to a vector with a magnitude of 1. 

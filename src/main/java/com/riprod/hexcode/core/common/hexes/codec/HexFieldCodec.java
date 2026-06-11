@@ -56,9 +56,6 @@ public final class HexFieldCodec implements Codec<Hex> {
     @Nullable
     @Override
     public Hex decodeJson(@Nonnull RawJsonReader reader, ExtraInfo extraInfo) throws IOException {
-        // RawJsonReader.readBsonValue dispatches to a string or document
-        // BsonValue based on the next token, so the BSON-side decode logic
-        // above handles both branches uniformly.
         BsonValue bsonValue = RawJsonReader.readBsonValue(reader);
         return decode(bsonValue, extraInfo);
     }
