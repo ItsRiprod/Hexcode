@@ -2,6 +2,7 @@ package com.riprod.hexcode.command.hex;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +93,7 @@ public class HexInspectCommand extends AbstractPlayerCommand {
         int idx = 1;
 
         String currentId = hex.getFirstGlyphId();
-        Set<String> walked = new java.util.HashSet<>();
+        Set<String> walked = new HashSet<>();
         List<String> execQueue = new ArrayList<>();
         if (currentId != null) execQueue.add(currentId);
 

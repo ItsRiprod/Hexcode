@@ -1,5 +1,6 @@
 package com.riprod.hexcode.builtin.glyphs.domain;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -48,7 +49,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         if (links == null || links.length == 0) return;
         HexContext hexContext = status.getHexContext();
         hexContext.updateRuntimeAccessors(ctx.getBuffer());
-        HexExecuter.continueExecution(java.util.Arrays.asList(links), hexContext);
+        HexExecuter.continueExecution(Arrays.asList(links), hexContext);
     }
 
     @Override

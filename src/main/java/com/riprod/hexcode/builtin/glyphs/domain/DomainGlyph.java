@@ -62,8 +62,7 @@ public static final String ID = "Domain";
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         float areaScale = computeAreaScale(GlyphHandler.sphereVolume(radius), asset);
 
-        int repeatCount = tracker.getGlyphUsage(glyph.getId());
-        float cost = VolatilityTracker.computeGlyphCost(glyph, repeatCount) * areaScale;
+        float cost = VolatilityTracker.computeGlyphCost(glyph) * areaScale;
         return tracker.consumeVolatility(cost);
     }
 
@@ -122,18 +121,21 @@ public static final String ID = "Domain";
         DomainZoneComponent zoneComp = new DomainZoneComponent(
                 (float) radius, durationSeconds, baseDrainPerSecond, BASE_TRIGGER_COST, power, casterUuid, casterRef);
 
-        Vector3f debugColor = DomainStyle.resolveColor(hexContext.getColors());
-        Vector3d debugScale = new Vector3d(radius * 2, radius * 2, radius * 2);
-        DebugComponent debugComp = new DebugComponent(DebugShape.Sphere, debugColor, debugScale, 0.1f);
-        debugComp.setOpacity(0.15f);
-        debugComp.setIntervalMultiplier(0.01f);
-        debugComp.setFadeMultiplier(2.0f);
-        debugComp.setFlags(DebugUtils.FLAG_NO_WIREFRAME);
-
         holder.ensureComponent(PropComponent.getComponentType());
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());
-        holder.addComponent(DebugComponent.getComponentType(), debugComp);
+
+        // alpha of 0 means an invisible zone: skip the debug shape but keep the functional zone
+        if (hexContext.getColors().getPrimaryAlpha() != 0f) {
+            Vector3f debugColor = DomainStyle.resolveColor(hexContext.getColors());
+            Vector3d debugScale = new Vector3d(radius * 2, radius * 2, radius * 2);
+            DebugComponent debugComp = new DebugComponent(DebugShape.Sphere, debugColor, debugScale, 0.1f);
+            debugComp.setOpacity(0.15f);
+            debugComp.setIntervalMultiplier(0.01f);
+            debugComp.setFadeMultiplier(2.0f);
+            debugComp.setFlags(DebugUtils.FLAG_NO_WIREFRAME);
+            holder.addComponent(DebugComponent.getComponentType(), debugComp);
+        }
         holder.addComponent(DomainZoneComponent.getComponentType(), zoneComp);
 
         Ref<EntityStore> zoneRef = hexContext.getAccessor().addEntity(holder, AddReason.SPAWN);

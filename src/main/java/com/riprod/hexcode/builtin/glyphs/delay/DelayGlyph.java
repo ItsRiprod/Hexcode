@@ -26,11 +26,12 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
-import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class DelayGlyph implements GlyphHandler {
@@ -49,30 +50,73 @@ public class DelayGlyph implements GlyphHandler {
         float seconds = HexVarUtil.numberOrDefault(
                 glyph.readSlot(DelayGlyphSlots.DURATION, hexContext), 1.0).floatValue();
 
-        if (seconds <= 0f) {
-            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
-            return;
+        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+
+        HexVar incomingDefault = hexContext.getDefaultVariable();
+        HexVar sourceVar = glyph.readSlot(DelayGlyphSlots.SOURCE, hexContext);
+        if (sourceVar == null) {
+            sourceVar = incomingDefault;
         }
 
-        if (seconds < 0.5f) { // early gate
+        boolean indefinite = seconds < 0f;
+        EntityVar entityVar = sourceVar instanceof EntityVar ev ? ev : null;
 
-            // check if the delay is shorter than the TPS of the world
-            World world = hexContext.getAccessor().getExternalData().getWorld();
-            if (1.0f / world.getTps() > seconds) {
+        if (!indefinite && entityVar == null) {
+            if (seconds <= 0f) {
                 HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
                 return;
+            }
+            if (seconds < 0.5f) {
+                World world = accessor.getExternalData().getWorld();
+                if (1.0f / world.getTps() > seconds) {
+                    HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+                    return;
+                }
             }
         }
 
         List<String> nextLinks = glyph.getNextLinks();
-        if (nextLinks.isEmpty()) {
+
+        DelayState state = new DelayState(seconds, new ArrayList<>(nextLinks),
+                hexContext.getColors(), entityVar == null);
+
+        if (entityVar != null) {
+            Ref<EntityStore> targetRef = entityVar.getRef(accessor);
+            if (targetRef == null || !targetRef.isValid()) {
+                HexExecuter.fail(glyph, hexContext,
+                        GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                        "delay target entity gone");
+                return;
+            }
+            TransformComponent targetTransform = accessor.getComponent(
+                    targetRef, TransformComponent.getComponentType());
+            if (targetTransform != null) {
+                DelayStyle.renderAt(targetTransform.getPosition(), hexContext);
+            }
+            HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, ID, state);
             return;
         }
 
-        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-
-        HexVar defaultVar = hexContext.getVariable(hexContext.getDefaultSlot());
-        Vector3d spawnPos = HexVarUtil.position(defaultVar, accessor);
+        Vector3d spawnPos;
+        Rotation3f rot;
+        switch (sourceVar) {
+            case RotationVar r -> {
+                rot = HexVarUtil.rotation(r, accessor);
+                spawnPos = HexVarUtil.position(incomingDefault, accessor);
+            }
+            case PositionVar p -> {
+                spawnPos = HexVarUtil.position(p, accessor);
+                rot = HexVarUtil.rotation(incomingDefault, accessor);
+            }
+            case BlockVar b -> {
+                spawnPos = HexVarUtil.position(b, accessor);
+                rot = HexVarUtil.rotation(b, accessor);
+            }
+            case null, default -> {
+                spawnPos = HexVarUtil.position(incomingDefault, accessor);
+                rot = HexVarUtil.rotation(incomingDefault, accessor);
+            }
+        }
         if (spawnPos == null) {
             Ref<EntityStore> casterRef = hexContext.getCasterRef();
             if (casterRef != null && casterRef.isValid()) {
@@ -83,51 +127,24 @@ public class DelayGlyph implements GlyphHandler {
                 spawnPos = new Vector3d();
             }
         }
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(defaultVar, hexContext);
 
-        DelayStyle.render(hexContext);
+        DelayStyle.renderAt(spawnPos, hexContext);
 
-        DelayState state = new DelayState(seconds, new ArrayList<>(nextLinks), hexContext.getColors(),
-                seconds >= 1f || entityVar == null);
-
-        if (seconds < 1f && entityVar != null) {
-            Ref<EntityStore> targetRef = entityVar.getRef(accessor);
-            if (targetRef == null || !targetRef.isValid()) {
-                HexExecuter.fail(glyph, hexContext,
-                        GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                        "delay target entity gone");
-                return;
-            }
-            HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, ID, state);
-            return;
-        }
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                 accessor, hexContext, glyph, DelayGlyph.ID, spawnPos, state);
 
+        if (rot != null) {
+            holder.putComponent(TransformComponent.getComponentType(),
+                    new TransformComponent(spawnPos, rot));
+        }
+
         ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(MODEL_ID);
         if (modelAsset != null) {
-            Model model = new Model(modelAsset.getId(), 1.0f, (Map<String, String>) null,
-                    modelAsset.getAttachments(null),
-                    modelAsset.getBoundingBox(), modelAsset.getModel(), modelAsset.getTexture(),
-                    modelAsset.getGradientSet(), modelAsset.getGradientId(), modelAsset.getEyeHeight(),
-                    modelAsset.getCrouchOffset(), modelAsset.getSittingOffset(),
-                    modelAsset.getSleepingOffset(),
-                    modelAsset.getAnimationSetMap(), modelAsset.getCamera(),
-                    modelAsset.getLight(), modelAsset.getParticles(), modelAsset.getTrails(),
-                    modelAsset.getPhysicsValues(),
-                    modelAsset.getDetailBoxes(), modelAsset.getPhobia(),
-                    modelAsset.getPhobiaModelAssetId()
-            );
+            Model model = Model.createScaledModel(modelAsset, 1.0f);
 
             holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
             holder.addComponent(PersistentModel.getComponentType(),
                     new PersistentModel(model.toReference()));
-
-            Rotation3f rotVar = HexVarUtil.rotation(defaultVar, accessor);
-            if (rotVar != null) {
-                holder.putComponent(TransformComponent.getComponentType(),
-                        new TransformComponent(spawnPos, rotVar));
-            }
         } else {
             LOGGER.atWarning().log("delay: model asset '%s' not found", MODEL_ID);
         }

@@ -33,11 +33,13 @@ public class DelayState implements ConstructState {
     }
 
     public void tick(float dt) {
-        remainingSeconds -= dt;
+        if (remainingSeconds > 0f) {
+            remainingSeconds = Math.max(0f, remainingSeconds - dt);
+        }
     }
 
     public boolean isExpired() {
-        return remainingSeconds <= 0f;
+        return remainingSeconds == 0f;
     }
 
     public List<String> getNextGlyphIds() {

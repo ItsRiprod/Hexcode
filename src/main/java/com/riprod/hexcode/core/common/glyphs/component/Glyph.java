@@ -1,6 +1,7 @@
 package com.riprod.hexcode.core.common.glyphs.component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -181,17 +182,17 @@ public class Glyph {
     }
 
     public void writeOutput(HexVar value, HexContext hexContext) {
-        hexContext.setVariable(hexContext.getDefaultSlot(), value);
+        hexContext.setDefaultVariable(value);
         hexContext.setVariable(this.id, value);
     }
 
     public void writeOutput(HexVar defaultSlotValue, HexVar selfValue, HexContext hexContext) {
-        hexContext.setVariable(hexContext.getDefaultSlot(), defaultSlotValue);
+        hexContext.setDefaultVariable(defaultSlotValue);
         hexContext.setVariable(this.id, selfValue);
     }
 
     public void writeDefaultOutput(HexVar value, HexContext hexContext) {
-        hexContext.setVariable(hexContext.getDefaultSlot(), value);
+        hexContext.setDefaultVariable(value);
     }
 
     public void writeSelfOutput(HexVar value, HexContext hexContext) {
@@ -207,7 +208,7 @@ public class Glyph {
             return new NumberVar(defaultNum);
         if (javaDefault != null)
             return javaDefault;
-        HexVar slotZero = hexContext.getVariable(hexContext.getDefaultSlot());
+        HexVar slotZero = hexContext.getDefaultVariable();
         if (slotZero != null)
             return slotZero;
         return new NumberVar(0.0);
@@ -220,7 +221,7 @@ public class Glyph {
         String[] links = slot.getLinks();
         if (links.length == 0)
             return List.of();
-        return java.util.Arrays.asList(links);
+        return Arrays.asList(links);
     }
 
     public List<HexVar> readSlotAll(String key, HexContext hexContext) {

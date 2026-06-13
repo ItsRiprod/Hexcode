@@ -116,17 +116,12 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         VolatilityTracker tracker = hexContext.getVolatilityTracker();
         if (tracker == null) return false;
 
-        int usage = tracker.getGlyphUsage(arcGlyph.getId());
-        float baseCost = VolatilityTracker.computeGlyphCost(arcGlyph, usage);
+        float baseCost = VolatilityTracker.computeGlyphCost(arcGlyph);
         float rangeScale = state.getMaxJumpDistance() / DEFAULT_JUMP_RANGE;
         float finalCost = baseCost * rangeScale;
 
         if (hexContext.getHexRoot() == null) return true;
-        boolean ok = tracker.consumeVolatility(finalCost);
-        if (ok) {
-            tracker.incrementGlyphUsage(arcGlyph.getId());
-        }
-        return ok;
+        return tracker.consumeVolatility(finalCost);
     }
 
     private boolean hopToNext(ArcState state, HexStatus<ArcState> status, ConstructTickContext ctx) {

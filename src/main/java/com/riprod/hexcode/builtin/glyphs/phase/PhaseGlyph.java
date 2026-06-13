@@ -65,8 +65,7 @@ public class PhaseGlyph implements GlyphHandler {
         float intensityScale = (float) Math.max(1.0,
                 intensity / asset.getSlot(PhaseGlyphSlots.INTENSITY).getDefaultValue());
 
-        int repeatCount = tracker.getGlyphUsage(glyph.getId());
-        float cost = VolatilityTracker.computeGlyphCost(glyph, repeatCount) * intensityScale;
+        float cost = VolatilityTracker.computeGlyphCost(glyph) * intensityScale;
         return tracker.consumeVolatility(cost);
     }
 

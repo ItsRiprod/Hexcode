@@ -3,10 +3,10 @@ package com.riprod.hexcode.core.common.execution.component;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +33,6 @@ public class HexContext {
     private float manaMultiplier = 1.0f;
     @Nullable private HexStyleAsset style;
     @Nullable private HexVar defaultVariable;
-    private String defaultSlot = Glyph.DEFAULT_SLOT;
     @Nullable private String castSlotKey;
     private float castDecayRate = 0f;
     private Map<String, HexVar> variables = new HashMap<>();
@@ -80,7 +79,6 @@ public class HexContext {
         copy.manaMultiplier = src.manaMultiplier;
         copy.style = src.style != null ? src.style.clone() : null;
         copy.defaultVariable = src.defaultVariable;
-        copy.defaultSlot = src.defaultSlot;
         copy.castSlotKey = src.castSlotKey;
         copy.castDecayRate = src.castDecayRate;
         copy.variables = new HashMap<>(src.variables);
@@ -102,9 +100,6 @@ public class HexContext {
         branch.defaultVariable = this.defaultVariable;
         branch.castSlotKey = this.castSlotKey;
         branch.castDecayRate = this.castDecayRate;
-        String slot = "$d_" + Long.toHexString(ThreadLocalRandom.current().nextLong());
-        branch.variables.put(slot, this.variables.get(this.defaultSlot));
-        branch.defaultSlot = slot;
         return branch;
     }
 
@@ -276,14 +271,6 @@ public class HexContext {
         this.defaultVariable = defaultVariable;
     }
 
-    public String getDefaultSlot() {
-        return defaultSlot != null ? defaultSlot : Glyph.DEFAULT_SLOT;
-    }
-
-    public void setDefaultSlot(String defaultSlot) {
-        this.defaultSlot = defaultSlot;
-    }
-
     @Nullable
     public String getCastSlotKey() {
         return castSlotKey;
@@ -328,7 +315,7 @@ public class HexContext {
 
         sb.append("\n");
         String childPrefix = prefix + (last ? "    " : "│   ");
-        java.util.List<String> nextLinks = node.getNextLinks();
+        List<String> nextLinks = node.getNextLinks();
         for (int i = 0; i < nextLinks.size(); i++) {
             toStringWalk(nextLinks.get(i), sb, childPrefix, i == nextLinks.size() - 1, visited);
         }
@@ -365,11 +352,6 @@ public class HexContext {
             .append(new KeyedCodec<>("DefaultVariable", HexVar.CODEC),
                     (c, v) -> c.defaultVariable = v,
                     c -> c.defaultVariable)
-            .add()
-            .append(new KeyedCodec<>("DefaultSlot", Codec.STRING),
-                    (c, v) -> c.defaultSlot = v,
-                    c -> c.defaultSlot)
-            .metadata(UIDisplayMode.HIDDEN)
             .add()
             .append(new KeyedCodec<>("CastSlotKey", Codec.STRING),
                     (c, v) -> c.castSlotKey = v,

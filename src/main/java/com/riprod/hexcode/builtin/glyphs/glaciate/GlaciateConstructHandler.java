@@ -48,7 +48,7 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
                 .getUuid();
 
-        hexContext.setVariable(hexContext.getDefaultSlot(), new EntityVar(entityId, ctx.getEntityRef()));
+        hexContext.setDefaultVariable(new EntityVar(entityId, ctx.getEntityRef()));
         HexExecuter.continueExecution(Arrays.asList(links), hexContext);
     }
 

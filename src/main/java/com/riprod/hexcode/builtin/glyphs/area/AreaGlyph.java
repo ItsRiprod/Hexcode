@@ -52,8 +52,7 @@ public class AreaGlyph implements GlyphHandler {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         float areaScale = computeAreaScale(GlyphHandler.sphereVolume(radius), asset);
 
-        int repeatCount = tracker.getGlyphUsage(glyph.getId());
-        float cost = VolatilityTracker.computeGlyphCost(glyph, repeatCount)
+        float cost = VolatilityTracker.computeGlyphCost(glyph)
                 * VOLATILITY_COST_MULTIPLIER * areaScale;
         if (cost <= 0) return true;
         return tracker.consumeVolatility(cost);

@@ -124,7 +124,9 @@ Debug.Next.description=The next glyph in the execution chain
 Delay.name=Delay
 Delay.description=Delays execution of child glyphs by a duration in seconds
 Delay.duration.name=Duration
-Delay.duration.description=How long to delay in seconds
+Delay.duration.description=Duration in Seconds. Negative is indef
+Delay.source.name=Source
+Delay.source.description=Position of the delay
 Delay.Next.name=Next
 Delay.Next.description=The next glyph in the execution chain
 

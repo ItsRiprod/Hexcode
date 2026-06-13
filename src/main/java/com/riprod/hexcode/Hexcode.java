@@ -94,6 +94,7 @@ import com.riprod.hexcode.state.HexTick;
 import com.riprod.hexcode.state.StateRouter;
 import com.riprod.patchly.PatchManager;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import com.hypixel.hytale.assetstore.AssetRegistry;
@@ -124,6 +125,7 @@ import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.riprod.hexcode.api.event.CraftingEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.GlyphDrawnEvent;
+import com.riprod.hexcode.builtin.eventListeners.GlyphDrawNotificationListener;
 import com.riprod.hexcode.builtin.eventListeners.GlyphMemoryListener;
 import com.riprod.hexcode.core.common.memories.GlyphMemory;
 import com.riprod.hexcode.core.common.memories.GlyphMemoryProvider;
@@ -153,7 +155,7 @@ public class Hexcode extends JavaPlugin {
     }
 
     @Override
-    public java.util.concurrent.CompletableFuture<Void> preLoad() {
+    public CompletableFuture<Void> preLoad() {
         return super.preLoad();
     }
 
@@ -481,6 +483,7 @@ public class Hexcode extends JavaPlugin {
         this.getEventRegistry().registerGlobal(HexStateChangeEvent.class, new HexStateDiagnosticListener());
         this.getEventRegistry().registerGlobal(CraftingEvent.class, new CraftingNotificationListener());
         this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphMemoryListener());
+        this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDrawNotificationListener());
         this.getEventRegistry().register(EventPriority.LAST, LoadAssetEvent.class, e -> {
             GlyphIconStore.generateMissing(this.getManifest());
             patchManager.rebuildAndApply("boot:LoadAssetEvent");

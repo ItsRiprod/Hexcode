@@ -10,6 +10,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import org.joml.Vector4d;
+import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.WaitForDataFrom;
@@ -25,6 +26,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
+import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 
 public class HexProjectileMissInteraction extends SimpleInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -70,7 +72,10 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
             Glyph triggering = state.getTriggeringGlyph();
             if (hitPos != null) {
                 if (triggering != null) {
-                    triggering.writeOutput(new BlockVar(new Vector3i((int) Math.floor(hitPos.x), (int) Math.floor(hitPos.y), (int) Math.floor(hitPos.z))), hexContext);
+                    BlockPosition hitBlock = ctx.getMetaStore().getMetaObject(Interaction.TARGET_BLOCK_RAW);
+                    triggering.writeOutput(hitBlock != null
+                            ? new BlockVar(new Vector3i(hitBlock.x, hitBlock.y, hitBlock.z))
+                            : new PositionVar(hitPos, true), hexContext);
                 }
                 ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
             }
