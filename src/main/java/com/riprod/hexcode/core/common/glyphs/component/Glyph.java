@@ -169,7 +169,7 @@ public class Glyph {
             return resolveAssetDefault(key, hexContext, javaDefault);
 
         if (hexContext.isResolving(linked.getId()))
-            return new NumberVar(0.0);
+            return null;
 
         hexContext.pushResolving(linked.getId());
         try {
