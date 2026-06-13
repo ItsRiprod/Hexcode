@@ -10,6 +10,7 @@ import com.riprod.hexcode.core.common.execution.component.HexColors;
 
 public class DelayState implements ConstructState {
 
+    private static final float epsilon = 0.001f;
     private float remainingSeconds;
     private List<String> nextGlyphIds;
     @Nullable
@@ -39,7 +40,7 @@ public class DelayState implements ConstructState {
     }
 
     public boolean isExpired() {
-        return remainingSeconds == 0f;
+        return Math.abs(remainingSeconds) <= epsilon;
     }
 
     public List<String> getNextGlyphIds() {
