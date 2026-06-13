@@ -50,7 +50,7 @@ public class VariableValue implements GlyphHandler {
             }
         }
 
-        hexContext.setVariable(hexContext.getDefaultSlot(), input);
+        hexContext.setDefaultVariable(input);
         hexContext.setVariable(glyph.getId(), input);
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }

@@ -50,13 +50,10 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         if (trigger == null || heldCtx == null)
             return;
 
-        // q-cancel zeroes the held tracker; in that case skip the release branch
-        // entirely
         VolatilityTracker heldTracker = heldCtx.getVolatilityTracker();
         if (heldTracker != null && heldTracker.getRemainingBudget() <= 0f)
             return;
 
-        // strip the held-time bonus so the release branch inherits the unboosted budget
         ConcentrationState state = status.getState();
         float bonus = state != null ? state.getVolatilityBonus() : 0f;
         if (heldTracker != null && bonus > 0f) {
@@ -64,11 +61,9 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             heldTracker.setBudget(adjusted);
         }
 
-        // deep copy gives the release branch its own VolatilityTracker so zeroing the
-        // held one (to kill any sustaining children of NEXT) won't take it down too
         HexContext releaseCtx = HexContext.cloneState(heldCtx);
+        releaseCtx.updateRuntimeAccessors(buffer);
 
-        // register the release tracker so subsequent q presses can still cancel it
         HexcasterIdleComponent idle = buffer.getComponent(
                 casterRef, HexcasterIdleComponent.getComponentType());
         if (idle != null) {

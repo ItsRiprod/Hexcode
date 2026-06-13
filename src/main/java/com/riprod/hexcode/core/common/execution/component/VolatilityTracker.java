@@ -1,7 +1,5 @@
 package com.riprod.hexcode.core.common.execution.component;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -18,8 +16,7 @@ public class VolatilityTracker {
     private float volatilityMultiplier;
     private float magicPowerMultiplier;
     private UUID executionId;
-    private Map<String, Integer> glyphUsageMap = new HashMap<>();
-    @javax.annotation.Nullable
+    @Nullable
     private String slotKey;
 
     public VolatilityTracker(float startingBudget, float volatilityMultiplier) {
@@ -42,14 +39,10 @@ public class VolatilityTracker {
     }
 
     public static float computeGlyphCost(Glyph glyph) {
-        return computeGlyphCost(glyph, 0);
-    }
-
-    public static float computeGlyphCost(Glyph glyph, int repeatCount) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         if (asset == null)
             return 0;
-        float baseCost = asset.getVolatility().getCostForRepeat(repeatCount);
+        float baseCost = asset.getVolatility().getInstantCost();
         // perfect draw (1.0) = 0.5x cost, worst draw (0.0) = 1.0x cost
         float qualityFactor = (1 - glyph.getVolatility()) * 0.5f + 0.5f;
         return baseCost * qualityFactor;
@@ -101,16 +94,6 @@ public class VolatilityTracker {
 
     public void setMagicPowerMultiplier(float magicPowerMultiplier) {
         this.magicPowerMultiplier = magicPowerMultiplier;
-    }
-
-    public int getGlyphUsage(String glyphId) {
-        return glyphUsageMap.getOrDefault(glyphId, 0);
-    }
-
-    public int incrementGlyphUsage(String glyphId) {
-        int usage = getGlyphUsage(glyphId) + 1;
-        glyphUsageMap.put(glyphId, usage);
-        return usage;
     }
 
     public UUID getExecutionId() {
@@ -180,7 +163,6 @@ public class VolatilityTracker {
         copy.volatilityMultiplier = this.volatilityMultiplier;
         copy.magicPowerMultiplier = this.magicPowerMultiplier;
         copy.executionId = this.executionId;
-        copy.glyphUsageMap = new HashMap<>(this.glyphUsageMap);
         copy.slotKey = this.slotKey;
         return copy;
     }

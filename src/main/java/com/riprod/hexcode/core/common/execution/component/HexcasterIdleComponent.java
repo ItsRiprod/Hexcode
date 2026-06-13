@@ -1,6 +1,7 @@
 package com.riprod.hexcode.core.common.execution.component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -160,7 +161,7 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
     }
 
     public void addDependency(UUID hexId, Ref<EntityStore> dependent) {
-        dependencies.computeIfAbsent(hexId, k -> new java.util.ArrayList<>()).add(dependent);
+        dependencies.computeIfAbsent(hexId, k -> new ArrayList<>()).add(dependent);
     }
 
     public Map<UUID, List<Ref<EntityStore>>> getDependencies() {
@@ -168,7 +169,7 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
     }
 
     public List<Ref<EntityStore>> getDependenciesForHex(UUID hexId) {
-        return dependencies.getOrDefault(hexId, java.util.Collections.emptyList());
+        return dependencies.getOrDefault(hexId, Collections.emptyList());
     }
 
     public List<Ref<EntityStore>> getDependencyList() {

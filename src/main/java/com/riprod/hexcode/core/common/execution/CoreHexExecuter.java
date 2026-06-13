@@ -59,7 +59,7 @@ public class CoreHexExecuter {
             defaultVar = context.getHexRoot().getRootVar(context);
         }
         if (defaultVar != null) {
-            context.setVariable(context.getDefaultSlot(), defaultVar);
+            context.setDefaultVariable(defaultVar);
         }
 
         continueExecution(List.of(startingGlyph), context);
@@ -117,9 +117,6 @@ public class CoreHexExecuter {
             if (!nextHandler.consumeVolatility(nextNode, hexContext)) {
                 HexExecuter.fail(nextNode, hexContext);
                 return;
-            }
-            if (tracker != null) {
-                tracker.incrementGlyphUsage(nextNode.getId());
             }
             nextHandler.execute(nextNode, hexContext);
         } catch (Exception e) {

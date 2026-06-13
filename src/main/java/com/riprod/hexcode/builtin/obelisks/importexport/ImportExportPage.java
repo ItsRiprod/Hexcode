@@ -74,7 +74,8 @@ public class ImportExportPage extends InteractiveCustomUIPage<ImportExportPage.P
             @Nonnull PageEventData data) {
 
         if ("sync".equals(data.action)) {
-            fieldValue = data.data != null ? data.data : "";
+            // pasted codes pick up trailing/wrapping whitespace that breaks base64 decode; valid codes never contain interior whitespace
+            fieldValue = data.data != null ? data.data.replaceAll("\\s+", "") : "";
         } else if ("export".equals(data.action)) {
             handleExport(ref, store);
         } else if ("import".equals(data.action)) {

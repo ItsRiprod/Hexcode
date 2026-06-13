@@ -61,8 +61,7 @@ public class ScaleGlyph implements GlyphHandler {
         VolatilityTracker tracker = hexContext.getVolatilityTracker();
         if (tracker == null)
             return true;
-        int repeatCount = tracker.getGlyphUsage(glyph.getId());
-        float baseCost = VolatilityTracker.computeGlyphCost(glyph, repeatCount);
+        float baseCost = VolatilityTracker.computeGlyphCost(glyph);
         if (baseCost <= 0)
             return true;
 

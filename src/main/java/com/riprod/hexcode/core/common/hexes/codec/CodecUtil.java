@@ -1,6 +1,10 @@
 package com.riprod.hexcode.core.common.hexes.codec;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.zip.Deflater;
+import java.util.zip.CRC32;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -227,7 +232,7 @@ public class CodecUtil {
 
     // --- byte-level prefixed string i/o (for v5) ---
 
-    static void writePrefixedByte(java.io.DataOutputStream out, String s) throws java.io.IOException {
+    static void writePrefixedByte(DataOutputStream out, String s) throws IOException {
         int pfx;
         String suffix;
         if (s.startsWith("Glyph_")) {
@@ -245,7 +250,7 @@ public class CodecUtil {
         out.write(bytes);
     }
 
-    static String readPrefixedByte(java.io.DataInputStream in) throws java.io.IOException {
+    static String readPrefixedByte(DataInputStream in) throws IOException {
         int header = in.readUnsignedByte();
         int pfx = (header >> 6) & 0x03;
         int len = header & 0x3F;
@@ -310,7 +315,7 @@ public class CodecUtil {
     @Nullable
     static byte[] inflate(byte[] data) {
         try (InflaterInputStream iis = new InflaterInputStream(
-                new java.io.ByteArrayInputStream(data))) {
+                new ByteArrayInputStream(data))) {
             return iis.readAllBytes();
         } catch (Exception e) {
             return null;
@@ -395,7 +400,7 @@ public class CodecUtil {
     }
 
     static long crc32(byte[] data) {
-        java.util.zip.CRC32 c = new java.util.zip.CRC32();
+        CRC32 c = new CRC32();
         c.update(data);
         return c.getValue();
     }

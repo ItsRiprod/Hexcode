@@ -42,8 +42,7 @@ public static final String ID = "Gust";
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         float areaScale = computeAreaScale(effective, asset);
 
-        int repeatCount = tracker.getGlyphUsage(glyph.getId());
-        float cost = VolatilityTracker.computeGlyphCost(glyph, repeatCount) * areaScale;
+        float cost = VolatilityTracker.computeGlyphCost(glyph) * areaScale;
         return tracker.consumeVolatility(cost);
     }
 
@@ -62,7 +61,7 @@ public static final String ID = "Gust";
         Vector3d center = HexVarUtil.position(centerVar, hexContext.getAccessor());
         if (center == null) {
             center = HexVarUtil.position(
-                    hexContext.getVariable(hexContext.getDefaultSlot()), hexContext.getAccessor());
+                    hexContext.getDefaultVariable(), hexContext.getAccessor());
         }
         if (center == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,

@@ -74,8 +74,7 @@ public static final String ID = "Ensnare";
                 harshScale(radius, DEFAULT_RADIUS, RADIUS_THRESHOLD, 2.0)
                 + harshScale(damage, DEFAULT_DAMAGE, DAMAGE_THRESHOLD, 2.0));
 
-        int repeatCount = tracker.getGlyphUsage(glyph.getId());
-        float cost = VolatilityTracker.computeGlyphCost(glyph, repeatCount) * scale;
+        float cost = VolatilityTracker.computeGlyphCost(glyph) * scale;
         return tracker.consumeVolatility(cost);
     }
 

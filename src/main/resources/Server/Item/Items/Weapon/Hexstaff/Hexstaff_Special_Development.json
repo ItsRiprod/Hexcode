@@ -4,7 +4,7 @@
     "Name": "hexcode.items.hexstaff.special.arcane.name",
     "Description": "hexcode.items.hexstaff.special.arcane.description"
   },
-  "Quality": "Legendary",
+  "Quality": "Developer",
   "ItemLevel": 35,
   "Model": "Items/Weapons/Staff/Blue_Staff.blockymodel",
   "Texture": "Items/Weapons/Staff/Blue_Staff.png",
@@ -66,34 +66,6 @@
     "Compatible": true
   },
   "MaxStack": 1,
-  "Recipe": {
-    "Input": [
-      {
-        "ItemId": "Hexstaff_Special_Life"
-      },
-      {
-        "ItemId": "Hexstaff_Special_Ice"
-      },
-      {
-        "ItemId": "Hexstaff_Special_Fire"
-      },
-      {
-        "ItemId": "Hexstaff_Special_Astral"
-      },
-      {
-        "ItemId": "Rock_Gem_Diamond",
-        "Quantity": 2
-      }
-    ],
-    "BenchRequirement": [
-      {
-        "Categories": [
-          "Arcane_Hexcode"
-        ],
-        "Id": "Arcanebench"
-      }
-    ]
-  },
   "InteractionConfig": {
     "Priorities": {
       "Secondary": {
@@ -103,6 +75,9 @@
     "UseDistance": {
       "Creative": 10
     }
+  },
+  "Interactions": {
+    "Secondary": "Hexstaff_Drawmode"
   },
   "InteractionVars": {
     "Drawmode": {

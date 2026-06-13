@@ -85,6 +85,9 @@ public class DebugGlyph implements GlyphHandler {
             }
         }
 
+        HexVar defaultVar = hexContext.getDefaultVariable();
+        sb.append("Default: ").append(defaultVar != null ? defaultVar.describe() : "[none]").append("\n");
+
         Map<String, HexVar> vars = hexContext.getVariables();
         if (vars.isEmpty()) {
             sb.append("Vars: [empty]");

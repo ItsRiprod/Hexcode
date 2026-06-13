@@ -41,7 +41,7 @@ public abstract class AbstractTriggerGlyph implements GlyphHandler {
 
     protected Ref<EntityStore> resolveSubject(Glyph glyph, HexContext hexContext) {
         Ref<EntityStore> caster = hexContext.getCasterRef();
-        HexVar slotZero = hexContext.getVariable(hexContext.getDefaultSlot());
+        HexVar slotZero = hexContext.getDefaultVariable();
         if (slotZero instanceof EntityVar ev) {
             Ref<EntityStore> r = ev.getRef(hexContext.getAccessor());
             if (r != null && r.isValid()) return r;

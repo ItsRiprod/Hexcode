@@ -59,8 +59,7 @@ public class ErodeGlyph implements GlyphHandler {
                 glyph.readSlot(ErodeGlyphSlots.AMOUNT, hexContext), DEFAULT_AMOUNT);
         float amountScale = (float) Math.max(1.0, amount / DEFAULT_AMOUNT);
 
-        int repeatCount = tracker.getGlyphUsage(glyph.getId());
-        float cost = VolatilityTracker.computeGlyphCost(glyph, repeatCount) * amountScale;
+        float cost = VolatilityTracker.computeGlyphCost(glyph) * amountScale;
         return tracker.consumeVolatility(cost);
     }
 

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,18 +38,15 @@ public final class TriggerListenerRegistry implements Resource<EntityStore> {
     private final Map<String, List<TriggerSubscription>> bootstraps = new ConcurrentHashMap<>();
     private final Map<String, Integer> listenerCounts = new HashMap<>();
 
-    // factories run on every new registry instance — lets builtin/plugin code
-    // install bootstrap subscriptions (e.g. imbuement binders) that should
-    // exist on every per-store registry without needing explicit per-store hooks.
-    private static final List<java.util.function.Consumer<TriggerListenerRegistry>> bootstrapFactories =
-            new java.util.concurrent.CopyOnWriteArrayList<>();
+    private static final List<Consumer<TriggerListenerRegistry>> bootstrapFactories =
+            new CopyOnWriteArrayList<>();
 
-    public static void registerBootstrap(@Nonnull java.util.function.Consumer<TriggerListenerRegistry> factory) {
+    public static void registerBootstrap(@Nonnull Consumer<TriggerListenerRegistry> factory) {
         bootstrapFactories.add(factory);
     }
 
     public TriggerListenerRegistry() {
-        for (java.util.function.Consumer<TriggerListenerRegistry> f : bootstrapFactories) {
+        for (Consumer<TriggerListenerRegistry> f : bootstrapFactories) {
             try {
                 f.accept(this);
             } catch (Exception e) {

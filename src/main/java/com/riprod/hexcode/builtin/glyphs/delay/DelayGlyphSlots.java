@@ -5,4 +5,5 @@ public final class DelayGlyphSlots {
     }
 
     public static final String DURATION = "duration";
+    public static final String SOURCE = "Source";
 }

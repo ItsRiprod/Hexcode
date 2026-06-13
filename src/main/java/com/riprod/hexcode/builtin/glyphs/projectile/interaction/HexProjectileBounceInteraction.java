@@ -11,6 +11,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import org.joml.Vector4d;
 import org.joml.Vector3i;
+import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.WaitForDataFrom;
@@ -28,6 +29,7 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
+import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public class HexProjectileBounceInteraction extends SimpleInteraction {
@@ -67,7 +69,10 @@ public class HexProjectileBounceInteraction extends SimpleInteraction {
                 return;
             }
             Vector3d hitPos = new Vector3d(hitLocation.x, hitLocation.y, hitLocation.z);
-            HexVar resultVar = new BlockVar(new Vector3i((int) Math.floor(hitPos.x), (int) Math.floor(hitPos.y), (int) Math.floor(hitPos.z)));
+            BlockPosition hitBlock = ctx.getMetaStore().getMetaObject(Interaction.TARGET_BLOCK_RAW);
+            HexVar resultVar = hitBlock != null
+                    ? new BlockVar(new Vector3i(hitBlock.x, hitBlock.y, hitBlock.z))
+                    : new PositionVar(hitPos, true);
             Glyph triggering = state.getTriggeringGlyph();
 
             if (triggering == null) {

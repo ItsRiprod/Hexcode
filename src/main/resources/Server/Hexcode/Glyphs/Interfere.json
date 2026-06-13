@@ -43,10 +43,5 @@
   },
   "Volatility": {
     "InstantCost": 5,
-    "DrainPerSecond": 0.0,
-    "RepeatEscalation": {
-      "Base": 1.0,
-      "K": 5.0
-    }
-  }
+    "DrainPerSecond": 0.0}
 }

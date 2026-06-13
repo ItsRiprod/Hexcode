@@ -51,8 +51,7 @@ public class ForceGlyph implements GlyphHandler {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         float areaScale = computeAreaScale(appliedMagnitude, asset);
 
-        int repeatCount = tracker.getGlyphUsage(glyph.getId());
-        float cost = VolatilityTracker.computeGlyphCost(glyph, repeatCount) * areaScale;
+        float cost = VolatilityTracker.computeGlyphCost(glyph) * areaScale;
         return tracker.consumeVolatility(cost);
     }
 

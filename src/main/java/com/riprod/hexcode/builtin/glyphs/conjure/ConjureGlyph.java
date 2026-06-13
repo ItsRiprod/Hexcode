@@ -83,8 +83,7 @@ public class ConjureGlyph implements GlyphHandler {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         float areaScale = computeAreaScale(volume, asset);
 
-        int repeatCount = tracker.getGlyphUsage(glyph.getId());
-        float cost = VolatilityTracker.computeGlyphCost(glyph, repeatCount) * areaScale;
+        float cost = VolatilityTracker.computeGlyphCost(glyph) * areaScale;
         return tracker.consumeVolatility(cost);
     }
 
@@ -158,8 +157,6 @@ public class ConjureGlyph implements GlyphHandler {
 
         ConjureZoneComponent zoneComp = new ConjureZoneComponent(halfExtents, interval, durationSeconds);
 
-        Vector3f debugColor = ConjureStyle.resolveColor(hexContext);
-
         HitboxCollisionConfig collisionConfig = HitboxCollisionConfig.getAssetMap()
                 .getAsset(HARD_COLLISION_ID);
 
@@ -169,11 +166,15 @@ public class ConjureGlyph implements GlyphHandler {
         holder.ensureComponent(PropComponent.getComponentType());
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());
-        DebugComponent debugComp = new DebugComponent(DebugShape.Cube, debugColor, size, 0.1f);
-        debugComp.setOpacity(hexContext.getColors().getPrimaryAlpha() * 0.5f);
-        debugComp.setIntervalMultiplier(0.01f);
-        debugComp.setFlags(DebugUtils.FLAG_NO_WIREFRAME);
-        holder.addComponent(DebugComponent.getComponentType(), debugComp);
+        // alpha of 0 means an invisible zone: skip the debug shape but keep the functional zone
+        if (hexContext.getColors().getPrimaryAlpha() != 0f) {
+            Vector3f debugColor = ConjureStyle.resolveColor(hexContext);
+            DebugComponent debugComp = new DebugComponent(DebugShape.Cube, debugColor, size, 0.1f);
+            debugComp.setOpacity(hexContext.getColors().getPrimaryAlpha() * 0.5f);
+            debugComp.setIntervalMultiplier(0.01f);
+            debugComp.setFlags(DebugUtils.FLAG_NO_WIREFRAME);
+            holder.addComponent(DebugComponent.getComponentType(), debugComp);
+        }
         holder.addComponent(BoundingBox.getComponentType(),
                 new BoundingBox(Box.horizontallyCentered(halfExtents.x * 2, halfExtents.y * 2,
                         halfExtents.z * 2)));

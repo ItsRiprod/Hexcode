@@ -11,7 +11,6 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
-import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
 public class DelayStyle {
@@ -25,13 +24,9 @@ public class DelayStyle {
         return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
     }
 
-    public static void render(HexContext hexContext) {
-        Vector3d casterPos = HexVarUtil.position(
-                hexContext.getVariable(hexContext.getDefaultSlot()), hexContext.getAccessor());
-        if (casterPos == null) return;
-
-        HexStyleAsset overrides = hexContext.getStyle();
-        VfxUtil.spawnPrimary(overrides, asset(), casterPos, hexContext.getAccessor());
+    public static void renderAt(Vector3d pos, HexContext hexContext) {
+        if (pos == null) return;
+        VfxUtil.spawnPrimary(hexContext.getStyle(), asset(), pos, hexContext.getAccessor());
     }
 
     public static ColorLight resolveLight(HexContext ctx) {

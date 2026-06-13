@@ -34,8 +34,7 @@ public interface GlyphHandler {
         VolatilityTracker tracker = hexContext.getVolatilityTracker();
         if (tracker == null)
             return true;
-        int repeatCount = tracker.getGlyphUsage(glyph.getId());
-        float cost = VolatilityTracker.computeGlyphCost(glyph, repeatCount);
+        float cost = VolatilityTracker.computeGlyphCost(glyph);
         if (cost <= 0)
             return true;
         boolean consumed = tracker.consumeVolatility(cost);
