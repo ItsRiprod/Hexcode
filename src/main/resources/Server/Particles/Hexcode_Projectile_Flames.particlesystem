@@ -1,13 +1,16 @@
 {
   "Spawners": [
     {
-      "SpawnerId": "Projectile_Flames"
-    },
-    {
       "SpawnerId": "Arcane_Ice_Crafting_Spawner"
     },
     {
       "SpawnerId": "Rings_Rings"
+    },
+    {
+      "SpawnerId": "Projectile_Glow"
+    },
+    {
+      "SpawnerId": "Projectile_Spark"
     }
   ],
   "CullDistance": 75.0,

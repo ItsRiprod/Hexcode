@@ -16,11 +16,6 @@ public class ProjectileStyle {
 
     private static final String GLYPH_ID = "Projectile";
     private static final Vector3f DEFAULT_COLOR = new Vector3f(1.0f, 0.8f, 0.3f);
-    private static final float TRAIL_THICKNESS = 0.08f;
-    private static final float TRAIL_DURATION = 0.3f;
-    private static final float HIT_LINE_THICKNESS = 0.12f;
-    private static final float HIT_LINE_LENGTH = 0.6f;
-    private static final float HIT_LINE_DURATION = 0.2f;
 
     private ProjectileStyle() {
     }
@@ -35,11 +30,6 @@ public class ProjectileStyle {
         GlyphAsset projectile = asset();
         VfxUtil.spawnPrimary(overrides, projectile, position, accessor);
         VfxUtil.spawnStyleParticle(overrides, projectile, position, accessor);
-
-        Vector3f color = resolveColor(overrides);
-        World world = accessor.getExternalData().getWorld();
-        Vector3d trailEnd = new Vector3d(position).add(new Vector3d(direction).mul(2.0));
-        VfxUtil.line(accessor, world, position, trailEnd, color, TRAIL_THICKNESS, TRAIL_DURATION, 0);
     }
 
     public static void renderEntityHit(Vector3d projectilePos, Vector3d hitPos, HexContext ctx,
@@ -47,11 +37,6 @@ public class ProjectileStyle {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         GlyphAsset projectile = asset();
         VfxUtil.spawnSecondary(overrides, projectile, hitPos, accessor);
-
-        Vector3f color = resolveColor(overrides);
-        World world = accessor.getExternalData().getWorld();
-        Vector3d lineEnd = new Vector3d(hitPos).add(0, HIT_LINE_LENGTH, 0);
-        VfxUtil.line(accessor, world, hitPos, lineEnd, color, HIT_LINE_THICKNESS, HIT_LINE_DURATION, 0);
     }
 
     public static void renderBlockHit(Vector3d hitPos, HexContext ctx,
@@ -59,11 +44,6 @@ public class ProjectileStyle {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         GlyphAsset projectile = asset();
         VfxUtil.spawnSecondary(overrides, projectile, hitPos, accessor);
-
-        Vector3f color = resolveColor(overrides);
-        World world = accessor.getExternalData().getWorld();
-        Vector3d lineEnd = new Vector3d(hitPos).add(0, HIT_LINE_LENGTH, 0);
-        VfxUtil.line(accessor, world, hitPos, lineEnd, color, HIT_LINE_THICKNESS, HIT_LINE_DURATION, 0);
     }
 
     public static void renderMiss(Vector3d endPos, HexContext ctx,

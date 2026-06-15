@@ -1,15 +1,5 @@
 {
   "Parent": "Glyph_Template",
-  "DefaultAttachments": [
-    {
-      "Model": "NPC/Glyphs/Models/Glyph_1.blockymodel",
-      "Texture": "NPC/Glyphs/Textures/Circle.png"
-    },
-    {
-      "Model": "NPC/Glyphs/Models/Triangle_2.blockymodel",
-      "Texture": "NPC/Glyphs/Textures/Triangle.png"
-    }
-  ],
   "Particles": [
     {
       "SystemId": "Hexcode_Projectile_Flames",
@@ -18,6 +8,9 @@
     {
       "SystemId": "Sword_Charged_Trail_Praetorian",
       "TargetEntityPart": "Self"
+    },
+    {
+      "SystemId": "Cinematic_Portal_Appear_L"
     }
   ],
   "Trails": [
