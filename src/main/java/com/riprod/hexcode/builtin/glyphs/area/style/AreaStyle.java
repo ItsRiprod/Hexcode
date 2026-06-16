@@ -17,6 +17,8 @@ import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.utils.VfxUtil;
 import java.util.List;
 
+import static com.hypixel.hytale.server.core.modules.debug.DebugUtils.COLOR_WHITE;
+
 public class AreaStyle {
 
     private static final String GLYPH_ID = "Area";
@@ -42,8 +44,15 @@ public class AreaStyle {
         matrix.translate(center.x, center.y, center.z);
         matrix.scale(radius * 2.0, radius * 2.0, radius * 2.0);
 
+//        Matrix4d hull = new Matrix4d();
+//        hull.identity();
+//        hull.translate(center.x, center.y, center.z);
+//        hull.scale(radius * 2.2, radius * 2.2, radius * 2.2);
+
         int flags = DebugUtils.FLAG_FADE | DebugUtils.FLAG_NO_WIREFRAME;
         DebugUtils.add(world, DebugShape.Sphere, matrix, color, SPHERE_DURATION, flags);
+//        DebugUtils.add(world, DebugShape.Sphere, hull, COLOR_WHITE, SPHERE_DURATION, flags);
+
 
         VfxUtil.spawnPrimary(overrides, asset(), center, accessor);
     }

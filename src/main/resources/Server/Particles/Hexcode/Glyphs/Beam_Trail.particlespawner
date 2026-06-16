@@ -1,9 +1,9 @@
 {
   "RenderMode": "BlendAdd",
-  "ParticleRotationInfluence": "BillboardVelocity",
+  "ParticleRotationInfluence": "None",
   "LinearFiltering": true,
   "LightInfluence": 0,
-  "MaxConcurrentParticles": 3,
+  "MaxConcurrentParticles": 20,
   "ParticleLifeSpan": {
     "Min": 0.6,
     "Max": 0.9
@@ -15,7 +15,8 @@
   },
   "InitialVelocity": {
     "Speed": {
-      "Min": 40
+      "Min": 40,
+      "Max": 80
     }
   },
   "Shape": "Cube",
@@ -53,5 +54,13 @@
       }
     }
   },
-  "IsLowRes": true
+  "IsLowRes": true,
+  "ParticleRotateWithSpawner": true,
+  "WaveDelay": {
+    "Max": 0.1
+  },
+  "ParticleCollision": {
+    "BlockType": "Solid",
+    "Action": "Expire"
+  }
 }

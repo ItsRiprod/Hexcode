@@ -1,0 +1,64 @@
+{
+  "$Comment": "replace later with voidy texture",
+  "RenderMode": "BlendAdd",
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": false,
+  "LightInfluence": 0,
+  "MaxConcurrentParticles": 1,
+  "ParticleLifeSpan": {
+    "Min": 0.4,
+    "Max": 0.4
+  },
+  "ParticleRotateWithSpawner": true,
+  "SpawnRate": {
+    "Min": 100,
+    "Max": 100
+  },
+  "Particle": {
+    "Texture": "Particles/textures/Area_Light_Particle.png",
+    "ScaleRatioConstraint": "None",
+    "Animation": {
+      "0": {
+        "Opacity": 1.0
+      },
+      "100": {
+        "Opacity": 0
+      }
+    },
+    "InitialAnimationFrame": {
+      "Opacity": 1,
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 0
+      },
+      "Color": "#ffffff",
+      "Rotation": {
+        "X": {
+          "Min": 90.0,
+          "Max": 90.0
+        }
+      },
+      "Scale": {
+        "X": {
+          "Min": 0.55,
+          "Max": 0.55
+        },
+        "Y": {
+          "Min": 0.55,
+          "Max": 0.55
+        }
+      }
+    },
+    "FrameSize": {
+      "Width": 256,
+      "Height": 256
+    },
+    "UseSpriteBlending": true,
+    "UVOption": "None",
+    "SoftParticles": "Disable"
+  },
+  "SpawnBurst": false,
+  "CameraOffset": -0.1,
+  "UseEmitDirection": true,
+  "IsLowRes": false
+}

@@ -10,10 +10,28 @@
     },
     {
       "SpawnerId": "Burst_Spawner"
+    },
+    {
+      "SpawnerId": "Area_Highlight",
+      "PositionOffset": {
+        "Y": 0,
+        "Z": 0
+      },
+      "LifeSpan": {
+        "Min": 0.1,
+        "Max": 0.1
+      }
+    },
+    {
+      "SpawnerId": "Area_Hairlight",
+      "LifeSpan": {
+        "Min": 0.1,
+        "Max": 0.1
+      }
     }
   ],
   "LifeSpan": 1.5,
-  "CullDistance": 100,
+  "CullDistance": 3000,
   "BoundingRadius": 5.0,
   "IsImportant": true
 }

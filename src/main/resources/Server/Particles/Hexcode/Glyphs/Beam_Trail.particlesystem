@@ -14,8 +14,10 @@
     },
     {
       "SpawnerId": "Beam_Presence",
-      "TotalSpawners": 1,
-      "MaxConcurrent": 5
+      "TotalSpawners": 1
+    },
+    {
+      "SpawnerId": "Beam_Glyph"
     }
   ],
   "LifeSpan": 0.4,

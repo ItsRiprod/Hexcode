@@ -1,0 +1,98 @@
+{
+  "$Comment": "replace later with voidy texture",
+  "RenderMode": "BlendAdd",
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": false,
+  "LightInfluence": 0,
+  "MaxConcurrentParticles": 1,
+  "ParticleLifeSpan": {
+    "Min": 0.4,
+    "Max": 0.4
+  },
+  "ParticleRotateWithSpawner": true,
+  "SpawnRate": {
+    "Min": 100,
+    "Max": 100
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Circles/Explosion_Shockwave.png",
+    "ScaleRatioConstraint": "None",
+    "Animation": {
+      "0": {
+        "Opacity": 1.0,
+        "Scale": {
+          "X": {
+            "Min": 0.1,
+            "Max": 0.1
+          },
+          "Y": {
+            "Max": 0.1,
+            "Min": 0.1
+          }
+        }
+      },
+      "50": {
+        "Scale": {
+          "X": {
+            "Min": 1,
+            "Max": 1
+          },
+          "Y": {
+            "Min": 1,
+            "Max": 1
+          }
+        },
+        "Rotation": {
+          "Z": {
+            "Min": 0,
+            "Max": 0
+          }
+        }
+      },
+      "100": {
+        "Opacity": 0,
+        "Rotation": {
+          "Z": {
+            "Min": 30,
+            "Max": 30
+          }
+        }
+      }
+    },
+    "InitialAnimationFrame": {
+      "Opacity": 1,
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 0
+      },
+      "Color": "#ffffff",
+      "Rotation": {
+        "X": {
+          "Min": 90.0,
+          "Max": 90.0
+        }
+      },
+      "Scale": {
+        "X": {
+          "Min": 0.7,
+          "Max": 0.7
+        },
+        "Y": {
+          "Min": 0.7,
+          "Max": 0.7
+        }
+      }
+    },
+    "FrameSize": {
+      "Width": 256,
+      "Height": 256
+    },
+    "UseSpriteBlending": true,
+    "UVOption": "RandomFlipV",
+    "SoftParticles": "Disable"
+  },
+  "SpawnBurst": false,
+  "CameraOffset": -0.1,
+  "UseEmitDirection": true,
+  "IsLowRes": false
+}

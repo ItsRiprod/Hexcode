@@ -1,0 +1,88 @@
+{
+  "RenderMode": "BlendAdd",
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": true,
+  "LightInfluence": 0,
+  "ParticleRotateWithSpawner": true,
+  "TrailSpawnerPositionMultiplier": 0,
+  "TrailSpawnerRotationMultiplier": 0,
+  "MaxConcurrentParticles": 10,
+  "ParticleLifeSpan": {
+    "Min": 0.2,
+    "Max": 1
+  },
+  "SpawnRate": {
+    "Min": 0,
+    "Max": 30
+  },
+  "$Comment": "Smol sparks for the circle portal",
+  "Particle": {
+    "Texture": "Particles/Textures/Smoke/Smoke_Mist.png",
+    "FrameSize": {
+      "Width": 32,
+      "Height": 32
+    },
+    "ScaleRatioConstraint": "OneToOne",
+    "UVOption": "RandomFlipU",
+    "Animation": {
+      "0": {
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Opacity": 0.436
+      },
+      "50": {
+        "Opacity": 0.584
+      },
+      "100": {
+        "Opacity": 0.436
+      }
+    },
+    "InitialAnimationFrame": {
+      "Rotation": {
+        "Y": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Z": {
+          "Min": 0,
+          "Max": 0
+        }
+      },
+      "Scale": {
+        "X": {
+          "Min": 1,
+          "Max": 1
+        },
+        "Y": {
+          "Min": 1,
+          "Max": 1
+        }
+      },
+      "Opacity": 1,
+      "Color": "#ffffff",
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 0
+      }
+    }
+  },
+  "VelocityStretchMultiplier": 100.0,
+  "Attractors": [
+    {
+      "LinearAcceleration": {
+        "Y": 4
+      },
+      "RadialAcceleration": -2
+    }
+  ],
+  "EmitOffset": {
+    "X": {
+      "Min": 0.3
+    },
+    "Z": {
+      "Min": 0.3
+    }
+  }
+}

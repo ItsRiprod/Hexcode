@@ -1,0 +1,74 @@
+{
+  "$Comment": "replace later with voidy texture",
+  "RenderMode": "Erosion",
+  "ParticleRotationInfluence": "None",
+  "LinearFiltering": false,
+  "LightInfluence": 0,
+  "MaxConcurrentParticles": 1,
+  "ParticleLifeSpan": {
+    "Min": 0.1,
+    "Max": 0.1
+  },
+  "ParticleRotateWithSpawner": true,
+  "SpawnRate": {
+    "Min": 100.0,
+    "Max": 100.0
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Circles/Portal_Runic_128.png",
+    "ScaleRatioConstraint": "None",
+    "Animation": {
+      "0": {
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Opacity": 1.0
+      },
+      "50": {
+        "Opacity": 1
+      },
+      "100": {
+        "Opacity": 1.0,
+        "Rotation": {
+          "Z": {
+            "Min": 10,
+            "Max": 10
+          }
+        }
+      }
+    },
+    "InitialAnimationFrame": {
+      "Opacity": 1,
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 0
+      },
+      "Color": "#4cc2ff",
+      "Scale": {
+        "X": {
+          "Min": 0.15,
+          "Max": 0.15
+        },
+        "Y": {
+          "Max": 0.15,
+          "Min": 0.15
+        }
+      }
+    },
+    "CollisionAnimationFrame": {
+      "Opacity": 1
+    },
+    "UVOption": "RandomFlipUV"
+  },
+  "SpawnBurst": false,
+  "CameraOffset": -0.1,
+  "UVMotion": {
+    "Texture": "Particles/Textures/UVMotion/FlowMap3.png",
+    "SpeedX": 0.08,
+    "Strength": 0.0,
+    "SpeedY": -0.08,
+    "Scale": 1.68
+  },
+  "UseEmitDirection": true
+}

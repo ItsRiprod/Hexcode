@@ -1,12 +1,12 @@
 {
   "RenderMode": "Distortion",
-  "ParticleRotationInfluence": "BillboardVelocity",
+  "ParticleRotationInfluence": "None",
   "LinearFiltering": true,
   "LightInfluence": 0,
-  "MaxConcurrentParticles": 10,
+  "MaxConcurrentParticles": 20,
   "ParticleLifeSpan": {
-    "Min": 20,
-    "Max": 20
+    "Min": 1,
+    "Max": 1
   },
   "SpawnBurst": false,
   "TotalParticles": {
@@ -22,21 +22,7 @@
     "ScaleRatioConstraint": "OneToOne",
     "Animation": {
       "0": {
-        "Opacity": 0.7,
-        "Rotation": {
-          "Y": {
-            "Min": 0,
-            "Max": 0
-          },
-          "Z": {
-            "Min": 0,
-            "Max": 0
-          },
-          "X": {
-            "Max": 0,
-            "Min": 0
-          }
-        }
+        "Opacity": 0.7
       },
       "100": {
         "Scale": {
@@ -52,39 +38,37 @@
         "Opacity": 0.7
       }
     },
+    "SoftParticles": "Enable",
     "InitialAnimationFrame": {
       "Rotation": {
-        "Z": {
-          "Max": 90
+        "X": {
+          "Min": 0
         },
         "Y": {
-          "Max": 90
-        },
-        "X": {
+          "Min": 90,
           "Max": 90
         }
       }
-    },
-    "SoftParticles": "Enable"
+    }
   },
   "InitialVelocity": {
     "Speed": {
       "Min": 80,
-      "Max": 80
+      "Max": 100
     }
   },
   "Shape": "Cube",
-  "ParticleRotateWithSpawner": false,
-  "ParticleCollision": {
-    "BlockType": "Solid"
-  },
+  "ParticleRotateWithSpawner": true,
   "SpawnRate": {
     "Min": 100,
     "Max": 100
   },
   "WaveDelay": {
-    "Min": 2,
-    "Max": 2
+    "Min": 0.1,
+    "Max": 0.2
   },
-  "UseEmitDirection": false
+  "UseEmitDirection": false,
+  "ParticleCollision": {
+    "BlockType": "Solid"
+  }
 }
