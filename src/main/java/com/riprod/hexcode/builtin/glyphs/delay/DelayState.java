@@ -5,12 +5,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.hypixel.hytale.math.util.MathUtil;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
 import com.riprod.hexcode.core.common.execution.component.HexColors;
 
 public class DelayState implements ConstructState {
 
-    private static final float epsilon = 0.001f;
     private float remainingSeconds;
     private List<String> nextGlyphIds;
     @Nullable
@@ -40,7 +40,7 @@ public class DelayState implements ConstructState {
     }
 
     public boolean isExpired() {
-        return Math.abs(remainingSeconds) <= epsilon;
+        return MathUtil.closeToZero(remainingSeconds);
     }
 
     public List<String> getNextGlyphIds() {

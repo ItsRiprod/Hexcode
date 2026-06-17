@@ -19,8 +19,8 @@ public class BeamStyle {
 
     private static final String GLYPH_ID = "Beam";
     private static final Vector3f DEFAULT_COLOR = new Vector3f(0.4f, 0.2f, 0.67f);
-    private static final double LINE_THICKNESS = 0.12;
-    private static final float LINE_DURATION = 1.5f;
+    private static final double LINE_THICKNESS = 0.02;
+    private static final float LINE_DURATION = 0.4f;
 
     private BeamStyle() {
     }

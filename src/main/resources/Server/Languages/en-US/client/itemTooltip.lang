@@ -1,2 +1,2 @@
-stats.Volatility=Spell Volatility
-stats.Magic_Power=Spell Power
+stats.Volatility=Spell Volatility: {value}
+stats.Magic_Power=Spell Power: {value}

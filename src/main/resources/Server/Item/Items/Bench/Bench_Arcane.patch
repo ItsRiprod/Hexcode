@@ -3,6 +3,7 @@
     "Bench": {
       "Categories+": [
         {
+          "$Match": "Id",
           "Id": "Arcane_Hexcode",
           "Icon": "Icons/CraftingCategories/Arcane/Arcane_Hexbook.png",
           "Name": "hexcode.workbench.benchCategories.hex"
