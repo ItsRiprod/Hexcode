@@ -32,7 +32,7 @@ configurations {
 dependencies {
     compileOnly libs.jetbrains.annotations
     compileOnly libs.jspecify
-    shadowBundle('curse.maven:patchly-1550889:8188362')
+    shadowBundle('curse.maven:patchly-1550889:8282627')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.3'
 }
@@ -58,6 +58,23 @@ hytaleTools {
     debugSuspend = false
 
     requireDcevm = true
+
+    // The bonus extras
+    subPlugin("Hextras", "com.riprod.hexcode.builtin.hextras.HextrasPlugin", false, false)
+    // The survival plugin
+    subPlugin("Hextreme", "com.riprod.hexcode.builtin.hextreme.HextremePlugin", false, false)
+    // Imbuements / Block Imbuements / Item Imbuements
+    subPlugin("Imbued", "com.riprod.hexcode.builtin.imbued.ImbuedPlugin", false, false)
+    // The base hexcode glyphs + styles + assets
+    subPlugin("HexCore", "com.riprod.hexcode.builtin.hexCore.HexCorePlugin", false, false)
+    // The ritual-casting plugin
+    subPlugin("Ritualistic", "com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin", true, false)
+    // The ultimate compatibility pack between hexcode and every-other plugin in existence
+    subPlugin("Hexability", "com.riprod.hexcode.builtin.hexability.HexabilityPlugin", true, false)
+    // The ultimate compatibility pack between hexcode and every-other plugin in existence
+    subPlugin("Hexomate", "com.riprod.hexcode.builtin.hexomate.HexomatePlugin", true, false)
+    // The debug code
+    subPlugin("Counterspell", "com.riprod.hexcode.builtin.counterspell.CounterspellPlugin", true, false)
 } 
 
 shadowJar {

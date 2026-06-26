@@ -1,19 +1,5 @@
 package com.riprod.hexcode;
 
-import com.riprod.hexcode.builtin.BuiltinPlugin;
-import com.riprod.hexcode.builtin.eventListeners.CraftingNotificationListener;
-import com.riprod.hexcode.builtin.eventListeners.FizzleMessageListener;
-import com.riprod.hexcode.builtin.eventListeners.GlyphDiagnosticListener;
-import com.riprod.hexcode.builtin.eventListeners.HexCastDiagnosticListener;
-import com.riprod.hexcode.builtin.eventListeners.HexStateDiagnosticListener;
-import com.riprod.hexcode.builtin.glyphs.levitate.LevitateStackComponent;
-import com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileBounceInteraction;
-import com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileHitInteraction;
-import com.riprod.hexcode.builtin.glyphs.projectile.interaction.HexProjectileMissInteraction;
-import com.riprod.hexcode.builtin.glyphs.scale.components.ScaleStackComponent;
-import com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterBounceInteraction;
-import com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterHitInteraction;
-import com.riprod.hexcode.builtin.glyphs.shatter.interaction.HexShatterMissInteraction;
 import com.riprod.hexcode.command.HexcodeCommand;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.construct.system.MountOrphanReaperSystem;
@@ -34,7 +20,6 @@ import com.riprod.hexcode.core.common.execution.queue.HexDrainEventSystem;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionTickSystem;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
-import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconStore;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotStyleAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
@@ -81,6 +66,8 @@ import com.riprod.hexcode.core.state.crafting.handlers.node.NodeRouter;
 import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.state.crafting.session.SessionTickSystem;
 import com.riprod.hexcode.core.state.idle.IdleSystem;
+import com.riprod.hexcode.core.common.memories.GlyphMemory;
+import com.riprod.hexcode.core.common.memories.GlyphMemoryProvider;
 import com.riprod.hexcode.interaction.HexStateChange;
 import com.riprod.hexcode.interaction.HexHold;
 import com.riprod.hexcode.interaction.HexMode;
@@ -99,10 +86,6 @@ import java.util.function.Consumer;
 
 import com.hypixel.hytale.assetstore.AssetRegistry;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
-import com.hypixel.hytale.event.EventPriority;
-import com.hypixel.hytale.server.core.asset.AssetPackRegisterEvent;
-import com.hypixel.hytale.server.core.asset.AssetPackUnregisterEvent;
-import com.hypixel.hytale.server.core.asset.LoadAssetEvent;
 import com.hypixel.hytale.builtin.asseteditor.AssetEditorPlugin;
 import com.hypixel.hytale.builtin.asseteditor.event.AssetEditorRequestDataSetEvent;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
@@ -122,16 +105,8 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore;
 import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
-import com.riprod.hexcode.api.event.CraftingEvent;
-import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.api.event.GlyphDrawnEvent;
-import com.riprod.hexcode.builtin.eventListeners.GlyphDrawNotificationListener;
-import com.riprod.hexcode.builtin.eventListeners.GlyphMemoryListener;
-import com.riprod.hexcode.core.common.memories.GlyphMemory;
-import com.riprod.hexcode.core.common.memories.GlyphMemoryProvider;
 import com.hypixel.hytale.builtin.adventure.memories.MemoriesPlugin;
 import com.hypixel.hytale.builtin.adventure.memories.memories.Memory;
-import com.riprod.hexcode.api.event.HexStateChangeEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
@@ -142,7 +117,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public class Hexcode extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private BuiltinPlugin builtinPlugin;
     private final PatchManager patchManager;
 
     public Hexcode(JavaPluginInit init) {
@@ -150,8 +124,6 @@ public class Hexcode extends JavaPlugin {
         patchManager = new PatchManager(this); // setup patchly
         LOGGER.atInfo().log("Hexcode spell-crafting mod v%s initializing...",
                 this.getManifest().getVersion().toString());
-
-        builtinPlugin = new BuiltinPlugin(init);
     }
 
     @Override
@@ -170,7 +142,6 @@ public class Hexcode extends JavaPlugin {
         this.registerInteractions();
         this.registerEvents();
         this.registerCommands();
-        this.registerExternal();
 
         LOGGER.atInfo().log("Hexcode %s setup complete!", this.getManifest().getVersion().toString());
     }
@@ -344,16 +315,6 @@ public class Hexcode extends JavaPlugin {
                 .registerComponent(DebugComponent.class, DebugComponent::new);
         DebugComponent.setComponentType(debugComponentType);
 
-        ComponentType<EntityStore, ScaleStackComponent> scaleStackComponentType = entityStoreRegistry
-                .registerComponent(ScaleStackComponent.class, "ScaleStack",
-                        ScaleStackComponent.CODEC);
-        ScaleStackComponent.setComponentType(scaleStackComponentType);
-
-        ComponentType<EntityStore, LevitateStackComponent> levitateStackComponentType = entityStoreRegistry
-                .registerComponent(LevitateStackComponent.class, "LevitateStack",
-                        LevitateStackComponent.CODEC);
-        LevitateStackComponent.setComponentType(levitateStackComponentType);
-
         entityStoreRegistry.registerSystem(new HexTick());
         entityStoreRegistry.registerSystem(new PedestalBlockEvent());
         entityStoreRegistry.registerSystem(new ObeliskBreakEvent());
@@ -363,7 +324,6 @@ public class Hexcode extends JavaPlugin {
         entityStoreRegistry.registerSystem(new GlyphEffectSystem());
         entityStoreRegistry.registerSystem(new HexCastEventSystem());
         entityStoreRegistry.registerSystem(new FireTriggerSystem());
-        entityStoreRegistry.registerSystem(new HexCastDiagnosticListener());
         entityStoreRegistry.registerSystem(new HexcasterCleanupSystem());
         entityStoreRegistry.registerSystem(new SessionTickSystem());
         entityStoreRegistry.registerSystem(new ImbuedBlockBreakHandler());
@@ -442,7 +402,6 @@ public class Hexcode extends JavaPlugin {
     }
 
     private void registerInteractions() {
-
         Interaction.CODEC.register("HexStateBranch", HexStateBranch.class, HexStateBranch.CODEC);
         Interaction.CODEC.register("HexStateChange", HexStateChange.class, HexStateChange.CODEC);
         Interaction.CODEC.register("HexHold", HexHold.class, HexHold.CODEC);
@@ -453,62 +412,15 @@ public class Hexcode extends JavaPlugin {
         Interaction.CODEC.register("PedestalInteraction", PedestalInteraction.class, PedestalInteraction.CODEC);
         Interaction.CODEC.register("HexItemCondition", HexItemCondition.class, HexItemCondition.CODEC);
         Interaction.CODEC.register("HexAbility", HexAbility.class, HexAbility.CODEC);
-        Interaction.CODEC.register("HexProjectileHit",
-                HexProjectileHitInteraction.class,
-                HexProjectileHitInteraction.CODEC);
-        Interaction.CODEC.register("HexProjectileMiss",
-                HexProjectileMissInteraction.class,
-                HexProjectileMissInteraction.CODEC);
-        Interaction.CODEC.register("HexProjectileBounce",
-                HexProjectileBounceInteraction.class,
-                HexProjectileBounceInteraction.CODEC);
-        Interaction.CODEC.register("HexShatterHit",
-                HexShatterHitInteraction.class,
-                HexShatterHitInteraction.CODEC);
-        Interaction.CODEC.register("HexShatterMiss",
-                HexShatterMissInteraction.class,
-                HexShatterMissInteraction.CODEC);
-        Interaction.CODEC.register("HexShatterBounce",
-                HexShatterBounceInteraction.class,
-                HexShatterBounceInteraction.CODEC);
-
     }
 
     private void registerEvents() {
-
         this.getEventRegistry().registerGlobal(PlayerConnectEvent.class, Hexcode::onPlayerConnect);
         this.getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, Hexcode::onPlayerDisconnect);
-        this.getEventRegistry().registerGlobal(GlyphFizzleEvent.class, new FizzleMessageListener());
-        this.getEventRegistry().registerGlobal(GlyphFizzleEvent.class, new GlyphDiagnosticListener());
-        this.getEventRegistry().registerGlobal(HexStateChangeEvent.class, new HexStateDiagnosticListener());
-        this.getEventRegistry().registerGlobal(CraftingEvent.class, new CraftingNotificationListener());
-        this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphMemoryListener());
-        this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDrawNotificationListener());
-        this.getEventRegistry().register(EventPriority.LAST, LoadAssetEvent.class, e -> {
-            GlyphIconStore.generateMissing(this.getManifest());
-            patchManager.rebuildAndApply("boot:LoadAssetEvent");
-        });
-        this.getEventRegistry().register(AssetPackRegisterEvent.class, e -> {
-            String name = e.getAssetPack().getName();
-            if (PatchManager.isSyntheticOverridePack(name))
-                return;
-            patchManager.rebuildAndApply("packRegister:" + name);
-        });
-        this.getEventRegistry().register(AssetPackUnregisterEvent.class, e -> {
-            String name = e.getAssetPack().getName();
-            if (PatchManager.isSyntheticOverridePack(name))
-                return;
-            patchManager.rebuildAndApply("packUnregister:" + name);
-        });
     }
 
     private void registerCommands() {
-
         this.getCommandRegistry().registerCommand(new HexcodeCommand());
-    }
-
-    private void registerExternal() {
-        this.builtinPlugin.startup();
     }
 
     @Override

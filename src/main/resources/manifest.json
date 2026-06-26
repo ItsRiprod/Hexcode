@@ -1,7 +1,7 @@
 {
     "Group": "Riprod",
     "Name": "Hexcode",
-    "Version": "0.8.6",
+    "Version": "0.9.0",
     "Description": "Magic By Design.",
     "Authors": [
         {
@@ -21,5 +21,63 @@
     "Main": "com.riprod.hexcode.Hexcode",
     "UpdateChecker": {
         "CurseForge": "1414678"
-    }
+    },
+    "SubPlugins": [
+        {
+            "Name": "Hextras",
+            "Main": "com.riprod.hexcode.builtin.hextras.HextrasPlugin",
+            "ServerVersion": ">=0.5.0 <0.6.0",
+            "DisabledByDefault": false,
+            "IncludesAssetPack": false
+        },
+        {
+            "Name": "Hextreme",
+            "Main": "com.riprod.hexcode.builtin.hextreme.HextremePlugin",
+            "ServerVersion": ">=0.5.0 <0.6.0",
+            "DisabledByDefault": false,
+            "IncludesAssetPack": false
+        },
+        {
+            "Name": "Imbued",
+            "Main": "com.riprod.hexcode.builtin.imbued.ImbuedPlugin",
+            "ServerVersion": ">=0.5.0 <0.6.0",
+            "DisabledByDefault": false,
+            "IncludesAssetPack": false
+        },
+        {
+            "Name": "HexCore",
+            "Main": "com.riprod.hexcode.builtin.hexCore.HexCorePlugin",
+            "ServerVersion": ">=0.5.0 <0.6.0",
+            "DisabledByDefault": false,
+            "IncludesAssetPack": false
+        },
+        {
+            "Name": "Ritualistic",
+            "Main": "com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin",
+            "ServerVersion": ">=0.5.0 <0.6.0",
+            "DisabledByDefault": true,
+            "IncludesAssetPack": false
+        },
+        {
+            "Name": "Hexability",
+            "Main": "com.riprod.hexcode.builtin.hexability.HexabilityPlugin",
+            "ServerVersion": ">=0.5.0 <0.6.0",
+            "DisabledByDefault": true,
+            "IncludesAssetPack": false
+        },
+        {
+            "Name": "Hexomate",
+            "Main": "com.riprod.hexcode.builtin.hexomate.HexomatePlugin",
+            "ServerVersion": ">=0.5.0 <0.6.0",
+            "DisabledByDefault": true,
+            "IncludesAssetPack": false
+        },
+        {
+            "Name": "Counterspell",
+            "Main": "com.riprod.hexcode.builtin.counterspell.CounterspellPlugin",
+            "ServerVersion": ">=0.5.0 <0.6.0",
+            "DisabledByDefault": true,
+            "IncludesAssetPack": false
+        }
+    ]
 }

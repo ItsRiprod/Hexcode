@@ -6,15 +6,15 @@
       "Icon": "Icons/ItemCategories/Hexcode.png",
        "SubCategories": [
         {
-          "Id": "Staffs",
+          "Id": "HexStaffs",
           "Name": "server.ui.itemcategory.subcategory.staffs.name",
           "Order": 10,
           "Description": "server.ui.itemcategory.subcategory.staffs.description"
         },
         {
-          "Id": "Books",
+          "Id": "HexBooks",
           "Name": "server.ui.itemcategory.subcategory.books.name",
-          "Order": 20,
+          "Order": 10,
           "Description": "server.ui.itemcategory.subcategory.books.description"
         }
       ]
