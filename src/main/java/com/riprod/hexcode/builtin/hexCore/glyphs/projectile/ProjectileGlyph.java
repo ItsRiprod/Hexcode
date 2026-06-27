@@ -142,11 +142,13 @@ public class ProjectileGlyph implements GlyphHandler {
         Vector3d launchVelocity = new Vector3d(direction).mul(speed);
         ProjectilePhysicsConfig physicsConfig = new ProjectilePhysicsConfig(gravity, bounces);
 
-        Ref<EntityStore> parent = sourceVar instanceof EntityVar var ? var.getRef(hexContext.getAccessor())
-                : hexContext.getCasterRef();
+        var accessor = hexContext.getAccessor();
+
+        Ref<EntityStore> parent = sourceVar instanceof EntityVar var ? var.getRef(accessor)
+                : hexContext.getCasterRef(accessor);
 
         physicsConfig.apply(holder, parent,
-                launchVelocity, hexContext.getAccessor(), false);
+                launchVelocity, accessor, false);
 
         holder.addComponent(DespawnComponent.getComponentType(),
                 new DespawnComponent(hexContext.getAccessor()

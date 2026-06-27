@@ -15,7 +15,7 @@ public interface HexRoot {
     BuilderCodec<HexRoot> BASE_CODEC = BuilderCodec.abstractBuilder(HexRoot.class).build();
 
     boolean isAlive();
-    Ref<EntityStore> getSourceRef();
+    Ref<EntityStore> getSourceRef(ComponentAccessor<EntityStore> accessor);
     void addDependency(HexContext ctx, Ref<EntityStore> ref);
     boolean tryConsumeMana(float cost, ComponentAccessor<EntityStore> accessor);
     float getCurrentMana(ComponentAccessor<EntityStore> accessor);

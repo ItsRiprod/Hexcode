@@ -23,6 +23,8 @@ import com.hypixel.hytale.codec.schema.metadata.ui.UIButton;
 import com.hypixel.hytale.codec.schema.metadata.ui.UICreateButtons;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import javax.annotation.Nullable;
+
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
@@ -44,6 +46,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     protected boolean isReversable = false;
     protected boolean isEnabled = true;
     protected VolatilityAsset volatility = new VolatilityAsset();
+    protected GlyphConfig config;
     protected ArrayList<DrawnShapeComponent> shapes = new ArrayList<>();
     protected LinkedHashMap<String, SlotAsset> slots = new LinkedHashMap<>();
     protected String styleId;
@@ -92,6 +95,11 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
 
     public VolatilityAsset getVolatility() {
         return this.volatility;
+    }
+
+    @Nullable
+    public GlyphConfig getConfig() {
+        return this.config;
     }
 
     public List<DrawnShapeComponent> getShapes() {
@@ -214,6 +222,11 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, v) -> a.volatility = v, a -> a.volatility,
                         (a, p) -> a.volatility = p.volatility)
                 .documentation("The volatility config for the glyph")
+                .add()
+                .appendInherited(new KeyedCodec<>("Config", GlyphConfig.CODEC),
+                        (a, v) -> a.config = v, a -> a.config,
+                        (a, p) -> a.config = p.config)
+                .documentation("Asset-defined tuning config for the glyph")
                 .add()
                 .appendInherited(
                         new KeyedCodec<>("ShapeStructure",

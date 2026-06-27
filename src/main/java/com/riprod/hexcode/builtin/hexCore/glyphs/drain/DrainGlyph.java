@@ -53,7 +53,9 @@ public static final String ID = "Drain";
             return;
         }
 
-        Ref<EntityStore> targetRef = entityVar.getRef(hexContext.getAccessor());
+        var accessor = hexContext.getAccessor();
+
+        Ref<EntityStore> targetRef = entityVar.getRef(accessor);
         if (targetRef == null || !targetRef.isValid()) {
             HexExecuter.fail(glyph, hexContext,
                     GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -82,7 +84,7 @@ public static final String ID = "Drain";
             UUIDComponent srcUuid = hexContext.getAccessor().getComponent(
                     targetRef, UUIDComponent.getComponentType());
             UUIDComponent casterUuid = hexContext.getAccessor().getComponent(
-                    hexContext.getCasterRef(), UUIDComponent.getComponentType());
+                    hexContext.getCasterRef(accessor), UUIDComponent.getComponentType());
             if (srcUuid == null || casterUuid == null
                     || !srcUuid.getUuid().equals(casterUuid.getUuid())) {
                 HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
@@ -91,7 +93,7 @@ public static final String ID = "Drain";
         }
 
         HexVar destVar = glyph.readSlot(DrainGlyphSlots.DESTINATION, hexContext);
-        Ref<EntityStore> destRef = hexContext.getCasterRef();
+        Ref<EntityStore> destRef = hexContext.getCasterRef(accessor);
         EntityVar destEntityVar = HexVarUtil.resolveEntityVar(destVar, hexContext);
         if (destEntityVar != null) {
             Ref<EntityStore> resolved = destEntityVar.getRef(hexContext.getAccessor());

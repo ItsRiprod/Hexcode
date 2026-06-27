@@ -40,7 +40,7 @@ public class DebugGlyph implements GlyphHandler {
     }
 
     private void dump(Glyph glyph, HexContext hexContext) {
-        Ref<EntityStore> casterRef = hexContext.getCasterRef();
+        Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
         if (casterRef == null || !casterRef.isValid())
             return;
         if (hexContext.getAccessor() == null)
@@ -52,8 +52,8 @@ public class DebugGlyph implements GlyphHandler {
         StringBuilder sb = new StringBuilder();
 
         float mana = hexContext.getHexRoot().getCurrentMana(hexContext.getAccessor());
-        float maxVol = hexContext.getVolatilityTracker().getStartingBudget();
-        float curVol = hexContext.getVolatilityTracker().getRemainingBudget();
+        float maxVol = hexContext.getVolatilityTracker().getInitialVolatility();
+        float curVol = hexContext.getVolatilityTracker().getCurrentVolatility();
         sb.append(String.format("Mana: %.1f\n", mana));
         sb.append(String.format("Volatility: %.1f / %.1f\n", curVol, maxVol));
 

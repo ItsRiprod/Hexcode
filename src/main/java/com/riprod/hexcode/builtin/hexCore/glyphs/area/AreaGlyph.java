@@ -19,10 +19,11 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.area.style.AreaStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -40,22 +41,19 @@ public class AreaGlyph implements GlyphHandler {
     public static final String ID = "Area";
 
     private static final double DEFAULT_RADIUS = 5.0;
-    private static final float VOLATILITY_COST_MULTIPLIER = 1.67f;
 
     @Override
     public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        VolatilityTracker tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getVolatilityTracker();
         if (tracker == null) return true;
 
         double radius = HexVarUtil.numberOrDefault(
                 glyph.readSlot(AreaGlyphSlots.RADIUS, hexContext), DEFAULT_RADIUS);
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        float areaScale = computeAreaScale(GlyphHandler.sphereVolume(radius), asset);
-
-        float cost = VolatilityTracker.computeGlyphCost(glyph)
-                * VOLATILITY_COST_MULTIPLIER * areaScale;
-        if (cost <= 0) return true;
-        return tracker.consumeVolatility(cost);
+        Impact impact = asset == null || asset.getConfig() == null
+                ? null : asset.getConfig().getImpact();
+        float cost = glyph.computeBaseCost() * Impact.scale(impact, radius);
+        return tracker.consumeVolatility(cost) > 0f;
     }
 
     @Override
@@ -114,7 +112,7 @@ public class AreaGlyph implements GlyphHandler {
 
     private List<PersistentRef> gatherEntities(Vector3d center, double radius, HexContext hexContext) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        Ref<EntityStore> casterRef = hexContext.getCasterRef();
+        Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
         List<PersistentRef> gathered = new ArrayList<>();
 
         List<Ref<EntityStore>> nearby = TargetUtil.getAllEntitiesInSphere(center, radius, accessor);

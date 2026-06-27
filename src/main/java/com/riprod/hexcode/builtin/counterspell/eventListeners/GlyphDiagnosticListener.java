@@ -20,7 +20,7 @@ public class GlyphDiagnosticListener implements Consumer<GlyphFizzleEvent> {
         HexContext ctx = event.getCtx();
         Ref<EntityStore> caster = null;
         if (ctx != null && ctx.getHexRoot() != null) {
-            caster = ctx.getHexRoot().getSourceRef();
+            caster = ctx.getHexRoot().getSourceRef(event.getCtx().getAccessor());
         }
         String casterStr = caster != null ? caster.toString() : "<null>";
         String detail = event.getDetail();

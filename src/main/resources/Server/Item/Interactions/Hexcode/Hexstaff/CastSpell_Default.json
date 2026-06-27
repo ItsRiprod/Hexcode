@@ -1,0 +1,103 @@
+{
+  "Type": "Charging",
+  "Forks": {
+    "Primary": "Draw"
+  },
+  "CancelOnItemChange": true,
+  "AllowIndefiniteHold": true,
+  "Effects": {
+    "ItemAnimationId": "HexCrafting_Enter",
+    "ClearAnimationOnFinish": true
+  },
+  "CancelOnOtherClick": false,
+  "Next": {
+    "0.0": {
+      "Type": "StatsCondition",
+      "Costs": {
+        "Stamina": 5
+      },
+      "Next": {
+        "Type": "Serial",
+        "Interactions": [
+          {
+            "Type": "ChangeStat",
+            "StatModifiers": {
+              "Stamina": -5
+            }
+          },
+          {
+            "Type": "HexExecute",
+            "Config": {
+              "HexStorageType": "StaffConfig",
+              "HexStats": {
+                "InitialVolatility": 30,
+                "VolatilityMultiplier": 1.0
+              }
+            }
+          }
+        ]
+      },
+      "Failed": "Stamina_Bar_Flash"
+    },
+    "0.8": {
+      "Type": "StatsCondition",
+      "Costs": {
+        "Stamina": 7
+      },
+      "Next": {
+        "Type": "Serial",
+        "Interactions": [
+          {
+            "Type": "ChangeStat",
+            "StatModifiers": {
+              "Stamina": -7
+            }
+          },
+          {
+            "Type": "HexExecute",
+            "Config": {
+              "HexStorageType": "StaffConfig",
+              "HexStats": {
+                "InitialVolatility": 55,
+                "VolatilityMultiplier": 1.0
+              }
+            }
+          }
+        ]
+      },
+      "Failed": "Stamina_Bar_Flash"
+    },
+    "1.6": {
+      "Type": "StatsCondition",
+      "Costs": {
+        "Stamina": 10
+      },
+      "Next": {
+        "Type": "Serial",
+        "Interactions": [
+          {
+            "Type": "ChangeStat",
+            "StatModifiers": {
+              "Stamina": -10
+            }
+          },
+          {
+            "Type": "HexExecute",
+            "Config": {
+              "HexStorageType": "StaffConfig",
+              "HexStats": {
+                "InitialVolatility": 80,
+                "VolatilityMultiplier": 1.0
+              }
+            }
+          }
+        ]
+      },
+      "Failed": "Stamina_Bar_Flash"
+    }
+  },
+  "Failed": {
+    "Type": "Interrupt",
+    "Entity": "Owner"
+  }
+}

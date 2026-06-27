@@ -68,7 +68,7 @@ public class ArcGlyph implements GlyphHandler {
 
         Set<UUID> visited = new HashSet<>();
         UUIDComponent casterUuid = accessor.getComponent(
-                hexContext.getCasterRef(), UUIDComponent.getComponentType());
+                hexContext.getCasterRef(accessor), UUIDComponent.getComponentType());
         if (casterUuid != null) visited.add(casterUuid.getUuid());
 
         UUIDComponent originUuid = accessor.getComponent(

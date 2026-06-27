@@ -40,10 +40,11 @@ public abstract class AbstractTriggerGlyph implements GlyphHandler {
     }
 
     protected Ref<EntityStore> resolveSubject(Glyph glyph, HexContext hexContext) {
-        Ref<EntityStore> caster = hexContext.getCasterRef();
+        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
         HexVar slotZero = hexContext.getDefaultVariable();
         if (slotZero instanceof EntityVar ev) {
-            Ref<EntityStore> r = ev.getRef(hexContext.getAccessor());
+            Ref<EntityStore> r = ev.getRef(accessor);
             if (r != null && r.isValid()) return r;
         }
         return caster;
@@ -51,8 +52,8 @@ public abstract class AbstractTriggerGlyph implements GlyphHandler {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        CommandBuffer<EntityStore> buffer = hexContext.getAccessor();
-        Ref<EntityStore> caster = hexContext.getCasterRef();
+        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
         if (caster == null || !caster.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED, "trigger has no caster");
             return;
@@ -63,7 +64,7 @@ public abstract class AbstractTriggerGlyph implements GlyphHandler {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED, "trigger subject invalid");
             return;
         }
-        UUIDComponent subjectUuidComp = buffer.getComponent(subject, UUIDComponent.getComponentType());
+        UUIDComponent subjectUuidComp = accessor.getComponent(subject, UUIDComponent.getComponentType());
         if (subjectUuidComp == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED, "trigger subject has no UUID");
             return;
@@ -79,16 +80,16 @@ public abstract class AbstractTriggerGlyph implements GlyphHandler {
 
         HexStatus<TriggerState> construct = new HexStatus<>(
                 TriggerConstructHandler.HANDLER_ID, hexContext, effectId, glyph, state);
-        HexEffectsComponent existing = buffer.getComponent(caster, HexEffectsComponent.getComponentType());
+        HexEffectsComponent existing = accessor.getComponent(caster, HexEffectsComponent.getComponentType());
         if (existing != null) {
             existing.addEffect(effectId, construct);
         } else {
             HexEffectsComponent fresh = new HexEffectsComponent();
             fresh.addEffect(effectId, construct);
-            buffer.putComponent(caster, HexEffectsComponent.getComponentType(), fresh);
+            accessor.putComponent(caster, HexEffectsComponent.getComponentType(), fresh);
         }
 
-        TriggerListenerRegistry registry = buffer.getResource(TriggerListenerRegistry.getResourceType());
+        TriggerListenerRegistry registry = accessor.getResource(TriggerListenerRegistry.getResourceType());
         if (registry == null) {
             LOGGER.atSevere().log("trigger registry resource missing for key %s", triggerKey());
             return;
@@ -99,6 +100,6 @@ public abstract class AbstractTriggerGlyph implements GlyphHandler {
                 subscriptionId, triggerKey(), subjectUuid, subject, caster, null, callback, true);
         registry.subscribe(sub);
 
-        buffer.putComponent(subject, TriggerListenerComponent.getComponentType(), new TriggerListenerComponent());
+        accessor.putComponent(subject, TriggerListenerComponent.getComponentType(), new TriggerListenerComponent());
     }
 }

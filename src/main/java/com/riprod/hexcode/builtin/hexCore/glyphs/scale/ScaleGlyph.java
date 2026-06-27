@@ -28,7 +28,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.scale.components.ScaleStackComp
 import com.riprod.hexcode.builtin.hexCore.glyphs.scale.components.ScaleState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.scale.style.ScaleStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -58,10 +58,10 @@ public class ScaleGlyph implements GlyphHandler {
 
     @Override
     public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        VolatilityTracker tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getVolatilityTracker();
         if (tracker == null)
             return true;
-        float baseCost = VolatilityTracker.computeGlyphCost(glyph);
+        float baseCost = glyph.computeBaseCost();
         if (baseCost <= 0)
             return true;
 
@@ -75,7 +75,7 @@ public class ScaleGlyph implements GlyphHandler {
         double factor = Math.expm1(K_GROWTH * (resultScale - 1.0));
         float cost = (float) Math.max(baseCost, baseCost * factor);
 
-        return tracker.consumeVolatility(cost);
+        return tracker.consumeVolatility(cost) > 0f;
     }
 
     private float readCurrentScale(Glyph glyph, HexContext hexContext) {

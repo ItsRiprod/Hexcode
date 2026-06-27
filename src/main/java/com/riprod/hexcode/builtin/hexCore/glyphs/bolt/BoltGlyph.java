@@ -24,17 +24,16 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.api.imbuement.ImbuedBlockActivator;
 import com.riprod.hexcode.builtin.hexCore.glyphs.bolt.style.BoltStyle;
-import com.riprod.hexcode.builtin.hexCore.glyphs.force.ForceGlyphSlots;
-import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class BoltGlyph implements GlyphHandler {
@@ -51,7 +50,7 @@ public class BoltGlyph implements GlyphHandler {
 
     @Override
     public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        VolatilityTracker tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getVolatilityTracker();
         if (tracker == null)
             return true;
 
@@ -59,10 +58,10 @@ public class BoltGlyph implements GlyphHandler {
         double magnitude = HexVarUtil.numberOrDefault(magInput, 15.0);
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        float areaScale = computeAreaScale(magnitude, asset);
-
-        float cost = VolatilityTracker.computeGlyphCost(glyph) * areaScale;
-        return tracker.consumeVolatility(cost);
+        Impact impact = asset == null || asset.getConfig() == null
+                ? null : asset.getConfig().getImpact();
+        float cost = glyph.computeBaseCost() * Impact.scale(impact, magnitude);
+        return tracker.consumeVolatility(cost) > 0f;
     }
 
     @Override
@@ -139,7 +138,7 @@ public class BoltGlyph implements GlyphHandler {
 
         ImbuedBlockActivator.ActivationOutcome outcome = ImbuedBlockActivator.tryConsume(world, blockPos);
         if (!outcome.isReady()) {
-            triggerBlockInteraction(accessor, hexContext.getCasterRef(), world, blockPos);
+            triggerBlockInteraction(accessor, hexContext.getCasterRef(accessor), world, blockPos);
         }
 
         glyph.writeOutput(new BlockVar(blockPos), hexContext);

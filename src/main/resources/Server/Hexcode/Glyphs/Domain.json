@@ -60,10 +60,16 @@
   },
   "Volatility": {
     "InstantCost": 10,
-    "DrainPerSecond": 0.5,
-    "AreaTax": {
+    "DrainPerSecond": 0.5
+  },
+  "Config": {
+    "Type": "Basic",
+    "Impact": {
+      "Type": "SphereVolume",
       "DefaultMagnitude": 1500.0,
-      "Exponent": 0.6667
+      "Exponent": 0.6667,
+      "ClampMin": 2.0,
+      "ClampMax": 15.0
     }
   },
   "Style": {

@@ -44,14 +44,26 @@
       "Label": "hexcode.glyphs.Ensnare.radius.name",
       "Description": "hexcode.glyphs.Ensnare.radius.description",
       "DefaultValue": 2.1,
-      "Unique": true
+      "Unique": true,
+      "Impact": {
+        "Type": "Threshold",
+        "Reference": 3.0,
+        "Threshold": 8.0,
+        "Exponent": 2.0
+      }
     },
     "damage": {
       "Style": "Input",
       "Label": "hexcode.glyphs.Ensnare.damage.name",
       "Description": "hexcode.glyphs.Ensnare.damage.description",
       "DefaultValue": 3,
-      "Unique": true
+      "Unique": true,
+      "Impact": {
+        "Type": "Threshold",
+        "Reference": 8.0,
+        "Threshold": 25.0,
+        "Exponent": 2.0
+      }
     },
     "duration": {
       "Style": "Input",
@@ -68,5 +80,6 @@
   },
   "Volatility": {
     "InstantCost": 4,
-    "DrainPerSecond": 0.15}
+    "DrainPerSecond": 0.15
+  }
 }

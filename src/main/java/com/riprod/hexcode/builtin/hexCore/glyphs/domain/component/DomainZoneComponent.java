@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.Component;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -123,7 +124,7 @@ public class DomainZoneComponent implements Component<EntityStore> {
     }
 
     @Nullable
-    public Ref<EntityStore> getCasterRef() {
+    public Ref<EntityStore> getCasterRef(ComponentAccessor<EntityStore> accessor) {
         return casterRef;
     }
 

@@ -21,7 +21,7 @@ public class IsHoldingValue implements GlyphHandler {
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
-        Ref<EntityStore> casterRef = hexContext.getCasterRef();
+        Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
         if (casterRef == null || !casterRef.isValid() || hexContext.getAccessor() == null) {
             return new NumberVar(0.0);
         }

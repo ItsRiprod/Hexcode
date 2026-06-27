@@ -2,11 +2,9 @@ package com.riprod.hexcode.core.common.drawing.interactions;
 
 import javax.annotation.Nonnull;
 
-import com.hypixel.hytale.codec.Codec;
-import com.hypixel.hytale.codec.KeyedCodec;
-import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.InteractionSyncData;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.WaitForDataFrom;
@@ -22,16 +20,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 /** @deprecated - in progress and deferred for the time being */
 public class HexDrawMode extends ChargingInteraction {
-
-    @Nonnull
-    public static final BuilderCodec<HexDrawMode> CODEC = BuilderCodec
-            .builder(HexDrawMode.class, HexDrawMode::new, ChargingInteraction.ABSTRACT_CODEC)
-            .appendInherited(new KeyedCodec<>("AllowIndefiniteHold", Codec.BOOLEAN),
-                    (i, s) -> i.allowIndefiniteHold = s,
-                    i -> i.allowIndefiniteHold,
-                    (i, p) -> i.allowIndefiniteHold = p.allowIndefiniteHold)
-            .add()
-            .build();
+    private static HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     private static final float COMMIT_DELAY = 5.0F;
     private static final float NO_DEADLINE = -1.0F;
@@ -64,6 +53,7 @@ public class HexDrawMode extends ChargingInteraction {
             if (strokes > store.getMetaObject(LAST_STROKE_COUNT)) {
                 store.putMetaObject(LAST_STROKE_COUNT, strokes);
                 store.putMetaObject(COMMIT_DEADLINE, time + COMMIT_DELAY);
+                LOGGER.atInfo().log("HexDrawMode: stroke count increased to %d, commit deadline set to %.2f", strokes, time + COMMIT_DELAY);
             }
         }
 

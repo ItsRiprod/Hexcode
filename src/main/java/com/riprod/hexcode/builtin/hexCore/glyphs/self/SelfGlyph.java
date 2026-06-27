@@ -19,7 +19,7 @@ public String getId() { return ID; };
 public static final String ID = "Self";
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
-        Ref<EntityStore> playerRef = hexContext.getCasterRef();
+        Ref<EntityStore> playerRef = hexContext.getCasterRef(hexContext.getAccessor());
         if (playerRef == null || !playerRef.isValid()) return null;
 
         UUIDComponent uuidComponent = hexContext.getAccessor().getComponent(playerRef, UUIDComponent.getComponentType());

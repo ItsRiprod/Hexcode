@@ -50,10 +50,15 @@
   },
   "Volatility": {
     "InstantCost": 3,
-    "DrainPerSecond": 0.0,
-    "AreaTax": {
+    "DrainPerSecond": 0.0
+  },
+  "Config": {
+    "Type": "Basic",
+    "Impact": {
+      "Type": "SphereVolume",
       "DefaultMagnitude": 1500.0,
-      "Exponent": 0.6667
+      "Exponent": 0.6667,
+      "Multiplier": 1.67
     }
   }
 }

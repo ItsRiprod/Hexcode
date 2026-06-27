@@ -58,9 +58,9 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
     private boolean holdingPrimary = false;
     private Map<UUID, List<Ref<EntityStore>>> dependencies = new HashMap<>();
 
-    private transient List<VolatilityTracker> activeTrackers = new ArrayList<>();
+    private transient List<HexStats> activeTrackers = new ArrayList<>();
 
-    public void registerActiveTracker(VolatilityTracker tracker) {
+    public void registerActiveTracker(HexStats tracker) {
         if (activeTrackers == null)
             activeTrackers = new ArrayList<>();
         if (tracker == null)
@@ -72,14 +72,14 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
     public void pruneCompletedTrackers() {
         if (activeTrackers == null || activeTrackers.isEmpty())
             return;
-        activeTrackers.removeIf(t -> t == null || t.getRemainingBudget() <= 0f);
+        activeTrackers.removeIf(t -> t == null || t.getCurrentVolatility() <= 0f);
     }
 
     public int getActiveCount() {
         pruneCompletedTrackers();
         if (activeTrackers == null) return 0;
         int n = 0;
-        for (VolatilityTracker t : activeTrackers) {
+        for (HexStats t : activeTrackers) {
             if (t != null && t.getSlotKey() == null) n++;
         }
         return n;
@@ -89,10 +89,10 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
         if (activeTrackers == null || activeTrackers.isEmpty())
             return;
         for (int i = 0; i < activeTrackers.size(); i++) {
-            VolatilityTracker t = activeTrackers.get(i);
+            HexStats t = activeTrackers.get(i);
             if (t != null && t.getSlotKey() == null) {
                 activeTrackers.remove(i);
-                t.setBudget(0f);
+                t.setVolatility(0f);
                 UUID execId = t.getExecutionId();
                 if (execId != null) dependencies.remove(execId);
                 return;
@@ -103,17 +103,17 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
     public void fizzleSlot(@Nonnull String slotKey) {
         if (activeTrackers == null || activeTrackers.isEmpty()) return;
         pruneCompletedTrackers();
-        for (VolatilityTracker t : activeTrackers) {
+        for (HexStats t : activeTrackers) {
             if (t == null) continue;
-            if (slotKey.equals(t.getSlotKey()) && t.getRemainingBudget() > 0f) {
-                t.setBudget(0f);
+            if (slotKey.equals(t.getSlotKey()) && t.getCurrentVolatility() > 0f) {
+                t.setVolatility(0f);
                 UUID execId = t.getExecutionId();
                 if (execId != null) dependencies.remove(execId);
             }
         }
     }
 
-    public List<VolatilityTracker> getActiveTrackers() {
+    public List<HexStats> getActiveTrackers() {
         if (activeTrackers == null)
             activeTrackers = new ArrayList<>();
         return activeTrackers;
@@ -122,12 +122,12 @@ public class HexcasterIdleComponent implements Component<EntityStore> {
     public void cancelAll(Ref<EntityStore> casterRef) {
         if (activeTrackers == null || activeTrackers.isEmpty())
             return;
-        for (VolatilityTracker tracker : new ArrayList<>(activeTrackers)) {
+        for (HexStats tracker : new ArrayList<>(activeTrackers)) {
             if (tracker == null)
                 continue;
-            if (tracker.getRemainingBudget() <= 0f)
+            if (tracker.getCurrentVolatility() <= 0f)
                 continue;
-            tracker.setBudget(0f);
+            tracker.setVolatility(0f);
         }
     }
 

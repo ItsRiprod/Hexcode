@@ -22,7 +22,8 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -36,9 +37,6 @@ public class PhaseGlyph implements GlyphHandler {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
-    private float minIntensity = 1.0f;
-    private float maxIntensity = 15.0f;
-
     @Override
     public String getId() {
         return ID;
@@ -48,7 +46,7 @@ public class PhaseGlyph implements GlyphHandler {
 
     @Override
     public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        VolatilityTracker tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getVolatilityTracker();
         if (tracker == null)
             return true;
 
@@ -58,15 +56,15 @@ public class PhaseGlyph implements GlyphHandler {
             return true;
         }
 
-        double intensity = clamp(HexVarUtil.numberOrDefault(
+        double intensity = HexVarUtil.numberOrDefault(
                 glyph.readSlot(PhaseGlyphSlots.INTENSITY, hexContext),
-                asset.getSlot(PhaseGlyphSlots.INTENSITY).getDefaultValue()),
-                minIntensity, maxIntensity);
-        float intensityScale = (float) Math.max(1.0,
-                intensity / asset.getSlot(PhaseGlyphSlots.INTENSITY).getDefaultValue());
+                asset.getSlot(PhaseGlyphSlots.INTENSITY).getDefaultValue());
 
-        float cost = VolatilityTracker.computeGlyphCost(glyph) * intensityScale;
-        return tracker.consumeVolatility(cost);
+        GlyphConfig config = asset.getConfig();
+        float intensityScale = Impact.scale(config == null ? null : config.getImpact(), intensity);
+
+        float cost = glyph.computeBaseCost() * intensityScale;
+        return tracker.consumeVolatility(cost) > 0f;
     }
 
     @Override
@@ -177,9 +175,5 @@ public class PhaseGlyph implements GlyphHandler {
         if (breaking == null)
             return 0;
         return breaking.getQuality();
-    }
-
-    private static double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(max, value));
     }
 }

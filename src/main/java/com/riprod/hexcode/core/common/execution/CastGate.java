@@ -11,7 +11,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 
 public final class CastGate {
 
@@ -30,13 +30,13 @@ public final class CastGate {
         if (!(context.getHexRoot() instanceof PlayerHexRoot playerRoot)) {
             return true;
         }
-        Ref<EntityStore> casterRef = playerRoot.getSourceRef();
+        Ref<EntityStore> casterRef = playerRoot.getSourceRef(buffer);
         if (casterRef == null || !casterRef.isValid()) return true;
 
         HexcasterIdleComponent idle = buffer.getComponent(casterRef, HexcasterIdleComponent.getComponentType());
         if (idle == null) return true;
 
-        VolatilityTracker tracker = context.getVolatilityTracker();
+        HexStats tracker = context.getVolatilityTracker();
         if (tracker == null) return true;
 
         String slotKey = context.getCastSlotKey();
@@ -53,8 +53,8 @@ public final class CastGate {
             }
             float volMax = playerRoot.resolveVolatility(buffer);
             float startingBudget = Math.max(0f, volMax - idle.getCumulativeDecay());
-            tracker.setBudget(startingBudget);
-            tracker.setStartingBudget(startingBudget);
+            tracker.setVolatility(startingBudget);
+            tracker.setInitialVolatility(startingBudget);
             idle.advanceCast(context.getCastDecayRate(), volMax);
         } else {
             idle.fizzleSlot(slotKey);

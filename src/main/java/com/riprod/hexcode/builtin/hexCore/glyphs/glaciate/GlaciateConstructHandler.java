@@ -73,7 +73,7 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         List<Ref<EntityStore>> found = TargetUtil.getAllEntitiesInSphere(
                 center, glaciate.getDamageRadius(), ctx.getBuffer());
 
-        Ref<EntityStore> casterRef = status.getHexContext().getCasterRef();
+        Ref<EntityStore> casterRef = status.getHexContext().getCasterRef(ctx.getBuffer());
         GlaciateState state = status.getState();
         List<String> nextLinks = state != null ? state.getNextGlyphIds() : List.of();
 

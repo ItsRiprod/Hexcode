@@ -119,8 +119,10 @@ public static final String ID = "Glaciate";
             ModelAsset modelAsset, HitboxCollisionConfig collisionConfig) {
         Model model = Model.createScaledModel(modelAsset, ICE_SCALE);
 
+        var accessor = hexContext.getAccessor();
+
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
-                hexContext.getAccessor(), hexContext, glyph, GlaciateGlyph.ID, new Vector3d(spawnPos),
+                accessor, hexContext, glyph, GlaciateGlyph.ID, new Vector3d(spawnPos),
                 new GlaciateState(glyph.getNextLinks()));
 
         Rotation3f rotation = new Rotation3f();
@@ -145,10 +147,10 @@ public static final String ID = "Glaciate";
         holder.addComponent(GlaciateComponent.getComponentType(),
                 new GlaciateComponent(DEFAULT_DAMAGE_RADIUS, DEFAULT_DAMAGE_MULTIPLIER, duration));
 
-        GlaciatePhysicsConfig.INSTANCE.apply(holder, hexContext.getCasterRef(),
-                new Vector3d(), hexContext.getAccessor(), false);
+        GlaciatePhysicsConfig.INSTANCE.apply(holder, hexContext.getCasterRef(accessor),
+                new Vector3d(), accessor, false);
 
-        Ref<EntityStore> iceRef = hexContext.getAccessor().addEntity(holder, AddReason.SPAWN);
+        Ref<EntityStore> iceRef = accessor.addEntity(holder, AddReason.SPAWN);
 
         UUIDComponent iceUuidComp = holder.getComponent(UUIDComponent.getComponentType());
         UUID iceUuid = iceUuidComp != null ? iceUuidComp.getUuid() : UUID.randomUUID();
@@ -156,6 +158,6 @@ public static final String ID = "Glaciate";
 
         hexContext.getHexRoot().addDependency(hexContext, iceRef);
 
-        GlaciateStyle.renderSpawn(spawnPos, hexContext, hexContext.getAccessor());
+        GlaciateStyle.renderSpawn(spawnPos, hexContext, accessor);
     }
 }

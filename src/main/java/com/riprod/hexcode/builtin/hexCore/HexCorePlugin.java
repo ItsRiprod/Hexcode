@@ -15,6 +15,9 @@ import com.riprod.hexcode.builtin.hexCore.eventListeners.CraftingNotificationLis
 import com.riprod.hexcode.builtin.hexCore.eventListeners.FizzleMessageListener;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphDrawNotificationListener;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphMemoryListener;
+import com.riprod.hexcode.builtin.hexCore.execution.config.EncodedConfig;
+import com.riprod.hexcode.builtin.hexCore.config.BasicConfig;
+import com.riprod.hexcode.builtin.hexCore.execution.config.StaffConfig;
 import com.riprod.hexcode.builtin.hexCore.glyphs.absolute.AbsoluteGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.add.AddGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.arc.ArcConstructHandler;
@@ -125,8 +128,15 @@ import com.riprod.hexcode.builtin.hexCore.staffStyles.RingStyle;
 import com.riprod.hexcode.builtin.hexCore.staffStyles.SphereStyle;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
+import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerRegistry;
+import com.riprod.hexcode.builtin.hexCore.impact.PowerLawImpact;
+import com.riprod.hexcode.builtin.hexCore.impact.RatioToDefaultImpact;
+import com.riprod.hexcode.builtin.hexCore.impact.SphereVolumeImpact;
+import com.riprod.hexcode.builtin.hexCore.impact.ThresholdImpact;
 
 public class HexCorePlugin extends JavaPlugin {
         private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -139,6 +149,7 @@ public class HexCorePlugin extends JavaPlugin {
 
         @Override
         public void setup() {
+                RegisterImpacts();
                 RegisterGlyphs();
                 RegisterStyles();
                 RegisterObelisks();
@@ -147,6 +158,16 @@ public class HexCorePlugin extends JavaPlugin {
                 RegisterConstructs();
                 RegisterInteractions();
                 RegisterEvents();
+                RegisterHexConfigs();
+                RegisterGlyphConfigs();
+        }
+
+        private void RegisterImpacts() {
+                Impact.CODEC
+                        .register(PowerLawImpact.ID, PowerLawImpact.class, PowerLawImpact.CODEC)
+                        .register(SphereVolumeImpact.ID, SphereVolumeImpact.class, SphereVolumeImpact.CODEC)
+                        .register(RatioToDefaultImpact.ID, RatioToDefaultImpact.class, RatioToDefaultImpact.CODEC)
+                        .register(ThresholdImpact.ID, ThresholdImpact.class, ThresholdImpact.CODEC);
         }
 
         private void RegisterGlyphs() {
@@ -270,6 +291,15 @@ public class HexCorePlugin extends JavaPlugin {
                 this.getEventRegistry().registerGlobal(CraftingEvent.class, new CraftingNotificationListener());
                 this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphMemoryListener());
                 this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDrawNotificationListener());
+        }
+
+        private void RegisterHexConfigs() {
+                HexConfigAsset.CODEC.register("StaffConfig", StaffConfig.class, StaffConfig.CODEC);
+                HexConfigAsset.CODEC.register("EncodedConfig", EncodedConfig.class, EncodedConfig.CODEC);
+        }
+
+        private void RegisterGlyphConfigs() {
+                GlyphConfig.CODEC.register(BasicConfig.ID, BasicConfig.class, BasicConfig.CODEC);
         }
 
         private void RegisterComponents() {

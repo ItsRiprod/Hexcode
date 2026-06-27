@@ -6,10 +6,9 @@ import javax.annotation.Nullable;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
-import com.riprod.hexcode.core.common.glyphs.registry.VolatilityAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public interface GlyphHandler {
@@ -31,14 +30,10 @@ public interface GlyphHandler {
     }
 
     default boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        VolatilityTracker tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getVolatilityTracker();
         if (tracker == null)
             return true;
-        float cost = VolatilityTracker.computeGlyphCost(glyph);
-        if (cost <= 0)
-            return true;
-        boolean consumed = tracker.consumeVolatility(cost);
-        return consumed;
+        return tracker.consumeVolatility(glyph.computeBaseCost()) > 0f;
     }
 
 
@@ -47,24 +42,8 @@ public interface GlyphHandler {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(getId());
         if (asset == null)
             return null;
-        // todo: finish config system
-        return null;
-    }
-
-    default float computeAreaScale(double volume, GlyphAsset asset) {
-        if (asset == null)
-            return 1.0f;
-        VolatilityAsset.AreaTax tax = asset.getVolatility().getAreaTax();
-        if (tax == null || tax.getDefaultMagnitude() <= 0.0f)
-            return 1.0f;
-        double ratio = volume / tax.getDefaultMagnitude();
-        if (ratio <= 1.0)
-            return 1.0f;
-        return (float) Math.pow(ratio, tax.getExponent());
-    }
-
-    static double sphereVolume(double radius) {
-        return (4.0 / 3.0) * Math.PI * radius * radius * radius;
+        GlyphConfig config = asset.getConfig();
+        return type.isInstance(config) ? type.cast(config) : null;
     }
 
     default ConfigBinding<? extends GlyphConfig> getConfigBinding() {

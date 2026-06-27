@@ -4,8 +4,22 @@
   "Effects": {
     "Particles": [
       {
-        "SystemId": "Fire_HexStaff_Aura"
+        "SystemId": "Ring_Spawner",
+        "Color": "#00f2ff"
+      },
+      {
+        "SystemId": "Rune_System",
+        "TargetEntityPart": "Entity"
+      },
+      {
+        "SystemId": "Alternative_Simple_Ring_System",
+        "TargetEntityPart": "Entity"
+      },
+      {
+        "SystemId": "Spinning_Particles_Player_System",
+        "TargetEntityPart": "Entity"
       }
-    ]
+    ],
+    "WorldSoundEventId": "SFX_Hexcode_Casting_Enter"
   }
 }

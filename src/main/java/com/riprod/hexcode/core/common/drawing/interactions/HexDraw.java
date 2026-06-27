@@ -1,12 +1,7 @@
 package com.riprod.hexcode.core.common.drawing.interactions;
 
-import java.util.Arrays;
-
 import javax.annotation.Nonnull;
 
-import com.hypixel.hytale.codec.Codec;
-import com.hypixel.hytale.codec.KeyedCodec;
-import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -15,42 +10,13 @@ import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.WaitForDataFrom;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
-import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.client.ChargingInteraction;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.drawing.DrawingSystem;
 import com.riprod.hexcode.core.common.hexcaster.component.HexcasterComponent;
-import com.riprod.hexcode.state.HexState;
-import com.riprod.hexcode.state.HexcodeManager;
-import com.riprod.hexcode.state.StateRouter;
-
-import it.unimi.dsi.fastutil.floats.Float2ObjectOpenHashMap;
 
 /** @deprecated - in progress and deferred for the time being */
 public class HexDraw extends ChargingInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-
-    // @Nonnull
-    // public static final BuilderCodec<HexDraw> CODEC = BuilderCodec
-    //         .builder(HexDraw.class, HexDraw::new, ChargingInteraction.ABSTRACT_CODEC)
-    //         .<String>appendInherited(
-    //                 new KeyedCodec<>("Next", Interaction.CHILD_ASSET_CODEC),
-    //                 (i, s) -> {
-    //                     i.next = new Float2ObjectOpenHashMap<>();
-    //                     i.next.put(0.0f, s);
-    //                 },
-    //                 i -> i.next != null ? i.next.get(0.0f) : null,
-    //                 (i, p) -> i.next = p.next)
-    //         .add()
-    //         .afterDecode(i -> {
-    //             i.allowIndefiniteHold = true;
-    //             if (i.next != null) {
-    //                 i.sortedKeys = i.next.keySet().toFloatArray();
-    //                 Arrays.sort(i.sortedKeys);
-    //                 i.highestChargeValue = i.sortedKeys[i.sortedKeys.length - 1];
-    //             }
-    //         })
-    //         .build();
 
     public HexDraw() {
     }

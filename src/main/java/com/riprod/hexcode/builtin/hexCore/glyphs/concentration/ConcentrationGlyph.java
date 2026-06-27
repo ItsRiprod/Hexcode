@@ -42,7 +42,7 @@ public class ConcentrationGlyph implements GlyphHandler {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        Ref<EntityStore> casterRef = hexContext.getCasterRef();
+        Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
         if (casterRef == null || !casterRef.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Caster not found");
@@ -70,9 +70,9 @@ public class ConcentrationGlyph implements GlyphHandler {
         }
 
         var tracker = hexContext.getVolatilityTracker();
-        float bonus = tracker != null ? tracker.getStartingBudget() * VOLATILITY_INCREASE : 0f;
+        float bonus = tracker != null ? tracker.getInitialVolatility() * VOLATILITY_INCREASE : 0f;
         if (tracker != null && bonus > 0f) {
-            tracker.addBudget(bonus);
+            tracker.addVolatility(bonus);
         }
 
         ConcentrationState state = new ConcentrationState(visualRef);

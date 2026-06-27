@@ -50,8 +50,12 @@
   },
   "Volatility": {
     "InstantCost": 6,
-    "DrainPerSecond": 0.0,
-    "AreaTax": {
+    "DrainPerSecond": 0.0
+  },
+  "Config": {
+    "Type": "Basic",
+    "Impact": {
+      "Type": "PowerLaw",
       "DefaultMagnitude": 15.0,
       "Exponent": 1.0
     }

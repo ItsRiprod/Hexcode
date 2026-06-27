@@ -8,7 +8,7 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -98,8 +98,8 @@ public class CoreHexExecuter {
     public static void drainStep(String nodeId, HexContext hexContext) {
         Glyph nextNode = hexContext.getGlyph(nodeId);
 
-        VolatilityTracker tracker = hexContext.getVolatilityTracker();
-        if (tracker != null && tracker.getRemainingBudget() <= 0) {
+        HexStats tracker = hexContext.getVolatilityTracker();
+        if (tracker != null && tracker.getCurrentVolatility() <= 0) {
             HexExecuter.fail(nextNode, hexContext, GlyphFizzleEvent.Reason.VOLATILITY_DEPLETED);
             return;
         }

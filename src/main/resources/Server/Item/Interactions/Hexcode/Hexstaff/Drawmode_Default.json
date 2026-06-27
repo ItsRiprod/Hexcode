@@ -9,5 +9,15 @@
     "ItemAnimationId": "HexCrafting_Enter",
     "ClearAnimationOnFinish": true
   },
-  "CancelOnOtherClick": false
+  "CancelOnOtherClick": false,
+  "Next": {
+    "0.0": {
+      "Type": "Interrupt",
+      "Entity": "Owner"
+    }
+  },
+  "Failed": {
+    "Type": "Interrupt",
+    "Entity": "Owner"
+  }
 }

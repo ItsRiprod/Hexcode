@@ -66,8 +66,8 @@
             "IncludesAssetPack": false
         },
         {
-            "Name": "Hexomate",
-            "Main": "com.riprod.hexcode.builtin.hexomate.HexomatePlugin",
+            "Name": "Hexomation",
+            "Main": "com.riprod.hexcode.builtin.hexomation.HexomationPlugin",
             "ServerVersion": ">=0.5.0 <0.6.0",
             "DisabledByDefault": true,
             "IncludesAssetPack": false

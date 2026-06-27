@@ -31,7 +31,10 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.ensnare.component.EnsnareCompon
 import com.riprod.hexcode.builtin.hexCore.glyphs.ensnare.component.SpikeEntry;
 import com.riprod.hexcode.builtin.hexCore.glyphs.ensnare.style.EnsnareStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.utils.HexDirectionUtil;
@@ -52,9 +55,6 @@ public static final String ID = "Ensnare";
     private static final double DEFAULT_DAMAGE = 8.0;
     private static final double DEFAULT_DURATION = 5.0;
 
-    private static final double RADIUS_THRESHOLD = 8.0;
-    private static final double DAMAGE_THRESHOLD = 25.0;
-
     private static final float DAMAGE_COOLDOWN_SECONDS = 1.0f;
     private static final int MAX_SPIKES = 64;
     private static final int GROUND_SCAN_RANGE = 3;
@@ -62,7 +62,7 @@ public static final String ID = "Ensnare";
 
     @Override
     public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        VolatilityTracker tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getVolatilityTracker();
         if (tracker == null) return true;
 
         double radius = Math.max(0, HexVarUtil.numberOrDefault(
@@ -70,12 +70,19 @@ public static final String ID = "Ensnare";
         double damage = Math.max(0, HexVarUtil.numberOrDefault(
                 glyph.readSlot(EnsnareGlyphSlots.DAMAGE, hexContext), DEFAULT_DAMAGE));
 
-        float scale = (float) Math.max(1.0,
-                harshScale(radius, DEFAULT_RADIUS, RADIUS_THRESHOLD, 2.0)
-                + harshScale(damage, DEFAULT_DAMAGE, DAMAGE_THRESHOLD, 2.0));
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        float scale = Math.max(1f,
+                Impact.scale(slotImpact(asset, EnsnareGlyphSlots.RADIUS), radius)
+                + Impact.scale(slotImpact(asset, EnsnareGlyphSlots.DAMAGE), damage));
 
-        float cost = VolatilityTracker.computeGlyphCost(glyph) * scale;
-        return tracker.consumeVolatility(cost);
+        float cost = glyph.computeBaseCost() * scale;
+        return tracker.consumeVolatility(cost) > 0f;
+    }
+
+    private static Impact slotImpact(GlyphAsset asset, String key) {
+        if (asset == null) return null;
+        SlotAsset slot = asset.getSlot(key);
+        return slot == null ? null : slot.getImpact();
     }
 
     @Override
@@ -204,11 +211,4 @@ public static final String ID = "Ensnare";
         hexContext.getHexRoot().addDependency(hexContext, trackerRef);
     }
 
-    private static double harshScale(double value, double reference, double threshold, double exponent) {
-        double ratio = value / reference;
-        if (value <= threshold) return ratio;
-        double base = threshold / reference;
-        double excess = (value - threshold) / reference;
-        return base + excess * Math.pow(value / threshold, exponent);
-    }
 }

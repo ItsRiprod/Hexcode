@@ -80,6 +80,13 @@ public class Glyph {
         this.efficiency = efficiency;
     }
 
+    public float computeBaseCost() {
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
+        if (asset == null)
+            return 0f;
+        return asset.getVolatility().getInstantCost() * ((1 - volatility) * 0.5f + 0.5f);
+    }
+
     public String getId() {
         return id;
     }

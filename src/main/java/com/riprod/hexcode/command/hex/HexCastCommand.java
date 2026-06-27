@@ -15,7 +15,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
 
@@ -44,7 +44,7 @@ public class HexCastCommand extends AbstractPlayerCommand {
         Hex hex = asset.getHex().clone();
         String name = asset.getDisplayName() != null ? asset.getDisplayName() : hexId;
 
-        var volatilityTracker = new VolatilityTracker();
+        var volatilityTracker = new HexStats();
 
         var playerHexRoot = new PlayerHexRoot(playerEntityRef, store);
 

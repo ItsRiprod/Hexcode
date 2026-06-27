@@ -45,7 +45,7 @@ public class PlayerHexRoot implements HexRoot {
     }
 
     @Override
-    public Ref<EntityStore> getSourceRef() {
+    public Ref<EntityStore> getSourceRef(ComponentAccessor<EntityStore> accessor) {
         return playerRef;
     }
 

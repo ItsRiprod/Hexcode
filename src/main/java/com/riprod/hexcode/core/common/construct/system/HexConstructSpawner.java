@@ -100,7 +100,6 @@ public class HexConstructSpawner {
         HexStatus<S> construct = new HexStatus<>(
                 handlerId, hexContext, constructId, triggeringGlyph, initialState);
 
-        // race-safe: reuse pending-add instance if one exists for this target this tick
         HexEffectsComponent existing = buffer.getComponent(targetRef, HexEffectsComponent.getComponentType());
         if (existing != null) {
             existing.addEffect(constructId, construct);
@@ -118,7 +117,6 @@ public class HexConstructSpawner {
                 return;
             }
         }
-        // second caller same tick: mutate the instance the first caller queued
         pending.addEffect(constructId, construct);
     }
 }

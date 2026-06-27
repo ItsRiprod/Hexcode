@@ -36,7 +36,13 @@
     "target": {
       "Style": "Input",
       "Label": "hexcode.glyphs.Phase.target.name",
-      "Description": "hexcode.glyphs.Phase.target.description"
+      "Description": "hexcode.glyphs.Phase.target.description",
+      "Impact": {
+        "Type": "Threshold",
+        "Reference": 20,
+        "Threshold": 2,
+        "Exponent": 1.5
+      }
     },
     "duration": {
       "Style": "Input",
@@ -60,7 +66,18 @@
   },
   "Volatility": {
     "InstantCost": 4,
-    "DrainPerSecond": 0.2},
+    "DrainPerSecond": 0.2
+  },
+  "Config": {
+    "Type": "Basic",
+    "Impact": {
+      "Type": "RatioToDefault",
+      "Reference": 20,
+      "ClampMin": 1.0,
+      "ClampMax": 15.0,
+      "Min": 1.0
+    }
+  },
   "IsEnabled": false,
   "IsReversable": false
 }

@@ -28,7 +28,7 @@ public class CastTriggerSource extends WorldEventSystem<EntityStore, HexCastEven
         if (registry == null || registry.countListeners(TriggerKey.CAST) == 0) return;
 
         Ref<EntityStore> caster = event.getContext().getHexRoot() != null
-                ? event.getContext().getHexRoot().getSourceRef() : null;
+                ? event.getContext().getHexRoot().getSourceRef(buffer) : null;
         if (caster == null || !caster.isValid()) return;
         UUIDComponent uuidComp = buffer.getComponent(caster, UUIDComponent.getComponentType());
         if (uuidComp == null) return;

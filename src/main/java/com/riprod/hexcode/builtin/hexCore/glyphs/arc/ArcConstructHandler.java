@@ -24,7 +24,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.arc.style.ArcStyle;
 import com.riprod.hexcode.builtin.hexCore.glyphs.arc.utils.ArcUtils;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -113,15 +113,15 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(arcGlyph.getGlyphId());
         if (asset == null) return true;
 
-        VolatilityTracker tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getVolatilityTracker();
         if (tracker == null) return false;
 
-        float baseCost = VolatilityTracker.computeGlyphCost(arcGlyph);
+        float baseCost = arcGlyph.computeBaseCost();
         float rangeScale = state.getMaxJumpDistance() / DEFAULT_JUMP_RANGE;
         float finalCost = baseCost * rangeScale;
 
         if (hexContext.getHexRoot() == null) return true;
-        return tracker.consumeVolatility(finalCost);
+        return tracker.consumeVolatility(finalCost) > 0f;
     }
 
     private boolean hopToNext(ArcState state, HexStatus<ArcState> status, ConstructTickContext ctx) {

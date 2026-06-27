@@ -29,7 +29,11 @@ public class GlyphRegistry {
             throw new IllegalArgumentException("duplicate glyph handler id: " + glyph.getId());
         }
         glyphs.put(glyph.getId(), glyph);
-        // todo later: finish the implementation of the config system
+
+        GlyphHandler.ConfigBinding<? extends GlyphConfig> binding = glyph.getConfigBinding();
+        if (binding != null) {
+            GlyphConfig.CODEC.register(glyph.getId(), binding.type(), binding.codec());
+        }
     }
 
     @Nullable

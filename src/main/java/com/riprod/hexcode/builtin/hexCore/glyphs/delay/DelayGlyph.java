@@ -118,7 +118,7 @@ public class DelayGlyph implements GlyphHandler {
             }
         }
         if (spawnPos == null) {
-            Ref<EntityStore> casterRef = hexContext.getCasterRef();
+            Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
             if (casterRef != null && casterRef.isValid()) {
                 TransformComponent tc = accessor.getComponent(
                         casterRef, TransformComponent.getComponentType());

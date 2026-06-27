@@ -35,9 +35,10 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.conjure.component.ConjureZoneComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.conjure.style.ConjureStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -60,7 +61,7 @@ public class ConjureGlyph implements GlyphHandler {
 
     @Override
     public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        VolatilityTracker tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getVolatilityTracker();
         if (tracker == null)
             return true;
 
@@ -81,10 +82,10 @@ public class ConjureGlyph implements GlyphHandler {
         }
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        float areaScale = computeAreaScale(volume, asset);
-
-        float cost = VolatilityTracker.computeGlyphCost(glyph) * areaScale;
-        return tracker.consumeVolatility(cost);
+        Impact impact = asset == null || asset.getConfig() == null
+                ? null : asset.getConfig().getImpact();
+        float cost = glyph.computeBaseCost() * Impact.scale(impact, volume);
+        return tracker.consumeVolatility(cost) > 0f;
     }
 
     @Override
@@ -185,7 +186,7 @@ public class ConjureGlyph implements GlyphHandler {
                     new HitboxCollision(collisionConfig));
         }
 
-        ConjurePhysicsConfig.INSTANCE.apply(holder, hexContext.getCasterRef(),
+        ConjurePhysicsConfig.INSTANCE.apply(holder, hexContext.getCasterRef(hexContext.getAccessor()),
                 new Vector3d(0, 0, 0), hexContext.getAccessor(), false);
 
         holder.addComponent(ConjureZoneComponent.getComponentType(), zoneComp);

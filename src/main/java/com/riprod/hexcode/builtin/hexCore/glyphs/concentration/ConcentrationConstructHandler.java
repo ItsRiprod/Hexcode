@@ -13,7 +13,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.concentration.style.ConcentrationStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 
 public class ConcentrationConstructHandler implements ConstructHandler<ConcentrationState> {
@@ -50,15 +50,15 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         if (trigger == null || heldCtx == null)
             return;
 
-        VolatilityTracker heldTracker = heldCtx.getVolatilityTracker();
-        if (heldTracker != null && heldTracker.getRemainingBudget() <= 0f)
+        HexStats heldTracker = heldCtx.getVolatilityTracker();
+        if (heldTracker != null && heldTracker.getCurrentVolatility() <= 0f)
             return;
 
         ConcentrationState state = status.getState();
         float bonus = state != null ? state.getVolatilityBonus() : 0f;
         if (heldTracker != null && bonus > 0f) {
-            float adjusted = Math.max(0f, heldTracker.getRemainingBudget() - bonus);
-            heldTracker.setBudget(adjusted);
+            float adjusted = Math.max(0f, heldTracker.getCurrentVolatility() - bonus);
+            heldTracker.setVolatility(adjusted);
         }
 
         HexContext releaseCtx = HexContext.cloneState(heldCtx);
@@ -71,7 +71,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         }
 
         if (heldTracker != null)
-            heldTracker.setBudget(0f);
+            heldTracker.setVolatility(0f);
 
         try {
             HexExecuter.continueFromSlot(trigger, ConcentrationGlyphSlots.RELEASE, releaseCtx);

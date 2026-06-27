@@ -20,7 +20,9 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.erode.style.ErodeStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
@@ -51,16 +53,17 @@ public class ErodeGlyph implements GlyphHandler {
 
     @Override
     public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        VolatilityTracker tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getVolatilityTracker();
         if (tracker == null)
             return true;
 
         double amount = HexVarUtil.numberOrDefault(
                 glyph.readSlot(ErodeGlyphSlots.AMOUNT, hexContext), DEFAULT_AMOUNT);
-        float amountScale = (float) Math.max(1.0, amount / DEFAULT_AMOUNT);
-
-        float cost = VolatilityTracker.computeGlyphCost(glyph) * amountScale;
-        return tracker.consumeVolatility(cost);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        Impact impact = asset == null || asset.getConfig() == null
+                ? null : asset.getConfig().getImpact();
+        float cost = glyph.computeBaseCost() * Impact.scale(impact, amount);
+        return tracker.consumeVolatility(cost) > 0f;
     }
 
     @Override
@@ -155,7 +158,7 @@ public class ErodeGlyph implements GlyphHandler {
             return;
         }
 
-        Ref<EntityStore> casterRef = hexContext.getCasterRef();
+        Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
         float damageScale = (float) (amount * BLOCK_DAMAGE_SCALE);
 
         BlockHarvestUtils.performBlockDamage(

@@ -72,7 +72,7 @@ hytaleTools {
     // The ultimate compatibility pack between hexcode and every-other plugin in existence
     subPlugin("Hexability", "com.riprod.hexcode.builtin.hexability.HexabilityPlugin", true, false)
     // The ultimate compatibility pack between hexcode and every-other plugin in existence
-    subPlugin("Hexomate", "com.riprod.hexcode.builtin.hexomate.HexomatePlugin", true, false)
+    subPlugin("Hexomation", "com.riprod.hexcode.builtin.hexomation.HexomationPlugin", true, false)
     // The debug code
     subPlugin("Counterspell", "com.riprod.hexcode.builtin.counterspell.CounterspellPlugin", true, false)
 } 

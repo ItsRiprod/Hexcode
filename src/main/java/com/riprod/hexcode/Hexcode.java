@@ -1,5 +1,13 @@
 package com.riprod.hexcode;
 
+import com.riprod.hexcode.builtin.counterspell.CounterspellPlugin;
+import com.riprod.hexcode.builtin.hexCore.HexCorePlugin;
+import com.riprod.hexcode.builtin.hexability.HexabilityPlugin;
+import com.riprod.hexcode.builtin.hexomation.HexomationPlugin;
+import com.riprod.hexcode.builtin.hextras.HextrasPlugin;
+import com.riprod.hexcode.builtin.hextreme.HextremePlugin;
+import com.riprod.hexcode.builtin.imbued.ImbuedPlugin;
+import com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin;
 import com.riprod.hexcode.command.HexcodeCommand;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.construct.system.MountOrphanReaperSystem;
@@ -13,6 +21,7 @@ import com.riprod.hexcode.core.common.drawing.registry.TemplateAsset;
 import com.riprod.hexcode.core.common.effect.GlyphEffectSystem;
 import com.riprod.hexcode.core.common.execution.component.BlockHexRoot;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
+import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
 import com.riprod.hexcode.core.common.execution.events.HexCastEventSystem;
@@ -73,6 +82,7 @@ import com.riprod.hexcode.interaction.HexHold;
 import com.riprod.hexcode.interaction.HexMode;
 import com.riprod.hexcode.interaction.HexModeExit;
 import com.riprod.hexcode.interaction.HexStateBranch;
+import com.riprod.hexcode.core.common.execution.interactions.HexExecuteInteraction;
 import com.riprod.hexcode.interaction.HexAbility;
 import com.riprod.hexcode.interaction.HexItemCondition;
 import com.riprod.hexcode.interaction.PedestalInteraction;
@@ -119,11 +129,30 @@ public class Hexcode extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private final PatchManager patchManager;
 
+    // Deprecated, waiting on a fix from hytale for proper implementation
+    private HexCorePlugin hexCore;
+//     private CounterspellPlugin counterspell;
+//     private HexabilityPlugin hexability;
+//     private HexomationPlugin hexomation;
+//     private HextrasPlugin hextras;
+//     private HextremePlugin hextreme;
+//     private ImbuedPlugin imbued;
+//     private RitualisticPlugin ritualistic;
+
     public Hexcode(JavaPluginInit init) {
         super(init);
         patchManager = new PatchManager(this); // setup patchly
         LOGGER.atInfo().log("Hexcode spell-crafting mod v%s initializing...",
                 this.getManifest().getVersion().toString());
+
+        // hexCore = new HexCorePlugin(init);
+        // counterspell = new CounterspellPlugin(init);
+        // hexability = new HexabilityPlugin(init);
+        // hexomation = new HexomationPlugin(init);
+        // hextras = new HextrasPlugin(init);
+        // hextreme = new HextremePlugin(init);
+        // imbued = new ImbuedPlugin(init);
+        // ritualistic = new RitualisticPlugin(init);
     }
 
     @Override
@@ -144,6 +173,16 @@ public class Hexcode extends JavaPlugin {
         this.registerCommands();
 
         LOGGER.atInfo().log("Hexcode %s setup complete!", this.getManifest().getVersion().toString());
+
+        // deprecated until hytale fixed implementation
+        // hexCore.setup();
+        // counterspell.setup();
+        // hexability.setup();
+        // hexomation.setup();
+        // hextras.setup();
+        // hextreme.setup();
+        // imbued.setup();
+        // ritualistic.setup();
     }
 
     @SuppressWarnings("null")
@@ -166,6 +205,15 @@ public class Hexcode extends JavaPlugin {
                         .loadsAfter(ParticleSystem.class)
                         .loadsAfter(SoundEvent.class)
                         .loadsAfter(ModelAsset.class)
+                        .build());
+        AssetRegistry.register(
+                HytaleAssetStore
+                        .builder(HexConfigAsset.class,
+                                new DefaultAssetMap<String, HexConfigAsset>())
+                        .setPath("Hexcode/Hex")
+                        .setCodec(HexConfigAsset.CODEC)
+                        .setKeyFunction(HexConfigAsset::getId)
+                        .loadsAfter(HexStyleAsset.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
@@ -412,6 +460,7 @@ public class Hexcode extends JavaPlugin {
         Interaction.CODEC.register("PedestalInteraction", PedestalInteraction.class, PedestalInteraction.CODEC);
         Interaction.CODEC.register("HexItemCondition", HexItemCondition.class, HexItemCondition.CODEC);
         Interaction.CODEC.register("HexAbility", HexAbility.class, HexAbility.CODEC);
+        Interaction.CODEC.register("HexExecute", HexExecuteInteraction.class, HexExecuteInteraction.CODEC);
     }
 
     private void registerEvents() {

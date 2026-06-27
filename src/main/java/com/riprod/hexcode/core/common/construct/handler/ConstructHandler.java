@@ -5,7 +5,7 @@ import java.util.List;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
@@ -41,13 +41,13 @@ public interface ConstructHandler<S extends ConstructState> {
     }
 
     default boolean drainSustain(float dt, HexStatus<S> status) {
-        VolatilityTracker tracker = status.getHexContext().getVolatilityTracker();
+        HexStats tracker = status.getHexContext().getVolatilityTracker();
         if (tracker == null) return true;
         float rate = resolveDrainRate(status);
         if (rate > 0f) {
-            if (!tracker.consumeVolatility(dt * rate)) return false;
+            if (tracker.consumeVolatility(dt * rate) <= 0f) return false;
         }
-        return tracker.getRemainingBudget() > 0f;
+        return tracker.getCurrentVolatility() > 0f;
     }
 
     static float resolveDrainRate(HexStatus<?> status) {

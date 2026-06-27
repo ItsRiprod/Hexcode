@@ -8,7 +8,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
@@ -54,9 +54,9 @@ public final class ConstructSplicer {
 
         mergeVariables(targetCtx, caster.getVariables(), varPolicy);
 
-        VolatilityTracker targetTracker = targetCtx.getVolatilityTracker();
+        HexStats targetTracker = targetCtx.getVolatilityTracker();
         if (targetTracker != null && donationAmount > 0f) {
-            targetTracker.addBudget(donationAmount);
+            targetTracker.addVolatility(donationAmount);
         }
 
         List<String> newChain = computeNewChain(chainMode, originalNext, casterChildren);

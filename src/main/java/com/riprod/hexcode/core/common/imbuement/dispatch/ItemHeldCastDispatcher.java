@@ -12,7 +12,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.imbued.triggers.InteractionPayload;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
@@ -47,7 +47,7 @@ public final class ItemHeldCastDispatcher implements CastRootDispatcher {
         float volatilityMax = ItemStatExtractor.extractVolatility(heldItem);
         float baseMana = SpellMana.computeTotalMana(hex);
         float resolvedPower = 1.0f + ItemStatExtractor.extractPower(heldItem);
-        VolatilityTracker tracker = new VolatilityTracker(volatilityMax, 1.0f, resolvedPower);
+        HexStats tracker = new HexStats(volatilityMax, 1.0f, resolvedPower);
 
         HexContext context = new HexContext(hex, baseMana, hexRoot, null, tracker);
 

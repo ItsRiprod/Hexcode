@@ -104,9 +104,11 @@ public class ShatterGlyph implements GlyphHandler {
         }
         centralDir = new Vector3d(centralDir.x / dirLen, centralDir.y / dirLen, centralDir.z / dirLen);
 
+        var accessor = hexContext.getAccessor();
+
         Ref<EntityStore> parent = sourceVar instanceof EntityVar var
-                ? var.getRef(hexContext.getAccessor())
-                : hexContext.getCasterRef();
+                ? var.getRef(accessor)
+                : hexContext.getCasterRef(accessor);
 
         int count = HexVarUtil.numberOrDefault(countVar, (double) DEFAULT_COUNT).intValue();
         if (count < 1) count = 1;

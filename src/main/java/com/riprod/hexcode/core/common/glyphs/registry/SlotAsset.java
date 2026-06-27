@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import org.joml.Vector3f;
 
 public class SlotAsset {
@@ -17,6 +18,8 @@ public class SlotAsset {
     private boolean unique = false;
     @Nullable
     private String styleId;
+    @Nullable
+    private Impact impact;
 
     public SlotAsset() {
     }
@@ -58,6 +61,11 @@ public class SlotAsset {
         return styleId;
     }
 
+    @Nullable
+    public Impact getImpact() {
+        return impact;
+    }
+
     public static final BuilderCodec<SlotAsset> CODEC = BuilderCodec
             .builder(SlotAsset.class, SlotAsset::new)
             .append(new KeyedCodec<>("Label", Codec.STRING),
@@ -75,6 +83,9 @@ public class SlotAsset {
             .append(new KeyedCodec<>("Style", Codec.STRING),
                     (s, v) -> s.styleId = v, s -> s.styleId)
             .addValidatorLate(() -> SlotStyleAsset.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .append(new KeyedCodec<>("Impact", Impact.CODEC),
+                    (s, v) -> s.impact = v, s -> s.impact)
             .add()
             .build();
 }

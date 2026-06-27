@@ -42,11 +42,14 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
     @Override
     public void onFirstTick(HexStatus<NoState> status, ConstructTickContext ctx) {
         Glyph triggering = status.getTriggeringGlyph();
-        if (triggering == null) return;
+        if (triggering == null)
+            return;
         Slot immediate = triggering.getSlot(DomainGlyphSlots.IMMEDIATE);
-        if (immediate == null) return;
+        if (immediate == null)
+            return;
         String[] links = immediate.getLinks();
-        if (links == null || links.length == 0) return;
+        if (links == null || links.length == 0)
+            return;
         HexContext hexContext = status.getHexContext();
         hexContext.updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(Arrays.asList(links), hexContext);
@@ -68,7 +71,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         HexRoot root = status.getHexContext().getHexRoot();
         if (root == null || !root.isAlive())
             return true;
-        Ref<EntityStore> rootRef = root.getSourceRef();
+        Ref<EntityStore> rootRef = root.getSourceRef(ctx.getBuffer());
         if (rootRef == null || !rootRef.isValid())
             return true;
 
@@ -150,12 +153,14 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         DomainZoneComponent zone = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), DomainZoneComponent.getComponentType());
 
-        if (zone != null && zone.getCasterRef() != null && zone.getCasterRef().isValid()) {
+        var accessor = ctx.getBuffer();
+
+        if (zone != null && zone.getCasterRef(accessor) != null && zone.getCasterRef(accessor).isValid()) {
             DomainAuraState aura = ConstructStateUtil.findState(
-                    ctx.getBuffer(), zone.getCasterRef(), DomainGlyph.AURA_ID, DomainAuraState.class);
+                    ctx.getBuffer(), zone.getCasterRef(accessor), DomainGlyph.AURA_ID, DomainAuraState.class);
             if (aura != null && ctx.getEntityRef().equals(aura.getZoneRef())) {
                 ConstructStateUtil.requestKillByHandlerId(
-                        ctx.getBuffer(), zone.getCasterRef(), DomainGlyph.AURA_ID);
+                        ctx.getBuffer(), zone.getCasterRef(accessor), DomainGlyph.AURA_ID);
             }
         }
 
@@ -173,7 +178,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
     private void updateCasterAura(DomainZoneComponent zone, boolean casterInside,
             Ref<EntityStore> zoneEntityRef, CommandBuffer<EntityStore> buffer,
             HexStatus<NoState> status) {
-        Ref<EntityStore> casterRef = zone.getCasterRef();
+        Ref<EntityStore> casterRef = zone.getCasterRef(buffer);
         if (casterRef == null || !casterRef.isValid())
             return;
 

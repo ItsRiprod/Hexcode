@@ -9,7 +9,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.component.BlockHexRoot;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
@@ -76,7 +76,7 @@ public final class ImbuedBlockActivator {
 
         ImbuementData baseSnapshot = base.copy();
         BlockHexRoot hexRoot = new BlockHexRoot(blockPos, capacity);
-        VolatilityTracker tracker = new VolatilityTracker(hexRoot.resolveVolatility(), 1.0f, 1.0f);
+        HexStats tracker = new HexStats(hexRoot.resolveVolatility(), 1.0f, 1.0f);
         HexContext context = new HexContext(hex, 0f, hexRoot, null, tracker);
 
         ImbuementProfileAsset profile = resolveProfile(blockType);
@@ -122,7 +122,7 @@ public final class ImbuedBlockActivator {
 
     private static void applyEssence(@Nonnull HexContext ctx, @Nonnull EssenceAsset essence) {
         float vm = essence.getVolatilityMultiplier();
-        VolatilityTracker tracker = ctx.getVolatilityTracker();
+        HexStats tracker = ctx.getVolatilityTracker();
         if (vm != 1.0f && tracker != null) {
             tracker.setVolatilityMultiplier(tracker.getVolatilityMultiplier() * vm);
         }

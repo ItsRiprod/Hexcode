@@ -33,12 +33,18 @@ public abstract sealed class HexVar
     }
 
     public final HexVar convertTo(Class<? extends HexVar> target, ComponentAccessor<EntityStore> accessor) {
-        if (target == this.getClass()) return this;
-        if (target == NumberVar.class) return new NumberVar(toScalar());
-        if (target == PositionVar.class) return toPosition(accessor);
-        if (target == RotationVar.class) return toRotation(accessor);
-        if (target == ColorVar.class) return toColor(accessor);
-        if (target == BlockVar.class) return toBlockVar(accessor);
+        if (target == this.getClass())
+            return this;
+        if (target == NumberVar.class)
+            return new NumberVar(toScalar());
+        if (target == PositionVar.class)
+            return toPosition(accessor);
+        if (target == RotationVar.class)
+            return toRotation(accessor);
+        if (target == ColorVar.class)
+            return toColor(accessor);
+        if (target == BlockVar.class)
+            return toBlockVar(accessor);
         throw new UnsupportedOperationException(
                 getClass().getSimpleName() + " cannot convert to " + target.getSimpleName());
     }
@@ -48,12 +54,14 @@ public abstract sealed class HexVar
     }
 
     public boolean equalTo(HexVar other) {
-        if (other == null) return false;
+        if (other == null)
+            return false;
         return Double.compare(this.toScalar(), other.toScalar()) == 0;
     }
 
     public int compareTo(HexVar other) {
-        if (other == null) return 1;
+        if (other == null)
+            return 1;
         return Double.compare(this.toScalar(), other.toScalar());
     }
 }

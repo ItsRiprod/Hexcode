@@ -7,3 +7,14 @@
 - Made glyphs defer-tick during execution
 - Made branches share context for cross-branch refs
 - Groundwork for client-driven casting/drawing
+
+## v0.9.0
+
+- Added Complexity
+- Added Config on glyphs
+- Added `Impact` on glyph asset configs to remove magic numbers
+- Added codec-registered Impact curves: PowerLaw, SphereVolume, RatioToDefault, Threshold
+- Added per-slot `Impact` for multi-input cost scaling (Ensnare)
+- Removed `AreaTax`/`computeAreaScale`; cost scaling now derived per-glyph via Impact
+- Moved base cost compute onto `Glyph.computeBaseCost()` - `HexStats` only holds/tracks
+- Migrated Force, Bolt, Gust, Area, Domain, Warp, Swap, Conjure, Phase, Erode, Fortify, Ensnare, Scale, Arc to Impact-based cost

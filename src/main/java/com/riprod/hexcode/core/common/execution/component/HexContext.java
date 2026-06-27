@@ -16,6 +16,8 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIDisplayMode;
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.Component;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -28,7 +30,7 @@ public class HexContext {
     // === serialized fields ===
     @Nullable private Hex hex;
     @Nullable private HexRoot root;
-    @Nullable private VolatilityTracker volatilityTracker;
+    @Nullable private HexStats volatilityTracker;
     private float manaCost = -1f;
     private float manaMultiplier = 1.0f;
     @Nullable private HexStyleAsset style;
@@ -47,7 +49,7 @@ public class HexContext {
     }
 
     public HexContext(Hex hex, float manaCost, HexRoot hexRoot, @Nullable HexStyleAsset style,
-            VolatilityTracker volatilityTracker) {
+            HexStats volatilityTracker) {
         this.hex = hex;
         this.manaCost = manaCost;
         this.root = hexRoot;
@@ -142,8 +144,8 @@ public class HexContext {
     }
 
     @Nullable
-    public Ref<EntityStore> getCasterRef() {
-        return root != null ? root.getSourceRef() : null;
+    public Ref<EntityStore> getCasterRef(ComponentAccessor<EntityStore> accessor) {
+        return root != null ? root.getSourceRef(accessor) : null;
     }
 
     @Nullable
@@ -176,23 +178,23 @@ public class HexContext {
     }
 
     @Nullable
-    public VolatilityTracker getVolatilityTracker() {
+    public HexStats getVolatilityTracker() {
         return volatilityTracker;
     }
 
-    public void setVolatilityTracker(VolatilityTracker volatilityTracker) {
+    public void setVolatilityTracker(HexStats volatilityTracker) {
         this.volatilityTracker = volatilityTracker;
         if (volatilityTracker != null) volatilityTracker.setExecutionId(this.executionId);
     }
 
     public float getVolatilityOverride() {
-        return this.volatilityTracker != null ? this.volatilityTracker.getStartingBudget() : 0f;
+        return this.volatilityTracker != null ? this.volatilityTracker.getInitialVolatility() : 0f;
     }
 
     public void setVolatilityOverride(float volatilityOverride) {
         if (this.volatilityTracker == null) return;
-        this.volatilityTracker.setBudget(volatilityOverride);
-        this.volatilityTracker.setStartingBudget(volatilityOverride);
+        this.volatilityTracker.setVolatility(volatilityOverride);
+        this.volatilityTracker.setInitialVolatility(volatilityOverride);
     }
 
     public float getVolatilityMultiplier() {
@@ -204,11 +206,11 @@ public class HexContext {
     }
 
     public float getPowerMultiplier() {
-        return this.volatilityTracker != null ? this.volatilityTracker.getMagicPowerMultiplier() : 1.0f;
+        return this.volatilityTracker != null ? this.volatilityTracker.getComplexityMultiplier() : 1.0f;
     }
 
     public void setPowerMultiplier(float v) {
-        if (this.volatilityTracker != null) this.volatilityTracker.setMagicPowerMultiplier(v);
+        if (this.volatilityTracker != null) this.volatilityTracker.setComplexityMultiplier(v);
     }
 
     public float getMagicPowerMultiplier() {
@@ -341,7 +343,7 @@ public class HexContext {
                     (c, v) -> c.manaMultiplier = v,
                     c -> c.manaMultiplier)
             .add()
-            .append(new KeyedCodec<>("VolatilityTracker", VolatilityTracker.CODEC),
+            .append(new KeyedCodec<>("VolatilityTracker", HexStats.CODEC),
                     (c, v) -> c.volatilityTracker = v,
                     c -> c.volatilityTracker)
             .add()
