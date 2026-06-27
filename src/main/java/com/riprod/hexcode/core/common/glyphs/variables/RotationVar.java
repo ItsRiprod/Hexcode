@@ -61,7 +61,7 @@ public final class RotationVar extends HexVar {
     public String describe() {
         if (rotation == null)
             return "RotationVar: [null]";
-        return String.format("RotationVar: pitch=%.3f rad, yaw=%.3f rad, roll=%.3f rad",
+        return String.format("RotationVar: ( p=%.3f, y=%.3f, r=%.3f )",
                 rotation.x, rotation.y, rotation.z);
     }
 
