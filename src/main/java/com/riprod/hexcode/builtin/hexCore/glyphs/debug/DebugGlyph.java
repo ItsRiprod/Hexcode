@@ -9,7 +9,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -138,10 +138,10 @@ public class DebugGlyph implements GlyphHandler {
         return message;
     }
 
-    private static String volatilityText(VolatilityTracker tracker) {
+    private static String volatilityText(HexStats tracker) {
         if (tracker == null)
             return "-";
-        return String.format("%.1f / %.1f", tracker.getRemainingBudget(), tracker.getStartingBudget());
+        return String.format("%.1f / %.1f", tracker.getCurrentVolatility(), tracker.getInitialVolatility());
     }
 
     private static String valueText(HexVar value) {
