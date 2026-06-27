@@ -5,7 +5,8 @@
     "Description": "Magic By Design.",
     "Authors": [
         {
-            "Name": "Riprod"
+            "Name": "Riprod",
+            "Email": "Some Email"
         }
     ],
     "Website": "https://modtale.net/mod/hexcode",
