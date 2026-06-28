@@ -70,7 +70,7 @@
   },
   "Config": {
     "Type": "Basic",
-    "Impact": {
+    "VolatilityImpact": {
       "Type": "RatioToDefault",
       "Reference": 20,
       "ClampMin": 1.0,

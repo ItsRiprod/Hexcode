@@ -79,7 +79,7 @@
   },
   "Config": {
     "Type": "Basic",
-    "Impact": {
+    "VolatilityImpact": {
       "Type": "PowerLaw",
       "DefaultMagnitude": 125.0,
       "Exponent": 1.0

@@ -31,7 +31,12 @@
       "Label": "hexcode.glyphs.Domain.magnitude.name",
       "Description": "hexcode.glyphs.Domain.magnitude.description",
       "DefaultValue": 5,
-      "Unique": true
+      "Unique": true,
+      "Impact": {
+        "Type": "Linear",
+        "Slope": 0.4,
+        "Offset": 0.0
+      }
     },
     "duration": {
       "Style": "Input",
@@ -45,7 +50,12 @@
       "Label": "hexcode.glyphs.Domain.power.name",
       "Description": "hexcode.glyphs.Domain.power.description",
       "DefaultValue": 0,
-      "Unique": true
+      "Unique": true,
+      "Impact": {
+        "Type": "Linear",
+        "Slope": 10.0,
+        "Offset": 10.0
+      }
     },
     "immediate": {
       "Style": "Next",
@@ -63,13 +73,17 @@
     "DrainPerSecond": 0.5
   },
   "Config": {
-    "Type": "Basic",
-    "Impact": {
+    "Type": "Domain",
+    "VolatilityImpact": {
       "Type": "SphereVolume",
       "DefaultMagnitude": 1500.0,
       "Exponent": 0.6667,
       "ClampMin": 2.0,
       "ClampMax": 15.0
+    },
+    "TriggerImpact": {
+      "Type": "Constant",
+      "Value": 5.0
     }
   },
   "Style": {

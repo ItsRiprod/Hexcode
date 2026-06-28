@@ -52,9 +52,9 @@ public interface ConstructHandler<S extends ConstructState> {
 
     static float resolveDrainRate(HexStatus<?> status) {
         Glyph trigger = status.getTriggeringGlyph();
-        if (trigger == null) return 0.15f;
+        if (trigger == null) return 0f;
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(trigger.getGlyphId());
-        if (asset == null) return 0.15f;
+        if (asset == null) return 0f;
         return asset.getVolatility().getDrainPerSecond();
     }
 }

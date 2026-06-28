@@ -61,7 +61,7 @@ public class PhaseGlyph implements GlyphHandler {
                 asset.getSlot(PhaseGlyphSlots.INTENSITY).getDefaultValue());
 
         GlyphConfig config = asset.getConfig();
-        float intensityScale = Impact.scale(config == null ? null : config.getImpact(), intensity);
+        float intensityScale = Impact.scale(config == null ? null : config.getVolatilityImpact(), intensity);
 
         float cost = glyph.computeBaseCost() * intensityScale;
         return tracker.consumeVolatility(cost) > 0f;

@@ -26,13 +26,13 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.arc.utils.ArcUtils;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 
 public class ArcConstructHandler implements ConstructHandler<ArcState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final float DEFAULT_JUMP_RANGE = 15.0f;
     private static final float SHOCK_OVERLAP = 0.25f;
     private static final String SHOCK_EFFECT_ID = "Hexcode_Shock";
 
@@ -116,9 +116,8 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         HexStats tracker = hexContext.getVolatilityTracker();
         if (tracker == null) return false;
 
-        float baseCost = arcGlyph.computeBaseCost();
-        float rangeScale = state.getMaxJumpDistance() / DEFAULT_JUMP_RANGE;
-        float finalCost = baseCost * rangeScale;
+        Impact impact = asset.getConfig() == null ? null : asset.getConfig().getVolatilityImpact();
+        float finalCost = arcGlyph.computeBaseCost() * Impact.scale(impact, state.getMaxJumpDistance());
 
         if (hexContext.getHexRoot() == null) return true;
         return tracker.consumeVolatility(finalCost) > 0f;

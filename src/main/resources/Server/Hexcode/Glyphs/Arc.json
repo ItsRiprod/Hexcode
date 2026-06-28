@@ -55,5 +55,14 @@
   },
   "Volatility": {
     "InstantCost": 5,
-    "DrainPerSecond": 0.0}
+    "DrainPerSecond": 0.0
+  },
+  "Config": {
+    "Type": "Basic",
+    "VolatilityImpact": {
+      "Type": "RatioToDefault",
+      "Reference": 15.0,
+      "Min": 0.0
+    }
+  }
 }

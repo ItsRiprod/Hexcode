@@ -54,7 +54,7 @@
   },
   "Config": {
     "Type": "Basic",
-    "Impact": {
+    "VolatilityImpact": {
       "Type": "SphereVolume",
       "DefaultMagnitude": 1500.0,
       "Exponent": 0.6667,

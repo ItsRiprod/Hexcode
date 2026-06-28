@@ -58,5 +58,14 @@
   },
   "Volatility": {
     "InstantCost": 2,
-    "DrainPerSecond": 0.1}
+    "DrainPerSecond": 0.1
+  },
+  "Config": {
+    "Type": "Basic",
+    "VolatilityImpact": {
+      "Type": "Exponential",
+      "Growth": 0.5,
+      "Min": 1.0
+    }
+  }
 }

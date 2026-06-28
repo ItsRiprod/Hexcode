@@ -38,6 +38,12 @@ public class ArcGlyph implements GlyphHandler {
     public static final String ID = "Arc";
 
     @Override
+    public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
+        // arc is charged per jump by ArcConstructHandler, not at cast
+        return true;
+    }
+
+    @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar targets = glyph.readSlot(ArcGlyphSlots.TARGET, hexContext);
         EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);

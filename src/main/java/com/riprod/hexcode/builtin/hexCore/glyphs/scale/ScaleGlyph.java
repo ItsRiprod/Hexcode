@@ -29,6 +29,8 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.scale.components.ScaleState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.scale.style.ScaleStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -52,8 +54,6 @@ public class ScaleGlyph implements GlyphHandler {
     private static final double DEFAULT_DURATION = 5.0;
     private static final double MIN_DURATION = 0.1;
 
-    private static final double K_GROWTH = 0.5;
-
     private static final Vector3f MOUNT_OFFSET = new Vector3f(0f, 2.5f, 0f);
 
     @Override
@@ -72,8 +72,10 @@ public class ScaleGlyph implements GlyphHandler {
         float currentScale = readCurrentScale(glyph, hexContext);
         double resultScale = clamp(currentScale * magnitude, MIN_MAGNITUDE, MAX_MAGNITUDE);
 
-        double factor = Math.expm1(K_GROWTH * (resultScale - 1.0));
-        float cost = (float) Math.max(baseCost, baseCost * factor);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        Impact impact = asset == null || asset.getConfig() == null
+                ? null : asset.getConfig().getVolatilityImpact();
+        float cost = baseCost * Impact.scale(impact, resultScale);
 
         return tracker.consumeVolatility(cost) > 0f;
     }

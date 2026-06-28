@@ -133,6 +133,9 @@ import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerRegistry;
+import com.riprod.hexcode.builtin.hexCore.impact.ConstantImpact;
+import com.riprod.hexcode.builtin.hexCore.impact.ExponentialImpact;
+import com.riprod.hexcode.builtin.hexCore.impact.LinearImpact;
 import com.riprod.hexcode.builtin.hexCore.impact.PowerLawImpact;
 import com.riprod.hexcode.builtin.hexCore.impact.RatioToDefaultImpact;
 import com.riprod.hexcode.builtin.hexCore.impact.SphereVolumeImpact;
@@ -167,7 +170,10 @@ public class HexCorePlugin extends JavaPlugin {
                         .register(PowerLawImpact.ID, PowerLawImpact.class, PowerLawImpact.CODEC)
                         .register(SphereVolumeImpact.ID, SphereVolumeImpact.class, SphereVolumeImpact.CODEC)
                         .register(RatioToDefaultImpact.ID, RatioToDefaultImpact.class, RatioToDefaultImpact.CODEC)
-                        .register(ThresholdImpact.ID, ThresholdImpact.class, ThresholdImpact.CODEC);
+                        .register(ThresholdImpact.ID, ThresholdImpact.class, ThresholdImpact.CODEC)
+                        .register(ExponentialImpact.ID, ExponentialImpact.class, ExponentialImpact.CODEC)
+                        .register(ConstantImpact.ID, ConstantImpact.class, ConstantImpact.CODEC)
+                        .register(LinearImpact.ID, LinearImpact.class, LinearImpact.CODEC);
         }
 
         private void RegisterGlyphs() {

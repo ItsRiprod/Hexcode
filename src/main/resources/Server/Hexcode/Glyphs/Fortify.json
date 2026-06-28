@@ -61,7 +61,7 @@
   },
   "Config": {
     "Type": "Basic",
-    "Impact": {
+    "VolatilityImpact": {
       "Type": "RatioToDefault",
       "Reference": 5.0,
       "Min": 1.0

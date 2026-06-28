@@ -29,6 +29,7 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
@@ -49,8 +50,21 @@ public static final String ID = "Domain";
     private static final double MAX_RADIUS = 15.0;
     private static final double DEFAULT_DURATION = 10.0;
     private static final double DEFAULT_POWER = 1.0;
-    private static final float BASE_MANA_COST = 20.0f;
-    private static final float BASE_TRIGGER_COST = 5.0f;
+
+    @Override
+    public ConfigBinding<DomainConfig> getConfigBinding() {
+        return ConfigBinding.of(DomainConfig.class, DomainConfig.CODEC);
+    }
+
+    private static Impact slotImpact(GlyphAsset asset, String key) {
+        if (asset == null) return null;
+        SlotAsset slot = asset.getSlot(key);
+        return slot == null ? null : slot.getImpact();
+    }
+
+    private static Impact triggerImpact(GlyphAsset asset) {
+        return asset != null && asset.getConfig() instanceof DomainConfig dc ? dc.getTriggerImpact() : null;
+    }
 
     @Override
     public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
@@ -61,7 +75,7 @@ public static final String ID = "Domain";
                 glyph.readSlot(DomainGlyphSlots.MAGNITUDE, hexContext), DEFAULT_RADIUS);
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         Impact impact = asset == null || asset.getConfig() == null
-                ? null : asset.getConfig().getImpact();
+                ? null : asset.getConfig().getVolatilityImpact();
         float cost = glyph.computeBaseCost() * Impact.scale(impact, radius);
         return tracker.consumeVolatility(cost) > 0f;
     }
@@ -100,13 +114,15 @@ public static final String ID = "Domain";
                 glyph.readSlot(DomainGlyphSlots.POWER, hexContext), DEFAULT_POWER).floatValue();
         power = Math.max(0.1f, power);
 
-        float upfrontCost = BASE_MANA_COST * (1 + (power - 1) * 0.5f);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        float upfrontCost = Impact.scale(slotImpact(asset, DomainGlyphSlots.POWER), power);
         if (!hexContext.getHexRoot().tryConsumeMana(upfrontCost, hexContext.getAccessor())) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.INSUFFICIENT_MANA);
             return;
         }
 
-        float baseDrainPerSecond = BASE_MANA_COST * ((float) radius / 5.0f) * 0.1f;
+        float baseDrainPerSecond = Impact.scale(slotImpact(asset, DomainGlyphSlots.MAGNITUDE), radius);
+        float triggerCost = Impact.scale(triggerImpact(asset), 0);
 
         UUIDComponent casterUuidComp = hexContext.getAccessor().getComponent(
                 casterRef, UUIDComponent.getComponentType());
@@ -119,7 +135,7 @@ public static final String ID = "Domain";
                 hexContext.getAccessor(), hexContext, glyph, DomainGlyph.ID, new Vector3d(anchorPos));
 
         DomainZoneComponent zoneComp = new DomainZoneComponent(
-                (float) radius, durationSeconds, baseDrainPerSecond, BASE_TRIGGER_COST, power, casterUuid, casterRef);
+                (float) radius, durationSeconds, baseDrainPerSecond, triggerCost, power, casterUuid, casterRef);
 
         holder.ensureComponent(PropComponent.getComponentType());
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());

@@ -7,6 +7,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -34,6 +35,17 @@ public interface GlyphHandler {
         if (tracker == null)
             return true;
         return tracker.consumeVolatility(glyph.computeBaseCost()) > 0f;
+    }
+
+    default void applyComplexity(Glyph glyph, HexContext hexContext, float volatilitySpent) {
+        HexStats tracker = hexContext.getVolatilityTracker();
+        if (tracker == null || volatilitySpent <= 0f)
+            return;
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        Impact impact = asset != null && asset.getConfig() != null
+                ? asset.getConfig().getComplexityImpact()
+                : null;
+        tracker.addComplexity(volatilitySpent * Impact.scale(impact, volatilitySpent));
     }
 
 

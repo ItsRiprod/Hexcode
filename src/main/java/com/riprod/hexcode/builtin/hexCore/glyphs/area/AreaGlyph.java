@@ -51,7 +51,7 @@ public class AreaGlyph implements GlyphHandler {
                 glyph.readSlot(AreaGlyphSlots.RADIUS, hexContext), DEFAULT_RADIUS);
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         Impact impact = asset == null || asset.getConfig() == null
-                ? null : asset.getConfig().getImpact();
+                ? null : asset.getConfig().getVolatilityImpact();
         float cost = glyph.computeBaseCost() * Impact.scale(impact, radius);
         return tracker.consumeVolatility(cost) > 0f;
     }
