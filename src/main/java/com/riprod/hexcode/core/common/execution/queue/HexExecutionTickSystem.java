@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.system.tick.TickingSystem;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.api.event.HexDrainEvent;
+import com.riprod.hexcode.api.event.HexQueueDrainEvent;
 
 public class HexExecutionTickSystem extends TickingSystem<EntityStore> {
 
@@ -16,6 +16,6 @@ public class HexExecutionTickSystem extends TickingSystem<EntityStore> {
         if (n == 0) {
             return;
         }
-        store.invoke(new HexDrainEvent(n));
+        store.invoke(new HexQueueDrainEvent(n));
     }
 }

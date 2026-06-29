@@ -44,11 +44,11 @@ public class HexCastCommand extends AbstractPlayerCommand {
         Hex hex = asset.getHex().clone();
         String name = asset.getDisplayName() != null ? asset.getDisplayName() : hexId;
 
-        var volatilityTracker = new HexStats();
+        var hexStats = new HexStats();
 
         var playerHexRoot = new PlayerHexRoot(playerEntityRef, store);
 
-        var castCtx = new HexContext(hex, 0, playerHexRoot, null, volatilityTracker);
+        var castCtx = new HexContext(hex, 0, playerHexRoot, null, hexStats);
 
         store.invoke(new HexCastEvent(castCtx));
 

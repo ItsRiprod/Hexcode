@@ -36,7 +36,7 @@ public final class CastGate {
         HexcasterIdleComponent idle = buffer.getComponent(casterRef, HexcasterIdleComponent.getComponentType());
         if (idle == null) return true;
 
-        HexStats tracker = context.getVolatilityTracker();
+        HexStats tracker = context.getHexStats();
         if (tracker == null) return true;
 
         String slotKey = context.getCastSlotKey();

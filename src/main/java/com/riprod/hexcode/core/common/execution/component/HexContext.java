@@ -30,7 +30,7 @@ public class HexContext {
     // === serialized fields ===
     @Nullable private Hex hex;
     @Nullable private HexRoot root;
-    @Nullable private HexStats volatilityTracker;
+    @Nullable private HexStats hexStats;
     private float manaCost = -1f;
     private float manaMultiplier = 1.0f;
     @Nullable private HexStyleAsset style;
@@ -49,13 +49,13 @@ public class HexContext {
     }
 
     public HexContext(Hex hex, float manaCost, HexRoot hexRoot, @Nullable HexStyleAsset style,
-            HexStats volatilityTracker) {
+            HexStats hexStats) {
         this.hex = hex;
         this.manaCost = manaCost;
         this.root = hexRoot;
         this.style = style;
         this.executionId = UUID.randomUUID();
-        setVolatilityTracker(volatilityTracker);
+        setHexStats(hexStats);
     }
 
     public HexContext applyNonDefaultsFrom(@Nullable HexContext other) {
@@ -65,8 +65,8 @@ public class HexContext {
         if (other.manaMultiplier != 1.0f) this.manaMultiplier *= other.manaMultiplier;
         if (other.style != null) this.style = other.style;
         if (other.castDecayRate > 0f) this.castDecayRate = other.castDecayRate;
-        if (other.volatilityTracker != null && this.volatilityTracker != null) {
-            this.volatilityTracker.applyOverridesFrom(other.volatilityTracker);
+        if (other.hexStats != null && this.hexStats != null) {
+            this.hexStats.applyOverridesFrom(other.hexStats);
         }
         return this;
     }
@@ -76,7 +76,7 @@ public class HexContext {
         HexContext copy = new HexContext();
         copy.hex = src.hex != null ? src.hex.clone() : null;
         copy.root = src.root != null ? src.root.copy() : null;
-        copy.volatilityTracker = src.volatilityTracker != null ? src.volatilityTracker.copy() : null;
+        copy.hexStats = src.hexStats != null ? src.hexStats.copy() : null;
         copy.manaCost = src.manaCost;
         copy.manaMultiplier = src.manaMultiplier;
         copy.style = src.style != null ? src.style.clone() : null;
@@ -93,7 +93,7 @@ public class HexContext {
         branch.root = this.root;
         branch.accessor = this.accessor;
         branch.hex = this.hex;
-        branch.volatilityTracker = this.volatilityTracker;
+        branch.hexStats = this.hexStats;
         branch.executionId = this.executionId;
         branch.variables = this.variables;
         branch.style = this.style != null ? this.style.clone() : null;
@@ -178,39 +178,39 @@ public class HexContext {
     }
 
     @Nullable
-    public HexStats getVolatilityTracker() {
-        return volatilityTracker;
+    public HexStats getHexStats() {
+        return hexStats;
     }
 
-    public void setVolatilityTracker(HexStats volatilityTracker) {
-        this.volatilityTracker = volatilityTracker;
-        if (volatilityTracker != null) volatilityTracker.setExecutionId(this.executionId);
+    public void setHexStats(HexStats hexStats) {
+        this.hexStats = hexStats;
+        if (hexStats != null) hexStats.setExecutionId(this.executionId);
     }
 
     public float getVolatilityOverride() {
-        return this.volatilityTracker != null ? this.volatilityTracker.getInitialVolatility() : 0f;
+        return this.hexStats != null ? this.hexStats.getInitialVolatility() : 0f;
     }
 
     public void setVolatilityOverride(float volatilityOverride) {
-        if (this.volatilityTracker == null) return;
-        this.volatilityTracker.setVolatility(volatilityOverride);
-        this.volatilityTracker.setInitialVolatility(volatilityOverride);
+        if (this.hexStats == null) return;
+        this.hexStats.setVolatility(volatilityOverride);
+        this.hexStats.setInitialVolatility(volatilityOverride);
     }
 
     public float getVolatilityMultiplier() {
-        return this.volatilityTracker != null ? this.volatilityTracker.getVolatilityMultiplier() : 1.0f;
+        return this.hexStats != null ? this.hexStats.getVolatilityMultiplier() : 1.0f;
     }
 
     public void setVolatilityMultiplier(float v) {
-        if (this.volatilityTracker != null) this.volatilityTracker.setVolatilityMultiplier(v);
+        if (this.hexStats != null) this.hexStats.setVolatilityMultiplier(v);
     }
 
     public float getPowerMultiplier() {
-        return this.volatilityTracker != null ? this.volatilityTracker.getComplexityMultiplier() : 1.0f;
+        return this.hexStats != null ? this.hexStats.getComplexityMultiplier() : 1.0f;
     }
 
     public void setPowerMultiplier(float v) {
-        if (this.volatilityTracker != null) this.volatilityTracker.setComplexityMultiplier(v);
+        if (this.hexStats != null) this.hexStats.setComplexityMultiplier(v);
     }
 
     public float getMagicPowerMultiplier() {
@@ -343,9 +343,9 @@ public class HexContext {
                     (c, v) -> c.manaMultiplier = v,
                     c -> c.manaMultiplier)
             .add()
-            .append(new KeyedCodec<>("VolatilityTracker", HexStats.CODEC),
-                    (c, v) -> c.volatilityTracker = v,
-                    c -> c.volatilityTracker)
+            .append(new KeyedCodec<>("HexStats", HexStats.CODEC),
+                    (c, v) -> c.hexStats = v,
+                    c -> c.hexStats)
             .add()
             .append(new KeyedCodec<>("Style", HexStyleAsset.CODEC),
                     (c, v) -> c.style = v,

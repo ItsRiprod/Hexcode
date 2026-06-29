@@ -8,7 +8,6 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -95,14 +94,8 @@ public class CoreHexExecuter {
         }
     }
 
-    public static void drainStep(String nodeId, HexContext hexContext) {
+    public static void executeQueuedGlyph(String nodeId, HexContext hexContext) {
         Glyph nextNode = hexContext.getGlyph(nodeId);
-
-        HexStats tracker = hexContext.getVolatilityTracker();
-        if (tracker != null && tracker.getCurrentVolatility() <= 0) {
-            HexExecuter.fail(nextNode, hexContext, GlyphFizzleEvent.Reason.VOLATILITY_DEPLETED);
-            return;
-        }
 
         if (nextNode == null) {
             HexExecuter.fail(null, hexContext);
@@ -114,11 +107,7 @@ public class CoreHexExecuter {
             return;
         }
         try {
-            if (!nextHandler.consumeVolatility(nextNode, hexContext)) {
-                HexExecuter.fail(nextNode, hexContext);
-                return;
-            }
-            nextHandler.execute(nextNode, hexContext);
+            nextHandler.execute0(nextNode, hexContext);
         } catch (Exception e) {
             HexExecuter.fail(nextNode, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED, e);
         }
