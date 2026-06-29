@@ -122,7 +122,7 @@ public final class ImbuedBlockActivator {
 
     private static void applyEssence(@Nonnull HexContext ctx, @Nonnull EssenceAsset essence) {
         float vm = essence.getVolatilityMultiplier();
-        HexStats tracker = ctx.getVolatilityTracker();
+        HexStats tracker = ctx.getHexStats();
         if (vm != 1.0f && tracker != null) {
             tracker.setVolatilityMultiplier(tracker.getVolatilityMultiplier() * vm);
         }

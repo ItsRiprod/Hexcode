@@ -40,7 +40,12 @@
       "Label": "hexcode.glyphs.Fortify.amount.name",
       "Description": "hexcode.glyphs.Fortify.amount.description",
       "DefaultValue": 15,
-      "Unique": true
+      "Unique": true,
+      "Impact": {
+        "Type": "RatioToDefault",
+        "Reference": 5.0,
+        "Min": 1.0
+      }
     },
     "duration": {
       "Style": "Input",
@@ -58,13 +63,5 @@
   "Volatility": {
     "InstantCost": 4,
     "DrainPerSecond": 0.1
-  },
-  "Config": {
-    "Type": "Basic",
-    "VolatilityImpact": {
-      "Type": "RatioToDefault",
-      "Reference": 5.0,
-      "Min": 1.0
-    }
   }
 }

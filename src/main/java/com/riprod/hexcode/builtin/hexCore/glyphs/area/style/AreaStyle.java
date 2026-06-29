@@ -5,12 +5,10 @@ import com.hypixel.hytale.component.Ref;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
-import com.hypixel.hytale.protocol.Color;
 import com.hypixel.hytale.protocol.DebugShape;
 import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexColors;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
@@ -22,7 +20,6 @@ import static com.hypixel.hytale.server.core.modules.debug.DebugUtils.COLOR_WHIT
 public class AreaStyle {
 
     private static final String GLYPH_ID = "Area";
-    private static final Vector3f DEFAULT_COLOR = new Vector3f(0.3f, 0.6f, 0.9f);
     private static final float SPHERE_DURATION = 0.5f;
 
     private AreaStyle() {
@@ -35,7 +32,7 @@ public class AreaStyle {
     public static void render(Vector3d center, double radius, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        Vector3f color = resolveColor(overrides);
+        Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset());
 
         World world = accessor.getExternalData().getWorld();
 
@@ -66,14 +63,5 @@ public class AreaStyle {
             ComponentAccessor<EntityStore> accessor, List<Ref<EntityStore>> recipients) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         VfxUtil.spawnSecondary(overrides, asset(), pos, accessor, recipients);
-    }
-
-    private static Vector3f resolveColor(HexStyleAsset overrides) {
-        Color c = overrides != null ? overrides.getPrimaryColor() : null;
-        if (c == null) {
-            HexStyleAsset glyphStyle = asset() != null ? asset().getStyle() : null;
-            c = glyphStyle != null ? glyphStyle.getPrimaryColor() : null;
-        }
-        return c != null ? HexColors.toVector3f(c) : DEFAULT_COLOR;
     }
 }

@@ -35,10 +35,12 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.projectile.style.ProjectileStyl
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class ProjectileGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -50,7 +52,6 @@ public class ProjectileGlyph implements GlyphHandler {
 
     public static final String ID = "Projectile";
 
-    private static final String PROJECTILE_MODEL = "Glyph_Projectile_Flight";
     private static final float PROJECTILE_SCALE = 0.5f;
     private static final Duration PROJECTILE_TTL = Duration.ofMinutes(10);
 
@@ -109,10 +110,11 @@ public class ProjectileGlyph implements GlyphHandler {
         if (bounces < 0)
             bounces = 0;
 
-        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(PROJECTILE_MODEL);
+        String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
         if (modelAsset == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "model asset not found: " + PROJECTILE_MODEL);
+                    "model asset not found: " + modelId);
             return;
         }
 

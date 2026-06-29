@@ -113,7 +113,7 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(arcGlyph.getGlyphId());
         if (asset == null) return true;
 
-        HexStats tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getHexStats();
         if (tracker == null) return false;
 
         Impact impact = asset.getConfig() == null ? null : asset.getConfig().getVolatilityImpact();

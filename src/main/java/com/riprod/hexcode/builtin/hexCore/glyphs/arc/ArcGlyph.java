@@ -22,6 +22,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.arc.utils.ArcUtils;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
@@ -38,9 +39,9 @@ public class ArcGlyph implements GlyphHandler {
     public static final String ID = "Arc";
 
     @Override
-    public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         // arc is charged per jump by ArcConstructHandler, not at cast
-        return true;
+        return 0f;
     }
 
     @Override

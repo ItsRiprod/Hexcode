@@ -32,6 +32,7 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
     protected Color secondaryColor;
     protected Float alpha;
     protected ModelParticle styleParticle;
+    protected String primaryModel;
 
     // locked (essence of the consumer)
     protected ModelParticle primaryParticle;
@@ -40,7 +41,6 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
     protected String primarySound;
     protected String secondarySound;
     protected String tertiarySound;
-    protected String primaryModel;
 
     public static AssetStore<String, HexStyleAsset, DefaultAssetMap<String, HexStyleAsset>> getAssetStore() {
         if (ASSET_STORE == null) {
@@ -135,6 +135,10 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         this.styleParticle = particle;
     }
 
+    public void setPrimaryModel(String primaryModel) {
+        this.primaryModel = primaryModel;
+    }
+
     public HexStyleAsset clone() {
         HexStyleAsset copy = new HexStyleAsset();
         copy.primaryColor = this.primaryColor != null ? this.primaryColor.clone() : null;
@@ -175,6 +179,7 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         if (other.secondaryColor != null) this.secondaryColor = other.secondaryColor.clone();
         if (other.alpha != null) this.alpha = other.alpha;
         if (other.styleParticle != null) this.styleParticle = other.styleParticle;
+        if (other.primaryModel != null) this.primaryModel = other.primaryModel;
         return this;
     }
 

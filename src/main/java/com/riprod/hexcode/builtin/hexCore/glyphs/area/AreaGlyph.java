@@ -19,12 +19,9 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.area.style.AreaStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
-import com.riprod.hexcode.core.common.execution.impact.Impact;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -41,20 +38,6 @@ public class AreaGlyph implements GlyphHandler {
     public static final String ID = "Area";
 
     private static final double DEFAULT_RADIUS = 5.0;
-
-    @Override
-    public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        HexStats tracker = hexContext.getVolatilityTracker();
-        if (tracker == null) return true;
-
-        double radius = HexVarUtil.numberOrDefault(
-                glyph.readSlot(AreaGlyphSlots.RADIUS, hexContext), DEFAULT_RADIUS);
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        Impact impact = asset == null || asset.getConfig() == null
-                ? null : asset.getConfig().getVolatilityImpact();
-        float cost = glyph.computeBaseCost() * Impact.scale(impact, radius);
-        return tracker.consumeVolatility(cost) > 0f;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

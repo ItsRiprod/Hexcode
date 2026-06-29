@@ -22,12 +22,9 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
-import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
@@ -43,29 +40,6 @@ public class PhaseGlyph implements GlyphHandler {
     };
 
     public static final String ID = "Phase";
-
-    @Override
-    public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        HexStats tracker = hexContext.getVolatilityTracker();
-        if (tracker == null)
-            return true;
-
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(getId());
-        if (asset == null) {
-            LOGGER.atWarning().log("Phase: missing config or asset, cannot compute volatility cost");
-            return true;
-        }
-
-        double intensity = HexVarUtil.numberOrDefault(
-                glyph.readSlot(PhaseGlyphSlots.INTENSITY, hexContext),
-                asset.getSlot(PhaseGlyphSlots.INTENSITY).getDefaultValue());
-
-        GlyphConfig config = asset.getConfig();
-        float intensityScale = Impact.scale(config == null ? null : config.getVolatilityImpact(), intensity);
-
-        float cost = glyph.computeBaseCost() * intensityScale;
-        return tracker.consumeVolatility(cost) > 0f;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

@@ -91,7 +91,7 @@ public class HexExecuteInteraction extends SimpleInteraction {
             Hex hexClone = hex.clone();
             HexUtils.validate(hexClone);
 
-            HexStats cfgStats = config.getVolatilityTracker();
+            HexStats cfgStats = config.getHexStats();
             float volatility = cfgStats.getInitialVolatility();
             float volMult = cfgStats.getVolatilityMultiplier();
             if (volMult <= 0f) volMult = 1.0f;

@@ -28,14 +28,14 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
     protected AssetExtraInfo.Data data;
     protected String id;
 
-    protected HexStats volatilityTracker = new HexStats();
+    protected HexStats hexStats = new HexStats();
     protected HexStyleAsset style = new HexStyleAsset();
     protected float castDecayRate = 0.0f;
 
     public abstract Hex getHex(ComponentAccessor<EntityStore> accessor, HexRoot hexRoot);
 
-    public HexStats getVolatilityTracker() {
-        return this.volatilityTracker;
+    public HexStats getHexStats() {
+        return this.hexStats;
     }
 
     public HexStyleAsset getStyle() {
@@ -67,9 +67,9 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
 
         BASE_CODEC = BuilderCodec.abstractBuilder(HexConfigAsset.class)
                 .appendInherited(new KeyedCodec<>("HexStats", HexStats.CODEC),
-                        (c, v) -> c.volatilityTracker = v,
-                        c -> c.volatilityTracker,
-                        (c, p) -> c.volatilityTracker = p.volatilityTracker)
+                        (c, v) -> c.hexStats = v,
+                        c -> c.hexStats,
+                        (c, p) -> c.hexStats = p.hexStats)
                 .add()
                 .appendInherited(new KeyedCodec<>("Style", HexStyleAsset.CODEC),
                         (c, v) -> c.style = v,

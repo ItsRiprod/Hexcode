@@ -54,7 +54,7 @@ public final class ConstructSplicer {
 
         mergeVariables(targetCtx, caster.getVariables(), varPolicy);
 
-        HexStats targetTracker = targetCtx.getVolatilityTracker();
+        HexStats targetTracker = targetCtx.getHexStats();
         if (targetTracker != null && donationAmount > 0f) {
             targetTracker.addVolatility(donationAmount);
         }

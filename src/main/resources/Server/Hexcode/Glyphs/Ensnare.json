@@ -52,25 +52,17 @@
         "Exponent": 2.0
       }
     },
-    "damage": {
-      "Style": "Input",
-      "Label": "hexcode.glyphs.Ensnare.damage.name",
-      "Description": "hexcode.glyphs.Ensnare.damage.description",
-      "DefaultValue": 3,
-      "Unique": true,
-      "Impact": {
-        "Type": "Threshold",
-        "Reference": 8.0,
-        "Threshold": 25.0,
-        "Exponent": 2.0
-      }
-    },
     "duration": {
       "Style": "Input",
       "Label": "hexcode.glyphs.Ensnare.duration.name",
       "Description": "hexcode.glyphs.Ensnare.duration.description",
       "DefaultValue": 4,
       "Unique": true
+    },
+    "Trapped": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Ensnare.Trapped.name",
+      "Description": "hexcode.glyphs.Ensnare.Trapped.description"
     },
     "Next": {
       "Style": "Next",

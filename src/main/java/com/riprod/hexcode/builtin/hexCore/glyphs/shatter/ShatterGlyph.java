@@ -36,10 +36,12 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.shatter.style.ShatterStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class ShatterGlyph implements GlyphHandler {
 
@@ -50,7 +52,6 @@ public class ShatterGlyph implements GlyphHandler {
 
     public static final String ID = "Shatter";
 
-    private static final String SHARD_MODEL = "Shatter";
     private static final float SHARD_SCALE = 0.35f;
     private static final int DEFAULT_COUNT = 5;
     private static final double DEFAULT_SPREAD = Math.PI / 6;
@@ -121,10 +122,11 @@ public class ShatterGlyph implements GlyphHandler {
 
         List<Vector3d> shardDirections = computeConeDirections(centralDir, count, spread);
 
-        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(SHARD_MODEL);
+        String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
         if (modelAsset == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "model asset not found: " + SHARD_MODEL);
+                    "model asset not found: " + modelId);
             return;
         }
         Model model = Model.createScaledModel(modelAsset, SHARD_SCALE);

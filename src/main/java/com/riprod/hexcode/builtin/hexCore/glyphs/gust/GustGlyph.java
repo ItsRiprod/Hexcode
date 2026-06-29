@@ -11,7 +11,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
@@ -30,21 +29,16 @@ public static final String ID = "Gust";
     private static final double MIN_KNOCKBACK_OFFSET = 0.1;
 
     @Override
-    public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        HexStats tracker = hexContext.getVolatilityTracker();
-        if (tracker == null) return true;
-
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         double radius = Math.max(0, HexVarUtil.numberOrDefault(
                 glyph.readSlot(GustGlyphSlots.RADIUS, hexContext), 5.0));
         double mag = Math.max(0, HexVarUtil.numberOrDefault(
                 glyph.readSlot(GustGlyphSlots.MAGNITUDE, hexContext), 15.0));
         double effective = mag * radius * radius;
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         Impact impact = asset == null || asset.getConfig() == null
                 ? null : asset.getConfig().getVolatilityImpact();
-        float cost = glyph.computeBaseCost() * Impact.scale(impact, effective);
-        return tracker.consumeVolatility(cost) > 0f;
+        return glyph.computeBaseCost(asset) * Impact.scale(impact, effective);
     }
 
     @Override

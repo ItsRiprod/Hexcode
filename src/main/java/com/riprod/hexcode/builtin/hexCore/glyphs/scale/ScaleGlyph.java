@@ -28,9 +28,9 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.scale.components.ScaleStackComp
 import com.riprod.hexcode.builtin.hexCore.glyphs.scale.components.ScaleState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.scale.style.ScaleStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -57,13 +57,10 @@ public class ScaleGlyph implements GlyphHandler {
     private static final Vector3f MOUNT_OFFSET = new Vector3f(0f, 2.5f, 0f);
 
     @Override
-    public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        HexStats tracker = hexContext.getVolatilityTracker();
-        if (tracker == null)
-            return true;
-        float baseCost = glyph.computeBaseCost();
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        float baseCost = glyph.computeBaseCost(asset);
         if (baseCost <= 0)
-            return true;
+            return 0f;
 
         double magnitude = clamp(HexVarUtil.numberOrDefault(
                 glyph.readSlot(ScaleGlyphSlots.MAGNITUDE, hexContext), DEFAULT_MAGNITUDE),
@@ -72,12 +69,9 @@ public class ScaleGlyph implements GlyphHandler {
         float currentScale = readCurrentScale(glyph, hexContext);
         double resultScale = clamp(currentScale * magnitude, MIN_MAGNITUDE, MAX_MAGNITUDE);
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         Impact impact = asset == null || asset.getConfig() == null
                 ? null : asset.getConfig().getVolatilityImpact();
-        float cost = baseCost * Impact.scale(impact, resultScale);
-
-        return tracker.consumeVolatility(cost) > 0f;
+        return baseCost * Impact.scale(impact, resultScale);
     }
 
     private float readCurrentScale(Glyph glyph, HexContext hexContext) {
@@ -264,7 +258,7 @@ public class ScaleGlyph implements GlyphHandler {
                         new Rotation3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z),
                         MountController.Minecart));
 
-        String modelId = ScaleStyle.resolveModelId(hexContext);
+        String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
         ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
         if (modelAsset != null) {
             Model model = Model.createUnitScaleModel(modelAsset);

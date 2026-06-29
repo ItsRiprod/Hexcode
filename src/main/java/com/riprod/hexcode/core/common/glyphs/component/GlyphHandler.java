@@ -5,11 +5,14 @@ import javax.annotation.Nullable;
 
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.core.common.glyphs.utils.GlyphCostUtil;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public interface GlyphHandler {
@@ -30,22 +33,43 @@ public interface GlyphHandler {
                 * ((1 - glyph.getEfficiency()) * 0.25f + 0.75f);
     }
 
-    default boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        HexStats tracker = hexContext.getVolatilityTracker();
-        if (tracker == null)
-            return true;
-        return tracker.consumeVolatility(glyph.computeBaseCost()) > 0f;
+    default void execute0(Glyph glyph, HexContext hexContext) {
+        HexStats tracker = hexContext.getHexStats();
+        if (tracker == null) {
+            execute(glyph, hexContext);
+            return;
+        }
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+
+        float volatilityCost = getVolatilityCost(glyph, hexContext, asset);
+        float currentVolatility = tracker.consumeVolatility(volatilityCost);
+        if (currentVolatility <= 0f) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.VOLATILITY_DEPLETED);
+            return;
+        }
+
+        float complexity = getComplexity(glyph, hexContext, asset, volatilityCost);
+        tracker.addComplexity(complexity);
+
+        execute(glyph, hexContext);
     }
 
-    default void applyComplexity(Glyph glyph, HexContext hexContext, float volatilitySpent) {
-        HexStats tracker = hexContext.getVolatilityTracker();
-        if (tracker == null || volatilitySpent <= 0f)
-            return;
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+    default float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        return GlyphCostUtil.volatilityCost(glyph, hexContext, asset);
+    }
+
+    default float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset, float volatilityCost) {
         Impact impact = asset != null && asset.getConfig() != null
                 ? asset.getConfig().getComplexityImpact()
                 : null;
-        tracker.addComplexity(volatilitySpent * Impact.scale(impact, volatilitySpent));
+        return volatilityCost * Impact.scale(impact, volatilityCost);
+    }
+
+    default void addComplexity(HexContext hexContext, float amount) {
+        HexStats tracker = hexContext.getHexStats();
+        if (tracker == null || amount == 0f)
+            return;
+        tracker.addComplexity(amount);
     }
 
 

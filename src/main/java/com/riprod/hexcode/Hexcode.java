@@ -25,7 +25,7 @@ import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
 import com.riprod.hexcode.core.common.execution.events.HexCastEventSystem;
-import com.riprod.hexcode.core.common.execution.queue.HexDrainEventSystem;
+import com.riprod.hexcode.core.common.execution.queue.HexQueueDrainEventSystem;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionTickSystem;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
@@ -393,7 +393,7 @@ public class Hexcode extends JavaPlugin {
                 .registerResource(HexExecutionQueue.class, HexExecutionQueue::new);
         HexExecutionQueue.setResourceType(hexExecutionQueueType);
         entityStoreRegistry.registerSystem(new HexExecutionTickSystem());
-        entityStoreRegistry.registerSystem(new HexDrainEventSystem());
+        entityStoreRegistry.registerSystem(new HexQueueDrainEventSystem());
 
     }
 

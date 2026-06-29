@@ -188,15 +188,15 @@ Drain.Next.name=Next
 Drain.Next.description=The next glyph in the execution chain
 
 Ensnare.name=Ensnare
-Ensnare.description=Creates spike formations that trap and damage entities in the area
+Ensnare.description=Creates spike formations that trap entities in the area
 Ensnare.target.name=Target
 Ensnare.target.description=Center position or entity for the rupture area
 Ensnare.radius.name=Radius
 Ensnare.radius.description=Radius of the rupture area in blocks
-Ensnare.damage.name=Damage
-Ensnare.damage.description=Spike damage per hit
 Ensnare.duration.name=Duration
 Ensnare.duration.description=Duration in ticks before spikes despawn
+Ensnare.Trapped.name=Trapped
+Ensnare.Trapped.description=Glyph to execute on each trapped target
 Ensnare.Next.name=Next
 Ensnare.Next.description=The next glyph in the execution chain
 

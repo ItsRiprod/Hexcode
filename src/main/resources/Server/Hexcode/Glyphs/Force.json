@@ -35,7 +35,12 @@
       "Label": "hexcode.glyphs.Force.magnitude.name",
       "Description": "hexcode.glyphs.Force.magnitude.description",
       "DefaultValue": 20,
-      "Unique": true
+      "Unique": true,
+      "Impact": {
+        "Type": "PowerLaw",
+        "DefaultMagnitude": 30.0,
+        "Exponent": 1.0
+      }
     },
     "Next": {
       "Style": "Next",
@@ -46,13 +51,5 @@
   "Volatility": {
     "InstantCost": 3,
     "DrainPerSecond": 0.0
-  },
-  "Config": {
-    "Type": "Basic",
-    "VolatilityImpact": {
-      "Type": "PowerLaw",
-      "DefaultMagnitude": 30.0,
-      "Exponent": 1.0
-    }
   }
 }

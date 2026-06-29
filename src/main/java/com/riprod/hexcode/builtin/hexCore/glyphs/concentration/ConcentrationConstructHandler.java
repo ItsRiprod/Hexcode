@@ -50,7 +50,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         if (trigger == null || heldCtx == null)
             return;
 
-        HexStats heldTracker = heldCtx.getVolatilityTracker();
+        HexStats heldTracker = heldCtx.getHexStats();
         if (heldTracker != null && heldTracker.getCurrentVolatility() <= 0f)
             return;
 
@@ -67,7 +67,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         HexcasterIdleComponent idle = buffer.getComponent(
                 casterRef, HexcasterIdleComponent.getComponentType());
         if (idle != null) {
-            idle.registerActiveTracker(releaseCtx.getVolatilityTracker());
+            idle.registerActiveTracker(releaseCtx.getHexStats());
         }
 
         if (heldTracker != null)

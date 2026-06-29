@@ -25,11 +25,42 @@ import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
 import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.component.HexColors;
+import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 public class VfxUtil {
   private VfxUtil() {
+  }
+
+  public static @Nullable String resolveModelId(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {
+    HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
+    String id = overrides != null ? overrides.getPrimaryModel() : null;
+    if (id != null)
+      return id;
+    HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
+    return glyphStyle != null ? glyphStyle.getPrimaryModel() : null;
+  }
+
+  private static final Color WHITE = new Color((byte) 255, (byte) 255, (byte) 255);
+
+  public static Color resolvePrimaryColorRaw(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {
+    HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
+    Color c = resolveColor(overrides != null ? overrides.getPrimaryColor() : null,
+        glyphStyleColor(glyphAsset, true));
+    return c != null ? c : WHITE;
+  }
+
+  public static Vector3f resolvePrimaryColor(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {
+    return HexColors.toVector3f(resolvePrimaryColorRaw(ctx, glyphAsset));
+  }
+
+  private static @Nullable Color glyphStyleColor(@Nullable GlyphAsset glyphAsset, boolean primary) {
+    HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
+    if (glyphStyle == null)
+      return null;
+    return primary ? glyphStyle.getPrimaryColor() : glyphStyle.getSecondaryColor();
   }
 
   public static void particle(String systemId, Vector3d pos, ComponentAccessor<EntityStore> accessor) {

@@ -30,9 +30,11 @@ import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class DelayGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -43,7 +45,6 @@ public class DelayGlyph implements GlyphHandler {
     }
 
     public static final String ID = "Delay";
-    private static final String MODEL_ID = "Delay";
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -138,7 +139,8 @@ public class DelayGlyph implements GlyphHandler {
                     new TransformComponent(spawnPos, rot));
         }
 
-        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(MODEL_ID);
+        String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
         if (modelAsset != null) {
             Model model = Model.createScaledModel(modelAsset, 1.0f);
 
@@ -146,7 +148,7 @@ public class DelayGlyph implements GlyphHandler {
             holder.addComponent(PersistentModel.getComponentType(),
                     new PersistentModel(model.toReference()));
         } else {
-            LOGGER.atWarning().log("delay: model asset '%s' not found", MODEL_ID);
+            LOGGER.atWarning().log("delay: model asset '%s' not found", modelId);
         }
 
         Ref<EntityStore> delayRef = accessor.addEntity(holder, AddReason.SPAWN);

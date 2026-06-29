@@ -20,9 +20,6 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.erode.style.ErodeStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.impact.Impact;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
@@ -51,20 +48,6 @@ public class ErodeGlyph implements GlyphHandler {
     private static final int MIN_TIER = 1;
     private static final int MAX_TIER = 6;
 
-    @Override
-    public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        HexStats tracker = hexContext.getVolatilityTracker();
-        if (tracker == null)
-            return true;
-
-        double amount = HexVarUtil.numberOrDefault(
-                glyph.readSlot(ErodeGlyphSlots.AMOUNT, hexContext), DEFAULT_AMOUNT);
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        Impact impact = asset == null || asset.getConfig() == null
-                ? null : asset.getConfig().getVolatilityImpact();
-        float cost = glyph.computeBaseCost() * Impact.scale(impact, amount);
-        return tracker.consumeVolatility(cost) > 0f;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

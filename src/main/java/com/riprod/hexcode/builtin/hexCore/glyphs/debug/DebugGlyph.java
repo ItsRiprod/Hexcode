@@ -48,9 +48,8 @@ public class DebugGlyph implements GlyphHandler {
         if (pr == null)
             return;
 
-        String volatility = volatilityText(hexContext.getVolatilityTracker());
-        // complexity axis not yet wired; placeholder until the accrual seam lands
-        String complexity = "0";
+        String volatility = volatilityText(hexContext.getHexStats());
+        String complexity = complexityText(hexContext.getHexStats());
 
         Slot slot = glyph.getSlot(DebugGlyphSlots.SLOT);
         boolean wired = slot != null && slot.getFirstLink() != null;
@@ -142,6 +141,12 @@ public class DebugGlyph implements GlyphHandler {
         if (tracker == null)
             return "-";
         return String.format("%.1f / %.1f", tracker.getCurrentVolatility(), tracker.getInitialVolatility());
+    }
+
+    private static String complexityText(HexStats tracker) {
+        if (tracker == null)
+            return "-";
+        return String.format("%.1f", tracker.getComplexity());
     }
 
     private static String valueText(HexVar value) {

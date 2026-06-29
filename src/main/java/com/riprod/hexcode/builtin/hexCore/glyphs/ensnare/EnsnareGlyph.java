@@ -31,9 +31,9 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.ensnare.component.EnsnareCompon
 import com.riprod.hexcode.builtin.hexCore.glyphs.ensnare.component.SpikeEntry;
 import com.riprod.hexcode.builtin.hexCore.glyphs.ensnare.style.EnsnareStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -48,11 +48,9 @@ public String getId() { return ID; };
 
 public static final String ID = "Ensnare";
 
-    private static final String SPIKE_MODEL = "Ensnare_Spike";
     private static final float SPIKE_SCALE = 0.5f;
 
     private static final double DEFAULT_RADIUS = 3.0;
-    private static final double DEFAULT_DAMAGE = 8.0;
     private static final double DEFAULT_DURATION = 5.0;
 
     private static final float DAMAGE_COOLDOWN_SECONDS = 1.0f;
@@ -61,22 +59,13 @@ public static final String ID = "Ensnare";
     private static final float DENSITY = 0.5f;
 
     @Override
-    public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        HexStats tracker = hexContext.getVolatilityTracker();
-        if (tracker == null) return true;
-
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         double radius = Math.max(0, HexVarUtil.numberOrDefault(
                 glyph.readSlot(EnsnareGlyphSlots.RADIUS, hexContext), DEFAULT_RADIUS));
-        double damage = Math.max(0, HexVarUtil.numberOrDefault(
-                glyph.readSlot(EnsnareGlyphSlots.DAMAGE, hexContext), DEFAULT_DAMAGE));
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        float scale = Math.max(1f,
-                Impact.scale(slotImpact(asset, EnsnareGlyphSlots.RADIUS), radius)
-                + Impact.scale(slotImpact(asset, EnsnareGlyphSlots.DAMAGE), damage));
+        float scale = Math.max(1f, Impact.scale(slotImpact(asset, EnsnareGlyphSlots.RADIUS), radius));
 
-        float cost = glyph.computeBaseCost() * scale;
-        return tracker.consumeVolatility(cost) > 0f;
+        return glyph.computeBaseCost(asset) * scale;
     }
 
     private static Impact slotImpact(GlyphAsset asset, String key) {
@@ -92,8 +81,6 @@ public static final String ID = "Ensnare";
 
         double radius = Math.max(0, HexVarUtil.numberOrDefault(
                 glyph.readSlot(EnsnareGlyphSlots.RADIUS, hexContext), DEFAULT_RADIUS));
-        double damage = Math.max(0, HexVarUtil.numberOrDefault(
-                glyph.readSlot(EnsnareGlyphSlots.DAMAGE, hexContext), DEFAULT_DAMAGE));
         double duration = Math.max(0, HexVarUtil.numberOrDefault(
                 glyph.readSlot(EnsnareGlyphSlots.DURATION, hexContext), DEFAULT_DURATION));
 
@@ -109,10 +96,11 @@ public static final String ID = "Ensnare";
         int centerBlockY = (int) Math.floor(center.y);
         int centerBlockZ = (int) Math.floor(center.z);
 
-        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(SPIKE_MODEL);
+        String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
         if (modelAsset == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Missing asset " + SPIKE_MODEL);
+                    "Missing asset " + modelId);
             return;
         }
         Model spikeModel = Model.createScaledModel(modelAsset, SPIKE_SCALE);
@@ -159,7 +147,7 @@ public static final String ID = "Ensnare";
         }
 
         spawnTrackerEntity(glyph, hexContext, spikes, (float) duration,
-                (float) damage, center, radius, accessor);
+                0f, center, radius, accessor);
 
         EnsnareStyle.renderSeismicBurst(center, hexContext, accessor);
     }

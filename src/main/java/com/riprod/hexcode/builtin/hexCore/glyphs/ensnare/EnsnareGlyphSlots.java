@@ -6,6 +6,6 @@ public final class EnsnareGlyphSlots {
 
     public static final String TARGET = "target";
     public static final String RADIUS = "radius";
-    public static final String DAMAGE = "damage";
     public static final String DURATION = "duration";
+    public static final String TRAPPED = "Trapped";
 }

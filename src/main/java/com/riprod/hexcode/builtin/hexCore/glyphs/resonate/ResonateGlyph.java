@@ -73,7 +73,7 @@ public class ResonateGlyph implements GlyphHandler {
             return;
         }
 
-        HexStats tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getHexStats();
         float donation = tracker != null ? tracker.getCurrentVolatility() : 0f;
 
         for (HexStatus<?> target : targets) {

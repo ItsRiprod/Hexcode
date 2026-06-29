@@ -81,7 +81,10 @@ public class Glyph {
     }
 
     public float computeBaseCost() {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
+        return computeBaseCost(GlyphAsset.getAssetMap().getAsset(glyphId));
+    }
+
+    public float computeBaseCost(GlyphAsset asset) {
         if (asset == null)
             return 0f;
         return asset.getVolatility().getInstantCost() * ((1 - volatility) * 0.5f + 0.5f);

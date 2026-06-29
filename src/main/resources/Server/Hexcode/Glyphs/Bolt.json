@@ -40,7 +40,12 @@
       "Label": "hexcode.glyphs.Bolt.power.name",
       "Description": "hexcode.glyphs.Bolt.power.description",
       "DefaultValue": 15,
-      "Unique": true
+      "Unique": true,
+      "Impact": {
+        "Type": "PowerLaw",
+        "DefaultMagnitude": 15.0,
+        "Exponent": 1.0
+      }
     },
     "Next": {
       "Style": "Next",
@@ -51,13 +56,5 @@
   "Volatility": {
     "InstantCost": 6,
     "DrainPerSecond": 0.0
-  },
-  "Config": {
-    "Type": "Basic",
-    "VolatilityImpact": {
-      "Type": "PowerLaw",
-      "DefaultMagnitude": 15.0,
-      "Exponent": 1.0
-    }
   }
 }

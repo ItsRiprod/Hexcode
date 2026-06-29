@@ -1,0 +1,13 @@
+{
+  "PrimaryColor": "#5D4037",
+  "SecondaryColor": "#A1887F",
+  "Alpha": 1.0,
+  "PrimaryModel": "Delay",
+  "PrimaryParticle": {
+    "SystemId": "Delay_Shimmer"
+  },
+  "PrimarySound": "SFX_Hex_Tick",
+  "SecondaryParticle": {
+    "SystemId": "Delay_Shimmer"
+  }
+}

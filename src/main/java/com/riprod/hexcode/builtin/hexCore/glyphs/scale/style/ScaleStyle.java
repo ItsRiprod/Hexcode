@@ -18,14 +18,6 @@ public class ScaleStyle {
         return GlyphAsset.getAssetMap().getAsset(ScaleGlyph.ID);
     }
 
-    public static String resolveModelId(HexContext ctx) {
-        HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        String id = overrides != null ? overrides.getPrimaryModel() : null;
-        if (id != null) return id;
-        HexStyleAsset glyphStyle = asset() != null ? asset().getStyle() : null;
-        return glyphStyle != null ? glyphStyle.getPrimaryModel() : null;
-    }
-
     public static void renderApply(Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;

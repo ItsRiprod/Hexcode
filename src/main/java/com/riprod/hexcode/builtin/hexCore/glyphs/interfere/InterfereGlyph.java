@@ -70,7 +70,7 @@ public class InterfereGlyph implements GlyphHandler {
         if (targets.isEmpty())
             return 0;
 
-        HexStats tracker = hexContext.getVolatilityTracker();
+        HexStats tracker = hexContext.getHexStats();
         float donation = tracker != null ? tracker.getCurrentVolatility() : 0f;
 
         ConstructTickContext ctx = new ConstructTickContext(accessor, ref);

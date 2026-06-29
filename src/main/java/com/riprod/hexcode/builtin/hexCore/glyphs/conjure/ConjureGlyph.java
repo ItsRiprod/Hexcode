@@ -35,7 +35,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.conjure.component.ConjureZoneComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.conjure.style.ConjureStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
@@ -60,11 +59,7 @@ public class ConjureGlyph implements GlyphHandler {
     private static final String HARD_COLLISION_ID = "Hexcode_Conjure_HardCollision";
 
     @Override
-    public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        HexStats tracker = hexContext.getVolatilityTracker();
-        if (tracker == null)
-            return true;
-
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         Vector3d a = HexVarUtil.position(
                 glyph.readSlot(ConjureGlyphSlots.COORDS_A, hexContext,
                         new PositionVar(new Vector3d(0.5, 0.5, 0.5))),
@@ -81,11 +76,9 @@ public class ConjureGlyph implements GlyphHandler {
             volume = dx * dy * dz;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         Impact impact = asset == null || asset.getConfig() == null
                 ? null : asset.getConfig().getVolatilityImpact();
-        float cost = glyph.computeBaseCost() * Impact.scale(impact, volume);
-        return tracker.consumeVolatility(cost) > 0f;
+        return glyph.computeBaseCost(asset) * Impact.scale(impact, volume);
     }
 
     @Override

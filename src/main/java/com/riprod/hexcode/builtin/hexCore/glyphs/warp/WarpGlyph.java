@@ -10,7 +10,6 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.warp.style.WarpStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
@@ -28,10 +27,7 @@ public String getId() { return ID; };
 public static final String ID = "Warp";
 
     @Override
-    public boolean consumeVolatility(Glyph glyph, HexContext hexContext) {
-        HexStats tracker = hexContext.getVolatilityTracker();
-        if (tracker == null) return true;
-
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         double distance = 0.0;
         HexVar destInput = glyph.readSlot(WarpGlyphSlots.DESTINATION, hexContext);
         var accessor = hexContext.getAccessor();
@@ -49,11 +45,9 @@ public static final String ID = "Warp";
             }
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         Impact impact = asset == null || asset.getConfig() == null
                 ? null : asset.getConfig().getVolatilityImpact();
-        float cost = glyph.computeBaseCost() * Impact.scale(impact, distance);
-        return tracker.consumeVolatility(cost) > 0f;
+        return glyph.computeBaseCost(asset) * Impact.scale(impact, distance);
     }
 
     @Override
