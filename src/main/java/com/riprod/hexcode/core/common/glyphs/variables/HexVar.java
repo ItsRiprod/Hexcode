@@ -16,6 +16,8 @@ public abstract sealed class HexVar
 
     public abstract String describe();
 
+    public abstract HexVar copy();
+
     public PositionVar toPosition(ComponentAccessor<EntityStore> accessor) {
         throw new UnsupportedOperationException(getClass().getSimpleName() + " cannot convert to Position");
     }

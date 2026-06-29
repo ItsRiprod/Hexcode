@@ -25,13 +25,13 @@
     "UVOption": "None",
     "Animation": {
       "0": { "FrameIndex": { "Min": 0, "Max": 3 }, "Opacity": 1, "Color": "#ffffff", "Scale": { "X": { "Min": 0.5, "Max": 0.6 }, "Y": { "Min": 0.2, "Max": 0.3 } } },
-      "30": { "Opacity": 0.6, "Scale": { "X": { "Min": 1.2, "Max": 1.2 }, "Y": { "Min": 0.6, "Max": 0.7 } }, "Color": "#dceeff" },
-      "100": { "Opacity": 0, "Color": "#a2f1ff", "Scale": { "X": { "Min": 0.8, "Max": 0.8 }, "Y": { "Min": 0.8, "Max": 0.8 } } }
+      "30": { "Opacity": 0.6, "Scale": { "X": { "Min": 1.2, "Max": 1.2 }, "Y": { "Min": 0.6, "Max": 0.7 } }, "Color": "#ffffff" },
+      "100": { "Opacity": 0, "Color": "#ffffff", "Scale": { "X": { "Min": 0.8, "Max": 0.8 }, "Y": { "Min": 0.8, "Max": 0.8 } } }
     },
     "InitialAnimationFrame": {
       "Scale": { "X": { "Min": -0.2, "Max": -0.15 }, "Y": { "Min": -0.2, "Max": -0.15 } },
       "Opacity": 1.0,
-      "Color": "#cdcdff",
+      "Color": "#ffffff",
       "FrameIndex": { "Min": 0, "Max": 3 }
     }
   },

@@ -22,7 +22,7 @@
     "SoftParticles": "Require",
     "UVOption": "RandomFlipU",
     "Animation": {
-      "0": { "FrameIndex": { "Min": 0, "Max": 0 }, "Opacity": 1, "Color": "#5d5d5d" },
+      "0": { "FrameIndex": { "Min": 0, "Max": 0 }, "Opacity": 1, "Color": "#ffffff" },
       "8": { "FrameIndex": { "Min": 1, "Max": 1 } },
       "16": { "FrameIndex": { "Min": 2, "Max": 2 } },
       "24": { "FrameIndex": { "Min": 3, "Max": 3 } },
@@ -34,7 +34,7 @@
       "74": { "FrameIndex": { "Min": 9, "Max": 9 } },
       "82": { "FrameIndex": { "Min": 10, "Max": 10 } },
       "90": { "FrameIndex": { "Min": 11, "Max": 11 }, "Opacity": 1 },
-      "100": { "Opacity": 0, "Color": "#a0a0a0", "Scale": { "X": { "Min": 1.0, "Max": 2.0 }, "Y": { "Min": 2.0, "Max": 3.0 } } }
+      "100": { "Opacity": 0, "Color": "#ffffff", "Scale": { "X": { "Min": 1.0, "Max": 2.0 }, "Y": { "Min": 2.0, "Max": 3.0 } } }
     },
     "InitialAnimationFrame": {
       "Opacity": 1, "Color": "#ffffff",

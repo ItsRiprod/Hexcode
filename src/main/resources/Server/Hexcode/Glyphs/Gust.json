@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#B3E5FC",
+    "SecondaryColor": "#E1F5FE",
     "PrimaryParticle": {
       "SystemId": "Gust_Small"
     },

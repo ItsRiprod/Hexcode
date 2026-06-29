@@ -126,7 +126,7 @@ public class HexStatus<S extends ConstructState> {
         copy.handlerId = this.handlerId;
         copy.killRequested = this.killRequested;
         copy.firedFirstTick = this.firedFirstTick;
-        copy.hexContext = this.hexContext.branch();
+        copy.hexContext = HexContext.cloneState(this.hexContext);
         copy.triggeringGlyph = this.triggeringGlyph;
         copy.elapsedTime = this.elapsedTime;
         copy.constructId = this.constructId;

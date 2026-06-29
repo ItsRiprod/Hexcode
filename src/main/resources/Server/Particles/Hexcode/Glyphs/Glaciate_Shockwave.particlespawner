@@ -15,8 +15,8 @@
     "ScaleRatioConstraint": "OneToOne",
     "Animation": {
       "0": { "Opacity": 0.7, "Color": "#ffffff", "Scale": { "X": { "Min": 0.0, "Max": 0.0 }, "Y": { "Min": 0.3, "Max": 0.3 } } },
-      "50": { "Opacity": 0.4, "Color": "#ccddff", "Scale": { "X": { "Min": 0.6, "Max": 0.6 }, "Y": { "Min": 0.6, "Max": 0.6 } } },
-      "100": { "Opacity": 0, "Color": "#99cdff", "Scale": { "X": { "Min": 1.0, "Max": 1.0 }, "Y": { "Min": 1.0, "Max": 1.0 } } }
+      "50": { "Opacity": 0.4, "Color": "#ffffff", "Scale": { "X": { "Min": 0.6, "Max": 0.6 }, "Y": { "Min": 0.6, "Max": 0.6 } } },
+      "100": { "Opacity": 0, "Color": "#ffffff", "Scale": { "X": { "Min": 1.0, "Max": 1.0 }, "Y": { "Min": 1.0, "Max": 1.0 } } }
     }
   }
 }

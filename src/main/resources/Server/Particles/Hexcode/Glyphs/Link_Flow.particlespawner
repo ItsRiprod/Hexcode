@@ -23,7 +23,7 @@
     "Animation": {
       "0": {
         "Opacity": 1,
-        "Color": "#5f95d9",
+        "Color": "#ffffff",
         "Scale": {
           "X": {
             "Min": 0.03,
@@ -37,7 +37,7 @@
       },
       "25": {
         "Opacity": 1,
-        "Color": "#5f95d9",
+        "Color": "#ffffff",
         "Scale": {
           "X": {
             "Min": 0.1,
@@ -51,7 +51,7 @@
       },
       "75": {
         "Opacity": 1,
-        "Color": "#5f95d9",
+        "Color": "#ffffff",
         "Scale": {
           "X": {
             "Min": 0.1,
@@ -65,7 +65,7 @@
       },
       "100": {
         "Opacity": 1,
-        "Color": "#5f95d9",
+        "Color": "#ffffff",
         "Scale": {
           "X": {
             "Min": 0.03,

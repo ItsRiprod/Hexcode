@@ -1,5 +1,11 @@
 {
-  "PrimaryColor": "#311B92",
-  "SecondaryColor": "#7C4DFF",
-  "Alpha": 1.0
+  "PrimaryColor": "#8319B6",
+  "SecondaryColor": "#CB6EF5",
+  "Alpha": 1.0,
+  "StyleParticle": {
+    "SystemId": "Spectre_Void_Head"
+  },
+  "PrimaryParticle": {
+    "SystemId": "VoidImpact"
+  }
 }

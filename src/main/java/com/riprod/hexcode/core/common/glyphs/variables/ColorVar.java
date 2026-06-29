@@ -29,6 +29,11 @@ public final class ColorVar extends HexVar {
     public double getA() { return a; }
 
     @Override
+    public HexVar copy() {
+        return new ColorVar(r, g, b, a);
+    }
+
+    @Override
     public Object getRawValue() {
         return new double[] { r, g, b, a };
     }

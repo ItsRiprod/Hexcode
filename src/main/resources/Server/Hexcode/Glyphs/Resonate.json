@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#26C6DA",
+    "SecondaryColor": "#B2EBF2",
     "PrimaryParticle": {
       "SystemId": "Link_Flow"
     },

@@ -37,6 +37,7 @@ public class HexContext {
     @Nullable private HexVar defaultVariable;
     @Nullable private String castSlotKey;
     private float castDecayRate = 0f;
+    private float currentComplexity = 0f;
     private Map<String, HexVar> variables = new HashMap<>();
     @Nullable
     private UUID executionId;
@@ -83,12 +84,17 @@ public class HexContext {
         copy.defaultVariable = src.defaultVariable;
         copy.castSlotKey = src.castSlotKey;
         copy.castDecayRate = src.castDecayRate;
+        copy.currentComplexity = src.currentComplexity;
         copy.variables = new HashMap<>(src.variables);
         copy.executionId = src.executionId;
         return copy;
     }
 
     public HexContext branch() {
+        return branch(2);
+    }
+
+    public HexContext branch(int splitFactor) {
         HexContext branch = new HexContext();
         branch.root = this.root;
         branch.accessor = this.accessor;
@@ -102,6 +108,7 @@ public class HexContext {
         branch.defaultVariable = this.defaultVariable;
         branch.castSlotKey = this.castSlotKey;
         branch.castDecayRate = this.castDecayRate;
+        branch.currentComplexity = this.currentComplexity / Math.max(1, splitFactor);
         return branch;
     }
 
@@ -174,7 +181,7 @@ public class HexContext {
     }
 
     public void setVariable(String slot, HexVar value) {
-        this.variables.put(slot, value);
+        this.variables.put(slot, value == null ? null : value.copy());
     }
 
     @Nullable
@@ -184,7 +191,24 @@ public class HexContext {
 
     public void setHexStats(HexStats hexStats) {
         this.hexStats = hexStats;
-        if (hexStats != null) hexStats.setExecutionId(this.executionId);
+        if (hexStats != null) {
+            hexStats.setExecutionId(this.executionId);
+            this.currentComplexity = hexStats.getInitialComplexity();
+        }
+    }
+
+    public float getComplexity() {
+        return currentComplexity;
+    }
+
+    public void addComplexity(float amount) {
+        this.currentComplexity = Math.max(0f, this.currentComplexity + amount);
+    }
+
+    public float consumeComplexity() {
+        float pooled = this.currentComplexity;
+        this.currentComplexity = 0f;
+        return pooled;
     }
 
     public float getVolatilityOverride() {
@@ -270,7 +294,7 @@ public class HexContext {
     }
 
     public void setDefaultVariable(@Nullable HexVar defaultVariable) {
-        this.defaultVariable = defaultVariable;
+        this.defaultVariable = defaultVariable == null ? null : defaultVariable.copy();
     }
 
     @Nullable
@@ -362,6 +386,11 @@ public class HexContext {
             .append(new KeyedCodec<>("CastDecayRate", Codec.FLOAT),
                     (c, v) -> c.castDecayRate = v,
                     c -> c.castDecayRate)
+            .add()
+            .append(new KeyedCodec<>("CurrentComplexity", Codec.FLOAT),
+                    (c, v) -> c.currentComplexity = v,
+                    c -> c.currentComplexity)
+            .metadata(UIDisplayMode.HIDDEN)
             .add()
             .append(new KeyedCodec<>("Variables", new MapCodec<>(HexVar.CODEC, HashMap::new)),
                     (c, v) -> c.variables = v,

@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#7C4DFF",
+    "SecondaryColor": "#D1C4E9",
     "PrimaryParticle": {
       "SystemId": "Phase_Out"
     },

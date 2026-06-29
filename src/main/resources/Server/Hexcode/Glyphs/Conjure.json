@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#3399FF",
+    "SecondaryColor": "#A3CCFF",
     "PrimaryParticle": {
       "SystemId": "Conjure_Spawn"
     },

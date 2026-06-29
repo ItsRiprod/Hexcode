@@ -1,6 +1,7 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "Parent": "Self_Growth",
     "PrimaryParticle": {
       "SystemId": "Hexcode_Grow_Effect"
     },

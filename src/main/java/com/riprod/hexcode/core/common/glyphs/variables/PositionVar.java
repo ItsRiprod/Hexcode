@@ -38,6 +38,11 @@ public final class PositionVar extends HexVar {
     }
 
     @Override
+    public HexVar copy() {
+        return new PositionVar(position == null ? null : new Vector3d(position), absolute);
+    }
+
+    @Override
     public Object getRawValue() {
         return position;
     }

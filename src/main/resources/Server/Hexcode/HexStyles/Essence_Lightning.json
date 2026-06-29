@@ -1,5 +1,11 @@
 {
-  "PrimaryColor": "#FFEA00",
-  "SecondaryColor": "#FFFDE7",
-  "Alpha": 1.0
+  "PrimaryColor": "#FFF454",
+  "SecondaryColor": "#FFC13B",
+  "Alpha": 1.0,
+  "StyleParticle": {
+    "SystemId": "Lightning"
+  },
+  "PrimaryParticle": {
+    "SystemId": "Magic_Hit"
+  }
 }

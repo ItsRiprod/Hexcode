@@ -1,5 +1,9 @@
 {
   "Parent": "Glyph_Template",
+  "Style": {
+    "PrimaryColor": "#8D6E63",
+    "SecondaryColor": "#BCAAA4"
+  },
   "Title": "hexcode.glyphs.Ceiling.name",
   "Description": "hexcode.glyphs.Ceiling.description",
   "ModelPath": "Ceiling",

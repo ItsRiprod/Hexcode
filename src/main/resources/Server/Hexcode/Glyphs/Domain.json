@@ -87,6 +87,8 @@
     }
   },
   "Style": {
+    "PrimaryColor": "#8033CC",
+    "SecondaryColor": "#C499E6",
     "PrimaryParticle": {
       "SystemId": "Conjure_Spawn"
     }

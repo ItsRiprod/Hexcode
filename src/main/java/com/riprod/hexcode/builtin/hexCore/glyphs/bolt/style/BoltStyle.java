@@ -5,13 +5,11 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
-import com.hypixel.hytale.protocol.Color;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexColors;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
@@ -22,7 +20,6 @@ public class BoltStyle {
 
     private static final String GLYPH_ID = "Bolt";
     private static final String SHOCK_EFFECT_ID = "Hexcode_Shock";
-    private static final Vector3f DEFAULT_COLOR = new Vector3f(0.6f, 0.9f, 1.0f);
     private static final float BEAM_THICKNESS = 0.2f;
     private static final float BEAM_DURATION = 0.3f;
     private static final int PARTICLES_PER_BOLT = 12;
@@ -34,20 +31,10 @@ public class BoltStyle {
         return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
     }
 
-    public static Vector3f resolveColor(HexContext ctx) {
-        HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        Color c = overrides != null ? overrides.getPrimaryColor() : null;
-        if (c == null) {
-            HexStyleAsset glyphStyle = asset() != null ? asset().getStyle() : null;
-            c = glyphStyle != null ? glyphStyle.getPrimaryColor() : null;
-        }
-        return c != null ? HexColors.toVector3f(c) : DEFAULT_COLOR;
-    }
-
     public static void renderBolt(ComponentAccessor<EntityStore> accessor, World world,
             Vector3d sourcePos, Vector3d targetPos, HexContext ctx) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        Vector3f color = resolveColor(ctx);
+        Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset());
         VfxUtil.line(accessor, world, sourcePos, targetPos, color, BEAM_THICKNESS, BEAM_DURATION, 0);
         String particleId = particleSystemId();
         if (particleId != null) {

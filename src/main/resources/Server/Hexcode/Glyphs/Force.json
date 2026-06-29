@@ -1,7 +1,7 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
-    "Parent": "Force_Fire",
+    "Parent": "Essence_Fire",
     "PrimaryParticle": {
       "SystemId": "Force_Impact"
     },

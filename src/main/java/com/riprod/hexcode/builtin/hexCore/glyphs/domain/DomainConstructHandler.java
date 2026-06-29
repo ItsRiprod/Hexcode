@@ -29,8 +29,10 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class DomainConstructHandler implements ConstructHandler<NoState> {
 
@@ -246,7 +248,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         } else if (!nowContested[0] && wasContested) {
             DebugComponent debug = buffer.getComponent(selfRef, DebugComponent.getComponentType());
             if (debug != null) {
-                debug.setColor(DomainStyle.resolveColor(null));
+                debug.setColor(VfxUtil.resolvePrimaryColor(null, GlyphAsset.getAssetMap().getAsset(DomainGlyph.ID)));
             }
         }
     }

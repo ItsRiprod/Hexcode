@@ -5,8 +5,8 @@
       "SystemId": "Area_Pulse"
     },
     "PrimarySound": "SFX_Skeleton_Mage_Spellbook_Impact",
-    "PrimaryColor": "#ffffff",
-    "SecondaryColor": "#ffffff"
+    "PrimaryColor": "#4D99E6",
+    "SecondaryColor": "#B3D9F2"
   },
   "Title": "hexcode.glyphs.Area.name",
   "Description": "hexcode.glyphs.Area.description",

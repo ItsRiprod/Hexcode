@@ -1,7 +1,6 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.domain.style;
 
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -14,7 +13,6 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class DomainStyle {
 
-    private static final Vector3f DEFAULT_COLOR = new Vector3f(0.5f, 0.2f, 0.8f);
     private static final String DESPAWN_PARTICLE = "Conjure_Despawn";
     private static final String DESPAWN_SOUND = "SFX_Fireball_Miss";
     private static final String CONTESTED_PARTICLE = "Halt_Crystallize";
@@ -25,12 +23,6 @@ public class DomainStyle {
 
     private static GlyphAsset asset() {
         return GlyphAsset.getAssetMap().getAsset(DomainGlyph.ID);
-    }
-
-    public static Vector3f resolveColor(HexColors colors) {
-        if (colors == null || colors.getPrimaryColor() == null)
-            return DEFAULT_COLOR;
-        return HexColors.toVector3f(colors.getPrimaryColor());
     }
 
     public static void renderSpawn(Vector3d pos, float radius, HexContext ctx,

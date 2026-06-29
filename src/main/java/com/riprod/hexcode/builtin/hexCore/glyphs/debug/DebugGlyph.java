@@ -49,7 +49,7 @@ public class DebugGlyph implements GlyphHandler {
             return;
 
         String volatility = volatilityText(hexContext.getHexStats());
-        String complexity = complexityText(hexContext.getHexStats());
+        String complexity = complexityText(hexContext);
 
         Slot slot = glyph.getSlot(DebugGlyphSlots.SLOT);
         boolean wired = slot != null && slot.getFirstLink() != null;
@@ -143,10 +143,10 @@ public class DebugGlyph implements GlyphHandler {
         return String.format("%.1f / %.1f", tracker.getCurrentVolatility(), tracker.getInitialVolatility());
     }
 
-    private static String complexityText(HexStats tracker) {
-        if (tracker == null)
+    private static String complexityText(HexContext hexContext) {
+        if (hexContext == null)
             return "-";
-        return String.format("%.1f", tracker.getComplexity());
+        return String.format("%.1f", hexContext.getComplexity());
     }
 
     private static String valueText(HexVar value) {

@@ -34,17 +34,17 @@
     "Animation": {
       "0": {
         "Opacity": 0.6,
-        "Color": "#3399dd",
+        "Color": "#ffffff",
         "Scale": { "X": { "Min": 0.08, "Max": 0.12 }, "Y": { "Min": 0.08, "Max": 0.12 } }
       },
       "50": {
         "Opacity": 0.3,
-        "Color": "#1166aa",
+        "Color": "#ffffff",
         "Scale": { "X": { "Min": 0.06, "Max": 0.08 }, "Y": { "Min": 0.06, "Max": 0.08 } }
       },
       "100": {
         "Opacity": 0,
-        "Color": "#004477",
+        "Color": "#ffffff",
         "Scale": { "X": { "Min": 0.02, "Max": 0.02 }, "Y": { "Min": 0.02, "Max": 0.02 } }
       }
     }

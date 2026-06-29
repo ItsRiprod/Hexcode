@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
-  "Style": "Chaos_Void",
+  "Style": {
+    "Parent": "Essence_Void"
+  },
   "Title": "hexcode.glyphs.Chaos.name",
   "Description": "hexcode.glyphs.Chaos.description",
   "ModelPath": "Chaos",

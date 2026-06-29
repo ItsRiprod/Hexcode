@@ -13,7 +13,6 @@ public class HexStats {
     private float initialVolatility;
     private float currentVolatility;
     private float initialComplexity;
-    private float currentComplexity;
     private float volatilityMultiplier;
     private float complexityMultiplier;
     private UUID executionId;
@@ -25,7 +24,6 @@ public class HexStats {
     public HexStats(float initialVolatility, float volatilityMultiplier, float complexityMultiplier) {
         this.initialVolatility = initialVolatility;
         this.currentVolatility = initialVolatility;
-        this.currentComplexity = 0f;
         this.volatilityMultiplier = volatilityMultiplier;
         this.complexityMultiplier = complexityMultiplier;
     }
@@ -63,18 +61,12 @@ public class HexStats {
         return this.currentVolatility;
     }
 
-    public float getComplexity() {
-        return currentComplexity;
+    public float getInitialComplexity() {
+        return initialComplexity;
     }
 
-    public void addComplexity(float amount) {
-        this.currentComplexity = Math.max(0f, this.currentComplexity + amount);
-    }
-
-    public float consumeComplexity() {
-        float pooled = this.currentComplexity;
-        this.currentComplexity = 0f;
-        return pooled;
+    public void setInitialComplexity(float initialComplexity) {
+        this.initialComplexity = initialComplexity;
     }
 
     public float getVolatilityMultiplier() {
@@ -124,11 +116,6 @@ public class HexStats {
                     (c) -> c.currentVolatility)
             .metadata(UIDisplayMode.HIDDEN)
             .add()
-            .append(new KeyedCodec<>("CurrentComplexity", Codec.FLOAT),
-                    (c, v) -> c.currentComplexity = v,
-                    (c) -> c.currentComplexity)
-            .metadata(UIDisplayMode.HIDDEN)
-            .add()
             .append(new KeyedCodec<>("VolatilityMultiplier", Codec.FLOAT),
                     (c, v) -> c.volatilityMultiplier = v,
                     (c) -> c.volatilityMultiplier)
@@ -153,7 +140,6 @@ public class HexStats {
         }
         if (other.initialComplexity > 0f) {
             this.initialComplexity = other.initialComplexity;
-            this.currentComplexity = other.initialComplexity;
         }
 
         if (other.volatilityMultiplier != 1.0f) {
@@ -170,7 +156,6 @@ public class HexStats {
         copy.initialVolatility = this.initialVolatility;
         copy.initialComplexity = this.initialComplexity;
         copy.currentVolatility = this.currentVolatility;
-        copy.currentComplexity = this.currentComplexity;
         copy.volatilityMultiplier = this.volatilityMultiplier;
         copy.complexityMultiplier = this.complexityMultiplier;
         copy.executionId = this.executionId;

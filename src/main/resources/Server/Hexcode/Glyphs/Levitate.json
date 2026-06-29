@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#B39DDB",
+    "SecondaryColor": "#EDE7F6",
     "PrimaryParticle": {
       "SystemId": "Levitate_Activate"
     },

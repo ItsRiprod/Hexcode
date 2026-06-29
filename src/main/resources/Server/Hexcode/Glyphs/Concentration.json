@@ -31,6 +31,8 @@
     "InstantCost": 0.1,
     "DrainPerSecond": 0.0},
   "Style": {
+    "PrimaryColor": "#00E5FF",
+    "SecondaryColor": "#B2EBF2",
     "PrimaryModel": "Concentration_Focus",
     "PrimaryParticle": {
       "SystemId": "Halt_Crystallize"

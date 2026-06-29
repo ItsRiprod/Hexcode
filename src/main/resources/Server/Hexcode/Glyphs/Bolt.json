@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#99E6FF",
+    "SecondaryColor": "#D6F2FF",
     "PrimaryParticle": {
       "SystemId": "Shock_Spawner_Temporary"
     },

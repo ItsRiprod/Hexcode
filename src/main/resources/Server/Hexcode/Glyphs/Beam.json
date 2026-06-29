@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#6633AB",
+    "SecondaryColor": "#B399D6",
     "SecondaryParticle": {
       "SystemId": "Beam_Impact"
     },

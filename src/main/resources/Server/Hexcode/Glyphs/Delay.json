@@ -1,7 +1,7 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
-    "Parent": "Delay_Earth",
+    "Parent": "Essence_Life",
     "PrimaryParticle": {
       "SystemId": "Delay_Shimmer"
     },

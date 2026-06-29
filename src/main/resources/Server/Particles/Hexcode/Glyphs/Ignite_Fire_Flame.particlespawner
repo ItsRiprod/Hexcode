@@ -23,10 +23,10 @@
     "SoftParticles": "Require",
     "UVOption": "None",
     "Animation": {
-      "0": { "FrameIndex": { "Min": 0, "Max": 3 }, "Scale": { "X": { "Min": 1.0, "Max": 1.0 }, "Y": { "Min": 1.0, "Max": 1.0 } }, "Opacity": 0.0, "Color": "#ffe92f" },
-      "20": { "Opacity": 1.0, "Color": "#ff870f" },
-      "50": { "Opacity": 0.6, "Color": "#ff7f00" },
-      "100": { "Opacity": 0, "Scale": { "X": { "Min": 0.8, "Max": 1.5 }, "Y": { "Min": 2.5, "Max": 3.5 } }, "Color": "#f23900" }
+      "0": { "FrameIndex": { "Min": 0, "Max": 3 }, "Scale": { "X": { "Min": 1.0, "Max": 1.0 }, "Y": { "Min": 1.0, "Max": 1.0 } }, "Opacity": 0.0, "Color": "#ffffff" },
+      "20": { "Opacity": 1.0, "Color": "#ffffff" },
+      "50": { "Opacity": 0.6, "Color": "#ffffff" },
+      "100": { "Opacity": 0, "Scale": { "X": { "Min": 0.8, "Max": 1.5 }, "Y": { "Min": 2.5, "Max": 3.5 } }, "Color": "#ffffff" }
     },
     "InitialAnimationFrame": {
       "Opacity": 1, "Color": "#ffffff", "FrameIndex": { "Min": 0, "Max": 3 },

@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#8D6E63",
+    "SecondaryColor": "#D7CCC8",
     "PrimaryParticle": {
       "SystemId": "Ensnare_Hit"
     },

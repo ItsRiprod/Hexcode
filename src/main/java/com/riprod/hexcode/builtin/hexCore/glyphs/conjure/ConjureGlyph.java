@@ -46,6 +46,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class ConjureGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -162,7 +163,7 @@ public class ConjureGlyph implements GlyphHandler {
         holder.ensureComponent(EffectControllerComponent.getComponentType());
         // alpha of 0 means an invisible zone: skip the debug shape but keep the functional zone
         if (hexContext.getColors().getPrimaryAlpha() != 0f) {
-            Vector3f debugColor = ConjureStyle.resolveColor(hexContext);
+            Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
             DebugComponent debugComp = new DebugComponent(DebugShape.Cube, debugColor, size, 0.1f);
             debugComp.setOpacity(hexContext.getColors().getPrimaryAlpha() * 0.5f);
             debugComp.setIntervalMultiplier(0.01f);

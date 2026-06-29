@@ -34,6 +34,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class DomainGlyph implements GlyphHandler {
     @Override
@@ -137,7 +138,7 @@ public static final String ID = "Domain";
 
         // alpha of 0 means an invisible zone: skip the debug shape but keep the functional zone
         if (hexContext.getColors().getPrimaryAlpha() != 0f) {
-            Vector3f debugColor = DomainStyle.resolveColor(hexContext.getColors());
+            Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
             Vector3d debugScale = new Vector3d(radius * 2, radius * 2, radius * 2);
             DebugComponent debugComp = new DebugComponent(DebugShape.Sphere, debugColor, debugScale, 0.1f);
             debugComp.setOpacity(0.15f);

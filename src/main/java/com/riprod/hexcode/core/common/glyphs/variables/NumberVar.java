@@ -31,6 +31,11 @@ public final class NumberVar extends HexVar {
     }
 
     @Override
+    public HexVar copy() {
+        return new NumberVar(number);
+    }
+
+    @Override
     public Object getRawValue() {
         return number;
     }

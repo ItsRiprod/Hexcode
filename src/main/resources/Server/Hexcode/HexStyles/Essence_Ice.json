@@ -1,5 +1,11 @@
 {
-  "PrimaryColor": "#00B0FF",
-  "SecondaryColor": "#B3E5FC",
-  "Alpha": 1.0
+  "PrimaryColor": "#4095E5",
+  "SecondaryColor": "#CBF6F2",
+  "Alpha": 1.0,
+  "StyleParticle": {
+    "SystemId": "IceBall"
+  },
+  "PrimaryParticle": {
+    "SystemId": "Impact_Ice"
+  }
 }

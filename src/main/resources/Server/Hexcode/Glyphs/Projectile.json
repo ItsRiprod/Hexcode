@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#FFCC4D",
+    "SecondaryColor": "#FFE6A3",
     "PrimaryParticle": {
       "SystemId": "Projectile_Launch"
     },

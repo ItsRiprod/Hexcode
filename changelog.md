@@ -20,23 +20,24 @@
 - Migrated Force, Bolt, Gust, Area, Domain, Warp, Swap, Conjure, Phase, Erode, Fortify, Ensnare, Scale, Arc to Impact-based cost
 - Reworked DebugGlyph output: wired slot shows linked glyphs (value, accuracy, speed, type); unwired shows full GIS variable map
 - Made DebugGlyph translation-backed via `hexcode/debugGlyph.lang` templates with inline color/markup (chat `markupEnabled` enabled per node)
-- [ ] DebugGlyph `{complexity}` is a `0` placeholder until the Complexity accrual accessor lands
 - Decoupled Complexity from Volatility: removed the dead `applyComplexity` seam that derived complexity from volatility spent
 - Made Complexity a glyph-authored axis via opt-in `GlyphHandler.addComplexity(ctx, amount)`; no implicit accrual, glyphs are the source of truth
 - Wired DebugGlyph `{complexity}` to read the live `HexStats` pool instead of the `0` placeholder
-- Reworked glyph resource flow: executor calls `GlyphHandler.execute0` (engine caller) which resolves the asset once, computes `getVolatilityCost`, consumes/gates, accrues complexity via `getComplexity`, then runs `execute`
-- Added automatic per-slot volatility cost: default `getVolatilityCost` = base cost x product of every per-slot `Impact` (`GlyphCostUtil`); global `Config.VolatilityImpact` is now override-only
+- Reworked glyph resource flow to simplify resource consumption
+- Added automatic per-slot volatility cost: default `getVolatilityCost` = base cost x product of every per-slot `Impact` - global `Config.VolatilityImpact` is now override-only
 - Added `Glyph.computeBaseCost(GlyphAsset)` overload to drop repeated asset lookups
-- Complexity now defaults to 1:1 of computed volatility cost (override `getComplexity` or set `ComplexityImpact`)
-- Collapsed Bolt, Force, Area, Erode, Fortify, Phase to declarative per-slot impact (deleted cost overrides; behavior-identical)
-- Migrated remaining cost overrides (Swap, Conjure, Warp, Scale, Arc, Domain, Gust) to `getVolatilityCost`; Domain stays an override because its per-slot impacts are mana, not volatility
-- Ensnare: removed the damage input/dealing, added a `Trapped` on-target routing slot, radius-only cost
-- [ ] Redesign Ensnare to snare-only and execute the `Trapped` glyph per ensnared target (see TODO.md)
+- Ensnare: removed the damage input/dealing
 - Aligned interaction tree of the experimental staff to be able to draw / cancel draw / cast
-- Moved large parts of the code to the proper locations / deprecated or removed many unneeded bits of code
+- mig: Moved large parts of the code to the proper locations / deprecated or removed many unneeded bits of code
+- feat: Added `Exponential`, `Constant`, and `Linear` impact curves
+- bug: Dropped the hardcoded construct drain fallback (configured constructs use the asset `DrainPerSecond` default)
+- bug: Added `HexVar.copy()` and clone-on-write in `HexContext.setVariable` / `setDefaultVariable` so no two slots can alias the same mutable var
 - Various bugfixes
-- Added `Exponential`, `Constant`, and `Linear` impact curves
-- Made Arc a single per-jump cost (removed the duplicate cast-time charge)
-- Migrated Domain mana to impacts: per-slot `Linear` for upfront/drain, global `Constant` trigger via `DomainConfig`
-- Dropped the hardcoded construct drain fallback (configured constructs use the asset `DrainPerSecond` default)
-- [ ] Verify in-game costs match pre-refactor values (Scale ramp, Arc per-jump, Domain mana)
+- feat: Fleshed out the six element styles
+- style: Centralized glyph style resolution in `VfxUtil.resolveModelId` / `resolvePrimaryColor` / `resolvePrimaryColorRaw` (context override then glyph asset); removed the duplicated per-glyph `resolveColor`/`resolveModelId` helpers and all eleven `DEFAULT_COLOR` constants
+- style: Made `primaryModel` an overridable `HexStyleAsset` field (now carried by `applyOverride`) so context models win over the glyph asset model
+- style: Routed Delay/Ensnare/Projectile/Shatter model spawns through style resolution; Glaciate and Conjure keep hardcoded structural models on purpose
+- style: Defined `PrimaryColor`/`SecondaryColor` on every visual glyph asset (parenting `Essence_*`/`Self_Growth`/`Chaos_Void` where thematic), added `PrimaryModel` to Ensnare/Shatter
+- style: Whitened every color-injected glyph particle spawner so the runtime-injected primary/secondary color is the sole color source (model trails, slot/effect, and pedestal particles left untouched)
+- [ ] Domain: `renderDespawn`/`renderContested` still call `VfxUtil.effect` with hardcoded particle+sound ids (bypasses asset sound slot and color injection); Domain has 5 effects but only 4 style slots, so slot-ifying needs a design decision
+- [ ] `Ignite_Fire` references base-game `Explosion_Big_*` spawners which cannot be whitened; injected color will multiply against their baked colors

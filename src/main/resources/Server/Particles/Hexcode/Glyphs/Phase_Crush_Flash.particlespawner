@@ -14,7 +14,7 @@
     "UVOption": "None",
     "Animation": {
       "0": { "FrameIndex": { "Min": 0, "Max": 3 }, "Opacity": 1.0, "Color": "#ffffff", "Scale": { "X": { "Min": 0.6, "Max": 1.0 }, "Y": { "Min": 0.6, "Max": 1.0 } } },
-      "100": { "Opacity": 0, "Color": "#3232ff", "Scale": { "X": { "Min": 0.1, "Max": 0.2 }, "Y": { "Min": 0.1, "Max": 0.2 } } }
+      "100": { "Opacity": 0, "Color": "#ffffff", "Scale": { "X": { "Min": 0.1, "Max": 0.2 }, "Y": { "Min": 0.1, "Max": 0.2 } } }
     }
   }
 }

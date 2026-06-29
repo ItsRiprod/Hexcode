@@ -1,6 +1,7 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "Parent": "Essence_Fire",
     "PrimaryParticle": {
       "SystemId": "Ignite_Fire"
     },

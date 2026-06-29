@@ -1,5 +1,11 @@
 {
-  "PrimaryColor": "#FF5722",
-  "SecondaryColor": "#FFAB40",
-  "Alpha": 1.0
+  "PrimaryColor": "#FF7F00",
+  "SecondaryColor": "#FFE92F",
+  "Alpha": 1.0,
+  "StyleParticle": {
+    "SystemId": "Fire_Projectile"
+  },
+  "PrimaryParticle": {
+    "SystemId": "Impact_Fire"
+  }
 }

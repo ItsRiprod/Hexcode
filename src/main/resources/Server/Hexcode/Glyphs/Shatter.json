@@ -1,6 +1,9 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#99E6FF",
+    "SecondaryColor": "#D6F2FF",
+    "PrimaryModel": "Shatter",
     "PrimaryParticle": {
       "SystemId": "Hexcode_Ice_Effect"
     },

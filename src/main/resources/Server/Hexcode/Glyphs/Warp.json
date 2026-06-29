@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#804DE6",
+    "SecondaryColor": "#C2A6F2",
     "PrimaryParticle": {
       "SystemId": "Warp_Departure"
     },

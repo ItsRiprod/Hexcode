@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#B366FF",
+    "SecondaryColor": "#DCB3FF",
     "PrimaryParticle": {
       "SystemId": "Swap_Rift"
     },

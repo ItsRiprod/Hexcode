@@ -48,8 +48,8 @@ public interface GlyphHandler {
             return;
         }
 
-        float complexity = getComplexity(glyph, hexContext, asset, volatilityCost);
-        tracker.addComplexity(complexity);
+        float complexity = getComplexity(glyph, hexContext, asset);
+        hexContext.addComplexity(complexity);
 
         execute(glyph, hexContext);
     }
@@ -58,18 +58,18 @@ public interface GlyphHandler {
         return GlyphCostUtil.volatilityCost(glyph, hexContext, asset);
     }
 
-    default float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset, float volatilityCost) {
-        Impact impact = asset != null && asset.getConfig() != null
-                ? asset.getConfig().getComplexityImpact()
-                : null;
-        return volatilityCost * Impact.scale(impact, volatilityCost);
+    default float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        if (asset == null)
+            return 0f;
+        float base = asset.getVolatility().getInstantCost();
+        Impact impact = asset.getConfig() != null ? asset.getConfig().getComplexityImpact() : null;
+        return base * Impact.scale(impact, base);
     }
 
     default void addComplexity(HexContext hexContext, float amount) {
-        HexStats tracker = hexContext.getHexStats();
-        if (tracker == null || amount == 0f)
+        if (amount == 0f)
             return;
-        tracker.addComplexity(amount);
+        hexContext.addComplexity(amount);
     }
 
 

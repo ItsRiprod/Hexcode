@@ -24,12 +24,12 @@
     "Animation": {
       "0": {
         "Opacity": 0.8,
-        "Color": "#88ddff",
+        "Color": "#ffffff",
         "Scale": { "X": { "Min": 2.0, "Max": 2.5 }, "Y": { "Min": 2.0, "Max": 2.5 } }
       },
       "100": {
         "Opacity": 0,
-        "Color": "#3399dd",
+        "Color": "#ffffff",
         "Scale": { "X": { "Min": 0.5, "Max": 0.5 }, "Y": { "Min": 0.5, "Max": 0.5 } }
       }
     }

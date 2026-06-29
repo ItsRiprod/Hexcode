@@ -40,6 +40,11 @@ public final class EntityVar extends HexVar {
         return entity;
     }
 
+    @Override
+    public HexVar copy() {
+        return new EntityVar(entity);
+    }
+
     @Nullable
     public Ref<EntityStore> getRef(ComponentAccessor<EntityStore> accessor) {
         if (entity == null) return null;

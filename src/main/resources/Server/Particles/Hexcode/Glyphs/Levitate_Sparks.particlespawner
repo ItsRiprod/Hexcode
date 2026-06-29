@@ -15,9 +15,9 @@
     "FrameSize": { "Width": 32, "Height": 32 },
     "ScaleRatioConstraint": "None",
     "Animation": {
-      "0": { "Opacity": 1.0, "Color": "#cc99ff", "Scale": { "X": { "Min": 0.08, "Max": 0.08 }, "Y": { "Min": 0.08, "Max": 0.08 } } },
-      "25": { "Color": "#bb77ee", "Scale": { "X": { "Min": 0.06, "Max": 0.06 }, "Y": { "Min": 1.0, "Max": 1.0 } } },
-      "100": { "Opacity": 0, "Color": "#330066", "Scale": { "X": { "Min": 0.02, "Max": 0.02 }, "Y": { "Min": 0.02, "Max": 0.02 } } }
+      "0": { "Opacity": 1.0, "Color": "#ffffff", "Scale": { "X": { "Min": 0.08, "Max": 0.08 }, "Y": { "Min": 0.08, "Max": 0.08 } } },
+      "25": { "Color": "#ffffff", "Scale": { "X": { "Min": 0.06, "Max": 0.06 }, "Y": { "Min": 1.0, "Max": 1.0 } } },
+      "100": { "Opacity": 0, "Color": "#ffffff", "Scale": { "X": { "Min": 0.02, "Max": 0.02 }, "Y": { "Min": 0.02, "Max": 0.02 } } }
     }
   }
 }

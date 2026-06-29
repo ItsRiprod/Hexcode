@@ -24,7 +24,7 @@
     "Animation": {
       "0": { "Scale": { "X": { "Min": 0.4, "Max": 0.7 } }, "Color": "#ffffff", "FrameIndex": { "Min": 0, "Max": 3 }, "Opacity": 1.0 },
       "80": { "Opacity": 0.8, "Scale": { "X": { "Min": 0.8, "Max": 1.0 } } },
-      "100": { "Color": "#99cdff", "Opacity": 0.0, "Scale": { "X": { "Min": 0.5, "Max": 0.6 } } }
+      "100": { "Color": "#ffffff", "Opacity": 0.0, "Scale": { "X": { "Min": 0.5, "Max": 0.6 } } }
     },
     "InitialAnimationFrame": {
       "Opacity": 1.0,

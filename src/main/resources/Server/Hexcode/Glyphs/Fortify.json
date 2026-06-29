@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "PrimaryColor": "#607D8B",
+    "SecondaryColor": "#B0BEC5",
     "PrimaryParticle": {
       "SystemId": "Halt_Crystallize"
     },

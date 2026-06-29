@@ -63,17 +63,19 @@ public class AreaGlyph implements GlyphHandler {
                 : null;
 
         if (blocksLinked) {
-            for (Vector3i pos : gatherBlocks(center, radius, accessor)) {
+            List<Vector3i> blocks = gatherBlocks(center, radius, accessor);
+            for (Vector3i pos : blocks) {
                 AreaStyle.renderHit(new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5),
                         hexContext, accessor, particleRecipients);
-                HexContext copy = hexContext.branch();
+                HexContext copy = hexContext.branch(blocks.size());
                 glyph.writeOutput(new BlockVar(pos), copy);
                 HexExecuter.continueFromSlot(glyph, AreaGlyphSlots.BLOCKS, copy);
             }
         }
 
         if (entitiesLinked) {
-            for (PersistentRef ref : gatherEntities(center, radius, hexContext)) {
+            List<PersistentRef> entities = gatherEntities(center, radius, hexContext);
+            for (PersistentRef ref : entities) {
                 Ref<EntityStore> entRef = ref.getEntity(accessor);
                 if (entRef != null && entRef.isValid()) {
                     TransformComponent t = accessor.getComponent(entRef, TransformComponent.getComponentType());
@@ -81,7 +83,7 @@ public class AreaGlyph implements GlyphHandler {
                         AreaStyle.renderHit(t.getPosition(), hexContext, accessor, particleRecipients);
                     }
                 }
-                HexContext copy = hexContext.branch();
+                HexContext copy = hexContext.branch(entities.size());
                 glyph.writeOutput(new EntityVar(ref), copy);
                 HexExecuter.continueFromSlot(glyph, AreaGlyphSlots.ENTITIES, copy);
             }

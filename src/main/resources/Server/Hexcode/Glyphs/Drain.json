@@ -1,7 +1,7 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
-    "Parent": "Drain_Ice",
+    "Parent": "Essence_Ice",
     "PrimaryParticle": {
       "SystemId": "Hexcode_Drain_Channel"
     },

@@ -1,6 +1,7 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
+    "Parent": "Essence_Ice",
     "PrimaryParticle": {
       "SystemId": "Freeze_Snow"
     },

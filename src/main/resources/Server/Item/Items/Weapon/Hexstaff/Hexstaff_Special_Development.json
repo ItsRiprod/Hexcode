@@ -77,6 +77,7 @@
     }
   },
   "Interactions": {
+    "Primary": "Hexstaff_CastSpell",
     "Secondary": "Hexstaff_Drawmode"
   },
   "InteractionVars": {
