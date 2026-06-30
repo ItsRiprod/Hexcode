@@ -1,0 +1,43 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Energy_Aura_Poof",
+      "PositionOffset": {
+        "X": 0,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Energy_Aura_Smoke",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "LifeSpan": {
+        "Min": 0,
+        "Max": 0.5
+      }
+    },
+    {
+      "SpawnerId": "Energy_Aura_Trail",
+      "PositionOffset": {
+        "X": 0,
+        "Z": 0,
+        "Y": 0
+      },
+      "LifeSpan": {
+        "Min": 0,
+        "Max": 0.1
+      }
+    },
+    {
+      "SpawnerId": "Energy_Aura_Sparks",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      }
+    }
+  ]
+}

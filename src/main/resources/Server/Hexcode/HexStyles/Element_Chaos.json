@@ -1,0 +1,10 @@
+{
+  "Parent": "Essence_Fire",
+  "PrimaryModel": "Chaos_Bolt",
+  "PrimaryParticle": {
+    "SystemId": "Chaos_Impact"
+  },
+  "StyleParticle": {
+    "SystemId": "Chaos_Aura"
+  }
+}

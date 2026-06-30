@@ -136,6 +136,17 @@ public class VfxUtil {
 
   public static void spawnStyleParticle(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
       Vector3d pos, ComponentAccessor<EntityStore> accessor) {
+    spawnStyleParticleDirected(overrides, glyphAsset, pos, accessor, new Rotation3f((float) (-Math.PI / 2), 0, 0));
+  }
+
+  public static void spawnStyleParticleDirected(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
+      Vector3d pos, ComponentAccessor<EntityStore> accessor, Vector3d direction) {
+    Rotation3f rotation = Rotation3f.lookAt(direction);
+    spawnStyleParticleDirected(overrides, glyphAsset, pos, accessor, rotation);
+  }
+
+  public static void spawnStyleParticleDirected(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
+      Vector3d pos, ComponentAccessor<EntityStore> accessor, Rotation3f rotation) {
     HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
     ModelParticle particle = overrides != null && overrides.getStyleParticle() != null
         ? overrides.getStyleParticle()
@@ -145,7 +156,7 @@ public class VfxUtil {
     Color tint = resolveColor(
         overrides != null ? overrides.getPrimaryColor() : null,
         glyphStyle != null ? glyphStyle.getPrimaryColor() : null);
-    spawnConfigured(particle, pos, tint, accessor);
+    spawnConfiguredDirected(particle, pos, rotation, tint, accessor);
   }
 
   private static @Nullable Color resolveColor(@Nullable Color override, @Nullable Color fallback) {

@@ -1,7 +1,7 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
-    "Parent": "Delay_Earth",
+    "Parent": "Element_Time",
     "PrimaryModel": "OnUse"
   },
   "Title": "hexcode.glyphs.OnUse.name",

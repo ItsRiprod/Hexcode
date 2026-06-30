@@ -1,0 +1,10 @@
+{
+  "Parent": "Essence_Ice",
+  "PrimaryModel": "Drain_Bolt",
+  "StyleParticle": {
+    "SystemId": "Drain_Aura"
+  },
+  "PrimaryParticle": {
+    "SystemId": "Drain_Impact"
+  }
+}

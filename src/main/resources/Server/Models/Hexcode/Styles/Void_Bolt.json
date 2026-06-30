@@ -1,0 +1,19 @@
+{
+  "Parent": "Fireball",
+  "Texture": "Items/Projectiles/Fireball_Textures/Void.png",
+  "Trails": [
+    {
+      "TrailId": "Void"
+    }
+  ],
+  "Particles": [
+    {
+      "SystemId": "Void_Bolt",
+      "TargetEntityPart": "Self"
+    },
+    {
+      "SystemId": "Hexcode_Projectile_Flames",
+      "Color": "#8319B6"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Void_Aura_Sparks",
+      "RotationOffset": {
+        "Yaw": 90,
+        "Pitch": 90,
+        "Roll": 90
+      }
+    }
+  ]
+}

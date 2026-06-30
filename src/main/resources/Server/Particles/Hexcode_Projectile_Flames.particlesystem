@@ -1,10 +1,7 @@
 {
   "Spawners": [
     {
-      "SpawnerId": "Arcane_Ice_Crafting_Spawner"
-    },
-    {
-      "SpawnerId": "Rings_Rings"
+      "SpawnerId": "Projectile_Aura_Spark"
     },
     {
       "SpawnerId": "Projectile_Glow"

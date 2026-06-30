@@ -1,0 +1,16 @@
+{
+  "Parent": "Fireball",
+  "Texture": "Items/Projectiles/Ice_Bolt_Texture.png",
+  "Trails": [
+    {
+      "TrailId": "Arrow"
+    }
+  ],
+  "Particles": [
+    {
+      "SystemId": "Drain_Bolt",
+      "TargetEntityPart": "Self"
+    }
+  ],
+  "Model": "Items/Projectiles/Ice_Bolt.blockymodel"
+}

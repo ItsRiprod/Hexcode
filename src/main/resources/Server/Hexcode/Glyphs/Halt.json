@@ -1,7 +1,7 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
-    "Parent": "Essence_Lightning",
+    "Parent": "Element_Void",
     "PrimaryParticle": {
       "SystemId": "Halt_Crystallize"
     },

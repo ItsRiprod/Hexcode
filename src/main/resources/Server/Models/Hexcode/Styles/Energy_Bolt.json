@@ -1,0 +1,17 @@
+{
+  "Parent": "Fireball",
+  "Texture": "Items/Projectiles/Lightning_Essence_Texture.png",
+  "Trails": [
+    {
+      "TrailId": "Small_Flame"
+    }
+  ],
+  "Particles": [
+    {
+      "SystemId": "Energy_Bolt",
+      "TargetEntityPart": "Self",
+      "Color": "#ffa100"
+    }
+  ],
+  "Model": "Items/Projectiles/Projectile.blockymodel"
+}

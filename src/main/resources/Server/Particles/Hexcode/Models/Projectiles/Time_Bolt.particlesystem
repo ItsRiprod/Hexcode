@@ -1,0 +1,21 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Time_Aura_Explosion",
+      "PositionOffset": {
+        "X": 0,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Time_Aura_Explosion2",
+      "PositionOffset": {
+        "X": 0,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Time_Aura_Trail"
+    }
+  ]
+}

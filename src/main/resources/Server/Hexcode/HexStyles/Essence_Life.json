@@ -1,11 +1,5 @@
 {
   "PrimaryColor": "#6CB839",
   "SecondaryColor": "#82FFA2",
-  "Alpha": 1.0,
-  "StyleParticle": {
-    "SystemId": "GreenOrbTrail"
-  },
-  "PrimaryParticle": {
-    "SystemId": "GreenOrbImpact"
-  }
+  "Alpha": 1.0
 }

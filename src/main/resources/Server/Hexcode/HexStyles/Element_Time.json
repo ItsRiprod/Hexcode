@@ -1,0 +1,10 @@
+{
+  "Parent": "Essence_Water",
+  "PrimaryModel": "Time_Bolt",
+  "StyleParticle": {
+    "SystemId": "Time_Aura"
+  },
+  "PrimaryParticle": {
+    "SystemId": "Time_Impact"
+  }
+}

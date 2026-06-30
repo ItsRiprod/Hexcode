@@ -1,0 +1,61 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Energy_Impact_Glow",
+      "PositionOffset": {
+        "X": 1,
+        "Y": 1,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Energy_Impact_Shockwave",
+      "PositionOffset": {
+        "X": 1,
+        "Y": 1,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Energy_Impact_Smoke",
+      "PositionOffset": {
+        "X": 1,
+        "Y": 1,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Energy_Impact_DustWhite",
+      "PositionOffset": {
+        "X": 1,
+        "Y": 1,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Energy_Impact_DustGold",
+      "PositionOffset": {
+        "X": 1,
+        "Y": 1,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Energy_Impact_Flash",
+      "PositionOffset": {
+        "X": 1,
+        "Y": 1,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Energy_Impact_Flair",
+      "PositionOffset": {
+        "X": 1,
+        "Y": 1,
+        "Z": 0
+      }
+    }
+  ],
+  "BoundingRadius": 10
+}

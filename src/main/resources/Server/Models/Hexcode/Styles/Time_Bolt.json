@@ -1,0 +1,20 @@
+{
+  "Parent": "Fireball",
+  "Texture": "Items/Projectiles/Iceball_Texture.png",
+  "Trails": [
+    {
+      "TrailId": "Time_Bolt_Trail",
+      "PositionOffset": {
+        "Y": 0.125
+      }
+    }
+  ],
+  "Particles": [
+    {
+      "SystemId": "Time_Bolt",
+      "TargetEntityPart": "Self",
+      "Color": "#00f2ff"
+    }
+  ],
+  "Model": "Items/Projectiles/Iceball.blockymodel"
+}

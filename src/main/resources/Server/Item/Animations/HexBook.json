@@ -1,68 +1,7 @@
 {
-  "Parent": "Spellbook",
+  "Parent": "HexStaff",
   "Animations": {
-    "HexCasting_Enter": {
-      "ThirdPerson": "Characters/Animations/HexCasting/Casting_Enter.blockyanim",
-      "FirstPerson": "Characters/Animations/HexCasting/Casting_Enter_FPS.blockyanim",
-      "Speed": 1
-    },
-    "HexCasting_Active": {
-      "ThirdPerson": "Characters/Animations/HexCasting/Casting_Active.blockyanim",
-      "FirstPerson": "Characters/Animations/HexCasting/Casting_Active_FPS.blockyanim",
-      "Speed": 0.5,
-      "Looping": true
-    },
-    "HexCasting_Primary": {
-      "ThirdPerson": "Characters/Animations/HexCasting/Casting_Primary.blockyanim",
-      "FirstPerson": "Characters/Animations/HexCasting/Casting_Primary_FPS.blockyanim",
-      "Speed": 0.5,
-      "Looping": true
-    },
-    "HexDrawing_Enter": {
-      "ThirdPerson": "Characters/Animations/HexCasting/Drawing_Enter.blockyanim",
-      "FirstPerson": "Characters/Animations/HexCasting/Drawing_Enter_FPS.blockyanim",
-      "Speed": 1
-    },
-    "HexDrawing_Active": {
-      "ThirdPerson": "Characters/Animations/HexCasting/Drawing_Active.blockyanim",
-      "FirstPerson": "Characters/Animations/HexCasting/Drawing_Active_FPS.blockyanim",
-      "Speed": 0.5,
-      "Looping": true
-    },
-    "HexDrawing_Primary": {
-      "ThirdPerson": "Characters/Animations/HexCasting/Drawing_Primary.blockyanim",
-      "FirstPerson": "Characters/Animations/HexCasting/Drawing_Primary_FPS.blockyanim",
-      "Speed": 0.5,
-      "Looping": true
-    },
-    "HexCrafting_Enter": {
-      "ThirdPerson": "Characters/Animations/HexCasting/Crafting_Enter.blockyanim",
-      "FirstPerson": "Characters/Animations/HexCasting/Crafting_Enter_FPS.blockyanim",
-      "Speed": 1
-    },
-    "HexCrafting_Active": {
-      "ThirdPerson": "Characters/Animations/HexCasting/Crafting_Active.blockyanim",
-      "FirstPerson": "Characters/Animations/HexCasting/Crafting_Active_FPS.blockyanim",
-      "Speed": 0.5,
-      "Looping": true
-    },
-    "HexCrafting_Primary": {
-      "ThirdPerson": "Characters/Animations/HexCasting/Crafting_Primary.blockyanim",
-      "FirstPerson": "Characters/Animations/HexCasting/Crafting_Primary_FPS.blockyanim",
-      "Speed": 1,
-      "Looping": true
-    },
-    "HexExecution_Primary": {
-      "ThirdPerson": "Characters/Animations/HexCasting/Execution_Primary.blockyanim",
-      "FirstPerson": "Characters/Animations/HexCasting/Execution_Primary_FPS.blockyanim",
-      "Speed": 1
-    },
     "Idle": {
-      "ThirdPerson": "Characters/Animations/Items/Off_Handed/Book/Idle.blockyanim",
-      "FirstPerson": "Characters/Animations/Items/Off_Handed/Book/Idle_FPS.blockyanim",
-      "Speed": 0.5
-    },
-    "HexCasting_Exit": {
       "ThirdPerson": "Characters/Animations/Items/Off_Handed/Book/Idle.blockyanim",
       "FirstPerson": "Characters/Animations/Items/Off_Handed/Book/Idle_FPS.blockyanim",
       "Speed": 0.5

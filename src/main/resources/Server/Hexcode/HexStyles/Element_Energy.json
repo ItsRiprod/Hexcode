@@ -1,0 +1,10 @@
+{
+  "Parent": "Essence_Lightning",
+  "PrimaryModel": "Energy_Bolt",
+  "StyleParticle": {
+    "SystemId": "Energy_Aura"
+  },
+  "PrimaryParticle": {
+    "SystemId": "Energy_Impact"
+  }
+}

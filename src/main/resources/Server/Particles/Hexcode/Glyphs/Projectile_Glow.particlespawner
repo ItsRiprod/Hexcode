@@ -16,7 +16,6 @@
     "Animation": {
       "0": {
         "Opacity": 0.124,
-        "Color": "#fffbea",
         "Scale": {
           "X": {
             "Min": 2.5,
@@ -29,12 +28,10 @@
         }
       },
       "50": {
-        "Opacity": 1,
-        "Color": "#3bbdff"
+        "Opacity": 1
       },
       "100": {
         "Opacity": 0.136,
-        "Color": "#2fe7ff",
         "Scale": {
           "X": {
             "Min": 2.5,

@@ -1,11 +1,5 @@
 {
-  "PrimaryColor": "#171E6A",
+  "PrimaryColor": "#4351e5",
   "SecondaryColor": "#58AD9B",
-  "Alpha": 1.0,
-  "StyleParticle": {
-    "SystemId": "Blue_Beam"
-  },
-  "PrimaryParticle": {
-    "SystemId": "Blue_Beam"
-  }
+  "Alpha": 1.0
 }

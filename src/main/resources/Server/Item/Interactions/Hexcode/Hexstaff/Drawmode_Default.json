@@ -13,11 +13,17 @@
   "Next": {
     "0.0": {
       "Type": "Interrupt",
-      "Entity": "Owner"
+      "Entity": "Owner",
+      "Effects": {
+        "ClearAnimationOnFinish": true
+      }
     }
   },
   "Failed": {
     "Type": "Interrupt",
-    "Entity": "Owner"
+    "Entity": "Owner",
+    "Effects": {
+      "ClearAnimationOnFinish": true
+    }
   }
 }

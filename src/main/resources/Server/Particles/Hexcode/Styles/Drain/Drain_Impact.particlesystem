@@ -1,0 +1,23 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Drain_Impact_Fragments"
+    },
+    {
+      "SpawnerId": "Drain_Impact_Cloud",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 1,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Drain_Impact_Shockwave",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0.3,
+        "Z": 0
+      }
+    }
+  ]
+}

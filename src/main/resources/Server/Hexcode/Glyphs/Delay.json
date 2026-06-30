@@ -1,15 +1,14 @@
 {
   "Parent": "Glyph_Template",
   "Style": {
-    "Parent": "Essence_Life",
+    "Parent": "Element_Time",
     "PrimaryParticle": {
       "SystemId": "Delay_Shimmer"
     },
     "PrimarySound": "SFX_Hex_Tick",
     "SecondaryParticle": {
       "SystemId": "Delay_Shimmer"
-    },
-    "PrimaryModel": "Delay"
+    }
   },
   "Title": "hexcode.glyphs.Delay.name",
   "Description": "hexcode.glyphs.Delay.description",

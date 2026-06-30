@@ -1,0 +1,122 @@
+{
+  "RenderMode": "BlendAdd",
+  "EmitOffset": {
+    "X": {
+      "Min": 0,
+      "Max": 0
+    },
+    "Y": {
+      "Min": 0,
+      "Max": 0
+    },
+    "Z": {
+      "Min": 0,
+      "Max": 0
+    }
+  },
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": true,
+  "LightInfluence": 0,
+  "ParticleRotateWithSpawner": true,
+  "TrailSpawnerPositionMultiplier": 0,
+  "TrailSpawnerRotationMultiplier": 0,
+  "MaxConcurrentParticles": 3,
+  "ParticleLifeSpan": {
+    "Min": 2.5,
+    "Max": 3.3333333333333335
+  },
+  "SpawnRate": {
+    "Min": 18,
+    "Max": 30
+  },
+  "TotalParticles": {
+    "Min": -1,
+    "Max": -1
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Basic/Glow_Noise.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "Animation": {
+      "0": {
+        "Rotation": {
+          "X": {
+            "Min": 0,
+            "Max": 0
+          },
+          "Y": {
+            "Min": 0,
+            "Max": 0
+          },
+          "Z": {
+            "Min": 0,
+            "Max": 0
+          }
+        },
+        "Scale": {
+          "X": {
+            "Min": 1,
+            "Max": 1
+          },
+          "Y": {
+            "Min": 1,
+            "Max": 1
+          }
+        },
+        "Opacity": 0
+      },
+      "50": {
+        "Color": "#86ff57",
+        "Opacity": 0.5,
+        "Scale": {
+          "X": {
+            "Min": 0.67,
+            "Max": 0.75
+          },
+          "Y": {
+            "Min": 0.67,
+            "Max": 0.75
+          }
+        }
+      },
+      "70": {
+        "Color": "#5550ff",
+        "Opacity": 0.5
+      },
+      "95": {
+        "Opacity": 0.05
+      },
+      "100": {
+        "Color": "#3232ff",
+        "Opacity": 0
+      }
+    },
+    "InitialAnimationFrame": {
+      "Rotation": {
+        "X": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Y": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Z": {
+          "Min": 0,
+          "Max": 0
+        }
+      },
+      "Scale": {
+        "X": {
+          "Min": 0.15,
+          "Max": 0.2
+        },
+        "Y": {
+          "Min": 0.15,
+          "Max": 0.2
+        }
+      },
+      "Opacity": 1,
+      "Color": "#86ff57"
+    }
+  }
+}

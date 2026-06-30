@@ -1,12 +1,9 @@
 {
   "Type": "Charging",
-  "Forks": {
-    "Primary": "Draw"
-  },
   "CancelOnItemChange": true,
   "AllowIndefiniteHold": true,
   "Effects": {
-    "ItemAnimationId": "HexCrafting_Enter",
+    "ItemAnimationId": "CastSpellCharging",
     "ClearAnimationOnFinish": true
   },
   "CancelOnOtherClick": false,
@@ -14,7 +11,7 @@
     "0.0": {
       "Type": "StatsCondition",
       "Costs": {
-        "Stamina": 5
+        "Stamina": 0.1
       },
       "Next": {
         "Type": "Serial",
@@ -22,7 +19,8 @@
           {
             "Type": "ChangeStat",
             "StatModifiers": {
-              "Stamina": -5
+              "Stamina": -1,
+              "StaminaRegenDelay": -0.5
             }
           },
           {
@@ -33,16 +31,19 @@
                 "InitialVolatility": 30,
                 "VolatilityMultiplier": 1.0
               }
+            },
+            "Effects": {
+              "ItemAnimationId": "HexExecution_Primary"
             }
           }
         ]
       },
       "Failed": "Stamina_Bar_Flash"
     },
-    "0.8": {
+    "0.33": {
       "Type": "StatsCondition",
       "Costs": {
-        "Stamina": 7
+        "Stamina": 0.1
       },
       "Next": {
         "Type": "Serial",
@@ -50,7 +51,8 @@
           {
             "Type": "ChangeStat",
             "StatModifiers": {
-              "Stamina": -7
+              "Stamina": -2,
+              "StaminaRegenDelay": -1
             }
           },
           {
@@ -58,19 +60,22 @@
             "Config": {
               "HexStorageType": "StaffConfig",
               "HexStats": {
-                "InitialVolatility": 55,
+                "InitialVolatility": 40,
                 "VolatilityMultiplier": 1.0
               }
+            },
+            "Effects": {
+              "ItemAnimationId": "HexExecution_Primary"
             }
           }
         ]
       },
       "Failed": "Stamina_Bar_Flash"
     },
-    "1.6": {
+    "0.66": {
       "Type": "StatsCondition",
       "Costs": {
-        "Stamina": 10
+        "Stamina": 0.1
       },
       "Next": {
         "Type": "Serial",
@@ -78,7 +83,8 @@
           {
             "Type": "ChangeStat",
             "StatModifiers": {
-              "Stamina": -10
+              "Stamina": -3,
+              "StaminaRegenDelay": -1.5
             }
           },
           {
@@ -86,9 +92,44 @@
             "Config": {
               "HexStorageType": "StaffConfig",
               "HexStats": {
-                "InitialVolatility": 80,
+                "InitialVolatility": 50,
                 "VolatilityMultiplier": 1.0
               }
+            },
+            "Effects": {
+              "ItemAnimationId": "HexExecution_Primary"
+            }
+          }
+        ]
+      },
+      "Failed": "Stamina_Bar_Flash"
+    },
+    "1": {
+      "Type": "StatsCondition",
+      "Costs": {
+        "Stamina": 0.1
+      },
+      "Next": {
+        "Type": "Serial",
+        "Interactions": [
+          {
+            "Type": "ChangeStat",
+            "StatModifiers": {
+              "Stamina": -5,
+              "StaminaRegenDelay": -2
+            }
+          },
+          {
+            "Type": "HexExecute",
+            "Config": {
+              "HexStorageType": "StaffConfig",
+              "HexStats": {
+                "InitialVolatility": 60,
+                "VolatilityMultiplier": 1.0
+              }
+            },
+            "Effects": {
+              "ItemAnimationId": "HexExecution_Primary"
             }
           }
         ]
@@ -98,6 +139,9 @@
   },
   "Failed": {
     "Type": "Interrupt",
-    "Entity": "Owner"
+    "Entity": "Owner",
+    "Effects": {
+      "ClearAnimationOnFinish": true
+    }
   }
 }

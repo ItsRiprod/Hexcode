@@ -98,7 +98,7 @@ public class ProjectileGlyph implements GlyphHandler {
         }
         direction = new Vector3d(direction.x / dirLen, direction.y / dirLen, direction.z / dirLen);
 
-        spawnPos.add(new Vector3d(direction).mul(1.5));
+        spawnPos.add(new Vector3d(direction).mul(1.1));
 
         double speed = HexVarUtil.numberOrDefault(speedVar, 30.0);
         if (speed <= 0)
@@ -121,9 +121,7 @@ public class ProjectileGlyph implements GlyphHandler {
         Holder<EntityStore> holder = HexConstructSpawner.create(hexContext.getAccessor(), hexContext, glyph,
                 ProjectileGlyph.ID, spawnPos);
 
-        Rotation3f rotation = new Rotation3f();
-        rotation.y = (float) Math.atan2(-direction.x, direction.z);
-        rotation.x = (float) Math.asin(Math.max(-1.0, Math.min(1.0, -direction.y)));
+        Rotation3f rotation = Rotation3f.lookAt(direction);
 
         holder.putComponent(TransformComponent.getComponentType(),
                 new TransformComponent(new Vector3d(spawnPos), rotation));

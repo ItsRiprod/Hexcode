@@ -39,5 +39,6 @@
 - style: Routed Delay/Ensnare/Projectile/Shatter model spawns through style resolution; Glaciate and Conjure keep hardcoded structural models on purpose
 - style: Defined `PrimaryColor`/`SecondaryColor` on every visual glyph asset (parenting `Essence_*`/`Self_Growth`/`Chaos_Void` where thematic), added `PrimaryModel` to Ensnare/Shatter
 - style: Whitened every color-injected glyph particle spawner so the runtime-injected primary/secondary color is the sole color source (model trails, slot/effect, and pedestal particles left untouched)
+- Migrated Shatter to a `ShatterConfig` leaf (default count/spread/speed/gravity, max count, shard ttl) - removed the in-handler magic constants
 - [ ] Domain: `renderDespawn`/`renderContested` still call `VfxUtil.effect` with hardcoded particle+sound ids (bypasses asset sound slot and color injection); Domain has 5 effects but only 4 style slots, so slot-ifying needs a design decision
 - [ ] `Ignite_Fire` references base-game `Explosion_Big_*` spawners which cannot be whitened; injected color will multiply against their baked colors

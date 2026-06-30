@@ -1,0 +1,10 @@
+{
+  "Parent": "Fireball",
+  "Texture": "Items/Projectiles/Fireball_Textures/Fireball.png",
+  "Particles": [
+    {
+      "SystemId": "Chaos_Bolt",
+      "TargetEntityPart": "Self"
+    }
+  ]
+}

@@ -61,6 +61,13 @@
       "ThirdPerson": "Characters/Animations/Items/Off_Handed/Book/Idle.blockyanim",
       "FirstPerson": "Characters/Animations/Items/Off_Handed/Book/Idle_FPS.blockyanim",
       "Speed": 0.5
+    },
+    "CastSpellCharging": {
+      "ThirdPerson": "Characters/Animations/HexCasting/CastSpellCharging.blockyanim",
+      "ThirdPersonMoving": "Characters/Animations/HexCasting/CastSpellCharging_Moving.blockyanim",
+      "FirstPerson": "Characters/Animations/HexCasting/CastSpellCharging_FPS.blockyanim",
+      "ThirdPersonFace": "Characters/Animations/Expressions/Frown.blockyanim",
+      "Speed": 1
     }
   }
 }

@@ -3,7 +3,8 @@
   "Particles": [
     {
       "SystemId": "Hexcode_Projectile_Flames",
-      "TargetEntityPart": "Self"
+      "TargetEntityPart": "Self",
+      "Color": "#00d0ff"
     },
     {
       "SystemId": "Sword_Charged_Trail_Praetorian",

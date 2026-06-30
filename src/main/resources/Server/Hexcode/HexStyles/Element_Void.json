@@ -1,0 +1,10 @@
+{
+  "Parent": "Essence_Void",
+  "PrimaryModel": "Void_Bolt",
+  "StyleParticle": {
+    "SystemId": "Void_Aura"
+  },
+  "PrimaryParticle": {
+    "SystemId": "Void_Impact"
+  }
+}

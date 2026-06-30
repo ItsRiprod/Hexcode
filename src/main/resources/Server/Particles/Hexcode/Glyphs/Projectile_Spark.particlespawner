@@ -16,7 +16,6 @@
     "Animation": {
       "0": {
         "Opacity": 0.0,
-        "Color": "#fffbea",
         "Scale": {
           "X": {
             "Min": 2,
@@ -26,7 +25,8 @@
             "Min": 2,
             "Max": 2
           }
-        }
+        },
+        "Color": "#fffbea"
       },
       "50": {
         "Opacity": 1.0,
@@ -34,7 +34,6 @@
       },
       "100": {
         "Opacity": 0.0,
-        "Color": "#fffbea",
         "Scale": {
           "X": {
             "Min": 2,
@@ -44,7 +43,8 @@
             "Min": 2,
             "Max": 2
           }
-        }
+        },
+        "Color": "#fffbea"
       }
     },
     "InitialAnimationFrame": {

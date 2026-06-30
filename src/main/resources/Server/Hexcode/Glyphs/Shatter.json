@@ -84,5 +84,14 @@
   },
   "Volatility": {
     "InstantCost": 4,
-    "DrainPerSecond": 0.1}
+    "DrainPerSecond": 0.1},
+  "Config": {
+    "Type": "Shatter",
+    "DefaultCount": 5,
+    "DefaultSpread": 0.5235987755982988,
+    "DefaultSpeed": 20.0,
+    "DefaultGravity": 10.0,
+    "MaxCount": 16,
+    "ShardTtlSeconds": 600
+  }
 }

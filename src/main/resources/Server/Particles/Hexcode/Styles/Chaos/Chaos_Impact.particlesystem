@@ -1,0 +1,40 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Chaos_Impact_Smoke",
+      "LifeSpan": {
+        "Min": 5.833333333333333,
+        "Max": 6.666666666666667
+      },
+      "PositionOffset": {
+        "X": 0,
+        "Y": -0.5,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Chaos_Impact_Fire",
+      "LifeSpan": {
+        "Min": 3.3333333333333335,
+        "Max": 5
+      },
+      "PositionOffset": {
+        "X": 0,
+        "Y": -0.5,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Chaos_Impact_Sparks",
+      "LifeSpan": {
+        "Min": 3.3333333333333335,
+        "Max": 5
+      },
+      "PositionOffset": {
+        "X": 0,
+        "Y": -0.4,
+        "Z": 0
+      }
+    }
+  ]
+}

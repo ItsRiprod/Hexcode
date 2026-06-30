@@ -130,7 +130,7 @@ public class Hexcode extends JavaPlugin {
     private final PatchManager patchManager;
 
     // Deprecated, waiting on a fix from hytale for proper implementation
-    private HexCorePlugin hexCore;
+//     private HexCorePlugin hexCore;
 //     private CounterspellPlugin counterspell;
 //     private HexabilityPlugin hexability;
 //     private HexomationPlugin hexomation;

@@ -1,0 +1,16 @@
+{
+  "TexturePath": "Trails/Ice.png",
+  "LifeSpan": 10,
+  "Roll": 0,
+  "Start": {
+    "Color": "#00e9ffdd",
+    "Width": 0.15
+  },
+  "End": {
+    "Color": "#000cffb8",
+    "Width": 0
+  },
+  "LightInfluence": 0.516,
+  "Smooth": false,
+  "RenderMode": "BlendLinear"
+}

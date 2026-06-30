@@ -1,0 +1,104 @@
+{
+  "RenderMode": "Erosion",
+  "ParticleRotationInfluence": "BillboardVelocity",
+  "LinearFiltering": true,
+  "LightInfluence": 0,
+  "ParticleRotateWithSpawner": true,
+  "TrailSpawnerPositionMultiplier": 1,
+  "TrailSpawnerRotationMultiplier": 1,
+  "MaxConcurrentParticles": 10,
+  "ParticleLifeSpan": {
+    "Min": 0.2,
+    "Max": 3
+  },
+  "SpawnRate": {
+    "Min": 0,
+    "Max": 30
+  },
+  "Attractors": [
+    {
+      "RadialTangentAcceleration": -2,
+      "RadialAxis": {
+        "Y": 2
+      },
+      "RadialAcceleration": 0,
+      "RadialTangentImpulse": 2,
+      "LinearAcceleration": {
+        "Y": 1
+      }
+    }
+  ],
+  "$Comment": "Smol sparks for the circle portal",
+  "EmitOffset": {
+    "X": {
+      "Min": 1,
+      "Max": 1.1
+    },
+    "Y": {
+      "Min": 0,
+      "Max": 0
+    },
+    "Z": {
+      "Min": 1,
+      "Max": 1.1
+    }
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Shapes/Spiral.png",
+    "FrameSize": {
+      "Width": 32,
+      "Height": 32
+    },
+    "ScaleRatioConstraint": "OneToOne",
+    "UVOption": "RandomFlipU",
+    "Animation": {
+      "0": {
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Opacity": 0,
+        "Scale": {
+          "X": {
+            "Min": 0.7,
+            "Max": 0.7
+          }
+        }
+      },
+      "50": {
+        "Opacity": 1
+      },
+      "100": {
+        "Opacity": 0
+      }
+    },
+    "InitialAnimationFrame": {
+      "Rotation": {
+        "X": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Y": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Z": {
+          "Min": 0,
+          "Max": 0
+        }
+      },
+      "Scale": {
+        "X": {
+          "Min": 0.4,
+          "Max": 0.5
+        }
+      },
+      "Opacity": 1,
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 0
+      }
+    }
+  },
+  "VelocityStretchMultiplier": 100.0
+}

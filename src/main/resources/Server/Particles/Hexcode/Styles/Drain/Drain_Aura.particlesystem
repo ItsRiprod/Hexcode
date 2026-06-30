@@ -1,0 +1,28 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Drain_Aura_Mist",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "LifeSpan": {
+        "Min": 0,
+        "Max": 0.5
+      }
+    },
+    {
+      "SpawnerId": "Drain_Aura_Snowflake",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "LifeSpan": {
+        "Min": 0,
+        "Max": 0.7
+      }
+    }
+  ]
+}

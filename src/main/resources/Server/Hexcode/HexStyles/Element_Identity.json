@@ -1,0 +1,10 @@
+{
+  "Parent": "Essence_Life",
+  "PrimaryModel": "Identity_Bolt",
+  "StyleParticle": {
+    "SystemId": "Identity_Aura"
+  },
+  "PrimaryParticle": {
+    "SystemId": "Identity_Impact"
+  }
+}

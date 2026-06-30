@@ -1,0 +1,15 @@
+{
+  "Parent": "Fireball",
+  "Trails": [
+    {
+      "TrailId": "Void_Green"
+    }
+  ],
+  "Particles": [
+    {
+      "SystemId": "Identity_Bolt",
+      "TargetEntityPart": "Self"
+    }
+  ],
+  "Texture": "Items/Projectiles/Fireball_Textures/SkeletonMage.png"
+}

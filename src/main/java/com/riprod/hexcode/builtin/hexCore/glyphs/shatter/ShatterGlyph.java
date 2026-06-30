@@ -37,6 +37,7 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
@@ -52,17 +53,14 @@ public class ShatterGlyph implements GlyphHandler {
 
     public static final String ID = "Shatter";
 
-    private static final float SHARD_SCALE = 0.35f;
-    private static final int DEFAULT_COUNT = 5;
-    private static final double DEFAULT_SPREAD = Math.PI / 6;
-    private static final double DEFAULT_SPEED = 20.0;
-    private static final double DEFAULT_GRAVITY = 10.0;
-    private static final int MAX_COUNT = 16;
-    private static final Duration SHARD_TTL = Duration.ofMinutes(10);
-
     private static final String HIT_ROOT_INTERACTION = "Hex_Shatter_Hit";
     private static final String MISS_ROOT_INTERACTION = "Hex_Shatter_Miss";
     private static final String BOUNCE_ROOT_INTERACTION = "Hex_Shatter_Bounce";
+
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(ShatterConfig.class, ShatterConfig.CODEC);
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -111,14 +109,19 @@ public class ShatterGlyph implements GlyphHandler {
                 ? var.getRef(accessor)
                 : hexContext.getCasterRef(accessor);
 
-        int count = HexVarUtil.numberOrDefault(countVar, (double) DEFAULT_COUNT).intValue();
-        if (count < 1) count = 1;
-        if (count > MAX_COUNT) count = MAX_COUNT;
+        ShatterConfig config = getConfig(ShatterConfig.class);
+        if (config == null) config = ShatterConfig.DEFAULTS;
 
-        double spread = HexVarUtil.numberOrDefault(spreadVar, DEFAULT_SPREAD);
-        double speed = HexVarUtil.numberOrDefault(speedVar, DEFAULT_SPEED);
-        if (speed <= 0) speed = DEFAULT_SPEED;
-        double gravity = HexVarUtil.numberOrDefault(gravityVar, DEFAULT_GRAVITY);
+        int count = HexVarUtil.numberOrDefault(countVar, (double) config.getDefaultCount()).intValue();
+        if (count < 1) count = 1;
+        if (count > config.getMaxCount()) count = config.getMaxCount();
+
+        double spread = HexVarUtil.numberOrDefault(spreadVar, config.getDefaultSpread());
+        double speed = HexVarUtil.numberOrDefault(speedVar, config.getDefaultSpeed());
+        if (speed <= 0) speed = config.getDefaultSpeed();
+        double gravity = HexVarUtil.numberOrDefault(gravityVar, config.getDefaultGravity());
+
+        Duration shardTtl = Duration.ofMillis((long) (config.getShardTtlSeconds() * 1000));
 
         List<Vector3d> shardDirections = computeConeDirections(centralDir, count, spread);
 
@@ -129,12 +132,12 @@ public class ShatterGlyph implements GlyphHandler {
                     "model asset not found: " + modelId);
             return;
         }
-        Model model = Model.createScaledModel(modelAsset, SHARD_SCALE);
+        Model model = Model.createScaledModel(modelAsset, 1.0f);
 
         for (Vector3d dir : shardDirections) {
             Vector3d shardSpawn = new Vector3d(spawnPos).add(new Vector3d(dir).mul(1.0));
             spawnShard(hexContext, glyph, parent, shardSpawn, dir, speed, gravity, model,
-                    shardDirections.size());
+                    shardDirections.size(), shardTtl);
         }
 
         ShatterStyle.renderLaunch(spawnPos, centralDir, hexContext, hexContext.getAccessor());
@@ -142,13 +145,11 @@ public class ShatterGlyph implements GlyphHandler {
 
     private void spawnShard(HexContext hexContext, Glyph glyph, Ref<EntityStore> parent,
             Vector3d position, Vector3d direction,
-            double speed, double gravity, Model model, int splitFactor) {
+            double speed, double gravity, Model model, int splitFactor, Duration shardTtl) {
 
         HexContext branched = hexContext.branch(splitFactor);
 
-        Rotation3f rotation = new Rotation3f();
-        rotation.y = (float) Math.atan2(-direction.x, direction.z);
-        rotation.setPitch((float) Math.asin(Math.max(-1.0, Math.min(1.0, -direction.y))));
+        Rotation3f rotation = Rotation3f.lookAt(direction);
 
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
 
@@ -175,7 +176,7 @@ public class ShatterGlyph implements GlyphHandler {
 
         holder.addComponent(DespawnComponent.getComponentType(),
                 new DespawnComponent(hexContext.getAccessor()
-                        .getResource(TimeResource.getResourceType()).getNow().plus(SHARD_TTL)));
+                        .getResource(TimeResource.getResourceType()).getNow().plus(shardTtl)));
 
         holder.addComponent(ShatterState.getComponentType(),
                 new ShatterState(branched, glyph));

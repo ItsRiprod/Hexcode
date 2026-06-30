@@ -18,7 +18,7 @@
   },
   "Title": "hexcode.glyphs.Projectile.name",
   "Description": "hexcode.glyphs.Projectile.description",
-  "ModelPath": "Projectile",
+  "ModelPath": "Glyph_Projectile",
   "BasePower": 1.0,
   "ManaConsumption": 3,
   "ShapeStructure": [
@@ -83,5 +83,6 @@
   },
   "Volatility": {
     "InstantCost": 2,
-    "DrainPerSecond": 0.0}
+    "DrainPerSecond": 0.0
+  }
 }

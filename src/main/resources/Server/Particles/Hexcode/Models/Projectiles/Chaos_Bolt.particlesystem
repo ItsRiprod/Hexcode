@@ -1,0 +1,21 @@
+{
+  "CullDistance": 100.0,
+  "IsImportant": false,
+  "LifeSpan": 10,
+  "Spawners": [
+    {
+      "SpawnerId": "Chaos_Aura_Sparks",
+      "PositionOffset": {
+        "X": 0.0,
+        "Z": 0.0
+      },
+      "FixedRotation": false
+    },
+    {
+      "SpawnerId": "Chaos_Aura_Trail"
+    },
+    {
+      "SpawnerId": "Chaos_Aura_Core"
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 {
   "Parent": "Glyph_Template",
-  "Style": "Self_Growth",
+  "Style": {
+    "Parent": "Element_Identity"
+  },
   "Title": "hexcode.glyphs.Self.name",
   "Description": "hexcode.glyphs.Self.description",
   "ModelPath": "Self",
@@ -21,5 +23,6 @@
   },
   "Volatility": {
     "InstantCost": 0.1,
-    "DrainPerSecond": 0.0}
+    "DrainPerSecond": 0.0
+  }
 }

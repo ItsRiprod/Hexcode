@@ -29,11 +29,7 @@ public class ShatterStyle {
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         VfxUtil.spawnPrimary(overrides, asset(), position, accessor);
-
-        Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset());
-        World world = accessor.getExternalData().getWorld();
-        Vector3d trailEnd = new Vector3d(position).add(new Vector3d(direction).mul(1.5));
-        VfxUtil.line(accessor, world, position, trailEnd, color, LINE_THICKNESS, LINE_DURATION, 0);
+        VfxUtil.spawnStyleParticleDirected(overrides, asset(), position, accessor, direction);
     }
 
     public static void renderShardHit(Vector3d hitPos, HexContext ctx,
