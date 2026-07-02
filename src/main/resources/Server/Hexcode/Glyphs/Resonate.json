@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Resonate",
   "Style": {
     "PrimaryColor": "#26C6DA",
     "SecondaryColor": "#B2EBF2",

@@ -1,5 +1,7 @@
 package com.riprod.hexcode.core.common.drawing;
 
+import java.util.UUID;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -10,12 +12,17 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.RefChangeSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.context.DrawModeEnterEvent;
 import com.riprod.hexcode.api.context.DrawModeExitEvent;
+import com.riprod.hexcode.api.dispatch.ShapeDrawnEvent;
+import com.riprod.hexcode.api.dispatch.ShapeStructure;
+import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.drawing.system.InterfaceManager;
 import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
+import com.riprod.hexcode.core.state.casting.utils.DraftFeedback;
 
 // refsystem only fires on entity add/remove; component add/remove on a living player
 // dispatches through refchangesystem, so the draw flag lifecycle must live here
@@ -55,16 +62,47 @@ public class DrawModeLifecycleSystem extends RefChangeSystem<EntityStore, DrawCa
     public void onComponentRemoved(@Nonnull Ref<EntityStore> ref, @Nonnull DrawCaptureComponent capture,
             @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer) {
         try {
+            if (!ref.isValid()) {
+                return;
+            }
+            if (capture.isStrokeActive()) {
+                DrawCaptureService.endStroke(buffer, ref, capture, resolveUuid(buffer, ref));
+            }
             Ref<EntityStore> trailRef = capture.getDrawTrailRef();
             if (trailRef != null && trailRef.isValid()) {
                 InterfaceManager.removeTrailEntity(buffer, trailRef);
                 capture.setDrawTrailRef(null);
             }
-            if (ref.isValid()) {
-                buffer.invoke(ref, new DrawModeExitEvent(ref));
+
+            buffer.invoke(ref, new DrawModeExitEvent(ref));
+
+            // exiting draw mode is an early commit: whatever the exit handlers left on the
+            // blackboard goes to the still-active context instead of evaporating with the
+            // ping-scaled finalize window (service-driven forfeits cleared it beforehand)
+            if (capture.getPendingShapes().isEmpty()) {
+                return;
             }
+            CasterComponent caster = buffer.getComponent(ref, CasterComponent.getComponentType());
+            String contextId = caster != null ? caster.getCurrentContext() : null;
+            ShapeStructure structure = DrawCaptureService.computeStructure(capture.getPendingShapes());
+            capture.getPendingShapes().clear();
+            capture.setFinalizePending(false);
+            if (structure == null) {
+                return;
+            }
+            if (contextId == null) {
+                DraftFeedback.playFailFeedback(buffer, ref);
+                return;
+            }
+            buffer.invoke(ref, new ShapeDrawnEvent(ref, structure));
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("[hexcode] draw mode exit failed");
         }
+    }
+
+    @Nullable
+    private static UUID resolveUuid(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
+        UUIDComponent uuid = buffer.getComponent(player, UUIDComponent.getComponentType());
+        return uuid != null ? uuid.getUuid() : null;
     }
 }

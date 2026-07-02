@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Levitate",
   "Style": {
     "PrimaryColor": "#B39DDB",
     "SecondaryColor": "#EDE7F6",

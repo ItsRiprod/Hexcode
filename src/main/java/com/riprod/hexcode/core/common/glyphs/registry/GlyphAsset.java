@@ -21,6 +21,7 @@ import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIButton;
 import com.hypixel.hytale.codec.schema.metadata.ui.UICreateButtons;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIEditor;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import javax.annotation.Nullable;
@@ -50,6 +51,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     protected ArrayList<DrawnShapeComponent> shapes = new ArrayList<>();
     protected LinkedHashMap<String, SlotAsset> slots = new LinkedHashMap<>();
     protected String styleId;
+    protected String handlerId;
 
     private transient Object2IntOpenHashMap<String> slotIndexCache;
 
@@ -100,6 +102,10 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     @Nullable
     public GlyphConfig getConfig() {
         return this.config;
+    }
+
+    public String getHandler() {
+        return this.handlerId;
     }
 
     public List<DrawnShapeComponent> getShapes() {
@@ -266,6 +272,19 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                 .addValidatorLate(() -> HexStyleAsset.VALIDATOR_CACHE.getValidator().late())
                 .documentation("The visual style of the glyph - particles, sounds, default colors, model")
                 .add()
+                .<String>appendInherited(new KeyedCodec<>("Handler", Codec.STRING),
+                        (a, v) -> a.handlerId = v,
+                        a -> a.handlerId,
+                        (a, p) -> a.handlerId = p.handlerId)
+                .metadata(new UIEditor(new UIEditor.Dropdown("HexcodeGlyphHandlers")))
+                .addValidatorLate(() -> GlyphHandlerKeyValidator.INSTANCE.late())
+                .documentation("The registered glyph handler that executes this glyph - multiple glyph assets can reference one handler")
+                .add()
+                .validator((a, results) -> {
+                    if (!a.shapes.isEmpty() && (a.handlerId == null || a.handlerId.isEmpty())) {
+                        results.fail("Handler is required for drawable glyphs (assets with a ShapeStructure)");
+                    }
+                })
                 .build();
     }
 }

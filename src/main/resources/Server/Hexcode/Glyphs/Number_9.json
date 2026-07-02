@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Number",
   "Title": "hexcode.glyphs.Number_9.name",
   "Description": "hexcode.glyphs.Number_9.description",
   "ModelPath": "Number_9",
@@ -19,6 +20,10 @@
       "Label": "hexcode.glyphs.Number_9.Next.name",
       "Description": "hexcode.glyphs.Number_9.Next.description"
     }
+  },
+  "Config": {
+    "Type": "Number",
+    "Value": 9
   },
   "ManaConsumption": 0,
   "Volatility": {

@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Variable",
   "Title": "hexcode.glyphs.Variable.name",
   "Description": "hexcode.glyphs.Variable.description",
   "ModelPath": "Variable",

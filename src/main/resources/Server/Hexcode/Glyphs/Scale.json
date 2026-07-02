@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Scale",
   "Style": {
     "PrimaryParticle": {
       "SystemId": "Scale_Apply"

@@ -44,13 +44,6 @@
           "Amount": 0.1
         }
       ],
-      "Volatility": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 8
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
@@ -64,5 +57,12 @@
       "Volatility"
     ]
   },
-  "ItemSoundSetId": "ISS_Weapons_Wood"
+  "ItemSoundSetId": "ISS_Weapons_Wood",
+  "InteractionVars": {
+    "CastSpell": {
+      "Interactions": [
+        "CastSpell_Basic_Bronze"
+      ]
+    }
+  }
 }

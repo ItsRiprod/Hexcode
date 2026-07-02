@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Delay",
   "Style": {
     "Parent": "Element_Time",
     "PrimaryParticle": {

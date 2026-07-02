@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Chaos",
   "Style": {
     "Parent": "Element_Chaos"
   },

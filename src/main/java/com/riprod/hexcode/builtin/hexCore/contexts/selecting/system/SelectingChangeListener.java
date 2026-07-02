@@ -6,17 +6,27 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.system.WorldEventSystem;
+import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.context.HexContextChangeEvent;
+import com.riprod.hexcode.api.event.CraftingEvent;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.SelectingState;
+import com.riprod.hexcode.builtin.hexCore.contexts.selecting.utils.SelectingScene;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
+import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
+import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
+import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
+import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
 import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
 
 public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexContextChangeEvent> {
+    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     public SelectingChangeListener() {
         super(HexContextChangeEvent.class);
@@ -31,9 +41,7 @@ public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexCo
         }
 
         if (SelectingState.CONTEXT_ID.equals(event.getNewContextId())) {
-            buffer.ensureComponent(player, HexcasterCraftingComponent.getComponentType());
-            buffer.putComponent(player, SelectingState.getComponentType(), new SelectingState());
-            ContextTransitionService.setInContextStat(buffer, player, true);
+            enter(buffer, player);
             return;
         }
 
@@ -43,14 +51,54 @@ public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexCo
         }
         buffer.tryRemoveComponent(player, SelectingState.getComponentType());
 
-        // headed to crafting: the session persists on the pedestal, the handler and
-        // container node own the scene handoff
+        // headed to crafting: despawn only the remaining previews - the selected
+        // container was already handed off to activeContainerRef pre-transition
         if (CraftingState.CONTEXT_ID.equals(event.getNewContextId())) {
+            teardownPreviewsIfOwner(buffer, player);
             return;
         }
-        if (event.getNewContextId() == null) {
-            ContextTransitionService.setInContextStat(buffer, player, false);
-            endSessionIfOwner(buffer, player);
+        ContextTransitionService.setInContextStat(buffer, player, false);
+        endSessionIfOwner(buffer, player);
+    }
+
+    private static void enter(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
+        buffer.ensureComponent(player, HexcasterCraftingComponent.getComponentType());
+        buffer.putComponent(player, SelectingState.getComponentType(), new SelectingState());
+        ContextTransitionService.setInContextStat(buffer, player, true);
+
+        PedestalBlockComponent pedestal = PedestalBlockUtil.resolvePedestal(player, buffer);
+        HexcodeSessionComponent session = pedestal != null
+                ? SessionUtils.resolveSession(pedestal, buffer)
+                : null;
+        if (pedestal == null || session == null || !session.isOwner(player)) {
+            return;
+        }
+
+        World world = buffer.getExternalData().getWorld();
+        SelectingScene.spawnPreviews(buffer, player, pedestal, session);
+        PedestalSystem.registerObelisks(buffer, world, pedestal);
+
+        ImbuementProfileAsset profile = session.getProfile();
+        if (profile != null && profile.isSkipSelecting() && !profile.getSlots().isEmpty()) {
+            // single-slot items auto-select once the just-spawned preview refs turn valid
+            String onlyKey = profile.getSlots().keySet().iterator().next();
+            session.setPendingReenterSlotKey(onlyKey);
+        }
+
+        PedestalSystem.updateState(buffer, pedestal, session, world, PedestalState.SELECTING);
+        HytaleServer.get().getEventBus().dispatchFor(CraftingEvent.class)
+                .dispatch(CraftingEvent.builder(CraftingEvent.Reason.ENTERED_SELECTING, player)
+                        .pedestal(pedestal)
+                        .build());
+    }
+
+    private static void teardownPreviewsIfOwner(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
+        Ref<EntityStore> sessionRef = SessionUtils.getSessionRefByPlayer(player, buffer);
+        HexcodeSessionComponent session = sessionRef != null
+                ? buffer.getComponent(sessionRef, HexcodeSessionComponent.getComponentType())
+                : null;
+        if (session != null && session.isOwner(player)) {
+            SessionUtils.despawnPreviewScene(buffer, session);
         }
     }
 

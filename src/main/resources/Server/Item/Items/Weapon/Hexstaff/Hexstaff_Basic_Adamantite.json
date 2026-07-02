@@ -35,13 +35,6 @@
           "Amount": 1.4
         }
       ],
-      "Volatility": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 170
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
@@ -82,5 +75,12 @@
         "Quantity": 8
       }
     ]
+  },
+  "InteractionVars": {
+    "CastSpell": {
+      "Interactions": [
+        "CastSpell_Basic_Adamantite"
+      ]
+    }
   }
 }

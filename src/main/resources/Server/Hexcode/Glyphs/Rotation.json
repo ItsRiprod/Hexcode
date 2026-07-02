@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Rotation",
   "Title": "hexcode.glyphs.Rotation.name",
   "Description": "hexcode.glyphs.Rotation.description",
   "ModelPath": "Rotation",

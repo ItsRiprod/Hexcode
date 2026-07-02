@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Dot",
   "Title": "hexcode.glyphs.Dot.name",
   "Description": "hexcode.glyphs.Dot.description",
   "ModelPath": "Dot",

@@ -87,9 +87,9 @@ public class HexcodeSessionComponent implements Component<EntityStore> {
     private List<Ref<EntityStore>> hexPreviewRefs = new ArrayList<>();
     private List<Ref<EntityStore>> slotNodeRefs = new ArrayList<>();
     private Ref<EntityStore> anchorNodeRef;
+    private Ref<EntityStore> activeContainerRef;
 
     private String activeSlotKey = null;
-    private int autosaveTickCounter = 0;
     private Hex pendingImportHex = null;
     private String pendingReenterSlotKey = null;
 
@@ -271,20 +271,21 @@ public class HexcodeSessionComponent implements Component<EntityStore> {
     }
 
     @Nullable
+    public Ref<EntityStore> getActiveContainerRef() {
+        return activeContainerRef;
+    }
+
+    public void setActiveContainerRef(@Nullable Ref<EntityStore> activeContainerRef) {
+        this.activeContainerRef = activeContainerRef;
+    }
+
+    @Nullable
     public String getActiveSlotKey() {
         return activeSlotKey;
     }
 
     public void setActiveSlotKey(@Nullable String activeSlotKey) {
         this.activeSlotKey = activeSlotKey;
-    }
-
-    public int getAutosaveTickCounter() {
-        return autosaveTickCounter;
-    }
-
-    public void setAutosaveTickCounter(int count) {
-        this.autosaveTickCounter = count;
     }
 
     public Hex getPendingImportHex() {
@@ -333,8 +334,8 @@ public class HexcodeSessionComponent implements Component<EntityStore> {
         copy.hexPreviewRefs = this.hexPreviewRefs != null ? new ArrayList<>(this.hexPreviewRefs) : new ArrayList<>();
         copy.slotNodeRefs = this.slotNodeRefs != null ? new ArrayList<>(this.slotNodeRefs) : new ArrayList<>();
         copy.anchorNodeRef = this.anchorNodeRef;
+        copy.activeContainerRef = this.activeContainerRef;
         copy.activeSlotKey = this.activeSlotKey;
-        copy.autosaveTickCounter = this.autosaveTickCounter;
         copy.pendingImportHex = this.pendingImportHex;
         copy.pendingReenterSlotKey = this.pendingReenterSlotKey;
         return copy;

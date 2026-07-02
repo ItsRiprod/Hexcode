@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Greater",
   "Title": "hexcode.glyphs.Greater.name",
   "Description": "hexcode.glyphs.Greater.description",
   "ModelPath": "Greater",

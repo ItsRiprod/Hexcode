@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Projectile",
   "Style": {
     "PrimaryColor": "#FFCC4D",
     "SecondaryColor": "#FFE6A3",

@@ -16,9 +16,10 @@ public final class SpellMana {
         float total = 0f;
         for (Glyph glyph : hex.getGlyphs()) {
             if (glyph == null) continue;
-            GlyphHandler handler = GlyphRegistry.get(glyph.getGlyphId());
-            if (handler == null) continue;
             GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+            if (asset == null) continue;
+            GlyphHandler handler = GlyphRegistry.get(asset.getHandler());
+            if (handler == null) continue;
             total += handler.collectMana(glyph, asset);
         }
         return total;

@@ -175,7 +175,11 @@ public class Glyph {
         if (linked == null)
             return resolveAssetDefault(key, hexContext, javaDefault);
 
-        GlyphHandler handler = GlyphRegistry.get(linked.getGlyphId());
+        GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
+        if (linkedAsset == null)
+            return resolveAssetDefault(key, hexContext, javaDefault);
+
+        GlyphHandler handler = GlyphRegistry.get(linkedAsset.getHandler());
         if (handler == null)
             return resolveAssetDefault(key, hexContext, javaDefault);
 
@@ -251,7 +255,10 @@ public class Glyph {
             Glyph linked = hexContext.getGlyph(linkId);
             if (linked == null)
                 continue;
-            GlyphHandler handler = GlyphRegistry.get(linked.getGlyphId());
+            GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
+            if (linkedAsset == null)
+                continue;
+            GlyphHandler handler = GlyphRegistry.get(linkedAsset.getHandler());
             if (handler == null)
                 continue;
 

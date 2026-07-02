@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Cross",
   "Title": "hexcode.glyphs.Cross.name",
   "Description": "hexcode.glyphs.Cross.description",
   "ModelPath": "Cross",

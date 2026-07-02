@@ -36,6 +36,7 @@ import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionTickSystem;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotStyleAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -471,7 +472,11 @@ public class Hexcode extends JavaPlugin {
     }
 
     private void RegisterAssetEditorDataSets() {
-        EventRegistry events = AssetEditorPlugin.get().getEventRegistry();
+        AssetEditorPlugin assetEditor = AssetEditorPlugin.get();
+        if (assetEditor == null) {
+            return;
+        }
+        EventRegistry events = assetEditor.getEventRegistry();
         events.register(AssetEditorRequestDataSetEvent.class, "HexcodeObeliskHandlers",
                 (Consumer<AssetEditorRequestDataSetEvent>) e -> e
                         .setResults(ObeliskHandlerRegistry.getAll().keySet()
@@ -482,6 +487,9 @@ public class Hexcode extends JavaPlugin {
         events.register(AssetEditorRequestDataSetEvent.class, "HexcodeNodeHandlers",
                 (Consumer<AssetEditorRequestDataSetEvent>) e -> e
                         .setResults(NodeRouter.keys().toArray(String[]::new)));
+        events.register(AssetEditorRequestDataSetEvent.class, "HexcodeGlyphHandlers",
+                (Consumer<AssetEditorRequestDataSetEvent>) e -> e
+                        .setResults(GlyphRegistry.getAll().keySet().toArray(String[]::new)));
     }
 
 }

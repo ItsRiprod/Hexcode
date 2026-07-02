@@ -35,13 +35,6 @@
           "Amount": 0.25
         }
       ],
-      "Volatility": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 18
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
@@ -86,5 +79,12 @@
         "RequiredTierLevel": 2
       }
     ]
+  },
+  "InteractionVars": {
+    "CastSpell": {
+      "Interactions": [
+        "CastSpell_Basic_Copper"
+      ]
+    }
   }
 }

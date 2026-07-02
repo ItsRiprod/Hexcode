@@ -36,13 +36,6 @@
           "Amount": 1.0
         }
       ],
-      "Volatility": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 100
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
@@ -83,5 +76,12 @@
         ]
       }
     ]
+  },
+  "InteractionVars": {
+    "CastSpell": {
+      "Interactions": [
+        "CastSpell_Basic_Cobalt"
+      ]
+    }
   }
 }

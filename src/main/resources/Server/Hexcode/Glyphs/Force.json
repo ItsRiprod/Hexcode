@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Force",
   "Style": {
     "Parent": "Element_Energy",
     "PrimaryParticle": {

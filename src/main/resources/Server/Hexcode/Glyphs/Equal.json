@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Equal",
   "Title": "hexcode.glyphs.Equal.name",
   "Description": "hexcode.glyphs.Equal.description",
   "ModelPath": "Equal",

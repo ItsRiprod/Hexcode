@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.state.crafting.handlers.node.Glyph;
+package com.riprod.hexcode.builtin.hexCore.nodes.glyph;
 
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -30,11 +30,11 @@ import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.state.casting.utils.GlyphStyler;
 import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.state.crafting.component.NodeComponent;
-import com.riprod.hexcode.core.state.crafting.constants.NodeTypeId;
+import com.riprod.hexcode.core.common.node.component.NodeComponent;
+import com.riprod.hexcode.core.common.node.NodeTypeId;
 import com.riprod.hexcode.core.state.crafting.handlers.CraftingDragHandler;
-import com.riprod.hexcode.core.state.crafting.handlers.node.NodeInterface;
-import com.riprod.hexcode.core.state.crafting.handlers.node.Slot.SlotNodeHandler;
+import com.riprod.hexcode.core.common.node.NodeInterface;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
 import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
 import com.riprod.hexcode.core.state.crafting.utils.CraftingPositionUtil;

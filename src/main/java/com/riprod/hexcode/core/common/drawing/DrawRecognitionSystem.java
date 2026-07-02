@@ -1,6 +1,9 @@
 package com.riprod.hexcode.core.common.drawing;
 
+import java.util.UUID;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -9,6 +12,8 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.protocol.InteractionType;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.dispatch.ShapeDrawnEvent;
 import com.riprod.hexcode.api.dispatch.ShapeStructure;
@@ -29,14 +34,21 @@ public class DrawRecognitionSystem extends EntityTickingSystem<EntityStore> {
             @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer) {
         try {
             DrawCaptureComponent capture = chunk.getComponent(index, DrawCaptureComponent.getComponentType());
-            if (capture == null || !capture.isFinalizePending()) {
+            if (capture == null) {
                 return;
             }
 
-            float timer = capture.getFinalizeTimer() + dt;
-            if (timer < capture.getFinalizeDelaySeconds()) {
-                capture.setFinalizeTimer(timer);
+            boolean forceCommit = consumeForceCommit(chunk, index, capture, buffer);
+            if (!capture.isFinalizePending()) {
                 return;
+            }
+
+            if (!forceCommit) {
+                float timer = capture.getFinalizeTimer() + dt;
+                if (timer < capture.getFinalizeDelaySeconds()) {
+                    capture.setFinalizeTimer(timer);
+                    return;
+                }
             }
             capture.setFinalizePending(false);
             capture.setFinalizeTimer(0f);
@@ -59,5 +71,39 @@ public class DrawRecognitionSystem extends EntityTickingSystem<EntityStore> {
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("[hexcode] draw recognition failed");
         }
+    }
+
+    // ability2 while drawing commits immediately, skipping the ping-scaled window; an
+    // in-flight stroke is closed first so it is part of the committed combination.
+    // non-matching ability presses are restored for their real consumers
+    private static boolean consumeForceCommit(ArchetypeChunk<EntityStore> chunk, int index,
+            DrawCaptureComponent capture, CommandBuffer<EntityStore> buffer) {
+        CasterComponent caster = chunk.getComponent(index, CasterComponent.getComponentType());
+        if (caster == null) {
+            return false;
+        }
+        InteractionType ability = caster.consumeAbilityPressed();
+        if (ability == null) {
+            return false;
+        }
+        if (ability != InteractionType.Ability2) {
+            caster.pressAbility(ability);
+            return false;
+        }
+
+        Ref<EntityStore> ref = chunk.getReferenceTo(index);
+        if (capture.isStrokeActive()) {
+            DrawCaptureService.endStroke(buffer, ref, capture, resolveUuid(buffer, ref));
+        }
+        if (!capture.getPendingShapes().isEmpty()) {
+            capture.setFinalizePending(true);
+        }
+        return true;
+    }
+
+    @Nullable
+    private static UUID resolveUuid(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
+        UUIDComponent uuid = buffer.getComponent(player, UUIDComponent.getComponentType());
+        return uuid != null ? uuid.getUuid() : null;
     }
 }

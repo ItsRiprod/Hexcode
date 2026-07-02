@@ -35,13 +35,6 @@
           "Amount": 0.45
         }
       ],
-      "Volatility": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 35
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
@@ -82,5 +75,12 @@
         "RequiredTierLevel": 3
       }
     ]
+  },
+  "InteractionVars": {
+    "CastSpell": {
+      "Interactions": [
+        "CastSpell_Basic_Iron"
+      ]
+    }
   }
 }

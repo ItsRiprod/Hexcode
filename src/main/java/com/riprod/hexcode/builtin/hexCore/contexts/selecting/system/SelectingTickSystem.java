@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.contexts.selecting.system;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -10,16 +12,18 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.SelectingState;
+import com.riprod.hexcode.builtin.hexCore.pedestals.PedestalSceneHover;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
+import com.riprod.hexcode.core.common.node.NodeRouter;
+import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
+import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
 import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
-import com.riprod.hexcode.core.state.crafting.system.CraftingStateSystem;
 
 public class SelectingTickSystem extends EntityTickingSystem<EntityStore> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -45,20 +49,16 @@ public class SelectingTickSystem extends EntityTickingSystem<EntityStore> {
                 return;
             }
 
-            // the container node flips the pedestal to crafting on slot select; the
-            // context follows the session
-            if (session.getState() == PedestalState.CRAFTING) {
-                ContextTransitionService.transitionFrom(buffer, player,
-                        SelectingState.CONTEXT_ID, CraftingState.CONTEXT_ID, CraftingState.PRIORITY);
+            if (drainPendingReenter(buffer, player, session)) {
                 return;
             }
 
-            CraftingStateSystem.tickCrafting(buffer, dt, player, pedestal);
+            PedestalSceneHover.tick(buffer, dt, player, pedestal);
 
             CasterComponent caster = chunk.getComponent(index, CasterComponent.getComponentType());
             if (caster != null) {
                 if (caster.consumePrimaryPressed()) {
-                    CraftingStateSystem.enterInteraction(player, null, buffer);
+                    enterInteraction(player, buffer);
                 }
                 caster.consumePrimaryReleased();
                 caster.consumeAbilityPressed();
@@ -66,5 +66,51 @@ public class SelectingTickSystem extends EntityTickingSystem<EntityStore> {
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("[hexcode] selecting tick failed");
         }
+    }
+
+    private static void enterInteraction(Ref<EntityStore> ref, CommandBuffer<EntityStore> buffer) {
+        HexcasterCraftingComponent craftingComp = buffer.getComponent(ref,
+                HexcasterCraftingComponent.getComponentType());
+        if (craftingComp == null)
+            return;
+
+        Ref<EntityStore> hoveredRef = craftingComp.getHoveredRef();
+        if (hoveredRef == null || !hoveredRef.isValid())
+            return;
+
+        craftingComp.setDragTickCount(0);
+
+        NodeRouter.enter(buffer, hoveredRef, ref);
+    }
+
+    private static boolean drainPendingReenter(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player,
+            HexcodeSessionComponent session) {
+
+        String pendingKey = session.getPendingReenterSlotKey();
+        if (pendingKey == null) return false;
+        if (session.getState() != PedestalState.SELECTING) return false;
+
+        Ref<EntityStore> previewRef = findPreviewBySlotKey(buffer, session, pendingKey);
+        if (previewRef == null || !previewRef.isValid()) return false;
+
+        session.setPendingReenterSlotKey(null);
+        NodeRouter.enter(buffer, previewRef, player);
+        return true;
+    }
+
+    private static Ref<EntityStore> findPreviewBySlotKey(CommandBuffer<EntityStore> buffer,
+            HexcodeSessionComponent session, String slotKey) {
+
+        List<Ref<EntityStore>> previews = session.getHexPreviewRefs();
+        if (previews == null) return null;
+        for (Ref<EntityStore> ref : previews) {
+            if (ref == null || !ref.isValid()) continue;
+            SlotComponent slotRef = buffer.getComponent(ref,
+                    SlotComponent.getComponentType());
+            if (slotRef != null && slotKey.equals(slotRef.getSlotKey())) {
+                return ref;
+            }
+        }
+        return null;
     }
 }

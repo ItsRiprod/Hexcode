@@ -20,11 +20,11 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
+import com.riprod.hexcode.builtin.hexCore.pedestals.PedestalSceneHover;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.state.crafting.system.CraftingStateSystem;
 
 public class CraftingTickSystem extends EntityTickingSystem<EntityStore> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -57,7 +57,7 @@ public class CraftingTickSystem extends EntityTickingSystem<EntityStore> {
                 return;
             }
 
-            CraftingStateSystem.tickCrafting(buffer, dt, player, pedestal);
+            PedestalSceneHover.tick(buffer, dt, player, pedestal);
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("[hexcode] crafting tick failed");
         }

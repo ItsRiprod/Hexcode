@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Erode",
   "Style": {
     "PrimaryColor": "#8D6E63",
     "SecondaryColor": "#D7CCC8",

@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Pi",
   "Title": "hexcode.glyphs.Pi.name",
   "Description": "hexcode.glyphs.Pi.description",
   "ModelPath": "Pi",

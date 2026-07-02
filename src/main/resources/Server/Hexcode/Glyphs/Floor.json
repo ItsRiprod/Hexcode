@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Floor",
   "Title": "hexcode.glyphs.Floor.name",
   "Description": "hexcode.glyphs.Floor.description",
   "ModelPath": "Floor",

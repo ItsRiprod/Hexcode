@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "OnCast",
   "Style": {
     "Parent": "Element_Time",
     "PrimaryModel": "OnCast"

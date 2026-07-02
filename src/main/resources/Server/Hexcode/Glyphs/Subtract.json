@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Subtract",
   "Title": "hexcode.glyphs.Subtract.name",
   "Description": "hexcode.glyphs.Subtract.description",
   "ModelPath": "Subtract",

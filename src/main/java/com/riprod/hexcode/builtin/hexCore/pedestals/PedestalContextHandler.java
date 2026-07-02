@@ -96,22 +96,21 @@ public class PedestalContextHandler implements Consumer<PedestalInteractEvent> {
             if (skipSelecting) {
                 VfxUtil.sound("SFX_Deployable_Totem_Heal_Despawn",
                         new Vector3d(loc.x, loc.y, loc.z), buffer);
-                PedestalSystem.exitCrafting(buffer, playerRef, pedestal, session);
-                SessionUtils.endSession(buffer, existingSessionRef, world);
                 ContextTransitionService.exit(buffer, playerRef, CraftingState.CONTEXT_ID);
                 return;
             }
-            PedestalSystem.exitCrafting(buffer, playerRef, pedestal, session);
-            PedestalSystem.enterSelecting(pedestal, player, world, buffer);
+            // save before the transition so the selecting scene renders the latest hex
+            SessionUtils.saveHexToBook(buffer, playerRef, session);
             ContextTransitionService.transitionFrom(buffer, playerRef,
                     CraftingState.CONTEXT_ID, SelectingState.CONTEXT_ID, SelectingState.PRIORITY);
         } else if (state == PedestalState.SELECTING) {
             VfxUtil.sound("SFX_Deployable_Totem_Heal_Despawn", new Vector3d(loc.x, loc.y, loc.z), buffer);
-            SessionUtils.endSession(buffer, existingSessionRef, world);
             ContextTransitionService.exit(buffer, playerRef, SelectingState.CONTEXT_ID);
         } else {
             VfxUtil.sound("SFX_Arcane_Workbench_Open_Local", new Vector3d(loc.x, loc.y, loc.z), buffer);
-            PedestalSystem.enterSelecting(pedestal, player, world, buffer);
+            HexcasterCraftingComponent craftingComp = buffer.ensureAndGetComponent(playerRef,
+                    HexcasterCraftingComponent.getComponentType());
+            craftingComp.setSessionRef(existingSessionRef);
             ContextTransitionService.attemptEnter(buffer, playerRef,
                     SelectingState.CONTEXT_ID, SelectingState.PRIORITY);
         }

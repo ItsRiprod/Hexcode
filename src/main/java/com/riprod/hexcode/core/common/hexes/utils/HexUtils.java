@@ -10,6 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.hexes.codec.DecodeResult;
 import com.riprod.hexcode.core.common.hexes.codec.HexCodec;
@@ -86,7 +87,8 @@ public class HexUtils {
     private static void removeUnregisteredGlyphs(Hex hex) {
         Set<String> toRemove = new HashSet<>();
         for (Glyph glyph : hex.getGlyphs()) {
-            if (GlyphRegistry.get(glyph.getGlyphId()) == null) {
+            GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+            if (asset == null || GlyphRegistry.get(asset.getHandler()) == null) {
                 toRemove.add(glyph.getId());
             }
         }

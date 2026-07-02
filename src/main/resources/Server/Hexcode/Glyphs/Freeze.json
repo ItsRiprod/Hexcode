@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Freeze",
   "Style": {
     "Parent": "Element_Drain",
     "PrimaryParticle": {

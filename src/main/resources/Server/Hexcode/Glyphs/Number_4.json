@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Number",
   "Title": "hexcode.glyphs.Number_4.name",
   "Description": "hexcode.glyphs.Number_4.description",
   "ModelPath": "Number_4",
@@ -19,6 +20,10 @@
       "Label": "hexcode.glyphs.Number_4.Next.name",
       "Description": "hexcode.glyphs.Number_4.Next.description"
     }
+  },
+  "Config": {
+    "Type": "Number",
+    "Value": 4
   },
   "ManaConsumption": 0,
   "Volatility": {

@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Fortify",
   "Style": {
     "PrimaryColor": "#607D8B",
     "SecondaryColor": "#B0BEC5",

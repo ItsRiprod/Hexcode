@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.state.crafting.handlers.node.Slot;
+package com.riprod.hexcode.builtin.hexCore.nodes.slot;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -16,10 +16,10 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.hover.utils.HoverableUtils;
 import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.state.crafting.component.NodeComponent;
-import com.riprod.hexcode.core.state.crafting.component.SlotComponent;
+import com.riprod.hexcode.core.common.node.component.NodeComponent;
+import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.state.crafting.constants.CraftingColors;
-import com.riprod.hexcode.core.state.crafting.handlers.node.BaseNodeHandler;
+import com.riprod.hexcode.core.common.node.BaseNodeHandler;
 import com.riprod.hexcode.core.state.crafting.utils.LinkRenderer;
 
 public abstract class BaseSlotHandler extends BaseNodeHandler {

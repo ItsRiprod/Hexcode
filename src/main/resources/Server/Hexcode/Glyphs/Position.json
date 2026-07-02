@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Position",
   "Title": "hexcode.glyphs.Position.name",
   "Description": "hexcode.glyphs.Position.description",
   "ModelPath": "Position",

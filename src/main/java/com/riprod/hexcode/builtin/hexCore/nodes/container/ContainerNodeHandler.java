@@ -28,6 +28,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.dispatch.SlotSelectedEvent;
 import com.riprod.hexcode.api.event.CraftingEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -43,7 +44,6 @@ import com.riprod.hexcode.core.common.hover.utils.HoverableUtils;
 import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.obelisk.system.ObeliskDispatcher;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
-import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.core.state.casting.utils.GlyphStyler;
@@ -185,11 +185,6 @@ public class ContainerNodeHandler extends BaseContainerHandler {
             return InteractionState.Failed;
         }
 
-        HexcasterCraftingComponent craftingComp = accessor.getComponent(playerRef,
-                HexcasterCraftingComponent.getComponentType());
-        if (craftingComp == null)
-            return InteractionState.Failed;
-
         SlotComponent slotRef = accessor.getComponent(node,
                 SlotComponent.getComponentType());
         String slotKey = slotRef != null ? slotRef.getSlotKey() : null;
@@ -197,8 +192,16 @@ public class ContainerNodeHandler extends BaseContainerHandler {
             logger.atWarning().log("container enter: clicked preview has no slot key");
             return InteractionState.Failed;
         }
-        session.setActiveSlotKey(slotKey);
 
+        // the handler only validates and announces selection intent; session writes,
+        // the context transition, and the crafting scene handoff belong to the contexts
+        SlotSelectedEvent event = new SlotSelectedEvent(playerRef, slotKey, node);
+        accessor.invoke(playerRef, event);
+        return event.isCancelled() ? InteractionState.Failed : InteractionState.Finished;
+    }
+
+    public Hex prepareForCrafting(CommandBuffer<EntityStore> accessor, Ref<EntityStore> node,
+            HexcodeSessionComponent session, String slotKey) {
         HexComponent hexComp = accessor.getComponent(node, HexComponent.getComponentType());
         Hex storedHex = session.getHexAt(slotKey, accessor);
 
@@ -220,29 +223,8 @@ public class ContainerNodeHandler extends BaseContainerHandler {
         freshComp.setSelfRef(node);
         if (hexComp != null) freshComp.setRootRef(hexComp.getRootRef());
         accessor.putComponent(node, HexComponent.getComponentType(), freshComp);
-
-        PedestalSystem.enterCrafting(accessor, playerRef, pedestal, node);
-        HytaleServer.get().getEventBus().dispatchFor(CraftingEvent.class)
-                .dispatch(CraftingEvent.builder(CraftingEvent.Reason.ENTERED_CRAFTING, playerRef)
-                        .pedestal(pedestal)
-                        .hex(originalHex)
-                        .slotKey(slotKey)
-                        .build());
-        ObeliskDispatcher.dispatchEnterCrafting(accessor, pedestal, playerRef);
-        craftingComp.setHoveredRef(null);
         accessor.removeComponent(node, DebugComponent.getComponentType());
-
-        Vector3d anchorPos = PedestalEntity.getAnchorPosition(session.getPedestalLocation());
-        Vector3d activePos = new Vector3d(
-                anchorPos.x + PedestalSystem.ACTIVE_HEX_OFFSET.x,
-                anchorPos.y + PedestalSystem.ACTIVE_HEX_OFFSET.y,
-                anchorPos.z + PedestalSystem.ACTIVE_HEX_OFFSET.z);
-
-        Ref<EntityStore> rootNodeRef = AnchorNodeHandler.INSTANCE.spawnNode(accessor, originalHex,
-                node, activePos, playerRef);
-        session.setAnchorNodeRef(rootNodeRef);
-
-        return InteractionState.Finished;
+        return originalHex;
     }
 
     @Override

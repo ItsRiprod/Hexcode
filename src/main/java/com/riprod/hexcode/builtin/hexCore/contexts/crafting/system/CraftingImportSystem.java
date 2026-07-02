@@ -9,16 +9,13 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.SelectingState;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
-import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
@@ -50,17 +47,14 @@ public class CraftingImportSystem extends EntityTickingSystem<EntityStore> {
             Hex importedHex = session.getPendingImportHex();
             session.setPendingImportHex(null);
 
-            PedestalSystem.exitCrafting(buffer, player, pedestal, session);
-
+            // the import replaces the slot content; null the active slot so the crafting
+            // teardown save cannot overwrite the imported hex with the discarded scene
+            session.setActiveSlotKey(null);
             if (savedKey != null) {
                 ItemStack stack = session.getStoredItem();
                 stack = ImbuementUtils.write(stack, savedKey, ImbuementUtils.fromHex(importedHex));
                 session.setStoredItem(stack);
             }
-
-            Player playerComp = buffer.getComponent(player, Player.getComponentType());
-            World world = buffer.getExternalData().getWorld();
-            PedestalSystem.enterSelecting(pedestal, playerComp, world, buffer);
             session.setPendingReenterSlotKey(savedKey);
 
             ContextTransitionService.transitionFrom(buffer, player,

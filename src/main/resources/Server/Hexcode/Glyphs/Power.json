@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Power",
   "Title": "hexcode.glyphs.Power.name",
   "Description": "hexcode.glyphs.Power.description",
   "ModelPath": "Power",

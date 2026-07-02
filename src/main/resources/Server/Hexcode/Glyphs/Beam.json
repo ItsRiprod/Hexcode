@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Beam",
   "Style": {
     "PrimaryColor": "#6633AB",
     "SecondaryColor": "#B399D6",

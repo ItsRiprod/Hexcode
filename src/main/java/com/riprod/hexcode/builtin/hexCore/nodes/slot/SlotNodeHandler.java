@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.state.crafting.handlers.node.Slot;
+package com.riprod.hexcode.builtin.hexCore.nodes.slot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +33,8 @@ import com.hypixel.hytale.server.core.modules.entity.component.DisplayNameCompon
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableType;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
-import com.riprod.hexcode.core.state.crafting.component.NodeComponent;
-import com.riprod.hexcode.core.state.crafting.component.SlotComponent;
+import com.riprod.hexcode.core.common.node.component.NodeComponent;
+import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.state.crafting.utils.RadialPositionUtil;
 

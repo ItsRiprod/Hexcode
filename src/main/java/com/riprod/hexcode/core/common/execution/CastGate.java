@@ -51,7 +51,7 @@ public final class CastGate {
             while (idle.getActiveCount() >= max) {
                 idle.evictOldest();
             }
-            float volMax = playerRoot.resolveVolatility(buffer);
+            float volMax = tracker.getInitialVolatility() + playerRoot.resolveVolatility(buffer);
             float startingBudget = Math.max(0f, volMax - idle.getCumulativeDecay());
             tracker.setVolatility(startingBudget);
             tracker.setInitialVolatility(startingBudget);

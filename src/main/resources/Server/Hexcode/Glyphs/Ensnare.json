@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Ensnare",
   "Style": {
     "PrimaryColor": "#558B2F",
     "SecondaryColor": "#AED581",

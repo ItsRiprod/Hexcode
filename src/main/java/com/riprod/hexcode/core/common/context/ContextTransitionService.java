@@ -40,10 +40,8 @@ public final class ContextTransitionService {
             return false;
         }
 
-        // preemption forfeits any in-flight draw; strokes on the blackboard must never
-        // commit into the incoming context
         if (current != null) {
-            buffer.tryRemoveComponent(player, DrawCaptureComponent.getComponentType());
+            forfeitDrawCapture(buffer, player);
         }
 
         caster.setContext(contextId, priority);
@@ -63,7 +61,7 @@ public final class ContextTransitionService {
             return false;
         }
 
-        buffer.tryRemoveComponent(player, DrawCaptureComponent.getComponentType());
+        forfeitDrawCapture(buffer, player);
         caster.setContext(toId, toPriority);
         caster.clearInput();
         announce(buffer, player, toId);
@@ -93,10 +91,25 @@ public final class ContextTransitionService {
             return;
         }
 
-        buffer.tryRemoveComponent(player, DrawCaptureComponent.getComponentType());
+        forfeitDrawCapture(buffer, player);
         caster.setContext(null, 0);
         caster.clearInput();
         announce(buffer, player, null);
+    }
+
+    // preemption and service-driven exits forfeit any in-flight draw; the blackboard is
+    // cleared BEFORE removal so the lifecycle's exit-commit cannot emit forfeited strokes
+    // into whichever context marker is still physically present
+    private static void forfeitDrawCapture(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
+        DrawCaptureComponent capture = buffer.getComponent(player, DrawCaptureComponent.getComponentType());
+        if (capture == null) {
+            return;
+        }
+        capture.getStrokePoints().clear();
+        capture.setStrokeActive(false);
+        capture.getPendingShapes().clear();
+        capture.setFinalizePending(false);
+        buffer.tryRemoveComponent(player, DrawCaptureComponent.getComponentType());
     }
 
     private static void announce(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player, String newId) {

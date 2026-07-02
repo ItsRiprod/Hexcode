@@ -13,12 +13,14 @@ import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
 import com.riprod.hexcode.core.common.context.CasterComponent;
+import com.riprod.hexcode.core.common.node.NodeRouter;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
+import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
+import com.riprod.hexcode.core.state.crafting.handlers.CraftingDragHandler;
 import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
-import com.riprod.hexcode.core.state.crafting.system.CraftingStateSystem;
 
 public class CraftingPrimarySystem extends EntityTickingSystem<EntityStore> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -48,19 +50,93 @@ public class CraftingPrimarySystem extends EntityTickingSystem<EntityStore> {
             boolean craftingActive = session.getState() == PedestalState.CRAFTING;
 
             if (caster.consumePrimaryPressed()) {
-                CraftingStateSystem.enterInteraction(player, null, buffer);
+                enterInteraction(player, buffer);
             } else if (caster.isPrimaryHeld() && craftingActive) {
-                CraftingStateSystem.tickInteraction(buffer, dt, player, pedestal);
+                tickInteraction(buffer, player);
             }
             if (caster.consumePrimaryReleased() && craftingActive) {
-                CraftingStateSystem.exitInteraction(buffer, player);
+                exitInteraction(buffer, player);
             }
             InteractionType ability = caster.consumeAbilityPressed();
             if (ability != null && craftingActive) {
-                CraftingStateSystem.enterAbility(buffer, player, ability);
+                enterAbility(buffer, player, ability);
             }
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("[hexcode] crafting primary input failed");
         }
+    }
+
+    private static void enterInteraction(Ref<EntityStore> ref, CommandBuffer<EntityStore> buffer) {
+        HexcasterCraftingComponent craftingComp = buffer.getComponent(ref,
+                HexcasterCraftingComponent.getComponentType());
+        if (craftingComp == null)
+            return;
+
+        Ref<EntityStore> hoveredRef = craftingComp.getHoveredRef();
+        if (hoveredRef == null || !hoveredRef.isValid())
+            return;
+
+        craftingComp.setDragTickCount(0);
+
+        NodeRouter.enter(buffer, hoveredRef, ref);
+    }
+
+    private static void tickInteraction(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref) {
+        HexcasterCraftingComponent craftingComp = accessor.getComponent(ref,
+                HexcasterCraftingComponent.getComponentType());
+        if (craftingComp == null)
+            return;
+
+        craftingComp.setDragTickCount(craftingComp.getDragTickCount() + 1);
+
+        Ref<EntityStore> draggedRef = craftingComp.getDraggingRef();
+        if (draggedRef == null || !draggedRef.isValid())
+            return;
+
+        NodeRouter.drag(accessor, draggedRef, ref);
+    }
+
+    private static void exitInteraction(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref) {
+        HexcasterCraftingComponent craftingComp = accessor.getComponent(ref,
+                HexcasterCraftingComponent.getComponentType());
+        if (craftingComp == null)
+            return;
+
+        boolean isClick = craftingComp.getDragTickCount() < 5;
+
+        Ref<EntityStore> draggedRef = craftingComp.getDraggingRef();
+
+        if (draggedRef == null || !draggedRef.isValid()) {
+            craftingComp.setDraggingRef(null);
+            craftingComp.setHeadAnchorRef(accessor, null);
+            craftingComp.setDragTickCount(0);
+            return;
+        }
+
+        if (isClick) {
+            NodeRouter.click(accessor, draggedRef, ref);
+        } else {
+            NodeRouter.exit(accessor, draggedRef, ref);
+        }
+
+        CraftingDragHandler.endDrag(accessor, draggedRef, craftingComp.getHeadAnchorRef(), craftingComp);
+
+        craftingComp.setDraggingRef(null);
+        craftingComp.setHeadAnchorRef(accessor, null);
+        craftingComp.setDragTickCount(0);
+    }
+
+    private static void enterAbility(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref,
+            InteractionType inputType) {
+        HexcasterCraftingComponent craftingComp = accessor.getComponent(ref,
+                HexcasterCraftingComponent.getComponentType());
+        if (craftingComp == null)
+            return;
+
+        Ref<EntityStore> hoveredRef = craftingComp.getHoveredRef();
+        if (hoveredRef == null)
+            return;
+
+        NodeRouter.ability(accessor, hoveredRef, inputType, ref);
     }
 }

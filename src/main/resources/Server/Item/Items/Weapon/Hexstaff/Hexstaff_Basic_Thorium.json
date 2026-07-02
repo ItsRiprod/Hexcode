@@ -35,13 +35,6 @@
           "Amount": 0.7
         }
       ],
-      "Volatility": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 60
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
@@ -83,5 +76,12 @@
         "Quantity": 8
       }
     ]
+  },
+  "InteractionVars": {
+    "CastSpell": {
+      "Interactions": [
+        "CastSpell_Basic_Thorium"
+      ]
+    }
   }
 }

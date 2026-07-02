@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Conjure",
   "Style": {
     "PrimaryColor": "#3399FF",
     "SecondaryColor": "#A3CCFF",

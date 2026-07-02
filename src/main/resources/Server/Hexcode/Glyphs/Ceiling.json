@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Ceiling",
   "Style": {
     "PrimaryColor": "#8D6E63",
     "SecondaryColor": "#BCAAA4"

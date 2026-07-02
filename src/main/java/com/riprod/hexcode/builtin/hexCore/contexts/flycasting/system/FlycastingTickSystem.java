@@ -9,13 +9,11 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.component.FlycastingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils.FlycastingDragHandler;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils.FlycastingHover;
-import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.positioning.GlyphPositioner;
@@ -71,13 +69,6 @@ public class FlycastingTickSystem extends EntityTickingSystem<EntityStore> {
                 if (capture != null) {
                     capture.setHoveredHex(state.getHoveredHex());
                 }
-            }
-
-            CasterComponent caster = chunk.getComponent(index, CasterComponent.getComponentType());
-            if (caster != null && caster.consumeAbilityPressed() == InteractionType.Ability2
-                    && capture != null && !capture.getPendingShapes().isEmpty()) {
-                capture.setFinalizeDelaySeconds(0f);
-                capture.setFinalizePending(true);
             }
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("[hexcode] flycasting tick failed");

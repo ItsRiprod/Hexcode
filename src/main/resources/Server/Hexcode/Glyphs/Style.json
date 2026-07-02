@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Style",
   "Title": "hexcode.glyphs.Style.name",
   "Description": "hexcode.glyphs.Style.description",
   "ModelPath": "Style",

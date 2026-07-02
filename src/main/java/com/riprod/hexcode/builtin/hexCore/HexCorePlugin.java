@@ -33,6 +33,7 @@ import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingU
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.SelectingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingChangeListener;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingForceExitSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingSlotSelectSystem;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingTickSystem;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.CraftingNotificationListener;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.FizzleMessageListener;
@@ -44,6 +45,12 @@ import com.riprod.hexcode.builtin.hexCore.config.BasicConfig;
 import com.riprod.hexcode.builtin.hexCore.execution.config.StaffConfig;
 import com.riprod.hexcode.builtin.hexCore.pedestals.PedestalContextHandler;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalInteractEvent;
+import com.riprod.hexcode.core.common.node.NodeRouter;
+import com.riprod.hexcode.core.common.node.NodeTypeId;
+import com.riprod.hexcode.builtin.hexCore.nodes.anchor.AnchorNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.nodes.container.ContainerNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.absolute.AbsoluteGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.add.AddGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.arc.ArcConstructHandler;
@@ -184,6 +191,7 @@ public class HexCorePlugin extends JavaPlugin {
                 RegisterGlyphs();
                 RegisterStyles();
                 RegisterObelisks();
+                RegisterNodes();
                 RegisterComponents();
                 RegisterSystems();
                 RegisterConstructs();
@@ -265,9 +273,7 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new DotGlyph());
                 GlyphRegistry.register(new CrossGlyph());
 
-                for (int i = 1; i <= 16; i++) {
-                        GlyphRegistry.register(new NumberValue(i));
-                }
+                GlyphRegistry.register(new NumberValue());
                 GlyphRegistry.register(new VariableValue());
                 GlyphRegistry.register(new PiValue());
 
@@ -297,6 +303,13 @@ public class HexCorePlugin extends JavaPlugin {
                 CastingStyleRegistry.register(new RingStyle());
                 CastingStyleRegistry.register(new SphereStyle());
                 CastingStyleRegistry.setDefault(RingStyle.ID);
+        }
+
+        private void RegisterNodes() {
+                NodeRouter.register(NodeTypeId.ANCHOR, AnchorNodeHandler.INSTANCE);
+                NodeRouter.register(NodeTypeId.CONTAINER, ContainerNodeHandler.INSTANCE);
+                NodeRouter.register(NodeTypeId.GLYPH, GlyphNodeHandler.INSTANCE);
+                NodeRouter.register(NodeTypeId.SLOT_STANDARD, SlotNodeHandler.INSTANCE);
         }
 
         private void RegisterInteractions() {
@@ -419,6 +432,7 @@ public class HexCorePlugin extends JavaPlugin {
 
                 entityStoreRegistry.registerSystem(new SelectingChangeListener());
                 entityStoreRegistry.registerSystem(new SelectingTickSystem());
+                entityStoreRegistry.registerSystem(new SelectingSlotSelectSystem());
                 entityStoreRegistry.registerSystem(new SelectingForceExitSystem());
 
                 entityStoreRegistry.registerSystem(new CraftingChangeListener());

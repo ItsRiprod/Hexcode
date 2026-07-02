@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Shatter",
   "Style": {
     "PrimaryColor": "#99E6FF",
     "SecondaryColor": "#D6F2FF",

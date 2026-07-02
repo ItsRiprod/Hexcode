@@ -13,6 +13,7 @@ import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
@@ -121,7 +122,8 @@ public class DebugGlyph implements GlyphHandler {
     }
 
     private static HexVar resolveLink(Glyph linked, HexContext hexContext) {
-        GlyphHandler handler = GlyphRegistry.get(linked.getGlyphId());
+        GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
+        GlyphHandler handler = linkedAsset != null ? GlyphRegistry.get(linkedAsset.getHandler()) : null;
         if (handler == null || hexContext.isResolving(linked.getId()))
             return null;
         hexContext.pushResolving(linked.getId());

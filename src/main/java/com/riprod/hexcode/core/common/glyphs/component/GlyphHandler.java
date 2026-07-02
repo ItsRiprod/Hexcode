@@ -74,8 +74,7 @@ public interface GlyphHandler {
 
 
     @Nullable
-    default <T extends GlyphConfig> T getConfig(@Nonnull Class<T> type) {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(getId());
+    default <T extends GlyphConfig> T getConfig(@Nonnull Class<T> type, @Nullable GlyphAsset asset) {
         if (asset == null)
             return null;
         GlyphConfig config = asset.getConfig();

@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "IsHolding",
   "Title": "hexcode.glyphs.IsHolding.name",
   "Description": "hexcode.glyphs.IsHolding.description",
   "ModelPath": "IsHolding",

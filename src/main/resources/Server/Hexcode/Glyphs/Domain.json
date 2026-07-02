@@ -1,5 +1,6 @@
 {
   "Parent": "Glyph_Template",
+  "Handler": "Domain",
   "Title": "hexcode.glyphs.Domain.name",
   "Description": "hexcode.glyphs.Domain.description",
   "ModelPath": "Domain",

@@ -109,7 +109,8 @@ public class ShatterGlyph implements GlyphHandler {
                 ? var.getRef(accessor)
                 : hexContext.getCasterRef(accessor);
 
-        ShatterConfig config = getConfig(ShatterConfig.class);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        ShatterConfig config = getConfig(ShatterConfig.class, asset);
         if (config == null) config = ShatterConfig.DEFAULTS;
 
         int count = HexVarUtil.numberOrDefault(countVar, (double) config.getDefaultCount()).intValue();
@@ -125,7 +126,7 @@ public class ShatterGlyph implements GlyphHandler {
 
         List<Vector3d> shardDirections = computeConeDirections(centralDir, count, spread);
 
-        String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+        String modelId = VfxUtil.resolveModelId(hexContext, asset);
         ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
         if (modelAsset == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,

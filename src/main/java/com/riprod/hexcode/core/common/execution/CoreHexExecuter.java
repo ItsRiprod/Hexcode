@@ -12,6 +12,7 @@ import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
@@ -101,7 +102,8 @@ public class CoreHexExecuter {
             HexExecuter.fail(null, hexContext);
             return;
         }
-        GlyphHandler nextHandler = GlyphRegistry.get(nextNode.getGlyphId());
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(nextNode.getGlyphId());
+        GlyphHandler nextHandler = asset != null ? GlyphRegistry.get(asset.getHandler()) : null;
         if (nextHandler == null) {
             HexExecuter.fail(nextNode, hexContext);
             return;
