@@ -14,4 +14,8 @@ public abstract class HexcodeEntityStatTypes {
     public static int getMagicCharges() {
         return EntityStatType.getAssetMap().getIndex("MagicCharges");
     }
+
+    public static int getInContext() {
+        return EntityStatType.getAssetMap().getIndex("InContext");
+    }
 }

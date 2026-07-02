@@ -679,3 +679,13 @@ Warp.destination.name=Destination
 Warp.destination.description=Position to teleport to
 Warp.Next.name=Next
 Warp.Next.description=The next glyph in the execution chain
+
+ElementFire.name=Fire
+ElementFire.description=Discharges accumulated complexity as fire damage
+ElementFire.Next.name=Next
+ElementFire.Next.description=The next glyph in the execution chain
+
+ElementBurning.name=Burning
+ElementBurning.description=Discharges accumulated complexity as a burning effect
+ElementBurning.Next.name=Next
+ElementBurning.Next.description=The next glyph in the execution chain

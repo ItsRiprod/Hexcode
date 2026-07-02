@@ -1,5 +1,4 @@
-
-    {
-      "Type": "HexAbility",
-      "CancelOnItemChange": true
-    }
+{
+  "Type": "HexContextAbility",
+  "CancelOnItemChange": true
+}

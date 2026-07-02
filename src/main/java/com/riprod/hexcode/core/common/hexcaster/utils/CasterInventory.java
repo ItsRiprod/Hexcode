@@ -18,6 +18,7 @@ import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
 import com.riprod.hexcode.utils.HexSlot;
+import com.riprod.hexcode.utils.HexStaffUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -113,11 +114,13 @@ public class CasterInventory {
         }
 
         HexStaffAsset staffAsset = getHexStaffAsset(mainHandItem);
-        if (staffAsset == null) {
+        if (staffAsset == null && !HexStaffUtil.isHexStaff(mainHandItem)) {
             return null;
         }
 
-        HexStaffComponent newComponent = new HexStaffComponent(staffAsset);
+        HexStaffComponent newComponent = staffAsset != null
+                ? new HexStaffComponent(staffAsset)
+                : new HexStaffComponent();
         ItemStack newStack = mainHandItem.withMetadata(METADATA_KEY_HEX_STAFF, HexStaffComponent.CODEC, newComponent);
 
         PlayerUtils.setHandItem(store, playerRef, HexSlot.MainHand, newStack);

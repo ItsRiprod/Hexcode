@@ -1,13 +1,25 @@
 {
-  "Type": "HexStateBranch",
-  "Branches": {
-    "Idle": "Root_Hexcode_Mode_Idle",
-    "Casting": "Root_Hexcode_Mode_Casting",
-    "Drawing": "Root_Hexcode_Mode_Drawing",
-    "Crafting": "Root_Hexcode_Mode_Crafting"
+  "Type": "StatsCondition",
+  "Costs": {
+    "InContext": 1
   },
-  "Effects": {
-    "ClearAnimationOnFinish": true
+  "Next": {
+    "Type": "HexContextPrimary",
+    "AllowIndefiniteHold": true,
+    "CancelOnOtherClick": false,
+    "Effects": {
+      "ItemAnimationId": "HexCrafting_Primary",
+      "ClearAnimationOnFinish": true
+    }
   },
-  "CancelOnItemChange": false
+  "Failed": {
+    "Type": "Replace",
+    "Var": "CastSpell",
+    "DefaultOk": true,
+    "DefaultValue": {
+      "Interactions": [
+        "CastSpell_Default"
+      ]
+    }
+  }
 }

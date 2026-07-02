@@ -11,9 +11,15 @@ import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInteraction;
+import com.hypixel.hytale.server.core.HytaleServer;
+import com.hypixel.hytale.server.core.modules.block.BlockModule;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.pedestal.system.PedestalInteractionEvent;
+import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
+import com.riprod.hexcode.core.common.pedestal.events.PedestalInteractEvent;
 import com.hypixel.hytale.logger.HytaleLogger;
+
+import org.joml.Vector3i;
 
 public class PedestalInteraction extends SimpleInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -53,7 +59,18 @@ public class PedestalInteraction extends SimpleInteraction {
                 return;
             }
 
-            PedestalInteractionEvent.HandleInteraction(buffer, playerRef, targetBlock);
+            Vector3i blockPos = new Vector3i(targetBlock.x, targetBlock.y, targetBlock.z);
+            World world = buffer.getExternalData().getWorld();
+            PedestalBlockComponent pedestal = BlockModule.getComponent(
+                    PedestalBlockComponent.getComponentType(), world,
+                    blockPos.x, blockPos.y, blockPos.z);
+            if (pedestal == null) {
+                ctx.getState().state = InteractionState.Finished;
+                return;
+            }
+
+            HytaleServer.get().getEventBus().dispatchFor(PedestalInteractEvent.class)
+                    .dispatch(new PedestalInteractEvent(buffer, playerRef, pedestal, blockPos));
 
             ctx.getState().state = InteractionState.Finished;
             super.tick0(firstRun, time, type, ctx, cooldown);

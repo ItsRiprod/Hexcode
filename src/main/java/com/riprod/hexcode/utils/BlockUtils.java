@@ -1,18 +1,17 @@
 package com.riprod.hexcode.utils;
 
-import javax.annotation.Nullable;
-
+import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
+import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -23,16 +22,14 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 
 public class BlockUtils {
-    public static void moveBlock(Vector3i source, Vector3d destination, World world) {
+    public static void moveBlock(Vector3i source, Vector3d destination, World world, CommandBuffer<EntityStore> accessor) {
         int srcX = source.x();
         int srcY = source.y();
         int srcZ = source.z();
 
-        int sourceBlockId = world.getBlock(srcX, srcY, srcZ);
-        if (sourceBlockId == BlockType.EMPTY_ID)
+        WorldChunk srcChunk = world.getChunk(ChunkUtil.indexChunkFromBlock(srcX, srcZ));
+        if (srcChunk == null || srcChunk.getBlock(srcX, srcY, srcZ) == BlockType.EMPTY_ID)
             return;
-
-        int rotation = world.getBlockRotationIndex(srcX, srcY, srcZ);
 
         int destX = (int) Math.floor(destination.x());
         int destY = (int) Math.floor(destination.y());
@@ -43,15 +40,18 @@ public class BlockUtils {
             return;
         }
 
-        world.setBlock(srcX, srcY, srcZ, "Empty");
+        // capture before clear so the block-entity state survives the move
+        BlockSelection moved = new BlockSelection();
+        moved.setPosition(srcX, srcY, srcZ);
+        moved.copyFromAtWorld(srcX, srcY, srcZ, srcChunk, null);
 
-        BlockType blockType = BlockType.getAssetMap().getAsset(sourceBlockId);
-        WorldChunk destChunk = world.getChunk(
-                ChunkUtil.indexChunkFromBlock(placement.x(), placement.z()));
-        if (destChunk != null) {
-            destChunk.setBlock(placement.x(), placement.y(), placement.z(),
-                    sourceBlockId, blockType, rotation, 0, 0);
-        }
+        BlockSelection cleared = new BlockSelection();
+        cleared.setPosition(srcX, srcY, srcZ);
+        cleared.addEmptyAtWorldPos(srcX, srcY, srcZ);
+        cleared.placeNoReturn(world, new Vector3i(), accessor);
+
+        moved.setPosition(placement.x(), placement.y(), placement.z());
+        moved.placeNoReturn(world, new Vector3i(), accessor);
     }
 
     public static Vector3i findAirBlock(World world, int x, int y, int z) {
@@ -70,7 +70,7 @@ public class BlockUtils {
                         int cx = x + dx;
                         int cy = y + dy;
                         int cz = z + (dz * sz);
-                        if (cy < 0 || cy >= 320)
+                        if (cy < ChunkUtil.MIN_Y || cy >= ChunkUtil.HEIGHT)
                             continue;
                         if (world.getBlock(cx, cy, cz) == 0) {
                             return new Vector3i(cx, cy, cz);
@@ -102,23 +102,54 @@ public class BlockUtils {
                 tc.setPosition(new Vector3d(dest.x(), dest.y(), dest.z()));
             }
         } else if (var instanceof BlockVar blockVar && blockVar.getValue() != null) {
-            moveBlock(blockVar.getValue(), dest, world);
+            moveBlock(blockVar.getValue(), dest, world, hexContext.getAccessor());
         } else if (var instanceof PositionVar posVar && posVar.getValue() != null) {
             Vector3i sourceBlock = new Vector3i(
                     (int) Math.floor(posVar.getValue().x()),
                     (int) Math.floor(posVar.getValue().y()),
                     (int) Math.floor(posVar.getValue().z()));
-            moveBlock(sourceBlock, dest, world);
+            moveBlock(sourceBlock, dest, world, hexContext.getAccessor());
         }
     }
 
     public static void swapPair(HexVar a, HexVar b, World world, HexContext hexContext) {
         Vector3d posA = HexVarUtil.position(a, hexContext.getAccessor());
         Vector3d posB = HexVarUtil.position(b, hexContext.getAccessor());
+        if (posA == null || posB == null) return;
 
-        if (posA != null && posB != null) {
+        // an entity on either side can't be block-captured; fall back to the teleport-based move
+        if (a instanceof EntityVar || b instanceof EntityVar) {
             moveToDestination(a, posB, world, hexContext);
             moveToDestination(b, posA, world, hexContext);
+            return;
         }
+
+        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+
+        int ax = (int) Math.floor(posA.x());
+        int ay = (int) Math.floor(posA.y());
+        int az = (int) Math.floor(posA.z());
+        int bx = (int) Math.floor(posB.x());
+        int by = (int) Math.floor(posB.y());
+        int bz = (int) Math.floor(posB.z());
+
+        WorldChunk chunkA = world.getChunk(ChunkUtil.indexChunkFromBlock(ax, az));
+        WorldChunk chunkB = world.getChunk(ChunkUtil.indexChunkFromBlock(bx, bz));
+        if (chunkA == null || chunkB == null) return;
+
+        // capture both before writing either, otherwise the first place would corrupt the second capture
+        BlockSelection selA = new BlockSelection();
+        selA.setPosition(ax, ay, az);
+        selA.copyFromAtWorld(ax, ay, az, chunkA, null);
+
+        BlockSelection selB = new BlockSelection();
+        selB.setPosition(bx, by, bz);
+        selB.copyFromAtWorld(bx, by, bz, chunkB, null);
+
+        // each place overwrites the other cell; the swap self-clears both sources
+        selA.setPosition(bx, by, bz);
+        selB.setPosition(ax, ay, az);
+        selA.placeNoReturn(world, new Vector3i(), accessor);
+        selB.placeNoReturn(world, new Vector3i(), accessor);
     }
 }

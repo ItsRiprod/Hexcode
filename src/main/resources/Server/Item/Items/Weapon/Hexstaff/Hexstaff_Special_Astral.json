@@ -27,14 +27,6 @@
   "Icon": "Icons/ItemsGenerated/Hex_Astral_Staff.png",
   "Scale": 1.3,
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
-  "Tags": {
-    "Family": [
-      "Staff"
-    ],
-    "Type": [
-      "Weapon"
-    ]
-  },
   "Weapon": {
     "StatModifiers": {
       "Magic_Power": [

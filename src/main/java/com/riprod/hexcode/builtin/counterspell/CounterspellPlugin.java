@@ -7,9 +7,15 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.HexStateChangeEvent;
+import com.riprod.hexcode.builtin.counterspell.eventListeners.ContextForceExitDiagnosticListener;
+import com.riprod.hexcode.builtin.counterspell.eventListeners.DrawModeEnterDiagnosticListener;
+import com.riprod.hexcode.builtin.counterspell.eventListeners.DrawModeExitDiagnosticListener;
+import com.riprod.hexcode.builtin.counterspell.eventListeners.GlyphCommitDiagnosticListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.GlyphDiagnosticListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.HexCastDiagnosticListener;
+import com.riprod.hexcode.builtin.counterspell.eventListeners.HexContextChangeDiagnosticListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.HexStateDiagnosticListener;
+import com.riprod.hexcode.builtin.counterspell.eventListeners.ShapeDrawnDiagnosticListener;
 
 public class CounterspellPlugin extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -35,6 +41,13 @@ public class CounterspellPlugin extends JavaPlugin {
     private void RegisterSystems() {
         ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
         entityStoreRegistry.registerSystem(new HexCastDiagnosticListener());
+
+        entityStoreRegistry.registerSystem(new DrawModeEnterDiagnosticListener());
+        entityStoreRegistry.registerSystem(new DrawModeExitDiagnosticListener());
+        entityStoreRegistry.registerSystem(new HexContextChangeDiagnosticListener());
+        entityStoreRegistry.registerSystem(new ShapeDrawnDiagnosticListener());
+        entityStoreRegistry.registerSystem(new GlyphCommitDiagnosticListener());
+        entityStoreRegistry.registerSystem(new ContextForceExitDiagnosticListener());
     }
 
 }

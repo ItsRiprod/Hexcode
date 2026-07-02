@@ -1,12 +1,10 @@
 {
-  "Type": "HexStateBranch",
-  "Branches": {
-    "Idle": "Root_Hexcode_Secondary_CastingFlow",
-    "Crafting": "Root_Hexcode_Secondary_DrawingFlow",
-    "Casting": "Root_Hexcode_Secondary_CastingFlow"
-  },
-  "CancelOnItemChange": false,
-  "Effects": {
-    "ClearAnimationOnFinish": true
+  "Type": "Replace",
+  "Var": "Drawmode",
+  "DefaultOk": true,
+  "DefaultValue": {
+    "Interactions": [
+      "Drawmode_Default"
+    ]
   }
 }

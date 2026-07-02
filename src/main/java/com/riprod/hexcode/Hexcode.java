@@ -11,8 +11,12 @@ import com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin;
 import com.riprod.hexcode.command.HexcodeCommand;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.construct.system.MountOrphanReaperSystem;
-import com.riprod.hexcode.core.common.drawing.DrawingSlotLockEvent;
-import com.riprod.hexcode.core.common.drawing.DrawingSystem;
+import com.riprod.hexcode.core.common.context.CasterComponent;
+import com.riprod.hexcode.core.common.context.interactions.HexContextAbility;
+import com.riprod.hexcode.core.common.context.interactions.HexContextPrimary;
+import com.riprod.hexcode.core.common.drawing.DrawModeLifecycleSystem;
+import com.riprod.hexcode.core.common.drawing.DrawRecognitionSystem;
+import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponent;
 import com.riprod.hexcode.core.common.drawing.interactions.HexDraw;
 import com.riprod.hexcode.core.common.drawing.interactions.HexDrawMode;
@@ -20,10 +24,12 @@ import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.drawing.registry.TemplateAsset;
 import com.riprod.hexcode.core.common.effect.GlyphEffectSystem;
 import com.riprod.hexcode.core.common.execution.component.BlockHexRoot;
+import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
 import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
+import com.riprod.hexcode.core.common.execution.interactions.HexDispel;
 import com.riprod.hexcode.core.common.execution.events.HexCastEventSystem;
 import com.riprod.hexcode.core.common.execution.queue.HexQueueDrainEventSystem;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
@@ -38,9 +44,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.hexbook.component.HexBookAsset;
-import com.riprod.hexcode.core.common.hexcaster.StaffUnequipEvent;
 import com.riprod.hexcode.core.common.hexcaster.component.HexcasterComponent;
-import com.riprod.hexcode.core.common.hexcaster.system.HexcasterCleanupSystem;
 import com.riprod.hexcode.core.common.hexes.codec.HexCacheResource;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
@@ -62,33 +66,21 @@ import com.riprod.hexcode.core.common.imbuement.block.ImbuedBlockBreakHandler;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalBlockEvent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalPlaceEvent;
+import com.riprod.hexcode.core.common.pedestal.system.SessionRecoverySystem;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.core.common.utilities.system.DebugTickSystem;
-import com.riprod.hexcode.core.state.casting.CastingSystem;
 import com.riprod.hexcode.core.state.casting.component.HexcasterCastingComponent;
 import com.riprod.hexcode.core.state.casting.registery.CastingStyleRegistry;
-import com.riprod.hexcode.core.state.crafting.CraftingSystem;
 import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.state.crafting.component.NodeComponent;
-import com.riprod.hexcode.core.state.crafting.component.SlotComponent;
-import com.riprod.hexcode.core.state.crafting.handlers.node.NodeRouter;
+import com.riprod.hexcode.core.common.node.component.NodeComponent;
+import com.riprod.hexcode.core.common.node.component.SlotComponent;
+import com.riprod.hexcode.core.common.node.NodeRouter;
 import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.state.crafting.session.SessionTickSystem;
-import com.riprod.hexcode.core.state.idle.IdleSystem;
 import com.riprod.hexcode.core.common.memories.GlyphMemory;
 import com.riprod.hexcode.core.common.memories.GlyphMemoryProvider;
-import com.riprod.hexcode.interaction.HexStateChange;
-import com.riprod.hexcode.interaction.HexHold;
-import com.riprod.hexcode.interaction.HexMode;
-import com.riprod.hexcode.interaction.HexModeExit;
-import com.riprod.hexcode.interaction.HexStateBranch;
 import com.riprod.hexcode.core.common.execution.interactions.HexExecuteInteraction;
-import com.riprod.hexcode.interaction.HexAbility;
-import com.riprod.hexcode.interaction.HexItemCondition;
 import com.riprod.hexcode.interaction.PedestalInteraction;
-import com.riprod.hexcode.state.HexState;
-import com.riprod.hexcode.state.HexTick;
-import com.riprod.hexcode.state.StateRouter;
 import com.riprod.patchly.PatchManager;
 
 import java.util.concurrent.CompletableFuture;
@@ -104,24 +96,18 @@ import com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
-import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.ResourceType;
 import com.hypixel.hytale.component.spatial.KDTree;
 import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.event.EventRegistry;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore;
-import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
-import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.builtin.adventure.memories.MemoriesPlugin;
 import com.hypixel.hytale.builtin.adventure.memories.memories.Memory;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -326,6 +312,18 @@ public class Hexcode extends JavaPlugin {
                         HexcasterIdleComponent::new);
         HexcasterIdleComponent.setComponentType(executionComponentType);
 
+        ComponentType<EntityStore, CasterComponent> casterComponentType = entityStoreRegistry
+                .registerComponent(CasterComponent.class, CasterComponent::new);
+        CasterComponent.setComponentType(casterComponentType);
+
+        ComponentType<EntityStore, DrawCaptureComponent> drawCaptureComponentType = entityStoreRegistry
+                .registerComponent(DrawCaptureComponent.class, DrawCaptureComponent::new);
+        DrawCaptureComponent.setComponentType(drawCaptureComponentType);
+
+        ComponentType<EntityStore, ExecutionComponent> queuedExecutionComponentType = entityStoreRegistry
+                .registerComponent(ExecutionComponent.class, ExecutionComponent::new);
+        ExecutionComponent.setComponentType(queuedExecutionComponentType);
+
         ComponentType<EntityStore, HexcasterCastingComponent> castingRootComponentType = entityStoreRegistry
                 .registerComponent(HexcasterCastingComponent.class,
                         HexcasterCastingComponent::new);
@@ -363,18 +361,17 @@ public class Hexcode extends JavaPlugin {
                 .registerComponent(DebugComponent.class, DebugComponent::new);
         DebugComponent.setComponentType(debugComponentType);
 
-        entityStoreRegistry.registerSystem(new HexTick());
         entityStoreRegistry.registerSystem(new PedestalBlockEvent());
         entityStoreRegistry.registerSystem(new ObeliskBreakEvent());
-        entityStoreRegistry.registerSystem(new DrawingSlotLockEvent());
-        entityStoreRegistry.registerSystem(new StaffUnequipEvent());
         entityStoreRegistry.registerSystem(new DebugTickSystem());
         entityStoreRegistry.registerSystem(new GlyphEffectSystem());
         entityStoreRegistry.registerSystem(new HexCastEventSystem());
         entityStoreRegistry.registerSystem(new FireTriggerSystem());
-        entityStoreRegistry.registerSystem(new HexcasterCleanupSystem());
         entityStoreRegistry.registerSystem(new SessionTickSystem());
+        entityStoreRegistry.registerSystem(new SessionRecoverySystem());
         entityStoreRegistry.registerSystem(new ImbuedBlockBreakHandler());
+        entityStoreRegistry.registerSystem(new DrawModeLifecycleSystem());
+        entityStoreRegistry.registerSystem(new DrawRecognitionSystem());
 
         ResourceType<EntityStore, SpatialResource<Ref<EntityStore>, EntityStore>> hoverableSpatialResourceType = entityStoreRegistry
                 .registerSpatialResource(() -> new KDTree<>(Ref::isValid));
@@ -442,30 +439,19 @@ public class Hexcode extends JavaPlugin {
             LOGGER.atWarning().log("[hexcode] MemoriesPlugin unavailable; glyph memories disabled");
         }
 
-        StateRouter.registerState(HexState.IDLE, new IdleSystem());
-        StateRouter.registerState(HexState.CASTING, new CastingSystem());
-        StateRouter.registerState(HexState.CRAFTING, new CraftingSystem());
-        StateRouter.registerState(HexState.DRAWING, new DrawingSystem());
-
     }
 
     private void registerInteractions() {
-        Interaction.CODEC.register("HexStateBranch", HexStateBranch.class, HexStateBranch.CODEC);
-        Interaction.CODEC.register("HexStateChange", HexStateChange.class, HexStateChange.CODEC);
-        Interaction.CODEC.register("HexHold", HexHold.class, HexHold.CODEC);
-        Interaction.CODEC.register("HexMode", HexMode.class, HexMode.CODEC);
         Interaction.CODEC.register("HexDraw", HexDraw.class, HexDraw.CODEC);
         Interaction.CODEC.register("HexDrawMode", HexDrawMode.class, HexDrawMode.CODEC);
-        Interaction.CODEC.register("HexModeExit", HexModeExit.class, HexModeExit.CODEC);
+        Interaction.CODEC.register("HexContextPrimary", HexContextPrimary.class, HexContextPrimary.CODEC);
+        Interaction.CODEC.register("HexContextAbility", HexContextAbility.class, HexContextAbility.CODEC);
+        Interaction.CODEC.register("HexDispel", HexDispel.class, HexDispel.CODEC);
         Interaction.CODEC.register("PedestalInteraction", PedestalInteraction.class, PedestalInteraction.CODEC);
-        Interaction.CODEC.register("HexItemCondition", HexItemCondition.class, HexItemCondition.CODEC);
-        Interaction.CODEC.register("HexAbility", HexAbility.class, HexAbility.CODEC);
         Interaction.CODEC.register("HexExecute", HexExecuteInteraction.class, HexExecuteInteraction.CODEC);
     }
 
     private void registerEvents() {
-        this.getEventRegistry().registerGlobal(PlayerConnectEvent.class, Hexcode::onPlayerConnect);
-        this.getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, Hexcode::onPlayerDisconnect);
     }
 
     private void registerCommands() {
@@ -498,41 +484,4 @@ public class Hexcode extends JavaPlugin {
                         .setResults(NodeRouter.keys().toArray(String[]::new)));
     }
 
-    private static void onPlayerConnect(PlayerConnectEvent event) {
-        try {
-            Holder<EntityStore> holder = event.getHolder();
-            holder.ensureComponent(HexcasterComponent.getComponentType());
-        } catch (Exception e) {
-            LOGGER.atSevere().log("[hexcode] onPlayerConnect failed: %s", e.getMessage());
-        }
-    }
-
-    private static void onPlayerDisconnect(PlayerDisconnectEvent event) {
-        try {
-            PlayerRef playerRef = event.getPlayerRef();
-            Ref<EntityStore> ref = playerRef.getReference();
-            if (ref != null) {
-                Store<EntityStore> store = ref.getStore();
-                World world = store.getExternalData().getWorld();
-                world.execute(() -> {
-                    try {
-                        if (ref.isValid()) {
-                            HexcasterComponent hexcaster = store.getComponent(ref,
-                                    HexcasterComponent.getComponentType());
-                            if (hexcaster != null
-                                    && hexcaster.getState() != HexState.IDLE) {
-                                hexcaster.requestStateChange(HexState.IDLE);
-                            }
-                        }
-                    } catch (Exception e) {
-                        LOGGER.atSevere().log(
-                                "[hexcode] onPlayerDisconnect world.execute failed: %s",
-                                e.getMessage());
-                    }
-                });
-            }
-        } catch (Exception e) {
-            LOGGER.atSevere().log("[hexcode] onPlayerDisconnect failed: %s", e.getMessage());
-        }
-    }
 }

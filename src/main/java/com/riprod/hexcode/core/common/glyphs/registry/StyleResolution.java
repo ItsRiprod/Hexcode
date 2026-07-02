@@ -3,7 +3,7 @@ package com.riprod.hexcode.core.common.glyphs.registry;
 import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.DebugShape;
-import com.riprod.hexcode.core.state.crafting.constants.NodeTypeId;
+import com.riprod.hexcode.core.common.node.NodeTypeId;
 
 public final class StyleResolution {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

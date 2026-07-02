@@ -22,8 +22,6 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.CraftingEvent;
-import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.core.common.hexcaster.component.HexcasterComponent;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
@@ -32,7 +30,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.registry.ImbuementProfileRegistry;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
-import com.riprod.hexcode.core.state.crafting.component.SlotComponent;
+import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.obelisk.component.ObeliskBlockComponent;
 import com.riprod.hexcode.core.common.obelisk.system.ObeliskDispatcher;
 import com.riprod.hexcode.core.common.obelisk.system.ObeliskSystem;
@@ -46,12 +44,11 @@ import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
 import com.riprod.hexcode.core.state.crafting.entity.AnchorEntity;
 import com.riprod.hexcode.core.state.crafting.entity.PedestalEntity;
 import com.riprod.hexcode.core.state.crafting.handlers.CraftingDragHandler;
-import com.riprod.hexcode.core.state.crafting.handlers.node.Container.ContainerNodeHandler;
-import com.riprod.hexcode.core.state.crafting.handlers.node.Slot.SlotNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.nodes.container.ContainerNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
 import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
 import com.riprod.hexcode.core.state.crafting.utils.RadialPositionUtil;
-import com.riprod.hexcode.state.HexState;
 import com.riprod.hexcode.utils.HexSlot;
 
 public class PedestalSystem {
@@ -300,17 +297,9 @@ public class PedestalSystem {
 
         PedestalSystem.SpawnHexPreviews(buffer, player.getReference(), pedestalComponent, session);
 
-        HexcasterCraftingComponent craftingComp = buffer.getComponent(player.getReference(),
+        HexcasterCraftingComponent craftingComp = buffer.ensureAndGetComponent(player.getReference(),
                 HexcasterCraftingComponent.getComponentType());
-        if (craftingComp != null) {
-            craftingComp.setSessionRef(sessionRef);
-        }
-
-        HexcasterComponent hexcaster = buffer.getComponent(player.getReference(),
-                HexcasterComponent.getComponentType());
-        if (hexcaster != null) {
-            hexcaster.requestStateChange(HexState.CRAFTING);
-        }
+        craftingComp.setSessionRef(sessionRef);
 
         List<Pair<Vector3i, ObeliskBlockComponent>> obeliskPairs = ObeliskBlockUtil
                 .getAvailableObelisks(pedestalComponent.getLocation(), pedestalComponent.getObeliskRange(),

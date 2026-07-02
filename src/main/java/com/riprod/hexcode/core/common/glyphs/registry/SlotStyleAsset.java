@@ -14,7 +14,7 @@ import com.hypixel.hytale.codec.schema.metadata.ui.UIEditor;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.DebugShape;
-import com.riprod.hexcode.core.state.crafting.handlers.node.NodeHandlerKeyValidator;
+import com.riprod.hexcode.core.common.node.NodeHandlerKeyValidator;
 
 public class SlotStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<String, SlotStyleAsset>> {
     public static final AssetBuilderCodec<String, SlotStyleAsset> CODEC;

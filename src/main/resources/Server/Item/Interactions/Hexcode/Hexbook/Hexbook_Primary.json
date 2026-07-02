@@ -1,12 +1,4 @@
 {
-  "Type": "HexStateBranch",
-  "Branches": {
-    "Casting": "Root_Hexcode_Mode_Casting",
-    "Drawing": "Root_Hexcode_Mode_Drawing",
-    "Crafting": "Root_Hexcode_Mode_Crafting"
-  },
-  "Effects": {
-    "ClearAnimationOnFinish": true
-  },
-  "CancelOnItemChange": false
+  "Type": "Simple",
+  "RunTime": 0
 }

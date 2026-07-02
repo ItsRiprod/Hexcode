@@ -13,10 +13,10 @@ import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.node.NodeRouter;
+import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
-import com.riprod.hexcode.core.state.crafting.component.SlotComponent;
 import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
-import com.riprod.hexcode.core.state.crafting.handlers.node.Container.ContainerNodeHandler;
 
 public class SessionTickSystem extends EntityTickingSystem<EntityStore> {
 
@@ -67,7 +67,7 @@ public class SessionTickSystem extends EntityTickingSystem<EntityStore> {
         if (previewRef == null || !previewRef.isValid()) return;
 
         session.setPendingReenterSlotKey(null);
-        ContainerNodeHandler.INSTANCE.enter(buffer, previewRef, ownerRef);
+        NodeRouter.enter(buffer, previewRef, ownerRef);
     }
 
     private static Ref<EntityStore> findPreviewBySlotKey(CommandBuffer<EntityStore> buffer,

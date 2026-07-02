@@ -1,5 +1,6 @@
 package com.riprod.hexcode.core.state.crafting.session;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,7 +18,8 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.hexcaster.component.HexcasterComponent;
+import com.riprod.hexcode.core.common.context.CasterComponent;
+import com.riprod.hexcode.core.common.context.ContextTransitionService;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
@@ -25,7 +27,7 @@ import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
 import com.riprod.hexcode.core.state.crafting.entity.AnchorEntity;
-import com.riprod.hexcode.core.state.crafting.handlers.node.Slot.SlotNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
 import com.riprod.hexcode.core.state.crafting.utils.PedestalItemUtil;
 import com.riprod.hexcode.state.HexState;
 
@@ -114,12 +116,11 @@ public class SessionUtils {
         logger.atInfo().log("ending session at %s", session.getPedestalLocation());
 
         Set<Ref<EntityStore>> participants = session.getParticipantRefs();
-        for (Ref<EntityStore> pRef : participants) {
+        for (Ref<EntityStore> pRef : new ArrayList<>(participants)) {
             if (pRef == null || !pRef.isValid()) continue;
-            HexcasterComponent hexcaster = buffer.getComponent(pRef, HexcasterComponent.getComponentType());
-            if (hexcaster != null
-                    && (hexcaster.getState() == HexState.CRAFTING || hexcaster.getState() == HexState.DRAWING)) {
-                hexcaster.requestStateChange(HexState.IDLE);
+            CasterComponent caster = buffer.getComponent(pRef, CasterComponent.getComponentType());
+            if (caster != null && caster.getCurrentContext() != null) {
+                ContextTransitionService.exit(buffer, pRef, caster.getCurrentContext());
             }
             HexcasterCraftingComponent craftingComp = buffer.getComponent(pRef,
                     HexcasterCraftingComponent.getComponentType());

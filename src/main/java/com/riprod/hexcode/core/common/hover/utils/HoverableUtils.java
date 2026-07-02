@@ -24,7 +24,7 @@ import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableType;
 import com.riprod.hexcode.core.common.hover.system.HoverableSpatialSystem;
-import com.riprod.hexcode.core.state.crafting.component.NodeComponent;
+import com.riprod.hexcode.core.common.node.component.NodeComponent;
 
 public class HoverableUtils {
 

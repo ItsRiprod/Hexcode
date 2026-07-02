@@ -24,14 +24,6 @@
   "Particles": [],
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
   "Icon": "Icons/ItemsGenerated/Arcane_Hexstaff.png",
-  "Tags": {
-    "Type": [
-      "Weapon"
-    ],
-    "Family": [
-      "Staff"
-    ]
-  },
   "Weapon": {
     "StatModifiers": {
       "Magic_Power": [

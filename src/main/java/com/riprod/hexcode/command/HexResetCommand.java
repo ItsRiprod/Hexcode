@@ -19,18 +19,19 @@ import com.hypixel.hytale.protocol.packets.player.SetMovementStates;
 import com.hypixel.hytale.protocol.packets.player.UpdateMovementSettings;
 import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
 import com.hypixel.hytale.server.core.io.PacketHandler;
+import com.riprod.hexcode.builtin.hexCore.common.ContextForceExitEvent;
+import com.riprod.hexcode.core.common.context.CasterComponent;
+import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponent;
 import com.riprod.hexcode.core.common.drawing.system.InterfaceManager;
-import com.riprod.hexcode.core.common.hexcaster.component.HexcasterComponent;
 import com.riprod.hexcode.core.state.casting.component.HexcasterCastingComponent;
 import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.state.HexState;
 
 public class HexResetCommand extends AbstractPlayerCommand {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     public HexResetCommand() {
-        super("reset", "Force reset hexcode state to IDLE");
+        super("reset", "Force exit any hexcode context and clean up");
         addAliases("r");
     }
 
@@ -38,26 +39,21 @@ public class HexResetCommand extends AbstractPlayerCommand {
     protected void execute(@Nonnull CommandContext ctx, @Nonnull Store<EntityStore> store,
             @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
         try {
-            HexcasterComponent hexcaster = store.getComponent(ref, HexcasterComponent.getComponentType());
+            CasterComponent caster = store.getComponent(ref, CasterComponent.getComponentType());
+            String currentContext = caster != null ? caster.getCurrentContext() : null;
 
-            if (hexcaster == null) {
-                send(playerRef, "no hexcaster component found");
-                return;
+            if (currentContext != null) {
+                store.invoke(ref, new ContextForceExitEvent(ref));
             }
 
-            HexState currentState = hexcaster.getState();
-            hexcaster.consumePendingState();
+            int cleaned = cleanupAll(store, ref);
 
-            int cleaned = cleanupAll(store, ref, hexcaster);
-
-            hexcaster.applyState(HexState.IDLE);
-
-            if (currentState == HexState.IDLE && cleaned == 0) {
-                send(playerRef, "already idle, nothing to reset");
-            } else if (currentState == HexState.IDLE) {
-                send(playerRef, "already idle, cleaned %d orphaned components", cleaned);
+            if (currentContext == null && cleaned == 0) {
+                send(playerRef, "no active context, nothing to reset");
+            } else if (currentContext == null) {
+                send(playerRef, "no active context, cleaned %d orphaned components", cleaned);
             } else {
-                send(playerRef, "reset from %s -> IDLE (cleaned %d components)", currentState, cleaned);
+                send(playerRef, "force-exited %s (cleaned %d components)", currentContext, cleaned);
             }
         } catch (Exception e) {
             LOGGER.atSevere().log("reset command failed: %s", e.getMessage());
@@ -65,8 +61,15 @@ public class HexResetCommand extends AbstractPlayerCommand {
         }
     }
 
-    private int cleanupAll(Store<EntityStore> store, Ref<EntityStore> ref, HexcasterComponent hexcaster) {
+    private int cleanupAll(Store<EntityStore> store, Ref<EntityStore> ref) {
         int cleaned = 0;
+
+        DrawCaptureComponent capture = store.getComponent(ref, DrawCaptureComponent.getComponentType());
+        if (capture != null) {
+            safeRemoveRef(store, capture.getDrawTrailRef());
+            tryRemoveComponent(store, ref, DrawCaptureComponent.getComponentType());
+            cleaned++;
+        }
 
         HexcasterDrawingComponent drawing = store.getComponent(ref, HexcasterDrawingComponent.getComponentType());
         if (drawing != null) {

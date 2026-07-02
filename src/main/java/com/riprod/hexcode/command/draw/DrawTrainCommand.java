@@ -13,8 +13,9 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayer
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.riprod.hexcode.core.common.drawing.DrawCaptureService;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
-import com.riprod.hexcode.core.common.hexcaster.component.HexcasterComponent;
 
 public class DrawTrainCommand extends AbstractPlayerCommand {
 
@@ -43,15 +44,14 @@ public class DrawTrainCommand extends AbstractPlayerCommand {
             return;
         }
 
-        HexcasterComponent comp = store.getComponent(playerEntityRef, HexcasterComponent.getComponentType());
-        if (comp == null) {
-            playerRef.sendMessage(Message.raw("no hexcaster component found"));
+        UUIDComponent uuid = store.getComponent(playerEntityRef, UUIDComponent.getComponentType());
+        if (uuid == null) {
+            playerRef.sendMessage(Message.raw("no uuid component found"));
             return;
         }
 
-        comp.setTrainingShapeId(shapeId);
         String overridePack = packArg.provided(context) ? packArg.get(context) : null;
-        comp.setTrainingPackOverride(overridePack);
+        DrawCaptureService.requestTraining(uuid.getUuid(), shapeId, overridePack);
 
         String suffix = overridePack != null ? " (writing to pack '" + overridePack + "')" : "";
         playerRef.sendMessage(Message.raw("training mode: draw a '" + shapeId + "' now. next shape will be recorded." + suffix));

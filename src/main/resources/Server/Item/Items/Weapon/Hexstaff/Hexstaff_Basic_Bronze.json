@@ -35,14 +35,6 @@
     }
   ],
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
-  "Tags": {
-    "Type": [
-      "Weapon"
-    ],
-    "Family": [
-      "Staff"
-    ]
-  },
   "Weapon": {
     "StatModifiers": {
       "Magic_Power": [

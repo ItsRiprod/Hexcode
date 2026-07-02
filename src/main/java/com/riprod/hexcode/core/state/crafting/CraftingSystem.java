@@ -36,8 +36,8 @@ import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingCompone
 import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
 import com.riprod.hexcode.core.state.crafting.entity.AnchorEntity;
 import com.riprod.hexcode.core.state.crafting.handlers.CraftingDragHandler;
-import com.riprod.hexcode.core.state.crafting.handlers.node.Container.ContainerNodeHandler;
-import com.riprod.hexcode.core.state.crafting.handlers.node.Slot.SlotNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.nodes.container.ContainerNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
 import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
 import com.riprod.hexcode.core.state.crafting.system.CraftingStateSystem;

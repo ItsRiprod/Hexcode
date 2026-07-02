@@ -1,18 +1,4 @@
 {
-  "Type": "HexItemCondition",
-  "CheckMode": "Both",
-  "MainHandItem": "HexStaff",
-  "OffHandItem": "HexBook",
-  "Next": {
-    "Type": "HexStateBranch",
-    "Branches": {
-      "Idle": "Root_Hexcode_Secondary_CastingFlow",
-      "Crafting": "Root_Hexcode_Secondary_DrawingFlow",
-      "Casting": "Root_Hexcode_Secondary_CastingFlow"
-    },
-    "CancelOnItemChange": false,
-    "Effects": {
-      "ClearAnimationOnFinish": true
-    }
-  }
+  "Type": "Simple",
+  "RunTime": 0
 }

@@ -19,8 +19,8 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Sim
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.obelisks.importexport.ImportExportPage;
-import com.riprod.hexcode.core.common.hexcaster.component.HexcasterComponent;
-import com.riprod.hexcode.state.HexState;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
+import com.riprod.hexcode.core.common.context.CasterComponent;
 
 public class ImportInteraction extends SimpleInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -56,18 +56,13 @@ public class ImportInteraction extends SimpleInteraction {
             var targetBlock = ctx.getTargetBlock();
             var targetBlockLocation = new Vector3i(targetBlock.x, targetBlock.y, targetBlock.z);
 
-            HexcasterComponent casterComp = buffer.getComponent(playerRef,
-                    HexcasterComponent.getComponentType());
-
-            if (casterComp == null) {
-                ctx.getState().state = InteractionState.Failed;
-                return;
-            }
+            CasterComponent casterComp = buffer.getComponent(playerRef,
+                    CasterComponent.getComponentType());
 
             PlayerRef ref = buffer.getComponent(playerRef, PlayerRef.getComponentType());
             if (ref == null)
                 return;
-            if (casterComp.getState() != HexState.CRAFTING) {
+            if (casterComp == null || !CraftingState.CONTEXT_ID.equals(casterComp.getCurrentContext())) {
                 ref.sendMessage(Message.raw("You must be in Crafting Mode to import/export a hex"));
                 ctx.getState().state = InteractionState.Failed;
                 return;

@@ -11,13 +11,39 @@ import com.riprod.hexcode.core.state.casting.registery.CastingStyleRegistry;
 import com.riprod.hexcode.api.event.CraftingEvent;
 import com.riprod.hexcode.api.event.GlyphDrawnEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
+import com.riprod.hexcode.builtin.hexCore.common.ContextForceExitSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingChangeListener;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingCleanupSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingForceExitSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingImportSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingPrimarySystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingShapeDrawnSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingTickSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.component.FlycastingState;
+import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingChangeListener;
+import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingEnterListener;
+import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingExitSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingForceExitSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingShapeDrawnSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingTeardownSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingTickSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingUnequipSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.SelectingState;
+import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingChangeListener;
+import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingForceExitSystem;
+import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingTickSystem;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.CraftingNotificationListener;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.FizzleMessageListener;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphDrawNotificationListener;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphMemoryListener;
 import com.riprod.hexcode.builtin.hexCore.execution.config.EncodedConfig;
+import com.riprod.hexcode.builtin.hexCore.execution.config.ExecutionConfig;
 import com.riprod.hexcode.builtin.hexCore.config.BasicConfig;
 import com.riprod.hexcode.builtin.hexCore.execution.config.StaffConfig;
+import com.riprod.hexcode.builtin.hexCore.pedestals.PedestalContextHandler;
+import com.riprod.hexcode.core.common.pedestal.events.PedestalInteractEvent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.absolute.AbsoluteGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.add.AddGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.arc.ArcConstructHandler;
@@ -27,6 +53,8 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.beam.BeamGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.bolt.BoltGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.burning.BurningGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.ceiling.CeilingGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elementburning.ElementBurningGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elementfire.ElementFireGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.chaos.ChaosGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.concentration.ConcentrationConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.concentration.ConcentrationGlyph;
@@ -207,6 +235,8 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new GlaciateGlyph());
                 GlyphRegistry.register(new TerraformGlyph());
                 GlyphRegistry.register(new BurningGlyph());
+                GlyphRegistry.register(new ElementFireGlyph());
+                GlyphRegistry.register(new ElementBurningGlyph());
                 GlyphRegistry.register(new EnsnareGlyph());
                 GlyphRegistry.register(new PhaseGlyph());
                 GlyphRegistry.register(new WarpGlyph());
@@ -297,10 +327,14 @@ public class HexCorePlugin extends JavaPlugin {
                 this.getEventRegistry().registerGlobal(CraftingEvent.class, new CraftingNotificationListener());
                 this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphMemoryListener());
                 this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDrawNotificationListener());
+                this.getEventRegistry().registerGlobal(PedestalInteractEvent.class, new PedestalContextHandler());
+                this.getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
+                                ContextForceExitSystem::onPlayerDisconnect);
         }
 
         private void RegisterHexConfigs() {
                 HexConfigAsset.CODEC.register("StaffConfig", StaffConfig.class, StaffConfig.CODEC);
+                HexConfigAsset.CODEC.register("ExecutionConfig", ExecutionConfig.class, ExecutionConfig.CODEC);
                 HexConfigAsset.CODEC.register("EncodedConfig", EncodedConfig.class, EncodedConfig.CODEC);
         }
 
@@ -352,6 +386,18 @@ public class HexCorePlugin extends JavaPlugin {
                                 .registerComponent(ScaleStackComponent.class, "ScaleStack",
                                                 ScaleStackComponent.CODEC);
                 ScaleStackComponent.setComponentType(scaleStackComponentType);
+
+                ComponentType<EntityStore, FlycastingState> flycastingStateType = entityStoreRegistry
+                                .registerComponent(FlycastingState.class, FlycastingState::new);
+                FlycastingState.setComponentType(flycastingStateType);
+
+                ComponentType<EntityStore, SelectingState> selectingStateType = entityStoreRegistry
+                                .registerComponent(SelectingState.class, SelectingState::new);
+                SelectingState.setComponentType(selectingStateType);
+
+                ComponentType<EntityStore, CraftingState> craftingStateType = entityStoreRegistry
+                                .registerComponent(CraftingState.class, CraftingState::new);
+                CraftingState.setComponentType(craftingStateType);
         }
 
         private void RegisterSystems() {
@@ -359,6 +405,29 @@ public class HexCorePlugin extends JavaPlugin {
 
                 entityStoreRegistry.registerSystem(new ErodeDamageSystem());
                 entityStoreRegistry.registerSystem(new FortifyDamageSystem());
+
+                entityStoreRegistry.registerSystem(new ContextForceExitSystem.OnDeath());
+
+                entityStoreRegistry.registerSystem(new FlycastingEnterListener());
+                entityStoreRegistry.registerSystem(new FlycastingChangeListener());
+                entityStoreRegistry.registerSystem(new FlycastingTeardownSystem());
+                entityStoreRegistry.registerSystem(new FlycastingTickSystem());
+                entityStoreRegistry.registerSystem(new FlycastingShapeDrawnSystem());
+                entityStoreRegistry.registerSystem(new FlycastingExitSystem());
+                entityStoreRegistry.registerSystem(new FlycastingUnequipSystem());
+                entityStoreRegistry.registerSystem(new FlycastingForceExitSystem());
+
+                entityStoreRegistry.registerSystem(new SelectingChangeListener());
+                entityStoreRegistry.registerSystem(new SelectingTickSystem());
+                entityStoreRegistry.registerSystem(new SelectingForceExitSystem());
+
+                entityStoreRegistry.registerSystem(new CraftingChangeListener());
+                entityStoreRegistry.registerSystem(new CraftingTickSystem());
+                entityStoreRegistry.registerSystem(new CraftingPrimarySystem());
+                entityStoreRegistry.registerSystem(new CraftingImportSystem());
+                entityStoreRegistry.registerSystem(new CraftingShapeDrawnSystem());
+                entityStoreRegistry.registerSystem(new CraftingForceExitSystem());
+                entityStoreRegistry.registerSystem(new CraftingCleanupSystem());
         }
 
         private void RegisterConstructs() {

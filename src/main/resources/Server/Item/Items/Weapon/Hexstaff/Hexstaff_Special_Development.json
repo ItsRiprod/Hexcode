@@ -8,7 +8,6 @@
   "ItemLevel": 35,
   "Model": "Items/Weapons/Staff/Blue_Staff.blockymodel",
   "Texture": "Items/Weapons/Staff/Blue_Staff.png",
-  "PlayerAnimationsId": "HexStaff",
   "IconProperties": {
     "Scale": 0.3,
     "Rotation": [
@@ -24,14 +23,6 @@
   "Particles": [],
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
   "Icon": "Icons/ItemsGenerated/Arcane_Hexstaff.png",
-  "Tags": {
-    "Type": [
-      "Weapon"
-    ],
-    "Family": [
-      "Staff"
-    ]
-  },
   "Weapon": {
     "StatModifiers": {
       "Magic_Power": [
@@ -62,24 +53,6 @@
     ]
   },
   "ItemSoundSetId": "ISS_Weapons_Wood",
-  "Utility": {
-    "Compatible": true
-  },
-  "MaxStack": 1,
-  "InteractionConfig": {
-    "Priorities": {
-      "Secondary": {
-        "MainHand": 10
-      }
-    },
-    "UseDistance": {
-      "Creative": 10
-    }
-  },
-  "Interactions": {
-    "Primary": "Hexstaff_CastSpell",
-    "Secondary": "Hexstaff_Drawmode"
-  },
   "InteractionVars": {
     "Drawmode": {
       "Interactions": [
