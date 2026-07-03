@@ -56,7 +56,31 @@
   "InteractionVars": {
     "Drawmode": {
       "Interactions": [
-        "Drawmode_Arcane"
+        {
+          "Type": "HexDrawMode",
+          "Parent": "Drawmode_Default",
+          "Effects": {
+            "Particles": [
+              {
+                "SystemId": "Ring_Spawner",
+                "Color": "#00f2ff"
+              },
+              {
+                "SystemId": "Rune_System",
+                "TargetEntityPart": "Entity"
+              },
+              {
+                "SystemId": "Alternative_Simple_Ring_System",
+                "TargetEntityPart": "Entity"
+              },
+              {
+                "SystemId": "Spinning_Particles_Player_System",
+                "TargetEntityPart": "Entity"
+              }
+            ],
+            "WorldSoundEventId": "SFX_Hexcode_Casting_Enter"
+          }
+        }
       ]
     }
   }

@@ -331,6 +331,15 @@ Interfere.target.description=Entity to interfere with
 Interfere.Next.name=Next
 Interfere.Next.description=The next glyph in the execution chain
 
+Invoke.name=Invoke
+Invoke.description=Runs a configured interaction from an entity, defaulting to the caster
+Invoke.source.name=Source
+Invoke.source.description=Optional entity to run the interaction from; a block or empty input runs it from the caster
+Invoke.target.name=Target
+Invoke.target.description=Optional entity, block, or position the interaction acts on
+Invoke.Next.name=Next
+Invoke.Next.description=The next glyph in the execution chain
+
 IsHolding.name=Is Holding
 IsHolding.description=Returns 1 if the caster is holding the primary cast button, 0 otherwise
 IsHolding.Next.name=Next

@@ -1,0 +1,35 @@
+{
+  "TranslationProperties": {
+    "Name": "hexcode.pages.page.name",
+    "Description": "hexcode.pages.page.description"
+  },
+  "Quality": "Common",
+  "Model": "Items/Consumable/Hexes/Hex_Page.blockymodel",
+  "Texture": "Items/Consumable/Hexes/Hex_Page_Common.png",
+  "IconProperties": {
+    "Scale": 0.7,
+    "Rotation": [
+      45,
+      90,
+      0
+    ],
+    "Translation": [
+      -7.8,
+      -7.8
+    ]
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "MaxStack": 16,
+  "Tags": {
+    "Family": [
+      "HexPage"
+    ],
+    "Type": [
+      "Consumable"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Weapons_Books",
+  "Interactions": {
+    "Secondary": "Page_Secondary"
+  }
+}

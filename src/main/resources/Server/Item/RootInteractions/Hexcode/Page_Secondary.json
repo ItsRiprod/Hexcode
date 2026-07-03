@@ -1,0 +1,15 @@
+{
+  "RequireNewClick": true,
+  "ClickQueuingTimeout": 0.1,
+  "Cooldown": {
+    "Cooldown": 0.3
+  },
+  "Interactions": [
+    "Page_Cast"
+  ],
+  "Rules": {
+    "Interrupting": [
+      "Primary"
+    ]
+  }
+}

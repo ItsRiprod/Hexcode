@@ -32,8 +32,8 @@ configurations {
 dependencies {
     compileOnly libs.jetbrains.annotations
     compileOnly libs.jspecify
-    // shadowBundle(files('lib/Patchly-3.3.0.jar'))
-    shadowBundle('curse.maven:patchly-1550889:8282627')
+    shadowBundle(files('lib/Patchly-3.4.0.jar'))
+    // shadowBundle('curse.maven:patchly-1550889:8282627')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.3'
 }

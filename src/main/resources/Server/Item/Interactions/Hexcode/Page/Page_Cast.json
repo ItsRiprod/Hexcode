@@ -1,0 +1,41 @@
+{
+  "Type": "Charging",
+  "CancelOnItemChange": true,
+  "AllowIndefiniteHold": true,
+  "Effects": {
+    "ItemAnimationId": "CastSpellCharging",
+    "ClearAnimationOnFinish": true
+  },
+  "CancelOnOtherClick": false,
+  "Next": {
+    "1": {
+      "Type": "Serial",
+      "Interactions": [
+        {
+          "Type": "HexExecute",
+          "Config": {
+            "HexStorageType": "PageConfig",
+            "HexStats": {
+              "InitialVolatility": 60,
+              "VolatilityMultiplier": 1.0
+            }
+          },
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          }
+        },
+        {
+          "Type": "ModifyInventory",
+          "AdjustHeldItemQuantity": -1
+        }
+      ]
+    }
+  },
+  "Failed": {
+    "Type": "Interrupt",
+    "Entity": "Owner",
+    "Effects": {
+      "ClearAnimationOnFinish": true
+    }
+  }
+}

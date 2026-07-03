@@ -1,0 +1,11 @@
+{
+  "Container": {
+    "Containers+": [
+      {
+        "Type": "Droplist",
+        "Weight": 100,
+        "DroplistId": "Drop_Page_Fireball"
+      }
+    ]
+  }
+}
