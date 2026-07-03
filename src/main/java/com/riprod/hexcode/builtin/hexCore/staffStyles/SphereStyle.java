@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 import org.joml.Vector3f;
 
 import com.hypixel.hytale.math.vector.Rotation3f;
-import com.riprod.hexcode.core.state.casting.component.CastingStyle;
+import com.riprod.hexcode.core.common.casting.component.CastingStyle;
 
 import java.util.ArrayList;
 import java.util.List;

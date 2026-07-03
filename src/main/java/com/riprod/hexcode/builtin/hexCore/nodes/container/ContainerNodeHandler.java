@@ -1,10 +1,8 @@
 package com.riprod.hexcode.builtin.hexCore.nodes.container;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
@@ -15,8 +13,6 @@ import org.joml.Vector3f;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.DebugShape;
 import com.hypixel.hytale.protocol.InteractionState;
-import com.hypixel.hytale.protocol.InteractionType;
-import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
@@ -29,39 +25,27 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.dispatch.SlotSelectedEvent;
-import com.riprod.hexcode.api.event.CraftingEvent;
-import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
-import com.riprod.hexcode.core.common.glyphs.utils.CreateGlyph;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hexes.utils.CreateHex;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableType;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
-import com.riprod.hexcode.core.common.hover.utils.HoverableUtils;
 import com.riprod.hexcode.core.common.node.component.SlotComponent;
-import com.riprod.hexcode.core.common.obelisk.system.ObeliskDispatcher;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
-import com.riprod.hexcode.core.state.casting.utils.GlyphStyler;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.builtin.hexCore.scene.GlyphStyler;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
-import com.riprod.hexcode.core.state.crafting.constants.CraftingColors;
+import com.riprod.hexcode.core.common.pedestal.constants.CraftingColors;
 import com.riprod.hexcode.core.common.node.NodeTypeId;
-import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
-import com.riprod.hexcode.core.state.crafting.entity.GlyphSpawner;
-import com.riprod.hexcode.core.state.crafting.entity.PedestalEntity;
-import com.riprod.hexcode.core.common.node.NodeInterface;
-import com.riprod.hexcode.core.common.node.NodeRouter;
-import com.riprod.hexcode.builtin.hexCore.nodes.anchor.AnchorNodeHandler;
+import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
+import com.riprod.hexcode.builtin.hexCore.nodes.GlyphSpawner;
 import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
-import com.riprod.hexcode.utils.CleanupUtils;
-import com.riprod.hexcode.utils.GlyphMath;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 import com.hypixel.hytale.logger.HytaleLogger;
 
 public class ContainerNodeHandler extends BaseContainerHandler {
@@ -82,7 +66,7 @@ public class ContainerNodeHandler extends BaseContainerHandler {
         boolean isEmpty = hex == null;
 
         Holder<EntityStore> holder;
-        HexComponent hexComponent = new HexComponent(hex); // will not be used if hex is null, but needed later
+        HexComponent hexComponent = new HexComponent(hex);
         if (!isEmpty) {
             hexComponent.setRootRef(anchorRef);
             hexComponent.setParentRef(null);

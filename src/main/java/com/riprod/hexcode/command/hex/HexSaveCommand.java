@@ -10,10 +10,11 @@ import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalAr
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
+import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProvider;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
+import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
 import com.riprod.hexcode.core.common.hexes.saved.SavedHexWriter;
@@ -38,6 +39,7 @@ public class HexSaveCommand extends AbstractPlayerCommand {
 
     public HexSaveCommand() {
         super("save", "save the active hex on your staff as a reusable preset");
+        this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADMIN);
     }
 
     @Override
@@ -50,13 +52,13 @@ public class HexSaveCommand extends AbstractPlayerCommand {
             return;
         }
 
-        HexcasterIdleComponent execComp = store.getComponent(playerEntityRef, HexcasterIdleComponent.getComponentType());
+        var execComp = store.getComponent(playerEntityRef, ExecutionComponent.getComponentType());
         if (execComp == null) {
             playerRef.sendMessage(Message.raw("no execution component found on player"));
             return;
         }
 
-        Hex activeHex = execComp.getActiveHex();
+        var activeHex = execComp.getQueuedHex();
         if (activeHex == null) {
             playerRef.sendMessage(Message.raw("no active hex on your staff - nothing to save"));
             return;

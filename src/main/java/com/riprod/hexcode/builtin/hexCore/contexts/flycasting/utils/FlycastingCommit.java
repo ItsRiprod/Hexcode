@@ -17,9 +17,9 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.utils.GlyphResolver;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.state.casting.utils.DraftFeedback;
-import com.riprod.hexcode.core.state.casting.utils.HexSpawner;
-import com.riprod.hexcode.core.state.casting.utils.InAirHexFactory;
+import com.riprod.hexcode.core.common.drawing.utils.DraftFeedback;
+import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils.HexSpawner;
+import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils.InAirHexFactory;
 
 public final class FlycastingCommit {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

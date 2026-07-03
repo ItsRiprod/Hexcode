@@ -21,6 +21,7 @@ public class ExecutionComponent implements Component<EntityStore> {
     }
 
     private Hex queuedHex;
+    private int castCount = 0;
 
     public ExecutionComponent() {
     }
@@ -32,6 +33,15 @@ public class ExecutionComponent implements Component<EntityStore> {
 
     public void setQueuedHex(@Nullable Hex queuedHex) {
         this.queuedHex = queuedHex;
+        this.castCount = 0;
+    }
+
+    public int getCastCount() {
+        return castCount;
+    }
+
+    public void advanceCast() {
+        this.castCount++;
     }
 
     @Nonnull
@@ -39,6 +49,7 @@ public class ExecutionComponent implements Component<EntityStore> {
     public ExecutionComponent clone() {
         ExecutionComponent copy = new ExecutionComponent();
         copy.queuedHex = this.queuedHex;
+        copy.castCount = this.castCount;
         return copy;
     }
 }

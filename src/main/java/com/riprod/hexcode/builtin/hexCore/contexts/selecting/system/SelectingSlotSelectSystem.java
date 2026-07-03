@@ -14,8 +14,8 @@ import com.riprod.hexcode.api.dispatch.SlotSelectedEvent;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.SelectingState;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 
 public class SelectingSlotSelectSystem extends EntityEventSystem<EntityStore, SlotSelectedEvent> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -45,9 +45,6 @@ public class SelectingSlotSelectSystem extends EntityEventSystem<EntityStore, Sl
             return;
         }
 
-        // explicit handoff before the transition: crafting owns the selected container
-        // via activeContainerRef, selecting keeps only the remainder in hexPreviewRefs,
-        // so change-listener ordering inside the announce cannot cross-despawn scenes
         session.setActiveSlotKey(event.getSlotKey());
         session.setActiveContainerRef(event.getContainerRef());
         session.getHexPreviewRefs().remove(event.getContainerRef());

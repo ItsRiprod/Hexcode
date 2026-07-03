@@ -4,7 +4,7 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
-import com.riprod.hexcode.core.state.casting.utils.GlyphStyler;
+import com.riprod.hexcode.builtin.hexCore.scene.GlyphStyler;
 import com.riprod.hexcode.core.common.node.BaseNodeHandler;
 
 public abstract class BaseGlyphHandler extends BaseNodeHandler {

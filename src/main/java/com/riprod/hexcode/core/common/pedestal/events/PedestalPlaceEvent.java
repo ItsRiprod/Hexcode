@@ -20,7 +20,7 @@ import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
-import com.riprod.hexcode.core.state.crafting.entity.PedestalEntity;
+import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
 
 public class PedestalPlaceEvent extends RefSystem<ChunkStore> {
 

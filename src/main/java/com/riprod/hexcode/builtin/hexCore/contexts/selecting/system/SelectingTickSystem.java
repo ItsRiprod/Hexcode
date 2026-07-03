@@ -20,10 +20,10 @@ import com.riprod.hexcode.core.common.node.NodeRouter;
 import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 
 public class SelectingTickSystem extends EntityTickingSystem<EntityStore> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

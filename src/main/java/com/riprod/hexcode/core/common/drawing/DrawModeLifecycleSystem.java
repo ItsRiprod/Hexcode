@@ -22,10 +22,8 @@ import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.drawing.system.InterfaceManager;
 import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
-import com.riprod.hexcode.core.state.casting.utils.DraftFeedback;
+import com.riprod.hexcode.core.common.drawing.utils.DraftFeedback;
 
-// refsystem only fires on entity add/remove; component add/remove on a living player
-// dispatches through refchangesystem, so the draw flag lifecycle must live here
 public class DrawModeLifecycleSystem extends RefChangeSystem<EntityStore, DrawCaptureComponent> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
@@ -75,10 +73,7 @@ public class DrawModeLifecycleSystem extends RefChangeSystem<EntityStore, DrawCa
             }
 
             buffer.invoke(ref, new DrawModeExitEvent(ref));
-
-            // exiting draw mode is an early commit: whatever the exit handlers left on the
-            // blackboard goes to the still-active context instead of evaporating with the
-            // ping-scaled finalize window (service-driven forfeits cleared it beforehand)
+            
             if (capture.getPendingShapes().isEmpty()) {
                 return;
             }

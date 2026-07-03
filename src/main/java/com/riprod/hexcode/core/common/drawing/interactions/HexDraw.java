@@ -62,8 +62,6 @@ public class HexDraw extends ChargingInteraction {
             }
 
             if (firstRun) {
-                // server-reinterpretation: hovering a hex turns this press into a drag,
-                // otherwise it is a stroke; the active context performs the drag itself
                 if (capture.getHoveredHex() != null) {
                     capture.setDraggingHex(capture.getHoveredHex());
                 } else {

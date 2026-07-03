@@ -39,8 +39,6 @@ public class FlycastingExitSystem extends EntityEventSystem<EntityStore, DrawMod
         }
         Ref<EntityStore> player = chunk.getReferenceTo(index);
 
-        // a preempting context already rewrote the caster; forfeited strokes must
-        // never queue for execution
         CasterComponent caster = chunk.getComponent(index, CasterComponent.getComponentType());
         if (caster == null || !FlycastingState.CONTEXT_ID.equals(caster.getCurrentContext())) {
             return;

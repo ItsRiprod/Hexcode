@@ -18,8 +18,8 @@ import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 
 public class CraftingImportSystem extends EntityTickingSystem<EntityStore> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -46,9 +46,7 @@ public class CraftingImportSystem extends EntityTickingSystem<EntityStore> {
             String savedKey = session.getActiveSlotKey();
             Hex importedHex = session.getPendingImportHex();
             session.setPendingImportHex(null);
-
-            // the import replaces the slot content; null the active slot so the crafting
-            // teardown save cannot overwrite the imported hex with the discarded scene
+    
             session.setActiveSlotKey(null);
             if (savedKey != null) {
                 ItemStack stack = session.getStoredItem();

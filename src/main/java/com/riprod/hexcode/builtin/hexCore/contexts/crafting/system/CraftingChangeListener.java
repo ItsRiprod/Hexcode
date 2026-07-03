@@ -34,13 +34,13 @@ import com.riprod.hexcode.core.common.obelisk.system.ObeliskDispatcher;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
-import com.riprod.hexcode.core.state.crafting.entity.PedestalEntity;
-import com.riprod.hexcode.core.state.crafting.handlers.CraftingDragHandler;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
-import com.riprod.hexcode.core.state.crafting.utils.GravityUtil;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
+import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
+import com.riprod.hexcode.builtin.hexCore.scene.CraftingDragHandler;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.GravityUtil;
 
 public class CraftingChangeListener extends WorldEventSystem<EntityStore, HexContextChangeEvent> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -104,8 +104,6 @@ public class CraftingChangeListener extends WorldEventSystem<EntityStore, HexCon
             craftingComp.clearCraftingState();
         }
 
-        // returning to selecting keeps the session alive; any other destination
-        // (including foreign contexts) is a full exit
         if (SelectingState.CONTEXT_ID.equals(event.getNewContextId())) {
             return;
         }

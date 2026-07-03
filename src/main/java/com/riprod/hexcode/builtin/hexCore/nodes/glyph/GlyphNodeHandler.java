@@ -28,16 +28,16 @@ import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableType;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
-import com.riprod.hexcode.core.state.casting.utils.GlyphStyler;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.builtin.hexCore.scene.GlyphStyler;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.core.common.node.NodeTypeId;
-import com.riprod.hexcode.core.state.crafting.handlers.CraftingDragHandler;
+import com.riprod.hexcode.builtin.hexCore.scene.CraftingDragHandler;
 import com.riprod.hexcode.core.common.node.NodeInterface;
 import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
-import com.riprod.hexcode.core.state.crafting.utils.CraftingPositionUtil;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
+import com.riprod.hexcode.builtin.hexCore.nodes.glyph.CraftingPositionUtil;
 
 public class GlyphNodeHandler extends BaseGlyphHandler {
   private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -133,9 +133,6 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
     return InteractionState.Finished;
   }
 
-  // single chokepoint for "this player's expanded glyph". collapses the previous
-  // expansion (if any, valid, and different) and applies the new one. pass null
-  // to collapse without expanding anything.
   private static void setExpandedGlyph(CommandBuffer<EntityStore> accessor,
       HexcasterCraftingComponent craftingComp, Ref<EntityStore> newRef,
       Ref<EntityStore> playerRef) {

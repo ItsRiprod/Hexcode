@@ -20,11 +20,12 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.FlagArg;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
+import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProvider;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.BsonUtil;
-import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
+import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -42,6 +43,7 @@ public class HexInspectCommand extends AbstractPlayerCommand {
     public HexInspectCommand() {
         super("inspect", "Print the glyph tree of the active hex on the held staff");
         addAliases("i");
+        this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADVENTURER);
 
         this.detailedFlag = this.withFlagArg("detailed", "raw JSON dump of hex data");
     }
@@ -53,7 +55,7 @@ public class HexInspectCommand extends AbstractPlayerCommand {
         boolean detailed = detailedFlag.get(context);
 
         HexStaffComponent staff = CasterInventory.getHexStaffComponent(store, playerEntityRef);
-        HexcasterIdleComponent execComp = store.getComponent(playerEntityRef, HexcasterIdleComponent.getComponentType());
+        var execComp = store.getComponent(playerEntityRef, ExecutionComponent.getComponentType());
         if (staff == null) {
             send(playerRef, "You are not holding a hex staff");
             return;
@@ -63,7 +65,7 @@ public class HexInspectCommand extends AbstractPlayerCommand {
             return;
         }
 
-        Hex hex = execComp.getActiveHex();
+        Hex hex = execComp.getQueuedHex();
         if (hex == null) {
             send(playerRef, "No active hex on staff");
             return;

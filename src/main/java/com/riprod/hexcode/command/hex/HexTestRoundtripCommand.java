@@ -17,10 +17,11 @@ import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
+import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProvider;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
+import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.hexes.codec.DecodeIssue;
@@ -39,6 +40,7 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
 
     public HexTestRoundtripCommand() {
         super("test-roundtrip", "encode+decode the active hex and verify structural equality");
+        this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADMIN);
         addAliases("tr");
     }
 
@@ -46,14 +48,14 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
     protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store,
             @Nonnull Ref<EntityStore> playerEntityRef, @Nonnull PlayerRef playerRef, @Nonnull World world) {
 
-        HexcasterIdleComponent execComp =
-                store.getComponent(playerEntityRef, HexcasterIdleComponent.getComponentType());
+        var execComp =
+                store.getComponent(playerEntityRef, ExecutionComponent.getComponentType());
         if (execComp == null) {
             send(playerRef, "no execution component found on player");
             return;
         }
 
-        Hex active = execComp.getActiveHex();
+        Hex active = execComp.getQueuedHex();
         if (active == null) {
             send(playerRef, "no hex selected on your staff");
             return;

@@ -36,7 +36,7 @@ public class GlyphMemoryListener implements Consumer<GlyphDrawnEvent> {
         GlyphMemory memory = new GlyphMemory(glyph.getGlyphId());
         memory.setCapturedTimestamp(System.currentTimeMillis());
         if (memories.hasRecordedMemory(memory)) return;
-        if (!playerMemories.recordMemory(memory)) return; // already held or at capacity
+        if (!playerMemories.recordMemory(memory)) return;
 
         PlayerRef pr = store.getComponent(playerRef, PlayerRef.getComponentType());
         if (pr == null) return;

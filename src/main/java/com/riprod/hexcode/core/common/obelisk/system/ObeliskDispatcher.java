@@ -14,7 +14,7 @@ import com.riprod.hexcode.core.common.obelisk.component.ObeliskBlockComponent;
 import com.riprod.hexcode.core.common.obelisk.interfaces.ObeliskInterface;
 import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerRegistry;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
-import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
+import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 
 public class ObeliskDispatcher {
     private static HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

@@ -22,7 +22,7 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeHandler;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.utils.VfxUtil;
 
 public final class CraftingGlyphSpawner {

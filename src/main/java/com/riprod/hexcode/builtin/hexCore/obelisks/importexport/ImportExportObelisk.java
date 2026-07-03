@@ -12,7 +12,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.obelisk.component.ObeliskBlockComponent;
 import com.riprod.hexcode.core.common.obelisk.interfaces.ObeliskInterface;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 
 public class ImportExportObelisk implements ObeliskInterface {
 

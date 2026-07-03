@@ -7,7 +7,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.component.FlycastingState;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
-import com.riprod.hexcode.core.state.casting.utils.GlyphStyler;
+import com.riprod.hexcode.builtin.hexCore.scene.GlyphStyler;
 
 public final class FlycastingHover {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

@@ -22,9 +22,9 @@ import com.riprod.hexcode.api.event.CraftingEvent;
 import com.riprod.hexcode.core.common.obelisk.component.ObeliskBlockComponent;
 import com.riprod.hexcode.core.common.obelisk.system.ObeliskSystem;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
-import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
+import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 
 public class PedestalBlockEvent extends EntityEventSystem<EntityStore, BreakBlockEvent> {
 

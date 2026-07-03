@@ -13,11 +13,11 @@ import com.riprod.hexcode.core.common.hover.utils.HoverableUtils;
 import com.riprod.hexcode.core.common.obelisk.system.ObeliskDispatcher;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
-import com.riprod.hexcode.core.state.crafting.utils.HoverStyleUtils;
-import com.riprod.hexcode.core.state.crafting.utils.LinkRenderer;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
+import com.riprod.hexcode.builtin.hexCore.pedestals.HoverStyleUtils;
+import com.riprod.hexcode.builtin.hexCore.scene.LinkRenderer;
 
 public final class PedestalSceneHover {
 

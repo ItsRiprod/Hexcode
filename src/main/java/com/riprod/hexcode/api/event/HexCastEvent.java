@@ -14,4 +14,10 @@ public class HexCastEvent extends CancellableEcsEvent {
     public HexContext getContext() {
         return context;
     }
+
+    public static final class Pre extends HexCastEvent {
+        public Pre(HexContext context) {
+            super(context);
+        }
+    }
 }

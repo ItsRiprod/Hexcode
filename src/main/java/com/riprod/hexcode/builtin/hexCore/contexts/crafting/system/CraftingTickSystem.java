@@ -24,7 +24,7 @@ import com.riprod.hexcode.builtin.hexCore.pedestals.PedestalSceneHover;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 
 public class CraftingTickSystem extends EntityTickingSystem<EntityStore> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

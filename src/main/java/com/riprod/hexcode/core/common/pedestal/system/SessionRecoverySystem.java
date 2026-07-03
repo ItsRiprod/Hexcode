@@ -12,8 +12,8 @@ import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.utils.PedestalItemUtil;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.utils.PedestalItemUtil;
 import com.riprod.hexcode.utils.HexSlot;
 
 public class SessionRecoverySystem extends RefSystem<EntityStore> {

@@ -30,8 +30,8 @@ import com.riprod.hexcode.core.common.hexes.codec.DecodeResult;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 import com.riprod.hexcode.utils.VfxUtil;
 
 public class ImportExportPage extends InteractiveCustomUIPage<ImportExportPage.PageEventData> {

@@ -14,7 +14,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHa
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInteraction;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
+import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 
 public class HexDispel extends SimpleInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -43,11 +43,11 @@ public class HexDispel extends SimpleInteraction {
                 return;
             }
 
-            HexcasterIdleComponent idleComp = buffer.getComponent(player,
-                    HexcasterIdleComponent.getComponentType());
-            int count = idleComp != null ? idleComp.getActiveCount() : 0;
-            if (idleComp != null) {
-                idleComp.cancelAll(player);
+            CasterStateComponent casterState = buffer.getComponent(player,
+                    CasterStateComponent.getComponentType());
+            int count = casterState != null ? casterState.getActiveCount() : 0;
+            if (casterState != null) {
+                casterState.cancelAll(player);
             }
             PlayerRef pr = buffer.getComponent(player, PlayerRef.getComponentType());
             if (pr != null && count > 0) {

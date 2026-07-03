@@ -10,10 +10,11 @@ import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
+import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProvider;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
+import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
 import com.riprod.hexcode.core.common.hexes.codec.DecodeIssue;
 import com.riprod.hexcode.core.common.hexes.codec.DecodeResult;
@@ -28,6 +29,7 @@ public class HexSerializeCommand extends AbstractPlayerCommand {
 
     public HexSerializeCommand() {
         super("serialize", "import/export hex spells");
+        this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADMIN);
         addAliases("s");
         addSubCommand(new ExportCommand());
         addSubCommand(new ImportCommand());
@@ -51,14 +53,14 @@ public class HexSerializeCommand extends AbstractPlayerCommand {
         protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store,
                 @Nonnull Ref<EntityStore> playerEntityRef, @Nonnull PlayerRef playerRef, @Nonnull World world) {
 
-            HexcasterIdleComponent execComp = store.getComponent(playerEntityRef, HexcasterIdleComponent.getComponentType());
+            var execComp = store.getComponent(playerEntityRef, ExecutionComponent.getComponentType());
 
             if (execComp == null) {
                 send(playerRef, "no execution component found on player");
                 return;
             }
 
-            Hex hex = execComp.getActiveHex();
+            Hex hex = execComp.getQueuedHex();
             if (hex == null) {
                 send(playerRef, "no hex selected on your staff");
                 return;

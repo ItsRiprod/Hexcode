@@ -27,7 +27,11 @@ import com.riprod.hexcode.core.common.execution.component.BlockHexRoot;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
 import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
-import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
+import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
+import com.riprod.hexcode.core.common.execution.precast.CastChargesSystem;
+import com.riprod.hexcode.core.common.execution.precast.CastDecaySystem;
+import com.riprod.hexcode.core.common.execution.precast.CastBookStyleSystem;
+import com.riprod.hexcode.core.common.execution.precast.CastSpellPowerSystem;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
 import com.riprod.hexcode.core.common.execution.interactions.HexDispel;
 import com.riprod.hexcode.core.common.execution.events.HexCastEventSystem;
@@ -70,14 +74,13 @@ import com.riprod.hexcode.core.common.pedestal.events.PedestalPlaceEvent;
 import com.riprod.hexcode.core.common.pedestal.system.SessionRecoverySystem;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.core.common.utilities.system.DebugTickSystem;
-import com.riprod.hexcode.core.state.casting.component.HexcasterCastingComponent;
-import com.riprod.hexcode.core.state.casting.registery.CastingStyleRegistry;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.casting.registry.CastingStyleRegistry;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.node.NodeRouter;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionTickSystem;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionTickSystem;
 import com.riprod.hexcode.core.common.memories.GlyphMemory;
 import com.riprod.hexcode.core.common.memories.GlyphMemoryProvider;
 import com.riprod.hexcode.core.common.execution.interactions.HexExecuteInteraction;
@@ -308,10 +311,10 @@ public class Hexcode extends JavaPlugin {
                         HexcasterComponent.CODEC);
         HexcasterComponent.setComponentType(hexcasterComponentType);
 
-        ComponentType<EntityStore, HexcasterIdleComponent> executionComponentType = entityStoreRegistry
-                .registerComponent(HexcasterIdleComponent.class,
-                        HexcasterIdleComponent::new);
-        HexcasterIdleComponent.setComponentType(executionComponentType);
+        ComponentType<EntityStore, CasterStateComponent> casterStateComponentType = entityStoreRegistry
+                .registerComponent(CasterStateComponent.class,
+                        CasterStateComponent::new);
+        CasterStateComponent.setComponentType(casterStateComponentType);
 
         ComponentType<EntityStore, CasterComponent> casterComponentType = entityStoreRegistry
                 .registerComponent(CasterComponent.class, CasterComponent::new);
@@ -324,11 +327,6 @@ public class Hexcode extends JavaPlugin {
         ComponentType<EntityStore, ExecutionComponent> queuedExecutionComponentType = entityStoreRegistry
                 .registerComponent(ExecutionComponent.class, ExecutionComponent::new);
         ExecutionComponent.setComponentType(queuedExecutionComponentType);
-
-        ComponentType<EntityStore, HexcasterCastingComponent> castingRootComponentType = entityStoreRegistry
-                .registerComponent(HexcasterCastingComponent.class,
-                        HexcasterCastingComponent::new);
-        HexcasterCastingComponent.setComponentType(castingRootComponentType);
 
         ComponentType<EntityStore, HexcasterCraftingComponent> craftingRootComponentType = entityStoreRegistry
                 .registerComponent(HexcasterCraftingComponent.class,
@@ -366,6 +364,10 @@ public class Hexcode extends JavaPlugin {
         entityStoreRegistry.registerSystem(new ObeliskBreakEvent());
         entityStoreRegistry.registerSystem(new DebugTickSystem());
         entityStoreRegistry.registerSystem(new GlyphEffectSystem());
+        entityStoreRegistry.registerSystem(new CastChargesSystem());
+        entityStoreRegistry.registerSystem(new CastDecaySystem());
+        entityStoreRegistry.registerSystem(new CastBookStyleSystem());
+        entityStoreRegistry.registerSystem(new CastSpellPowerSystem());
         entityStoreRegistry.registerSystem(new HexCastEventSystem());
         entityStoreRegistry.registerSystem(new FireTriggerSystem());
         entityStoreRegistry.registerSystem(new SessionTickSystem());

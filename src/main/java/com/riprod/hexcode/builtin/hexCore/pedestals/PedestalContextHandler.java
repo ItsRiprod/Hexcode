@@ -27,10 +27,10 @@ import com.riprod.hexcode.core.common.imbuement.registry.ImbuementProfileRegistr
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalInteractEvent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 import com.riprod.hexcode.utils.HexSlot;
 import com.riprod.hexcode.utils.VfxUtil;
 

@@ -19,7 +19,7 @@ import com.riprod.hexcode.api.dispatch.ShapeDrawnEvent;
 import com.riprod.hexcode.api.dispatch.ShapeStructure;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
-import com.riprod.hexcode.core.state.casting.utils.DraftFeedback;
+import com.riprod.hexcode.core.common.drawing.utils.DraftFeedback;
 
 public class DrawRecognitionSystem extends EntityTickingSystem<EntityStore> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -73,9 +73,6 @@ public class DrawRecognitionSystem extends EntityTickingSystem<EntityStore> {
         }
     }
 
-    // ability2 while drawing commits immediately, skipping the ping-scaled window; an
-    // in-flight stroke is closed first so it is part of the committed combination.
-    // non-matching ability presses are restored for their real consumers
     private static boolean consumeForceCommit(ArchetypeChunk<EntityStore> chunk, int index,
             DrawCaptureComponent capture, CommandBuffer<EntityStore> buffer) {
         CasterComponent caster = chunk.getComponent(index, CasterComponent.getComponentType());

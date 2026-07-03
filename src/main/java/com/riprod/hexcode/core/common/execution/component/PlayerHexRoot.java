@@ -88,14 +88,14 @@ public class PlayerHexRoot implements HexRoot {
 
     @Override
     public void addDependency(HexContext ctx, Ref<EntityStore> ref) {
-        HexcasterIdleComponent hexcasterComp = ctx.getAccessor().getComponent(
-                playerRef, HexcasterIdleComponent.getComponentType());
-        if (hexcasterComp != null) {
-            hexcasterComp.addDependency(ctx.getExecutionId(), ref);
+        CasterStateComponent casterState = ctx.getAccessor().getComponent(
+                playerRef, CasterStateComponent.getComponentType());
+        if (casterState != null) {
+            casterState.addDependency(ctx.getExecutionId(), ref);
         } else {
-            HexcasterIdleComponent newComp = new HexcasterIdleComponent();
+            CasterStateComponent newComp = new CasterStateComponent();
             newComp.addDependency(ctx.getExecutionId(), ref);
-            ctx.getAccessor().putComponent(playerRef, HexcasterIdleComponent.getComponentType(), newComp);
+            ctx.getAccessor().putComponent(playerRef, CasterStateComponent.getComponentType(), newComp);
         }
     }
 
@@ -122,6 +122,21 @@ public class PlayerHexRoot implements HexRoot {
             }
         }
         return 0.0f;
+    }
+
+    private static final float DEFAULT_STABILITY = 100f;
+
+    public float resolveStability(ComponentAccessor<EntityStore> accessor) {
+        EntityStatMap statMap = accessor.getComponent(playerRef, EntityStatMap.getComponentType());
+        if (statMap != null) {
+            int idx = HexcodeEntityStatTypes.getStability();
+            if (idx != Integer.MIN_VALUE) {
+                EntityStatValue stat = statMap.get(idx);
+                if (stat != null)
+                    return stat.getMax();
+            }
+        }
+        return DEFAULT_STABILITY;
     }
 
     public float resolveMaxMagicCharges(ComponentAccessor<EntityStore> accessor) {

@@ -10,7 +10,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.obelisk.component.ObeliskBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
-import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
+import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 
 public class ObeliskSystem {
 

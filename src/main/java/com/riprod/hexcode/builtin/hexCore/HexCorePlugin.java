@@ -7,7 +7,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Int
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.state.casting.registery.CastingStyleRegistry;
+import com.riprod.hexcode.core.common.casting.registry.CastingStyleRegistry;
 import com.riprod.hexcode.api.event.CraftingEvent;
 import com.riprod.hexcode.api.event.GlyphDrawnEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
@@ -42,7 +42,6 @@ import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphMemoryListener;
 import com.riprod.hexcode.builtin.hexCore.execution.config.EncodedConfig;
 import com.riprod.hexcode.builtin.hexCore.execution.config.ExecutionConfig;
 import com.riprod.hexcode.builtin.hexCore.config.BasicConfig;
-import com.riprod.hexcode.builtin.hexCore.execution.config.StaffConfig;
 import com.riprod.hexcode.builtin.hexCore.pedestals.PedestalContextHandler;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalInteractEvent;
 import com.riprod.hexcode.core.common.node.NodeRouter;
@@ -106,12 +105,12 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.halt.HaltConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.halt.HaltGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.ignite.IgniteConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.ignite.IgniteGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.interaction.InteractionGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.interfere.InterfereGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.isHolding.IsHoldingValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.less.LessGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.levitate.LevitateConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.levitate.LevitateGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.levitate.LevitateStackComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.multiply.MultiplyGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.number.NumberValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.onCast.OnCastGlyph;
@@ -281,6 +280,8 @@ public class HexCorePlugin extends JavaPlugin {
 
                 GlyphRegistry.register(new OutputGlyph());
 
+                GlyphRegistry.register(new InteractionGlyph());
+
                 GlyphRegistry.register(new IsHoldingValue());
                 GlyphRegistry.register(new ConcentrationGlyph());
 
@@ -346,7 +347,6 @@ public class HexCorePlugin extends JavaPlugin {
         }
 
         private void RegisterHexConfigs() {
-                HexConfigAsset.CODEC.register("StaffConfig", StaffConfig.class, StaffConfig.CODEC);
                 HexConfigAsset.CODEC.register("ExecutionConfig", ExecutionConfig.class, ExecutionConfig.CODEC);
                 HexConfigAsset.CODEC.register("EncodedConfig", EncodedConfig.class, EncodedConfig.CODEC);
         }
@@ -389,11 +389,6 @@ public class HexCorePlugin extends JavaPlugin {
                 ComponentType<EntityStore, HexEffectsComponent> hexConstructType = entityStoreRegistry
                                 .registerComponent(HexEffectsComponent.class, HexEffectsComponent::new);
                 HexEffectsComponent.setComponentType(hexConstructType);
-
-                ComponentType<EntityStore, LevitateStackComponent> levitateStackComponentType = entityStoreRegistry
-                                .registerComponent(LevitateStackComponent.class, "LevitateStack",
-                                                LevitateStackComponent.CODEC);
-                LevitateStackComponent.setComponentType(levitateStackComponentType);
 
                 ComponentType<EntityStore, ScaleStackComponent> scaleStackComponentType = entityStoreRegistry
                                 .registerComponent(ScaleStackComponent.class, "ScaleStack",

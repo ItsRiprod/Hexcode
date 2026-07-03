@@ -7,6 +7,10 @@ public abstract class HexcodeEntityStatTypes {
         return EntityStatType.getAssetMap().getIndex("Volatility");
     }
 
+    public static int getStability() {
+        return EntityStatType.getAssetMap().getIndex("Stability");
+    }
+
     public static int getMagicPower() {
         return EntityStatType.getAssetMap().getIndex("Magic_Power");
     }

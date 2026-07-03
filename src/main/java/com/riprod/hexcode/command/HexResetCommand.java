@@ -19,19 +19,21 @@ import com.hypixel.hytale.protocol.packets.player.SetMovementStates;
 import com.hypixel.hytale.protocol.packets.player.UpdateMovementSettings;
 import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
 import com.hypixel.hytale.server.core.io.PacketHandler;
+import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProvider;
 import com.riprod.hexcode.builtin.hexCore.common.ContextForceExitEvent;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponent;
 import com.riprod.hexcode.core.common.drawing.system.InterfaceManager;
-import com.riprod.hexcode.core.state.casting.component.HexcasterCastingComponent;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 
 public class HexResetCommand extends AbstractPlayerCommand {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     public HexResetCommand() {
         super("reset", "Force exit any hexcode context and clean up");
+
+        this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADVENTURER);
         addAliases("r");
     }
 
@@ -73,20 +75,11 @@ public class HexResetCommand extends AbstractPlayerCommand {
 
         HexcasterDrawingComponent drawing = store.getComponent(ref, HexcasterDrawingComponent.getComponentType());
         if (drawing != null) {
-            try { InterfaceManager.removeTrails(store, ref); } catch (Exception ignored) {}
-            tryRemoveComponent(store, ref, HexcasterDrawingComponent.getComponentType());
-            cleaned++;
-        }
-
-        HexcasterCastingComponent casting = store.getComponent(ref, HexcasterCastingComponent.getComponentType());
-        if (casting != null) {
-            safeRemoveRef(store, casting.getHeadAnchorRef());
-            safeRemoveRef(store, casting.getCastingRootRef());
-            for (Ref<EntityStore> hex : casting.getActiveHexes()) {
-                safeRemoveRef(store, hex);
+            try {
+                InterfaceManager.removeTrails(store, ref);
+            } catch (Exception ignored) {
             }
-            casting.clearCastingState();
-            tryRemoveComponent(store, ref, HexcasterCastingComponent.getComponentType());
+            tryRemoveComponent(store, ref, HexcasterDrawingComponent.getComponentType());
             cleaned++;
         }
 
@@ -103,21 +96,26 @@ public class HexResetCommand extends AbstractPlayerCommand {
     private void resetFlight(Store<EntityStore> store, Ref<EntityStore> ref) {
         try {
             MovementManager mm = store.getComponent(ref, MovementManager.getComponentType());
-            if (mm == null) return;
+            if (mm == null)
+                return;
             PlayerRef pr = store.getComponent(ref, PlayerRef.getComponentType());
-            if (pr == null) return;
+            if (pr == null)
+                return;
             PacketHandler handler = pr.getPacketHandler();
             handler.writeNoCache(new SetMovementStates(new SavedMovementStates(false)));
             mm.applyDefaultSettings();
             handler.writeNoCache(new UpdateMovementSettings(mm.getSettings()));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     private void safeRemoveRef(Store<EntityStore> store, Ref<EntityStore> entityRef) {
-        if (entityRef == null || !entityRef.isValid()) return;
+        if (entityRef == null || !entityRef.isValid())
+            return;
         try {
             store.removeEntity(entityRef, RemoveReason.REMOVE);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     private <T extends Component<EntityStore>> void tryRemoveComponent(
@@ -125,7 +123,8 @@ public class HexResetCommand extends AbstractPlayerCommand {
             ComponentType<EntityStore, T> type) {
         try {
             store.removeComponent(ref, type);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     private void send(PlayerRef playerRef, String message, Object... args) {

@@ -28,9 +28,9 @@ import com.riprod.hexcode.core.common.glyphs.utils.GlyphResolver;
 import com.riprod.hexcode.core.common.obelisk.system.ObeliskDispatcher;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
-import com.riprod.hexcode.core.state.crafting.entity.PedestalEntity;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
+import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 
 public class CraftingShapeDrawnSystem extends EntityEventSystem<EntityStore, ShapeDrawnEvent> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

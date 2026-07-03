@@ -31,13 +31,13 @@ import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableType;
 import com.riprod.hexcode.core.common.hover.utils.HoverableUtils;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
-import com.riprod.hexcode.core.state.crafting.constants.CraftingColors;
+import com.riprod.hexcode.core.common.pedestal.constants.CraftingColors;
 import com.riprod.hexcode.core.common.node.NodeTypeId;
 import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeHandler;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.utils.LinkRenderer;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.builtin.hexCore.scene.LinkRenderer;
 
 public class AnchorNodeHandler extends BaseAnchorHandler {
 
@@ -144,15 +144,12 @@ public class AnchorNodeHandler extends BaseAnchorHandler {
         boolean hasConnection = hexComp.getHex().getFirstGlyphId() != null
                 || !nodeComp.getOutgoingRefs().isEmpty();
 
-        // press 1: soft clear - sever anchor link, keep glyph entities and inter-glyph
-        // links intact
         if (hasConnection) {
             hexComp.getHex().setFirstGlyphId(null);
             nodeComp.getOutgoingRefs().clear();
             return InteractionState.Finished;
         }
 
-        // press 2: hard clear - despawn every glyph entity and its slot entities
         List<Ref<EntityStore>> children = hexComp.getChildGlyphRefsList();
         for (Ref<EntityStore> childRef : children) {
             if (childRef != null && childRef.isValid()) {

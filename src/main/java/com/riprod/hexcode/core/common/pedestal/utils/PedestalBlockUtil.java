@@ -10,8 +10,8 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 
 public class PedestalBlockUtil {
 

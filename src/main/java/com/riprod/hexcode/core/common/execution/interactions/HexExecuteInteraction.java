@@ -19,15 +19,9 @@ import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
-import com.riprod.hexcode.core.common.hexbook.component.HexBookAsset;
-import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
-import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
-import com.riprod.hexcode.core.common.hexstaff.component.HexStaffAsset;
-import com.riprod.hexcode.core.common.hexstaff.component.HexStaffComponent;
-import com.riprod.hexcode.utils.HexSlot;
 import com.riprod.hexcode.utils.SpellMana;
 
 public class HexExecuteInteraction extends SimpleInteraction {
@@ -97,30 +91,12 @@ public class HexExecuteInteraction extends SimpleInteraction {
             if (volMult <= 0f) volMult = 1.0f;
 
             float baseMana = SpellMana.computeTotalMana(hexClone);
-            float resolvedPower = hexRoot.resolveSpellPower(buffer);
-
-            HexStaffComponent staff = CasterInventory.getHexStaffComponent(buffer, ref);
-            float castDecayRate = staff != null ? staff.getCastDecayRate() : 0f;
-
-            HexStaffAsset staffAsset = CasterInventory.getHexStaffAsset(
-                    PlayerUtils.getHandItem(buffer, ref, HexSlot.MainHand));
-            HexBookAsset bookAsset = CasterInventory.getHexBookAsset(
-                    PlayerUtils.getHandItem(buffer, ref, HexSlot.OffHand));
 
             HexStyleAsset style = HexStyleAsset.empty();
-            if (staffAsset != null && staffAsset.getStyle() != null) style.compose(staffAsset.getStyle());
             if (config.getStyle() != null) style.compose(config.getStyle());
-            if (bookAsset != null && bookAsset.getStyle() != null
-                    && bookAsset.getStyle().getSecondaryColor() != null) {
-                style.setSecondaryColor(bookAsset.getStyle().getSecondaryColor().clone());
-            }
 
-            HexStats tracker = new HexStats(volatility, volMult, resolvedPower);
+            HexStats tracker = new HexStats(volatility, volMult, 1.0f);
             HexContext context = new HexContext(hexClone, baseMana, hexRoot, style, tracker);
-            context.setCastDecayRate(castDecayRate);
-
-            if (staffAsset != null) context.applyNonDefaultsFrom(staffAsset.getDefaults());
-            if (bookAsset != null) context.applyNonDefaultsFrom(bookAsset.getDefaults());
 
             HexExecuter.cast(context, buffer);
             ctx.getState().state = InteractionState.Finished;

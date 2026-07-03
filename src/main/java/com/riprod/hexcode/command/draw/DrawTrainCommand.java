@@ -14,6 +14,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProvider;
 import com.riprod.hexcode.core.common.drawing.DrawCaptureService;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 
@@ -24,6 +25,7 @@ public class DrawTrainCommand extends AbstractPlayerCommand {
 
     public DrawTrainCommand() {
         super("train", "Record next drawn shape as a template for the given shape ID");
+        this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADMIN);
         addAliases("t");
 
         this.shapeIdArg = this.withRequiredArg("shapeId", "The shape ID to train", ArgTypes.STRING);

@@ -18,9 +18,9 @@ import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.state.crafting.entity.PedestalEntity;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.utils.RadialPositionUtil;
+import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.builtin.hexCore.scene.RadialPositionUtil;
 
 public final class SelectingScene {
 

@@ -133,7 +133,8 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     }
 
     public HexStyleAsset getStyle() {
-        if (this.styleId == null) return null;
+        if (this.styleId == null)
+            return null;
         return HexStyleAsset.getAssetMap().getAsset(this.styleId);
     }
 
@@ -194,15 +195,14 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, p) -> a.isEnabled = p.isEnabled)
                 .documentation("Whether or not the glyph is enabled")
                 .add()
-                .<String>appendInherited(new KeyedCodec<>("ModelPath", Codec.STRING),
-                        (a, v) -> a.modelPath = v, a -> a.modelPath,
-                        (a, p) -> a.modelPath = p.modelPath)
-                .addValidatorLate(() -> ModelAsset.VALIDATOR_CACHE.getValidator().late())
-                .documentation("The location of the glyph model")
-                .add()
-                .<Float>appendInherited(new KeyedCodec<>("BasePower", Codec.FLOAT),
-                        (a, v) -> a.basePower = v, a -> a.basePower,
-                        (a, p) -> a.basePower = p.basePower)
+                .<String>appendInherited(new KeyedCodec<>("Handler", Codec.STRING),
+                        (a, v) -> a.handlerId = v,
+                        a -> a.handlerId,
+                        (a, p) -> a.handlerId = p.handlerId)
+                .metadata(new UIEditor(new UIEditor.Dropdown("HexcodeGlyphHandlers")))
+                .addValidatorLate(() -> GlyphHandlerKeyValidator.INSTANCE.late())
+                .documentation(
+                        "The registered glyph handler that executes this glyph - multiple glyph assets can reference one handler")
                 .add()
                 .<String>appendInherited(new KeyedCodec<>("Title", Codec.STRING),
                         (a, v) -> a.title = v, a -> a.title,
@@ -219,6 +219,16 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, p) -> a.verboseDescription = p.verboseDescription)
                 .documentation("Optional verbose description translation key for the glyph's memory entry")
                 .add()
+                .<String>appendInherited(new KeyedCodec<>("ModelPath", Codec.STRING),
+                        (a, v) -> a.modelPath = v, a -> a.modelPath,
+                        (a, p) -> a.modelPath = p.modelPath)
+                .addValidatorLate(() -> ModelAsset.VALIDATOR_CACHE.getValidator().late())
+                .documentation("The location of the glyph model")
+                .add()
+                .<Float>appendInherited(new KeyedCodec<>("BasePower", Codec.FLOAT),
+                        (a, v) -> a.basePower = v, a -> a.basePower,
+                        (a, p) -> a.basePower = p.basePower)
+                .add()
                 .appendInherited(new KeyedCodec<>("ManaConsumption", Codec.INTEGER),
                         (a, v) -> a.manaConsumption = v, a -> a.manaConsumption,
                         (a, p) -> a.manaConsumption = p.manaConsumption)
@@ -228,11 +238,6 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, v) -> a.volatility = v, a -> a.volatility,
                         (a, p) -> a.volatility = p.volatility)
                 .documentation("The volatility config for the glyph")
-                .add()
-                .appendInherited(new KeyedCodec<>("Config", GlyphConfig.CODEC),
-                        (a, v) -> a.config = v, a -> a.config,
-                        (a, p) -> a.config = p.config)
-                .documentation("Asset-defined tuning config for the glyph")
                 .add()
                 .appendInherited(
                         new KeyedCodec<>("ShapeStructure",
@@ -253,6 +258,11 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, p) -> a.isReversable = p.isReversable)
                 .documentation("Whether or not the shape is reversable (drawn in any order)")
                 .add()
+                .appendInherited(new KeyedCodec<>("Config", GlyphConfig.CODEC),
+                        (a, v) -> a.config = v, a -> a.config,
+                        (a, p) -> a.config = p.config)
+                .documentation("Asset-defined tuning config for the glyph")
+                .add()
                 .appendInherited(
                         new KeyedCodec<>("Slots", slotMapCodec),
                         (a, v) -> {
@@ -272,19 +282,6 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                 .addValidatorLate(() -> HexStyleAsset.VALIDATOR_CACHE.getValidator().late())
                 .documentation("The visual style of the glyph - particles, sounds, default colors, model")
                 .add()
-                .<String>appendInherited(new KeyedCodec<>("Handler", Codec.STRING),
-                        (a, v) -> a.handlerId = v,
-                        a -> a.handlerId,
-                        (a, p) -> a.handlerId = p.handlerId)
-                .metadata(new UIEditor(new UIEditor.Dropdown("HexcodeGlyphHandlers")))
-                .addValidatorLate(() -> GlyphHandlerKeyValidator.INSTANCE.late())
-                .documentation("The registered glyph handler that executes this glyph - multiple glyph assets can reference one handler")
-                .add()
-                .validator((a, results) -> {
-                    if (!a.shapes.isEmpty() && (a.handlerId == null || a.handlerId.isEmpty())) {
-                        results.fail("Handler is required for drawable glyphs (assets with a ShapeStructure)");
-                    }
-                })
                 .build();
     }
 }

@@ -20,10 +20,10 @@ import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
-import com.riprod.hexcode.core.state.crafting.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.state.crafting.constants.PedestalState;
-import com.riprod.hexcode.core.state.crafting.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.state.crafting.session.SessionUtils;
+import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 
 public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexContextChangeEvent> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -51,8 +51,6 @@ public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexCo
         }
         buffer.tryRemoveComponent(player, SelectingState.getComponentType());
 
-        // headed to crafting: despawn only the remaining previews - the selected
-        // container was already handed off to activeContainerRef pre-transition
         if (CraftingState.CONTEXT_ID.equals(event.getNewContextId())) {
             teardownPreviewsIfOwner(buffer, player);
             return;
@@ -80,7 +78,6 @@ public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexCo
 
         ImbuementProfileAsset profile = session.getProfile();
         if (profile != null && profile.isSkipSelecting() && !profile.getSlots().isEmpty()) {
-            // single-slot items auto-select once the just-spawned preview refs turn valid
             String onlyKey = profile.getSlots().keySet().iterator().next();
             session.setPendingReenterSlotKey(onlyKey);
         }

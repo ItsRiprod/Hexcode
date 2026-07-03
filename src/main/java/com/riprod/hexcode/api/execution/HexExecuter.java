@@ -26,6 +26,9 @@ public class HexExecuter {
     public static void cast(HexContext context, CommandBuffer<EntityStore> buffer) {
         context.updateRuntimeAccessors(buffer);
         if (context.getStyle() == null) context.setStyle(HexStyleAsset.empty());
+        HexCastEvent.Pre pre = new HexCastEvent.Pre(context);
+        buffer.invoke(pre);
+        if (pre.isCancelled()) return;
         buffer.invoke(new HexCastEvent(context));
     }
 

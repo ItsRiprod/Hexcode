@@ -15,7 +15,7 @@ import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
 import com.riprod.hexcode.core.common.execution.component.HexColors;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
-import com.riprod.hexcode.core.state.casting.registery.CastingStyleValidator;
+import com.riprod.hexcode.core.common.casting.registry.CastingStyleValidator;
 
 import javax.annotation.Nullable;
 
