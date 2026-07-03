@@ -3,7 +3,7 @@
     "StatModifiers": {
       "Mana?": [
         {
-          "Amount": 38,
+          "Amount": 25,
           "CalculationType": "Additive"
         }
       ],

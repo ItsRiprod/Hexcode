@@ -3,13 +3,13 @@
     "StatModifiers": {
       "Mana?": [
         {
-          "Amount": 100,
+          "Amount": 13,
           "CalculationType": "Additive"
         }
       ],
       "Volatility?": [
         {
-          "Amount": 13,
+          "Amount": 7,
           "CalculationType": "Additive"
         }
       ]

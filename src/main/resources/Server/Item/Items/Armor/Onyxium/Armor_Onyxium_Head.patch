@@ -1,15 +1,15 @@
 {
   "Armor": {
     "StatModifiers": {
-      "Mana": [
+      "Mana?": [
         {
-          "Amount": 154,
+          "Amount": 16,
           "CalculationType": "Additive"
         }
       ],
       "Volatility?": [
         {
-          "Amount": 20,
+          "Amount": 4.5,
           "CalculationType": "Additive"
         }
       ]
