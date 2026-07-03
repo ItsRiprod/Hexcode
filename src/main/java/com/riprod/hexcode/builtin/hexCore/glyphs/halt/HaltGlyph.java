@@ -10,7 +10,6 @@ import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBeha
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.entity.EntityUtils;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.modules.physics.component.PhysicsValues;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -22,6 +21,8 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
@@ -34,8 +35,10 @@ public String getId() { return ID; };
 
 public static final String ID = "Halt";
 
-    private static final String HALT_EFFECT_ID = "Hexcode_Halt";
-    private static final double DEFAULT_DURATION = 0.0;
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(HaltConfig.class, HaltConfig.CODEC);
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -54,11 +57,15 @@ public static final String ID = "Halt";
             return;
         }
 
-        double duration = HexVarUtil.numberOrDefault(
-                glyph.readSlot(HaltGlyphSlots.DURATION, hexContext), DEFAULT_DURATION);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        HaltConfig config = getConfig(HaltConfig.class, asset);
+        if (config == null) config = HaltConfig.DEFAULTS;
+
+        double duration = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(HaltGlyphSlots.DURATION, hexContext),
+                asset.getSlot(HaltGlyphSlots.DURATION));
 
         try {
-            PhysicsValues originalForState = null;
             StandardPhysicsProvider physics = accessor.getComponent(ref,
                     StandardPhysicsProvider.getComponentType());
             if (physics != null) {
@@ -72,22 +79,15 @@ public static final String ID = "Halt";
                     vel.getInstructions().clear();
                     vel.addInstruction(new Vector3d(), null, ChangeVelocityType.Set);
                 }
-
-                if (duration > 0) {
-                    PhysicsValues original = EntityUtils.getPhysicsValues(ref, accessor);
-                    PhysicsValues halted = new PhysicsValues(original.getMass(), 999.0, false);
-                    accessor.putComponent(ref, PhysicsValues.getComponentType(), halted);
-                    originalForState = new PhysicsValues(original);
-                }
             }
 
             if (duration > 0) {
                 HexConstructSpawner.applyWithState(accessor, ref, hexContext, glyph, HaltGlyph.ID,
-                        new HaltState((float) duration, originalForState, glyph.getNextLinks()));
+                        new HaltState((float) duration, config.getEffectId(), glyph.getNextLinks()));
             }
 
             if (duration > 0) {
-                EntityEffect haltEffect = EntityEffect.getAssetMap().getAsset(HALT_EFFECT_ID);
+                EntityEffect haltEffect = EntityEffect.getAssetMap().getAsset(config.getEffectId());
                 if (haltEffect != null) {
                     EffectControllerComponent controller = accessor.getComponent(
                             ref, EffectControllerComponent.getComponentType());
@@ -96,7 +96,7 @@ public static final String ID = "Halt";
                                 OverlapBehavior.OVERWRITE, accessor);
                     }
                 } else {
-                    LOGGER.atWarning().log("halt: %s effect asset not found", HALT_EFFECT_ID);
+                    LOGGER.atWarning().log("halt: %s effect asset not found", config.getEffectId());
                 }
             }
 

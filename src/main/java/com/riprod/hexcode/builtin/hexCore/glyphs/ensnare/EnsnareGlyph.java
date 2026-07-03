@@ -33,6 +33,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.ensnare.style.EnsnareStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -48,20 +49,15 @@ public String getId() { return ID; };
 
 public static final String ID = "Ensnare";
 
-    private static final float SPIKE_SCALE = 0.5f;
-
-    private static final double DEFAULT_RADIUS = 3.0;
-    private static final double DEFAULT_DURATION = 5.0;
-
-    private static final float DAMAGE_COOLDOWN_SECONDS = 1.0f;
-    private static final int MAX_SPIKES = 64;
-    private static final int GROUND_SCAN_RANGE = 3;
-    private static final float DENSITY = 0.5f;
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(EnsnareConfig.class, EnsnareConfig.CODEC);
+    }
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        double radius = Math.max(0, HexVarUtil.numberOrDefault(
-                glyph.readSlot(EnsnareGlyphSlots.RADIUS, hexContext), DEFAULT_RADIUS));
+        double radius = Math.max(0, HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(EnsnareGlyphSlots.RADIUS, hexContext), asset.getSlot(EnsnareGlyphSlots.RADIUS)));
 
         float scale = Math.max(1f, Impact.scale(slotImpact(asset, EnsnareGlyphSlots.RADIUS), radius));
 
@@ -79,10 +75,14 @@ public static final String ID = "Ensnare";
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         World world = accessor.getExternalData().getWorld();
 
-        double radius = Math.max(0, HexVarUtil.numberOrDefault(
-                glyph.readSlot(EnsnareGlyphSlots.RADIUS, hexContext), DEFAULT_RADIUS));
-        double duration = Math.max(0, HexVarUtil.numberOrDefault(
-                glyph.readSlot(EnsnareGlyphSlots.DURATION, hexContext), DEFAULT_DURATION));
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        EnsnareConfig config = getConfig(EnsnareConfig.class, asset);
+        if (config == null) config = EnsnareConfig.DEFAULTS;
+
+        double radius = Math.max(0, HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(EnsnareGlyphSlots.RADIUS, hexContext), asset.getSlot(EnsnareGlyphSlots.RADIUS)));
+        double duration = Math.max(0, HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(EnsnareGlyphSlots.DURATION, hexContext), asset.getSlot(EnsnareGlyphSlots.DURATION)));
 
         Vector3d center = HexVarUtil.position(
                 glyph.readSlot(EnsnareGlyphSlots.TARGET, hexContext), accessor);
@@ -96,35 +96,35 @@ public static final String ID = "Ensnare";
         int centerBlockY = (int) Math.floor(center.y);
         int centerBlockZ = (int) Math.floor(center.z);
 
-        String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+        String modelId = VfxUtil.resolveModelId(hexContext, asset);
         ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
         if (modelAsset == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Missing asset " + modelId);
             return;
         }
-        Model spikeModel = Model.createScaledModel(modelAsset, SPIKE_SCALE);
+        Model spikeModel = Model.createScaledModel(modelAsset, config.getSpikeScale());
 
         List<SpikeEntry> spikes = new ArrayList<>();
         int intRadius = (int) Math.ceil(radius);
         long seed = centerBlockX * 73856093L ^ centerBlockZ * 19349663L ^ centerBlockY * 83492791L;
 
-        for (int dx = -intRadius; dx <= intRadius && spikes.size() < MAX_SPIKES; dx++) {
-            for (int dz = -intRadius; dz <= intRadius && spikes.size() < MAX_SPIKES; dz++) {
+        for (int dx = -intRadius; dx <= intRadius && spikes.size() < config.getMaxSpikes(); dx++) {
+            for (int dz = -intRadius; dz <= intRadius && spikes.size() < config.getMaxSpikes(); dz++) {
                 if (dx * dx + dz * dz > radius * radius)
                     continue;
 
                 long hash = (dx * 73856093L ^ dz * 19349663L ^ seed) & 0xFFFFFFFFL;
-                if ((hash % 100) >= (long) (DENSITY * 100))
+                if ((hash % 100) >= (long) (config.getDensity() * 100))
                     continue;
 
                 int worldX = centerBlockX + dx;
                 int worldZ = centerBlockZ + dz;
 
-                int groundY = findGround(world, worldX, centerBlockY, worldZ);
+                int groundY = findGround(world, worldX, centerBlockY, worldZ, config);
                 if (groundY < 0)
                     continue;
-                if (Math.abs(groundY - centerBlockY) > 2)
+                if (Math.abs(groundY - centerBlockY) > config.getHeightTolerance())
                     continue;
 
                 Vector3d spikePos = new Vector3d(worldX + 0.5, groundY + 1.0, worldZ + 0.5);
@@ -147,13 +147,13 @@ public static final String ID = "Ensnare";
         }
 
         spawnTrackerEntity(glyph, hexContext, spikes, (float) duration,
-                0f, center, radius, accessor);
+                center, radius, config, accessor);
 
         EnsnareStyle.renderSeismicBurst(center, hexContext, accessor);
     }
 
-    private int findGround(World world, int x, int centerY, int z) {
-        for (int y = centerY + GROUND_SCAN_RANGE; y >= centerY - GROUND_SCAN_RANGE; y--) {
+    private int findGround(World world, int x, int centerY, int z, EnsnareConfig config) {
+        for (int y = centerY + config.getGroundScanRange(); y >= centerY - config.getGroundScanRange(); y--) {
             int blockId = world.getBlock(x, y, z);
             if (blockId != BlockType.EMPTY_ID) {
                 int aboveId = world.getBlock(x, y + 1, z);
@@ -185,14 +185,15 @@ public static final String ID = "Ensnare";
     }
 
     private void spawnTrackerEntity(Glyph glyph, HexContext hexContext,
-            List<SpikeEntry> spikes, float durationSeconds, float spikeDamage,
-            Vector3d center, double radius, CommandBuffer<EntityStore> accessor) {
+            List<SpikeEntry> spikes, float durationSeconds,
+            Vector3d center, double radius, EnsnareConfig config, CommandBuffer<EntityStore> accessor) {
         Holder<EntityStore> holder = HexConstructSpawner.create(
                 accessor, hexContext, glyph, EnsnareGlyph.ID, new Vector3d(center));
 
         holder.addComponent(EnsnareComponent.getComponentType(),
-                new EnsnareComponent(spikes, durationSeconds, spikeDamage,
-                        DAMAGE_COOLDOWN_SECONDS, center, radius));
+                new EnsnareComponent(spikes, durationSeconds, config.getSpikeDamage(),
+                        config.getDamageCooldownSeconds(), center, radius,
+                        config.getSpikeHitYMin(), config.getSpikeHitYMax()));
 
         Ref<EntityStore> trackerRef = accessor.addEntity(holder, AddReason.SPAWN);
 

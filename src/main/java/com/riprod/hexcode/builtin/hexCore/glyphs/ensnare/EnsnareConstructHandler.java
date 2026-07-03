@@ -26,13 +26,13 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.ensnare.component.SpikeEntry;
 import com.riprod.hexcode.builtin.hexCore.glyphs.ensnare.style.EnsnareStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.utils.VfxUtil;
 
 public class EnsnareConstructHandler implements ConstructHandler<NoState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final double SPIKE_HIT_RADIUS_SQ = 0.7 * 0.7;
     private static int damageCauseIndex = -1;
 
     @Override
@@ -46,6 +46,13 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
 
         processDamage(ensnare, status, ctx);
         return !drainSustain(dt, status);
+    }
+
+    private static EnsnareConfig resolveConfig(Glyph triggeringGlyph) {
+        if (triggeringGlyph == null) return EnsnareConfig.DEFAULTS;
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(triggeringGlyph.getGlyphId());
+        if (asset == null) return EnsnareConfig.DEFAULTS;
+        return asset.getConfig() instanceof EnsnareConfig ec ? ec : EnsnareConfig.DEFAULTS;
     }
 
     @Override
@@ -63,11 +70,13 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
 
     private void processDamage(EnsnareComponent ensnare, HexStatus<NoState> status,
             ConstructTickContext ctx) {
+        EnsnareConfig config = resolveConfig(status.getTriggeringGlyph());
+
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Vector3d center = ensnare.getCenter();
-        double radius = ensnare.getRadius() + 1.0;
-        Vector3d min = new Vector3d(center.x - radius, center.y - 3, center.z - radius);
-        Vector3d max = new Vector3d(center.x + radius, center.y + 4, center.z + radius);
+        double radius = ensnare.getRadius() + config.getBoxPaddingXZ();
+        Vector3d min = new Vector3d(center.x - radius, center.y - config.getBoxPaddingYMin(), center.z - radius);
+        Vector3d max = new Vector3d(center.x + radius, center.y + config.getBoxPaddingYMax(), center.z + radius);
 
         List<Ref<EntityStore>> nearbyEntities = TargetUtil.getAllEntitiesInBox(min, max, buffer);
         if (nearbyEntities.isEmpty()) return;
@@ -85,7 +94,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
             if (tc == null) continue;
 
             Vector3d entityPos = tc.getPosition();
-            SpikeEntry nearestSpike = ensnare.findNearestSpike(entityPos, SPIKE_HIT_RADIUS_SQ);
+            SpikeEntry nearestSpike = ensnare.findNearestSpike(entityPos, config.getSpikeHitRadiusSq());
             if (nearestSpike == null) continue;
 
             applyDamage(buffer, targetRef, ensnare.getSpikeDamage());

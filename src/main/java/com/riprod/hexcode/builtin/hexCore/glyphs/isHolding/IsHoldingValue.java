@@ -4,7 +4,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
+import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -25,8 +25,8 @@ public class IsHoldingValue implements GlyphHandler {
         if (casterRef == null || !casterRef.isValid() || hexContext.getAccessor() == null) {
             return new NumberVar(0.0);
         }
-        HexcasterIdleComponent comp = hexContext.getAccessor().getComponent(
-                casterRef, HexcasterIdleComponent.getComponentType());
+        CasterStateComponent comp = hexContext.getAccessor().getComponent(
+                casterRef, CasterStateComponent.getComponentType());
         boolean holding = comp != null && comp.isHoldingPrimary();
         return new NumberVar(holding ? 1.0 : 0.0);
     }

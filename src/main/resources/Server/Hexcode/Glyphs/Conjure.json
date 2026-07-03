@@ -81,11 +81,16 @@
     "DrainPerSecond": 0.25
   },
   "Config": {
-    "Type": "Basic",
+    "Type": "Conjure",
     "VolatilityImpact": {
       "Type": "PowerLaw",
       "DefaultMagnitude": 125.0,
       "Exponent": 1.0
-    }
+    },
+    "BoxHalfExtent": 0.5,
+    "MinAxisSize": 1.0,
+    "SpatialQueryInterval": 0.2,
+    "HardCollision": "Hexcode_Conjure_HardCollision",
+    "AnchorModel": "Conjured_Anchor"
   }
 }

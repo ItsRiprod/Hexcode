@@ -22,6 +22,8 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.erode.style.ErodeStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -37,17 +39,10 @@ public class ErodeGlyph implements GlyphHandler {
 
     public static final String ID = "Erode";
 
-    private static final String ERODE_EFFECT_ID = "Hexcode_Erode";
-    private static final double DEFAULT_AMOUNT = 5.0;
-    private static final double DEFAULT_DURATION = 100.0;
-    private static final double MIN_AMOUNT = 1.0;
-    private static final double MAX_AMOUNT = 20.0;
-    private static final float VULNERABILITY_SCALE = 0.05f;
-    private static final float BLOCK_DAMAGE_SCALE = 0.05f;
-    private static final String TOOL_ASSET_PREFIX = "Hexcode_Erode_Tool_T";
-    private static final int MIN_TIER = 1;
-    private static final int MAX_TIER = 6;
-
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(ErodeConfig.class, ErodeConfig.CODEC);
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -58,37 +53,45 @@ public class ErodeGlyph implements GlyphHandler {
             return;
         }
 
-        double amount = Math.max(MIN_AMOUNT, Math.min(MAX_AMOUNT,
-                HexVarUtil.numberOrDefault(
-                        glyph.readSlot(ErodeGlyphSlots.AMOUNT, hexContext), DEFAULT_AMOUNT)));
-        double duration = HexVarUtil.numberOrDefault(
-                glyph.readSlot(ErodeGlyphSlots.DURATION, hexContext), DEFAULT_DURATION);
-        float vulnerabilityMultiplier = (float) (amount * VULNERABILITY_SCALE);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        ErodeConfig config = getConfig(ErodeConfig.class, asset);
+        if (config == null) config = ErodeConfig.DEFAULTS;
+
+        double amount = Math.max(config.getMinAmount(), Math.min(config.getMaxAmount(),
+                HexVarUtil.numberOrSlotDefault(
+                        glyph.readSlot(ErodeGlyphSlots.AMOUNT, hexContext),
+                        asset.getSlot(ErodeGlyphSlots.AMOUNT))));
+        double duration = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ErodeGlyphSlots.DURATION, hexContext),
+                asset.getSlot(ErodeGlyphSlots.DURATION));
+        float vulnerabilityMultiplier = (float) (amount * config.getVulnerabilityScale());
         float durationSeconds = (float) duration;
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
         if (entityVar != null) {
-            applyToEntities(entityVar, vulnerabilityMultiplier, durationSeconds, glyph, hexContext, accessor);
+            applyToEntities(entityVar, vulnerabilityMultiplier, durationSeconds, config,
+                    glyph, hexContext, accessor);
         } else {
             BlockVar blockVar = HexVarUtil.resolveBlockVar(targets, hexContext);
             if (blockVar != null)
-                applyToBlocks(blockVar, amount, hexContext, accessor);
+                applyToBlocks(blockVar, amount, config, hexContext, accessor);
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
         }
     }
 
     private void applyToEntities(EntityVar entityVar, float vulnerabilityMultiplier,
-            float durationSeconds, Glyph glyph, HexContext hexContext,
+            float durationSeconds, ErodeConfig config, Glyph glyph, HexContext hexContext,
             CommandBuffer<EntityStore> accessor) {
         Ref<EntityStore> ref = entityVar.getRef(accessor);
         if (ref == null || !ref.isValid())
             return;
 
-        EntityEffect erodeEffect = EntityEffect.getAssetMap().getAsset(ERODE_EFFECT_ID);
+        String effectId = config.getEffectId();
+        EntityEffect erodeEffect = EntityEffect.getAssetMap().getAsset(effectId);
         if (erodeEffect == null) {
-            LOGGER.atWarning().log("erode: %s effect asset not found", ERODE_EFFECT_ID);
+            LOGGER.atWarning().log("erode: %s effect asset not found", effectId);
             return;
         }
 
@@ -105,8 +108,10 @@ public class ErodeGlyph implements GlyphHandler {
             existing.setVulnerabilityMultiplier(vulnerabilityMultiplier);
             existing.setRemainingDuration(durationSeconds);
             existing.setNextGlyphIds(glyph.getNextLinks());
+            existing.setEffectId(effectId);
         } else {
             ErodeState state = new ErodeState(vulnerabilityMultiplier, durationSeconds, glyph.getNextLinks());
+            state.setEffectId(effectId);
             HexConstructSpawner.applyWithState(
                     accessor, ref, hexContext, glyph, ErodeGlyph.ID, state);
         }
@@ -120,7 +125,7 @@ public class ErodeGlyph implements GlyphHandler {
                 vulnerabilityMultiplier * 100, durationSeconds);
     }
 
-    private void applyToBlocks(BlockVar blockVar, double amount,
+    private void applyToBlocks(BlockVar blockVar, double amount, ErodeConfig config,
             HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         Vector3i pos = blockVar.getValue();
         if (pos == null)
@@ -132,8 +137,8 @@ public class ErodeGlyph implements GlyphHandler {
         if (chunkRef == null || !chunkRef.isValid())
             return;
 
-        int tier = amountToTier(amount);
-        String toolId = TOOL_ASSET_PREFIX + tier;
+        int tier = amountToTier(amount, config);
+        String toolId = config.getToolAssetPrefix() + tier;
         Item toolItem = Item.getAssetMap().getAsset(toolId);
         ItemTool tool = toolItem != null ? toolItem.getTool() : null;
         if (tool == null) {
@@ -142,7 +147,7 @@ public class ErodeGlyph implements GlyphHandler {
         }
 
         Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
-        float damageScale = (float) (amount * BLOCK_DAMAGE_SCALE);
+        float damageScale = (float) (amount * config.getBlockDamageScale());
 
         BlockHarvestUtils.performBlockDamage(
                 casterRef,
@@ -161,8 +166,8 @@ public class ErodeGlyph implements GlyphHandler {
                 pos, tier, damageScale);
     }
 
-    private static int amountToTier(double amount) {
-        int t = (int) Math.floor((amount - 1) / 4) + 1;
-        return Math.max(MIN_TIER, Math.min(MAX_TIER, t));
+    private static int amountToTier(double amount, ErodeConfig config) {
+        int t = (int) Math.floor((amount - 1) / config.getTierBucketWidth()) + 1;
+        return Math.max(config.getMinTier(), Math.min(config.getMaxTier(), t));
     }
 }

@@ -22,6 +22,8 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -37,13 +39,20 @@ public class AreaGlyph implements GlyphHandler {
 
     public static final String ID = "Area";
 
-    private static final double DEFAULT_RADIUS = 5.0;
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(AreaConfig.class, AreaConfig.CODEC);
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        AreaConfig config = getConfig(AreaConfig.class, asset);
+        if (config == null) config = AreaConfig.DEFAULTS;
+
         HexVar centerVar = glyph.readSlot(AreaGlyphSlots.CENTER, hexContext);
-        double radius = HexVarUtil.numberOrDefault(
-                glyph.readSlot(AreaGlyphSlots.RADIUS, hexContext), DEFAULT_RADIUS);
+        double radius = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(AreaGlyphSlots.RADIUS, hexContext), asset.getSlot(AreaGlyphSlots.RADIUS));
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         Vector3d center = HexVarUtil.position(centerVar, accessor);
@@ -59,7 +68,7 @@ public class AreaGlyph implements GlyphHandler {
         boolean blocksLinked = hasLinks(glyph, AreaGlyphSlots.BLOCKS);
         boolean entitiesLinked = hasLinks(glyph, AreaGlyphSlots.ENTITIES);
         List<Ref<EntityStore>> particleRecipients = blocksLinked || entitiesLinked
-                ? VfxUtil.collectParticleRecipients(center, radius + 25.0, accessor)
+                ? VfxUtil.collectParticleRecipients(center, radius + config.getParticleMargin(), accessor)
                 : null;
 
         if (blocksLinked) {

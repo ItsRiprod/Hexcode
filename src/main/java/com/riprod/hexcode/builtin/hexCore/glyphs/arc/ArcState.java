@@ -19,6 +19,7 @@ public class ArcState implements ConstructState {
     private float delay;
     private float elapsedSeconds;
     private boolean hasFired;
+    private String effectId;
 
     public ArcState() {
         this.branches = new ArrayList<>();
@@ -26,7 +27,7 @@ public class ArcState implements ConstructState {
     }
 
     public ArcState(Glyph arcGlyph, List<String> branches, Set<UUID> visited,
-            float maxJumpDistance, float delay) {
+            float maxJumpDistance, float delay, String effectId) {
         this.arcGlyph = arcGlyph;
         this.branches = branches;
         this.branchIndex = 0;
@@ -35,6 +36,7 @@ public class ArcState implements ConstructState {
         this.delay = delay;
         this.elapsedSeconds = 0f;
         this.hasFired = false;
+        this.effectId = effectId;
     }
 
     public Glyph getArcGlyph() {
@@ -94,10 +96,14 @@ public class ArcState implements ConstructState {
         this.hasFired = hasFired;
     }
 
+    public String getEffectId() {
+        return effectId;
+    }
+
     @Override
     public ArcState copy() {
         ArcState c = new ArcState(arcGlyph, new ArrayList<>(branches),
-                new HashSet<>(visited), maxJumpDistance, delay);
+                new HashSet<>(visited), maxJumpDistance, delay, effectId);
         c.branchIndex = this.branchIndex;
         c.elapsedSeconds = this.elapsedSeconds;
         c.hasFired = this.hasFired;

@@ -21,6 +21,8 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
@@ -33,15 +35,23 @@ public class FreezeGlyph implements GlyphHandler {
 
     public static final String ID = "Freeze";
 
-    private static final double DEFAULT_DURATION = 3.0;
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(FreezeConfig.class, FreezeConfig.CODEC);
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar targets = glyph.readSlot(FreezeGlyphSlots.TARGET, hexContext);
         if (targets == null) return;
 
-        double duration = HexVarUtil.numberOrDefault(
-                glyph.readSlot(FreezeGlyphSlots.DURATION, hexContext), DEFAULT_DURATION);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        FreezeConfig config = getConfig(FreezeConfig.class, asset);
+        if (config == null) config = FreezeConfig.DEFAULTS;
+
+        double duration = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(FreezeGlyphSlots.DURATION, hexContext),
+                asset.getSlot(FreezeGlyphSlots.DURATION));
 
         EntityEffect freezeEffect = EntityEffect.getAssetMap().getAsset("Hexcode_Freeze");
         if (freezeEffect == null) {
@@ -70,7 +80,7 @@ public class FreezeGlyph implements GlyphHandler {
             TransformComponent tc = accessor.getComponent(targetRef, TransformComponent.getComponentType());
             if (tc != null) {
                 Vector3d pos = tc.getPosition();
-                placeIceBlock(world, pos, frozenBlocks);
+                placeIceBlock(world, pos, frozenBlocks, config.getIceBlockId());
                 FreezeStyle.renderFreeze(pos, hexContext, accessor);
             }
 
@@ -82,7 +92,8 @@ public class FreezeGlyph implements GlyphHandler {
         }
     }
 
-    private static void placeIceBlock(World world, Vector3d pos, List<FrozenBlock> frozenBlocks) {
+    private static void placeIceBlock(World world, Vector3d pos, List<FrozenBlock> frozenBlocks,
+            String iceBlockId) {
         int footX = (int) Math.floor(pos.x());
         int footY = (int) Math.floor(pos.y()) - 1;
         int footZ = (int) Math.floor(pos.z());
@@ -97,6 +108,6 @@ public class FreezeGlyph implements GlyphHandler {
         int rotationIndex = world.getBlockRotationIndex(footX, footY, footZ);
         frozenBlocks.add(new FrozenBlock(new Vector3i(footX, footY, footZ), typeId, rotationIndex));
 
-        world.setBlock(footX, footY, footZ, "Rock_Ice");
+        world.setBlock(footX, footY, footZ, iceBlockId);
     }
 }

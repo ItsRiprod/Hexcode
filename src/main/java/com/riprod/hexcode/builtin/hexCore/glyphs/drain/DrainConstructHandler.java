@@ -36,7 +36,7 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
         if (sourceStat == null) return true;
 
         if (state.getSourceStatIndex() == DefaultEntityStatTypes.getHealth()) {
-            if (sourceStat.get() <= 1.0f) return true;
+            if (sourceStat.get() <= state.getHpFloor()) return true;
         } else {
             if (sourceStat.get() <= 0) return true;
         }
@@ -54,7 +54,7 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
 
         float drainAmount = state.getDrainPerSecond() * dt;
         if (state.getSourceStatIndex() == DefaultEntityStatTypes.getHealth()) {
-            drainAmount = Math.min(drainAmount, sourceStat.get() - 1.0f);
+            drainAmount = Math.min(drainAmount, sourceStat.get() - state.getHpFloor());
         } else {
             drainAmount = Math.min(drainAmount, sourceStat.get());
         }

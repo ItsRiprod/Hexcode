@@ -52,5 +52,9 @@
   },
   "Volatility": {
     "InstantCost": 4,
-    "DrainPerSecond": 0.2}
+    "DrainPerSecond": 0.2},
+  "Config": {
+    "Type": "Freeze",
+    "IceBlock": "Rock_Ice"
+  }
 }

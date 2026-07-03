@@ -16,6 +16,8 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.ignite.style.IgniteStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
@@ -28,8 +30,10 @@ public class IgniteGlyph implements GlyphHandler {
 
     public static final String ID = "Ignite";
 
-    private static final String BURN_EFFECT_ID = "Burn";
-    private static final double DEFAULT_DURATION = 5.0;
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(IgniteConfig.class, IgniteConfig.CODEC);
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -40,10 +44,15 @@ public class IgniteGlyph implements GlyphHandler {
             return;
         }
 
-        EntityEffect burnEffect = EntityEffect.getAssetMap().getAsset(BURN_EFFECT_ID);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        IgniteConfig config = getConfig(IgniteConfig.class, asset);
+        if (config == null) config = IgniteConfig.DEFAULTS;
+
+        String effectId = config.getEffectId();
+        EntityEffect burnEffect = EntityEffect.getAssetMap().getAsset(effectId);
         if (burnEffect == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Missing asset Burn");
+                    "Missing asset " + effectId);
             return;
         }
 
@@ -53,8 +62,9 @@ public class IgniteGlyph implements GlyphHandler {
             return;
         }
 
-        double duration = HexVarUtil.numberOrDefault(
-                glyph.readSlot(IgniteGlyphSlots.DURATION, hexContext), DEFAULT_DURATION);
+        double duration = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(IgniteGlyphSlots.DURATION, hexContext),
+                asset.getSlot(IgniteGlyphSlots.DURATION));
         float durationSeconds = (float) duration;
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
@@ -87,7 +97,7 @@ public class IgniteGlyph implements GlyphHandler {
             existing.setRemainingDuration(durationSeconds);
             existing.setNextGlyphIds(glyph.getNextLinks());
         } else {
-            IgniteState state = new IgniteState(durationSeconds, glyph.getNextLinks());
+            IgniteState state = new IgniteState(durationSeconds, effectId, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
                     accessor, ref, hexContext, glyph, IgniteGlyph.ID, state);
         }

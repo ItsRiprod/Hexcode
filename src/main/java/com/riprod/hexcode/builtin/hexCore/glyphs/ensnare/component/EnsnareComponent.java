@@ -26,12 +26,15 @@ public class EnsnareComponent implements Component<EntityStore> {
     private transient Map<Long, List<SpikeEntry>> spikesByCell;
     private Vector3d center;
     private double radius;
+    private double spikeHitYMin;
+    private double spikeHitYMax;
 
     public EnsnareComponent() {
     }
 
     public EnsnareComponent(List<SpikeEntry> spikes, float durationSeconds, float spikeDamage,
-            float damageCooldownSeconds, Vector3d center, double radius) {
+            float damageCooldownSeconds, Vector3d center, double radius,
+            double spikeHitYMin, double spikeHitYMax) {
         this.spikes = spikes;
         this.durationSeconds = durationSeconds;
         this.elapsedSeconds = 0;
@@ -40,6 +43,8 @@ public class EnsnareComponent implements Component<EntityStore> {
         this.lastDamageTimeMap = new HashMap<>();
         this.center = center;
         this.radius = radius;
+        this.spikeHitYMin = spikeHitYMin;
+        this.spikeHitYMax = spikeHitYMax;
     }
 
     public static void setComponentType(ComponentType<EntityStore, EnsnareComponent> type) {
@@ -77,7 +82,7 @@ public class EnsnareComponent implements Component<EntityStore> {
 
                     if (distSq < nearestDistSq && distSq <= hitRadiusSq) {
                         double dy = entityPos.y - spikePos.y;
-                        if (dy >= -0.5 && dy <= 1.5) {
+                        if (dy >= spikeHitYMin && dy <= spikeHitYMax) {
                             nearestDistSq = distSq;
                             nearest = spike;
                         }
@@ -164,6 +169,8 @@ public class EnsnareComponent implements Component<EntityStore> {
         copy.lastDamageTimeMap = this.lastDamageTimeMap != null ? new HashMap<>(this.lastDamageTimeMap) : null;
         copy.center = this.center != null ? new Vector3d(this.center) : null;
         copy.radius = this.radius;
+        copy.spikeHitYMin = this.spikeHitYMin;
+        copy.spikeHitYMax = this.spikeHitYMax;
         return copy;
     }
 }

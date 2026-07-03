@@ -85,5 +85,14 @@
   "Volatility": {
     "InstantCost": 2,
     "DrainPerSecond": 0.0
+  },
+  "Config": {
+    "Type": "Projectile",
+    "ProjectileScale": 0.5,
+    "TtlSeconds": 600,
+    "SpawnOffset": 1.1,
+    "HitRootInteraction": "Hex_Projectile_Hit",
+    "MissRootInteraction": "Hex_Projectile_Miss",
+    "BounceRootInteraction": "Hex_Projectile_Bounce"
   }
 }

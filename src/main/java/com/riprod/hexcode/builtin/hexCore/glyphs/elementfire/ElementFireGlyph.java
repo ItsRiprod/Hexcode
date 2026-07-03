@@ -19,7 +19,6 @@ public class ElementFireGlyph implements GlyphHandler {
 
     @Override
     public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        // converter: drains the accumulated pool instead of adding to it
         return 0f;
     }
 

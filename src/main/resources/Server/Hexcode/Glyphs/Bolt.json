@@ -59,5 +59,9 @@
   "Volatility": {
     "InstantCost": 6,
     "DrainPerSecond": 0.0
+  },
+  "Config": {
+    "Type": "Bolt",
+    "DamageCause": "Environment"
   }
 }

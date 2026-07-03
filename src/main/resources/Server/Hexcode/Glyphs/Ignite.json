@@ -48,5 +48,9 @@
   },
   "Volatility": {
     "InstantCost": 3,
-    "DrainPerSecond": 0.1}
+    "DrainPerSecond": 0.1},
+  "Config": {
+    "Type": "Ignite",
+    "Effect": "Burn"
+  }
 }

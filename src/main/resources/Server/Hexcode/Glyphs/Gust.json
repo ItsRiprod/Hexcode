@@ -68,11 +68,15 @@
     "DrainPerSecond": 0.0
   },
   "Config": {
-    "Type": "Basic",
+    "Type": "Gust",
     "VolatilityImpact": {
       "Type": "PowerLaw",
       "DefaultMagnitude": 375.0,
       "Exponent": 1.0
-    }
+    },
+    "MinKnockbackOffset": 0.1,
+    "EntityDamage": 0.0,
+    "EntityDamageFalloff": 1.0,
+    "VerticalKnockbackScale": 0.3
   }
 }

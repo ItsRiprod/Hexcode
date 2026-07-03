@@ -16,7 +16,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 public class IgniteConstructHandler implements ConstructHandler<IgniteState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final String BURN_EFFECT_ID = "Burn";
 
     @Override
     public boolean onTick(float dt, HexStatus<IgniteState> status, ConstructTickContext ctx) {
@@ -29,8 +28,8 @@ public class IgniteConstructHandler implements ConstructHandler<IgniteState> {
 
     @Override
     public void onEnd(HexStatus<IgniteState> status, ConstructTickContext ctx) {
-        cleanup(ctx);
         IgniteState state = status.getState();
+        cleanup(ctx, state != null ? state.getEffectId() : null);
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
@@ -39,7 +38,8 @@ public class IgniteConstructHandler implements ConstructHandler<IgniteState> {
 
     @Override
     public void onAbort(HexStatus<IgniteState> status, ConstructTickContext ctx) {
-        cleanup(ctx);
+        IgniteState state = status.getState();
+        cleanup(ctx, state != null ? state.getEffectId() : null);
         LOGGER.atInfo().log("ignite: terminated early; chain suppressed");
     }
 
@@ -55,7 +55,9 @@ public class IgniteConstructHandler implements ConstructHandler<IgniteState> {
         if (state != null) state.setNextGlyphIds(ids);
     }
 
-    private void cleanup(ConstructTickContext ctx) {
+    private void cleanup(ConstructTickContext ctx, String effectId) {
+        if (effectId == null) return;
+
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Ref<EntityStore> target = ctx.getEntityRef();
         if (target == null || !target.isValid()) return;
@@ -63,7 +65,7 @@ public class IgniteConstructHandler implements ConstructHandler<IgniteState> {
         EffectControllerComponent controller = buffer.getComponent(
                 target, EffectControllerComponent.getComponentType());
         if (controller != null) {
-            int effectIndex = EntityEffect.getAssetMap().getIndex(BURN_EFFECT_ID);
+            int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
             if (effectIndex != Integer.MIN_VALUE) {
                 controller.removeEffect(target, effectIndex, buffer);
             }

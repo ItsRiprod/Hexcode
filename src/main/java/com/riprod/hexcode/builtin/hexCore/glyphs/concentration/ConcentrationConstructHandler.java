@@ -11,15 +11,24 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.concentration.style.ConcentrationStyle;
+import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 
 public class ConcentrationConstructHandler implements ConstructHandler<ConcentrationState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final float SECONDARY_INTERVAL = 1.0f;
+
+    private ConcentrationConfig resolveConfig(HexStatus<ConcentrationState> status) {
+        Glyph trigger = status.getTriggeringGlyph();
+        GlyphAsset asset = trigger != null
+                ? GlyphAsset.getAssetMap().getAsset(trigger.getGlyphId()) : null;
+        GlyphConfig raw = asset != null ? asset.getConfig() : null;
+        return raw instanceof ConcentrationConfig cc ? cc : ConcentrationConfig.DEFAULTS;
+    }
 
     @Override
     public boolean onTick(float dt, HexStatus<ConcentrationState> status, ConstructTickContext ctx) {
@@ -28,8 +37,8 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             return true;
 
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
-        HexcasterIdleComponent execComp = buffer.getComponent(
-                casterRef, HexcasterIdleComponent.getComponentType());
+        CasterStateComponent execComp = buffer.getComponent(
+                casterRef, CasterStateComponent.getComponentType());
         if (execComp == null)
             return true;
 
@@ -64,8 +73,8 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         HexContext releaseCtx = HexContext.cloneState(heldCtx);
         releaseCtx.updateRuntimeAccessors(buffer);
 
-        HexcasterIdleComponent idle = buffer.getComponent(
-                casterRef, HexcasterIdleComponent.getComponentType());
+        CasterStateComponent idle = buffer.getComponent(
+                casterRef, CasterStateComponent.getComponentType());
         if (idle != null) {
             idle.registerActiveTracker(releaseCtx.getHexStats());
         }
@@ -89,9 +98,10 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         if (state == null)
             return;
 
+        float interval = (float) resolveConfig(status).getSecondaryIntervalSeconds();
         float accum = state.getTickAccum() + dt;
-        while (accum >= SECONDARY_INTERVAL) {
-            accum -= SECONDARY_INTERVAL;
+        while (accum >= interval) {
+            accum -= interval;
             TransformComponent transform = buffer.getComponent(
                     casterRef, TransformComponent.getComponentType());
             if (transform == null)

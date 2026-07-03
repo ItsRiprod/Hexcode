@@ -10,6 +10,7 @@ public class ErodeState implements ConstructState {
     private float vulnerabilityMultiplier;
     private float remainingDuration;
     private List<String> nextGlyphIds;
+    private String effectId;
 
     public ErodeState() {
         this.nextGlyphIds = new ArrayList<>();
@@ -54,9 +55,19 @@ public class ErodeState implements ConstructState {
         this.nextGlyphIds = ids != null ? ids : new ArrayList<>();
     }
 
+    public String getEffectId() {
+        return effectId;
+    }
+
+    public void setEffectId(String effectId) {
+        this.effectId = effectId;
+    }
+
     @Override
     public ErodeState copy() {
-        return new ErodeState(vulnerabilityMultiplier, remainingDuration,
+        ErodeState c = new ErodeState(vulnerabilityMultiplier, remainingDuration,
                 new ArrayList<>(nextGlyphIds));
+        c.effectId = this.effectId;
+        return c;
     }
 }

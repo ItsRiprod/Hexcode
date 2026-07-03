@@ -1,0 +1,48 @@
+{
+  "$Requires": "Riprod:Hexability",
+  "Parent": "Glyph_Template",
+  "Handler": "Interaction",
+  "Title": "hexcode.glyphs.Invoke.name",
+  "Description": "hexcode.glyphs.Invoke.description",
+  "ModelPath": "Invoke",
+  "ShapeStructure": [
+    {
+      "ShapeId": "Triangle",
+      "Size": 1.0
+    },
+    {
+      "ShapeId": "Triangle",
+      "Size": 1.0
+    },
+    {
+      "ShapeId": "Circle",
+      "Size": 1.0
+    }
+  ],
+  "Slots": {
+    "source": {
+      "Style": "Input",
+      "Label": "hexcode.glyphs.Invoke.source.name",
+      "Description": "hexcode.glyphs.Invoke.source.description"
+    },
+    "target": {
+      "Style": "Input",
+      "Label": "hexcode.glyphs.Invoke.target.name",
+      "Description": "hexcode.glyphs.Invoke.target.description"
+    },
+    "Next": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Invoke.Next.name",
+      "Description": "hexcode.glyphs.Invoke.Next.description"
+    }
+  },
+  "ManaConsumption": 20,
+  "Volatility": {
+    "InstantCost": 3,
+    "DrainPerSecond": 0.0
+  },
+  "Config": {
+    "Type": "Interaction",
+    "RootInteraction": "Flamethrower_Goblin_Primary"
+  }
+}

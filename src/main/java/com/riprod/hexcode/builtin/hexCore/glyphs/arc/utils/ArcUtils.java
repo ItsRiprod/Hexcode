@@ -19,16 +19,15 @@ import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 
 public class ArcUtils {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final String SHOCK_EFFECT_ID = "Hexcode_Shock";
 
     private ArcUtils() {
     }
 
     public static void applyShockEffect(CommandBuffer<EntityStore> accessor,
-            Ref<EntityStore> targetRef, float durationSeconds) {
-        EntityEffect shockEffect = EntityEffect.getAssetMap().getAsset(SHOCK_EFFECT_ID);
+            Ref<EntityStore> targetRef, String effectId, float durationSeconds) {
+        EntityEffect shockEffect = EntityEffect.getAssetMap().getAsset(effectId);
         if (shockEffect == null) {
-            LOGGER.atWarning().log("arc: Hexcode_Shock effect asset not found");
+            LOGGER.atWarning().log("arc: %s effect asset not found", effectId);
             return;
         }
 

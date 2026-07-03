@@ -23,6 +23,7 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
@@ -40,12 +41,20 @@ public class ArcGlyph implements GlyphHandler {
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        // arc is charged per jump by ArcConstructHandler, not at cast
         return 0f;
     }
 
     @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(ArcConfig.class, ArcConfig.CODEC);
+    }
+
+    @Override
     public void execute(Glyph glyph, HexContext hexContext) {
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        ArcConfig config = getConfig(ArcConfig.class, asset);
+        if (config == null) config = ArcConfig.DEFAULTS;
+
         HexVar targets = glyph.readSlot(ArcGlyphSlots.TARGET, hexContext);
         EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
         if (entityVar == null) {
@@ -68,10 +77,10 @@ public class ArcGlyph implements GlyphHandler {
             return;
         }
 
-        double maxJump = HexVarUtil.numberOrDefault(
-                glyph.readSlot(ArcGlyphSlots.JUMP, hexContext), 15.0);
-        double delay = HexVarUtil.numberOrDefault(
-                glyph.readSlot(ArcGlyphSlots.DELAY, hexContext), 0.75);
+        double maxJump = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ArcGlyphSlots.JUMP, hexContext), asset.getSlot(ArcGlyphSlots.JUMP));
+        double delay = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ArcGlyphSlots.DELAY, hexContext), asset.getSlot(ArcGlyphSlots.DELAY));
 
         Set<UUID> visited = new HashSet<>();
         UUIDComponent casterUuid = accessor.getComponent(
@@ -113,7 +122,7 @@ public class ArcGlyph implements GlyphHandler {
         ArcStyle.renderHit(accessor, firstJumpPos, hexContext);
 
         ArcState state = new ArcState(glyph, new ArrayList<>(branches), visited,
-                (float) maxJump, (float) delay);
+                (float) maxJump, (float) delay, config.getEffectId());
 
         HexConstructSpawner.applyWithState(
                 accessor, firstJump, hexContext, glyph, ArcGlyph.ID, state);

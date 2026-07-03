@@ -56,5 +56,12 @@
   },
   "Volatility": {
     "InstantCost": 2,
-    "DrainPerSecond": 0.15}
+    "DrainPerSecond": 0.15},
+  "Config": {
+    "Type": "Levitate",
+    "DurationFloor": 1.0,
+    "TickInterval": 0.5,
+    "RiseSpeedPerIntensity": 1.5,
+    "Effect": "Hexcode_Levitate"
+  }
 }

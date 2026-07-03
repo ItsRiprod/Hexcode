@@ -25,8 +25,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final float BASE_CRUSH_DAMAGE = 4.0f;
-    private static int damageCauseIndex = -1;
 
     @Override
     public boolean onTick(float dt, HexStatus<PhaseState> status, ConstructTickContext ctx) {
@@ -102,9 +100,10 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
         Vector3d max = new Vector3d(pos.x + 1.0, pos.y + 1.0, pos.z + 1.0);
         List<Ref<EntityStore>> entities = TargetUtil.getAllEntitiesInBox(min, max, buffer);
 
-        if (damageCauseIndex < 0) {
-            damageCauseIndex = DamageCause.getAssetMap().getIndex("Environment");
-        }
+        PhaseState state = status.getState();
+        int damageCauseIndex = state != null
+                ? DamageCause.getAssetMap().getIndex(state.getDamageCauseId())
+                : -1;
 
         for (Ref<EntityStore> ref : entities) {
             if (ref == null || !ref.isValid())
@@ -118,7 +117,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
                 DamageCause cause = DamageCause.getAssetMap().getAsset(damageCauseIndex);
                 if (cause != null) {
                     Damage damage = new Damage(
-                            new Damage.EnvironmentSource("hex_phase"), cause, BASE_CRUSH_DAMAGE);
+                            new Damage.EnvironmentSource("hex_phase"), cause, state.getCrushDamage());
                     DamageSystems.executeDamage(ref, buffer, damage);
                 }
             }

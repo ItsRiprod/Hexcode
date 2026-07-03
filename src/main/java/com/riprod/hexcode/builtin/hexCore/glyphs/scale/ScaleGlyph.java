@@ -9,7 +9,6 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.MountController;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
@@ -30,6 +29,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.scale.style.ScaleStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -48,13 +48,10 @@ public class ScaleGlyph implements GlyphHandler {
 
     public static final String ID = "Scale";
 
-    private static final double DEFAULT_MAGNITUDE = 2.0;
-    private static final double MIN_MAGNITUDE = 0.01;
-    private static final double MAX_MAGNITUDE = 32.0;
-    private static final double DEFAULT_DURATION = 5.0;
-    private static final double MIN_DURATION = 0.1;
-
-    private static final Vector3f MOUNT_OFFSET = new Vector3f(0f, 2.5f, 0f);
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(ScaleConfig.class, ScaleConfig.CODEC);
+    }
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
@@ -62,12 +59,16 @@ public class ScaleGlyph implements GlyphHandler {
         if (baseCost <= 0)
             return 0f;
 
-        double magnitude = clamp(HexVarUtil.numberOrDefault(
-                glyph.readSlot(ScaleGlyphSlots.MAGNITUDE, hexContext), DEFAULT_MAGNITUDE),
-                MIN_MAGNITUDE, MAX_MAGNITUDE);
+        ScaleConfig config = getConfig(ScaleConfig.class, asset);
+        if (config == null) config = ScaleConfig.DEFAULTS;
+
+        double magnitude = clamp(HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ScaleGlyphSlots.MAGNITUDE, hexContext),
+                asset != null ? asset.getSlot(ScaleGlyphSlots.MAGNITUDE) : null),
+                config.getMinMagnitude(), config.getMaxMagnitude());
 
         float currentScale = readCurrentScale(glyph, hexContext);
-        double resultScale = clamp(currentScale * magnitude, MIN_MAGNITUDE, MAX_MAGNITUDE);
+        double resultScale = clamp(currentScale * magnitude, config.getMinMagnitude(), config.getMaxMagnitude());
 
         Impact impact = asset == null || asset.getConfig() == null
                 ? null : asset.getConfig().getVolatilityImpact();
@@ -139,12 +140,16 @@ public class ScaleGlyph implements GlyphHandler {
             return;
         }
 
-        double magnitude = clamp(HexVarUtil.numberOrDefault(
-                glyph.readSlot(ScaleGlyphSlots.MAGNITUDE, hexContext), DEFAULT_MAGNITUDE),
-                MIN_MAGNITUDE, MAX_MAGNITUDE);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        ScaleConfig config = getConfig(ScaleConfig.class, asset);
+        if (config == null) config = ScaleConfig.DEFAULTS;
 
-        float durationSeconds = (float) Math.max(MIN_DURATION, HexVarUtil.numberOrDefault(
-                glyph.readSlot(ScaleGlyphSlots.DURATION, hexContext), DEFAULT_DURATION));
+        double magnitude = clamp(HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ScaleGlyphSlots.MAGNITUDE, hexContext), asset.getSlot(ScaleGlyphSlots.MAGNITUDE)),
+                config.getMinMagnitude(), config.getMaxMagnitude());
+
+        float durationSeconds = (float) Math.max(config.getMinDuration(), HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ScaleGlyphSlots.DURATION, hexContext), asset.getSlot(ScaleGlyphSlots.DURATION)));
 
         try {
             ModelComponent modelComp = accessor.getComponent(
@@ -175,10 +180,10 @@ public class ScaleGlyph implements GlyphHandler {
             }
 
             String baseAssetId = stack.getBaseAssetId();
-            ModelAsset asset = baseAssetId != null
+            ModelAsset baseModelAsset = baseAssetId != null
                     ? ModelAsset.getAssetMap().getAsset(baseAssetId)
                     : null;
-            if (asset == null) {
+            if (baseModelAsset == null) {
                 HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                         "Cannot resolve base model asset");
                 return;
@@ -194,7 +199,7 @@ public class ScaleGlyph implements GlyphHandler {
             accessor.putComponent(targetRef, ScaleStackComponent.getComponentType(), stack);
 
             float absoluteScale = (float) clamp(stack.productOfContributions(),
-                    MIN_MAGNITUDE, MAX_MAGNITUDE);
+                    config.getMinMagnitude(), config.getMaxMagnitude());
 
             applyAbsoluteScale(accessor, targetRef, baseAssetId, absoluteScale);
 
@@ -214,7 +219,7 @@ public class ScaleGlyph implements GlyphHandler {
             }
 
             Ref<EntityStore> visualRef = magnitude >= 1.0
-                    ? spawnVisual(accessor, spawnPos, targetRef, hexContext)
+                    ? spawnVisual(accessor, spawnPos, targetRef, hexContext, config)
                     : null;
             state.setVisualRef(visualRef);
 
@@ -245,7 +250,7 @@ public class ScaleGlyph implements GlyphHandler {
     }
 
     private Ref<EntityStore> spawnVisual(CommandBuffer<EntityStore> accessor,
-            Vector3d spawnPos, Ref<EntityStore> targetRef, HexContext hexContext) {
+            Vector3d spawnPos, Ref<EntityStore> targetRef, HexContext hexContext, ScaleConfig config) {
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
         holder.addComponent(TransformComponent.getComponentType(),
                 new TransformComponent(spawnPos, new Rotation3f()));
@@ -255,7 +260,7 @@ public class ScaleGlyph implements GlyphHandler {
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
         holder.addComponent(MountedComponent.getComponentType(),
                 new MountedComponent(targetRef,
-                        new Rotation3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z),
+                        new Rotation3f(0f, config.getMountOffsetY(), 0f),
                         MountController.Minecart));
 
         String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));

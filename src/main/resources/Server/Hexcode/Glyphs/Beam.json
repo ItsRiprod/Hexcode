@@ -56,5 +56,9 @@
   },
   "Volatility": {
     "InstantCost": 2,
-    "DrainPerSecond": 0.0}
+    "DrainPerSecond": 0.0},
+  "Config": {
+    "Type": "Beam",
+    "OriginOffset": 1.5
+  }
 }

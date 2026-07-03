@@ -40,5 +40,9 @@
   },
   "Volatility": {
     "InstantCost": 2,
-    "DrainPerSecond": 0.1}
+    "DrainPerSecond": 0.1},
+  "Config": {
+    "Type": "Halt",
+    "Effect": "Hexcode_Halt"
+  }
 }

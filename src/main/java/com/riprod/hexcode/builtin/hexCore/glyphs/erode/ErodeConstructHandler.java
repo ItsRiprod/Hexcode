@@ -16,7 +16,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 public class ErodeConstructHandler implements ConstructHandler<ErodeState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final String ERODE_EFFECT_ID = "Hexcode_Erode";
 
     @Override
     public boolean onTick(float dt, HexStatus<ErodeState> status, ConstructTickContext ctx) {
@@ -29,7 +28,7 @@ public class ErodeConstructHandler implements ConstructHandler<ErodeState> {
 
     @Override
     public void onEnd(HexStatus<ErodeState> status, ConstructTickContext ctx) {
-        cleanup(ctx);
+        cleanup(status, ctx);
         ErodeState state = status.getState();
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
@@ -39,7 +38,7 @@ public class ErodeConstructHandler implements ConstructHandler<ErodeState> {
 
     @Override
     public void onAbort(HexStatus<ErodeState> status, ConstructTickContext ctx) {
-        cleanup(ctx);
+        cleanup(status, ctx);
         LOGGER.atInfo().log("erode: terminated early; chain suppressed");
     }
 
@@ -55,15 +54,19 @@ public class ErodeConstructHandler implements ConstructHandler<ErodeState> {
         if (state != null) state.setNextGlyphIds(ids);
     }
 
-    private void cleanup(ConstructTickContext ctx) {
+    private void cleanup(HexStatus<ErodeState> status, ConstructTickContext ctx) {
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Ref<EntityStore> target = ctx.getEntityRef();
         if (target == null || !target.isValid()) return;
 
+        ErodeState state = status.getState();
+        String effectId = state != null ? state.getEffectId() : null;
+        if (effectId == null) return;
+
         EffectControllerComponent controller = buffer.getComponent(
                 target, EffectControllerComponent.getComponentType());
         if (controller != null) {
-            int effectIndex = EntityEffect.getAssetMap().getIndex(ERODE_EFFECT_ID);
+            int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
             if (effectIndex != Integer.MIN_VALUE) {
                 controller.removeEffect(target, effectIndex, buffer);
             }

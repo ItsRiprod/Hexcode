@@ -22,6 +22,7 @@ public class DrainState implements ConstructState {
     private List<String> nextGlyphIds;
     @Nullable
     private HexColors colors;
+    private float hpFloor;
 
     public DrainState() {
         this.nextGlyphIds = new ArrayList<>();
@@ -29,7 +30,7 @@ public class DrainState implements ConstructState {
 
     public DrainState(int sourceStatIndex, @Nullable Ref<EntityStore> destEntityRef,
             float conversionRate, float totalDrainAmount, float durationSeconds,
-            List<String> nextGlyphIds, @Nullable HexColors colors) {
+            List<String> nextGlyphIds, @Nullable HexColors colors, float hpFloor) {
         this.sourceStatIndex = sourceStatIndex;
         this.destEntityRef = destEntityRef;
         this.conversionRate = conversionRate;
@@ -38,6 +39,7 @@ public class DrainState implements ConstructState {
         this.drainedSoFar = 0f;
         this.nextGlyphIds = nextGlyphIds;
         this.colors = colors;
+        this.hpFloor = hpFloor;
     }
 
     public int getSourceStatIndex() {
@@ -90,6 +92,10 @@ public class DrainState implements ConstructState {
         return colors;
     }
 
+    public float getHpFloor() {
+        return hpFloor;
+    }
+
     @Override
     public DrainState copy() {
         DrainState c = new DrainState();
@@ -101,6 +107,7 @@ public class DrainState implements ConstructState {
         c.drainedSoFar = this.drainedSoFar;
         c.nextGlyphIds = new ArrayList<>(this.nextGlyphIds);
         c.colors = this.colors;
+        c.hpFloor = this.hpFloor;
         return c;
     }
 }

@@ -44,5 +44,10 @@
     "PrimarySound": "SFX_Portal_Neutral_Open",
     "TertiarySound": "SFX_Concentrate_Fail",
     "SecondarySound": "SFX_Concentrate_Duration"
+  },
+  "Config": {
+    "Type": "Concentration",
+    "VolatilityBonusFraction": 0.5,
+    "SecondaryIntervalSeconds": 1.0
   }
 }

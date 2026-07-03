@@ -3,26 +3,21 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.halt;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-import com.hypixel.hytale.server.core.modules.physics.component.PhysicsValues;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
 
 public class HaltState implements ConstructState {
 
     private float remainingDuration;
-    @Nullable
-    private PhysicsValues originalPhysicsValues;
+    private String effectId;
     private List<String> nextGlyphIds;
 
     public HaltState() {
         this.nextGlyphIds = new ArrayList<>();
     }
 
-    public HaltState(float remainingDuration, @Nullable PhysicsValues originalPhysicsValues,
-            List<String> nextGlyphIds) {
+    public HaltState(float remainingDuration, String effectId, List<String> nextGlyphIds) {
         this.remainingDuration = remainingDuration;
-        this.originalPhysicsValues = originalPhysicsValues;
+        this.effectId = effectId;
         this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
     }
 
@@ -30,9 +25,8 @@ public class HaltState implements ConstructState {
         return remainingDuration;
     }
 
-    @Nullable
-    public PhysicsValues getOriginalPhysicsValues() {
-        return originalPhysicsValues;
+    public String getEffectId() {
+        return effectId;
     }
 
     public void tick(float dt) {
@@ -53,8 +47,6 @@ public class HaltState implements ConstructState {
 
     @Override
     public HaltState copy() {
-        PhysicsValues cloned = originalPhysicsValues != null
-                ? new PhysicsValues(originalPhysicsValues) : null;
-        return new HaltState(remainingDuration, cloned, new ArrayList<>(nextGlyphIds));
+        return new HaltState(remainingDuration, effectId, new ArrayList<>(nextGlyphIds));
     }
 }

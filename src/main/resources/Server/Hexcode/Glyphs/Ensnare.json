@@ -77,5 +77,21 @@
   "Volatility": {
     "InstantCost": 4,
     "DrainPerSecond": 0.15
+  },
+  "Config": {
+    "Type": "Ensnare",
+    "SpikeScale": 0.5,
+    "DamageCooldownSeconds": 1.0,
+    "MaxSpikes": 64,
+    "GroundScanRange": 3,
+    "Density": 0.5,
+    "HeightTolerance": 2,
+    "SpikeDamage": 0.0,
+    "SpikeHitRadiusSq": 0.49,
+    "BoxPaddingXZ": 1.0,
+    "BoxPaddingYMin": 3.0,
+    "BoxPaddingYMax": 4.0,
+    "SpikeHitYMin": -0.5,
+    "SpikeHitYMax": 1.5
   }
 }

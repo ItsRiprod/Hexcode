@@ -26,6 +26,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.glaciate.style.GlaciateStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 
 public class GlaciateConstructHandler implements ConstructHandler<GlaciateState> {
@@ -77,6 +78,8 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         GlaciateState state = status.getState();
         List<String> nextLinks = state != null ? state.getNextGlyphIds() : List.of();
 
+        GlaciateConfig config = resolveConfig(status.getTriggeringGlyph());
+
         for (Ref<EntityStore> ref : found) {
             if (ref == null || !ref.isValid())
                 continue;
@@ -95,11 +98,11 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
                 continue;
             glaciate.getHitEntities().add(uuid.getUuid());
 
-            if (speed > 0.1) {
+            if (speed > config.getMinDamageSpeed()) {
                 float damage = (float) (speed * glaciate.getDamageMultiplier());
                 damage *= status.getHexContext().getMagicPowerMultiplier();
                 applyDamage(ref, damage, ctx);
-                applyKnockback(ref, iceVelocity, speed, ctx);
+                applyKnockback(ref, iceVelocity, speed, config, ctx);
             }
 
             GlaciateStyle.renderImpact(center,
@@ -125,7 +128,6 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         if (state == null) return;
         HexContext hexContext = status.getHexContext();
         hexContext.updateRuntimeAccessors(ctx.getBuffer());
-        // chain-after-melt fires once for the Next slot in addition to the per-hit fires from onTick
         HexExecuter.continueExecution(state.getNextGlyphIds(), hexContext);
     }
 
@@ -173,13 +175,20 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
     }
 
     private void applyKnockback(Ref<EntityStore> ref, Vector3d iceVelocity, double speed,
-            ConstructTickContext ctx) {
-        Vector3d kbVelocity = new Vector3d(iceVelocity).normalize().mul(speed * 0.3);
-        kbVelocity.y = Math.max(kbVelocity.y, 2.0);
+            GlaciateConfig config, ConstructTickContext ctx) {
+        Vector3d kbVelocity = new Vector3d(iceVelocity).normalize().mul(speed * config.getKnockbackScale());
+        kbVelocity.y = Math.max(kbVelocity.y, config.getMinVerticalKnockback());
         KnockbackComponent kb = new KnockbackComponent();
         kb.setVelocity(kbVelocity);
         kb.setVelocityType(ChangeVelocityType.Add);
         kb.setDuration(0.0f);
         ctx.getBuffer().putComponent(ref, KnockbackComponent.getComponentType(), kb);
+    }
+
+    private GlaciateConfig resolveConfig(Glyph triggeringGlyph) {
+        if (triggeringGlyph == null) return GlaciateConfig.DEFAULTS;
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(triggeringGlyph.getGlyphId());
+        if (asset == null) return GlaciateConfig.DEFAULTS;
+        return asset.getConfig() instanceof GlaciateConfig gc ? gc : GlaciateConfig.DEFAULTS;
     }
 }

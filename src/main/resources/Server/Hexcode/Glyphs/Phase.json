@@ -73,5 +73,10 @@
     "DrainPerSecond": 0.2
   },
   "IsEnabled": false,
-  "IsReversable": false
+  "IsReversable": false,
+  "Config": {
+    "Type": "Phase",
+    "CrushDamage": 4.0,
+    "DamageCause": "Environment"
+  }
 }

@@ -61,11 +61,13 @@
     "DrainPerSecond": 0.0
   },
   "Config": {
-    "Type": "Basic",
+    "Type": "Arc",
     "VolatilityImpact": {
       "Type": "RatioToDefault",
       "Reference": 15.0,
       "Min": 0.0
-    }
+    },
+    "ShockOverlapSeconds": 0.25,
+    "Effect": "Hexcode_Shock"
   }
 }

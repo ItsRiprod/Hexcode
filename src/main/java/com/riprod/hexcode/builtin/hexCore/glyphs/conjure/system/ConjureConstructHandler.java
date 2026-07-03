@@ -24,11 +24,19 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.conjure.style.ConjureStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
+import com.riprod.hexcode.builtin.hexCore.glyphs.conjure.ConjureConfig;
 
 public class ConjureConstructHandler implements ConstructHandler<NoState> {
 
-    private static final float SPATIAL_INTERVAL_SECONDS = 0.2f;
+    private ConjureConfig resolveConfig(HexStatus<NoState> status) {
+        Glyph glyph = status.getTriggeringGlyph();
+        GlyphAsset asset = glyph != null ? GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId()) : null;
+        return asset != null && asset.getConfig() instanceof ConjureConfig config
+                ? config
+                : ConjureConfig.DEFAULTS;
+    }
 
     @Override
     public void onFirstTick(HexStatus<NoState> status, ConstructTickContext ctx) {
@@ -87,7 +95,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
 
         zone.setSpatialQueryTimer(zone.getSpatialQueryTimer() - dt);
         if (zone.getSpatialQueryTimer() <= 0f) {
-            zone.setSpatialQueryTimer(SPATIAL_INTERVAL_SECONDS);
+            zone.setSpatialQueryTimer(resolveConfig(status).getSpatialQueryInterval());
 
             Vector3d pos = transform.getPosition();
             Vector3d half = zone.getHalfExtents();

@@ -59,5 +59,24 @@
   },
   "Volatility": {
     "InstantCost": 3,
-    "DrainPerSecond": 0.0}
+    "DrainPerSecond": 0.0},
+  "Config": {
+    "Type": "Growth",
+    "MinAmount": 1.0,
+    "MaxAmount": 20.0,
+    "StagesReferenceAmount": 5.0,
+    "BonemealRadius": 2,
+    "BonemealChance": 0.35,
+    "AttemptsFloor": 3,
+    "AttemptsPerAmount": 1.5,
+    "GrowthEffect": "Hexcode_Growth",
+    "VegetationBlocks": [
+      "Plant_Grass_Short",
+      "Plant_Grass_Tall",
+      "Plant_Flower_Daisy",
+      "Plant_Flower_Poppy",
+      "Plant_Fern"
+    ],
+    "GrassDirtPrefixes": ["Soil_Grass", "Soil_Dirt"]
+  }
 }

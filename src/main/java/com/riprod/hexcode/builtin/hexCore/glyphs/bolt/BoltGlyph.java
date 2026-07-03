@@ -32,6 +32,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.api.imbuement.ImbuedBlockActivator;
 import com.riprod.hexcode.builtin.hexCore.glyphs.bolt.style.BoltStyle;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
@@ -45,7 +46,10 @@ public class BoltGlyph implements GlyphHandler {
 
     public static final String ID = "Bolt";
 
-    private static int damageCauseIndex = -1;
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(BoltConfig.class, BoltConfig.CODEC);
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -59,12 +63,16 @@ public class BoltGlyph implements GlyphHandler {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         World world = accessor.getExternalData().getWorld();
-        Vector3f color = VfxUtil.resolvePrimaryColor(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        Vector3f color = VfxUtil.resolvePrimaryColor(hexContext, asset);
+
+        BoltConfig config = getConfig(BoltConfig.class, asset);
+        if (config == null) config = BoltConfig.DEFAULTS;
 
         EntityVar entityVar = HexVarUtil.resolveEntityVar(target, hexContext);
         BlockVar blockVar = entityVar == null ? HexVarUtil.resolveBlockVar(target, hexContext) : null;
         if (entityVar != null) {
-            handleEntityTarget(glyph, hexContext, entityVar, accessor, world, color);
+            handleEntityTarget(glyph, hexContext, entityVar, accessor, world, color, asset, config);
         } else if (blockVar != null) {
             handleBlockTarget(glyph, hexContext, blockVar, accessor, world, color);
         } else {
@@ -78,7 +86,7 @@ public class BoltGlyph implements GlyphHandler {
 
     private void handleEntityTarget(Glyph glyph, HexContext hexContext, EntityVar entityVar,
             CommandBuffer<EntityStore> accessor,
-            World world, Vector3f color) {
+            World world, Vector3f color, GlyphAsset asset, BoltConfig config) {
 
         Ref<EntityStore> targetRef = entityVar.getRef(accessor);
         if (targetRef == null || !targetRef.isValid()) {
@@ -97,10 +105,10 @@ public class BoltGlyph implements GlyphHandler {
         BoltStyle.renderImpact(accessor, targetPos, hexContext);
         BoltStyle.applyShockEffect(accessor, targetRef);
 
-        double damageAmount = HexVarUtil.numberOrDefault(
-                glyph.readSlot(BoltGlyphSlots.POWER, hexContext), 5.0);
+        double damageAmount = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(BoltGlyphSlots.POWER, hexContext), asset.getSlot(BoltGlyphSlots.POWER));
         damageAmount *= hexContext.getMagicPowerMultiplier();
-        applyDamage(accessor, targetRef, (float) damageAmount);
+        applyDamage(accessor, targetRef, (float) damageAmount, config.getDamageCauseId());
 
         LOGGER.atInfo().log("bolt: hit entity for %.1f damage", damageAmount);
     }
@@ -166,18 +174,10 @@ public class BoltGlyph implements GlyphHandler {
     }
 
     private static void applyDamage(CommandBuffer<EntityStore> accessor,
-            Ref<EntityStore> targetRef, float amount) {
-        if (damageCauseIndex < 0) {
-            damageCauseIndex = DamageCause.getAssetMap().getIndex("Environment");
-        }
-        if (damageCauseIndex == Integer.MIN_VALUE) {
-            LOGGER.atWarning().log("bolt: Environment damage cause not found");
-            return;
-        }
-
-        DamageCause cause = DamageCause.getAssetMap().getAsset(damageCauseIndex);
+            Ref<EntityStore> targetRef, float amount, String damageCauseId) {
+        DamageCause cause = DamageCause.getAssetMap().getAsset(damageCauseId);
         if (cause == null) {
-            LOGGER.atWarning().log("bolt: could not resolve damage cause");
+            LOGGER.atWarning().log("bolt: %s damage cause not found", damageCauseId);
             return;
         }
 

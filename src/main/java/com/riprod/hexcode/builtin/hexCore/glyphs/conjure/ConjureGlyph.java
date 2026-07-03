@@ -39,6 +39,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
@@ -57,23 +58,32 @@ public class ConjureGlyph implements GlyphHandler {
     };
 
     public static final String ID = "Conjure";
-    private static final String HARD_COLLISION_ID = "Hexcode_Conjure_HardCollision";
+
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(ConjureConfig.class, ConjureConfig.CODEC);
+    }
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        ConjureConfig config = getConfig(ConjureConfig.class, asset);
+        if (config == null) config = ConjureConfig.DEFAULTS;
+        double half = config.getBoxHalfExtent();
+
         Vector3d a = HexVarUtil.position(
                 glyph.readSlot(ConjureGlyphSlots.COORDS_A, hexContext,
-                        new PositionVar(new Vector3d(0.5, 0.5, 0.5))),
+                        new PositionVar(new Vector3d(half, half, half))),
                 hexContext.getAccessor());
         Vector3d b = HexVarUtil.position(
                 glyph.readSlot(ConjureGlyphSlots.COORDS_B, hexContext,
-                        new PositionVar(new Vector3d(-0.5, -0.5, -0.5))),
+                        new PositionVar(new Vector3d(-half, -half, -half))),
                 hexContext.getAccessor());
         double volume = 1.0;
         if (a != null && b != null) {
-            double dx = Math.max(1.0, Math.abs(a.x - b.x));
-            double dy = Math.max(1.0, Math.abs(a.y - b.y));
-            double dz = Math.max(1.0, Math.abs(a.z - b.z));
+            double minAxis = config.getMinAxisSize();
+            double dx = Math.max(minAxis, Math.abs(a.x - b.x));
+            double dy = Math.max(minAxis, Math.abs(a.y - b.y));
+            double dz = Math.max(minAxis, Math.abs(a.z - b.z));
             volume = dx * dy * dz;
         }
 
@@ -84,10 +94,15 @@ public class ConjureGlyph implements GlyphHandler {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        ConjureConfig config = getConfig(ConjureConfig.class, asset);
+        if (config == null) config = ConjureConfig.DEFAULTS;
+        double half = config.getBoxHalfExtent();
+
         HexVar coordsAVar = glyph.readSlot(ConjureGlyphSlots.COORDS_A, hexContext,
-                new PositionVar(new Vector3d(0.5, 0.5, 0.5)));
+                new PositionVar(new Vector3d(half, half, half)));
         HexVar coordsBVar = glyph.readSlot(ConjureGlyphSlots.COORDS_B, hexContext,
-                new PositionVar(new Vector3d(-0.5, -0.5, -0.5)));
+                new PositionVar(new Vector3d(-half, -half, -half)));
         HexVar durationVar = glyph.readSlot(ConjureGlyphSlots.DURATION, hexContext);
         HexVar intervalVar = glyph.readSlot(ConjureGlyphSlots.INTERVAL, hexContext);
         HexVar anchorVar = glyph.readSlot(ConjureGlyphSlots.ANCHOR, hexContext);
@@ -147,13 +162,15 @@ public class ConjureGlyph implements GlyphHandler {
                 (max.z - min.z) / 2);
         Vector3d size = new Vector3d(max.x - min.x, max.y - min.y, max.z - min.z);
 
-        float durationSeconds = HexVarUtil.numberOrDefault(durationVar, 30.0).floatValue();
-        float interval = HexVarUtil.numberOrDefault(intervalVar, -1.0).floatValue();
+        float durationSeconds = HexVarUtil.numberOrSlotDefault(
+                durationVar, asset.getSlot(ConjureGlyphSlots.DURATION)).floatValue();
+        float interval = HexVarUtil.numberOrSlotDefault(
+                intervalVar, asset.getSlot(ConjureGlyphSlots.INTERVAL)).floatValue();
 
         ConjureZoneComponent zoneComp = new ConjureZoneComponent(halfExtents, interval, durationSeconds);
 
         HitboxCollisionConfig collisionConfig = HitboxCollisionConfig.getAssetMap()
-                .getAsset(HARD_COLLISION_ID);
+                .getAsset(config.getHardCollisionId());
 
         Holder<EntityStore> holder = HexConstructSpawner.create(
                 hexContext.getAccessor(), hexContext, glyph, ConjureGlyph.ID, new Vector3d(center));
@@ -161,7 +178,6 @@ public class ConjureGlyph implements GlyphHandler {
         holder.ensureComponent(PropComponent.getComponentType());
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());
-        // alpha of 0 means an invisible zone: skip the debug shape but keep the functional zone
         if (hexContext.getColors().getPrimaryAlpha() != 0f) {
             Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
             DebugComponent debugComp = new DebugComponent(DebugShape.Cube, debugColor, size, 0.1f);
@@ -185,7 +201,7 @@ public class ConjureGlyph implements GlyphHandler {
 
         holder.addComponent(ConjureZoneComponent.getComponentType(), zoneComp);
 
-        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset("Conjured_Anchor");
+        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(config.getAnchorModelId());
         if (modelAsset != null) {
 
             Box modelBox = new Box(

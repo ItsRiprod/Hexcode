@@ -22,11 +22,12 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.concentration.style.ConcentrationStyle;
+import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.utils.VfxUtil;
 
 public class ConcentrationGlyph implements GlyphHandler {
@@ -38,12 +39,19 @@ public class ConcentrationGlyph implements GlyphHandler {
     }
 
     public static final String ID = "Concentration";
-    private static final float VOLATILITY_INCREASE = 0.5f;
 
     private static final Vector3f MOUNT_OFFSET = new Vector3f(0f, 1.4f, 1.2f);
 
     @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(ConcentrationConfig.class, ConcentrationConfig.CODEC);
+    }
+
+    @Override
     public void execute(Glyph glyph, HexContext hexContext) {
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        ConcentrationConfig config = getConfig(ConcentrationConfig.class, asset);
+        if (config == null) config = ConcentrationConfig.DEFAULTS;
         Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
         if (casterRef == null || !casterRef.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -53,8 +61,8 @@ public class ConcentrationGlyph implements GlyphHandler {
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        HexcasterIdleComponent execComp = accessor.getComponent(
-                casterRef, HexcasterIdleComponent.getComponentType());
+        CasterStateComponent execComp = accessor.getComponent(
+                casterRef, CasterStateComponent.getComponentType());
         if (execComp == null || !execComp.isHoldingPrimary()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Caster not holding primary");
@@ -65,14 +73,14 @@ public class ConcentrationGlyph implements GlyphHandler {
                 casterRef, TransformComponent.getComponentType());
         Ref<EntityStore> visualRef = null;
 
-        // only spawn visual if caster has a transform - otherwise just don't spawn one instead of failing the glyph
         if (casterTransform != null) {
             visualRef = spawnVisual(accessor, casterTransform, casterRef, hexContext);
             ConcentrationStyle.renderSpawn(casterTransform.getPosition(), hexContext, accessor);
         }
 
         var tracker = hexContext.getHexStats();
-        float bonus = tracker != null ? tracker.getInitialVolatility() * VOLATILITY_INCREASE : 0f;
+        float bonus = tracker != null
+                ? tracker.getInitialVolatility() * (float) config.getVolatilityBonusFraction() : 0f;
         if (tracker != null && bonus > 0f) {
             tracker.addVolatility(bonus);
         }

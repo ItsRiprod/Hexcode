@@ -36,6 +36,7 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
@@ -52,15 +53,17 @@ public class ProjectileGlyph implements GlyphHandler {
 
     public static final String ID = "Projectile";
 
-    private static final float PROJECTILE_SCALE = 0.5f;
-    private static final Duration PROJECTILE_TTL = Duration.ofMinutes(10);
-
-    private static final String HIT_ROOT_INTERACTION = "Hex_Projectile_Hit";
-    private static final String MISS_ROOT_INTERACTION = "Hex_Projectile_Miss";
-    private static final String BOUNCE_ROOT_INTERACTION = "Hex_Projectile_Bounce";
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(ProjectileConfig.class, ProjectileConfig.CODEC);
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        ProjectileConfig config = getConfig(ProjectileConfig.class, asset);
+        if (config == null) config = ProjectileConfig.DEFAULTS;
+
         HexVar sourceVar = glyph.readSlot(ProjectileGlyphSlots.SOURCE, hexContext);
         HexVar directionVar = glyph.readSlot(ProjectileGlyphSlots.DIRECTION, hexContext);
         HexVar speedVar = glyph.readSlot(ProjectileGlyphSlots.SPEED, hexContext);
@@ -98,15 +101,17 @@ public class ProjectileGlyph implements GlyphHandler {
         }
         direction = new Vector3d(direction.x / dirLen, direction.y / dirLen, direction.z / dirLen);
 
-        spawnPos.add(new Vector3d(direction).mul(1.1));
+        spawnPos.add(new Vector3d(direction).mul(config.getSpawnOffset()));
 
-        double speed = HexVarUtil.numberOrDefault(speedVar, 30.0);
+        double speedDefault = HexVarUtil.numberOrSlotDefault(null, asset.getSlot(ProjectileGlyphSlots.SPEED));
+        double speed = HexVarUtil.numberOrSlotDefault(speedVar, asset.getSlot(ProjectileGlyphSlots.SPEED));
         if (speed <= 0)
-            speed = 30.0;
+            speed = speedDefault;
 
-        double gravity = HexVarUtil.numberOrDefault(gravityVar, 0.0);
+        double gravity = HexVarUtil.numberOrSlotDefault(gravityVar, asset.getSlot(ProjectileGlyphSlots.GRAVITY));
 
-        int bounces = HexVarUtil.numberOrDefault(bouncesVar, 0.0).intValue();
+        int bounces = HexVarUtil.numberOrSlotDefault(
+                bouncesVar, asset.getSlot(ProjectileGlyphSlots.BOUNCES)).intValue();
         if (bounces < 0)
             bounces = 0;
 
@@ -127,7 +132,7 @@ public class ProjectileGlyph implements GlyphHandler {
                 new TransformComponent(new Vector3d(spawnPos), rotation));
         holder.addComponent(HeadRotation.getComponentType(), new HeadRotation(rotation));
 
-        Model model = Model.createScaledModel(modelAsset, PROJECTILE_SCALE);
+        Model model = Model.createScaledModel(modelAsset, config.getProjectileScale());
 
         holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
         holder.addComponent(PersistentModel.getComponentType(), new PersistentModel(model.toReference()));
@@ -137,7 +142,7 @@ public class ProjectileGlyph implements GlyphHandler {
         holder.addComponent(Velocity.getComponentType(), new Velocity());
 
         holder.addComponent(Interactions.getComponentType(),
-                new Interactions(buildInteractionsMap()));
+                new Interactions(buildInteractionsMap(config)));
 
         Vector3d launchVelocity = new Vector3d(direction).mul(speed);
         ProjectilePhysicsConfig physicsConfig = new ProjectilePhysicsConfig(gravity, bounces);
@@ -150,9 +155,10 @@ public class ProjectileGlyph implements GlyphHandler {
         physicsConfig.apply(holder, parent,
                 launchVelocity, accessor, false);
 
+        Duration ttl = Duration.ofMillis((long) (config.getTtlSeconds() * 1000));
         holder.addComponent(DespawnComponent.getComponentType(),
                 new DespawnComponent(hexContext.getAccessor()
-                        .getResource(TimeResource.getResourceType()).getNow().plus(PROJECTILE_TTL)));
+                        .getResource(TimeResource.getResourceType()).getNow().plus(ttl)));
 
         holder.addComponent(ProjectileState.getComponentType(),
                 new ProjectileState(hexContext, glyph));
@@ -169,11 +175,11 @@ public class ProjectileGlyph implements GlyphHandler {
         ProjectileStyle.renderLaunch(spawnPos, direction, hexContext, hexContext.getAccessor());
     }
 
-    private static Map<InteractionType, String> buildInteractionsMap() {
+    private static Map<InteractionType, String> buildInteractionsMap(ProjectileConfig config) {
         Map<InteractionType, String> map = new EnumMap<>(InteractionType.class);
-        map.put(InteractionType.ProjectileHit, HIT_ROOT_INTERACTION);
-        map.put(InteractionType.ProjectileMiss, MISS_ROOT_INTERACTION);
-        map.put(InteractionType.ProjectileBounce, BOUNCE_ROOT_INTERACTION);
+        map.put(InteractionType.ProjectileHit, config.getHitRootInteraction());
+        map.put(InteractionType.ProjectileMiss, config.getMissRootInteraction());
+        map.put(InteractionType.ProjectileBounce, config.getBounceRootInteraction());
         return map;
     }
 }

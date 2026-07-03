@@ -16,10 +16,11 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.beam.style.BeamStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.TargetFilter;
@@ -32,8 +33,18 @@ public class BeamGlyph implements GlyphHandler {
 public String getId() { return ID; };
 
 public static final String ID = "Beam";
+
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(BeamConfig.class, BeamConfig.CODEC);
+    }
+
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        BeamConfig config = getConfig(BeamConfig.class, asset);
+        if (config == null) config = BeamConfig.DEFAULTS;
+
         HexVar posVar = glyph.readSlot(BeamGlyphSlots.SOURCE, hexContext);
         HexVar rotVar = glyph.readSlot(BeamGlyphSlots.ROTATION, hexContext);
         if (rotVar == null) rotVar = posVar;
@@ -58,8 +69,8 @@ public static final String ID = "Beam";
             return;
         }
 
-        int beamLength = (int) HexVarUtil.number(
-                glyph.readSlot(BeamGlyphSlots.RANGE, hexContext, new NumberVar(32.0))).doubleValue();
+        int beamLength = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(BeamGlyphSlots.RANGE, hexContext), asset.getSlot(BeamGlyphSlots.RANGE)).intValue();
 
         double dlen = direction.length();
         double nx = dlen > 1e-9 ? direction.x / dlen : 0;
@@ -98,7 +109,7 @@ public static final String ID = "Beam";
             }
         }
 
-        Vector3d beamOrigin = new Vector3d(origin).add(new Vector3d(direction).mul(1.5));
+        Vector3d beamOrigin = new Vector3d(origin).add(new Vector3d(direction).mul(config.getOriginOffset()));
 
         Vector3d endPoint;
         BeamStyle.HitType hitType;

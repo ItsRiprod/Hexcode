@@ -25,6 +25,7 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
@@ -40,6 +41,11 @@ public class PhaseGlyph implements GlyphHandler {
     };
 
     public static final String ID = "Phase";
+
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(PhaseConfig.class, PhaseConfig.CODEC);
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -63,6 +69,9 @@ public class PhaseGlyph implements GlyphHandler {
         double intensity = HexVarUtil.numberOrDefault(
                 glyph.readSlot(PhaseGlyphSlots.INTENSITY, hexContext),
                 asset.getSlot(PhaseGlyphSlots.INTENSITY).getDefaultValue());
+
+        PhaseConfig config = getConfig(PhaseConfig.class, asset);
+        if (config == null) config = PhaseConfig.DEFAULTS;
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         World world = accessor.getExternalData().getWorld();
@@ -114,7 +123,8 @@ public class PhaseGlyph implements GlyphHandler {
 
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                 accessor, hexContext, glyph, PhaseGlyph.ID, blockCenter,
-                new PhaseState(glyph.getNextLinks()));
+                new PhaseState(glyph.getNextLinks(), (float) config.getCrushDamage(),
+                        config.getDamageCauseId()));
 
         holder.addComponent(PhaseComponent.getComponentType(),
                 new PhaseComponent(phasedBlocks, (float) duration));

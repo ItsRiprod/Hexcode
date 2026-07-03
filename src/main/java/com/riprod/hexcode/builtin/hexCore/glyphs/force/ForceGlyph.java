@@ -69,7 +69,7 @@ public class ForceGlyph implements GlyphHandler {
                 clampUpwardY(ref, force, hexContext.getAccessor());
 
                 VelocityUtil.applyVelocity(ref, force, ChangeVelocityType.Add,
-                        new ForceVelocityConfig(), hexContext.getAccessor());
+                        null, hexContext.getAccessor());
 
                 ForceGlyphStyle.render(targetPos, force, hexContext, hexContext.getAccessor());
             }

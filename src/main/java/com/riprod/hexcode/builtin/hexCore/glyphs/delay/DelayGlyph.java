@@ -48,8 +48,10 @@ public class DelayGlyph implements GlyphHandler {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        float seconds = HexVarUtil.numberOrDefault(
-                glyph.readSlot(DelayGlyphSlots.DURATION, hexContext), 1.0).floatValue();
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        float seconds = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(DelayGlyphSlots.DURATION, hexContext),
+                asset.getSlot(DelayGlyphSlots.DURATION)).floatValue();
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 

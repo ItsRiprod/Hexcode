@@ -66,5 +66,13 @@
   "Volatility": {
     "InstantCost": 4,
     "DrainPerSecond": 0.1
+  },
+  "Config": {
+    "Type": "Fortify",
+    "MinAmount": 1.0,
+    "MaxAmount": 20.0,
+    "ReductionScale": 0.5,
+    "BlockHealScale": 0.05,
+    "Effect": "Hexcode_Fortify"
   }
 }

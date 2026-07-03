@@ -19,6 +19,8 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
@@ -32,18 +34,23 @@ public String getId() { return ID; };
 
 public static final String ID = "Drain";
 
-    private static final float HP_TO_MANA_RATE = 1.5f;
-    private static final float STAMINA_TO_MANA_RATE = 0.6f;
-    private static final float DEFAULT_DURATION = 1.0f;
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(DrainConfig.class, DrainConfig.CODEC);
+    }
 
-    private static float conversionRate(int sourceStat) {
-        if (sourceStat == DefaultEntityStatTypes.getHealth()) return HP_TO_MANA_RATE;
-        if (sourceStat == DefaultEntityStatTypes.getStamina()) return STAMINA_TO_MANA_RATE;
-        return 1.0f;
+    private static float conversionRate(int sourceStat, DrainConfig config) {
+        if (sourceStat == DefaultEntityStatTypes.getHealth()) return config.getHpToManaRate();
+        if (sourceStat == DefaultEntityStatTypes.getStamina()) return config.getStaminaToManaRate();
+        return config.getDefaultConversionRate();
     }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        DrainConfig config = getConfig(DrainConfig.class, asset);
+        if (config == null) config = DrainConfig.DEFAULTS;
+
         HexVar targetVar = glyph.readSlot(DrainGlyphSlots.TARGET, hexContext);
         EntityVar entityVar = HexVarUtil.resolveEntityVar(targetVar, hexContext);
         if (entityVar == null) {
@@ -77,7 +84,7 @@ public static final String ID = "Drain";
             drainPercent = HexVarUtil.numberOrDefault(staminaInput, 0.0);
         } else {
             sourceStatIndex = DefaultEntityStatTypes.getHealth();
-            drainPercent = 15.0f;
+            drainPercent = config.getDefaultDrainPercent();
         }
 
         if (sourceStatIndex == DefaultEntityStatTypes.getHealth()) {
@@ -100,7 +107,7 @@ public static final String ID = "Drain";
             if (resolved != null && resolved.isValid()) destRef = resolved;
         }
 
-        float rate = conversionRate(sourceStatIndex);
+        float rate = conversionRate(sourceStatIndex, config);
 
         if (drainPercent <= 0) {
             HexExecuter.fail(glyph, hexContext,
@@ -128,7 +135,7 @@ public static final String ID = "Drain";
         float totalDrainAmount = (float) (drainPercent / 100.0) * sourceStat.getMax();
 
         if (sourceStatIndex == DefaultEntityStatTypes.getHealth()) {
-            float maxDrainable = sourceStat.get() - 1.0f;
+            float maxDrainable = sourceStat.get() - config.getHpFloor();
             if (maxDrainable <= 0) {
                 HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
                 return;
@@ -146,9 +153,10 @@ public static final String ID = "Drain";
         }
 
         HexVar durationVar = glyph.readSlot(DrainGlyphSlots.DURATION, hexContext);
-        float duration = DEFAULT_DURATION;
+        float duration = HexVarUtil.numberOrSlotDefault(null, asset.getSlot(DrainGlyphSlots.DURATION)).floatValue();
         if (durationVar != null) {
-            duration = Math.max(0.01f, HexVarUtil.numberOrDefault(durationVar, (double) DEFAULT_DURATION).floatValue());
+            duration = Math.max(config.getDurationFloor(),
+                    HexVarUtil.numberOrSlotDefault(durationVar, asset.getSlot(DrainGlyphSlots.DURATION)).floatValue());
         }
 
         HexColors colors = hexContext.getColors();
@@ -158,7 +166,8 @@ public static final String ID = "Drain";
                 : new ArrayList<>();
 
         DrainState state = new DrainState(
-                sourceStatIndex, destRef, rate, totalDrainAmount, duration, nextGlyphIds, colors);
+                sourceStatIndex, destRef, rate, totalDrainAmount, duration, nextGlyphIds, colors,
+                config.getHpFloor());
 
         HexConstructSpawner.applyWithState(
                 hexContext.getAccessor(), targetRef, hexContext, glyph, DrainGlyph.ID, state);

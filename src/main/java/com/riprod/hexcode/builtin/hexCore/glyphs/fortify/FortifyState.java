@@ -9,16 +9,18 @@ public class FortifyState implements ConstructState {
 
     private float damageReduction;
     private float remainingDuration;
+    private String effectId;
     private List<String> nextGlyphIds;
 
     public FortifyState() {
         this.nextGlyphIds = new ArrayList<>();
     }
 
-    public FortifyState(float damageReduction, float remainingDuration,
+    public FortifyState(float damageReduction, float remainingDuration, String effectId,
             List<String> nextGlyphIds) {
         this.damageReduction = damageReduction;
         this.remainingDuration = remainingDuration;
+        this.effectId = effectId;
         this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
     }
 
@@ -36,6 +38,10 @@ public class FortifyState implements ConstructState {
 
     public void setRemainingDuration(float remainingDuration) {
         this.remainingDuration = remainingDuration;
+    }
+
+    public String getEffectId() {
+        return effectId;
     }
 
     public void tick(float dt) {
@@ -56,7 +62,7 @@ public class FortifyState implements ConstructState {
 
     @Override
     public FortifyState copy() {
-        return new FortifyState(damageReduction, remainingDuration,
+        return new FortifyState(damageReduction, remainingDuration, effectId,
                 new ArrayList<>(nextGlyphIds));
     }
 }

@@ -32,6 +32,8 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.growth.style.GrowthStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -45,23 +47,10 @@ public String getId() { return ID; };
 
 public static final String ID = "Growth";
 
-    private static final String GROWTH_EFFECT_ID = "Hexcode_Growth";
-    private static final double DEFAULT_AMOUNT = 5.0;
-    private static final double DEFAULT_DURATION = 10.0;
-    private static final double MIN_AMOUNT = 1.0;
-    private static final double MAX_AMOUNT = 20.0;
-    private static final int BONEMEAL_RADIUS = 2;
-    private static final float BONEMEAL_CHANCE = 0.35f;
-
-    private static final String[] VEGETATION_BLOCKS = {
-            "Plant_Grass_Short", "Plant_Grass_Tall",
-            "Plant_Flower_Daisy", "Plant_Flower_Poppy",
-            "Plant_Fern"
-    };
-
-    private static final String[] GRASS_DIRT_PREFIXES = {
-            "Soil_Grass", "Soil_Dirt"
-    };
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(GrowthConfig.class, GrowthConfig.CODEC);
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -71,40 +60,48 @@ public static final String ID = "Growth";
             return;
         }
 
-        double amount = Math.max(MIN_AMOUNT, Math.min(MAX_AMOUNT,
-                HexVarUtil.numberOrDefault(
-                        glyph.readSlot(GrowthGlyphSlots.AMOUNT, hexContext), DEFAULT_AMOUNT)));
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        GrowthConfig config = getConfig(GrowthConfig.class, asset);
+        if (config == null) config = GrowthConfig.DEFAULTS;
+
+        double amount = Math.max(config.getMinAmount(), Math.min(config.getMaxAmount(),
+                HexVarUtil.numberOrSlotDefault(
+                        glyph.readSlot(GrowthGlyphSlots.AMOUNT, hexContext),
+                        asset.getSlot(GrowthGlyphSlots.AMOUNT))));
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
         if (entityVar != null) {
-            applyToEntity(entityVar, amount, glyph, hexContext, accessor);
+            applyToEntity(entityVar, amount, glyph, hexContext, asset, config, accessor);
             return;
         }
 
         BlockVar blockVar = HexVarUtil.resolveBlockVar(targets, hexContext);
-        if (blockVar != null) applyToBlock(blockVar, amount, hexContext, accessor);
+        if (blockVar != null) applyToBlock(blockVar, amount, config, hexContext, accessor);
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 
     private void applyToEntity(EntityVar entityVar, double amount,
-            Glyph glyph, HexContext hexContext, CommandBuffer<EntityStore> accessor) {
+            Glyph glyph, HexContext hexContext, GlyphAsset asset, GrowthConfig config,
+            CommandBuffer<EntityStore> accessor) {
         Ref<EntityStore> ref = entityVar.getRef(accessor);
         if (ref == null || !ref.isValid()) {
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
         }
 
-        EntityEffect growthEffect = EntityEffect.getAssetMap().getAsset(GROWTH_EFFECT_ID);
+        String effectId = config.getGrowthEffectId();
+        EntityEffect growthEffect = EntityEffect.getAssetMap().getAsset(effectId);
         if (growthEffect == null) {
-            LOGGER.atWarning().log("growth: %s effect asset not found", GROWTH_EFFECT_ID);
+            LOGGER.atWarning().log("growth: %s effect asset not found", effectId);
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
         }
 
-        double duration = HexVarUtil.numberOrDefault(
-                glyph.readSlot(GrowthGlyphSlots.DURATION, hexContext), DEFAULT_DURATION);
+        double duration = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(GrowthGlyphSlots.DURATION, hexContext),
+                asset.getSlot(GrowthGlyphSlots.DURATION));
         float durationSeconds = (float) duration;
 
         EffectControllerComponent controller = accessor.getComponent(
@@ -125,7 +122,7 @@ public static final String ID = "Growth";
             existing.setRemainingDuration(durationSeconds);
             existing.setNextGlyphIds(glyph.getNextLinks());
         } else {
-            GrowthState state = new GrowthState(durationSeconds, glyph.getNextLinks());
+            GrowthState state = new GrowthState(durationSeconds, effectId, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
                     accessor, ref, hexContext, glyph, GrowthGlyph.ID, state);
         }
@@ -133,7 +130,7 @@ public static final String ID = "Growth";
         LOGGER.atInfo().log("growth: applied regen buff for %.1fs to entity", durationSeconds);
     }
 
-    private void applyToBlock(BlockVar blockVar, double amount,
+    private void applyToBlock(BlockVar blockVar, double amount, GrowthConfig config,
             HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         Vector3i pos = blockVar.getValue();
         if (pos == null) return;
@@ -145,17 +142,17 @@ public static final String ID = "Growth";
         BlockType blockType = BlockType.getAssetMap().getAsset(blockId);
         if (blockType == null) return;
 
-        if (tryAdvanceGrowth(world, pos, blockType, amount, hexContext, accessor)) {
+        if (tryAdvanceGrowth(world, pos, blockType, amount, config, hexContext, accessor)) {
             return;
         }
 
-        if (isGrassDirtBlock(blockType)) {
-            applyBonemeal(world, pos, amount, hexContext, accessor);
+        if (isGrassDirtBlock(blockType, config)) {
+            applyBonemeal(world, pos, amount, config, hexContext, accessor);
         }
     }
 
     private boolean tryAdvanceGrowth(World world, Vector3i pos, BlockType blockType,
-            double amount, HexContext hexContext, CommandBuffer<EntityStore> accessor) {
+            double amount, GrowthConfig config, HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         FarmingData farmingConfig = blockType.getFarming();
         if (farmingConfig == null || farmingConfig.getStages() == null) return false;
 
@@ -185,7 +182,7 @@ public static final String ID = "Growth";
         int currentStage = (int) farmingBlock.getGrowthProgress();
         if (currentStage >= stages.length) currentStage = stages.length - 1;
 
-        int stagesToAdvance = Math.max(1, (int) (amount / DEFAULT_AMOUNT));
+        int stagesToAdvance = Math.max(1, (int) (amount / config.getStagesReferenceAmount()));
         int newStage = Math.min(currentStage + stagesToAdvance, stages.length - 1);
 
         if (newStage <= currentStage) return true;
@@ -222,23 +219,24 @@ public static final String ID = "Growth";
         return true;
     }
 
-    private boolean isGrassDirtBlock(BlockType blockType) {
+    private boolean isGrassDirtBlock(BlockType blockType, GrowthConfig config) {
         String id = blockType.getId();
         if (id == null) return false;
-        for (String prefix : GRASS_DIRT_PREFIXES) {
+        for (String prefix : config.getGrassDirtPrefixes()) {
             if (id.startsWith(prefix)) return true;
         }
         return false;
     }
 
-    private void applyBonemeal(World world, Vector3i pos, double amount,
+    private void applyBonemeal(World world, Vector3i pos, double amount, GrowthConfig config,
             HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         ThreadLocalRandom rng = ThreadLocalRandom.current();
-        int attempts = Math.max(3, (int) (amount * 1.5));
+        int attempts = Math.max(config.getAttemptsFloor(), (int) (amount * config.getAttemptsPerAmount()));
+        int bonemealRadius = config.getBonemealRadius();
 
         for (int a = 0; a < attempts; a++) {
-            int dx = rng.nextInt(-BONEMEAL_RADIUS, BONEMEAL_RADIUS + 1);
-            int dz = rng.nextInt(-BONEMEAL_RADIUS, BONEMEAL_RADIUS + 1);
+            int dx = rng.nextInt(-bonemealRadius, bonemealRadius + 1);
+            int dz = rng.nextInt(-bonemealRadius, bonemealRadius + 1);
             int tx = pos.x + dx;
             int tz = pos.z + dz;
             int ty = pos.y;
@@ -249,9 +247,10 @@ public static final String ID = "Growth";
             int aboveId = world.getBlock(tx, ty + 1, tz);
             if (aboveId != BlockType.EMPTY_ID) continue;
 
-            if (rng.nextFloat() > BONEMEAL_CHANCE) continue;
+            if (rng.nextFloat() > config.getBonemealChance()) continue;
 
-            String vegetation = VEGETATION_BLOCKS[rng.nextInt(VEGETATION_BLOCKS.length)];
+            String[] vegetationBlocks = config.getVegetationBlocks();
+            String vegetation = vegetationBlocks[rng.nextInt(vegetationBlocks.length)];
             world.setBlock(tx, ty + 1, tz, vegetation);
 
             Vector3d effectPos = new Vector3d(tx + 0.5, ty + 1.5, tz + 0.5);

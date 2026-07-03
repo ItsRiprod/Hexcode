@@ -136,7 +136,6 @@ public static final String ID = "Domain";
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());
 
-        // alpha of 0 means an invisible zone: skip the debug shape but keep the functional zone
         if (hexContext.getColors().getPrimaryAlpha() != 0f) {
             Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
             Vector3d debugScale = new Vector3d(radius * 2, radius * 2, radius * 2);

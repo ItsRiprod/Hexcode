@@ -62,11 +62,15 @@
     "DrainPerSecond": 0.1
   },
   "Config": {
-    "Type": "Basic",
+    "Type": "Scale",
     "VolatilityImpact": {
       "Type": "Exponential",
       "Growth": 0.5,
       "Min": 1.0
-    }
+    },
+    "MinMagnitude": 0.01,
+    "MaxMagnitude": 32.0,
+    "MinDuration": 0.1,
+    "MountOffsetY": 2.5
   }
 }

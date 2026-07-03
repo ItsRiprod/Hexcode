@@ -8,14 +8,16 @@ import com.riprod.hexcode.core.common.construct.state.ConstructState;
 public class GrowthState implements ConstructState {
 
     private float remainingDuration;
+    private String effectId;
     private List<String> nextGlyphIds;
 
     public GrowthState() {
         this.nextGlyphIds = new ArrayList<>();
     }
 
-    public GrowthState(float remainingDuration, List<String> nextGlyphIds) {
+    public GrowthState(float remainingDuration, String effectId, List<String> nextGlyphIds) {
         this.remainingDuration = remainingDuration;
+        this.effectId = effectId;
         this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
     }
 
@@ -25,6 +27,10 @@ public class GrowthState implements ConstructState {
 
     public void setRemainingDuration(float remainingDuration) {
         this.remainingDuration = remainingDuration;
+    }
+
+    public String getEffectId() {
+        return effectId;
     }
 
     public void tick(float dt) {
@@ -45,6 +51,6 @@ public class GrowthState implements ConstructState {
 
     @Override
     public GrowthState copy() {
-        return new GrowthState(remainingDuration, new ArrayList<>(nextGlyphIds));
+        return new GrowthState(remainingDuration, effectId, new ArrayList<>(nextGlyphIds));
     }
 }

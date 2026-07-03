@@ -9,7 +9,6 @@ import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
-import com.hypixel.hytale.server.core.modules.physics.component.PhysicsValues;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -21,7 +20,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 public class HaltConstructHandler implements ConstructHandler<HaltState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final String HALT_EFFECT_ID = "Hexcode_Halt";
 
     @Override
     public boolean onTick(float dt, HexStatus<HaltState> status, ConstructTickContext ctx) {
@@ -71,7 +69,6 @@ public class HaltConstructHandler implements ConstructHandler<HaltState> {
     }
 
     private void cleanup(HexStatus<HaltState> status, ConstructTickContext ctx) {
-        HaltState state = status.getState();
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Ref<EntityStore> target = ctx.getEntityRef();
         if (target == null || !target.isValid()) return;
@@ -82,15 +79,14 @@ public class HaltConstructHandler implements ConstructHandler<HaltState> {
             physics.setState(StandardPhysicsProvider.STATE.ACTIVE);
         }
 
-        if (state != null && state.getOriginalPhysicsValues() != null) {
-            buffer.putComponent(target, PhysicsValues.getComponentType(),
-                    new PhysicsValues(state.getOriginalPhysicsValues()));
-        }
+        HaltState state = status.getState();
+        String effectId = state != null ? state.getEffectId() : null;
+        if (effectId == null) return;
 
         EffectControllerComponent controller = buffer.getComponent(
                 target, EffectControllerComponent.getComponentType());
         if (controller != null) {
-            int effectIndex = EntityEffect.getAssetMap().getIndex(HALT_EFFECT_ID);
+            int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
             if (effectIndex != Integer.MIN_VALUE) {
                 controller.removeEffect(target, effectIndex, buffer);
             }

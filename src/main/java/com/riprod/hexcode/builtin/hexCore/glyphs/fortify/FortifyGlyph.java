@@ -28,6 +28,8 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.fortify.style.FortifyStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -42,13 +44,10 @@ public class FortifyGlyph implements GlyphHandler {
 
     public static final String ID = "Fortify";
 
-    private static final String FORTIFY_EFFECT_ID = "Hexcode_Fortify";
-    private static final double DEFAULT_AMOUNT = 5.0;
-    private static final double DEFAULT_DURATION = 20.0;
-    private static final double MIN_AMOUNT = 1.0;
-    private static final double MAX_AMOUNT = 20.0;
-    private static final float REDUCTION_SCALE = 0.5f;
-    private static final float BLOCK_HEAL_SCALE = 0.05f;
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(FortifyConfig.class, FortifyConfig.CODEC);
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -59,33 +58,42 @@ public class FortifyGlyph implements GlyphHandler {
             return;
         }
 
-        double amount = Math.max(MIN_AMOUNT, Math.min(MAX_AMOUNT,
-                HexVarUtil.numberOrDefault(
-                        glyph.readSlot(FortifyGlyphSlots.AMOUNT, hexContext), DEFAULT_AMOUNT)));
-        double duration = HexVarUtil.numberOrDefault(
-                glyph.readSlot(FortifyGlyphSlots.DURATION, hexContext), DEFAULT_DURATION);
-        float damageReduction = (float) (amount * REDUCTION_SCALE);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        FortifyConfig config = getConfig(FortifyConfig.class, asset);
+        if (config == null) config = FortifyConfig.DEFAULTS;
+
+        double amount = Math.max(config.getMinAmount(), Math.min(config.getMaxAmount(),
+                HexVarUtil.numberOrSlotDefault(
+                        glyph.readSlot(FortifyGlyphSlots.AMOUNT, hexContext),
+                        asset.getSlot(FortifyGlyphSlots.AMOUNT))));
+        double duration = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(FortifyGlyphSlots.DURATION, hexContext),
+                asset.getSlot(FortifyGlyphSlots.DURATION));
+        float damageReduction = (float) (amount * config.getReductionScale());
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
         if (entityVar != null) {
-            applyToEntities(glyph, entityVar, damageReduction, (float) duration, hexContext, accessor);
+            applyToEntities(glyph, entityVar, damageReduction, (float) duration, config,
+                    hexContext, accessor);
         } else {
             BlockVar blockVar = HexVarUtil.resolveBlockVar(targets, hexContext);
-            if (blockVar != null) applyToBlocks(blockVar, amount, hexContext, accessor);
+            if (blockVar != null) applyToBlocks(blockVar, amount, config, hexContext, accessor);
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
         }
     }
 
     private void applyToEntities(Glyph glyph, EntityVar entityVar, float damageReduction,
-            float durationSeconds, HexContext hexContext, CommandBuffer<EntityStore> accessor) {
+            float durationSeconds, FortifyConfig config, HexContext hexContext,
+            CommandBuffer<EntityStore> accessor) {
         Ref<EntityStore> ref = entityVar.getRef(accessor);
         if (ref == null || !ref.isValid()) return;
 
-        EntityEffect fortifyEffect = EntityEffect.getAssetMap().getAsset(FORTIFY_EFFECT_ID);
+        String effectId = config.getEffectId();
+        EntityEffect fortifyEffect = EntityEffect.getAssetMap().getAsset(effectId);
         if (fortifyEffect == null) {
-            LOGGER.atWarning().log("fortify: %s effect asset not found", FORTIFY_EFFECT_ID);
+            LOGGER.atWarning().log("fortify: %s effect asset not found", effectId);
             return;
         }
 
@@ -103,7 +111,8 @@ public class FortifyGlyph implements GlyphHandler {
             existing.setRemainingDuration(durationSeconds);
             existing.setNextGlyphIds(glyph.getNextLinks());
         } else {
-            FortifyState state = new FortifyState(damageReduction, durationSeconds, glyph.getNextLinks());
+            FortifyState state = new FortifyState(damageReduction, durationSeconds, effectId,
+                    glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
                     accessor, ref, hexContext, glyph, FortifyGlyph.ID, state);
         }
@@ -117,7 +126,7 @@ public class FortifyGlyph implements GlyphHandler {
                 damageReduction, durationSeconds);
     }
 
-    private void applyToBlocks(BlockVar blockVar, double amount,
+    private void applyToBlocks(BlockVar blockVar, double amount, FortifyConfig config,
             HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         Vector3i pos = blockVar.getValue();
         if (pos == null) return;
@@ -140,7 +149,7 @@ public class FortifyGlyph implements GlyphHandler {
         TimeResource timeResource = world.getEntityStore().getStore()
                 .getResource(TimeResource.getResourceType());
         Instant now = timeResource.getNow();
-        float healAmount = (float) (amount * BLOCK_HEAL_SCALE);
+        float healAmount = (float) (amount * config.getBlockHealScale());
 
         bhc.damageBlock(now, world, pos, -healAmount);
 

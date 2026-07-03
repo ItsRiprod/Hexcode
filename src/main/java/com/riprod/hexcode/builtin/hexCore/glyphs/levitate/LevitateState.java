@@ -2,7 +2,6 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.levitate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -11,30 +10,24 @@ import com.riprod.hexcode.core.common.execution.component.HexColors;
 
 public class LevitateState implements ConstructState {
 
-    private UUID constructId;
     private float appliedIntensity;
     private float remainingDuration;
     private float tickAccum;
     @Nullable
     private HexColors colors;
     private List<String> nextGlyphIds;
+    private String effectId;
 
     public LevitateState() {
-        this.constructId = UUID.randomUUID();
         this.nextGlyphIds = new ArrayList<>();
     }
 
-    public LevitateState(UUID constructId, float appliedIntensity, float remainingDuration,
+    public LevitateState(float appliedIntensity, float remainingDuration,
             @Nullable HexColors colors, List<String> nextGlyphIds) {
-        this.constructId = constructId;
         this.appliedIntensity = appliedIntensity;
         this.remainingDuration = remainingDuration;
         this.colors = colors;
         this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
-    }
-
-    public UUID getConstructId() {
-        return constructId;
     }
 
     public float getAppliedIntensity() {
@@ -70,6 +63,14 @@ public class LevitateState implements ConstructState {
         this.colors = colors;
     }
 
+    public String getEffectId() {
+        return effectId;
+    }
+
+    public void setEffectId(String effectId) {
+        this.effectId = effectId;
+    }
+
     public void tick(float dt) {
         remainingDuration -= dt;
     }
@@ -88,9 +89,10 @@ public class LevitateState implements ConstructState {
 
     @Override
     public LevitateState copy() {
-        LevitateState c = new LevitateState(constructId, appliedIntensity, remainingDuration,
+        LevitateState c = new LevitateState(appliedIntensity, remainingDuration,
                 colors, new ArrayList<>(nextGlyphIds));
         c.tickAccum = this.tickAccum;
+        c.effectId = this.effectId;
         return c;
     }
 }

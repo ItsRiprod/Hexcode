@@ -28,20 +28,27 @@ import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 
 public class ArcConstructHandler implements ConstructHandler<ArcState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final float SHOCK_OVERLAP = 0.25f;
-    private static final String SHOCK_EFFECT_ID = "Hexcode_Shock";
 
     @Override
     public void onFirstTick(HexStatus<ArcState> status, ConstructTickContext ctx) {
-        // shock the entity we just struck for the hop delay + overlap
         ArcState state = status.getState();
         if (state == null) return;
-        ArcUtils.applyShockEffect(ctx.getBuffer(), ctx.getEntityRef(), state.getDelay() + SHOCK_OVERLAP);
+        ArcConfig config = resolveConfig(state.getArcGlyph());
+        ArcUtils.applyShockEffect(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId(),
+                state.getDelay() + (float) config.getShockOverlapSeconds());
+    }
+
+    private ArcConfig resolveConfig(Glyph arcGlyph) {
+        if (arcGlyph == null) return ArcConfig.DEFAULTS;
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(arcGlyph.getGlyphId());
+        GlyphConfig raw = asset != null ? asset.getConfig() : null;
+        return raw instanceof ArcConfig arcConfig ? arcConfig : ArcConfig.DEFAULTS;
     }
 
     @Override
@@ -61,13 +68,13 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
 
     @Override
     public void onCleanup(HexStatus<ArcState> status, ConstructTickContext ctx) {
-        // strip the shock effect off the target we were attached to
+        ArcState state = status.getState();
         Ref<EntityStore> target = ctx.getEntityRef();
-        if (target != null && target.isValid()) {
+        if (state != null && state.getEffectId() != null && target != null && target.isValid()) {
             EffectControllerComponent controller = ctx.getBuffer().getComponent(
                     target, EffectControllerComponent.getComponentType());
             if (controller != null) {
-                int effectIndex = EntityEffect.getAssetMap().getIndex(SHOCK_EFFECT_ID);
+                int effectIndex = EntityEffect.getAssetMap().getIndex(state.getEffectId());
                 if (effectIndex != Integer.MIN_VALUE) {
                     controller.removeEffect(target, effectIndex, ctx.getBuffer());
                 }
@@ -160,7 +167,7 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
                 state.getBranches().subList(state.getBranchIndex(), state.getBranches().size()));
 
         ArcState nextState = new ArcState(state.getArcGlyph(), remaining, nextVisited,
-                state.getMaxJumpDistance(), state.getDelay());
+                state.getMaxJumpDistance(), state.getDelay(), state.getEffectId());
 
         HexConstructSpawner.applyWithState(
                 buffer, nextTarget, hexContext, status.getTriggeringGlyph(),
