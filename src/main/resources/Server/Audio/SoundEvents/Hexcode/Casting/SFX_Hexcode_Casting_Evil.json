@@ -1,0 +1,18 @@
+{
+  "Layers": [
+    {
+      "Files": [
+        "Sounds/Hexcode/Casting/Casting_Loop_Enter.ogg"
+      ],
+      "Looping": false
+    },
+    {
+      "Files": [
+        "Sounds/Hexcode/Casting/Casting_Loop_Evil.ogg"
+      ],
+      "Looping": true,
+      "StartDelay": 0.25
+    }
+  ],
+  "Volume": -4.08
+}

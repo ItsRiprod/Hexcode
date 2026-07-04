@@ -12,7 +12,7 @@
   "Description": "hexcode.glyphs.Halt.description",
   "ModelPath": "Halt",
   "BasePower": 1.0,
-  "ManaConsumption": 10,
+  "ManaConsumption": 1.0,
   "ShapeStructure": [
     {
       "ShapeId": "Antitriangle",
@@ -39,8 +39,9 @@
     }
   },
   "Volatility": {
-    "InstantCost": 2,
-    "DrainPerSecond": 0.1},
+    "InstantCost": 1.0,
+    "DrainPerSecond": 0.1
+  },
   "Config": {
     "Type": "Halt",
     "Effect": "Hexcode_Halt"

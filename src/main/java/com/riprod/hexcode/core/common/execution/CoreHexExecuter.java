@@ -4,6 +4,7 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.event.GlyphExecuteEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
@@ -35,7 +36,7 @@ public class CoreHexExecuter {
             return;
         }
 
-        if (!context.getHexRoot().tryConsumeMana(context.getManaCost(), buffer)) {
+        if (context.isConsumeMana() && !context.getHexRoot().tryConsumeMana(context.getManaCost(), buffer)) {
             HytaleServer.get().getEventBus().dispatchFor(GlyphFizzleEvent.class)
                     .dispatch(new GlyphFizzleEvent(null, GlyphFizzleEvent.Reason.INSUFFICIENT_MANA, context));
             return;
@@ -99,9 +100,11 @@ public class CoreHexExecuter {
         Glyph nextNode = hexContext.getGlyph(nodeId);
 
         if (nextNode == null) {
-            HexExecuter.fail(null, hexContext);
+            HexExecuter.fail(null, hexContext, GlyphFizzleEvent.Reason.ERROR, "unresolved node: " + nodeId);
             return;
         }
+        HytaleServer.get().getEventBus().dispatchFor(GlyphExecuteEvent.class)
+                .dispatch(new GlyphExecuteEvent(nodeId, nextNode, hexContext));
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(nextNode.getGlyphId());
         GlyphHandler nextHandler = asset != null ? GlyphRegistry.get(asset.getHandler()) : null;
         if (nextHandler == null) {

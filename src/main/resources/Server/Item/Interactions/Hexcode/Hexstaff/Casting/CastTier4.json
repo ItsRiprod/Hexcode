@@ -1,0 +1,37 @@
+{
+  "Type": "StatsCondition",
+  "Costs": {
+    "Stamina": 0.1
+  },
+  "Next": {
+    "Type": "Serial",
+    "Interactions": [
+      {
+        "Type": "ChangeStat",
+        "StatModifiers": {
+          "Stamina": -5,
+          "StaminaRegenDelay": -2
+        }
+      },
+      {
+        "Type": "Replace",
+        "Var": "HexTier4",
+        "DefaultOk": true,
+        "DefaultValue": {
+          "Type": "HexExecute",
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "HexStats": {
+              "InitialVolatility": 60,
+              "VolatilityMultiplier": 1.0
+            }
+          },
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          }
+        }
+      }
+    ]
+  },
+  "Failed": "Stamina_Bar_Flash"
+}

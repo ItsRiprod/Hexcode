@@ -37,6 +37,7 @@ public class CastDecaySystem extends WorldEventSystem<EntityStore, HexCastEvent.
             @Nonnull HexCastEvent.Pre event) {
         if (event.isCancelled()) return;
         HexContext context = event.getContext();
+        if (!context.isApplyVolatilityDecay()) return;
         if (context.getCastSlotKey() != null) return;
         if (!(context.getHexRoot() instanceof PlayerHexRoot playerRoot)) return;
         Ref<EntityStore> casterRef = playerRoot.getSourceRef(buffer);

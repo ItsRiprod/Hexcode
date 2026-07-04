@@ -19,6 +19,7 @@ import com.riprod.hexcode.command.hex.HexInspectCommand;
 import com.riprod.hexcode.command.hex.HexSaveCommand;
 import com.riprod.hexcode.command.hex.HexSerializeCommand;
 import com.riprod.hexcode.command.hex.HexTestRoundtripCommand;
+import com.riprod.hexcode.builtin.hextreme.command.HexPageCommand;
 
 import com.hypixel.hytale.logger.HytaleLogger;
 
@@ -41,6 +42,7 @@ public class HexcodeCommand extends AbstractPlayerCommand {
         addSubCommand(new HexCastCommand());
         addSubCommand(new DrawTrainCommand());
         addSubCommand(new HexResetCommand());
+        addSubCommand(new HexPageCommand());
     }
 
     @Override
@@ -63,6 +65,7 @@ public class HexcodeCommand extends AbstractPlayerCommand {
         ctx.sendMessage(Message.raw("/hexcode save <name> --pack=<packName> - Save the active hex as a reusable preset"));
         ctx.sendMessage(Message.raw("/hexcode test-roundtrip - Encode+decode the active hex and verify structural equality"));
         ctx.sendMessage(Message.raw("/hexcode cast <hexId> - Cast a saved hex by its asset id"));
+        ctx.sendMessage(Message.raw("/hexcode page <hexId> --name=<override> --quantity=<n> - Create Spell Page item(s) inscribed with a saved hex"));
         ctx.sendMessage(Message.raw("/hexcode train - Start a draw training session"));
         ctx.sendMessage(Message.raw("/hexcode reset - Force reset hexcode state to IDLE"));
     }

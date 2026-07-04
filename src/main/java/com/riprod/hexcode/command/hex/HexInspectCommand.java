@@ -30,9 +30,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
-import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.common.hexstaff.component.HexStaffComponent;
 
 public class HexInspectCommand extends AbstractPlayerCommand {
 
@@ -54,12 +52,7 @@ public class HexInspectCommand extends AbstractPlayerCommand {
 
         boolean detailed = detailedFlag.get(context);
 
-        HexStaffComponent staff = CasterInventory.getHexStaffComponent(store, playerEntityRef);
         var execComp = store.getComponent(playerEntityRef, ExecutionComponent.getComponentType());
-        if (staff == null) {
-            send(playerRef, "You are not holding a hex staff");
-            return;
-        }
         if (execComp == null) {
             send(playerRef, "No execution component found on player");
             return;
@@ -74,7 +67,7 @@ public class HexInspectCommand extends AbstractPlayerCommand {
         if (detailed) {
             printDetailed(playerRef, hex);
         } else {
-            printFormatted(playerRef, hex, staff.getStyleId());
+            printFormatted(playerRef, hex);
         }
     }
 
@@ -87,7 +80,7 @@ public class HexInspectCommand extends AbstractPlayerCommand {
         send(playerRef, json);
     }
 
-    private void printFormatted(PlayerRef playerRef, Hex hex, String style) {
+    private void printFormatted(PlayerRef playerRef, Hex hex) {
         Map<String, Integer> indexMap = new HashMap<>();
         List<Glyph> effectGlyphs = new ArrayList<>();
         Set<String> valueGlyphIds = new LinkedHashSet<>();
@@ -129,7 +122,7 @@ public class HexInspectCommand extends AbstractPlayerCommand {
         }
 
         List<String> lines = new ArrayList<>();
-        lines.add("== Hex Staff (style: " + style + ") ==");
+        lines.add("== Hex Staff ==");
         lines.add("");
 
         for (Glyph g : effectGlyphs) {

@@ -17,7 +17,7 @@
   "Description": "hexcode.glyphs.Beam.description",
   "ModelPath": "Beam",
   "BasePower": 1.0,
-  "ManaConsumption": 4,
+  "ManaConsumption": 0.4,
   "ShapeStructure": [
     {
       "ShapeId": "Square",
@@ -55,8 +55,9 @@
     }
   },
   "Volatility": {
-    "InstantCost": 2,
-    "DrainPerSecond": 0.0},
+    "InstantCost": 1.0,
+    "DrainPerSecond": 0.0
+  },
   "Config": {
     "Type": "Beam",
     "OriginOffset": 1.5

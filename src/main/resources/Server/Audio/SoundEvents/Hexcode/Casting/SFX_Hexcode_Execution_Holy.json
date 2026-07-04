@@ -1,0 +1,12 @@
+{
+  "Layers": [
+    {
+      "Files": [
+        "Sounds/Hexcode/Casting/Execute_Hex_Holy.ogg"
+      ],
+      "Looping": true
+    }
+  ],
+  "Volume": -8.04,
+  "Parent": "SFX_Attn_VeryQuiet"
+}

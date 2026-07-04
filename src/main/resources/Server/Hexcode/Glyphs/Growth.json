@@ -16,7 +16,7 @@
   "Description": "hexcode.glyphs.Growth.description",
   "ModelPath": "Growth",
   "BasePower": 1.0,
-  "ManaConsumption": 12,
+  "ManaConsumption": 1.2,
   "ShapeStructure": [
     {
       "ShapeId": "Square",
@@ -58,8 +58,9 @@
     }
   },
   "Volatility": {
-    "InstantCost": 3,
-    "DrainPerSecond": 0.0},
+    "InstantCost": 2,
+    "DrainPerSecond": 0.0
+  },
   "Config": {
     "Type": "Growth",
     "MinAmount": 1.0,
@@ -77,6 +78,9 @@
       "Plant_Flower_Poppy",
       "Plant_Fern"
     ],
-    "GrassDirtPrefixes": ["Soil_Grass", "Soil_Dirt"]
+    "GrassDirtPrefixes": [
+      "Soil_Grass",
+      "Soil_Dirt"
+    ]
   }
 }

@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
@@ -43,7 +44,15 @@ public class DrawCaptureComponent implements Component<EntityStore> {
     private HexComponent draggingHex;
     private boolean dragReleaseRequested;
 
+    private ModelParticle[] auraParticles;
+    private String castStyleId = "ring";
+
     public DrawCaptureComponent() {
+    }
+
+    public DrawCaptureComponent(@Nullable ModelParticle[] auraParticles, @Nonnull String castStyleId) {
+        this.auraParticles = auraParticles;
+        this.castStyleId = castStyleId;
     }
 
     public FloatArrayList getStrokePoints() {
@@ -139,6 +148,16 @@ public class DrawCaptureComponent implements Component<EntityStore> {
         this.dragReleaseRequested = true;
     }
 
+    @Nullable
+    public ModelParticle[] getAuraParticles() {
+        return auraParticles;
+    }
+
+    @Nonnull
+    public String getCastStyleId() {
+        return castStyleId;
+    }
+
     @Nonnull
     @Override
     public DrawCaptureComponent clone() {
@@ -155,6 +174,8 @@ public class DrawCaptureComponent implements Component<EntityStore> {
         copy.hoveredHex = this.hoveredHex;
         copy.draggingHex = this.draggingHex;
         copy.dragReleaseRequested = this.dragReleaseRequested;
+        copy.auraParticles = this.auraParticles;
+        copy.castStyleId = this.castStyleId;
         return copy;
     }
 }

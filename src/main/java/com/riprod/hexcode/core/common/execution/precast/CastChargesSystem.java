@@ -42,14 +42,16 @@ public class CastChargesSystem extends WorldEventSystem<EntityStore, HexCastEven
         tracker.setSlotKey(slotKey);
 
         if (slotKey == null) {
-            int max = (int) playerRoot.resolveMaxMagicCharges(buffer);
-            if (max <= 0) {
-                sendNoSlotsMessage(buffer, casterRef);
-                event.setCancelled(true);
-                return;
-            }
-            while (casterState.getActiveCount() >= max) {
-                casterState.evictOldest();
+            if (context.isRequireMagicCharges()) {
+                int max = (int) playerRoot.resolveMaxMagicCharges(buffer);
+                if (max <= 0) {
+                    sendNoSlotsMessage(buffer, casterRef);
+                    event.setCancelled(true);
+                    return;
+                }
+                while (casterState.getActiveCount() >= max) {
+                    casterState.evictOldest();
+                }
             }
         } else {
             casterState.fizzleSlot(slotKey);

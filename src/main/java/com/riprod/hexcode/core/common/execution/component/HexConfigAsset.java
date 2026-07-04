@@ -29,8 +29,11 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
     protected String id;
 
     protected HexStats hexStats = new HexStats();
-    protected HexStyleAsset style = new HexStyleAsset();
-    protected float castDecayRate = 0.0f;
+    protected String styleId;
+    protected boolean requireMagicCharges = true;
+    protected boolean consumeMana = true;
+    protected boolean applyVolatilityDecay = true;
+    protected boolean bypassVolatilityDepletion = false;
 
     public abstract Hex getHex(ComponentAccessor<EntityStore> accessor, HexRoot hexRoot);
 
@@ -39,7 +42,24 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
     }
 
     public HexStyleAsset getStyle() {
-        return this.style;
+        if (this.styleId == null) return null;
+        return HexStyleAsset.getAssetMap().getAsset(this.styleId);
+    }
+
+    public boolean isRequireMagicCharges() {
+        return this.requireMagicCharges;
+    }
+
+    public boolean isConsumeMana() {
+        return this.consumeMana;
+    }
+
+    public boolean isApplyVolatilityDecay() {
+        return this.applyVolatilityDecay;
+    }
+
+    public boolean isBypassVolatilityDepletion() {
+        return this.bypassVolatilityDepletion;
     }
 
     public static AssetStore<String, HexConfigAsset, DefaultAssetMap<String, HexConfigAsset>> getAssetStore() {
@@ -71,15 +91,31 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
                         c -> c.hexStats,
                         (c, p) -> c.hexStats = p.hexStats)
                 .add()
-                .appendInherited(new KeyedCodec<>("Style", HexStyleAsset.CODEC),
-                        (c, v) -> c.style = v,
-                        c -> c.style,
-                        (c, p) -> c.style = p.style)
+                .appendInherited(new KeyedCodec<>("Style", HexStyleAsset.CHILD_ASSET_CODEC),
+                        (c, v) -> c.styleId = v,
+                        c -> c.styleId,
+                        (c, p) -> c.styleId = p.styleId)
+                .addValidatorLate(() -> HexStyleAsset.VALIDATOR_CACHE.getValidator().late())
                 .add()
-                .<Float>appendInherited(new KeyedCodec<>("CastDecayRate", Codec.FLOAT),
-                        (c, v) -> c.castDecayRate = v,
-                        c -> c.castDecayRate,
-                        (c, p) -> c.castDecayRate = p.castDecayRate)
+                .<Boolean>appendInherited(new KeyedCodec<>("RequireMagicCharges", Codec.BOOLEAN),
+                        (c, v) -> c.requireMagicCharges = v,
+                        c -> c.requireMagicCharges,
+                        (c, p) -> c.requireMagicCharges = p.requireMagicCharges)
+                .add()
+                .<Boolean>appendInherited(new KeyedCodec<>("ConsumeMana", Codec.BOOLEAN),
+                        (c, v) -> c.consumeMana = v,
+                        c -> c.consumeMana,
+                        (c, p) -> c.consumeMana = p.consumeMana)
+                .add()
+                .<Boolean>appendInherited(new KeyedCodec<>("ApplyVolatilityDecay", Codec.BOOLEAN),
+                        (c, v) -> c.applyVolatilityDecay = v,
+                        c -> c.applyVolatilityDecay,
+                        (c, p) -> c.applyVolatilityDecay = p.applyVolatilityDecay)
+                .add()
+                .<Boolean>appendInherited(new KeyedCodec<>("BypassVolatilityDepletion", Codec.BOOLEAN),
+                        (c, v) -> c.bypassVolatilityDepletion = v,
+                        c -> c.bypassVolatilityDepletion,
+                        (c, p) -> c.bypassVolatilityDepletion = p.bypassVolatilityDepletion)
                 .add()
                 .build();
 

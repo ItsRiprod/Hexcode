@@ -18,8 +18,7 @@
       -7.8
     ]
   },
-  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
-  "MaxStack": 16,
+  "MaxStack": 1,
   "Tags": {
     "Family": [
       "HexPage"
@@ -31,5 +30,10 @@
   "ItemSoundSetId": "ISS_Weapons_Books",
   "Interactions": {
     "Secondary": "Page_Secondary"
-  }
+  },
+  "Icon": "Icons/ItemsGenerated/Hex_Page.png",
+  "Parent": "Recipe_Page",
+  "MaxDurability": 10,
+  "DurabilityLossOnDeath": false,
+  "Repairable": false
 }

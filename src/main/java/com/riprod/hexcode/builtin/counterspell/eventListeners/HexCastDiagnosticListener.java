@@ -27,9 +27,13 @@ public class HexCastDiagnosticListener extends WorldEventSystem<EntityStore, Hex
         Hex hex = data != null ? data.getHex() : null;
         String firstGlyph = hex != null ? hex.get(hex.getFirstGlyphId()).getGlyphId() : "<null>";
         LOGGER.atInfo().log(
-                "firstGlyph=%s mana=%s cancelled=%s",
+                "firstGlyph=%s mana=%s cancelled=%s reqCharges=%s consumeMana=%s decay=%s bypassVol=%s",
                 firstGlyph,
                 data != null ? data.getManaCost() : "<null>",
-                event.isCancelled());
+                event.isCancelled(),
+                data != null && data.isRequireMagicCharges(),
+                data != null && data.isConsumeMana(),
+                data != null && data.isApplyVolatilityDecay(),
+                data != null && data.isBypassVolatilityDepletion());
     }
 }

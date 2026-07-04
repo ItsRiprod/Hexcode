@@ -6,7 +6,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
+import com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
@@ -23,8 +23,8 @@ public class ForceGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     public static final String ID = "Force";
 
-    private static final double MAX_Y_VELOCITY = 25.0;
-    
+    private static final double MAX_Y_VELOCITY = 130.0;
+
     @Override
     public String getId() {
         return ID;
@@ -66,10 +66,15 @@ public class ForceGlyph implements GlyphHandler {
                 }
                 Vector3d force = new Vector3d(direction).mul(magnitude);
 
-                clampUpwardY(ref, force, hexContext.getAccessor());
-
-                VelocityUtil.applyVelocity(ref, force, ChangeVelocityType.Add,
+                double vy = Math.min(force.y, MAX_Y_VELOCITY);
+                VelocityUtil.applyVelocity(ref, new Vector3d(0, vy, 0), ChangeVelocityType.Set,
                         null, hexContext.getAccessor());
+
+                VelocityConfig horizontal = new VelocityConfig();
+                horizontal.setGroundResistance(0.80f);
+                horizontal.setAirResistance(1f);
+                VelocityUtil.applyVelocity(ref, new Vector3d(force.x, 0, force.z), ChangeVelocityType.Add,
+                        horizontal, hexContext.getAccessor());
 
                 ForceGlyphStyle.render(targetPos, force, hexContext, hexContext.getAccessor());
             }
@@ -78,19 +83,5 @@ public class ForceGlyph implements GlyphHandler {
         }
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
-    }
-
-    private void clampUpwardY(Ref<EntityStore> ref, Vector3d force,
-            CommandBuffer<EntityStore> accessor) {
-        if (force.y <= 0) return;
-        Velocity vel = accessor.getComponent(ref, Velocity.getComponentType());
-        if (vel == null) return;
-        double currentY = vel.getClientVelocity().y();
-        double headroom = MAX_Y_VELOCITY - currentY;
-        if (headroom <= 0) {
-            force.y = 0;
-        } else if (force.y > headroom) {
-            force.y = headroom;
-        }
     }
 }

@@ -54,8 +54,6 @@ import com.riprod.hexcode.core.common.hexes.codec.HexCacheResource;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
-import com.riprod.hexcode.core.common.hexstaff.component.HexStaffAsset;
-import com.riprod.hexcode.core.common.hexstaff.component.HexStaffComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hover.system.HoverableSpatialSystem;
 import com.riprod.hexcode.core.common.imbuement.asset.EssenceAsset;
@@ -246,22 +244,12 @@ public class Hexcode extends JavaPlugin {
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
-                        .builder(HexStaffAsset.class,
-                                new DefaultAssetMap<String, HexStaffAsset>())
-                        .setPath("Hexcode/HexStaffs")
-                        .setCodec(HexStaffAsset.CODEC)
-                        .setKeyFunction(HexStaffAsset::getId)
-                        .loadsAfter(ParticleSystem.class)
-                        .loadsAfter(Item.class)
-                        .loadsAfter(HexStyleAsset.class)
-                        .build());
-        AssetRegistry.register(
-                HytaleAssetStore
                         .builder(SavedHexAsset.class,
                                 new DefaultAssetMap<String, SavedHexAsset>())
                         .setPath("Hexcode/SavedHexes")
                         .setCodec(SavedHexAsset.CODEC)
                         .setKeyFunction(SavedHexAsset::getId)
+                        .loadsAfter(GlyphAsset.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
@@ -298,12 +286,6 @@ public class Hexcode extends JavaPlugin {
                 HexComponent.class, "Hex",
                 HexComponent.CODEC);
         HexComponent.setComponentType(hexComponentType);
-
-        ComponentType<EntityStore, HexStaffComponent> hexStaffComponentType = entityStoreRegistry
-                .registerComponent(
-                        HexStaffComponent.class, "HexStaff",
-                        HexStaffComponent.CODEC);
-        HexStaffComponent.setComponentType(hexStaffComponentType);
 
         ComponentType<EntityStore, HexcasterComponent> hexcasterComponentType = entityStoreRegistry
                 .registerComponent(

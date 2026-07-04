@@ -50,9 +50,90 @@
   },
   "ItemSoundSetId": "ISS_Weapons_Wood",
   "InteractionVars": {
-    "CastSpell": {
-      "Interactions": [
-        "CastSpell_Basic_Mithril"
+    "HexTier1": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 55,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Mithril"
+      }
+    },
+    "HexTier2": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 63,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Mithril"
+      }
+    },
+    "HexTier3": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 71,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Mithril"
+      }
+    },
+    "HexTier4": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 79,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Mithril"
+      }
+    },
+    "Drawmode": {
+      "Type": "HexDrawMode",
+      "Parent": "Drawmode_Default",
+      "AuraParticles": [
+        {
+          "SystemId": "Hexstaff_Motes_Slow",
+          "PositionOffset": {
+            "Y": 1.5
+          },
+          "Color": "#FFFFFF",
+          "Scale": 1.3
+        },
+        {
+          "SystemId": "Hexstaff_Sparks_Mid",
+          "PositionOffset": {
+            "Y": 0.0
+          },
+          "Color": "#ECEFF1",
+          "Scale": 1.2
+        },
+        {
+          "SystemId": "Hexstaff_Generic_Mist",
+          "PositionOffset": {
+            "Y": -1.5
+          },
+          "Color": "#ECEFF1",
+          "Scale": 1.3
+        }
       ]
     }
   }

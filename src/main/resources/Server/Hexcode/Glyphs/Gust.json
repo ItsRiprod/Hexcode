@@ -21,7 +21,7 @@
   "Description": "hexcode.glyphs.Gust.description",
   "ModelPath": "Gust",
   "BasePower": 1.0,
-  "ManaConsumption": 15,
+  "ManaConsumption": 1.5,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",
@@ -64,7 +64,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 4,
+    "InstantCost": 3,
     "DrainPerSecond": 0.0
   },
   "Config": {

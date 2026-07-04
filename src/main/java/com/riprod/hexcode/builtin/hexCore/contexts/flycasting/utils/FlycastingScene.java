@@ -8,7 +8,6 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
-import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -19,8 +18,6 @@ import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
-import com.riprod.hexcode.core.common.hexstaff.component.HexStaffAsset;
-import com.riprod.hexcode.core.common.hexstaff.component.HexStaffComponent;
 import com.riprod.hexcode.utils.CleanupUtils;
 import com.riprod.hexcode.utils.HexSlot;
 
@@ -32,29 +29,23 @@ public final class FlycastingScene {
 
     @Nullable
     public static FlycastingState spawn(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
-        HexStaffComponent staff = CasterInventory.getHexStaffComponent(buffer, player);
-        if (staff == null) {
-            return null;
-        }
-
         DrawCaptureComponent capture = buffer.getComponent(player, DrawCaptureComponent.getComponentType());
         List<Hex> hexes = capture != null ? capture.getPalette()
                 : CasterInventory.getHexesForCasting(buffer, player);
 
-        ItemStack mainHand = InventoryComponent.getItemInHand(buffer, player);
         ItemStack offHand = PlayerUtils.getHandItem(buffer, player, HexSlot.OffHand);
-        HexStaffAsset staffAsset = CasterInventory.getHexStaffAsset(mainHand);
         HexBookAsset bookAsset = CasterInventory.getHexBookAsset(offHand);
-        ModelParticle[] staffParticles = staffAsset != null ? staffAsset.getCastingAuraParticles() : null;
+        ModelParticle[] staffParticles = capture != null ? capture.getAuraParticles() : null;
         ModelParticle[] bookParticles = bookAsset != null ? bookAsset.getCastingAuraParticles() : null;
         ModelParticle[] particles = mergeParticles(staffParticles, bookParticles);
 
         float eyeHeight = resolveEyeHeight(buffer, player);
         Ref<EntityStore> castingRootRef = RootSpawner.createCastingRoot(buffer, player, eyeHeight, particles);
 
+        String castStyleId = capture != null ? capture.getCastStyleId() : "ring";
         FlycastingState state = new FlycastingState();
         state.setCastingRootRef(castingRootRef);
-        state.setActiveHexes(HexSpawner.spawnHexes(buffer, player, castingRootRef, hexes, staff.getStyleId()));
+        state.setActiveHexes(HexSpawner.spawnHexes(buffer, player, castingRootRef, hexes, castStyleId));
         return state;
     }
 

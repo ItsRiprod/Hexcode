@@ -28,6 +28,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 0.5,
-    "DrainPerSecond": 0.05}
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.05
+  }
 }

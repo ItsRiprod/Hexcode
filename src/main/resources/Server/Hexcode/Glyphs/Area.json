@@ -13,7 +13,7 @@
   "Description": "hexcode.glyphs.Area.description",
   "ModelPath": "Area",
   "BasePower": 1.0,
-  "ManaConsumption": 5,
+  "ManaConsumption": 0.5,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",
@@ -39,9 +39,9 @@
       "Unique": true,
       "Impact": {
         "Type": "SphereVolume",
-        "DefaultMagnitude": 1500.0,
+        "DefaultMagnitude": 523.0,
         "Exponent": 0.6667,
-        "Multiplier": 1.67
+        "Multiplier": 1.0
       }
     },
     "Blocks": {
@@ -56,7 +56,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 3,
+    "InstantCost": 1.0,
     "DrainPerSecond": 0.0
   },
   "Config": {

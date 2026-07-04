@@ -12,7 +12,7 @@
   "Description": "hexcode.glyphs.Force.description",
   "ModelPath": "Force",
   "BasePower": 1.0,
-  "ManaConsumption": 8,
+  "ManaConsumption": 0.8,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",
@@ -50,7 +50,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 3,
+    "InstantCost": 0.5,
     "DrainPerSecond": 0.0
   }
 }

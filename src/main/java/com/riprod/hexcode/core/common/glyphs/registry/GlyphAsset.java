@@ -43,7 +43,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     protected String description;
     protected String verboseDescription;
     protected float basePower = 1.0f;
-    protected int manaConsumption = 10;
+    protected float manaConsumption = 1.0f;
     protected boolean isReversable = false;
     protected boolean isEnabled = true;
     protected VolatilityAsset volatility = new VolatilityAsset();
@@ -91,7 +91,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
         return this.basePower;
     }
 
-    public int getManaConsumption() {
+    public float getManaConsumption() {
         return this.manaConsumption;
     }
 
@@ -229,7 +229,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, v) -> a.basePower = v, a -> a.basePower,
                         (a, p) -> a.basePower = p.basePower)
                 .add()
-                .appendInherited(new KeyedCodec<>("ManaConsumption", Codec.INTEGER),
+                .<Float>appendInherited(new KeyedCodec<>("ManaConsumption", Codec.FLOAT),
                         (a, v) -> a.manaConsumption = v, a -> a.manaConsumption,
                         (a, p) -> a.manaConsumption = p.manaConsumption)
                 .documentation("How much mana the glyph consumes when cast")

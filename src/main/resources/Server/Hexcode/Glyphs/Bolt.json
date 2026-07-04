@@ -17,7 +17,7 @@
   "Description": "hexcode.glyphs.Bolt.description",
   "ModelPath": "Bolt",
   "BasePower": 1.0,
-  "ManaConsumption": 20,
+  "ManaConsumption": 2.0,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",
@@ -42,11 +42,11 @@
       "Style": "Input",
       "Label": "hexcode.glyphs.Bolt.power.name",
       "Description": "hexcode.glyphs.Bolt.power.description",
-      "DefaultValue": 15,
+      "DefaultValue": 5,
       "Unique": true,
       "Impact": {
         "Type": "PowerLaw",
-        "DefaultMagnitude": 15.0,
+        "DefaultMagnitude": 5.0,
         "Exponent": 1.0
       }
     },
@@ -57,7 +57,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 6,
+    "InstantCost": 4,
     "DrainPerSecond": 0.0
   },
   "Config": {

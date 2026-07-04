@@ -78,9 +78,82 @@
     ]
   },
   "InteractionVars": {
-    "CastSpell": {
-      "Interactions": [
-        "CastSpell_Basic_Thorium"
+    "HexTier1": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 31,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Thorium"
+      }
+    },
+    "HexTier2": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 36,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Thorium"
+      }
+    },
+    "HexTier3": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 40,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Thorium"
+      }
+    },
+    "HexTier4": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 45,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Thorium"
+      }
+    },
+    "Drawmode": {
+      "Type": "HexDrawMode",
+      "Parent": "Drawmode_Default",
+      "AuraParticles": [
+        {
+          "SystemId": "Hexstaff_Generic_Mist",
+          "PositionOffset": {
+            "Y": -1.5
+          },
+          "Color": "#4CAF50",
+          "Scale": 1.2
+        },
+        {
+          "SystemId": "Hexstaff_Motes_Slow",
+          "PositionOffset": {
+            "Y": 0.5
+          },
+          "Color": "#A5D6A7",
+          "Scale": 1.0
+        }
       ]
     }
   }

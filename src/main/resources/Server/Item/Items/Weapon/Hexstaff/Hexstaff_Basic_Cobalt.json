@@ -78,9 +78,82 @@
     ]
   },
   "InteractionVars": {
-    "CastSpell": {
-      "Interactions": [
-        "CastSpell_Basic_Cobalt"
+    "HexTier1": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 35,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Cobalt"
+      }
+    },
+    "HexTier2": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 40,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Cobalt"
+      }
+    },
+    "HexTier3": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 45,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Cobalt"
+      }
+    },
+    "HexTier4": {
+      "Type": "HexExecute",
+      "Effects": {
+        "ItemAnimationId": "HexExecution_Primary"
+      },
+      "Config": {
+        "HexStorageType": "ExecutionConfig",
+        "HexStats": {
+          "InitialVolatility": 50,
+          "VolatilityMultiplier": 1.0
+        },
+        "Style": "Hexstaff_Basic_Cobalt"
+      }
+    },
+    "Drawmode": {
+      "Type": "HexDrawMode",
+      "Parent": "Drawmode_Default",
+      "AuraParticles": [
+        {
+          "SystemId": "Hexstaff_Generic_Mist",
+          "PositionOffset": {
+            "Y": -1.5
+          },
+          "Color": "#1E88E5",
+          "Scale": 1.2
+        },
+        {
+          "SystemId": "Hexstaff_Orbit_Spark",
+          "PositionOffset": {
+            "Y": 0.0
+          },
+          "Color": "#64B5F6",
+          "Scale": 1.1
+        }
       ]
     }
   }

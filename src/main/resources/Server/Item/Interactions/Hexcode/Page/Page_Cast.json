@@ -1,10 +1,12 @@
 {
   "Type": "Charging",
   "CancelOnItemChange": true,
-  "AllowIndefiniteHold": true,
   "Effects": {
     "ItemAnimationId": "CastSpellCharging",
-    "ClearAnimationOnFinish": true
+    "ClearAnimationOnFinish": true,
+    "ItemPlayerAnimationsId": "HexBook",
+    "LocalSoundEventId": "SFX_Hexcode_Page_Cast_2",
+    "ClearSoundEventOnFinish": true
   },
   "CancelOnOtherClick": false,
   "Next": {
@@ -18,7 +20,10 @@
             "HexStats": {
               "InitialVolatility": 60,
               "VolatilityMultiplier": 1.0
-            }
+            },
+            "RequireMagicCharges": false,
+            "BypassVolatilityDepletion": true,
+            "ApplyVolatilityDecay": false
           },
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"
@@ -26,7 +31,10 @@
         },
         {
           "Type": "ModifyInventory",
-          "AdjustHeldItemQuantity": -1
+          "AdjustHeldItemDurability": -1,
+          "BrokenItem": "Ingredient_Fabric_Scrap_Linen",
+          "NotifyOnBreak": true,
+          "NotifyOnBreakMessage": "hexcode.pages.page.break"
         }
       ]
     }

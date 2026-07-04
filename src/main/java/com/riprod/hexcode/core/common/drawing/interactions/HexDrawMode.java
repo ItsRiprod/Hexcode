@@ -1,18 +1,24 @@
 package com.riprod.hexcode.core.common.drawing.interactions;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIEditor;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.WaitForDataFrom;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.client.ChargingInteraction;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.casting.registry.CastingStyleValidator;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 
 public class HexDrawMode extends ChargingInteraction {
@@ -21,7 +27,24 @@ public class HexDrawMode extends ChargingInteraction {
     @Nonnull
     public static final BuilderCodec<HexDrawMode> CODEC = BuilderCodec
             .builder(HexDrawMode.class, HexDrawMode::new, ChargingInteraction.CODEC)
+            .appendInherited(new KeyedCodec<>("AuraParticles", ModelParticle.ARRAY_CODEC),
+                    (i, v) -> i.auraParticles = v,
+                    i -> i.auraParticles,
+                    (i, p) -> i.auraParticles = p.auraParticles)
+            .add()
+            .appendInherited(new KeyedCodec<>("CastStyleId", Codec.STRING),
+                    (i, v) -> i.castStyleId = v,
+                    i -> i.castStyleId,
+                    (i, p) -> i.castStyleId = p.castStyleId)
+            .metadata(new UIEditor(new UIEditor.Dropdown("HexcodeCastingStyles")))
+            .addValidatorLate(() -> CastingStyleValidator.INSTANCE.late())
+            .add()
             .build();
+
+    @Nullable
+    private ModelParticle[] auraParticles;
+    @Nullable
+    private String castStyleId;
 
     public HexDrawMode() {
     }
@@ -43,10 +66,10 @@ public class HexDrawMode extends ChargingInteraction {
                 return;
             }
 
-            // presence of the capture component is the draw flag; the lifecycle refsystem
-            // fires enter/exit off these structural writes
             if (firstRun && buffer.getComponent(player, DrawCaptureComponent.getComponentType()) == null) {
-                buffer.putComponent(player, DrawCaptureComponent.getComponentType(), new DrawCaptureComponent());
+                String castStyle = this.castStyleId != null ? this.castStyleId : "ring";
+                buffer.putComponent(player, DrawCaptureComponent.getComponentType(),
+                        new DrawCaptureComponent(this.auraParticles, castStyle));
             }
 
             super.tick0(firstRun, time, type, ctx, cooldown);

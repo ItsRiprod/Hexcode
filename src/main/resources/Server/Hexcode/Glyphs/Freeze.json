@@ -16,7 +16,7 @@
   "Description": "hexcode.glyphs.Freeze.description",
   "ModelPath": "Freeze",
   "BasePower": 1.0,
-  "ManaConsumption": 20,
+  "ManaConsumption": 2.0,
   "ShapeStructure": [
     {
       "ShapeId": "Anticircle",
@@ -41,7 +41,7 @@
       "Style": "Input",
       "Label": "hexcode.glyphs.Freeze.duration.name",
       "Description": "hexcode.glyphs.Freeze.duration.description",
-      "DefaultValue": 10,
+      "DefaultValue": 5,
       "Unique": true
     },
     "Next": {
@@ -51,8 +51,9 @@
     }
   },
   "Volatility": {
-    "InstantCost": 4,
-    "DrainPerSecond": 0.2},
+    "InstantCost": 3,
+    "DrainPerSecond": 0.2
+  },
   "Config": {
     "Type": "Freeze",
     "IceBlock": "Rock_Ice"

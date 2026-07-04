@@ -97,6 +97,10 @@ public class HexExecuteInteraction extends SimpleInteraction {
 
             HexStats tracker = new HexStats(volatility, volMult, 1.0f);
             HexContext context = new HexContext(hexClone, baseMana, hexRoot, style, tracker);
+            context.setRequireMagicCharges(config.isRequireMagicCharges());
+            context.setConsumeMana(config.isConsumeMana());
+            context.setApplyVolatilityDecay(config.isApplyVolatilityDecay());
+            context.setBypassVolatilityDepletion(config.isBypassVolatilityDepletion());
 
             HexExecuter.cast(context, buffer);
             ctx.getState().state = InteractionState.Finished;

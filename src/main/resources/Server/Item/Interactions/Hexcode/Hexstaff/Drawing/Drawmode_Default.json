@@ -1,0 +1,44 @@
+{
+  "Type": "HexDrawMode",
+  "Forks": {
+    "Primary": "Draw"
+  },
+  "CancelOnItemChange": true,
+  "AllowIndefiniteHold": true,
+  "Effects": {
+    "ItemAnimationId": "HexCrafting_Enter",
+    "ClearAnimationOnFinish": true
+  },
+  "CancelOnOtherClick": false,
+  "Next": {
+    "0.0": {
+      "Type": "Interrupt",
+      "Entity": "Owner",
+      "Effects": {
+        "ClearAnimationOnFinish": true
+      }
+    }
+  },
+  "Failed": {
+    "Type": "Interrupt",
+    "Entity": "Owner",
+    "Effects": {
+      "ClearAnimationOnFinish": true
+    }
+  },
+  "AuraParticles": [
+    {
+      "SystemId": "Mist_Spawner",
+      "DetachedFromModel": false,
+      "Scale": 1.5,
+      "Color": "#8ab",
+      "PositionOffset": {
+        "Y": -1.5
+      }
+    },
+    {
+      "SystemId": "Ring_Spawner"
+    }
+  ],
+  "CastStyleId": "ring"
+}

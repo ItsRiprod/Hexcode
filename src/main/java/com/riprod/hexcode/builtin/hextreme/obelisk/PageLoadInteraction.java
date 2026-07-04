@@ -35,17 +35,18 @@ public class PageLoadInteraction extends SimpleInteraction {
     @Override
     protected void tick0(boolean firstRun, float time, @Nonnull InteractionType type,
             @Nonnull InteractionContext ctx, @Nonnull CooldownHandler cooldown) {
-        try {
-            if (!firstRun) {
-                ctx.getState().state = InteractionState.Finished;
-                return;
-            }
+        ctx.getState().state = firstRun ? resolve(ctx) : InteractionState.Finished;
+        // delegate to SimpleInteraction.tick0 so a Failed result jumps past the Next
+        // (consume) branch instead of falling through into it
+        super.tick0(firstRun, time, type, ctx, cooldown);
+    }
 
+    private InteractionState resolve(@Nonnull InteractionContext ctx) {
+        try {
             CommandBuffer<EntityStore> buffer = ctx.getCommandBuffer();
             Ref<EntityStore> playerRef = ctx.getEntity();
             if (buffer == null || playerRef == null || !playerRef.isValid()) {
-                ctx.getState().state = InteractionState.Failed;
-                return;
+                return InteractionState.Failed;
             }
 
             PlayerRef ref = buffer.getComponent(playerRef, PlayerRef.getComponentType());
@@ -53,41 +54,36 @@ public class PageLoadInteraction extends SimpleInteraction {
             CasterComponent caster = buffer.getComponent(playerRef, CasterComponent.getComponentType());
             if (caster == null || !CraftingState.CONTEXT_ID.equals(caster.getCurrentContext())) {
                 if (ref != null) ref.sendMessage(Message.raw("You must be in Crafting Mode to load a page"));
-                ctx.getState().state = InteractionState.Failed;
-                return;
+                return InteractionState.Failed;
             }
 
             HexcodeSessionComponent session = SessionUtils.resolveSessionByPlayer(playerRef, buffer);
             if (session == null) {
-                ctx.getState().state = InteractionState.Failed;
-                return;
+                return InteractionState.Failed;
             }
 
             Ref<EntityStore> ownerRef = session.getOwnerRef();
             if (ownerRef == null || !ownerRef.isValid() || !ownerRef.equals(playerRef)) {
                 if (ref != null) ref.sendMessage(Message.raw("You don't own this pedestal"));
-                ctx.getState().state = InteractionState.Failed;
-                return;
+                return InteractionState.Failed;
             }
 
             if (session.getActiveSlotKey() == null) {
                 if (ref != null) ref.sendMessage(Message.raw("Select a slot first"));
-                ctx.getState().state = InteractionState.Failed;
-                return;
+                return InteractionState.Failed;
             }
 
             Hex hex = PageConfig.resolvePageHex(ctx.getHeldItem());
             if (hex == null) {
                 if (ref != null) ref.sendMessage(Message.raw("Hold a page inscribed with a spell"));
-                ctx.getState().state = InteractionState.Failed;
-                return;
+                return InteractionState.Failed;
             }
 
             session.setPendingImportHex(hex);
-            ctx.getState().state = InteractionState.Finished;
+            return InteractionState.Finished;
         } catch (Exception e) {
             LOGGER.atSevere().log("[hexcode] PageLoadInteraction failed: %s", e.getMessage());
-            ctx.getState().state = InteractionState.Failed;
+            return InteractionState.Failed;
         }
     }
 

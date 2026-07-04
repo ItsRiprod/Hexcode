@@ -12,7 +12,7 @@
   "Description": "hexcode.glyphs.Ignite.description",
   "ModelPath": "Ignite",
   "BasePower": 1.0,
-  "ManaConsumption": 15,
+  "ManaConsumption": 1.5,
   "ShapeStructure": [
     {
       "ShapeId": "Antisquare",
@@ -47,8 +47,9 @@
     }
   },
   "Volatility": {
-    "InstantCost": 3,
-    "DrainPerSecond": 0.1},
+    "InstantCost": 2,
+    "DrainPerSecond": 0.1
+  },
   "Config": {
     "Type": "Ignite",
     "Effect": "Burn"

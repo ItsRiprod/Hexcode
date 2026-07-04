@@ -20,7 +20,7 @@
   "Description": "hexcode.glyphs.Glaciate.description",
   "ModelPath": "Glaciate",
   "BasePower": 1.0,
-  "ManaConsumption": 30,
+  "ManaConsumption": 3.0,
   "ShapeStructure": [
     {
       "ShapeId": "Anticircle",
@@ -68,8 +68,9 @@
     }
   },
   "Volatility": {
-    "InstantCost": 6,
-    "DrainPerSecond": 0.3},
+    "InstantCost": 4,
+    "DrainPerSecond": 0.3
+  },
   "Config": {
     "Type": "Glaciate",
     "IceScale": 2.0,

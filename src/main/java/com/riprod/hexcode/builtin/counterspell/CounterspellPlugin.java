@@ -5,8 +5,10 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.event.GlyphExecuteEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.HexStateChangeEvent;
+import com.riprod.hexcode.builtin.counterspell.eventListeners.GlyphExecuteDiagnosticListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.ContextForceExitDiagnosticListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.DrawModeEnterDiagnosticListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.DrawModeExitDiagnosticListener;
@@ -35,6 +37,7 @@ public class CounterspellPlugin extends JavaPlugin {
     private void RegisterListeners() {
 
         this.getEventRegistry().registerGlobal(GlyphFizzleEvent.class, new GlyphDiagnosticListener());
+        this.getEventRegistry().registerGlobal(GlyphExecuteEvent.class, new GlyphExecuteDiagnosticListener());
         this.getEventRegistry().registerGlobal(HexStateChangeEvent.class, new HexStateDiagnosticListener());
     }
 

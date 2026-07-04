@@ -21,7 +21,7 @@
   "Description": "hexcode.glyphs.Projectile.description",
   "ModelPath": "Glyph_Projectile",
   "BasePower": 1.0,
-  "ManaConsumption": 3,
+  "ManaConsumption": 0.3,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",
@@ -83,7 +83,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 2,
+    "InstantCost": 1.0,
     "DrainPerSecond": 0.0
   },
   "Config": {

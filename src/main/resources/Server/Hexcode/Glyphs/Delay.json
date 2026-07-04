@@ -43,7 +43,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 0.5,
+    "InstantCost": 0.25,
     "DrainPerSecond": 0.1
   }
 }

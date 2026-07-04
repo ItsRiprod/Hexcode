@@ -36,7 +36,6 @@ public class HexContext {
     @Nullable private HexStyleAsset style;
     @Nullable private HexVar defaultVariable;
     @Nullable private String castSlotKey;
-    private float castDecayRate = 0f;
     private float currentComplexity = 0f;
     private Map<String, HexVar> variables = new HashMap<>();
     @Nullable
@@ -45,6 +44,10 @@ public class HexContext {
     // === transient fields ===
     private transient CommandBuffer<EntityStore> accessor;
     private transient Deque<String> resolutionStack = new ArrayDeque<>();
+    private transient boolean requireMagicCharges = true;
+    private transient boolean consumeMana = true;
+    private transient boolean applyVolatilityDecay = true;
+    private transient boolean bypassVolatilityDepletion = false;
 
     public HexContext() {
     }
@@ -65,7 +68,6 @@ public class HexContext {
         if (other.manaCost >= 0f) this.manaCost = other.manaCost;
         if (other.manaMultiplier != 1.0f) this.manaMultiplier *= other.manaMultiplier;
         if (other.style != null) this.style = other.style;
-        if (other.castDecayRate > 0f) this.castDecayRate = other.castDecayRate;
         if (other.hexStats != null && this.hexStats != null) {
             this.hexStats.applyOverridesFrom(other.hexStats);
         }
@@ -83,10 +85,13 @@ public class HexContext {
         copy.style = src.style != null ? src.style.clone() : null;
         copy.defaultVariable = src.defaultVariable;
         copy.castSlotKey = src.castSlotKey;
-        copy.castDecayRate = src.castDecayRate;
         copy.currentComplexity = src.currentComplexity;
         copy.variables = new HashMap<>(src.variables);
         copy.executionId = src.executionId;
+        copy.requireMagicCharges = src.requireMagicCharges;
+        copy.consumeMana = src.consumeMana;
+        copy.applyVolatilityDecay = src.applyVolatilityDecay;
+        copy.bypassVolatilityDepletion = src.bypassVolatilityDepletion;
         return copy;
     }
 
@@ -107,8 +112,11 @@ public class HexContext {
         branch.manaMultiplier = this.manaMultiplier;
         branch.defaultVariable = this.defaultVariable;
         branch.castSlotKey = this.castSlotKey;
-        branch.castDecayRate = this.castDecayRate;
         branch.currentComplexity = this.currentComplexity / Math.max(1, splitFactor);
+        branch.requireMagicCharges = this.requireMagicCharges;
+        branch.consumeMana = this.consumeMana;
+        branch.applyVolatilityDecay = this.applyVolatilityDecay;
+        branch.bypassVolatilityDepletion = this.bypassVolatilityDepletion;
         return branch;
     }
 
@@ -138,6 +146,38 @@ public class HexContext {
 
     public void updateRuntimeAccessors(CommandBuffer<EntityStore> buffer) {
         this.accessor = buffer;
+    }
+
+    public boolean isRequireMagicCharges() {
+        return requireMagicCharges;
+    }
+
+    public void setRequireMagicCharges(boolean requireMagicCharges) {
+        this.requireMagicCharges = requireMagicCharges;
+    }
+
+    public boolean isConsumeMana() {
+        return consumeMana;
+    }
+
+    public void setConsumeMana(boolean consumeMana) {
+        this.consumeMana = consumeMana;
+    }
+
+    public boolean isApplyVolatilityDecay() {
+        return applyVolatilityDecay;
+    }
+
+    public void setApplyVolatilityDecay(boolean applyVolatilityDecay) {
+        this.applyVolatilityDecay = applyVolatilityDecay;
+    }
+
+    public boolean isBypassVolatilityDepletion() {
+        return bypassVolatilityDepletion;
+    }
+
+    public void setBypassVolatilityDepletion(boolean bypassVolatilityDepletion) {
+        this.bypassVolatilityDepletion = bypassVolatilityDepletion;
     }
 
     // === root + caster ref ===
@@ -306,14 +346,6 @@ public class HexContext {
         this.castSlotKey = castSlotKey;
     }
 
-    public float getCastDecayRate() {
-        return castDecayRate;
-    }
-
-    public void setCastDecayRate(float castDecayRate) {
-        this.castDecayRate = castDecayRate;
-    }
-
     public UUID getExecutionId() {
         return executionId;
     }
@@ -382,10 +414,6 @@ public class HexContext {
             .append(new KeyedCodec<>("CastSlotKey", Codec.STRING),
                     (c, v) -> c.castSlotKey = v,
                     c -> c.castSlotKey)
-            .add()
-            .append(new KeyedCodec<>("CastDecayRate", Codec.FLOAT),
-                    (c, v) -> c.castDecayRate = v,
-                    c -> c.castDecayRate)
             .add()
             .append(new KeyedCodec<>("CurrentComplexity", Codec.FLOAT),
                     (c, v) -> c.currentComplexity = v,

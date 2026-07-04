@@ -17,7 +17,7 @@
   "Description": "hexcode.glyphs.Fortify.description",
   "ModelPath": "Fortify",
   "BasePower": 1.0,
-  "ManaConsumption": 15,
+  "ManaConsumption": 1.5,
   "ShapeStructure": [
     {
       "ShapeId": "Square",
@@ -42,7 +42,7 @@
       "Style": "Input",
       "Label": "hexcode.glyphs.Fortify.amount.name",
       "Description": "hexcode.glyphs.Fortify.amount.description",
-      "DefaultValue": 15,
+      "DefaultValue": 5,
       "Unique": true,
       "Impact": {
         "Type": "RatioToDefault",
@@ -54,7 +54,7 @@
       "Style": "Input",
       "Label": "hexcode.glyphs.Fortify.duration.name",
       "Description": "hexcode.glyphs.Fortify.duration.description",
-      "DefaultValue": 200,
+      "DefaultValue": 20,
       "Unique": true
     },
     "Next": {
@@ -64,7 +64,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 4,
+    "InstantCost": 2,
     "DrainPerSecond": 0.1
   },
   "Config": {

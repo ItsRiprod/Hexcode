@@ -17,7 +17,7 @@
   "Description": "hexcode.glyphs.Resonate.description",
   "ModelPath": "Resonate",
   "BasePower": 1.0,
-  "ManaConsumption": 20,
+  "ManaConsumption": 2.0,
   "ShapeStructure": [
     {
       "ShapeId": "Antisquare",
@@ -41,6 +41,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 4,
-    "DrainPerSecond": 0.0}
+    "InstantCost": 2.5,
+    "DrainPerSecond": 0.0
+  }
 }

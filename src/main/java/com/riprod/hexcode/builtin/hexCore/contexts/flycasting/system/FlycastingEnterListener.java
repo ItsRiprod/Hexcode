@@ -10,7 +10,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.context.DrawModeEnterEvent;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.component.FlycastingState;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
-import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
 
 public class FlycastingEnterListener extends WorldEventSystem<EntityStore, DrawModeEnterEvent> {
 
@@ -23,9 +22,6 @@ public class FlycastingEnterListener extends WorldEventSystem<EntityStore, DrawM
             @Nonnull DrawModeEnterEvent event) {
         Ref<EntityStore> player = event.getPlayer();
         if (player == null || !player.isValid()) {
-            return;
-        }
-        if (CasterInventory.getHexStaffComponent(buffer, player) == null) {
             return;
         }
         ContextTransitionService.attemptEnter(buffer, player,

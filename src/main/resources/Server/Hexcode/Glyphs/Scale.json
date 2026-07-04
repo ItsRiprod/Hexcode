@@ -15,7 +15,7 @@
   "Description": "hexcode.glyphs.Scale.description",
   "ModelPath": "Scale",
   "BasePower": 1.0,
-  "ManaConsumption": 12,
+  "ManaConsumption": 1.2,
   "ShapeStructure": [
     {
       "ShapeId": "Square",

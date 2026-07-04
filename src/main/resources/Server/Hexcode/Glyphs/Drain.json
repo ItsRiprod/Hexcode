@@ -59,8 +59,9 @@
     }
   },
   "Volatility": {
-    "InstantCost": 3,
-    "DrainPerSecond": 0.3},
+    "InstantCost": 1.0,
+    "DrainPerSecond": 0.3
+  },
   "Config": {
     "Type": "Drain",
     "HpToManaRate": 1.5,

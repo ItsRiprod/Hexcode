@@ -21,7 +21,7 @@
   "Description": "hexcode.glyphs.Conjure.description",
   "ModelPath": "Conjure",
   "BasePower": 1.0,
-  "ManaConsumption": 28,
+  "ManaConsumption": 2.8,
   "ShapeStructure": [
     {
       "ShapeId": "Square",
@@ -77,7 +77,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 6,
+    "InstantCost": 1.5,
     "DrainPerSecond": 0.25
   },
   "Config": {

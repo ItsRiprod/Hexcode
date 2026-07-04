@@ -1,5 +1,11 @@
 page.name=Spell Page
 page.description=<color is="#aaaaaa">A page inscribed with a single hex.</color>\n\n<b>To cast</b>\nPress and Hold <b>Secondary</b> to channel the inscribed spell\nThe page is <color is="#ff5555">consumed</color> on cast
+page.break={itemName} has Disappated
 
 fireball.name=Spell Page: Fireball
 fireball.description=<color is="#aaaaaa">A page inscribed with</color> <color is="#ff5555"><b>Fireball</b></color><color is="#aaaaaa">.</color>\n\n<b>To cast</b>\nPress and Hold <b>Secondary</b> to channel the inscribed spell\nThe page is <color is="#ff5555">consumed</color> on cast
+
+energy_bolt.name=Spell Page: Energy Bolt
+
+ice_bolt.name=Spell Page: Ice Bolt
+launch.name=Spell Page: Launch

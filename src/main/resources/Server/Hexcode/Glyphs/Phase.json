@@ -20,7 +20,7 @@
   "Title": "hexcode.glyphs.Phase.name",
   "Description": "hexcode.glyphs.Phase.description",
   "ModelPath": "Phase",
-  "ManaConsumption": 20,
+  "ManaConsumption": 2.0,
   "ShapeStructure": [
     {
       "ShapeId": "Square",
@@ -69,7 +69,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 4,
+    "InstantCost": 3,
     "DrainPerSecond": 0.2
   },
   "IsEnabled": false,

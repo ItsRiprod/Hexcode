@@ -43,7 +43,7 @@ public interface GlyphHandler {
 
         float volatilityCost = getVolatilityCost(glyph, hexContext, asset);
         float currentVolatility = tracker.consumeVolatility(volatilityCost);
-        if (currentVolatility <= 0f) {
+        if (!hexContext.isBypassVolatilityDepletion() && currentVolatility <= 0f) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.VOLATILITY_DEPLETED);
             return;
         }

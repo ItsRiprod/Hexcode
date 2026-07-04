@@ -1,0 +1,23 @@
+{
+  "Type": "Charging",
+  "CancelOnItemChange": true,
+  "AllowIndefiniteHold": true,
+  "Effects": {
+    "ItemAnimationId": "CastSpellCharging",
+    "ClearAnimationOnFinish": true
+  },
+  "CancelOnOtherClick": false,
+  "Next": {
+    "0.0": "CastTier1",
+    "0.33": "CastTier2",
+    "0.66": "CastTier3",
+    "1": "CastTier4"
+  },
+  "Failed": {
+    "Type": "Interrupt",
+    "Entity": "Owner",
+    "Effects": {
+      "ClearAnimationOnFinish": true
+    }
+  }
+}

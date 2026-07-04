@@ -10,7 +10,8 @@ Hexcode_Pedestal_Template.name=[Developer Item] Template Pedestal
 Hexcode_Pedestal_Template.description=<color is="#e7bd00">Creative-Only item</color>\n<color is="#aaaaaa">Crafting station for hexcode spells.\nPlace a hex book to begin.</color>\n\n<color is="#aaaaaa">Supports <b>5</b> obelisks within <b>8</b> blocks\nCrafting radius <b>z5</b> blocks</color>
 
 Hexcode_Obelisk_Life.name=Life Obelisk
-Hexcode_Obelisk_Life.description=<color is="#aaaaaa">Place near a pedestal to augment crafting.\n\nIncreases max <b>volatility</b> at the cost of efficiency.\nDraw bigger spells -- but less precisely.</color>
+Hexcode_Obelisk_Life.description=<color is="#aaaaaa">Place near a pedestal to augment crafting.\n\nEnables <b>decoding</b> hex pages found throughout your world into the currently active slot.\nThis will replace whatever spell is currently active.</color>
+Hexcode_Obelisk_Life.hint=Press [{key}] to decode Hex Page
 Hexcode_Obelisk_Void.name=Void Obelisk
 Hexcode_Obelisk_Void.description=<color is="#aaaaaa">Place near a pedestal to augment crafting.\n\nAllows <b>importing</b> and <b>exporting</b> hex blueprints.\nSave your spells or load shared designs.</color>
 Hexcode_Obelisk_Seeker.name=Seeker Obelisk

@@ -18,6 +18,7 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.MountController;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
+import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -57,15 +58,31 @@ public class SlotNodeHandler extends BaseSlotHandler {
         Map<String, SlotAsset> assetSlots = asset.getSlots();
         if (assetSlots.isEmpty()) return;
 
-        List<Vector3f> radialFallbacks = computeRadialFallbacks(assetSlots);
+        HeadRotation headRot = accessor.getComponent(playerRef, HeadRotation.getComponentType());
+        float pitch = headRot != null ? headRot.getRotation().x : 0f;
+        float yaw = headRot != null ? headRot.getRotation().y : 0f;
+        float cp = (float) Math.cos(pitch);
+        float sp = (float) Math.sin(pitch);
+        float cy = (float) Math.cos(yaw);
+        float sy = (float) Math.sin(yaw);
+        Vector3f right = new Vector3f(-cy, 0f, sy);
+        Vector3f up = new Vector3f(sp * sy, cp, sp * cy);
+        Vector3f forward = new Vector3f(-cp * sy, sp, -cp * cy);
+
+        List<Vector3f> radialFallbacks = computeRadialFallbacks(assetSlots, right, up);
         int radialIndex = 0;
 
         for (Map.Entry<String, SlotAsset> entry : assetSlots.entrySet()) {
             String key = entry.getKey();
             SlotAsset slotAsset = entry.getValue();
-            Vector3f offset = slotAsset.getOffset();
-            if (offset == null) {
+            Vector3f authored = slotAsset.getOffset();
+            Vector3f offset;
+            if (authored == null) {
                 offset = radialFallbacks.get(radialIndex++);
+            } else {
+                offset = new Vector3f(right).mul(authored.x)
+                        .add(new Vector3f(up).mul(authored.y))
+                        .add(new Vector3f(forward).mul(authored.z));
             }
 
             Slot slot = glyph.getOrCreateSlot(key);
@@ -82,13 +99,13 @@ public class SlotNodeHandler extends BaseSlotHandler {
         }
     }
 
-    private List<Vector3f> computeRadialFallbacks(Map<String, SlotAsset> assetSlots) {
+    private List<Vector3f> computeRadialFallbacks(Map<String, SlotAsset> assetSlots, Vector3f right, Vector3f up) {
         int unsetCount = 0;
         for (SlotAsset s : assetSlots.values()) {
             if (s.getOffset() == null) unsetCount++;
         }
         if (unsetCount == 0) return new ArrayList<>();
-        return RadialPositionUtil.calculateOffsets(unsetCount, SLOT_RADIUS, 0f, null);
+        return RadialPositionUtil.calculateOffsets(unsetCount, SLOT_RADIUS, 0f, right, up);
     }
 
     private Ref<EntityStore> spawnSlotEntityAt(CommandBuffer<EntityStore> accessor,

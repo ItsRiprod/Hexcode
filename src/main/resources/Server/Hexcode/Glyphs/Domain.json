@@ -5,7 +5,7 @@
   "Description": "hexcode.glyphs.Domain.description",
   "ModelPath": "Domain",
   "BasePower": 1.0,
-  "ManaConsumption": 40,
+  "ManaConsumption": 4.0,
   "ShapeStructure": [
     {
       "ShapeId": "Square",
@@ -70,7 +70,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 10,
+    "InstantCost": 4,
     "DrainPerSecond": 0.5
   },
   "Config": {
@@ -79,7 +79,7 @@
       "Type": "SphereVolume",
       "DefaultMagnitude": 1500.0,
       "Exponent": 0.6667,
-      "ClampMin": 2.0,
+      "ClampMin": 1.0,
       "ClampMax": 15.0
     },
     "TriggerImpact": {
