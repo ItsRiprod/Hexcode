@@ -1,0 +1,12 @@
+{
+  "Interactions": {
+    "Fire": {
+      "Type": "Basic",
+      "Particle": "Ignite_Fire"
+    },
+    "Ice": {
+      "Type": "Basic",
+      "Particle": "Effect_Snow_Impact"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "ApplicationEffects": {
+    "EntityBottomTint": "#80ecff",
+    "EntityTopTint": "#da72ff",
+    "Particles": [
+      {
+        "SystemId": "Effect_Snow"
+      }
+    ]
+  },
+  "OverlapBehavior": "Overwrite",
+  "Infinite": false,
+  "Debuff": true,
+  "Duration": 5,
+  "DamageResistance": {
+    "Fire": [
+      {
+        "Amount": -1.0,
+        "CalculationType": "Percent"
+      }
+    ],
+    "Ice": [
+      {
+        "Amount": 0.5,
+        "CalculationType": "Percent"
+      }
+    ]
+  }
+}

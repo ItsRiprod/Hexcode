@@ -52,6 +52,13 @@
             "IncludesAssetPack": false
         },
         {
+            "Name": "Ums",
+            "Main": "com.riprod.hexcode.ums.UmsPlugin",
+            "ServerVersion": ">=0.5.0 <0.6.0",
+            "DisabledByDefault": false,
+            "IncludesAssetPack": false
+        },
+        {
             "Name": "Ritualistic",
             "Main": "com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin",
             "ServerVersion": ">=0.5.0 <0.6.0",

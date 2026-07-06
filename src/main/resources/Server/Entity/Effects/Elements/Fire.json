@@ -1,0 +1,35 @@
+{
+  "ApplicationEffects": {
+    "EntityBottomTint": "#100600",
+    "EntityTopTint": "#cf2302",
+    "Particles": [
+      {
+        "SystemId": "Effect_Fire"
+      }
+    ]
+  },
+  "DamageCalculatorCooldown": 1,
+  "DamageCalculator": {
+    "BaseDamage": {
+      "Fire": 5
+    }
+  },
+  "OverlapBehavior": "Overwrite",
+  "Infinite": false,
+  "Debuff": true,
+  "Duration": 5,
+  "DamageResistance": {
+    "Fire": [
+      {
+        "Amount": 0.5,
+        "CalculationType": "Percent"
+      }
+    ],
+    "Ice": [
+      {
+        "Amount": 0.5,
+        "CalculationType": "Percent"
+      }
+    ]
+  }
+}
