@@ -7,7 +7,10 @@
   "AllowIndefiniteHold": true,
   "Effects": {
     "ItemAnimationId": "HexCrafting_Enter",
-    "ClearAnimationOnFinish": true
+    "ClearAnimationOnFinish": true,
+    "LocalSoundEventId": "SFX_Hexcode_Casting_Enter",
+    "ClearSoundEventOnFinish": true,
+    "CameraEffect": "Impact_Strong"
   },
   "CancelOnOtherClick": false,
   "Next": {

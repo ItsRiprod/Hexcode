@@ -18,17 +18,21 @@
         "Var": "HexTier4",
         "DefaultOk": true,
         "DefaultValue": {
-          "Type": "HexExecute",
-          "Config": {
-            "HexStorageType": "ExecutionConfig",
-            "HexStats": {
-              "InitialVolatility": 60,
-              "VolatilityMultiplier": 1.0
+          "Interactions": [
+            {
+              "Type": "HexExecute",
+              "Config": {
+                "HexStorageType": "ExecutionConfig",
+                "HexStats": {
+                  "InitialVolatility": 60,
+                  "VolatilityMultiplier": 1.0
+                }
+              },
+              "Effects": {
+                "ItemAnimationId": "HexExecution_Primary"
+              }
             }
-          },
-          "Effects": {
-            "ItemAnimationId": "HexExecution_Primary"
-          }
+          ]
         }
       }
     ]

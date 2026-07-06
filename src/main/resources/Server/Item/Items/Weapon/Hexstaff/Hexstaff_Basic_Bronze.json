@@ -60,80 +60,100 @@
   "ItemSoundSetId": "ISS_Weapons_Wood",
   "InteractionVars": {
     "HexTier1": {
-      "Type": "HexExecute",
-      "Effects": {
-        "ItemAnimationId": "HexExecution_Primary"
-      },
-      "Config": {
-        "HexStorageType": "ExecutionConfig",
-        "HexStats": {
-          "InitialVolatility": 25,
-          "VolatilityMultiplier": 1.0
-        },
-        "Style": "Hexstaff_Basic_Bronze"
-      }
+      "Interactions": [
+        {
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "HexStats": {
+              "InitialVolatility": 25,
+              "VolatilityMultiplier": 1.0
+            },
+            "Style": "Hexstaff_Basic_Bronze"
+          }
+        }
+      ]
     },
     "HexTier2": {
-      "Type": "HexExecute",
-      "Effects": {
-        "ItemAnimationId": "HexExecution_Primary"
-      },
-      "Config": {
-        "HexStorageType": "ExecutionConfig",
-        "HexStats": {
-          "InitialVolatility": 29,
-          "VolatilityMultiplier": 1.0
-        },
-        "Style": "Hexstaff_Basic_Bronze"
-      }
+      "Interactions": [
+        {
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "HexStats": {
+              "InitialVolatility": 29,
+              "VolatilityMultiplier": 1.0
+            },
+            "Style": "Hexstaff_Basic_Bronze"
+          }
+        }
+      ]
     },
     "HexTier3": {
-      "Type": "HexExecute",
-      "Effects": {
-        "ItemAnimationId": "HexExecution_Primary"
-      },
-      "Config": {
-        "HexStorageType": "ExecutionConfig",
-        "HexStats": {
-          "InitialVolatility": 32,
-          "VolatilityMultiplier": 1.0
-        },
-        "Style": "Hexstaff_Basic_Bronze"
-      }
+      "Interactions": [
+        {
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "HexStats": {
+              "InitialVolatility": 32,
+              "VolatilityMultiplier": 1.0
+            },
+            "Style": "Hexstaff_Basic_Bronze"
+          }
+        }
+      ]
     },
     "HexTier4": {
-      "Type": "HexExecute",
-      "Effects": {
-        "ItemAnimationId": "HexExecution_Primary"
-      },
-      "Config": {
-        "HexStorageType": "ExecutionConfig",
-        "HexStats": {
-          "InitialVolatility": 36,
-          "VolatilityMultiplier": 1.0
-        },
-        "Style": "Hexstaff_Basic_Bronze"
-      }
+      "Interactions": [
+        {
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "HexStats": {
+              "InitialVolatility": 36,
+              "VolatilityMultiplier": 1.0
+            },
+            "Style": "Hexstaff_Basic_Bronze"
+          }
+        }
+      ]
     },
     "Drawmode": {
-      "Type": "HexDrawMode",
-      "Parent": "Drawmode_Default",
-      "AuraParticles": [
+      "Interactions": [
         {
-          "SystemId": "Hexstaff_Generic_Mist",
-          "PositionOffset": {
-            "Y": -1.5
-          },
-          "Color": "#E6B800",
-          "Scale": 1.0
-        },
-        {
-          "SystemId": "Hexstaff_Ember_Rise",
-          "PositionOffset": {
-            "Y": -1.2
-          },
-          "Color": "#FFD54F",
-          "Scale": 0.9
+          "Type": "HexDrawMode",
+          "Parent": "Drawmode_Default",
+          "AuraParticles": [
+            {
+              "SystemId": "Hexstaff_Generic_Mist",
+              "PositionOffset": {
+                "Y": -1.5
+              },
+              "Color": "#E6B800",
+              "Scale": 1.0
+            },
+            {
+              "SystemId": "Hexstaff_Ember_Rise",
+              "PositionOffset": {
+                "Y": -1.2
+              },
+              "Color": "#FFD54F",
+              "Scale": 0.9
+            }
+          ]
         }
       ]
     }

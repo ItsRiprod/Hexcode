@@ -88,95 +88,115 @@
   },
   "InteractionVars": {
     "HexTier1": {
-      "Type": "HexExecute",
-      "Effects": {
-        "ItemAnimationId": "HexExecution_Primary"
-      },
-      "Config": {
-        "HexStorageType": "ExecutionConfig",
-        "HexStats": {
-          "InitialVolatility": 30,
-          "VolatilityMultiplier": 1.0
-        },
-        "Style": "Hexstaff_Special_Ice"
-      }
+      "Interactions": [
+        {
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "HexStats": {
+              "InitialVolatility": 30,
+              "VolatilityMultiplier": 1.0
+            },
+            "Style": "Hexstaff_Special_Ice"
+          }
+        }
+      ]
     },
     "HexTier2": {
-      "Type": "HexExecute",
-      "Effects": {
-        "ItemAnimationId": "HexExecution_Primary"
-      },
-      "Config": {
-        "HexStorageType": "ExecutionConfig",
-        "HexStats": {
-          "InitialVolatility": 40,
-          "VolatilityMultiplier": 1.0
-        },
-        "Style": "Hexstaff_Special_Ice"
-      }
+      "Interactions": [
+        {
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "HexStats": {
+              "InitialVolatility": 40,
+              "VolatilityMultiplier": 1.0
+            },
+            "Style": "Hexstaff_Special_Ice"
+          }
+        }
+      ]
     },
     "HexTier3": {
-      "Type": "HexExecute",
-      "Effects": {
-        "ItemAnimationId": "HexExecution_Primary"
-      },
-      "Config": {
-        "HexStorageType": "ExecutionConfig",
-        "HexStats": {
-          "InitialVolatility": 50,
-          "VolatilityMultiplier": 1.0
-        },
-        "Style": "Hexstaff_Special_Ice"
-      }
+      "Interactions": [
+        {
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "HexStats": {
+              "InitialVolatility": 50,
+              "VolatilityMultiplier": 1.0
+            },
+            "Style": "Hexstaff_Special_Ice"
+          }
+        }
+      ]
     },
     "HexTier4": {
-      "Type": "HexExecute",
-      "Effects": {
-        "ItemAnimationId": "HexExecution_Primary"
-      },
-      "Config": {
-        "HexStorageType": "ExecutionConfig",
-        "HexStats": {
-          "InitialVolatility": 60,
-          "VolatilityMultiplier": 1.0
-        },
-        "Style": "Hexstaff_Special_Ice"
-      }
+      "Interactions": [
+        {
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "HexStats": {
+              "InitialVolatility": 60,
+              "VolatilityMultiplier": 1.0
+            },
+            "Style": "Hexstaff_Special_Ice"
+          }
+        }
+      ]
     },
     "Drawmode": {
-      "Type": "HexDrawMode",
-      "Parent": "Drawmode_Default",
-      "AuraParticles": [
+      "Interactions": [
         {
-          "SystemId": "Hexstaff_Generic_Rune",
-          "PositionOffset": {
-            "Y": 2.5
-          },
-          "Color": "#4FC3F7"
-        },
-        {
-          "SystemId": "Hexstaff_Motes_Slow",
-          "PositionOffset": {
-            "Y": 1.3
-          },
-          "Color": "#4FC3F7",
-          "Scale": 1.2
-        },
-        {
-          "SystemId": "Hexstaff_Sparks_Fast",
-          "PositionOffset": {
-            "Y": 0.6
-          },
-          "Color": "#0277BD",
-          "Scale": 0.9
-        },
-        {
-          "SystemId": "Hexstaff_Generic_Mist",
-          "PositionOffset": {
-            "Y": -1.5
-          },
-          "Color": "#0277BD",
-          "Scale": 1.0
+          "Type": "HexDrawMode",
+          "Parent": "Drawmode_Default",
+          "AuraParticles": [
+            {
+              "SystemId": "Hexstaff_Generic_Rune",
+              "PositionOffset": {
+                "Y": 2.5
+              },
+              "Color": "#4FC3F7"
+            },
+            {
+              "SystemId": "Hexstaff_Motes_Slow",
+              "PositionOffset": {
+                "Y": 1.3
+              },
+              "Color": "#4FC3F7",
+              "Scale": 1.2
+            },
+            {
+              "SystemId": "Hexstaff_Sparks_Fast",
+              "PositionOffset": {
+                "Y": 0.6
+              },
+              "Color": "#0277BD",
+              "Scale": 0.9
+            },
+            {
+              "SystemId": "Hexstaff_Generic_Mist",
+              "PositionOffset": {
+                "Y": -1.5
+              },
+              "Color": "#0277BD",
+              "Scale": 1.0
+            }
+          ]
         }
       ]
     }

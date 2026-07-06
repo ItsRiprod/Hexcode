@@ -4,6 +4,13 @@
       "Files": [
         "Sounds/Hexcode/Casting/Casting_Enter.ogg"
       ]
+    },
+    {
+      "Files": [
+        "Sounds/Hexcode/Casting/Casting_Loop.ogg"
+      ],
+      "Looping": true,
+      "StartDelay": 0.15
     }
   ],
   "Volume": -6.0,

@@ -120,10 +120,16 @@ public class InteractionGlyph implements GlyphHandler {
         } else if (target instanceof BlockVar blockVar && blockVar.getValue() != null) {
             Vector3i pos = blockVar.getValue();
             targetBlock = new BlockPosition(pos.x, pos.y, pos.z);
+            targetHit = new Vector4d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, 1);
             resultVar = target;
         } else if (target instanceof PositionVar positionVar && positionVar.getValue() != null) {
             Vector3d pos = positionVar.getValue();
             targetHit = new Vector4d(pos.x, pos.y, pos.z, 1);
+            BlockVar snapped = positionVar.toBlockVar(accessor);
+            if (snapped != null && snapped.getValue() != null) {
+                Vector3i b = snapped.getValue();
+                targetBlock = new BlockPosition(b.x, b.y, b.z);
+            }
             resultVar = target;
         }
 
@@ -141,10 +147,12 @@ public class InteractionGlyph implements GlyphHandler {
 
         if (targetRef != null) {
             interactionContext.getMetaStore().putMetaObject(Interaction.TARGET_ENTITY, targetRef);
-        } else if (targetBlock != null) {
+        }
+        if (targetBlock != null) {
             interactionContext.getMetaStore().putMetaObject(Interaction.TARGET_BLOCK, targetBlock);
             interactionContext.getMetaStore().putMetaObject(Interaction.TARGET_BLOCK_RAW, targetBlock);
-        } else if (targetHit != null) {
+        }
+        if (targetHit != null) {
             interactionContext.getMetaStore().putMetaObject(Interaction.HIT_LOCATION, targetHit);
         }
 
