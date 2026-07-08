@@ -24,8 +24,6 @@ import com.riprod.hexcode.builtin.ums.assets.ElementAsset;
 import com.riprod.hexcode.builtin.ums.registry.UmsReactionContext;
 import com.riprod.hexcode.builtin.ums.assets.BaseElementInteraction;
 
-// side-effect only interceptor: the damage NUMBER is owned by native EntityEffect DamageResistance.
-// this system reads the defender's active UMS statuses and fires their reaction for the incoming cause.
 public class UmsReactionSystem extends DamageEventSystem {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 

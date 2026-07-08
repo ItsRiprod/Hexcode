@@ -12,7 +12,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
@@ -30,7 +29,6 @@ import com.hypixel.hytale.server.core.modules.time.TimeResource;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.projectile.ProjectilePhysicsConfig;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style.ShatterStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
@@ -172,7 +170,7 @@ public class ShatterGlyph implements GlyphHandler {
                 new Interactions(buildInteractionsMap()));
 
         Vector3d launchVelocity = new Vector3d(direction).mul(speed);
-        new ProjectilePhysicsConfig(gravity, 0).apply(holder, parent,
+        new ShatterPhysicsConfig(gravity, 0).apply(holder, parent,
                 launchVelocity, hexContext.getAccessor(), false);
 
         holder.addComponent(DespawnComponent.getComponentType(),

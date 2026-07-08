@@ -2,6 +2,7 @@
   "ApplicationEffects": {
     "EntityBottomTint": "#80ecff",
     "EntityTopTint": "#da72ff",
+    "HorizontalSpeedMultiplier": 0.5,
     "Particles": [
       {
         "SystemId": "Effect_Snow"

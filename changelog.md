@@ -41,3 +41,5 @@
 - style: Whitened every color-injected glyph particle spawner so the runtime-injected primary/secondary color is the sole color source (model trails, slot/effect, and pedestal particles left untouched)
 - fix: Migrated Shatter to a `ShatterConfig` leaf (default count/spread/speed/gravity, max count, shard ttl) - removed the in-handler magic constants
 - Feat: Added ECS event transparency logging to the counterspell diagnostics sub-plugin (`builtin/counterspell/eventListeners/*DiagnosticListener` for DrawModeEnter/Exit, HexContextChange, ShapeDrawn, GlyphCommit, ContextForceExit - disable the sub-plugin to silence) plus a context-enter rejection log in `ContextTransitionService`
+- fix: Patchly now writes `manifest.json` into its override pack so `prefab save` (the engine's `validatePackExistsOnDisk` scan) no longer unregisters the pack and cascade-removes every patched asset
+- Patchly no longer force-reloads written overrides (removed `AssetReloader`); the engine natively loads the override folder pack at register and hot-reloads later writes via its own directory monitor

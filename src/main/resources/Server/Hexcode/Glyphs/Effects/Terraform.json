@@ -5,7 +5,7 @@
   "Description": "hexcode.glyphs.Terraform.description",
   "ModelPath": "Terraform",
   "BasePower": 1.0,
-  "ManaConsumption": 3.5,
+  "ManaConsumption": 7.0,
   "ShapeStructure": [
     {
       "ShapeId": "Square",

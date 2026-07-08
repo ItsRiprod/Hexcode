@@ -21,7 +21,7 @@
   "Description": "hexcode.glyphs.Gust.description",
   "ModelPath": "Gust",
   "BasePower": 1.0,
-  "ManaConsumption": 1.5,
+  "ManaConsumption": 3.0,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",

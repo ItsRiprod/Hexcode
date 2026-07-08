@@ -1,11 +1,11 @@
 {
   "Interactions": {
     "Fire": {
-      "Type": "Basic",
+      "Type": "Generic",
       "Particle": "Ignite_Fire"
     },
     "Ice": {
-      "Type": "Basic",
+      "Type": "Generic",
       "Particle": "Effect_Snow_Impact"
     }
   }

@@ -1,27 +1,16 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.system;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
-import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
-import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.entity.entities.ProjectileComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
-import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.state.NoState;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.conjure.component.ConjureZoneComponent;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.conjure.style.ConjureStyle;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.ProjectileGlyphSlots;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;

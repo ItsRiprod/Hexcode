@@ -13,7 +13,7 @@
   "Description": "hexcode.glyphs.Area.description",
   "ModelPath": "Area",
   "BasePower": 1.0,
-  "ManaConsumption": 0.5,
+  "ManaConsumption": 1.0,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",

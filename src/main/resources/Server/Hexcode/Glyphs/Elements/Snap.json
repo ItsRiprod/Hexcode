@@ -1,10 +1,10 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "ElementSnap",
+  "Handler": "Snap",
   "Style": "Essence_Ice",
-  "Title": "hexcode.glyphs.ElementSnap.name",
-  "Description": "hexcode.glyphs.ElementSnap.description",
-  "ModelPath": "Glaciate",
+  "Title": "hexcode.glyphs.Snap.name",
+  "Description": "hexcode.glyphs.Snap.description",
+  "ModelPath": "Snap",
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [
@@ -28,9 +28,17 @@
   "Slots": {
     "Next": {
       "Style": "Next",
-      "Label": "hexcode.glyphs.ElementSnap.Next.name",
-      "Description": "hexcode.glyphs.ElementSnap.Next.description"
+      "Label": "hexcode.glyphs.Snap.Next.name",
+      "Description": "hexcode.glyphs.Snap.Next.description"
     }
+  },
+  "Config": {
+    "Type": "Snap",
+    "DamageCause": "Ice",
+    "Efficiency": 0.75,
+    "OnHitEffect": "Ice",
+    "OnHitDuration": 1.5,
+    "AffinityStat": "Affinity_Ice"
   },
   "Volatility": {
     "InstantCost": 0.1,

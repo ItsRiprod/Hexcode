@@ -5,7 +5,7 @@
   "Description": "hexcode.glyphs.Domain.description",
   "ModelPath": "Domain",
   "BasePower": 1.0,
-  "ManaConsumption": 4.0,
+  "ManaConsumption": 8.0,
   "ShapeStructure": [
     {
       "ShapeId": "Square",

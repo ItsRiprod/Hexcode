@@ -17,7 +17,7 @@
   "Description": "hexcode.glyphs.Bolt.description",
   "ModelPath": "Bolt",
   "BasePower": 1.0,
-  "ManaConsumption": 2.0,
+  "ManaConsumption": 4.0,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",

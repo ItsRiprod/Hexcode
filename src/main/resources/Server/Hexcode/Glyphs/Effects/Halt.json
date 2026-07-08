@@ -12,7 +12,7 @@
   "Description": "hexcode.glyphs.Halt.description",
   "ModelPath": "Halt",
   "BasePower": 1.0,
-  "ManaConsumption": 1.0,
+  "ManaConsumption": 2.0,
   "ShapeStructure": [
     {
       "ShapeId": "Antitriangle",

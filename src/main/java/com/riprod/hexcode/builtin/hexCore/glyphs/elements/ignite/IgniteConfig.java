@@ -1,25 +1,54 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.elements.ignite;
 
+import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementGlyphConfig;
 
-public final class IgniteConfig extends GlyphConfig {
+public final class IgniteConfig extends ElementGlyphConfig {
 
     public static final IgniteConfig DEFAULTS = new IgniteConfig();
 
-    private String effectId = "Burn";
+    private String statusEffect = "Fire";
+    private float durationPerComplexity = 1.0f;
+    private float minDuration = 1.0f;
+    private float maxDuration = 30.0f;
 
-    public String getEffectId() {
-        return effectId;
+    public String getStatusEffect() {
+        return statusEffect;
+    }
+
+    public float getDurationPerComplexity() {
+        return durationPerComplexity;
+    }
+
+    public float getMinDuration() {
+        return minDuration;
+    }
+
+    public float getMaxDuration() {
+        return maxDuration;
     }
 
     public static final BuilderCodec<IgniteConfig> CODEC = BuilderCodec
-            .builder(IgniteConfig.class, IgniteConfig::new, GlyphConfig.BASE_CODEC)
-            .append(new KeyedCodec<>("Effect", EntityEffect.CHILD_ASSET_CODEC, true),
-                    (c, v) -> c.effectId = v, c -> c.effectId)
+            .builder(IgniteConfig.class, IgniteConfig::new, ElementGlyphConfig.BASE_CODEC)
+            .append(new KeyedCodec<>("StatusEffect", Codec.STRING, true),
+                    (c, v) -> c.statusEffect = v, c -> c.statusEffect)
             .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .append(new KeyedCodec<>("DurationPerComplexity", Codec.FLOAT, true),
+                    (c, v) -> c.durationPerComplexity = v, c -> c.durationPerComplexity)
+            .addValidator(Validators.greaterThanOrEqual(0.0f))
+            .add()
+            .append(new KeyedCodec<>("MinDuration", Codec.FLOAT, true),
+                    (c, v) -> c.minDuration = v, c -> c.minDuration)
+            .addValidator(Validators.greaterThanOrEqual(0.0f))
+            .add()
+            .append(new KeyedCodec<>("MaxDuration", Codec.FLOAT, true),
+                    (c, v) -> c.maxDuration = v, c -> c.maxDuration)
+            .addValidator(Validators.greaterThanOrEqual(0.0f))
             .add()
             .build();
 }

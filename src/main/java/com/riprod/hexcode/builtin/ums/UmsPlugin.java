@@ -11,8 +11,12 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.ums.assets.ElementAsset;
 import com.riprod.hexcode.builtin.ums.assets.BaseElementInteraction;
-import com.riprod.hexcode.builtin.ums.interaction.BasicInteraction;
+import com.riprod.hexcode.builtin.ums.interaction.GenericElementInteraction;
 import com.riprod.hexcode.builtin.ums.systems.UmsReactionSystem;
+import com.riprod.hexcode.core.common.casting.registry.CastingStyleRegistry;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
+import com.riprod.hexcode.core.common.node.NodeRouter;
+import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerRegistry;
 
 public class UmsPlugin extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -41,7 +45,8 @@ public class UmsPlugin extends JavaPlugin {
     }
 
     private void registerInteractions() {
-        BaseElementInteraction.CODEC.register(BasicInteraction.ID, BasicInteraction.class, BasicInteraction.CODEC);
+        BaseElementInteraction.CODEC.register(GenericElementInteraction.ID, GenericElementInteraction.class,
+                GenericElementInteraction.CODEC);
     }
 
     private void registerSystems() {

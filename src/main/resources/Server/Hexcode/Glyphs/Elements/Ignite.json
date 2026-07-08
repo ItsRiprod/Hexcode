@@ -12,14 +12,14 @@
   "Description": "hexcode.glyphs.Ignite.description",
   "ModelPath": "Ignite",
   "BasePower": 1.0,
-  "ManaConsumption": 1.5,
+  "ManaConsumption": 3.0,
   "ShapeStructure": [
     {
       "ShapeId": "Square",
       "Size": 1.0
     },
     {
-      "ShapeId": "Circle",
+      "ShapeId": "Antisquare",
       "Size": 0.8
     },
     {
@@ -27,35 +27,28 @@
       "Size": 0.6
     },
     {
-      "ShapeId": "Triangle",
+      "ShapeId": "Antisquare",
       "Size": 0.4
     }
   ],
   "Slots": {
-    "target": {
-      "Style": "Input",
-      "Label": "hexcode.glyphs.Ignite.target.name",
-      "Description": "hexcode.glyphs.Ignite.target.description"
-    },
-    "duration": {
-      "Style": "Input",
-      "Label": "hexcode.glyphs.Ignite.duration.name",
-      "Description": "hexcode.glyphs.Ignite.duration.description",
-      "DefaultValue": 5,
-      "Unique": true
-    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Ignite.Next.name",
       "Description": "hexcode.glyphs.Ignite.Next.description"
     }
   },
+  "Config": {
+    "Type": "Ignite",
+    "StatusEffect": "Fire",
+    "Efficiency": 0.95,
+    "DurationPerComplexity": 1.0,
+    "MinDuration": 1.0,
+    "MaxDuration": 30.0,
+    "AffinityStat": "Affinity_Fire"
+  },
   "Volatility": {
     "InstantCost": 0.1,
     "DrainPerSecond": 0.2
-  },
-  "Config": {
-    "Type": "Ignite",
-    "Effect": "Burn"
   }
 }

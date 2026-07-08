@@ -1,3 +1,5 @@
+# Utility
+
 Absolute.name=Absolute
 Absolute.description=Absolute value of A. Numbers/Positions/Colors/Rotations become a positive number (magnitude). Entities and blocks pass through unchanged.
 Absolute.a.name=A
@@ -13,59 +15,6 @@ Add.b.name=B
 Add.b.description=Second operand
 Add.Next.name=Next
 Add.Next.description=The next glyph in the execution chain
-
-Arc.name=Arc
-Arc.description=Chain lightning that fires each child on the next chain target
-Arc.target.name=Target
-Arc.target.description=Variable containing the targets to affect
-Arc.jump.name=Jump
-Arc.jump.description=Number of blocks to jump
-Arc.delay.name=Delay
-Arc.delay.description=Seconds between each arc jump
-Arc.Next.name=Next
-Arc.Next.description=The next glyph in the execution chain
-
-Area.name=Area
-Area.description=Sweeps a sphere around a center point and fans out separately to its Blocks and Entities branches, executing each once per matching target
-Area.center.name=Center
-Area.center.description=Center point to gather around
-Area.radius.name=Radius
-Area.radius.description=Radius of the gathering area
-Area.Blocks.name=Blocks
-Area.Blocks.description=Executes once per non-empty block in the area
-Area.Next.name=Entities
-Area.Next.description=Executes once per entity in the area (excluding the caster)
-
-Beam.name=Beam
-Beam.description=Raycasts from an entity in a direction, storing the first hit
-Beam.source.name=Source
-Beam.source.description=Entity to raycast from
-Beam.rotation.name=Direction
-Beam.rotation.description=Aim Direction
-Beam.range.name=Range
-Beam.range.description=Maximum range in blocks
-Beam.Next.name=Next
-Beam.Next.description=The next glyph in the execution chain
-
-Bolt.name=Bolt
-Bolt.description=Instant single-target energy discharge or remote block interaction
-Bolt.target.name=Target
-Bolt.target.description=Variable containing the targets to affect
-Bolt.power.name=Power
-Bolt.power.description=Damage or power level of the bolt
-Bolt.Next.name=Next
-Bolt.Next.description=The next glyph in the execution chain
-
-Burning.name=Burning
-Burning.description=Emit a beam of fire in front of you, selecting everyone in your path
-Burning.center.name=Center
-Burning.center.description=Position to center the explosion. Defaults to caster position
-Burning.radius.name=Radius
-Burning.radius.description=Radius of the fire explosion
-Burning.magnitude.name=Magnitude
-Burning.magnitude.description=Strength of the explosion force and damage
-Burning.Next.name=Next
-Burning.Next.description=The next glyph in the execution chain
 
 Ceiling.name=Ceiling
 Ceiling.description=Rounds A up to the nearest whole number. Preserves type: Positions and Rotations are ceiled component-wise. Entities, Blocks and Colors pass through unchanged.
@@ -89,23 +38,6 @@ Concentration.Next.name=Next
 Concentration.Next.description=Children sustained while concentrating
 Concentration.release.name=Release
 Concentration.release.description=Executes when you release concentration
-
-Conjure.name=Conjure
-Conjure.description=Spawns a temporary area zone at a position
-Conjure.anchor.name=Anchor
-Conjure.anchor.description=Center position or entity for the zone
-Conjure.coordsA.name=First Corner
-Conjure.coordsA.description=First corner offset from anchor
-Conjure.coordsB.name=Second Corner
-Conjure.coordsB.description=Second corner offset from anchor
-Conjure.duration.name=Duration
-Conjure.duration.description=Duration of the conjured zone in seconds
-Conjure.interval.name=Interval
-Conjure.interval.description=Interval between executions, -1 for none
-Conjure.immediate.name=Immediate
-Conjure.immediate.description=Fires immediately after the conjuration is created
-Conjure.Next.name=Next
-Conjure.Next.description=Executes on every entity in the area
 
 Cos.name=Cos
 Cos.description=Cosine of A (radians)
@@ -139,21 +71,6 @@ Divide.b.description=Second operand
 Divide.Next.name=Next
 Divide.Next.description=The next glyph in the execution chain
 
-Domain.name=Domain
-Domain.description=Domain Expansion. Decreases volatility within domain.
-Domain.target.name=Target
-Domain.target.description=Anchor position for domain center
-Domain.magnitude.name=Radius
-Domain.magnitude.description=Sphere radius (2-15 blocks)
-Domain.duration.name=Duration
-Domain.duration.description=Lifetime in seconds
-Domain.power.name=Power
-Domain.power.description=Contestation power (higher wins, costs more upfront mana)
-Domain.immediate.name=Immediate
-Domain.immediate.description=Fires immediately after the domain is spawned
-Domain.Next.name=Next
-Domain.Next.description=Fires per entity entering the domain (excluding caster)
-
 Dot.name=Dot Product
 Dot.description=Derives the dot product of two vector inputs.
 Dot.v.name=The first vector
@@ -172,34 +89,6 @@ Cross.w.description=The second vector of the cross product
 Cross.Next.name=Next Glyph
 Cross.Next.description=The next glyph in the execution chain
 
-Drain.name=Drain
-Drain.description=Channels HP or Stamina into Mana over time. As a value, reads resource fill percentage.
-Drain.hp.name=HP
-Drain.hp.description=Drain HP > Mana (1:1)
-Drain.stamina.name=Stamina
-Drain.stamina.description=Drain Stamina > Mana (lossy)
-Drain.target.name=Target
-Drain.target.description=Entity to drain. Filter slot for Mana
-Drain.duration.name=Duration
-Drain.duration.description=Seconds to channel over
-Drain.destination.name=Destination
-Drain.destination.description=Entity whose Mana will receive the drained resource. Defaults to caster. HP source is only allowed when draining self.
-Drain.Next.name=Next
-Drain.Next.description=The next glyph in the execution chain
-
-Ensnare.name=Ensnare
-Ensnare.description=Creates spike formations that trap entities in the area
-Ensnare.target.name=Target
-Ensnare.target.description=Center position or entity for the rupture area
-Ensnare.radius.name=Radius
-Ensnare.radius.description=Radius of the rupture area in blocks
-Ensnare.duration.name=Duration
-Ensnare.duration.description=Duration in ticks before spikes despawn
-Ensnare.Trapped.name=Trapped
-Ensnare.Trapped.description=Glyph to execute on each trapped target
-Ensnare.Next.name=Next
-Ensnare.Next.description=The next glyph in the execution chain
-
 Equal.name=Equal
 Equal.description=Branches execution if A equals B. Assigns A to output if B is absent.
 Equal.a.name=A
@@ -213,67 +102,12 @@ Equal.Greater.description=If A is greater than B
 Equal.Less.name=Less
 Equal.Less.description=If A is less than B
 
-Erode.name=Erode
-Erode.description=Weakens targets for a duration, increasing damage taken from all sources
-Erode.target.name=Target
-Erode.target.description=Variable containing the targets to affect
-Erode.amount.name=Amount
-Erode.amount.description=Vulnerability increase per incoming hit
-Erode.duration.name=Duration
-Erode.duration.description=How long the effect lasts in seconds
-Erode.Next.name=Next
-Erode.Next.description=The next glyph in the execution chain
-
 Floor.name=Floor
 Floor.description=Rounds A down to the nearest whole number. Preserves type: Positions and Rotations are floored component-wise. Entities, Blocks and Colors pass through unchanged.
 Floor.a.name=A
 Floor.a.description=Value to floor
 Floor.Next.name=Next
 Floor.Next.description=The next glyph in the execution chain
-
-Force.name=Force
-Force.description=Applies directional force to all targets in a variable
-Force.target.name=Target
-Force.target.description=Variable containing the targets to affect
-Force.direction.name=Direction
-Force.direction.description=Direction vector for the effect
-Force.magnitude.name=Magnitude
-Force.magnitude.description=Strength of the applied force
-Force.Next.name=Next
-Force.Next.description=The next glyph in the execution chain
-
-Fortify.name=Fortify
-Fortify.description=Increases resilience of targets for a duration
-Fortify.target.name=Target
-Fortify.target.description=Variable containing the targets to affect
-Fortify.amount.name=Amount
-Fortify.amount.description=Damage reduction per incoming hit
-Fortify.duration.name=Duration
-Fortify.duration.description=How long the effect lasts in seconds
-Fortify.Next.name=Next
-Fortify.Next.description=The next glyph in the execution chain
-
-Freeze.name=Freeze
-Freeze.description=Total stasis on targets with ice surfaces
-Freeze.target.name=Target
-Freeze.target.description=Variable containing the targets to affect
-Freeze.duration.name=Duration
-Freeze.duration.description=Duration of the freeze effect in seconds
-Freeze.Next.name=Next
-Freeze.Next.description=The next glyph in the execution chain
-
-Glaciate.name=Glaciate
-Glaciate.description=Conjures a solid ice block at a target with gravity and speed-based impact damage
-Glaciate.target.name=Target
-Glaciate.target.description=Where to spawn the ice block
-Glaciate.offset.name=Offset
-Glaciate.offset.description=Spawn offset: number=height, position=relative offset, entity=absolute position
-Glaciate.duration.name=Duration
-Glaciate.duration.description=How long the ice block persists
-Glaciate.immediate.name=Immediate
-Glaciate.immediate.description=Fires immediately after being cast
-Glaciate.Next.name=Next
-Glaciate.Next.description=The next glyph in the execution chain
 
 Greater.name=Greater
 Greater.description=Branches execution if A is greater than B
@@ -283,62 +117,6 @@ Greater.b.name=B
 Greater.b.description=Second operand
 Greater.Next.name=Next
 Greater.Next.description=The next glyph in the execution chain
-
-Growth.name=Growth
-Growth.description=Restores the natural state of targets: heals entities, grows crops, repairs blocks
-Growth.target.name=Target
-Growth.target.description=Variable containing the targets to affect
-Growth.amount.name=Amount
-Growth.amount.description=Restoration strength
-Growth.Next.name=Next
-Growth.Next.description=The next glyph in the execution chain
-Growth.duration.name=Duration
-Growth.duration.description=The length of the growth in seconds
-
-Gust.name=Gust
-Gust.description=Radial force pushing targets away from a center point
-Gust.center.name=Center
-Gust.center.description=Position to center the effect around
-Gust.radius.name=Radius
-Gust.radius.description=Radius of the area of effect
-Gust.magnitude.name=Magnitude
-Gust.magnitude.description=Strength of the applied force
-Gust.Next.name=Next
-Gust.Next.description=The next glyph in the execution chain
-
-Halt.name=Halt
-Halt.description=Instantly zeros all velocity on targets, optionally sustaining suppression
-Halt.target.name=Target
-Halt.target.description=Variable containing the targets to affect
-Halt.duration.name=Duration
-Halt.duration.description=Duration in seconds to sustain halt (0 = instant one-shot)
-Halt.Next.name=Next
-Halt.Next.description=The next glyph in the execution chain
-
-Ignite.name=Ignite
-Ignite.description=Sets targets on fire, dealing damage over time
-Ignite.target.name=Target
-Ignite.target.description=Variable containing the targets to affect
-Ignite.duration.name=Duration
-Ignite.duration.description=Duration of the burn effect in seconds
-Ignite.Next.name=Next
-Ignite.Next.description=The next glyph in the execution chain
-
-Interfere.name=Interfere
-Interfere.description=Hijacks all active hex constructs on the target, replacing their continuation with this chain. Strips hex effects from targets without active constructs.
-Interfere.target.name=Target
-Interfere.target.description=Entity to interfere with
-Interfere.Next.name=Next
-Interfere.Next.description=The next glyph in the execution chain
-
-Invoke.name=Invoke
-Invoke.description=Runs a configured interaction from an entity, defaulting to the caster
-Invoke.source.name=Source
-Invoke.source.description=Optional entity to run the interaction from; a block or empty input runs it from the caster
-Invoke.target.name=Target
-Invoke.target.description=Optional entity, block, or position the interaction acts on
-Invoke.Next.name=Next
-Invoke.Next.description=The next glyph in the execution chain
 
 IsHolding.name=Is Holding
 IsHolding.description=Returns 1 if the caster is holding the primary cast button, 0 otherwise
@@ -353,17 +131,6 @@ Less.b.name=B
 Less.b.description=Second operand
 Less.Next.name=Next
 Less.Next.description=The next glyph in the execution chain
-
-Levitate.name=Levitate
-Levitate.description=Reverses or nullifies gravity on targets for a duration
-Levitate.target.name=Target
-Levitate.target.description=Variable containing the targets to affect
-Levitate.intensity.name=Intensity
-Levitate.intensity.description=Upward force strength, 0 for weightlessness
-Levitate.duration.name=Duration
-Levitate.duration.description=How long the effect lasts in seconds
-Levitate.Next.name=Next
-Levitate.Next.description=The next glyph in the execution chain
 
 Multiply.name=Multiply
 Multiply.description=Multiplies two values together
@@ -486,17 +253,6 @@ Output.color.description=Number for grayscale (0-255) or PositionVar for RGB (x=
 Output.Next.name=Next
 Output.Next.description=The next glyph in the execution chain
 
-Phase.name=Phase
-Phase.description=Temporarily removes blocks from reality, restoring them after a delay
-Phase.target.name=Target
-Phase.target.description=Blocks to phase out of existence
-Phase.duration.name=Duration
-Phase.duration.description=How long blocks stay phased in ticks
-Phase.intensity.name=Intensity
-Phase.intensity.description=Maximum block hardness that can be phased
-Phase.Next.name=Next
-Phase.Next.description=The next glyph in the execution chain
-
 Pi.name=Pi
 Pi.description=The value of Pi
 Pi.Next.name=Next
@@ -521,32 +277,6 @@ Power.b.name=B
 Power.b.description=Exponent
 Power.Next.name=Next
 Power.Next.description=The next glyph in the execution chain
-
-Projectile.name=Projectile
-Projectile.description=Launches a projectile that triggers child glyphs on collision
-Projectile.source.name=Source
-Projectile.source.description=Entity to launch the projectile from
-Projectile.direction.name=Direction
-Projectile.direction.description=Launch direction, defaults to source entity's look direction
-Projectile.speed.name=Speed
-Projectile.speed.description=Speed of the projectile
-Projectile.gravity.name=Gravity
-Projectile.gravity.description=The amount that gravity affects the projectile
-Projectile.bounces.name=Bounces
-Projectile.bounces.description=The number of bounces the projectile will have
-Projectile.Next.name=Next
-Projectile.Next.description=The next glyph in the execution chain
-Projectile.immediate.name=Immediate
-Projectile.immediate.description=Fires immediately after the projectile is created
-Projectile.bounce.name=OnBounce
-Projectile.bounce.description=Fires once for every bounce
-
-Resonate.name=Resonate
-Resonate.description=Appends a parallel glyph chain to an ally's active hex construct. Can transfer mana to the construct's owner or directly to entities with a mana pool.
-Resonate.target.name=Target
-Resonate.target.description=Hex construct entities to resonate with
-Resonate.Next.name=Next
-Resonate.Next.description=The next glyph in the execution chain
 
 Root.name=Root
 Root.description=The B-th root of A
@@ -577,38 +307,10 @@ Round.a.description=Value to round
 Round.Next.name=Next
 Round.Next.description=The next glyph in the execution chain
 
-Scale.name=Scale
-Scale.description=Temporarily scales an entity's visual size and collision box
-Scale.target.name=Target
-Scale.target.description=Entity to scale
-Scale.magnitude.name=Magnitude
-Scale.magnitude.description=Scale factor (0.25-4.0)
-Scale.duration.name=Duration
-Scale.duration.description=How long the scale lasts in seconds
-Scale.Next.name=Next
-Scale.Next.description=The next glyph in the execution chain
-
 Self.name=Self
 Self.description=Returns a reference to the caster
 Self.Next.name=Next
 Self.Next.description=The next glyph in the execution chain
-
-Shatter.name=Shatter
-Shatter.description=Launches ice shard projectiles in a cone from a position. Each shard triggers the next glyph where it lands.
-Shatter.source.name=Source
-Shatter.source.description=Position or entity to launch shards from
-Shatter.direction.name=Direction
-Shatter.direction.description=Central direction of the cone
-Shatter.count.name=Count
-Shatter.count.description=Number of ice shards to launch
-Shatter.spread.name=Spread
-Shatter.spread.description=Cone spread angle in radians
-Shatter.speed.name=Speed
-Shatter.speed.description=Shard launch speed
-Shatter.gravity.name=Gravity
-Shatter.gravity.description=Gravity applied to shards
-Shatter.Next.name=Next
-Shatter.Next.description=The next glyph in the execution chain
 
 Sin.name=Sin
 Sin.description=Sine of A (radians)
@@ -616,13 +318,6 @@ Sin.a.name=A
 Sin.a.description=Angle in radians
 Sin.Next.name=Next
 Sin.Next.description=The next glyph in the execution chain
-
-Skull.name=Skull
-Skull.description=<b>???</b>
-Skull.target.name=???
-Skull.target.description=???
-Skull.Next.name=???
-Skull.Next.description=???
 
 Style.name=Style
 Style.description=Override the active hex color with RGBA (0-255)
@@ -648,28 +343,12 @@ Subtract.b.description=Second operand
 Subtract.Next.name=Next
 Subtract.Next.description=The next glyph in the execution chain
 
-Swap.name=Swap
-Swap.description=Exchanges positions between two variable arrays element-by-element
-Swap.a.name=A
-Swap.a.description=First operand
-Swap.b.name=B
-Swap.b.description=Second operand
-Swap.Next.name=Next
-Swap.Next.description=The next glyph in the execution chain
-
 Tan.name=Tan
 Tan.description=Tangent of A (radians)
 Tan.a.name=A
 Tan.a.description=Angle in radians
 Tan.Next.name=Next
 Tan.Next.description=The next glyph in the execution chain
-
-Terraform.name=Terraform
-Terraform.description=Moves existing natural blocks from one position to another
-Terraform.target.name=Target
-Terraform.target.description=Variable containing the targets to affect
-Terraform.Next.name=Next
-Terraform.Next.description=The next glyph in the execution chain
 
 Variable.name=Variable
 Variable.description=A variable
@@ -680,6 +359,315 @@ Variable.output.description=Where to save the variable
 Variable.Next.name=Next
 Variable.Next.description=The next glyph in the execution chain
 
+# Selectors
+
+Area.name=Area
+Area.description=Sweeps a sphere around a center point and fans out separately to its Blocks and Entities branches, executing each once per matching target
+Area.center.name=Center
+Area.center.description=Center point to gather around
+Area.radius.name=Radius
+Area.radius.description=Radius of the gathering area
+Area.Blocks.name=Blocks
+Area.Blocks.description=Executes once per non-empty block in the area
+Area.Next.name=Entities
+Area.Next.description=Executes once per entity in the area (excluding the caster)
+
+Beam.name=Beam
+Beam.description=Raycasts from an entity in a direction, storing the first hit
+Beam.source.name=Source
+Beam.source.description=Entity to raycast from
+Beam.rotation.name=Direction
+Beam.rotation.description=Aim Direction
+Beam.range.name=Range
+Beam.range.description=Maximum range in blocks
+Beam.Next.name=Next
+Beam.Next.description=The next glyph in the execution chain
+
+Burning.name=Burning
+Burning.description=Emit a beam of fire in front of you, selecting everyone in your path
+Burning.center.name=Center
+Burning.center.description=Position to center the explosion. Defaults to caster position
+Burning.radius.name=Radius
+Burning.radius.description=Radius of the fire explosion
+Burning.magnitude.name=Magnitude
+Burning.magnitude.description=Strength of the explosion force and damage
+Burning.Next.name=Next
+Burning.Next.description=The next glyph in the execution chain
+
+Projectile.name=Projectile
+Projectile.description=Launches a projectile that triggers child glyphs on collision
+Projectile.source.name=Source
+Projectile.source.description=Entity to launch the projectile from
+Projectile.direction.name=Direction
+Projectile.direction.description=Launch direction, defaults to source entity's look direction
+Projectile.speed.name=Speed
+Projectile.speed.description=Speed of the projectile
+Projectile.gravity.name=Gravity
+Projectile.gravity.description=The amount that gravity affects the projectile
+Projectile.bounces.name=Bounces
+Projectile.bounces.description=The number of bounces the projectile will have
+Projectile.Next.name=Next
+Projectile.Next.description=The next glyph in the execution chain
+Projectile.immediate.name=Immediate
+Projectile.immediate.description=Fires immediately after the projectile is created
+Projectile.bounce.name=OnBounce
+Projectile.bounce.description=Fires once for every bounce
+
+# Effects
+
+Arc.name=Arc
+Arc.description=Chain lightning that fires each child on the next chain target
+Arc.target.name=Target
+Arc.target.description=Variable containing the targets to affect
+Arc.jump.name=Jump
+Arc.jump.description=Number of blocks to jump
+Arc.delay.name=Delay
+Arc.delay.description=Seconds between each arc jump
+Arc.Next.name=Next
+Arc.Next.description=The next glyph in the execution chain
+
+Bolt.name=Bolt
+Bolt.description=Instant single-target energy discharge or remote block interaction
+Bolt.target.name=Target
+Bolt.target.description=Variable containing the targets to affect
+Bolt.power.name=Power
+Bolt.power.description=Damage or power level of the bolt
+Bolt.Next.name=Next
+Bolt.Next.description=The next glyph in the execution chain
+
+Conjure.name=Conjure
+Conjure.description=Spawns a temporary area zone at a position
+Conjure.anchor.name=Anchor
+Conjure.anchor.description=Center position or entity for the zone
+Conjure.coordsA.name=First Corner
+Conjure.coordsA.description=First corner offset from anchor
+Conjure.coordsB.name=Second Corner
+Conjure.coordsB.description=Second corner offset from anchor
+Conjure.duration.name=Duration
+Conjure.duration.description=Duration of the conjured zone in seconds
+Conjure.interval.name=Interval
+Conjure.interval.description=Interval between executions, -1 for none
+Conjure.immediate.name=Immediate
+Conjure.immediate.description=Fires immediately after the conjuration is created
+Conjure.Next.name=Next
+Conjure.Next.description=Executes on every entity in the area
+
+Domain.name=Domain
+Domain.description=Domain Expansion. Decreases volatility within domain.
+Domain.target.name=Target
+Domain.target.description=Anchor position for domain center
+Domain.magnitude.name=Radius
+Domain.magnitude.description=Sphere radius (2-15 blocks)
+Domain.duration.name=Duration
+Domain.duration.description=Lifetime in seconds
+Domain.power.name=Power
+Domain.power.description=Contestation power (higher wins, costs more upfront mana)
+Domain.immediate.name=Immediate
+Domain.immediate.description=Fires immediately after the domain is spawned
+Domain.Next.name=Next
+Domain.Next.description=Fires per entity entering the domain (excluding caster)
+
+Drain.name=Drain
+Drain.description=Channels HP or Stamina into Mana over time. As a value, reads resource fill percentage.
+Drain.hp.name=HP
+Drain.hp.description=Drain HP > Mana (1:1)
+Drain.stamina.name=Stamina
+Drain.stamina.description=Drain Stamina > Mana (lossy)
+Drain.target.name=Target
+Drain.target.description=Entity to drain. Filter slot for Mana
+Drain.duration.name=Duration
+Drain.duration.description=Seconds to channel over
+Drain.destination.name=Destination
+Drain.destination.description=Entity whose Mana will receive the drained resource. Defaults to caster. HP source is only allowed when draining self.
+Drain.Next.name=Next
+Drain.Next.description=The next glyph in the execution chain
+
+Ensnare.name=Ensnare
+Ensnare.description=Creates spike formations that trap entities in the area
+Ensnare.target.name=Target
+Ensnare.target.description=Center position or entity for the rupture area
+Ensnare.radius.name=Radius
+Ensnare.radius.description=Radius of the rupture area in blocks
+Ensnare.duration.name=Duration
+Ensnare.duration.description=Duration in ticks before spikes despawn
+Ensnare.Trapped.name=Trapped
+Ensnare.Trapped.description=Glyph to execute on each trapped target
+Ensnare.Next.name=Next
+Ensnare.Next.description=The next glyph in the execution chain
+
+Erode.name=Erode
+Erode.description=Weakens targets for a duration, increasing damage taken from all sources
+Erode.target.name=Target
+Erode.target.description=Variable containing the targets to affect
+Erode.amount.name=Amount
+Erode.amount.description=Vulnerability increase per incoming hit
+Erode.duration.name=Duration
+Erode.duration.description=How long the effect lasts in seconds
+Erode.Next.name=Next
+Erode.Next.description=The next glyph in the execution chain
+
+Force.name=Force
+Force.description=Applies directional force to all targets in a variable
+Force.target.name=Target
+Force.target.description=Variable containing the targets to affect
+Force.direction.name=Direction
+Force.direction.description=Direction vector for the effect
+Force.magnitude.name=Magnitude
+Force.magnitude.description=Strength of the applied force
+Force.Next.name=Next
+Force.Next.description=The next glyph in the execution chain
+
+Fortify.name=Fortify
+Fortify.description=Increases resilience of targets for a duration
+Fortify.target.name=Target
+Fortify.target.description=Variable containing the targets to affect
+Fortify.amount.name=Amount
+Fortify.amount.description=Damage reduction per incoming hit
+Fortify.duration.name=Duration
+Fortify.duration.description=How long the effect lasts in seconds
+Fortify.Next.name=Next
+Fortify.Next.description=The next glyph in the execution chain
+
+Glaciate.name=Glaciate
+Glaciate.description=Conjures a solid ice block at a target with gravity and speed-based impact damage
+Glaciate.target.name=Target
+Glaciate.target.description=Where to spawn the ice block
+Glaciate.offset.name=Offset
+Glaciate.offset.description=Spawn offset: number=height, position=relative offset, entity=absolute position
+Glaciate.duration.name=Duration
+Glaciate.duration.description=How long the ice block persists
+Glaciate.immediate.name=Immediate
+Glaciate.immediate.description=Fires immediately after being cast
+Glaciate.Next.name=Next
+Glaciate.Next.description=The next glyph in the execution chain
+
+Growth.name=Growth
+Growth.description=Restores the natural state of targets: heals entities, grows crops, repairs blocks
+Growth.target.name=Target
+Growth.target.description=Variable containing the targets to affect
+Growth.amount.name=Amount
+Growth.amount.description=Restoration strength
+Growth.Next.name=Next
+Growth.Next.description=The next glyph in the execution chain
+Growth.duration.name=Duration
+Growth.duration.description=The length of the growth in seconds
+
+Gust.name=Gust
+Gust.description=Radial force pushing targets away from a center point
+Gust.center.name=Center
+Gust.center.description=Position to center the effect around
+Gust.radius.name=Radius
+Gust.radius.description=Radius of the area of effect
+Gust.magnitude.name=Magnitude
+Gust.magnitude.description=Strength of the applied force
+Gust.Next.name=Next
+Gust.Next.description=The next glyph in the execution chain
+
+Halt.name=Halt
+Halt.description=Instantly zeros all velocity on targets, optionally sustaining suppression
+Halt.target.name=Target
+Halt.target.description=Variable containing the targets to affect
+Halt.duration.name=Duration
+Halt.duration.description=Duration in seconds to sustain halt (0 = instant one-shot)
+Halt.Next.name=Next
+Halt.Next.description=The next glyph in the execution chain
+
+Interfere.name=Interfere
+Interfere.description=Hijacks all active hex constructs on the target, replacing their continuation with this chain. Strips hex effects from targets without active constructs.
+Interfere.target.name=Target
+Interfere.target.description=Entity to interfere with
+Interfere.Next.name=Next
+Interfere.Next.description=The next glyph in the execution chain
+
+Invoke.name=Invoke
+Invoke.description=Runs a configured interaction from an entity, defaulting to the caster
+Invoke.source.name=Source
+Invoke.source.description=Optional entity to run the interaction from; a block or empty input runs it from the caster
+Invoke.target.name=Target
+Invoke.target.description=Optional entity, block, or position the interaction acts on
+Invoke.Next.name=Next
+Invoke.Next.description=The next glyph in the execution chain
+
+Levitate.name=Levitate
+Levitate.description=Reverses or nullifies gravity on targets for a duration
+Levitate.target.name=Target
+Levitate.target.description=Variable containing the targets to affect
+Levitate.intensity.name=Intensity
+Levitate.intensity.description=Upward force strength, 0 for weightlessness
+Levitate.duration.name=Duration
+Levitate.duration.description=How long the effect lasts in seconds
+Levitate.Next.name=Next
+Levitate.Next.description=The next glyph in the execution chain
+
+Phase.name=Phase
+Phase.description=Temporarily removes blocks from reality, restoring them after a delay
+Phase.target.name=Target
+Phase.target.description=Blocks to phase out of existence
+Phase.duration.name=Duration
+Phase.duration.description=How long blocks stay phased in ticks
+Phase.intensity.name=Intensity
+Phase.intensity.description=Maximum block hardness that can be phased
+Phase.Next.name=Next
+Phase.Next.description=The next glyph in the execution chain
+
+Resonate.name=Resonate
+Resonate.description=Appends a parallel glyph chain to an ally's active hex construct. Can transfer mana to the construct's owner or directly to entities with a mana pool.
+Resonate.target.name=Target
+Resonate.target.description=Hex construct entities to resonate with
+Resonate.Next.name=Next
+Resonate.Next.description=The next glyph in the execution chain
+
+Scale.name=Scale
+Scale.description=Temporarily scales an entity's visual size and collision box
+Scale.target.name=Target
+Scale.target.description=Entity to scale
+Scale.magnitude.name=Magnitude
+Scale.magnitude.description=Scale factor (0.25-4.0)
+Scale.duration.name=Duration
+Scale.duration.description=How long the scale lasts in seconds
+Scale.Next.name=Next
+Scale.Next.description=The next glyph in the execution chain
+
+Shatter.name=Shatter
+Shatter.description=Launches ice shard projectiles in a cone from a position. Each shard triggers the next glyph where it lands.
+Shatter.source.name=Source
+Shatter.source.description=Position or entity to launch shards from
+Shatter.direction.name=Direction
+Shatter.direction.description=Central direction of the cone
+Shatter.count.name=Count
+Shatter.count.description=Number of ice shards to launch
+Shatter.spread.name=Spread
+Shatter.spread.description=Cone spread angle in radians
+Shatter.speed.name=Speed
+Shatter.speed.description=Shard launch speed
+Shatter.gravity.name=Gravity
+Shatter.gravity.description=Gravity applied to shards
+Shatter.Next.name=Next
+Shatter.Next.description=The next glyph in the execution chain
+
+Skull.name=Skull
+Skull.description=<b>???</b>
+Skull.target.name=???
+Skull.target.description=???
+Skull.Next.name=???
+Skull.Next.description=???
+
+Swap.name=Swap
+Swap.description=Exchanges positions between two variable arrays element-by-element
+Swap.a.name=A
+Swap.a.description=First operand
+Swap.b.name=B
+Swap.b.description=Second operand
+Swap.Next.name=Next
+Swap.Next.description=The next glyph in the execution chain
+
+Terraform.name=Terraform
+Terraform.description=Moves existing natural blocks from one position to another
+Terraform.target.name=Target
+Terraform.target.description=Variable containing the targets to affect
+Terraform.Next.name=Next
+Terraform.Next.description=The next glyph in the execution chain
+
 Warp.name=Warp
 Warp.description=Teleports targets to a destination position
 Warp.target.name=Target
@@ -689,12 +677,24 @@ Warp.destination.description=Position to teleport to
 Warp.Next.name=Next
 Warp.Next.description=The next glyph in the execution chain
 
-ElementFire.name=Fire
-ElementFire.description=Discharges accumulated complexity as fire damage
-ElementFire.Next.name=Next
-ElementFire.Next.description=The next glyph in the execution chain
+# Elementals
 
-ElementBurning.name=Burning
-ElementBurning.description=Discharges accumulated complexity as a burning effect
-ElementBurning.Next.name=Next
-ElementBurning.Next.description=The next glyph in the execution chain
+Scorch.name=Scorch
+Scorch.description=Discharges accumulated complexity as a burst of fire damage
+Scorch.Next.name=Next
+Scorch.Next.description=The next glyph in the execution chain
+
+Ignite.name=Ignite
+Ignite.description=Sets the target ablaze, dealing fire damage over time
+Ignite.Next.name=Next
+Ignite.Next.description=The next glyph in the execution chain
+
+Snap.name=Snap
+Snap.description=Discharges accumulated complexity as a brittle burst of ice damage
+Snap.Next.name=Next
+Snap.Next.description=The next glyph in the execution chain
+
+Freeze.name=Freeze
+Freeze.description=Chills the target, slowing movement and attack speed as it stacks toward a full freeze
+Freeze.Next.name=Next
+Freeze.Next.description=The next glyph in the execution chain

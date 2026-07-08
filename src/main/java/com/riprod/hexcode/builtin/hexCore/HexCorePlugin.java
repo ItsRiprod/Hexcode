@@ -75,8 +75,6 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.force.ForceGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.FortifyConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.FortifyGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.system.FortifyDamageSystem;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.freeze.FreezeConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.freeze.FreezeGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.GlaciateConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.GlaciateGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.component.GlaciateComponent;
@@ -88,14 +86,8 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.halt.HaltConstructHandl
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.halt.HaltGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interaction.InteractionGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interfere.InterfereGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.isHolding.IsHoldingValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.LevitateConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.LevitateGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.onCast.OnCastGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.onDeath.OnDeathGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.onPrimary.OnPrimaryGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.onSecondary.OnSecondaryGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.onUse.OnUseGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.phase.PhaseComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.phase.PhaseConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.phase.PhaseGlyph;
@@ -111,8 +103,10 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.interaction.Hex
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.swap.SwapGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.terraform.TerraformGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.warp.WarpGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.burning.ElementBurningGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fire.ElementFireGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.scorch.ScorchGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.snap.SnapGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.FreezeConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.FreezeGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ignite.IgniteConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ignite.IgniteGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.area.AreaGlyph;
@@ -136,9 +130,15 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.divide.DivideGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.dot.DotGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.equal.EqualGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.floor.FloorGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.isHolding.IsHoldingValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.less.LessGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.multiply.MultiplyGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.number.NumberValue;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.onCast.OnCastGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.onDeath.OnDeathGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.onPrimary.OnPrimaryGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.onSecondary.OnSecondaryGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.onUse.OnUseGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.output.OutputGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.pi.PiValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.position.PositionValue;
@@ -202,53 +202,19 @@ public class HexCorePlugin extends JavaPlugin {
 
         private void RegisterImpacts() {
                 Impact.CODEC
-                        .register(PowerLawImpact.ID, PowerLawImpact.class, PowerLawImpact.CODEC)
-                        .register(SphereVolumeImpact.ID, SphereVolumeImpact.class, SphereVolumeImpact.CODEC)
-                        .register(RatioToDefaultImpact.ID, RatioToDefaultImpact.class, RatioToDefaultImpact.CODEC)
-                        .register(ThresholdImpact.ID, ThresholdImpact.class, ThresholdImpact.CODEC)
-                        .register(ExponentialImpact.ID, ExponentialImpact.class, ExponentialImpact.CODEC)
-                        .register(ConstantImpact.ID, ConstantImpact.class, ConstantImpact.CODEC)
-                        .register(LinearImpact.ID, LinearImpact.class, LinearImpact.CODEC);
+                                .register(PowerLawImpact.ID, PowerLawImpact.class, PowerLawImpact.CODEC)
+                                .register(SphereVolumeImpact.ID, SphereVolumeImpact.class, SphereVolumeImpact.CODEC)
+                                .register(RatioToDefaultImpact.ID, RatioToDefaultImpact.class,
+                                                RatioToDefaultImpact.CODEC)
+                                .register(ThresholdImpact.ID, ThresholdImpact.class, ThresholdImpact.CODEC)
+                                .register(ExponentialImpact.ID, ExponentialImpact.class, ExponentialImpact.CODEC)
+                                .register(ConstantImpact.ID, ConstantImpact.class, ConstantImpact.CODEC)
+                                .register(LinearImpact.ID, LinearImpact.class, LinearImpact.CODEC);
         }
 
         private void RegisterGlyphs() {
 
-                GlyphRegistry.register(new SelfGlyph());
-                GlyphRegistry.register(new ChaosGlyph());
-                GlyphRegistry.register(new ForceGlyph());
-                GlyphRegistry.register(new DelayGlyph());
-                GlyphRegistry.register(new DrainGlyph());
-                GlyphRegistry.register(new HaltGlyph());
-
-                GlyphRegistry.register(new BeamGlyph());
-                GlyphRegistry.register(new AreaGlyph());
-                GlyphRegistry.register(new ProjectileGlyph());
-                GlyphRegistry.register(new GustGlyph());
-                GlyphRegistry.register(new ConjureGlyph());
-                GlyphRegistry.register(new GrowthGlyph());
-                GlyphRegistry.register(new FortifyGlyph());
-                GlyphRegistry.register(new ErodeGlyph());
-                GlyphRegistry.register(new InterfereGlyph());
-                GlyphRegistry.register(new ResonateGlyph());
-                GlyphRegistry.register(new LevitateGlyph());
-                GlyphRegistry.register(new ScaleGlyph());
-                GlyphRegistry.register(new DomainGlyph());
-
-                GlyphRegistry.register(new IgniteGlyph());
-                GlyphRegistry.register(new BoltGlyph());
-                GlyphRegistry.register(new ArcGlyph());
-                GlyphRegistry.register(new FreezeGlyph());
-                GlyphRegistry.register(new ShatterGlyph());
-                GlyphRegistry.register(new GlaciateGlyph());
-                GlyphRegistry.register(new TerraformGlyph());
-                GlyphRegistry.register(new BurningGlyph());
-                GlyphRegistry.register(new ElementFireGlyph());
-                GlyphRegistry.register(new ElementBurningGlyph());
-                GlyphRegistry.register(new EnsnareGlyph());
-                GlyphRegistry.register(new PhaseGlyph());
-                GlyphRegistry.register(new WarpGlyph());
-                GlyphRegistry.register(new SwapGlyph());
-
+                // utilities
                 GlyphRegistry.register(new MultiplyGlyph());
                 GlyphRegistry.register(new AddGlyph());
                 GlyphRegistry.register(new SubtractGlyph());
@@ -266,30 +232,67 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new PowerGlyph());
                 GlyphRegistry.register(new RootGlyph());
                 GlyphRegistry.register(new StyleGlyph());
-
                 GlyphRegistry.register(new PositionValue());
                 GlyphRegistry.register(new RotationValue());
                 GlyphRegistry.register(new DotGlyph());
                 GlyphRegistry.register(new CrossGlyph());
-
                 GlyphRegistry.register(new NumberValue());
                 GlyphRegistry.register(new VariableValue());
                 GlyphRegistry.register(new PiValue());
-
                 GlyphRegistry.register(new DebugGlyph());
-
                 GlyphRegistry.register(new OutputGlyph());
-
-                GlyphRegistry.register(new InteractionGlyph());
-
                 GlyphRegistry.register(new IsHoldingValue());
-                GlyphRegistry.register(new ConcentrationGlyph());
-
                 GlyphRegistry.register(new OnPrimaryGlyph());
                 GlyphRegistry.register(new OnSecondaryGlyph());
                 GlyphRegistry.register(new OnUseGlyph());
                 GlyphRegistry.register(new OnDeathGlyph());
                 GlyphRegistry.register(new OnCastGlyph());
+
+                // tier 1 glyphs
+                GlyphRegistry.register(new SelfGlyph());
+                GlyphRegistry.register(new ChaosGlyph());
+                GlyphRegistry.register(new ForceGlyph());
+                GlyphRegistry.register(new DelayGlyph());
+                GlyphRegistry.register(new DrainGlyph());
+                GlyphRegistry.register(new HaltGlyph());
+
+                // tier 2 glyphs
+                GlyphRegistry.register(new BeamGlyph());
+                GlyphRegistry.register(new AreaGlyph());
+                GlyphRegistry.register(new ProjectileGlyph());
+                GlyphRegistry.register(new BurningGlyph());
+
+                // tier 3 glyphs
+                GlyphRegistry.register(new InterfereGlyph());
+                GlyphRegistry.register(new ResonateGlyph());
+                GlyphRegistry.register(new GustGlyph());
+                GlyphRegistry.register(new ConjureGlyph());
+                GlyphRegistry.register(new GrowthGlyph());
+                GlyphRegistry.register(new FortifyGlyph());
+                GlyphRegistry.register(new ErodeGlyph());
+                GlyphRegistry.register(new LevitateGlyph());
+                GlyphRegistry.register(new ScaleGlyph());
+                GlyphRegistry.register(new DomainGlyph());
+                GlyphRegistry.register(new BoltGlyph());
+                GlyphRegistry.register(new ArcGlyph());
+                GlyphRegistry.register(new ShatterGlyph());
+                GlyphRegistry.register(new GlaciateGlyph());
+                GlyphRegistry.register(new TerraformGlyph());
+                GlyphRegistry.register(new EnsnareGlyph());
+                GlyphRegistry.register(new PhaseGlyph());
+                GlyphRegistry.register(new WarpGlyph());
+                GlyphRegistry.register(new SwapGlyph());
+                GlyphRegistry.register(new InteractionGlyph());
+                GlyphRegistry.register(new ConcentrationGlyph());
+                
+                // tier 4 glyphs
+                GlyphRegistry.register(new FreezeGlyph());
+                GlyphRegistry.register(new IgniteGlyph());
+                GlyphRegistry.register(new ScorchGlyph());
+                GlyphRegistry.register(new SnapGlyph());
+
+
+                
         }
 
         private void RegisterObelisks() {

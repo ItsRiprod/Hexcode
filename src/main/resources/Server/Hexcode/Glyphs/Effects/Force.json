@@ -12,7 +12,7 @@
   "Description": "hexcode.glyphs.Force.description",
   "ModelPath": "Force",
   "BasePower": 1.0,
-  "ManaConsumption": 0.8,
+  "ManaConsumption": 1.6,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",

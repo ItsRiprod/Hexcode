@@ -17,7 +17,7 @@
   "Description": "hexcode.glyphs.Beam.description",
   "ModelPath": "Beam",
   "BasePower": 1.0,
-  "ManaConsumption": 0.4,
+  "ManaConsumption": 0.8,
   "ShapeStructure": [
     {
       "ShapeId": "Square",

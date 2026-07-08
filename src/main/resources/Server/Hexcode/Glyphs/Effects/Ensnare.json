@@ -21,7 +21,7 @@
   "Description": "hexcode.glyphs.Ensnare.description",
   "ModelPath": "Ensnare",
   "BasePower": 1.0,
-  "ManaConsumption": 1.8,
+  "ManaConsumption": 3.6,
   "ShapeStructure": [
     {
       "ShapeId": "Square",

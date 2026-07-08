@@ -17,7 +17,7 @@
   "Description": "hexcode.glyphs.Erode.description",
   "ModelPath": "Erode",
   "BasePower": 1.0,
-  "ManaConsumption": 1.5,
+  "ManaConsumption": 3.0,
   "ShapeStructure": [
     {
       "ShapeId": "Antisquare",

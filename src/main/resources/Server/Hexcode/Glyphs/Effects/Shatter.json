@@ -21,7 +21,7 @@
   "Description": "hexcode.glyphs.Shatter.description",
   "ModelPath": "Shatter",
   "BasePower": 1.0,
-  "ManaConsumption": 3.2,
+  "ManaConsumption": 6.4,
   "ShapeStructure": [
     {
       "ShapeId": "Anticircle",
