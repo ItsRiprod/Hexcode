@@ -61,6 +61,24 @@ public class ShatterGlyph implements GlyphHandler {
     }
 
     @Override
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        if (asset == null) return 0f;
+        ShatterConfig config = getConfig(ShatterConfig.class, asset);
+        if (config == null) config = ShatterConfig.DEFAULTS;
+
+        int count = HexVarUtil.numberOrDefault(
+                glyph.readSlot(ShatterGlyphSlots.COUNT, hexContext),
+                (double) config.getDefaultCount()).intValue();
+        if (count < 1) count = 1;
+
+        // shards are priced per projectile, discounted from a full projectile; draw quality
+        // reduction is carried through computeBaseCost / InstantCost
+        float instantCost = asset.getVolatility().getInstantCost();
+        float drawFactor = instantCost > 0f ? glyph.computeBaseCost(asset) / instantCost : 1f;
+        return (float) (count * config.getPerShardPrice() * drawFactor);
+    }
+
+    @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar sourceVar = glyph.readSlot(ShatterGlyphSlots.SOURCE, hexContext);
         HexVar directionVar = glyph.readSlot(ShatterGlyphSlots.DIRECTION, hexContext);
@@ -113,7 +131,6 @@ public class ShatterGlyph implements GlyphHandler {
 
         int count = HexVarUtil.numberOrDefault(countVar, (double) config.getDefaultCount()).intValue();
         if (count < 1) count = 1;
-        if (count > config.getMaxCount()) count = config.getMaxCount();
 
         double spread = HexVarUtil.numberOrDefault(spreadVar, config.getDefaultSpread());
         double speed = HexVarUtil.numberOrDefault(speedVar, config.getDefaultSpeed());

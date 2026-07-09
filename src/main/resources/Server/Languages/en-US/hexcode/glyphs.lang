@@ -426,14 +426,12 @@ Arc.delay.description=Seconds between each arc jump
 Arc.Next.name=Next
 Arc.Next.description=The next glyph in the execution chain
 
-Bolt.name=Bolt
-Bolt.description=Instant single-target energy discharge or remote block interaction
-Bolt.target.name=Target
-Bolt.target.description=Variable containing the targets to affect
-Bolt.power.name=Power
-Bolt.power.description=Damage or power level of the bolt
-Bolt.Next.name=Next
-Bolt.Next.description=The next glyph in the execution chain
+Interact.name=Interact
+Interact.description=Remotely triggers a block interaction, such as a door, lever, or mechanism
+Interact.target.name=Target
+Interact.target.description=Variable containing the block or entity to interact with
+Interact.Next.name=Next
+Interact.Next.description=The next glyph in the execution chain
 
 Conjure.name=Conjure
 Conjure.description=Spawns a temporary area zone at a position
@@ -698,3 +696,13 @@ Freeze.name=Freeze
 Freeze.description=Chills the target, slowing movement and attack speed as it stacks toward a full freeze
 Freeze.Next.name=Next
 Freeze.Next.description=The next glyph in the execution chain
+
+Bolt.name=Bolt
+Bolt.description=Discharges accumulated complexity as an instant burst of lightning damage
+Bolt.Next.name=Next
+Bolt.Next.description=The next glyph in the execution chain
+
+Shocking.name=Shocking
+Shocking.description=Shocks the target, interrupting and staggering them for a duration
+Shocking.Next.name=Next
+Shocking.Next.description=The next glyph in the execution chain

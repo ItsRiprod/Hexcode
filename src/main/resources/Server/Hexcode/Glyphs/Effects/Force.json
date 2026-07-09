@@ -39,8 +39,9 @@
       "Unique": true,
       "Impact": {
         "Type": "PowerLaw",
-        "DefaultMagnitude": 30.0,
-        "Exponent": 1.0
+        "DefaultMagnitude": 20.0,
+        "Exponent": 1.5,
+        "Min": 0.07
       }
     },
     "Next": {
@@ -50,7 +51,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 0.5,
+    "InstantCost": 3,
     "DrainPerSecond": 0.0
   }
 }

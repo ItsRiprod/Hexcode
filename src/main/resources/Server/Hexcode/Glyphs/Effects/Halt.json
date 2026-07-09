@@ -40,7 +40,7 @@
   },
   "Volatility": {
     "InstantCost": 1.0,
-    "DrainPerSecond": 0.1
+    "DrainPerSecond": 0.4
   },
   "Config": {
     "Type": "Halt",

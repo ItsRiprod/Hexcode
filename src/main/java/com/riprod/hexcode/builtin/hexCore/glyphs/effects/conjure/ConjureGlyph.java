@@ -37,6 +37,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.style.ConjureSt
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -64,8 +65,27 @@ public class ConjureGlyph implements GlyphHandler {
         return ConfigBinding.of(ConjureConfig.class, ConjureConfig.CODEC);
     }
 
+    private static final float PASSIVE_FLOOR = 0.1f;
+
+    private static boolean hasLinks(Glyph glyph, String slotKey) {
+        Slot s = glyph.getSlot(slotKey);
+        return s != null && s.getLinks().length > 0;
+    }
+
+    private boolean isPassive(Glyph glyph) {
+        return glyph.getNextLinks().isEmpty() && !hasLinks(glyph, ConjureGlyphSlots.IMMEDIATE);
+    }
+
+    @Override
+    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        return isPassive(glyph) ? PASSIVE_FLOOR
+                : GlyphHandler.super.getComplexity(glyph, hexContext, asset);
+    }
+
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        if (isPassive(glyph)) return PASSIVE_FLOOR;
+
         ConjureConfig config = getConfig(ConjureConfig.class, asset);
         if (config == null) config = ConjureConfig.DEFAULTS;
         double half = config.getBoxHalfExtent();

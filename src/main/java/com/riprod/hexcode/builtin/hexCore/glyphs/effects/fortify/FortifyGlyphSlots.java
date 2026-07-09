@@ -5,6 +5,5 @@ public final class FortifyGlyphSlots {
     }
 
     public static final String TARGET = "target";
-    public static final String AMOUNT = "amount";
     public static final String DURATION = "duration";
 }

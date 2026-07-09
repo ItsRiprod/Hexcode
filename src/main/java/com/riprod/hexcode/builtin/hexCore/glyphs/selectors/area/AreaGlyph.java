@@ -44,6 +44,24 @@ public class AreaGlyph implements GlyphHandler {
         return ConfigBinding.of(AreaConfig.class, AreaConfig.CODEC);
     }
 
+    private static final float PASSIVE_FLOOR = 0.1f;
+
+    private boolean isPassive(Glyph glyph) {
+        return !hasLinks(glyph, AreaGlyphSlots.BLOCKS) && !hasLinks(glyph, AreaGlyphSlots.ENTITIES);
+    }
+
+    @Override
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        return isPassive(glyph) ? PASSIVE_FLOOR
+                : GlyphHandler.super.getVolatilityCost(glyph, hexContext, asset);
+    }
+
+    @Override
+    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        return isPassive(glyph) ? PASSIVE_FLOOR
+                : GlyphHandler.super.getComplexity(glyph, hexContext, asset);
+    }
+
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());

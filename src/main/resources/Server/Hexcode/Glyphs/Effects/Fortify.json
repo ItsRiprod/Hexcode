@@ -38,18 +38,6 @@
       "Label": "hexcode.glyphs.Fortify.target.name",
       "Description": "hexcode.glyphs.Fortify.target.description"
     },
-    "amount": {
-      "Style": "Input",
-      "Label": "hexcode.glyphs.Fortify.amount.name",
-      "Description": "hexcode.glyphs.Fortify.amount.description",
-      "DefaultValue": 5,
-      "Unique": true,
-      "Impact": {
-        "Type": "RatioToDefault",
-        "Reference": 5.0,
-        "Min": 1.0
-      }
-    },
     "duration": {
       "Style": "Input",
       "Label": "hexcode.glyphs.Fortify.duration.name",
@@ -65,14 +53,10 @@
   },
   "Volatility": {
     "InstantCost": 2,
-    "DrainPerSecond": 0.1
+    "DrainPerSecond": 0.15
   },
   "Config": {
     "Type": "Fortify",
-    "MinAmount": 1.0,
-    "MaxAmount": 20.0,
-    "ReductionScale": 0.5,
-    "BlockHealScale": 0.05,
     "Effect": "Hexcode_Fortify"
   }
 }

@@ -69,7 +69,7 @@ hytaleTools {
     // The base hexcode glyphs + styles + assets
     subPlugin("HexCore", "com.riprod.hexcode.builtin.hexCore.HexCorePlugin", false, false)
     // The unified magic system - elemental damage causes, statuses, and interaction reactions
-    subPlugin("Ums", "com.riprod.hexcode.builtin.ums.UmsPlugin", false, false)
+    subPlugin("Statly", "com.riprod.hexcode.builtin.statly.StatlyPlugin", false, false)
     // The ritual-casting plugin
     subPlugin("Ritualistic", "com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin", true, false)
     // The ultimate compatibility pack between hexcode and every-other plugin in existence

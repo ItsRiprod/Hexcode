@@ -76,7 +76,7 @@
           "Workbench_Tools"
         ],
         "Id": "Workbench",
-        "RequiredTierLevel": 2
+        "RequiredTierLevel": 1
       }
     ]
   },

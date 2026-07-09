@@ -1,0 +1,48 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Shocking",
+  "Style": "Essence_Lightning",
+  "Title": "hexcode.glyphs.Shocking.name",
+  "Description": "hexcode.glyphs.Shocking.description",
+  "ModelPath": "Shocking",
+  "BasePower": 1.0,
+  "ManaConsumption": 3.0,
+  "ShapeStructure": [
+    {
+      "ShapeId": "Square",
+      "Size": 1.0
+    },
+    {
+      "ShapeId": "Circle",
+      "Size": 0.8
+    },
+    {
+      "ShapeId": "Circle",
+      "Size": 0.6
+    },
+    {
+      "ShapeId": "Circle",
+      "Size": 0.4
+    }
+  ],
+  "Slots": {
+    "Next": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Shocking.Next.name",
+      "Description": "hexcode.glyphs.Shocking.Next.description"
+    }
+  },
+  "Config": {
+    "Type": "Shocking",
+    "StatusEffect": "Lightning",
+    "Efficiency": 0.8,
+    "DurationPerComplexity": 1.0,
+    "MinDuration": 1.0,
+    "MaxDuration": 30.0,
+    "AffinityStat": "Affinity_Lightning"
+  },
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.2
+  }
+}

@@ -9,6 +9,13 @@ import com.riprod.hexcode.core.common.execution.impact.Impact;
 
 public abstract class GlyphConfig {
 
+    public static final Impact DEFAULT_COMPLEXITY_IMPACT = new Impact() {
+        @Override
+        public float compute(double input) {
+            return 1.3f;
+        }
+    };
+
     public static final CodecMapCodec<GlyphConfig> CODEC = new CodecMapCodec<>("Type");
 
     public static final BuilderCodec<GlyphConfig> BASE_CODEC = BuilderCodec
@@ -16,7 +23,7 @@ public abstract class GlyphConfig {
             .append(new KeyedCodec<>("VolatilityImpact", Impact.CODEC),
                     (c, v) -> c.volatilityImpact = v, c -> c.volatilityImpact)
             .add()
-            .append(new KeyedCodec<>("ComplexityImpact", Impact.CODEC),
+            .append(new KeyedCodec<>("ComplexityImpact", Impact.CODEC, true),
                     (c, v) -> c.complexityImpact = v, c -> c.complexityImpact)
             .add()
             .build();
@@ -24,15 +31,13 @@ public abstract class GlyphConfig {
     @Nullable
     protected Impact volatilityImpact;
 
-    @Nullable
-    protected Impact complexityImpact;
+    protected Impact complexityImpact = DEFAULT_COMPLEXITY_IMPACT;
 
     @Nullable
     public Impact getVolatilityImpact() {
         return volatilityImpact;
     }
 
-    @Nullable
     public Impact getComplexityImpact() {
         return complexityImpact;
     }

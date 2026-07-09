@@ -2,6 +2,20 @@
   "Duration": 5.0,
   "Debuff": true,
   "OverlapBehavior": "Overwrite",
+  "DamageResistance": {
+    "Physical": [
+      {
+        "CalculationType": "Percent",
+        "Amount": -0.25
+      }
+    ],
+    "Environmental": [
+      {
+        "CalculationType": "Percent",
+        "Amount": -0.25
+      }
+    ]
+  },
   "ApplicationEffects": {
     "EntityBottomTint": "#665533",
     "EntityTopTint": "#998866",

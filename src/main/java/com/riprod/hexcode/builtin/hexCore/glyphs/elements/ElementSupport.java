@@ -7,9 +7,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
-import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
-import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
-import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType;
@@ -33,15 +30,6 @@ public final class ElementSupport {
         if (entityVar == null) return null;
         Ref<EntityStore> ref = entityVar.getRef(hexContext.getAccessor());
         return ref != null && ref.isValid() ? ref : null;
-    }
-
-    public static boolean dealDamage(Ref<EntityStore> target, CommandBuffer<EntityStore> accessor,
-            String damageCauseId, float amount, String sourceTag) {
-        DamageCause cause = DamageCause.getAssetMap().getAsset(damageCauseId);
-        if (cause == null) return false;
-        Damage damage = new Damage(new Damage.EnvironmentSource(sourceTag), cause, amount);
-        DamageSystems.executeDamage(target, accessor, damage);
-        return true;
     }
 
     public static boolean applyStatus(Ref<EntityStore> target, CommandBuffer<EntityStore> accessor,

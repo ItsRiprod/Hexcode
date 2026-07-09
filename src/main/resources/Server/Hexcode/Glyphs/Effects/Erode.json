@@ -65,7 +65,7 @@
   },
   "Volatility": {
     "InstantCost": 2,
-    "DrainPerSecond": 0.1
+    "DrainPerSecond": 0.15
   },
   "Config": {
     "Type": "Erode",

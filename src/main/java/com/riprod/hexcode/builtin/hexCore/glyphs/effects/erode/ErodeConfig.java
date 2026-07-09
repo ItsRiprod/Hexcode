@@ -14,7 +14,6 @@ public final class ErodeConfig extends GlyphConfig {
     private double maxAmount = 20.0;
     private int minTier = 1;
     private int maxTier = 6;
-    private float vulnerabilityScale = 0.05f;
     private float blockDamageScale = 0.05f;
     private int tierBucketWidth = 4;
     private String effectId = "Hexcode_Erode";
@@ -34,10 +33,6 @@ public final class ErodeConfig extends GlyphConfig {
 
     public int getMaxTier() {
         return maxTier;
-    }
-
-    public float getVulnerabilityScale() {
-        return vulnerabilityScale;
     }
 
     public float getBlockDamageScale() {
@@ -69,9 +64,6 @@ public final class ErodeConfig extends GlyphConfig {
             .add()
             .append(new KeyedCodec<>("MaxTier", Codec.INTEGER, true),
                     (c, v) -> c.maxTier = v, c -> c.maxTier)
-            .add()
-            .append(new KeyedCodec<>("VulnerabilityScale", Codec.FLOAT, true),
-                    (c, v) -> c.vulnerabilityScale = v, c -> c.vulnerabilityScale)
             .add()
             .append(new KeyedCodec<>("BlockDamageScale", Codec.FLOAT, true),
                     (c, v) -> c.blockDamageScale = v, c -> c.blockDamageScale)

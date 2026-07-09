@@ -39,11 +39,30 @@ public static final String ID = "Beam";
         return ConfigBinding.of(BeamConfig.class, BeamConfig.CODEC);
     }
 
+    private static final float PASSIVE_FLOOR = 0.1f;
+
+    private boolean isPassive(Glyph glyph) {
+        return glyph.getNextLinks().isEmpty();
+    }
+
+    @Override
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        return isPassive(glyph) ? PASSIVE_FLOOR
+                : GlyphHandler.super.getVolatilityCost(glyph, hexContext, asset);
+    }
+
+    @Override
+    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        return isPassive(glyph) ? PASSIVE_FLOOR
+                : GlyphHandler.super.getComplexity(glyph, hexContext, asset);
+    }
+
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         BeamConfig config = getConfig(BeamConfig.class, asset);
         if (config == null) config = BeamConfig.DEFAULTS;
+        boolean passive = isPassive(glyph);
 
         HexVar posVar = glyph.readSlot(BeamGlyphSlots.SOURCE, hexContext);
         HexVar rotVar = glyph.readSlot(BeamGlyphSlots.ROTATION, hexContext);
@@ -92,19 +111,21 @@ public static final String ID = "Beam";
             blockHitDist = new Vector3d(origin).sub(blockHitLocation).length();
         }
 
-        EntityVar sourceEntityVar = HexVarUtil.resolveEntityVar(posVar, hexContext);
-        if (sourceEntityVar != null) {
-            Ref<EntityStore> sourceRef = sourceEntityVar.getRef(hexContext.getAccessor());
-            if (sourceRef != null && sourceRef.isValid()) {
-                List<Ref<EntityStore>> candidates = new ArrayList<>(
-                        TargetUtil.getAllEntitiesInSphere(origin, beamLength, hexContext.getAccessor()));
-                candidates.removeIf(ref -> ref == null || ref.equals(sourceRef));
-                entityHit = TargetFilter.getSmallestTarget(origin, new Vector3d(direction).normalize(),
-                        candidates, hexContext.getAccessor(), beamLength);
-                if (entityHit != null) {
-                    Vector3d entityPos = hexContext.getAccessor().getComponent(entityHit,
-                            TransformComponent.getComponentType()).getPosition();
-                    entityHitDist = new Vector3d(origin).sub(entityPos).length();
+        if (!passive) {
+            EntityVar sourceEntityVar = HexVarUtil.resolveEntityVar(posVar, hexContext);
+            if (sourceEntityVar != null) {
+                Ref<EntityStore> sourceRef = sourceEntityVar.getRef(hexContext.getAccessor());
+                if (sourceRef != null && sourceRef.isValid()) {
+                    List<Ref<EntityStore>> candidates = new ArrayList<>(
+                            TargetUtil.getAllEntitiesInSphere(origin, beamLength, hexContext.getAccessor()));
+                    candidates.removeIf(ref -> ref == null || ref.equals(sourceRef));
+                    entityHit = TargetFilter.getSmallestTarget(origin, new Vector3d(direction).normalize(),
+                            candidates, hexContext.getAccessor(), beamLength);
+                    if (entityHit != null) {
+                        Vector3d entityPos = hexContext.getAccessor().getComponent(entityHit,
+                                TransformComponent.getComponentType()).getPosition();
+                        entityHitDist = new Vector3d(origin).sub(entityPos).length();
+                    }
                 }
             }
         }
@@ -127,19 +148,17 @@ public static final String ID = "Beam";
                 hitType = BeamStyle.HitType.ENTITY;
             }
         } else if (blockHitLocation != null) {
-            PositionVar resultVar = new PositionVar(blockHitLocation, true);
-            glyph.writeOutput(resultVar, hexContext);
             endPoint = blockHitLocation;
             hitType = BeamStyle.HitType.BLOCK;
+            if (!passive) glyph.writeOutput(new PositionVar(blockHitLocation, true), hexContext);
         } else {
             endPoint = new Vector3d(origin).add(new Vector3d(direction).mul(beamLength));
             hitType = BeamStyle.HitType.MISS;
-            PositionVar resultVar = new PositionVar(endPoint, true);
-            glyph.writeOutput(resultVar, hexContext);
+            if (!passive) glyph.writeOutput(new PositionVar(endPoint, true), hexContext);
         }
 
         BeamStyle.render(beamOrigin, endPoint, new Vector3f(rotation.x, rotation.y, rotation.z), hitType, hexContext, hexContext.getAccessor());
 
-        HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+        if (!passive) HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 }

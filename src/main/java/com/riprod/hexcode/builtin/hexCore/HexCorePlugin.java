@@ -52,7 +52,7 @@ import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeHandler;
 import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.ArcConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.ArcGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.bolt.BoltGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact.InteractGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.chaos.ChaosGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.ConcentrationConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.ConcentrationGlyph;
@@ -70,11 +70,9 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.EnsnareGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.EnsnareComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.erode.ErodeConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.erode.ErodeGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.erode.system.ErodeDamageSystem;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.force.ForceGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.FortifyConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.FortifyGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.system.FortifyDamageSystem;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.GlaciateConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.GlaciateGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.component.GlaciateComponent;
@@ -103,7 +101,10 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.interaction.Hex
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.swap.SwapGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.terraform.TerraformGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.warp.WarpGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.bolt.BoltGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.scorch.ScorchGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.shocking.ShockingConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.shocking.ShockingGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.snap.SnapGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.FreezeConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.FreezeGlyph;
@@ -273,7 +274,7 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new LevitateGlyph());
                 GlyphRegistry.register(new ScaleGlyph());
                 GlyphRegistry.register(new DomainGlyph());
-                GlyphRegistry.register(new BoltGlyph());
+                GlyphRegistry.register(new InteractGlyph());
                 GlyphRegistry.register(new ArcGlyph());
                 GlyphRegistry.register(new ShatterGlyph());
                 GlyphRegistry.register(new GlaciateGlyph());
@@ -290,6 +291,8 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new IgniteGlyph());
                 GlyphRegistry.register(new ScorchGlyph());
                 GlyphRegistry.register(new SnapGlyph());
+                GlyphRegistry.register(new BoltGlyph());
+                GlyphRegistry.register(new ShockingGlyph());
 
 
                 
@@ -414,9 +417,6 @@ public class HexCorePlugin extends JavaPlugin {
         private void RegisterSystems() {
                 ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
 
-                entityStoreRegistry.registerSystem(new ErodeDamageSystem());
-                entityStoreRegistry.registerSystem(new FortifyDamageSystem());
-
                 entityStoreRegistry.registerSystem(new ContextForceExitSystem.OnDeath());
 
                 entityStoreRegistry.registerSystem(new FlycastingEnterListener());
@@ -452,13 +452,14 @@ public class HexCorePlugin extends JavaPlugin {
                 ConstructRegistry.register(PhaseGlyph.ID, new PhaseConstructHandler());
                 ConstructRegistry.register(ConjureGlyph.ID, new ConjureConstructHandler());
                 ConstructRegistry.register(ErodeGlyph.ID, new ErodeConstructHandler());
+                ConstructRegistry.register(FortifyGlyph.ID, new FortifyConstructHandler());
                 ConstructRegistry.register(LevitateGlyph.ID, new LevitateConstructHandler());
                 ConstructRegistry.register(HaltGlyph.ID, new HaltConstructHandler());
-                ConstructRegistry.register(FortifyGlyph.ID, new FortifyConstructHandler());
                 ConstructRegistry.register(DrainGlyph.ID, new DrainConstructHandler());
                 ConstructRegistry.register(DelayGlyph.ID, new DelayConstructHandler());
                 ConstructRegistry.register(EnsnareGlyph.ID, new EnsnareConstructHandler());
                 ConstructRegistry.register(FreezeGlyph.ID, new FreezeConstructHandler());
+                ConstructRegistry.register(ShockingGlyph.ID, new ShockingConstructHandler());
                 ConstructRegistry.register(ProjectileGlyph.ID, new ProjectileConstructHandler());
                 ConstructRegistry.register(IgniteGlyph.ID, new IgniteConstructHandler());
                 ConstructRegistry.register(GrowthGlyph.ID, new GrowthConstructHandler());

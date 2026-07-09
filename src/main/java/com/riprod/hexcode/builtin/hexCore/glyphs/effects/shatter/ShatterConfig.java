@@ -13,7 +13,7 @@ public final class ShatterConfig extends GlyphConfig {
     private double defaultSpread = Math.PI / 6;
     private double defaultSpeed = 20.0;
     private double defaultGravity = 10.0;
-    private int maxCount = 16;
+    private double perShardPrice = 0.5;
     private double shardTtlSeconds = 600.0;
 
     public int getDefaultCount() {
@@ -32,8 +32,8 @@ public final class ShatterConfig extends GlyphConfig {
         return defaultGravity;
     }
 
-    public int getMaxCount() {
-        return maxCount;
+    public double getPerShardPrice() {
+        return perShardPrice;
     }
 
     public double getShardTtlSeconds() {
@@ -54,8 +54,8 @@ public final class ShatterConfig extends GlyphConfig {
             .append(new KeyedCodec<>("DefaultGravity", Codec.DOUBLE, true),
                     (c, v) -> c.defaultGravity = v, c -> c.defaultGravity)
             .add()
-            .append(new KeyedCodec<>("MaxCount", Codec.INTEGER, true),
-                    (c, v) -> c.maxCount = v, c -> c.maxCount)
+            .append(new KeyedCodec<>("PerShardPrice", Codec.DOUBLE, true),
+                    (c, v) -> c.perShardPrice = v, c -> c.perShardPrice)
             .add()
             .append(new KeyedCodec<>("ShardTtlSeconds", Codec.DOUBLE, true),
                     (c, v) -> c.shardTtlSeconds = v, c -> c.shardTtlSeconds)

@@ -35,6 +35,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.Proj
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -56,6 +57,31 @@ public class ProjectileGlyph implements GlyphHandler {
     @Override
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
         return ConfigBinding.of(ProjectileConfig.class, ProjectileConfig.CODEC);
+    }
+
+    private static final float PASSIVE_FLOOR = 0.1f;
+
+    private static boolean hasLinks(Glyph glyph, String slotKey) {
+        Slot s = glyph.getSlot(slotKey);
+        return s != null && s.getLinks().length > 0;
+    }
+
+    private boolean isPassive(Glyph glyph) {
+        return glyph.getNextLinks().isEmpty()
+                && !hasLinks(glyph, ProjectileGlyphSlots.IMMEDIATE)
+                && !hasLinks(glyph, ProjectileGlyphSlots.BOUNCE);
+    }
+
+    @Override
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        return isPassive(glyph) ? PASSIVE_FLOOR
+                : GlyphHandler.super.getVolatilityCost(glyph, hexContext, asset);
+    }
+
+    @Override
+    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        return isPassive(glyph) ? PASSIVE_FLOOR
+                : GlyphHandler.super.getComplexity(glyph, hexContext, asset);
     }
 
     @Override

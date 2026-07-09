@@ -72,7 +72,7 @@ public class ForceGlyph implements GlyphHandler {
 
                 VelocityConfig horizontal = new VelocityConfig();
                 horizontal.setGroundResistance(0.80f);
-                horizontal.setAirResistance(1f);
+                horizontal.setAirResistance(0.97f);
                 VelocityUtil.applyVelocity(ref, new Vector3d(force.x, 0, force.z), ChangeVelocityType.Add,
                         horizontal, hexContext.getAccessor());
 

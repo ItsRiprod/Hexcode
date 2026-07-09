@@ -52,8 +52,8 @@
             "IncludesAssetPack": false
         },
         {
-            "Name": "Ums",
-            "Main": "com.riprod.hexcode.builtin.ums.UmsPlugin",
+            "Name": "Statly",
+            "Main": "com.riprod.hexcode.builtin.statly.StatlyPlugin",
             "ServerVersion": ">=0.5.0 <0.6.0",
             "DisabledByDefault": false,
             "IncludesAssetPack": false

@@ -42,7 +42,7 @@
     "Type": "Ignite",
     "StatusEffect": "Fire",
     "Efficiency": 0.95,
-    "DurationPerComplexity": 1.0,
+    "DurationPerComplexity": 0.5,
     "MinDuration": 1.0,
     "MaxDuration": 30.0,
     "AffinityStat": "Affinity_Fire"

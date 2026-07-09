@@ -93,7 +93,7 @@
     "DefaultSpread": 0.5235987755982988,
     "DefaultSpeed": 20.0,
     "DefaultGravity": 10.0,
-    "MaxCount": 16,
+    "PerShardPrice": 0.5,
     "ShardTtlSeconds": 600
   }
 }

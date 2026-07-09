@@ -8,10 +8,10 @@
       }
     ]
   },
-  "DamageCalculatorCooldown": 1,
+  "DamageCalculatorCooldown": 0.5,
   "DamageCalculator": {
     "BaseDamage": {
-      "Fire": 5
+      "Fire": 1
     }
   },
   "OverlapBehavior": "Overwrite",

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -14,8 +13,6 @@ import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
 
 public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
-
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     @Override
     public boolean onTick(float dt, HexStatus<FortifyState> status, ConstructTickContext ctx) {
@@ -29,18 +26,15 @@ public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
     @Override
     public void onEnd(HexStatus<FortifyState> status, ConstructTickContext ctx) {
         FortifyState state = status.getState();
-        cleanup(ctx, state != null ? state.getEffectId() : null);
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("fortify: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<FortifyState> status, ConstructTickContext ctx) {
-        FortifyState state = status.getState();
-        cleanup(ctx, state != null ? state.getEffectId() : null);
-        LOGGER.atInfo().log("fortify: terminated early; chain suppressed");
+        // native effect outlives an early cancel unless we strip it here
+        cleanup(ctx, status.getState() != null ? status.getState().getEffectId() : null);
     }
 
     @Override

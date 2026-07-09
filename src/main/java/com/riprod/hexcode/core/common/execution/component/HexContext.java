@@ -37,6 +37,7 @@ public class HexContext {
     @Nullable private HexVar defaultVariable;
     @Nullable private String castSlotKey;
     private float currentComplexity = 0f;
+    private float complexityBudget = 0f;
     private Map<String, HexVar> variables = new HashMap<>();
     @Nullable
     private UUID executionId;
@@ -86,6 +87,7 @@ public class HexContext {
         copy.defaultVariable = src.defaultVariable;
         copy.castSlotKey = src.castSlotKey;
         copy.currentComplexity = src.currentComplexity;
+        copy.complexityBudget = src.complexityBudget;
         copy.variables = new HashMap<>(src.variables);
         copy.executionId = src.executionId;
         copy.requireMagicCharges = src.requireMagicCharges;
@@ -113,6 +115,7 @@ public class HexContext {
         branch.defaultVariable = this.defaultVariable;
         branch.castSlotKey = this.castSlotKey;
         branch.currentComplexity = this.currentComplexity / Math.max(1, splitFactor);
+        branch.complexityBudget = this.complexityBudget / Math.max(1, splitFactor);
         branch.requireMagicCharges = this.requireMagicCharges;
         branch.consumeMana = this.consumeMana;
         branch.applyVolatilityDecay = this.applyVolatilityDecay;
@@ -249,6 +252,18 @@ public class HexContext {
         float pooled = this.currentComplexity;
         this.currentComplexity = 0f;
         return pooled;
+    }
+
+    public void accrueComplexity(float nominalBase, float actualCost, float budgetRatio) {
+        this.complexityBudget += budgetRatio * nominalBase;
+        float accrued = Math.min(this.complexityBudget, actualCost);
+        if (accrued > 0f)
+            this.currentComplexity += accrued;
+        this.complexityBudget -= accrued;
+    }
+
+    public float getComplexityBudget() {
+        return complexityBudget;
     }
 
     public float getVolatilityOverride() {
@@ -418,6 +433,11 @@ public class HexContext {
             .append(new KeyedCodec<>("CurrentComplexity", Codec.FLOAT),
                     (c, v) -> c.currentComplexity = v,
                     c -> c.currentComplexity)
+            .metadata(UIDisplayMode.HIDDEN)
+            .add()
+            .append(new KeyedCodec<>("ComplexityBudget", Codec.FLOAT),
+                    (c, v) -> c.complexityBudget = v,
+                    c -> c.complexityBudget)
             .metadata(UIDisplayMode.HIDDEN)
             .add()
             .append(new KeyedCodec<>("Variables", new MapCodec<>(HexVar.CODEC, HashMap::new)),

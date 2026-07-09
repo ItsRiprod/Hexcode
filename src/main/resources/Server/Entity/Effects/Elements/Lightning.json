@@ -1,0 +1,34 @@
+{
+  "ApplicationEffects": {
+    "EntityBottomTint": "#0a2540",
+    "EntityTopTint": "#99e6ff",
+    "HorizontalSpeedMultiplier": 0.6,
+    "MouseSensitivityAdjustmentTarget": 2.5,
+    "MouseSensitivityAdjustmentDuration": 0.3,
+    "AbilityEffects": {
+      "Disabled": [
+        "Primary",
+        "Secondary"
+      ]
+    },
+    "Particles": [
+      {
+        "SystemId": "Stunned",
+        "TargetEntityPart": "Entity",
+        "TargetNodeName": "Head"
+      }
+    ]
+  },
+  "OverlapBehavior": "Overwrite",
+  "Infinite": false,
+  "Debuff": true,
+  "Duration": 3,
+  "DamageResistance": {
+    "Lightning": [
+      {
+        "Amount": 0.5,
+        "CalculationType": "Percent"
+      }
+    ]
+  }
+}

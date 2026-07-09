@@ -18,9 +18,7 @@ public final class PowerLawImpact extends Impact {
         if (defaultMagnitude <= 0.0)
             return min;
         double ratio = input / defaultMagnitude;
-        if (ratio <= 1.0)
-            return min;
-        return (float) Math.pow(ratio, exponent);
+        return (float) Math.max(Math.pow(ratio, exponent), min);
     }
 
     public static final BuilderCodec<PowerLawImpact> CODEC = BuilderCodec

@@ -1,0 +1,8 @@
+{
+  "Interactions": {
+    "Lightning": {
+      "Type": "Generic",
+      "Particle": "Bolt_Hit"
+    }
+  }
+}

@@ -69,7 +69,7 @@
   },
   "Volatility": {
     "InstantCost": 4,
-    "DrainPerSecond": 0.3
+    "DrainPerSecond": 0.5
   },
   "Config": {
     "Type": "Glaciate",

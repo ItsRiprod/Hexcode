@@ -7,7 +7,6 @@ import com.riprod.hexcode.core.common.construct.state.ConstructState;
 
 public class FortifyState implements ConstructState {
 
-    private float damageReduction;
     private float remainingDuration;
     private String effectId;
     private List<String> nextGlyphIds;
@@ -16,24 +15,10 @@ public class FortifyState implements ConstructState {
         this.nextGlyphIds = new ArrayList<>();
     }
 
-    public FortifyState(float damageReduction, float remainingDuration, String effectId,
-            List<String> nextGlyphIds) {
-        this.damageReduction = damageReduction;
+    public FortifyState(float remainingDuration, String effectId, List<String> nextGlyphIds) {
         this.remainingDuration = remainingDuration;
         this.effectId = effectId;
         this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
-    }
-
-    public float getDamageReduction() {
-        return damageReduction;
-    }
-
-    public void setDamageReduction(float damageReduction) {
-        this.damageReduction = damageReduction;
-    }
-
-    public float getRemainingDuration() {
-        return remainingDuration;
     }
 
     public void setRemainingDuration(float remainingDuration) {
@@ -62,7 +47,6 @@ public class FortifyState implements ConstructState {
 
     @Override
     public FortifyState copy() {
-        return new FortifyState(damageReduction, remainingDuration, effectId,
-                new ArrayList<>(nextGlyphIds));
+        return new FortifyState(remainingDuration, effectId, new ArrayList<>(nextGlyphIds));
     }
 }

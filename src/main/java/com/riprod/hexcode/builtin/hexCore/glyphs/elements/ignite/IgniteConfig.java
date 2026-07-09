@@ -12,7 +12,7 @@ public final class IgniteConfig extends ElementGlyphConfig {
     public static final IgniteConfig DEFAULTS = new IgniteConfig();
 
     private String statusEffect = "Fire";
-    private float durationPerComplexity = 1.0f;
+    private float durationPerComplexity = 0.5f;
     private float minDuration = 1.0f;
     private float maxDuration = 30.0f;
 

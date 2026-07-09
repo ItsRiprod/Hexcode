@@ -1,6 +1,9 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.elements.scorch;
 
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
+import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
+import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
@@ -46,10 +49,17 @@ public class ScorchGlyph implements GlyphHandler {
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float damage = hexContext.consumeComplexity() * config.getEfficiency() * affinity;
+        float amount = hexContext.consumeComplexity() * config.getEfficiency() * affinity;
 
-        ElementSupport.dealDamage(target, hexContext.getAccessor(),
-                config.getDamageCause(), damage, "ums_scorch");
+        DamageCause cause = DamageCause.getAssetMap().getAsset(config.getDamageCause());
+        if (cause != null) {
+            Ref<EntityStore> caster = hexContext.getCasterRef(hexContext.getAccessor());
+            Damage.Source source = caster != null && caster.isValid()
+                    ? new Damage.EntitySource(caster)
+                    : new Damage.EnvironmentSource("Magic");
+            DamageSystems.executeDamage(target, hexContext.getAccessor(),
+                    new Damage(source, cause, amount));
+        }
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }

@@ -39,7 +39,12 @@
       "Label": "hexcode.glyphs.Levitate.intensity.name",
       "Description": "hexcode.glyphs.Levitate.intensity.description",
       "DefaultValue": 1,
-      "Unique": true
+      "Unique": true,
+      "Impact": {
+        "Type": "RatioToDefault",
+        "Reference": 1.0,
+        "Min": 1.0
+      }
     },
     "duration": {
       "Style": "Input",
