@@ -1,0 +1,10 @@
+{
+  "LifeSpan": 3.0,
+  "CullDistance": 60,
+  "BoundingRadius": 4.0,
+  "IsImportant": true,
+  "Spawners": [
+    { "SpawnerId": "Water_Beam_Waves", "PositionOffset": { "Y": 0.1 } },
+    { "SpawnerId": "Geyzer_Smoke", "PositionOffset": { "Y": 0.75 }, "StartDelay": 0.2 }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "LifeSpan": 2.0,
+  "CullDistance": 50,
+  "BoundingRadius": 4.0,
+  "IsImportant": true,
+  "Spawners": [
+    { "SpawnerId": "Water_Beam_Splash", "PositionOffset": { "Y": 0.5 } },
+    { "SpawnerId": "Water_Beam_Splash_Side", "PositionOffset": { "Y": 0.5 } }
+  ]
+}

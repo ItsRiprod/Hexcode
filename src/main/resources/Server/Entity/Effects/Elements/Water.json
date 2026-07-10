@@ -1,25 +1,31 @@
 {
   "ApplicationEffects": {
-    "EntityBottomTint": "#100600",
-    "EntityTopTint": "#cf2302",
+    "EntityBottomTint": "#0a1a40",
+    "EntityTopTint": "#4351e5",
     "Particles": [
       {
-        "SystemId": "Effect_Fire"
+        "SystemId": "Water_Soak"
       }
     ]
-  },
-  "DamageCalculatorCooldown": 0.5,
-  "DamageCalculator": {
-    "BaseDamage": {
-      "Fire": 1
-    }
   },
   "OverlapBehavior": "Overwrite",
   "Infinite": false,
   "Debuff": true,
-  "Duration": 5,
+  "Duration": 3,
   "DamageResistance": {
+    "Lightning": [
+      {
+        "Amount": -1.0,
+        "CalculationType": "Percent"
+      }
+    ],
     "Fire": [
+      {
+        "Amount": 0.5,
+        "CalculationType": "Percent"
+      }
+    ],
+    "Water": [
       {
         "Amount": 0.5,
         "CalculationType": "Percent"
@@ -28,12 +34,6 @@
     "Ice": [
       {
         "Amount": 0.5,
-        "CalculationType": "Percent"
-      }
-    ],
-    "Water": [
-      {
-        "Amount": -1.0,
         "CalculationType": "Percent"
       }
     ]

@@ -706,3 +706,13 @@ Shocking.name=Shocking
 Shocking.description=Shocks the target, interrupting and staggering them for a duration
 Shocking.Next.name=Next
 Shocking.Next.description=The next glyph in the execution chain
+
+Drown.name=Drown
+Drown.description=Discharges accumulated complexity as a crushing surge of water damage
+Drown.Next.name=Next
+Drown.Next.description=The next glyph in the execution chain
+
+Drench.name=Drench
+Drench.description=Soaks the target, leaving them dripping and conductive for a duration
+Drench.Next.name=Next
+Drench.Next.description=The next glyph in the execution chain

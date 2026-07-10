@@ -1,0 +1,48 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Drench",
+  "Style": "Essence_Water",
+  "Title": "hexcode.glyphs.Drench.name",
+  "Description": "hexcode.glyphs.Drench.description",
+  "ModelPath": "Drench",
+  "BasePower": 1.0,
+  "ManaConsumption": 3.0,
+  "ShapeStructure": [
+    {
+      "ShapeId": "Square",
+      "Size": 1.0
+    },
+    {
+      "ShapeId": "Triangle",
+      "Size": 0.8
+    },
+    {
+      "ShapeId": "Triangle",
+      "Size": 0.6
+    },
+    {
+      "ShapeId": "Triangle",
+      "Size": 0.4
+    }
+  ],
+  "Slots": {
+    "Next": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Drench.Next.name",
+      "Description": "hexcode.glyphs.Drench.Next.description"
+    }
+  },
+  "Config": {
+    "Type": "Drench",
+    "StatusEffect": "Water",
+    "Efficiency": 0.6,
+    "DurationPerComplexity": 1.0,
+    "MinDuration": 1.0,
+    "MaxDuration": 30.0,
+    "AffinityStat": "Affinity_Water"
+  },
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.2
+  }
+}

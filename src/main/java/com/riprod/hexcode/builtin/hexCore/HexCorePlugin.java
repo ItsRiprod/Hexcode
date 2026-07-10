@@ -102,6 +102,9 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.swap.SwapGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.terraform.TerraformGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.warp.WarpGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.bolt.BoltGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.drench.DrenchConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.drench.DrenchGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.drown.DrownGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.scorch.ScorchGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.shocking.ShockingConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.shocking.ShockingGlyph;
@@ -293,6 +296,8 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new SnapGlyph());
                 GlyphRegistry.register(new BoltGlyph());
                 GlyphRegistry.register(new ShockingGlyph());
+                GlyphRegistry.register(new DrownGlyph());
+                GlyphRegistry.register(new DrenchGlyph());
 
 
                 
@@ -460,6 +465,7 @@ public class HexCorePlugin extends JavaPlugin {
                 ConstructRegistry.register(EnsnareGlyph.ID, new EnsnareConstructHandler());
                 ConstructRegistry.register(FreezeGlyph.ID, new FreezeConstructHandler());
                 ConstructRegistry.register(ShockingGlyph.ID, new ShockingConstructHandler());
+                ConstructRegistry.register(DrenchGlyph.ID, new DrenchConstructHandler());
                 ConstructRegistry.register(ProjectileGlyph.ID, new ProjectileConstructHandler());
                 ConstructRegistry.register(IgniteGlyph.ID, new IgniteConstructHandler());
                 ConstructRegistry.register(GrowthGlyph.ID, new GrowthConstructHandler());

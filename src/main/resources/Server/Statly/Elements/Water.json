@@ -1,0 +1,8 @@
+{
+  "Interactions": {
+    "Water": {
+      "Type": "Generic",
+      "Particle": "Water_Splash"
+    }
+  }
+}
