@@ -250,6 +250,7 @@ public class Hexcode extends JavaPlugin {
                         .setCodec(SavedHexAsset.CODEC)
                         .setKeyFunction(SavedHexAsset::getId)
                         .loadsAfter(GlyphAsset.class)
+                        .loadsAfter(SlotStyleAsset.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore

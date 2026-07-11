@@ -16,7 +16,7 @@
   "Description": "hexcode.glyphs.Freeze.description",
   "ModelPath": "Freeze",
   "BasePower": 1.0,
-  "ManaConsumption": 4.0,
+  "ManaConsumption": 2.0,
   "ShapeStructure": [
     {
       "ShapeId": "Square",
@@ -45,7 +45,6 @@
   "Config": {
     "Type": "Freeze",
     "StatusEffect": "Ice",
-    "IceBlock": "Rock_Ice",
     "Efficiency": 0.75,
     "DurationPerComplexity": 1.0,
     "AffinityStat": "Affinity_Ice"

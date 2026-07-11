@@ -26,6 +26,7 @@ public class SlotStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<
     protected Vector3f color = new Vector3f(1f, 1f, 1f);
     protected DebugShape shape = DebugShape.Cube;
     protected String nodeHandlerId = "slot.standard";
+    protected String slotType = "Link";
 
     public static AssetStore<String, SlotStyleAsset, DefaultAssetMap<String, SlotStyleAsset>> getAssetStore() {
         if (ASSET_STORE == null) {
@@ -58,6 +59,10 @@ public class SlotStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<
         return this.nodeHandlerId;
     }
 
+    public String getSlotType() {
+        return this.slotType;
+    }
+
     static {
         CODEC = AssetBuilderCodec
                 .builder(SlotStyleAsset.class, SlotStyleAsset::new, Codec.STRING, (asset, s) -> {
@@ -88,6 +93,12 @@ public class SlotStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<
                         a -> a.nodeHandlerId)
                     .metadata(new UIEditor(new UIEditor.Dropdown("HexcodeNodeHandlers")))
                     .addValidatorLate(() -> NodeHandlerKeyValidator.INSTANCE.late())
+                .add()
+                .append(new KeyedCodec<>("SlotType", Codec.STRING),
+                        (a, v) -> {
+                            if (v != null) a.slotType = v;
+                        },
+                        a -> a.slotType)
                 .add()
                 .build();
         VALIDATOR_CACHE = new ValidatorCache<>(new AssetKeyValidator<>(SlotStyleAsset::getAssetStore));

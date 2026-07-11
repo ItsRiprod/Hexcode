@@ -8,6 +8,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
@@ -26,7 +27,19 @@ public class MageArmorConstructHandler implements ConstructHandler<MageArmorStat
         if (state == null) return true;
         state.tick(dt);
         if (!drainSustain(dt, status)) return true;
+        if (isPoolDepleted(ctx)) return true;
         return state.isExpired();
+    }
+
+    private boolean isPoolDepleted(ConstructTickContext ctx) {
+        Ref<EntityStore> ref = ctx.getEntityRef();
+        if (ref == null || !ref.isValid()) return true;
+        EntityStatMap statMap = ctx.getBuffer().getComponent(ref, EntityStatMap.getComponentType());
+        if (statMap == null) return true;
+        int statIndex = EntityStatType.getAssetMap().getIndex(MagicHealthComponent.STAT_ID);
+        if (statIndex == Integer.MIN_VALUE) return false;
+        EntityStatValue pool = statMap.get(statIndex);
+        return pool == null || pool.get() <= 0f;
     }
 
     @Override
@@ -59,7 +72,8 @@ public class MageArmorConstructHandler implements ConstructHandler<MageArmorStat
 
     private void cleanup(HexStatus<MageArmorState> status, ConstructTickContext ctx) {
         MageArmorState state = status.getState();
-        if (state == null) return;
+        if (state == null || state.isCleanedUp()) return;
+        state.markCleanedUp();
 
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Ref<EntityStore> targetRef = ctx.getEntityRef();

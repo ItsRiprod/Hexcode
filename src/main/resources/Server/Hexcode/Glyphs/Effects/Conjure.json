@@ -21,7 +21,7 @@
   "Description": "hexcode.glyphs.Conjure.description",
   "ModelPath": "Conjure",
   "BasePower": 1.0,
-  "ManaConsumption": 5.6,
+  "ManaConsumption": 0.5,
   "ShapeStructure": [
     {
       "ShapeId": "Square",
@@ -65,6 +65,13 @@
       "DefaultValue": -1,
       "Unique": true
     },
+    "hitbox": {
+      "Style": "Boolean",
+      "Label": "hexcode.glyphs.Conjure.hitbox.name",
+      "Description": "hexcode.glyphs.Conjure.hitbox.description",
+      "DefaultValue": 1,
+      "Unique": true
+    },
     "immediate": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Conjure.immediate.name",
@@ -91,6 +98,7 @@
     "MinAxisSize": 1.0,
     "SpatialQueryInterval": 0.2,
     "HardCollision": "Hexcode_Conjure_HardCollision",
+    "SoftCollision": "Hexcode_Conjure_SoftCollision",
     "AnchorModel": "Conjured_Anchor"
   }
 }

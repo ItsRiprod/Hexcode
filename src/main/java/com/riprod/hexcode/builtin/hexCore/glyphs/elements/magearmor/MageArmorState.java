@@ -11,6 +11,7 @@ public class MageArmorState implements ConstructState {
     private float durationSeconds;
     private float elapsedSeconds;
     private List<String> nextGlyphIds;
+    private boolean cleanedUp;
 
     public MageArmorState() {
         this.nextGlyphIds = new ArrayList<>();
@@ -25,6 +26,14 @@ public class MageArmorState implements ConstructState {
 
     public String getEffectId() {
         return effectId;
+    }
+
+    public boolean isCleanedUp() {
+        return cleanedUp;
+    }
+
+    public void markCleanedUp() {
+        this.cleanedUp = true;
     }
 
     public void tick(float dt) {
@@ -43,10 +52,18 @@ public class MageArmorState implements ConstructState {
         this.nextGlyphIds = ids != null ? ids : new ArrayList<>();
     }
 
+    public void refresh(float durationSeconds, List<String> nextGlyphIds) {
+        this.durationSeconds = durationSeconds;
+        this.elapsedSeconds = 0f;
+        this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
+        this.cleanedUp = false;
+    }
+
     @Override
     public MageArmorState copy() {
         MageArmorState c = new MageArmorState(effectId, durationSeconds, new ArrayList<>(nextGlyphIds));
         c.elapsedSeconds = this.elapsedSeconds;
+        c.cleanedUp = this.cleanedUp;
         return c;
     }
 }

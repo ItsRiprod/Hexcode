@@ -17,7 +17,7 @@
   "Description": "hexcode.glyphs.Warp.description",
   "ModelPath": "Warp",
   "BasePower": 1.0,
-  "ManaConsumption": 5.0,
+  "ManaConsumption": 2.0,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",

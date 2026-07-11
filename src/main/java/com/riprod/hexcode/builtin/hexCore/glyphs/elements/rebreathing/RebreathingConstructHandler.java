@@ -56,7 +56,8 @@ public class RebreathingConstructHandler implements ConstructHandler<Rebreathing
 
     private void cleanup(HexStatus<RebreathingState> status, ConstructTickContext ctx) {
         RebreathingState state = status.getState();
-        if (state == null) return;
+        if (state == null || state.isCleanedUp()) return;
+        state.markCleanedUp();
 
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Ref<EntityStore> targetRef = ctx.getEntityRef();

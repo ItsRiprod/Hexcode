@@ -127,7 +127,7 @@ public class Glyph {
         Slot existing = slots.get(key);
         if (existing != null)
             return existing;
-        Slot created = new Slot();
+        Slot created = Slot.forAssetSlot(this.glyphId, key);
         slots.put(key, created);
         return created;
     }
@@ -215,6 +215,12 @@ public class Glyph {
 
     @Nullable
     private HexVar resolveAssetDefault(String key, HexContext hexContext, @Nullable HexVar javaDefault) {
+        Slot slot = slots.get(key);
+        if (slot != null) {
+            HexVar inline = slot.inlineValue();
+            if (inline != null)
+                return inline;
+        }
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
         SlotAsset slotAsset = asset != null ? asset.getSlot(key) : null;
         Double defaultNum = slotAsset != null ? slotAsset.getDefaultValue() : null;

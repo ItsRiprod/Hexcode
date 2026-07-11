@@ -343,13 +343,13 @@ public class HexCodecV14 {
                     int allEmptyFlag = br.read(1);
                     if (allEmptyFlag == 1) {
                         for (String name : schema) {
-                            Slot slot = new Slot();
+                            Slot slot = Slot.forAssetSlot(asset, name);
                             slot.setLinks(new String[0]);
                             decodedSlots.put(name, slot);
                         }
                     } else {
                         for (String name : schema) {
-                            Slot slot = new Slot();
+                            Slot slot = Slot.forAssetSlot(asset, name);
                             slot.setLinks(readLinkPlaceholders(br, refBits));
                             decodedSlots.put(name, slot);
                         }
@@ -360,7 +360,7 @@ public class HexCodecV14 {
                         int sIdx = br.read(spBits);
                         String name = sIdx < slotPalette.size() ? slotPalette.get(sIdx) : null;
                         if (name == null) name = "<unresolved_" + sIdx + ">";
-                        Slot slot = new Slot();
+                        Slot slot = Slot.forAssetSlot(asset, name);
                         slot.setLinks(readLinkPlaceholders(br, refBits));
                         decodedSlots.put(name, slot);
                     }

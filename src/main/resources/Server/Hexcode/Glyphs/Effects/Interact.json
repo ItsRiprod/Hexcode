@@ -17,7 +17,7 @@
   "Description": "hexcode.glyphs.Interact.description",
   "ModelPath": "Interact",
   "BasePower": 1.0,
-  "ManaConsumption": 4.0,
+  "ManaConsumption": 0.3,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",
@@ -45,7 +45,7 @@
     }
   },
   "Volatility": {
-    "InstantCost": 4,
+    "InstantCost": 1,
     "DrainPerSecond": 0.0
   }
 }

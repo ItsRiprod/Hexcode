@@ -16,7 +16,7 @@
   "Description": "hexcode.glyphs.Growth.description",
   "ModelPath": "Growth",
   "BasePower": 1.0,
-  "ManaConsumption": 2.4,
+  "ManaConsumption": 1.4,
   "ShapeStructure": [
     {
       "ShapeId": "Square",

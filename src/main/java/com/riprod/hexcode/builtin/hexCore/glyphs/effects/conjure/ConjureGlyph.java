@@ -189,8 +189,15 @@ public class ConjureGlyph implements GlyphHandler {
 
         ConjureZoneComponent zoneComp = new ConjureZoneComponent(halfExtents, interval, durationSeconds);
 
-        HitboxCollisionConfig collisionConfig = HitboxCollisionConfig.getAssetMap()
-                .getAsset(config.getHardCollisionId());
+        double hitboxMode = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ConjureGlyphSlots.HITBOX, hexContext),
+                asset.getSlot(ConjureGlyphSlots.HITBOX)).doubleValue();
+        String collisionId = hitboxMode > 0 ? config.getHardCollisionId()
+                : hitboxMode < 0 ? config.getSoftCollisionId()
+                : null;
+        HitboxCollisionConfig collisionConfig = collisionId != null
+                ? HitboxCollisionConfig.getAssetMap().getAsset(collisionId)
+                : null;
 
         Holder<EntityStore> holder = HexConstructSpawner.create(
                 hexContext.getAccessor(), hexContext, glyph, ConjureGlyph.ID, new Vector3d(center));

@@ -1,0 +1,162 @@
+{
+  "RenderMode": "Erosion",
+  "EmitOffset": {
+    "X": {
+      "Min": 0.5,
+      "Max": 0.8
+    },
+    "Y": {
+      "Min": 0,
+      "Max": 0.3
+    },
+    "Z": {
+      "Min": 0.5,
+      "Max": 0.8
+    }
+  },
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": true,
+  "LightInfluence": 0,
+  "MaxConcurrentParticles": 150,
+  "ParticleLifeSpan": {
+    "Min": 0.6666666666666666,
+    "Max": 0.8333333333333334
+  },
+  "ParticleRotateWithSpawner": false,
+  "TrailSpawnerPositionMultiplier": 1,
+  "TrailSpawnerRotationMultiplier": 1,
+  "SpawnRate": {
+    "Min": 6,
+    "Max": 9
+  },
+  "TotalParticles": {
+    "Min": -1,
+    "Max": -1
+  },
+  "InitialVelocity": {
+    "Speed": {
+      "Min": 0.48,
+      "Max": 0.96
+    },
+    "Pitch": {
+      "Min": 80,
+      "Max": 100
+    },
+    "Yaw": {
+      "Min": 0,
+      "Max": 0
+    }
+  },
+  "Attractors": [
+    {
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "RadialAxis": {
+        "X": 0,
+        "Y": 1,
+        "Z": 0
+      },
+      "Radius": 0,
+      "RadialAcceleration": -0.72,
+      "RadialTangentAcceleration": 0.504
+    },
+    {
+      "Position": {
+        "X": 0,
+        "Y": 1.1,
+        "Z": 0
+      },
+      "RadialAxis": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Radius": 0,
+      "RadialAcceleration": -2.88,
+      "RadialTangentAcceleration": 0.28800000000000003
+    }
+  ],
+  "Particle": {
+    "Texture": "Particles/Textures/Impacts/Trail_Mace_SignatureAlpha.png",
+    "FrameSize": {
+      "Width": 32,
+      "Height": 32
+    },
+    "ScaleRatioConstraint": "OneToOne",
+    "Animation": {
+      "0": {
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Scale": {
+          "X": {
+            "Min": 1,
+            "Max": 1
+          }
+        },
+        "Rotation": {
+          "X": {
+            "Min": 0,
+            "Max": 0
+          },
+          "Y": {
+            "Min": 0,
+            "Max": 0
+          },
+          "Z": {
+            "Min": 0,
+            "Max": 0
+          }
+        },
+        "Opacity": 0
+      },
+      "10": {},
+      "50": {
+        "Opacity": 0.7
+      },
+      "90": {
+        "Opacity": 0.1,
+        "Scale": {
+          "X": {
+            "Min": 3,
+            "Max": 1.67
+          }
+        }
+      },
+      "100": {
+        "Opacity": 0
+      }
+    },
+    "InitialAnimationFrame": {
+      "Rotation": {
+        "X": {
+          "Min": 0,
+          "Max": 360
+        },
+        "Y": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Z": {
+          "Min": 0,
+          "Max": 360
+        }
+      },
+      "Scale": {
+        "X": {
+          "Min": 0.1,
+          "Max": 0.3
+        }
+      },
+      "Opacity": 1,
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 0
+      }
+    }
+  }
+}

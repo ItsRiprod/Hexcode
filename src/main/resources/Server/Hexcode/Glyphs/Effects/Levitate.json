@@ -13,7 +13,7 @@
   "Description": "hexcode.glyphs.Levitate.description",
   "ModelPath": "Levitate",
   "BasePower": 1.0,
-  "ManaConsumption": 2.0,
+  "ManaConsumption": 1.0,
   "ShapeStructure": [
     {
       "ShapeId": "Antisquare",

@@ -56,7 +56,8 @@ public class ElectrocuteConstructHandler implements ConstructHandler<Electrocute
 
     private void cleanup(HexStatus<ElectrocuteState> status, ConstructTickContext ctx) {
         ElectrocuteState state = status.getState();
-        if (state == null) return;
+        if (state == null || state.isCleanedUp()) return;
+        state.markCleanedUp();
 
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Ref<EntityStore> targetRef = ctx.getEntityRef();

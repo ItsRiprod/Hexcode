@@ -19,6 +19,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
@@ -60,6 +61,10 @@ public class ConcentrationGlyph implements GlyphHandler {
         }
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+
+        ConcentrationState existing = ConstructStateUtil.findState(
+                accessor, casterRef, ConcentrationGlyph.ID, ConcentrationState.class);
+        if (existing != null) return;
 
         CasterStateComponent execComp = accessor.getComponent(
                 casterRef, CasterStateComponent.getComponentType());

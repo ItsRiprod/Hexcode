@@ -1,0 +1,10 @@
+{
+  "Color": [
+    0.8,
+    0.8,
+    0.8
+  ],
+  "Shape": "Cone",
+  "NodeHandlerId": "slot.boolean",
+  "SlotType": "Boolean"
+}

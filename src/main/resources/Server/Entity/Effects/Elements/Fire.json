@@ -6,12 +6,16 @@
       {
         "SystemId": "Effect_Fire"
       }
-    ]
+    ],
+    "ScreenEffect": "ScreenEffects/Fire.png",
+    "LocalSoundEventId": "SFX_Effect_Burn_Local",
+    "WorldSoundEventId": "SFX_Effect_Burn_World",
+    "ModelVFXId": "GlyphGlow"
   },
-  "DamageCalculatorCooldown": 0.5,
+  "DamageCalculatorCooldown": 1,
   "DamageCalculator": {
     "BaseDamage": {
-      "Fire": 1
+      "Fire": 3
     }
   },
   "OverlapBehavior": "Overwrite",
@@ -37,5 +41,6 @@
         "CalculationType": "Percent"
       }
     ]
-  }
+  },
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png"
 }

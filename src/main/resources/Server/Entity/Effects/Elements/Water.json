@@ -45,5 +45,10 @@
         "CalculationType": "Percent"
       }
     ]
-  }
+  },
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png",
+  "StatModifiers": {
+    "Oxygen": 100
+  },
+  "ValueType": "Percent"
 }

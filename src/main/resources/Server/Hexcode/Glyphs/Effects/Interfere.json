@@ -21,7 +21,7 @@
   "Description": "hexcode.glyphs.Interfere.description",
   "ModelPath": "Interfere",
   "BasePower": 1.0,
-  "ManaConsumption": 4.4,
+  "ManaConsumption": 1.5,
   "ShapeStructure": [
     {
       "ShapeId": "Antisquare",

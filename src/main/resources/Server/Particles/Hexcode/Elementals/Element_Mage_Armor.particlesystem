@@ -1,0 +1,20 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Element_Mage_Armor_Aura",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Heal_Rays",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      }
+    }
+  ]
+}

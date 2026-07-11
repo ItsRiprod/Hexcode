@@ -19,8 +19,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.resonate.style.ResonateStyle;
 import com.riprod.hexcode.builtin.hexCore.utils.ConstructSplicer;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexRoot;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -73,9 +71,6 @@ public class ResonateGlyph implements GlyphHandler {
             return;
         }
 
-        HexStats tracker = hexContext.getHexStats();
-        float donation = tracker != null ? tracker.getCurrentVolatility() : 0f;
-
         for (HexStatus<?> target : targets) {
             ConstructHandler<?> handler = ConstructRegistry.get(target.getHandlerId());
             if (handler == null) continue;
@@ -83,11 +78,7 @@ public class ResonateGlyph implements GlyphHandler {
             ConstructSplicer.splice(target, handler, hexContext, glyph,
                     ConstructSplicer.ChainMode.APPEND_TAIL,
                     ConstructSplicer.VariablePolicy.PREFER_TARGET,
-                    donation);
-        }
-
-        if (tracker != null && donation > 0f) {
-            tracker.setVolatility(0f);
+                    0f);
         }
 
         Vector3d pos = resolvePosition(ref, accessor);

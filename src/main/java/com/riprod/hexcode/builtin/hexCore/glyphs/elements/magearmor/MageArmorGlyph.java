@@ -10,6 +10,7 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.magearmor.component.MagicHealthComponent;
+import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -76,8 +77,14 @@ public class MageArmorGlyph implements GlyphHandler {
                 new MagicHealthComponent(effectId));
         ElementSupport.applyStatus(target, accessor, effectId, duration);
 
-        MageArmorState state = new MageArmorState(effectId, duration, glyph.getNextLinks());
-        HexConstructSpawner.applyWithState(
-                accessor, target, hexContext, glyph, MageArmorGlyph.ID, state);
+        MageArmorState existing = ConstructStateUtil.findState(
+                accessor, target, MageArmorGlyph.ID, MageArmorState.class);
+        if (existing != null) {
+            existing.refresh(duration, glyph.getNextLinks());
+        } else {
+            MageArmorState state = new MageArmorState(effectId, duration, glyph.getNextLinks());
+            HexConstructSpawner.applyWithState(
+                    accessor, target, hexContext, glyph, MageArmorGlyph.ID, state);
+        }
     }
 }

@@ -10,7 +10,7 @@
     "ClearAnimationOnFinish": true,
     "LocalSoundEventId": "SFX_Hexcode_Casting_Enter",
     "ClearSoundEventOnFinish": true,
-    "CameraEffect": "Impact_Strong"
+    "CameraEffect": "Impact_Light"
   },
   "CancelOnOtherClick": false,
   "Next": {

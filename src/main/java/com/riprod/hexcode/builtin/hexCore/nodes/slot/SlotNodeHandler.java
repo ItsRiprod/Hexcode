@@ -42,7 +42,7 @@ import com.riprod.hexcode.builtin.hexCore.scene.RadialPositionUtil;
 public class SlotNodeHandler extends BaseSlotHandler {
     public static final SlotNodeHandler INSTANCE = new SlotNodeHandler();
 
-    private static final double SLOT_SCALE = 0.2;
+    static final double SLOT_SCALE = 0.2;
     private static final float SLOT_RESPAWN_INTERVAL = 0.5f;
     private static final float SLOT_RADIUS = 0.6f;
 
@@ -92,7 +92,7 @@ public class SlotNodeHandler extends BaseSlotHandler {
             if (parentTransform == null) continue;
 
             Ref<EntityStore> slotRef = spawnSlotEntityAt(accessor, glyphRef, key, slotAsset, offset,
-                    parentTransform.getPosition(), glyph.getGlyphId());
+                    parentTransform.getPosition(), glyph.getGlyphId(), slot);
             if (slotRef != null) {
                 glyphComp.getSlotEntityRefs().add(slotRef);
             }
@@ -110,7 +110,7 @@ public class SlotNodeHandler extends BaseSlotHandler {
 
     private Ref<EntityStore> spawnSlotEntityAt(CommandBuffer<EntityStore> accessor,
             Ref<EntityStore> parentRef, String slotKey, SlotAsset asset, Vector3f offset,
-            Vector3d parentWorldPos, String glyphId) {
+            Vector3d parentWorldPos, String glyphId, Slot slot) {
         ResolvedStyle rs = StyleResolution.resolve(asset, glyphId, slotKey);
 
         Vector3d slotPos = new Vector3d(
@@ -125,8 +125,11 @@ public class SlotNodeHandler extends BaseSlotHandler {
 
         holder.addComponent(SlotComponent.getComponentType(), new SlotComponent(slotKey));
 
-        holder.addComponent(DebugComponent.getComponentType(),
-                new DebugComponent(rs.shape(), rs.color(), SLOT_SCALE, SLOT_RESPAWN_INTERVAL));
+        DebugComponent debug = new DebugComponent(rs.shape(), rs.color(), SLOT_SCALE, SLOT_RESPAWN_INTERVAL);
+        if (slot instanceof BooleanSlot booleanSlot) {
+            BooleanSlotHandler.styleMarker(debug, booleanSlot);
+        }
+        holder.addComponent(DebugComponent.getComponentType(), debug);
 
         Box slotBox = new Box(-SLOT_SCALE, -SLOT_SCALE, -SLOT_SCALE,
                 SLOT_SCALE, SLOT_SCALE, SLOT_SCALE);

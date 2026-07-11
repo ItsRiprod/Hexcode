@@ -15,7 +15,7 @@
   "Title": "hexcode.glyphs.Arc.name",
   "Description": "hexcode.glyphs.Arc.description",
   "ModelPath": "Arc",
-  "ManaConsumption": 5.0,
+  "ManaConsumption": 2.0,
   "ShapeStructure": [
     {
       "ShapeId": "Circle",

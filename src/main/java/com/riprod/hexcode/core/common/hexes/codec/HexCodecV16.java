@@ -101,12 +101,17 @@ public class HexCodecV16 {
         byte[] glyphStreamBytes = encodeGlyphStream(glyphs, palMap, palBits, accVals, accMin,
                 accBits, speedVals, defaultSpeed, slotIdxMap, spBits, idToIdx, refBits);
 
+        byte[] slotStateBytes = HexCodecV15.encodeSlotStates(glyphs);
+
         ByteArrayOutputStream body = new ByteArrayOutputStream();
-        CodecUtil.writeByteVarInt(body, 4);
+        CodecUtil.writeByteVarInt(body, 4 + (slotStateBytes != null ? 1 : 0));
         HexCodecV15.appendSection(body, SECTION_HEADER, header);
         HexCodecV15.appendSection(body, SECTION_ASSET_PALETTE, assetPaletteBytes);
         HexCodecV15.appendSection(body, SECTION_SLOT_PALETTE, slotPaletteBytes);
         HexCodecV15.appendSection(body, SECTION_GLYPH_STREAM, glyphStreamBytes);
+        if (slotStateBytes != null) {
+            HexCodecV15.appendSection(body, HexCodecV15.SECTION_SLOT_STATE, slotStateBytes);
+        }
         return body.toByteArray();
     }
 
@@ -262,6 +267,17 @@ public class HexCodecV16 {
 
         HexCodecV15.resolveLinks(hex, placeholderIds);
         if (!placeholderIds.isEmpty()) hex.setFirstGlyphId(placeholderIds.get(0));
+
+        if (sections.containsKey(HexCodecV15.SECTION_SLOT_STATE)) {
+            try {
+                HexCodecV15.decodeSlotStates(sections.get(HexCodecV15.SECTION_SLOT_STATE),
+                        placeholderIds, hex);
+            } catch (Exception e) {
+                issues.add(new DecodeIssue("slot state failed: " + e.getMessage()
+                        + "; slot toggles default", DecodeIssue.Severity.INFO));
+            }
+        }
+
         HexCodecV15.finalizeHex(hex, anyUnresolved, issues);
         HexUtils.compress(hex);
         return new DecodeResult(hex, issues);

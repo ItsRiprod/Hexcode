@@ -17,7 +17,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interfere.style.InterfereStyle;
 import com.riprod.hexcode.builtin.hexCore.utils.ConstructSplicer;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -70,9 +69,6 @@ public class InterfereGlyph implements GlyphHandler {
         if (targets.isEmpty())
             return 0;
 
-        HexStats tracker = hexContext.getHexStats();
-        float donation = tracker != null ? tracker.getCurrentVolatility() : 0f;
-
         ConstructTickContext ctx = new ConstructTickContext(accessor, ref);
 
         int hijacked = 0;
@@ -84,7 +80,7 @@ public class InterfereGlyph implements GlyphHandler {
             ConstructSplicer.splice(target, handler, hexContext, glyph,
                     ConstructSplicer.ChainMode.REPLACE,
                     ConstructSplicer.VariablePolicy.PREFER_CASTER,
-                    donation);
+                    0f);
 
             try {
                 invokeOnEnd(handler, target, ctx);
@@ -95,9 +91,6 @@ public class InterfereGlyph implements GlyphHandler {
             hijacked++;
         }
 
-        if (tracker != null && donation > 0f) {
-            tracker.setVolatility(0f);
-        }
         return hijacked;
     }
 

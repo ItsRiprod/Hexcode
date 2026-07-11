@@ -10,4 +10,5 @@ public final class ConjureGlyphSlots {
     public static final String DURATION = "duration";
     public static final String INTERVAL = "interval";
     public static final String IMMEDIATE = "immediate";
+    public static final String HITBOX = "hitbox";
 }

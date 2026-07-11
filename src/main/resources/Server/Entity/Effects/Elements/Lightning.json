@@ -2,13 +2,14 @@
   "ApplicationEffects": {
     "EntityBottomTint": "#0a2540",
     "EntityTopTint": "#99e6ff",
-    "HorizontalSpeedMultiplier": 1.4,
+    "HorizontalSpeedMultiplier": 2,
     "Particles": [
       {
         "SystemId": "Shock_Spawner_Temporary",
         "TargetEntityPart": "Entity"
       }
-    ]
+    ],
+    "ScreenEffect": "ScreenEffects/Daggers.png"
   },
   "DamageCalculatorCooldown": 0.5,
   "DamageCalculator": {
@@ -27,5 +28,6 @@
         "CalculationType": "Percent"
       }
     ]
-  }
+  },
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png"
 }

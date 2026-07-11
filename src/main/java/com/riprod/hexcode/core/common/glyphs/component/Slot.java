@@ -2,30 +2,76 @@ package com.riprod.hexcode.core.common.glyphs.component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.lookup.CodecMapCodec;
+import com.hypixel.hytale.codec.lookup.Priority;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.DebugShape;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotStyleAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.StyleResolution;
 import com.riprod.hexcode.core.common.glyphs.registry.StyleResolution.ResolvedStyle;
+import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
-public class Slot {
-    private String[] links = new String[0];
+public abstract class Slot {
+    public static final CodecMapCodec<Slot> CODEC = new CodecMapCodec<>("Type", true, false);
+    public static final BuilderCodec<Slot> BASE_CODEC = BuilderCodec.abstractBuilder(Slot.class)
+            .append(new KeyedCodec<>("Links", Codec.STRING_ARRAY),
+                    (s, v) -> s.setLinks(v),
+                    s -> s.links)
+            .add()
+            .build();
 
-    private transient String key;
-    private transient String label;
-    private transient String description;
-    private transient Vector3f color;
-    private transient Vector3f offset;
-    private transient DebugShape shape;
-    private transient boolean unique;
+    private static final Map<String, Supplier<? extends Slot>> FACTORIES = new HashMap<>();
 
-    public Slot() {
+    protected String[] links = new String[0];
+
+    protected transient String key;
+    protected transient String label;
+    protected transient String description;
+    protected transient Vector3f color;
+    protected transient Vector3f offset;
+    protected transient DebugShape shape;
+    protected transient boolean unique;
+
+    public static void registerType(String id, Class<? extends Slot> type,
+            BuilderCodec<? extends Slot> codec, Supplier<? extends Slot> factory) {
+        registerType(Priority.NORMAL, id, type, codec, factory);
+    }
+
+    public static void registerType(Priority priority, String id, Class<? extends Slot> type,
+            BuilderCodec<? extends Slot> codec, Supplier<? extends Slot> factory) {
+        CODEC.register(priority, id, type, codec);
+        FACTORIES.put(id, factory);
+    }
+
+    public static Slot create(@Nullable String typeId) {
+        Supplier<? extends Slot> factory = typeId != null ? FACTORIES.get(typeId) : null;
+        return factory != null ? factory.get() : new LinkSlot();
+    }
+
+    public static Slot forAssetSlot(@Nullable String glyphId, String slotKey) {
+        return create(resolveTypeId(glyphId, slotKey));
+    }
+
+    @Nullable
+    private static String resolveTypeId(@Nullable String glyphId, String slotKey) {
+        if (glyphId == null) return null;
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
+        SlotAsset slotAsset = asset != null ? asset.getSlot(slotKey) : null;
+        String styleId = slotAsset != null ? slotAsset.getStyleId() : null;
+        if (styleId == null) return null;
+        SlotStyleAsset style = SlotStyleAsset.getAssetMap().getAsset(styleId);
+        return style != null ? style.getSlotType() : null;
     }
 
     public String[] getLinks() {
@@ -103,16 +149,20 @@ public class Slot {
         return this.shape;
     }
 
-    public static final BuilderCodec<Slot> CODEC = BuilderCodec.builder(Slot.class, Slot::new)
-            .append(new KeyedCodec<>("Links", Codec.STRING_ARRAY),
-                    (s, v) -> s.links = v != null ? v : new String[0],
-                    s -> s.links)
-            .add()
-            .build();
+    @Nullable
+    public byte[] encodeState() {
+        return null;
+    }
 
-    @Override
-    public Slot clone() {
-        Slot copy = new Slot();
+    public void decodeState(byte[] state) {
+    }
+
+    @Nullable
+    public HexVar inlineValue() {
+        return null;
+    }
+
+    protected void copyBaseState(Slot copy) {
         copy.links = Arrays.copyOf(this.links, this.links.length);
         copy.key = this.key;
         copy.label = this.label;
@@ -121,8 +171,10 @@ public class Slot {
         copy.offset = this.offset;
         copy.shape = this.shape;
         copy.unique = this.unique;
-        return copy;
     }
+
+    @Override
+    public abstract Slot clone();
 
     @Override
     public String toString() {

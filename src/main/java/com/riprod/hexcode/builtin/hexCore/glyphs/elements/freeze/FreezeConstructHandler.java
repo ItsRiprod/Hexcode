@@ -5,18 +5,13 @@ import java.util.List;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
-import org.joml.Vector3d;
-import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.component.FrozenBlock;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.style.FreezeStyle;
 
 public class FreezeConstructHandler implements ConstructHandler<FreezeState> {
 
@@ -61,7 +56,8 @@ public class FreezeConstructHandler implements ConstructHandler<FreezeState> {
 
     private void cleanup(HexStatus<FreezeState> status, ConstructTickContext ctx) {
         FreezeState state = status.getState();
-        if (state == null) return;
+        if (state == null || state.isCleanedUp()) return;
+        state.markCleanedUp();
 
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Ref<EntityStore> frozenRef = ctx.getEntityRef();
@@ -77,15 +73,5 @@ public class FreezeConstructHandler implements ConstructHandler<FreezeState> {
                 }
             }
         }
-
-        World world = buffer.getExternalData().getWorld();
-        for (FrozenBlock block : state.getFrozenBlocks()) {
-            Vector3i pos = block.getPosition();
-            Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
-            world.setBlock(pos.x, pos.y, pos.z, block.getBlockTypeId());
-            FreezeStyle.renderMelt(blockCenter, status.getHexContext(), buffer);
-        }
-
-        LOGGER.atInfo().log("freeze: cleanup restored %d blocks", state.getFrozenBlocks().size());
     }
 }

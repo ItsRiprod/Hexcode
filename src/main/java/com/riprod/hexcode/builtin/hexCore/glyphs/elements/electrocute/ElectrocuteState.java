@@ -11,6 +11,7 @@ public class ElectrocuteState implements ConstructState {
     private float durationSeconds;
     private float elapsedSeconds;
     private List<String> nextGlyphIds;
+    private boolean cleanedUp;
 
     public ElectrocuteState() {
         this.nextGlyphIds = new ArrayList<>();
@@ -43,10 +44,26 @@ public class ElectrocuteState implements ConstructState {
         this.nextGlyphIds = ids != null ? ids : new ArrayList<>();
     }
 
+    public boolean isCleanedUp() {
+        return cleanedUp;
+    }
+
+    public void markCleanedUp() {
+        this.cleanedUp = true;
+    }
+
+    public void refresh(float durationSeconds, List<String> nextGlyphIds) {
+        this.durationSeconds = durationSeconds;
+        this.elapsedSeconds = 0f;
+        this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
+        this.cleanedUp = false;
+    }
+
     @Override
     public ElectrocuteState copy() {
         ElectrocuteState c = new ElectrocuteState(effectId, durationSeconds, new ArrayList<>(nextGlyphIds));
         c.elapsedSeconds = this.elapsedSeconds;
+        c.cleanedUp = this.cleanedUp;
         return c;
     }
 }

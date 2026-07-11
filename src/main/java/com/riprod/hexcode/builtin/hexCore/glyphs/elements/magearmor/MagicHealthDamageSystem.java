@@ -10,8 +10,6 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.SystemGroup;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageModule;
@@ -55,36 +53,13 @@ public class MagicHealthDamageSystem extends DamageEventSystem {
             if (pool == null) return;
 
             float available = pool.get();
-            if (available <= 0f) {
-                deplete(ref, buffer);
-                return;
-            }
+            if (available <= 0f) return;
 
             float absorbed = Math.min(incoming, available);
             statMap.subtractStatValue(statIndex, absorbed);
             damage.setAmount(incoming - absorbed);
-
-            if (available - absorbed <= 0f) {
-                deplete(ref, buffer);
-            }
         } catch (Exception e) {
             LOGGER.atSevere().log("MagicHealthDamageSystem failed: %s", e.getMessage());
         }
-    }
-
-    private void deplete(Ref<EntityStore> ref, CommandBuffer<EntityStore> buffer) {
-        MagicHealthComponent tracking = buffer.getComponent(ref, MagicHealthComponent.getComponentType());
-        String effectId = tracking != null ? tracking.getEffectId() : null;
-        if (effectId != null) {
-            EffectControllerComponent controller = buffer.getComponent(
-                    ref, EffectControllerComponent.getComponentType());
-            if (controller != null) {
-                int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-                if (effectIndex != Integer.MIN_VALUE) {
-                    controller.removeEffect(ref, effectIndex, buffer);
-                }
-            }
-        }
-        buffer.removeComponent(ref, MagicHealthComponent.getComponentType());
     }
 }

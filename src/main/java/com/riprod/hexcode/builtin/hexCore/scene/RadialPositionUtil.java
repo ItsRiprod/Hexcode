@@ -28,7 +28,7 @@ public class RadialPositionUtil {
             positions.add(offset);
         }
 
-        return positions;
+        return positions.reversed();
     }
 
     public static List<Vector3f> calculateOffsets(int count, float radius, float angleOffset, Vector3f right, Vector3f up) {

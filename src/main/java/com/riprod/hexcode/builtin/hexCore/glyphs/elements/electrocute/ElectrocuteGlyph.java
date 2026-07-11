@@ -7,6 +7,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
+import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -60,8 +61,14 @@ public class ElectrocuteGlyph implements GlyphHandler {
             return;
         }
 
-        ElectrocuteState state = new ElectrocuteState(effectId, seconds, glyph.getNextLinks());
-        HexConstructSpawner.applyWithState(
-                accessor, target, hexContext, glyph, ElectrocuteGlyph.ID, state);
+        ElectrocuteState existing = ConstructStateUtil.findState(
+                accessor, target, ElectrocuteGlyph.ID, ElectrocuteState.class);
+        if (existing != null) {
+            existing.refresh(seconds, glyph.getNextLinks());
+        } else {
+            ElectrocuteState state = new ElectrocuteState(effectId, seconds, glyph.getNextLinks());
+            HexConstructSpawner.applyWithState(
+                    accessor, target, hexContext, glyph, ElectrocuteGlyph.ID, state);
+        }
     }
 }

@@ -1,6 +1,6 @@
 {
   "ModelPath": "Base_Glyph",
-  "ManaConsumption": 50,
+  "ManaConsumption": 1,
   "Volatility": {
     "InstantCost": 1,
     "DrainPerSecond": 0.15}

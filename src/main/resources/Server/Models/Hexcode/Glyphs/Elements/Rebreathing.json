@@ -6,15 +6,15 @@
       "Texture": "NPC/Glyphs/Textures/Square.png"
     },
     {
-      "Model": "NPC/Glyphs/Models/Glyph_2.blockymodel",
+      "Model": "NPC/Glyphs/Models/Triangle_1.blockymodel",
       "Texture": "NPC/Glyphs/Textures/Triangle.png"
     },
     {
-      "Model": "NPC/Glyphs/Models/Glyph_3.blockymodel",
+      "Model": "NPC/Glyphs/Models/Triangle_2.blockymodel",
       "Texture": "NPC/Glyphs/Textures/Triangle.png"
     },
     {
-      "Model": "NPC/Glyphs/Models/Glyph_4.blockymodel",
+      "Model": "NPC/Glyphs/Models/Triangle_3.blockymodel",
       "Texture": "NPC/Glyphs/Textures/Triangle.png"
     }
   ]

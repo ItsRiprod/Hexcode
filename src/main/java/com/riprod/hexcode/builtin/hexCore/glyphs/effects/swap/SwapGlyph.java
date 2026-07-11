@@ -27,7 +27,9 @@ public static final String ID = "Swap";
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         double distance = 0.0;
         HexVar varsA = glyph.readSlot(SwapGlyphSlots.A, hexContext);
+        if (varsA == null) varsA = hexContext.getDefaultVariable();
         HexVar varsB = glyph.readSlot(SwapGlyphSlots.B, hexContext);
+        if (varsB == null) varsB = hexContext.getDefaultVariable();
         if (varsA != null && varsB != null) {
             Vector3d posA = HexVarUtil.position(varsA, hexContext.getAccessor());
             Vector3d posB = HexVarUtil.position(varsB, hexContext.getAccessor());
@@ -47,7 +49,9 @@ public static final String ID = "Swap";
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar varsA = glyph.readSlot(SwapGlyphSlots.A, hexContext);
+        if (varsA == null) varsA = hexContext.getDefaultVariable();
         HexVar varsB = glyph.readSlot(SwapGlyphSlots.B, hexContext);
+        if (varsB == null) varsB = hexContext.getDefaultVariable();
 
         if (varsA == null || varsB == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,

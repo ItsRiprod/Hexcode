@@ -24,10 +24,4 @@ public class FreezeStyle {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         VfxUtil.spawnPrimary(overrides, asset(), pos, accessor);
     }
-
-    public static void renderMelt(Vector3d pos, HexContext ctx,
-            ComponentAccessor<EntityStore> accessor) {
-        HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), pos, accessor);
-    }
 }

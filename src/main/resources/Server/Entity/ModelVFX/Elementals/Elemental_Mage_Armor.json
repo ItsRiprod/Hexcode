@@ -1,0 +1,8 @@
+{
+  "SwitchTo": "PostColor",
+  "UseBloomOnHighlight": true,
+  "HighlightColor": "#00D4FF",
+  "HighlightThickness": 2.5,
+  "PostColorOpacity": 0.0,
+  "LoopOption": "Loop"
+}

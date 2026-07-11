@@ -36,7 +36,7 @@
       "Description": "hexcode.glyphs.Invoke.Next.description"
     }
   },
-  "ManaConsumption": 20,
+  "ManaConsumption": 1,
   "Volatility": {
     "InstantCost": 3,
     "DrainPerSecond": 0.0

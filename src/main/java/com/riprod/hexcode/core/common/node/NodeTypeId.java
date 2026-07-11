@@ -8,6 +8,7 @@ public final class NodeTypeId {
     public static final NodeTypeId CONTAINER = new NodeTypeId("container");
     public static final NodeTypeId GLYPH = new NodeTypeId("glyph");
     public static final NodeTypeId SLOT_STANDARD = new NodeTypeId("slot.standard");
+    public static final NodeTypeId SLOT_BOOLEAN = new NodeTypeId("slot.boolean");
 
     private final String id;
 

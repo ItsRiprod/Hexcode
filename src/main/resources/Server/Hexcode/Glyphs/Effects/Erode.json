@@ -17,7 +17,7 @@
   "Description": "hexcode.glyphs.Erode.description",
   "ModelPath": "Erode",
   "BasePower": 1.0,
-  "ManaConsumption": 3.0,
+  "ManaConsumption": 2.0,
   "ShapeStructure": [
     {
       "ShapeId": "Antisquare",
@@ -65,7 +65,7 @@
   },
   "Volatility": {
     "InstantCost": 2,
-    "DrainPerSecond": 0.15
+    "DrainPerSecond": 2
   },
   "Config": {
     "Type": "Erode",

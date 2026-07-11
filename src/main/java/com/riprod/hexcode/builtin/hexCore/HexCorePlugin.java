@@ -50,6 +50,11 @@ import com.riprod.hexcode.builtin.hexCore.nodes.anchor.AnchorNodeHandler;
 import com.riprod.hexcode.builtin.hexCore.nodes.container.ContainerNodeHandler;
 import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeHandler;
 import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlot;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlotHandler;
+import com.riprod.hexcode.core.common.glyphs.component.LinkSlot;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.hypixel.hytale.codec.lookup.Priority;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.ArcConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.ArcGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact.InteractGlyph;
@@ -329,6 +334,10 @@ public class HexCorePlugin extends JavaPlugin {
                 NodeRouter.register(NodeTypeId.CONTAINER, ContainerNodeHandler.INSTANCE);
                 NodeRouter.register(NodeTypeId.GLYPH, GlyphNodeHandler.INSTANCE);
                 NodeRouter.register(NodeTypeId.SLOT_STANDARD, SlotNodeHandler.INSTANCE);
+                NodeRouter.register(NodeTypeId.SLOT_BOOLEAN, BooleanSlotHandler.INSTANCE);
+
+                Slot.registerType(Priority.DEFAULT, "Link", LinkSlot.class, LinkSlot.CODEC, LinkSlot::new);
+                Slot.registerType("Boolean", BooleanSlot.class, BooleanSlot.CODEC, BooleanSlot::new);
         }
 
         private void RegisterInteractions() {

@@ -15,6 +15,7 @@ public final class ConjureConfig extends GlyphConfig {
     private double minAxisSize = 1.0;
     private float spatialQueryInterval = 0.2f;
     private String hardCollisionId = "Hexcode_Conjure_HardCollision";
+    private String softCollisionId = "Hexcode_Conjure_SoftCollision";
     private String anchorModelId = "Conjured_Anchor";
 
     public double getBoxHalfExtent() {
@@ -31,6 +32,10 @@ public final class ConjureConfig extends GlyphConfig {
 
     public String getHardCollisionId() {
         return hardCollisionId;
+    }
+
+    public String getSoftCollisionId() {
+        return softCollisionId;
     }
 
     public String getAnchorModelId() {
@@ -50,6 +55,10 @@ public final class ConjureConfig extends GlyphConfig {
             .add()
             .append(new KeyedCodec<>("HardCollision", Codec.STRING, true),
                     (c, v) -> c.hardCollisionId = v, c -> c.hardCollisionId)
+            .addValidatorLate(() -> HitboxCollisionConfig.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .append(new KeyedCodec<>("SoftCollision", Codec.STRING, true),
+                    (c, v) -> c.softCollisionId = v, c -> c.softCollisionId)
             .addValidatorLate(() -> HitboxCollisionConfig.VALIDATOR_CACHE.getValidator().late())
             .add()
             .append(new KeyedCodec<>("AnchorModel", Codec.STRING, true),

@@ -1,8 +1,16 @@
 {
   "Interactions": {
-    "Life": {
+    "Lightning": {
       "Type": "Generic",
-      "Particle": "Effect_Heal"
+      "Particle": "Lightning"
+    },
+    "Water": {
+      "Type": "Generic",
+      "Particle": "Water_Splash"
+    },
+    "Ice": {
+      "Type": "Generic",
+      "Particle": "IceBall_Explosion"
     }
   }
 }

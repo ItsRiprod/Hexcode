@@ -78,7 +78,7 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
 
                     if (stack.isEmpty()) {
                         ScaleGlyph.applyAbsoluteScale(buffer, targetRef, baseAssetId, 1.0f);
-                        buffer.removeComponent(targetRef, ScaleStackComponent.getComponentType());
+                        buffer.tryRemoveComponent(targetRef, ScaleStackComponent.getComponentType());
                     } else {
                         buffer.putComponent(targetRef, ScaleStackComponent.getComponentType(), stack);
                         float absolute = stack.productOfContributions();

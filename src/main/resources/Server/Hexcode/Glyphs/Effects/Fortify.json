@@ -17,7 +17,7 @@
   "Description": "hexcode.glyphs.Fortify.description",
   "ModelPath": "Fortify",
   "BasePower": 1.0,
-  "ManaConsumption": 3.0,
+  "ManaConsumption": 2.0,
   "ShapeStructure": [
     {
       "ShapeId": "Square",
@@ -53,7 +53,7 @@
   },
   "Volatility": {
     "InstantCost": 2,
-    "DrainPerSecond": 0.15
+    "DrainPerSecond": 2
   },
   "Config": {
     "Type": "Fortify",
