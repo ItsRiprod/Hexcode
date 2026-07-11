@@ -1,4 +1,4 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.elements.drench;
+package com.riprod.hexcode.builtin.hexCore.glyphs.elements.rebreathing;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -14,9 +14,9 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 
-public class DrenchGlyph implements GlyphHandler {
+public class RebreathingGlyph implements GlyphHandler {
 
-    public static final String ID = "Drench";
+    public static final String ID = "Rebreathing";
 
     @Override
     public String getId() {
@@ -25,7 +25,7 @@ public class DrenchGlyph implements GlyphHandler {
 
     @Override
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(DrenchConfig.class, DrenchConfig.CODEC);
+        return ConfigBinding.of(RebreathingConfig.class, RebreathingConfig.CODEC);
     }
 
     @Override
@@ -38,30 +38,30 @@ public class DrenchGlyph implements GlyphHandler {
         Ref<EntityStore> target = ElementSupport.resolveTarget(glyph, hexContext);
         if (target == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Drench must target an entity");
+                    "Rebreathing must target an entity");
             return;
         }
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        DrenchConfig config = getConfig(DrenchConfig.class, asset);
-        if (config == null) config = DrenchConfig.DEFAULTS;
+        RebreathingConfig config = getConfig(RebreathingConfig.class, asset);
+        if (config == null) config = RebreathingConfig.DEFAULTS;
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float seconds = ElementSupport.scaledDuration(hexContext.consumeComplexity(),
                 config.getEfficiency(), config.getDurationPerComplexity(),
-                config.getMinDuration(), config.getMaxDuration(), affinity);
+                affinity);
 
         String effectId = config.getStatusEffect();
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         if (!ElementSupport.applyStatus(target, accessor, effectId, seconds)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Drench could not apply " + effectId);
+                    "Rebreathing could not apply " + effectId);
             return;
         }
 
-        DrenchState state = new DrenchState(effectId, seconds, glyph.getNextLinks());
+        RebreathingState state = new RebreathingState(effectId, seconds, glyph.getNextLinks());
         HexConstructSpawner.applyWithState(
-                accessor, target, hexContext, glyph, DrenchGlyph.ID, state);
+                accessor, target, hexContext, glyph, RebreathingGlyph.ID, state);
     }
 }

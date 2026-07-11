@@ -1,10 +1,10 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Drench",
+  "Handler": "Rebreathing",
   "Style": "Essence_Water",
-  "Title": "hexcode.glyphs.Drench.name",
-  "Description": "hexcode.glyphs.Drench.description",
-  "ModelPath": "Drench",
+  "Title": "hexcode.glyphs.Rebreathing.name",
+  "Description": "hexcode.glyphs.Rebreathing.description",
+  "ModelPath": "Rebreathing",
   "BasePower": 1.0,
   "ManaConsumption": 3.0,
   "ShapeStructure": [
@@ -28,17 +28,15 @@
   "Slots": {
     "Next": {
       "Style": "Next",
-      "Label": "hexcode.glyphs.Drench.Next.name",
-      "Description": "hexcode.glyphs.Drench.Next.description"
+      "Label": "hexcode.glyphs.Rebreathing.Next.name",
+      "Description": "hexcode.glyphs.Rebreathing.Next.description"
     }
   },
   "Config": {
-    "Type": "Drench",
+    "Type": "Rebreathing",
     "StatusEffect": "Water",
     "Efficiency": 0.6,
     "DurationPerComplexity": 1.0,
-    "MinDuration": 1.0,
-    "MaxDuration": 30.0,
     "AffinityStat": "Affinity_Water"
   },
   "Volatility": {

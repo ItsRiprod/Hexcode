@@ -13,8 +13,6 @@ public final class IgniteConfig extends ElementGlyphConfig {
 
     private String statusEffect = "Fire";
     private float durationPerComplexity = 0.5f;
-    private float minDuration = 1.0f;
-    private float maxDuration = 30.0f;
 
     public String getStatusEffect() {
         return statusEffect;
@@ -22,14 +20,6 @@ public final class IgniteConfig extends ElementGlyphConfig {
 
     public float getDurationPerComplexity() {
         return durationPerComplexity;
-    }
-
-    public float getMinDuration() {
-        return minDuration;
-    }
-
-    public float getMaxDuration() {
-        return maxDuration;
     }
 
     public static final BuilderCodec<IgniteConfig> CODEC = BuilderCodec
@@ -40,14 +30,6 @@ public final class IgniteConfig extends ElementGlyphConfig {
             .add()
             .append(new KeyedCodec<>("DurationPerComplexity", Codec.FLOAT, true),
                     (c, v) -> c.durationPerComplexity = v, c -> c.durationPerComplexity)
-            .addValidator(Validators.greaterThanOrEqual(0.0f))
-            .add()
-            .append(new KeyedCodec<>("MinDuration", Codec.FLOAT, true),
-                    (c, v) -> c.minDuration = v, c -> c.minDuration)
-            .addValidator(Validators.greaterThanOrEqual(0.0f))
-            .add()
-            .append(new KeyedCodec<>("MaxDuration", Codec.FLOAT, true),
-                    (c, v) -> c.maxDuration = v, c -> c.maxDuration)
             .addValidator(Validators.greaterThanOrEqual(0.0f))
             .add()
             .build();

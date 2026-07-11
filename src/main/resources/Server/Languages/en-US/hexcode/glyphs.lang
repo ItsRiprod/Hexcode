@@ -693,7 +693,7 @@ Snap.Next.name=Next
 Snap.Next.description=The next glyph in the execution chain
 
 Freeze.name=Freeze
-Freeze.description=Chills the target, slowing movement and attack speed as it stacks toward a full freeze
+Freeze.description=Freezes the target, dealing ice damage over time and slowing its movement as it stacks toward a full freeze
 Freeze.Next.name=Next
 Freeze.Next.description=The next glyph in the execution chain
 
@@ -702,17 +702,27 @@ Bolt.description=Discharges accumulated complexity as an instant burst of lightn
 Bolt.Next.name=Next
 Bolt.Next.description=The next glyph in the execution chain
 
-Shocking.name=Shocking
-Shocking.description=Shocks the target, interrupting and staggering them for a duration
-Shocking.Next.name=Next
-Shocking.Next.description=The next glyph in the execution chain
+Electrocute.name=Electrocute
+Electrocute.description=Electrocutes the target, dealing lightning damage over time and jolting it into faster, frenzied movement
+Electrocute.Next.name=Next
+Electrocute.Next.description=The next glyph in the execution chain
 
 Drown.name=Drown
 Drown.description=Discharges accumulated complexity as a crushing surge of water damage
 Drown.Next.name=Next
 Drown.Next.description=The next glyph in the execution chain
 
-Drench.name=Drench
-Drench.description=Soaks the target, leaving them dripping and conductive for a duration
-Drench.Next.name=Next
-Drench.Next.description=The next glyph in the execution chain
+HealthSurge.name=Health Surge
+HealthSurge.description=Converts accumulated complexity into healing, restoring the target's health
+HealthSurge.Next.name=Next
+HealthSurge.Next.description=The next glyph in the execution chain
+
+MageArmor.name=Mage Armor
+MageArmor.description=Grants the target temporary hitpoints that absorb incoming damage for a duration
+MageArmor.Next.name=Next
+MageArmor.Next.description=The next glyph in the execution chain
+
+Rebreathing.name=Rebreathing
+Rebreathing.description=Fills the target's lungs with air, letting it breathe underwater for a duration
+Rebreathing.Next.name=Next
+Rebreathing.Next.description=The next glyph in the execution chain

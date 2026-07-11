@@ -102,12 +102,17 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.swap.SwapGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.terraform.TerraformGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.warp.WarpGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.bolt.BoltGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.drench.DrenchConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.drench.DrenchGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.healthsurge.HealthSurgeGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.magearmor.MageArmorConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.magearmor.MageArmorGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.magearmor.MagicHealthDamageSystem;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.magearmor.component.MagicHealthComponent;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.rebreathing.RebreathingConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.rebreathing.RebreathingGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.drown.DrownGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.scorch.ScorchGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.shocking.ShockingConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.shocking.ShockingGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.electrocute.ElectrocuteConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.electrocute.ElectrocuteGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.snap.SnapGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.FreezeConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.FreezeGlyph;
@@ -295,9 +300,11 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new ScorchGlyph());
                 GlyphRegistry.register(new SnapGlyph());
                 GlyphRegistry.register(new BoltGlyph());
-                GlyphRegistry.register(new ShockingGlyph());
+                GlyphRegistry.register(new ElectrocuteGlyph());
                 GlyphRegistry.register(new DrownGlyph());
-                GlyphRegistry.register(new DrenchGlyph());
+                GlyphRegistry.register(new RebreathingGlyph());
+                GlyphRegistry.register(new HealthSurgeGlyph());
+                GlyphRegistry.register(new MageArmorGlyph());
 
 
                 
@@ -406,6 +413,10 @@ public class HexCorePlugin extends JavaPlugin {
                                                 ScaleStackComponent.CODEC);
                 ScaleStackComponent.setComponentType(scaleStackComponentType);
 
+                ComponentType<EntityStore, MagicHealthComponent> magicHealthComponentType = entityStoreRegistry
+                                .registerComponent(MagicHealthComponent.class, MagicHealthComponent::new);
+                MagicHealthComponent.setComponentType(magicHealthComponentType);
+
                 ComponentType<EntityStore, FlycastingState> flycastingStateType = entityStoreRegistry
                                 .registerComponent(FlycastingState.class, FlycastingState::new);
                 FlycastingState.setComponentType(flycastingStateType);
@@ -421,6 +432,8 @@ public class HexCorePlugin extends JavaPlugin {
 
         private void RegisterSystems() {
                 ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
+
+                entityStoreRegistry.registerSystem(new MagicHealthDamageSystem());
 
                 entityStoreRegistry.registerSystem(new ContextForceExitSystem.OnDeath());
 
@@ -464,8 +477,9 @@ public class HexCorePlugin extends JavaPlugin {
                 ConstructRegistry.register(DelayGlyph.ID, new DelayConstructHandler());
                 ConstructRegistry.register(EnsnareGlyph.ID, new EnsnareConstructHandler());
                 ConstructRegistry.register(FreezeGlyph.ID, new FreezeConstructHandler());
-                ConstructRegistry.register(ShockingGlyph.ID, new ShockingConstructHandler());
-                ConstructRegistry.register(DrenchGlyph.ID, new DrenchConstructHandler());
+                ConstructRegistry.register(ElectrocuteGlyph.ID, new ElectrocuteConstructHandler());
+                ConstructRegistry.register(MageArmorGlyph.ID, new MageArmorConstructHandler());
+                ConstructRegistry.register(RebreathingGlyph.ID, new RebreathingConstructHandler());
                 ConstructRegistry.register(ProjectileGlyph.ID, new ProjectileConstructHandler());
                 ConstructRegistry.register(IgniteGlyph.ID, new IgniteConstructHandler());
                 ConstructRegistry.register(GrowthGlyph.ID, new GrowthConstructHandler());

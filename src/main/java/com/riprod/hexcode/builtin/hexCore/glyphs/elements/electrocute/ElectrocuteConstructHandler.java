@@ -1,4 +1,4 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.elements.drench;
+package com.riprod.hexcode.builtin.hexCore.glyphs.elements.electrocute;
 
 import java.util.List;
 
@@ -13,13 +13,13 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
 
-public class DrenchConstructHandler implements ConstructHandler<DrenchState> {
+public class ElectrocuteConstructHandler implements ConstructHandler<ElectrocuteState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     @Override
-    public boolean onTick(float dt, HexStatus<DrenchState> status, ConstructTickContext ctx) {
-        DrenchState state = status.getState();
+    public boolean onTick(float dt, HexStatus<ElectrocuteState> status, ConstructTickContext ctx) {
+        ElectrocuteState state = status.getState();
         if (state == null) return true;
         state.tick(dt);
         if (!drainSustain(dt, status)) return true;
@@ -27,35 +27,35 @@ public class DrenchConstructHandler implements ConstructHandler<DrenchState> {
     }
 
     @Override
-    public void onEnd(HexStatus<DrenchState> status, ConstructTickContext ctx) {
+    public void onEnd(HexStatus<ElectrocuteState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        DrenchState state = status.getState();
+        ElectrocuteState state = status.getState();
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("drench: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atInfo().log("electrocute: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
-    public void onAbort(HexStatus<DrenchState> status, ConstructTickContext ctx) {
+    public void onAbort(HexStatus<ElectrocuteState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("drench: terminated early; chain suppressed");
+        LOGGER.atInfo().log("electrocute: terminated early; chain suppressed");
     }
 
     @Override
-    public List<String> getPendingNextGlyphIds(HexStatus<DrenchState> status) {
-        DrenchState state = status.getState();
+    public List<String> getPendingNextGlyphIds(HexStatus<ElectrocuteState> status) {
+        ElectrocuteState state = status.getState();
         return state != null ? state.getNextGlyphIds() : List.of();
     }
 
     @Override
-    public void setPendingNextGlyphIds(HexStatus<DrenchState> status, List<String> ids) {
-        DrenchState state = status.getState();
+    public void setPendingNextGlyphIds(HexStatus<ElectrocuteState> status, List<String> ids) {
+        ElectrocuteState state = status.getState();
         if (state != null) state.setNextGlyphIds(ids);
     }
 
-    private void cleanup(HexStatus<DrenchState> status, ConstructTickContext ctx) {
-        DrenchState state = status.getState();
+    private void cleanup(HexStatus<ElectrocuteState> status, ConstructTickContext ctx) {
+        ElectrocuteState state = status.getState();
         if (state == null) return;
 
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();

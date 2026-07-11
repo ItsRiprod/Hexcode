@@ -1,0 +1,29 @@
+{
+  "ApplicationEffects": {
+    "EntityBottomTint": "#2a1a00",
+    "EntityTopTint": "#ffd76a",
+    "Particles": [
+      {
+        "SystemId": "Effect_Heal"
+      }
+    ]
+  },
+  "OverlapBehavior": "Overwrite",
+  "Infinite": false,
+  "Debuff": false,
+  "Duration": 3,
+  "DamageResistance": {
+    "Water": [
+      {
+        "Amount": 0.5,
+        "CalculationType": "Percent"
+      }
+    ],
+    "Lightning": [
+      {
+        "Amount": 0.5,
+        "CalculationType": "Percent"
+      }
+    ]
+  }
+}

@@ -9,6 +9,12 @@
       }
     ]
   },
+  "DamageCalculatorCooldown": 0.5,
+  "DamageCalculator": {
+    "BaseDamage": {
+      "Ice": 0.5
+    }
+  },
   "OverlapBehavior": "Overwrite",
   "Infinite": false,
   "Debuff": true,

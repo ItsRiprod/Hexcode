@@ -1,22 +1,22 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.elements.shocking;
+package com.riprod.hexcode.builtin.hexCore.glyphs.elements.rebreathing;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
 
-public class ShockingState implements ConstructState {
+public class RebreathingState implements ConstructState {
 
     private String effectId;
     private float durationSeconds;
     private float elapsedSeconds;
     private List<String> nextGlyphIds;
 
-    public ShockingState() {
+    public RebreathingState() {
         this.nextGlyphIds = new ArrayList<>();
     }
 
-    public ShockingState(String effectId, float durationSeconds, List<String> nextGlyphIds) {
+    public RebreathingState(String effectId, float durationSeconds, List<String> nextGlyphIds) {
         this.effectId = effectId;
         this.durationSeconds = durationSeconds;
         this.elapsedSeconds = 0f;
@@ -44,8 +44,8 @@ public class ShockingState implements ConstructState {
     }
 
     @Override
-    public ShockingState copy() {
-        ShockingState c = new ShockingState(effectId, durationSeconds, new ArrayList<>(nextGlyphIds));
+    public RebreathingState copy() {
+        RebreathingState c = new RebreathingState(effectId, durationSeconds, new ArrayList<>(nextGlyphIds));
         c.elapsedSeconds = this.elapsedSeconds;
         return c;
     }

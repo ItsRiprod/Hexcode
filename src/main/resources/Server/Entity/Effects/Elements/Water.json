@@ -8,9 +8,17 @@
       }
     ]
   },
+  "RawStatModifiers": {
+    "Oxygen": [
+      {
+        "Amount": 1000,
+        "CalculationType": "Additive"
+      }
+    ]
+  },
   "OverlapBehavior": "Overwrite",
   "Infinite": false,
-  "Debuff": true,
+  "Debuff": false,
   "Duration": 3,
   "DamageResistance": {
     "Lightning": [

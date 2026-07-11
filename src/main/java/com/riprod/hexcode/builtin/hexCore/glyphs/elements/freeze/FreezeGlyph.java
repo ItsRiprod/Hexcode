@@ -60,7 +60,7 @@ public class FreezeGlyph implements GlyphHandler {
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float seconds = ElementSupport.scaledDuration(hexContext.consumeComplexity(),
                 config.getEfficiency(), config.getDurationPerComplexity(),
-                config.getMinDuration(), config.getMaxDuration(), affinity);
+                affinity);
 
         String effectId = config.getStatusEffect();
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();

@@ -1,0 +1,8 @@
+{
+  "Interactions": {
+    "Life": {
+      "Type": "Generic",
+      "Particle": "Effect_Heal"
+    }
+  }
+}

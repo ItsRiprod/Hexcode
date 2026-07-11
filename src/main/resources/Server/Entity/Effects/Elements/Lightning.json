@@ -2,22 +2,19 @@
   "ApplicationEffects": {
     "EntityBottomTint": "#0a2540",
     "EntityTopTint": "#99e6ff",
-    "HorizontalSpeedMultiplier": 0.6,
-    "MouseSensitivityAdjustmentTarget": 2.5,
-    "MouseSensitivityAdjustmentDuration": 0.3,
-    "AbilityEffects": {
-      "Disabled": [
-        "Primary",
-        "Secondary"
-      ]
-    },
+    "HorizontalSpeedMultiplier": 1.4,
     "Particles": [
       {
-        "SystemId": "Stunned",
-        "TargetEntityPart": "Entity",
-        "TargetNodeName": "Head"
+        "SystemId": "Shock_Spawner_Temporary",
+        "TargetEntityPart": "Entity"
       }
     ]
+  },
+  "DamageCalculatorCooldown": 0.5,
+  "DamageCalculator": {
+    "BaseDamage": {
+      "Lightning": 0.5
+    }
   },
   "OverlapBehavior": "Overwrite",
   "Infinite": false,

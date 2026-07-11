@@ -9,7 +9,8 @@ public final class GustConfig extends GlyphConfig {
 
     public static final GustConfig DEFAULTS = new GustConfig();
 
-    private double minKnockbackOffset = 0.1;
+    // purposefully a random number to avoid intentional offsets causing the divide-by-zero bug (obtained by keyboard spam)
+    private double minKnockbackOffset = 0.15792347;
     private float entityDamage = 0.0f;
     private float entityDamageFalloff = 1.0f;
     private double verticalKnockbackScale = 0.3;

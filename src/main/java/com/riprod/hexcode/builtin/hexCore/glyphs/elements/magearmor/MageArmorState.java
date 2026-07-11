@@ -1,22 +1,22 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.elements.drench;
+package com.riprod.hexcode.builtin.hexCore.glyphs.elements.magearmor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
 
-public class DrenchState implements ConstructState {
+public class MageArmorState implements ConstructState {
 
     private String effectId;
     private float durationSeconds;
     private float elapsedSeconds;
     private List<String> nextGlyphIds;
 
-    public DrenchState() {
+    public MageArmorState() {
         this.nextGlyphIds = new ArrayList<>();
     }
 
-    public DrenchState(String effectId, float durationSeconds, List<String> nextGlyphIds) {
+    public MageArmorState(String effectId, float durationSeconds, List<String> nextGlyphIds) {
         this.effectId = effectId;
         this.durationSeconds = durationSeconds;
         this.elapsedSeconds = 0f;
@@ -44,8 +44,8 @@ public class DrenchState implements ConstructState {
     }
 
     @Override
-    public DrenchState copy() {
-        DrenchState c = new DrenchState(effectId, durationSeconds, new ArrayList<>(nextGlyphIds));
+    public MageArmorState copy() {
+        MageArmorState c = new MageArmorState(effectId, durationSeconds, new ArrayList<>(nextGlyphIds));
         c.elapsedSeconds = this.elapsedSeconds;
         return c;
     }

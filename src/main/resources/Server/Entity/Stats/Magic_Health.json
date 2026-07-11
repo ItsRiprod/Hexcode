@@ -1,0 +1,8 @@
+{
+  "Shared": true,
+  "ResetType": "MinValue",
+  "InitialValue": 0,
+  "Min": 0,
+  "Max": 100000,
+  "IgnoreInvulnerability": true
+}

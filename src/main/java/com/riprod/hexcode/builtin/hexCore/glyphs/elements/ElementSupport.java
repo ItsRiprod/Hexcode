@@ -44,11 +44,8 @@ public final class ElementSupport {
     }
 
     public static float scaledDuration(float complexity, float efficiency, float perComplexity,
-            float min, float max, float affinity) {
-        float seconds = complexity * efficiency * perComplexity * affinity;
-        if (seconds < min) seconds = min;
-        if (seconds > max) seconds = max;
-        return seconds;
+            float affinity) {
+        return complexity * efficiency * perComplexity * affinity;
     }
 
     public static float affinityFactor(HexContext hexContext, @Nullable String affinityStat, float scale) {

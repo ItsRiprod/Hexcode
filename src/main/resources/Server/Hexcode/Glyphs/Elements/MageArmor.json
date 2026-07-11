@@ -1,0 +1,46 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "MageArmor",
+  "Style": "Essence_Life",
+  "Title": "hexcode.glyphs.MageArmor.name",
+  "Description": "hexcode.glyphs.MageArmor.description",
+  "ModelPath": "MageArmor",
+  "BasePower": 1.0,
+  "ManaConsumption": 3.0,
+  "ShapeStructure": [
+    {
+      "ShapeId": "Square",
+      "Size": 1.0
+    },
+    {
+      "ShapeId": "Square",
+      "Size": 0.8
+    },
+    {
+      "ShapeId": "Square",
+      "Size": 0.6
+    },
+    {
+      "ShapeId": "Square",
+      "Size": 0.4
+    }
+  ],
+  "Slots": {
+    "Next": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.MageArmor.Next.name",
+      "Description": "hexcode.glyphs.MageArmor.Next.description"
+    }
+  },
+  "Config": {
+    "Type": "MageArmor",
+    "StatusEffect": "Life",
+    "Efficiency": 1.0,
+    "DurationPerComplexity": 1.0,
+    "AffinityStat": "Affinity_Life"
+  },
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.2
+  }
+}

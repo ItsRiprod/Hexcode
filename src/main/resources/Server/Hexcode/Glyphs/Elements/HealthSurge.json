@@ -1,0 +1,44 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "HealthSurge",
+  "Style": "Essence_Life",
+  "Title": "hexcode.glyphs.HealthSurge.name",
+  "Description": "hexcode.glyphs.HealthSurge.description",
+  "ModelPath": "HealthSurge",
+  "BasePower": 1.0,
+  "ManaConsumption": 0,
+  "ShapeStructure": [
+    {
+      "ShapeId": "Circle",
+      "Size": 1.0
+    },
+    {
+      "ShapeId": "Square",
+      "Size": 0.8
+    },
+    {
+      "ShapeId": "Square",
+      "Size": 0.6
+    },
+    {
+      "ShapeId": "Square",
+      "Size": 0.4
+    }
+  ],
+  "Slots": {
+    "Next": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.HealthSurge.Next.name",
+      "Description": "hexcode.glyphs.HealthSurge.Next.description"
+    }
+  },
+  "Config": {
+    "Type": "HealthSurge",
+    "Efficiency": 1.0,
+    "AffinityStat": "Affinity_Life"
+  },
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.0
+  }
+}
