@@ -29,7 +29,6 @@ public class FlycastingState implements Component<EntityStore> {
     }
 
     private Ref<EntityStore> castingRootRef;
-    private Ref<EntityStore> headAnchorRef;
     private List<Ref<EntityStore>> activeHexes = new ArrayList<>();
     private HexComponent hoveredHex;
     private GlyphComponent hoveredGlyph;
@@ -46,15 +45,6 @@ public class FlycastingState implements Component<EntityStore> {
 
     public void setCastingRootRef(@Nullable Ref<EntityStore> castingRootRef) {
         this.castingRootRef = castingRootRef;
-    }
-
-    @Nullable
-    public Ref<EntityStore> getHeadAnchorRef() {
-        return headAnchorRef;
-    }
-
-    public void setHeadAnchorRef(@Nullable Ref<EntityStore> headAnchorRef) {
-        this.headAnchorRef = headAnchorRef;
     }
 
     public List<Ref<EntityStore>> getActiveHexes() {
@@ -112,7 +102,6 @@ public class FlycastingState implements Component<EntityStore> {
     public FlycastingState clone() {
         FlycastingState copy = new FlycastingState();
         copy.castingRootRef = this.castingRootRef;
-        copy.headAnchorRef = this.headAnchorRef;
         copy.activeHexes = new ArrayList<>(this.activeHexes);
         copy.hoveredHex = this.hoveredHex;
         copy.hoveredGlyph = this.hoveredGlyph;

@@ -1,9 +1,10 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -22,13 +23,11 @@ import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.state.NoState;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.DomainGlyphSlots;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.component.DomainZoneComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.style.DomainStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
@@ -40,22 +39,6 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
     private static final float DOMAIN_VOLATILITY_BOOST = 0.67f;
     private static final float SPATIAL_INTERVAL_SECONDS = 0.2f;
     private static final Vector3f CONTESTED_COLOR = new Vector3f(0.5f, 0.5f, 0.5f);
-
-    @Override
-    public void onFirstTick(HexStatus<NoState> status, ConstructTickContext ctx) {
-        Glyph triggering = status.getTriggeringGlyph();
-        if (triggering == null)
-            return;
-        Slot immediate = triggering.getSlot(DomainGlyphSlots.IMMEDIATE);
-        if (immediate == null)
-            return;
-        String[] links = immediate.getLinks();
-        if (links == null || links.length == 0)
-            return;
-        HexContext hexContext = status.getHexContext();
-        hexContext.updateRuntimeAccessors(ctx.getBuffer());
-        HexExecuter.continueExecution(Arrays.asList(links), hexContext);
-    }
 
     @Override
     public boolean onTick(float dt, HexStatus<NoState> status, ConstructTickContext ctx) {
@@ -85,8 +68,8 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
 
             updateContestation(zone, center, ctx.getEntityRef(), ctx.getBuffer());
 
-            List<Ref<EntityStore>> found = TargetUtil.getAllEntitiesInSphere(
-                    center, zone.getRadius(), ctx.getBuffer());
+            List<Ref<EntityStore>> found = new ObjectArrayList<>(TargetUtil.getAllEntitiesInSphere(
+                    center, zone.getRadius(), ctx.getBuffer()));
 
             Set<UUID> previousOccupants = zone.getNewOccupants();
             Set<UUID> currentOccupants = zone.getLastOccupants();

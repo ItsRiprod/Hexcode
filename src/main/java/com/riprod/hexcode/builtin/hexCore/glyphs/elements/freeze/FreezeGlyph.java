@@ -14,8 +14,11 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+
+import java.util.Arrays;
 
 public class FreezeGlyph implements GlyphHandler {
 
@@ -51,7 +54,8 @@ public class FreezeGlyph implements GlyphHandler {
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float seconds = ElementSupport.scaledDuration(hexContext.consumeComplexity(),
+        float limit = ElementSupport.complexityLimit(glyph, asset, hexContext);
+        float seconds = ElementSupport.scaledDuration(hexContext.consumeComplexity(limit),
                 config.getEfficiency(), config.getDurationPerComplexity(), affinity);
 
         String effectId = config.getStatusEffect();
@@ -75,6 +79,12 @@ public class FreezeGlyph implements GlyphHandler {
             FreezeState state = new FreezeState(effectId, seconds, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
                     accessor, target, hexContext, glyph, FreezeGlyph.ID, state);
+        }
+
+        Slot immediate = glyph.getSlot(FreezeGlyphSlots.IMMEDIATE);
+        if (immediate != null && immediate.getLinks().length > 0) {
+            HexContext immediateCtx = hexContext.branch();
+            HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
         }
     }
 }

@@ -32,6 +32,17 @@
     }
   ],
   "Slots": {
+    "ComplexityLimit": {
+      "Style": "Input",
+      "Label": "hexcode.glyphs.Ignite.ComplexityLimit.name",
+      "Description": "hexcode.glyphs.Ignite.ComplexityLimit.description",
+      "DefaultValue": -1
+    },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Ignite.immediate.name",
+      "Description": "hexcode.glyphs.Ignite.immediate.description"
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Ignite.Next.name",

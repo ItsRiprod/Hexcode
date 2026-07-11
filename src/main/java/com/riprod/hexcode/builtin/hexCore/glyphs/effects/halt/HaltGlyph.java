@@ -21,12 +21,15 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
+
+import java.util.Arrays;
 
 public class HaltGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -84,6 +87,13 @@ public static final String ID = "Halt";
             if (duration > 0) {
                 HexConstructSpawner.applyWithState(accessor, ref, hexContext, glyph, HaltGlyph.ID,
                         new HaltState((float) duration, config.getEffectId(), glyph.getNextLinks()));
+
+                Slot immediate = glyph.getSlot(HaltGlyphSlots.IMMEDIATE);
+                if (immediate != null && immediate.getLinks().length > 0) {
+                    HexContext immediateCtx = hexContext.branch();
+                    immediateCtx.setDefaultVariable(entityVar);
+                    HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
+                }
             }
 
             if (duration > 0) {

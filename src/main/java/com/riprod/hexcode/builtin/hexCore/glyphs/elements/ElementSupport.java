@@ -14,13 +14,23 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public final class ElementSupport {
 
+    public static final String COMPLEXITY_LIMIT_SLOT = "ComplexityLimit";
+
     private ElementSupport() {
+    }
+
+    public static float complexityLimit(Glyph glyph, GlyphAsset asset, HexContext hexContext) {
+        if (asset == null || asset.getSlot(COMPLEXITY_LIMIT_SLOT) == null) return -1f;
+        return HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(COMPLEXITY_LIMIT_SLOT, hexContext),
+                asset.getSlot(COMPLEXITY_LIMIT_SLOT)).floatValue();
     }
 
     @Nullable

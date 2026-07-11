@@ -59,6 +59,8 @@ Delay.duration.name=Duration
 Delay.duration.description=Duration in Seconds. Negative is indef
 Delay.source.name=Source
 Delay.source.description=Position of the delay
+Delay.immediate.name=Immediate
+Delay.immediate.description=Fires immediately, carrying the spawned delay entity
 Delay.Next.name=Next
 Delay.Next.description=The next glyph in the execution chain
 
@@ -479,6 +481,8 @@ Drain.duration.name=Duration
 Drain.duration.description=Seconds to channel over
 Drain.destination.name=Destination
 Drain.destination.description=Entity whose Mana will receive the drained resource. Defaults to caster. HP source is only allowed when draining self.
+Drain.immediate.name=Immediate
+Drain.immediate.description=Fires immediately when the effect is applied
 Drain.Next.name=Next
 Drain.Next.description=The next glyph in the execution chain
 
@@ -503,6 +507,8 @@ Erode.amount.name=Amount
 Erode.amount.description=Vulnerability increase per incoming hit
 Erode.duration.name=Duration
 Erode.duration.description=How long the effect lasts in seconds
+Erode.immediate.name=Immediate
+Erode.immediate.description=Fires immediately when the effect is applied
 Erode.Next.name=Next
 Erode.Next.description=The next glyph in the execution chain
 
@@ -525,6 +531,8 @@ Fortify.amount.name=Amount
 Fortify.amount.description=Damage reduction per incoming hit
 Fortify.duration.name=Duration
 Fortify.duration.description=How long the effect lasts in seconds
+Fortify.immediate.name=Immediate
+Fortify.immediate.description=Fires immediately when the effect is applied
 Fortify.Next.name=Next
 Fortify.Next.description=The next glyph in the execution chain
 
@@ -547,6 +555,8 @@ Growth.target.name=Target
 Growth.target.description=Variable containing the targets to affect
 Growth.amount.name=Amount
 Growth.amount.description=Restoration strength
+Growth.immediate.name=Immediate
+Growth.immediate.description=Fires immediately when the effect is applied
 Growth.Next.name=Next
 Growth.Next.description=The next glyph in the execution chain
 Growth.duration.name=Duration
@@ -569,6 +579,8 @@ Halt.target.name=Target
 Halt.target.description=Variable containing the targets to affect
 Halt.duration.name=Duration
 Halt.duration.description=Duration in seconds to sustain halt (0 = instant one-shot)
+Halt.immediate.name=Immediate
+Halt.immediate.description=Fires immediately when the effect is applied
 Halt.Next.name=Next
 Halt.Next.description=The next glyph in the execution chain
 
@@ -596,6 +608,8 @@ Levitate.intensity.name=Intensity
 Levitate.intensity.description=Upward force strength, 0 for weightlessness
 Levitate.duration.name=Duration
 Levitate.duration.description=How long the effect lasts in seconds
+Levitate.immediate.name=Immediate
+Levitate.immediate.description=Fires immediately when the effect is applied
 Levitate.Next.name=Next
 Levitate.Next.description=The next glyph in the execution chain
 
@@ -607,6 +621,8 @@ Phase.duration.name=Duration
 Phase.duration.description=How long blocks stay phased in ticks
 Phase.intensity.name=Intensity
 Phase.intensity.description=Maximum block hardness that can be phased
+Phase.immediate.name=Immediate
+Phase.immediate.description=Fires immediately when the block is phased
 Phase.Next.name=Next
 Phase.Next.description=The next glyph in the execution chain
 
@@ -625,6 +641,8 @@ Scale.magnitude.name=Magnitude
 Scale.magnitude.description=Scale factor (0.25-4.0)
 Scale.duration.name=Duration
 Scale.duration.description=How long the scale lasts in seconds
+Scale.immediate.name=Immediate
+Scale.immediate.description=Fires immediately when the effect is applied
 Scale.Next.name=Next
 Scale.Next.description=The next glyph in the execution chain
 
@@ -683,48 +701,78 @@ Scorch.name=Scorch
 Scorch.description=Discharges accumulated complexity as a burst of fire damage
 Scorch.Next.name=Next
 Scorch.Next.description=The next glyph in the execution chain
+Scorch.ComplexityLimit.name=Complexity Limit
+Scorch.ComplexityLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
 
 Ignite.name=Ignite
 Ignite.description=Sets the target ablaze, dealing fire damage over time
+Ignite.immediate.name=Immediate
+Ignite.immediate.description=Fires immediately when the status is applied
 Ignite.Next.name=Next
 Ignite.Next.description=The next glyph in the execution chain
+Ignite.ComplexityLimit.name=Complexity Limit
+Ignite.ComplexityLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
 
 Snap.name=Snap
 Snap.description=Discharges accumulated complexity as a brittle burst of ice damage
 Snap.Next.name=Next
 Snap.Next.description=The next glyph in the execution chain
+Snap.ComplexityLimit.name=Complexity Limit
+Snap.ComplexityLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
 
 Freeze.name=Freeze
 Freeze.description=Freezes the target, dealing ice damage over time and slowing its movement as it stacks toward a full freeze
+Freeze.immediate.name=Immediate
+Freeze.immediate.description=Fires immediately when the status is applied
 Freeze.Next.name=Next
 Freeze.Next.description=The next glyph in the execution chain
+Freeze.ComplexityLimit.name=Complexity Limit
+Freeze.ComplexityLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
 
 Bolt.name=Bolt
 Bolt.description=Discharges accumulated complexity as an instant burst of lightning damage
 Bolt.Next.name=Next
 Bolt.Next.description=The next glyph in the execution chain
+Bolt.ComplexityLimit.name=Complexity Limit
+Bolt.ComplexityLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
 
 Electrocute.name=Electrocute
 Electrocute.description=Electrocutes the target, dealing lightning damage over time and jolting it into faster, frenzied movement
+Electrocute.immediate.name=Immediate
+Electrocute.immediate.description=Fires immediately when the status is applied
 Electrocute.Next.name=Next
 Electrocute.Next.description=The next glyph in the execution chain
+Electrocute.ComplexityLimit.name=Complexity Limit
+Electrocute.ComplexityLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
 
 Drown.name=Drown
 Drown.description=Discharges accumulated complexity as a crushing surge of water damage
 Drown.Next.name=Next
 Drown.Next.description=The next glyph in the execution chain
+Drown.ComplexityLimit.name=Complexity Limit
+Drown.ComplexityLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
 
 HealthSurge.name=Health Surge
 HealthSurge.description=Converts accumulated complexity into healing, restoring the target's health
 HealthSurge.Next.name=Next
 HealthSurge.Next.description=The next glyph in the execution chain
+HealthSurge.ComplexityLimit.name=Complexity Limit
+HealthSurge.ComplexityLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
 
 MageArmor.name=Mage Armor
 MageArmor.description=Grants the target temporary hitpoints that absorb incoming damage for a duration
+MageArmor.immediate.name=Immediate
+MageArmor.immediate.description=Fires immediately when the status is applied
 MageArmor.Next.name=Next
 MageArmor.Next.description=The next glyph in the execution chain
+MageArmor.ComplexityLimit.name=Complexity Limit
+MageArmor.ComplexityLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
 
 Rebreathing.name=Rebreathing
 Rebreathing.description=Fills the target's lungs with air, letting it breathe underwater for a duration
+Rebreathing.immediate.name=Immediate
+Rebreathing.immediate.description=Fires immediately when the status is applied
 Rebreathing.Next.name=Next
 Rebreathing.Next.description=The next glyph in the execution chain
+Rebreathing.ComplexityLimit.name=Complexity Limit
+Rebreathing.ComplexityLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.

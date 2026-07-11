@@ -15,8 +15,11 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+
+import java.util.Arrays;
 
 public class MageArmorGlyph implements GlyphHandler {
 
@@ -60,7 +63,8 @@ public class MageArmorGlyph implements GlyphHandler {
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float complexity = hexContext.consumeComplexity();
+        float limit = ElementSupport.complexityLimit(glyph, asset, hexContext);
+        float complexity = hexContext.consumeComplexity(limit);
         float pool = complexity * config.getEfficiency() * affinity;
         float duration = pool * config.getDurationPerComplexity();
 
@@ -85,6 +89,12 @@ public class MageArmorGlyph implements GlyphHandler {
             MageArmorState state = new MageArmorState(effectId, duration, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
                     accessor, target, hexContext, glyph, MageArmorGlyph.ID, state);
+        }
+
+        Slot immediate = glyph.getSlot(MageArmorGlyphSlots.IMMEDIATE);
+        if (immediate != null && immediate.getLinks().length > 0) {
+            HexContext immediateCtx = hexContext.branch();
+            HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
         }
     }
 }

@@ -92,7 +92,7 @@ public class CoreHexExecuter {
 
         for (String nextNodeId : nextGlyphs) {
             queue.enqueue(new HexExecutionQueue.PendingGlyph(nextNodeId,
-                    multiBranch ? hexContext.branch(nextGlyphs.size()) : hexContext));
+                    multiBranch ? hexContext.branch() : hexContext));
         }
     }
 

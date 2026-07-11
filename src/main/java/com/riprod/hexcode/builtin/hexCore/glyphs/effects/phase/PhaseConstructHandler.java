@@ -2,6 +2,8 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.phase;
 
 import java.util.List;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
@@ -98,7 +100,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
             HexStatus<PhaseState> status, CommandBuffer<EntityStore> buffer) {
         Vector3d min = new Vector3d(pos.x, pos.y, pos.z);
         Vector3d max = new Vector3d(pos.x + 1.0, pos.y + 1.0, pos.z + 1.0);
-        List<Ref<EntityStore>> entities = TargetUtil.getAllEntitiesInBox(min, max, buffer);
+        List<Ref<EntityStore>> entities = new ObjectArrayList<>(TargetUtil.getAllEntitiesInBox(min, max, buffer));
 
         PhaseState state = status.getState();
         int damageCauseIndex = state != null

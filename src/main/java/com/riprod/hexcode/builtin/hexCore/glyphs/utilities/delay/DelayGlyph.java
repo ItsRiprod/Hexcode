@@ -1,8 +1,10 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.delay;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -15,6 +17,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -26,6 +29,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.delay.style.DelayStyl
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -97,6 +101,12 @@ public class DelayGlyph implements GlyphHandler {
                 DelayStyle.renderAt(targetTransform.getPosition(), hexContext);
             }
             HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, ID, state);
+
+            Slot immediate = glyph.getSlot(DelayGlyphSlots.IMMEDIATE);
+            if (immediate != null && immediate.getLinks().length > 0) {
+                HexContext immediateCtx = hexContext.branch();
+                HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
+            }
             return;
         }
 
@@ -156,5 +166,13 @@ public class DelayGlyph implements GlyphHandler {
         Ref<EntityStore> delayRef = accessor.addEntity(holder, AddReason.SPAWN);
 
         hexContext.getHexRoot().addDependency(hexContext, delayRef);
+
+        Slot immediate = glyph.getSlot(DelayGlyphSlots.IMMEDIATE);
+        if (immediate != null && immediate.getLinks().length > 0) {
+            UUID delayUuid = accessor.getComponent(delayRef, UUIDComponent.getComponentType()).getUuid();
+            HexContext immediateCtx = hexContext.branch();
+            immediateCtx.setDefaultVariable(new EntityVar(delayUuid, delayRef));
+            HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
+        }
     }
 }

@@ -13,6 +13,8 @@ public class HexStats {
     private float initialVolatility;
     private float currentVolatility;
     private float initialComplexity;
+    private float currentComplexity;
+    private float complexityBudget;
     private float volatilityMultiplier;
     private float complexityMultiplier;
     private UUID executionId;
@@ -69,6 +71,39 @@ public class HexStats {
         this.initialComplexity = initialComplexity;
     }
 
+    public float getComplexity() {
+        return currentComplexity;
+    }
+
+    public void addComplexity(float amount) {
+        this.currentComplexity = Math.max(0f, this.currentComplexity + amount);
+    }
+
+    public float consumeComplexity() {
+        float pooled = this.currentComplexity;
+        this.currentComplexity = 0f;
+        return pooled;
+    }
+
+    public float consumeComplexity(float cap) {
+        if (cap < 0f) return consumeComplexity();
+        float taken = Math.min(this.currentComplexity, cap);
+        this.currentComplexity -= taken;
+        return taken;
+    }
+
+    public void accrueComplexity(float nominalBase, float actualCost, float budgetRatio) {
+        this.complexityBudget += budgetRatio * nominalBase;
+        float accrued = Math.min(this.complexityBudget, actualCost);
+        if (accrued > 0f)
+            this.currentComplexity += accrued;
+        this.complexityBudget -= accrued;
+    }
+
+    public float getComplexityBudget() {
+        return complexityBudget;
+    }
+
     public float getVolatilityMultiplier() {
         return volatilityMultiplier;
     }
@@ -116,6 +151,14 @@ public class HexStats {
                     (c) -> c.currentVolatility)
             .metadata(UIDisplayMode.HIDDEN)
             .add()
+            .append(new KeyedCodec<>("CurrentComplexity", Codec.FLOAT),
+                    (c, v) -> c.currentComplexity = v,
+                    (c) -> c.currentComplexity)
+            .add()
+            .append(new KeyedCodec<>("ComplexityBudget", Codec.FLOAT),
+                    (c, v) -> c.complexityBudget = v,
+                    (c) -> c.complexityBudget)
+            .add()
             .append(new KeyedCodec<>("VolatilityMultiplier", Codec.FLOAT),
                     (c, v) -> c.volatilityMultiplier = v,
                     (c) -> c.volatilityMultiplier)
@@ -140,6 +183,7 @@ public class HexStats {
         }
         if (other.initialComplexity > 0f) {
             this.initialComplexity = other.initialComplexity;
+            this.currentComplexity = other.initialComplexity;
         }
 
         if (other.volatilityMultiplier != 1.0f) {
@@ -155,6 +199,8 @@ public class HexStats {
         HexStats copy = new HexStats();
         copy.initialVolatility = this.initialVolatility;
         copy.initialComplexity = this.initialComplexity;
+        copy.currentComplexity = this.currentComplexity;
+        copy.complexityBudget = this.complexityBudget;
         copy.currentVolatility = this.currentVolatility;
         copy.volatilityMultiplier = this.volatilityMultiplier;
         copy.complexityMultiplier = this.complexityMultiplier;

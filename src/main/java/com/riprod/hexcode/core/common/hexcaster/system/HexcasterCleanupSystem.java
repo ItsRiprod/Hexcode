@@ -11,6 +11,7 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.context.ContextTransitionService;
 import com.riprod.hexcode.core.common.hexcaster.component.HexcasterComponent;
 import com.riprod.hexcode.state.HexcodeManager;
 import com.riprod.hexcode.state.StateRouter;
@@ -34,13 +35,7 @@ public class HexcasterCleanupSystem extends RefSystem<EntityStore> {
             if (comp == null)
                 return;
 
-            for (HexcodeManager manager : StateRouter.allManagers()) {
-                try {
-                    manager.onPlayerJoin(ref, comp, store, buffer);
-                } catch (Exception e) {
-                    LOGGER.atWarning().withCause(e).log("[hexcode] manager onPlayerJoin failed");
-                }
-            }
+            ContextTransitionService.setInContextStat(buffer, ref, false);
         } catch (Exception e) {
             LOGGER.atSevere().log("[hexcode] HexcasterCleanupSystem.onEntityAdded failed: %s", e.getMessage());
         }

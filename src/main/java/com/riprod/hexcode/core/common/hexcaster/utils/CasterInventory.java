@@ -81,7 +81,7 @@ public class CasterInventory {
     private static String nextFreeBookSlot(ItemStack item, Map<String, ImbuementData> map) {
         ImbuementProfileAsset profile = ImbuementUtils.resolveProfile(item);
         if (profile == null) return null;
-        for (String key : profile.getSlots().keySet()) {
+        for (String key : profile.resolveSlots(item).keySet()) {
             if (!map.containsKey(key)) return key;
         }
         return null;

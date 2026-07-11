@@ -1,8 +1,8 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
@@ -25,33 +25,12 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.component.Glac
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.style.GlaciateStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 
 public class GlaciateConstructHandler implements ConstructHandler<GlaciateState> {
 
     private static int damageCauseIndex = -1;
-
-    @Override
-    public void onFirstTick(HexStatus<GlaciateState> status, ConstructTickContext ctx) {
-        Glyph triggering = status.getTriggeringGlyph();
-        if (triggering == null)
-            return;
-        Slot immediate = triggering.getSlot(GlaciateGlyphSlots.IMMEDIATE);
-        if (immediate == null)
-            return;
-        String[] links = immediate.getLinks();
-        if (links == null || links.length == 0)
-            return;
-        HexContext hexContext = status.getHexContext();
-        hexContext.updateRuntimeAccessors(ctx.getBuffer());
-        UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
-                .getUuid();
-
-        hexContext.setDefaultVariable(new EntityVar(entityId, ctx.getEntityRef()));
-        HexExecuter.continueExecution(Arrays.asList(links), hexContext);
-    }
 
     @Override
     public boolean onTick(float dt, HexStatus<GlaciateState> status, ConstructTickContext ctx) {
@@ -71,8 +50,8 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         double speed = vel != null ? vel.getSpeed() : 0;
 
         Vector3d center = transform.getPosition();
-        List<Ref<EntityStore>> found = TargetUtil.getAllEntitiesInSphere(
-                center, glaciate.getDamageRadius(), ctx.getBuffer());
+        List<Ref<EntityStore>> found = new ObjectArrayList<>(TargetUtil.getAllEntitiesInSphere(
+                center, glaciate.getDamageRadius(), ctx.getBuffer()));
 
         Ref<EntityStore> casterRef = status.getHexContext().getCasterRef(ctx.getBuffer());
         GlaciateState state = status.getState();

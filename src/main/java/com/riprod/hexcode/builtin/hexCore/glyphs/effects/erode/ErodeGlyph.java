@@ -22,12 +22,15 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
+
+import java.util.Arrays;
 
 public class ErodeGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -67,6 +70,12 @@ public class ErodeGlyph implements GlyphHandler {
         if (entityVar != null) {
             // sustained entity vulnerability defers continuation to the construct's onEnd
             if (applyToEntities(glyph, entityVar, (float) duration, config, hexContext, accessor)) {
+                Slot immediate = glyph.getSlot(ErodeGlyphSlots.IMMEDIATE);
+                if (immediate != null && immediate.getLinks().length > 0) {
+                    HexContext immediateCtx = hexContext.branch();
+                    immediateCtx.setDefaultVariable(entityVar);
+                    HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
+                }
                 return;
             }
         } else {

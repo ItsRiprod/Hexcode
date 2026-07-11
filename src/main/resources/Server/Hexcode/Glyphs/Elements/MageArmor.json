@@ -26,6 +26,17 @@
     }
   ],
   "Slots": {
+    "ComplexityLimit": {
+      "Style": "Input",
+      "Label": "hexcode.glyphs.MageArmor.ComplexityLimit.name",
+      "Description": "hexcode.glyphs.MageArmor.ComplexityLimit.description",
+      "DefaultValue": -1
+    },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.MageArmor.immediate.name",
+      "Description": "hexcode.glyphs.MageArmor.immediate.description"
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.MageArmor.Next.name",

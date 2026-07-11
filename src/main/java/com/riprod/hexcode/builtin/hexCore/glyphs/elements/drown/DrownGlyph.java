@@ -49,7 +49,8 @@ public class DrownGlyph implements GlyphHandler {
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float amount = hexContext.consumeComplexity() * config.getEfficiency() * affinity;
+        float limit = ElementSupport.complexityLimit(glyph, asset, hexContext);
+        float amount = hexContext.consumeComplexity(limit) * config.getEfficiency() * affinity;
 
         DamageCause cause = DamageCause.getAssetMap().getAsset(config.getDamageCause());
         if (cause != null) {

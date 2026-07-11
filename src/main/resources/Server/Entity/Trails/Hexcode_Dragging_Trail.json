@@ -1,6 +1,5 @@
 {
   "TexturePath": "Trails/Arrow.png",
-  "LifeSpan": 100,
   "Roll": 0,
   "LightInfluence": 0,
   "Start": {

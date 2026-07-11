@@ -3,20 +3,19 @@ package com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils;
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.MountController;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.component.FlycastingState;
+import com.riprod.hexcode.core.common.drawing.DrawAnchorUtils;
+import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
-import com.riprod.hexcode.core.common.glyphs.utils.CreateGlyph;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.positioning.GlyphSelector;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils.HexSpawner;
@@ -29,12 +28,8 @@ public final class FlycastingDragHandler {
     }
 
     public static void beginDrag(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player,
-            FlycastingState state, HexComponent hex) {
-        removeHeadAnchor(buffer, state);
-
-        float eyeHeight = FlycastingScene.resolveEyeHeight(buffer, player);
-        Ref<EntityStore> headAnchorRef = CreateGlyph.createHeadAnchor(buffer, player, eyeHeight);
-        state.setHeadAnchorRef(headAnchorRef);
+            FlycastingState state, DrawCaptureComponent capture, HexComponent hex) {
+        Ref<EntityStore> headAnchorRef = DrawAnchorUtils.ensureAnchor(buffer, player, capture);
 
         Ref<EntityStore> glyphRef = hex.getSelfRef();
         if (glyphRef != null && glyphRef.isValid()) {
@@ -48,15 +43,6 @@ public final class FlycastingDragHandler {
 
     public static void tickDrag(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player,
             FlycastingState state, HeadRotation headRotation) {
-        Ref<EntityStore> headAnchor = state.getHeadAnchorRef();
-        if (headAnchor != null && headAnchor.isValid()) {
-            TransformComponent headTransform = buffer.getComponent(headAnchor,
-                    TransformComponent.getComponentType());
-            if (headTransform != null) {
-                headTransform.getRotation().set(headRotation.getRotation().x, headRotation.getRotation().y, 0f);
-            }
-        }
-
         GlyphSelector.DragGlyph(buffer, player, state.getDraggingHex());
 
         HexComponent targetHex = GlyphSelector.findHoveredHex(buffer, headRotation.getRotation(),
@@ -90,7 +76,6 @@ public final class FlycastingDragHandler {
                 HexSpawner.MergeGlyphs(buffer, hoveredGlyph, draggedHex, eyeHeight);
                 state.getActiveHexes().remove(draggedHex.getSelfRef());
                 state.setDraggingHex(null);
-                removeHeadAnchor(buffer, state);
                 FlycastingHover.applyGlyphHover(buffer, state, null);
                 return;
             } catch (Exception e) {
@@ -99,7 +84,6 @@ public final class FlycastingDragHandler {
         }
 
         state.setDraggingHex(null);
-        removeHeadAnchor(buffer, state);
         FlycastingHover.applyHexHover(buffer, state, null);
         FlycastingHover.applyGlyphHover(buffer, state, null);
 
@@ -114,12 +98,4 @@ public final class FlycastingDragHandler {
                         MountController.Minecart));
     }
 
-    public static void removeHeadAnchor(CommandBuffer<EntityStore> buffer, FlycastingState state) {
-        Ref<EntityStore> headAnchor = state.getHeadAnchorRef();
-        if (headAnchor != null && headAnchor.isValid()) {
-            buffer.tryRemoveComponent(headAnchor, MountedComponent.getComponentType());
-            buffer.tryRemoveEntity(headAnchor, RemoveReason.REMOVE);
-        }
-        state.setHeadAnchorRef(null);
-    }
 }

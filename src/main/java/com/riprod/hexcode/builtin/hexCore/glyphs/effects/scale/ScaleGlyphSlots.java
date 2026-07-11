@@ -7,4 +7,5 @@ public final class ScaleGlyphSlots {
     public static final String TARGET = "target";
     public static final String MAGNITUDE = "magnitude";
     public static final String DURATION = "duration";
+    public static final String IMMEDIATE = "immediate";
 }

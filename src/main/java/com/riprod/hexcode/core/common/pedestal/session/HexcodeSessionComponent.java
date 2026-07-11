@@ -192,14 +192,13 @@ public class HexcodeSessionComponent implements Component<EntityStore> {
 
     @Nullable
     public Hex getHexAt(String slotKey, ComponentAccessor<EntityStore> accessor) {
-        if (slotKey == null) return null;
-        ImbuementData data = ImbuementUtils.read(storedItem, slotKey);
-        return data != null ? ImbuementUtils.resolveHex(data, accessor) : null;
+        ImbuementProfileAsset profile = getProfile();
+        return profile != null ? profile.readHex(storedItem, slotKey, accessor) : null;
     }
 
     public int getSlotCount() {
         ImbuementProfileAsset profile = getProfile();
-        return profile != null ? profile.getSlots().size() : 0;
+        return profile != null ? profile.resolveSlots(storedItem).size() : 0;
     }
 
     public HexSlot getSourceSlot() {

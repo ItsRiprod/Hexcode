@@ -25,7 +25,7 @@ public class HexBookAsset implements JsonAssetWithMap<String, DefaultAssetMap<St
     protected AssetExtraInfo.Data data;
     protected String id;
     protected String itemId;
-    protected int maxGlyphs = 10;
+    protected int slotCount = 10;
     protected ModelParticle[] castingAuraParticles;
     protected ModelParticle[] craftingAuraParticles;
     protected String styleId;
@@ -56,8 +56,8 @@ public class HexBookAsset implements JsonAssetWithMap<String, DefaultAssetMap<St
         return this.itemId;
     }
 
-    public int getMaxGlyphs() {
-        return this.maxGlyphs;
+    public int getSlotCount() {
+        return this.slotCount;
     }
 
     public ModelParticle[] getCastingAuraParticles() {
@@ -99,10 +99,11 @@ public class HexBookAsset implements JsonAssetWithMap<String, DefaultAssetMap<St
                         (glyphAsset) -> glyphAsset.id,
                         (asset, data) -> asset.data = data,
                         (asset) -> asset.data)
-                .appendInherited(new KeyedCodec<>("MaxGlyphs", Codec.INTEGER),
-                        (a, v) -> a.maxGlyphs = v,
-                        a -> a.maxGlyphs,
-                        (a, p) -> a.maxGlyphs = p.maxGlyphs)
+                .appendInherited(new KeyedCodec<>("SlotCount", Codec.INTEGER),
+                        (a, v) -> a.slotCount = v,
+                        a -> a.slotCount,
+                        (a, p) -> a.slotCount = p.slotCount)
+                .documentation("Number of hex pages (imbuement slots) this book exposes in Selection Mode.")
                 .add()
                 .appendInherited(new KeyedCodec<>("CastingAuraParticles", ModelParticle.ARRAY_CODEC),
                         (a, v) -> a.castingAuraParticles = v,

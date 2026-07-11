@@ -32,6 +32,9 @@ public class DrawCaptureComponent implements Component<EntityStore> {
     private boolean strokeActive;
     private long strokeStartMillis;
     private Ref<EntityStore> drawTrailRef;
+    private Ref<EntityStore> headAnchorRef;
+
+    private final List<Ref<EntityStore>> persistentStrokeRefs = new ArrayList<>();
 
     private final List<DrawnShapeComponent> pendingShapes = new ArrayList<>();
     private boolean finalizePending;
@@ -82,6 +85,19 @@ public class DrawCaptureComponent implements Component<EntityStore> {
 
     public void setDrawTrailRef(@Nullable Ref<EntityStore> drawTrailRef) {
         this.drawTrailRef = drawTrailRef;
+    }
+
+    @Nullable
+    public Ref<EntityStore> getHeadAnchorRef() {
+        return headAnchorRef;
+    }
+
+    public void setHeadAnchorRef(@Nullable Ref<EntityStore> headAnchorRef) {
+        this.headAnchorRef = headAnchorRef;
+    }
+
+    public List<Ref<EntityStore>> getPersistentStrokeRefs() {
+        return persistentStrokeRefs;
     }
 
     public List<DrawnShapeComponent> getPendingShapes() {
@@ -166,6 +182,8 @@ public class DrawCaptureComponent implements Component<EntityStore> {
         copy.strokeActive = this.strokeActive;
         copy.strokeStartMillis = this.strokeStartMillis;
         copy.drawTrailRef = this.drawTrailRef;
+        copy.headAnchorRef = this.headAnchorRef;
+        copy.persistentStrokeRefs.addAll(this.persistentStrokeRefs);
         copy.pendingShapes.addAll(this.pendingShapes);
         copy.finalizePending = this.finalizePending;
         copy.finalizeTimer = this.finalizeTimer;

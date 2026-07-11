@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale;
 
+import java.util.Arrays;
+
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -33,6 +35,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
@@ -225,6 +228,13 @@ public class ScaleGlyph implements GlyphHandler {
 
             HexConstructSpawner.applyWithState(
                     accessor, targetRef, hexContext, glyph, ScaleGlyph.ID, state);
+
+            Slot immediate = glyph.getSlot(ScaleGlyphSlots.IMMEDIATE);
+            if (immediate != null && immediate.getLinks().length > 0) {
+                HexContext immediateCtx = hexContext.branch();
+                immediateCtx.setDefaultVariable(entityVar);
+                HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
+            }
 
             ScaleStyle.renderApply(spawnPos, hexContext, accessor);
         } catch (Exception e) {

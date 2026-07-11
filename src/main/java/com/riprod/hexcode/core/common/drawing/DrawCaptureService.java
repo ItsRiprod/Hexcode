@@ -79,7 +79,7 @@ public final class DrawCaptureService {
             DrawCaptureComponent capture, @Nullable UUID playerId) {
         Ref<EntityStore> trailRef = capture.getDrawTrailRef();
         if (trailRef != null) {
-            InterfaceManager.removeTrailEntity(buffer, trailRef);
+            capture.getPersistentStrokeRefs().add(trailRef);
             capture.setDrawTrailRef(null);
         }
         capture.setStrokeActive(false);
@@ -108,10 +108,13 @@ public final class DrawCaptureService {
 
     public static void openFinalizeWindow(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player,
             DrawCaptureComponent capture) {
-        float pingSeconds = LatencyUtil.pingMillis(buffer, player) / 1000f;
-        capture.setFinalizeDelaySeconds(FINALIZE_BASE_SECONDS + pingSeconds * FINALIZE_PING_FACTOR);
         capture.setFinalizeTimer(0f);
         capture.setFinalizePending(true);
+        if (capture.getFinalizeDelaySeconds() < 0f) {
+            return;
+        }
+        float pingSeconds = LatencyUtil.pingMillis(buffer, player) / 1000f;
+        capture.setFinalizeDelaySeconds(FINALIZE_BASE_SECONDS + pingSeconds * FINALIZE_PING_FACTOR);
     }
 
     @Nullable

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import org.joml.Vector3d;
@@ -102,7 +104,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
             Vector3d min = new Vector3d(pos.x - half.x, pos.y - half.y, pos.z - half.z);
             Vector3d max = new Vector3d(pos.x + half.x, pos.y + half.y, pos.z + half.z);
 
-            List<Ref<EntityStore>> found = TargetUtil.getAllEntitiesInBox(min, max, ctx.getBuffer());
+            List<Ref<EntityStore>> found = new ObjectArrayList<>(TargetUtil.getAllEntitiesInBox(min, max, ctx.getBuffer()));
 
             Set<UUID> previousOccupants = zone.getNewOccupants();
             Set<UUID> currentOccupants = zone.getLastOccupants();

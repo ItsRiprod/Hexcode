@@ -26,6 +26,12 @@
     }
   ],
   "Slots": {
+    "ComplexityLimit": {
+      "Style": "Input",
+      "Label": "hexcode.glyphs.Bolt.ComplexityLimit.name",
+      "Description": "hexcode.glyphs.Bolt.ComplexityLimit.description",
+      "DefaultValue": -1
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Bolt.Next.name",

@@ -1,4 +1,5 @@
 {
+  "PedestalType": "Armor",
   "CategoryId": "Items.Armors",
   "Slots": {
     "Attacked": {

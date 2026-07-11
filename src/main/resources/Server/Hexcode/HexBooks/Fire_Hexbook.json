@@ -1,5 +1,5 @@
 {
-  "MaxGlyphs": 6,
+  "SlotCount": 10,
   "CastingAuraParticles": [
     {
       "SystemId": "Shock_Spawner",

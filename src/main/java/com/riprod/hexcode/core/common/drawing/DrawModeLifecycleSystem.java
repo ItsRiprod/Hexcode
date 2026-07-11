@@ -23,6 +23,7 @@ import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.drawing.system.InterfaceManager;
 import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
 import com.riprod.hexcode.core.common.drawing.utils.DraftFeedback;
+import com.riprod.hexcode.utils.CleanupUtils;
 
 public class DrawModeLifecycleSystem extends RefChangeSystem<EntityStore, DrawCaptureComponent> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -71,6 +72,10 @@ public class DrawModeLifecycleSystem extends RefChangeSystem<EntityStore, DrawCa
                 InterfaceManager.removeTrailEntity(buffer, trailRef);
                 capture.setDrawTrailRef(null);
             }
+
+            CleanupUtils.safeRemoveEntities(buffer, capture.getPersistentStrokeRefs());
+            capture.getPersistentStrokeRefs().clear();
+            DrawAnchorUtils.removeAnchor(buffer, capture);
 
             buffer.invoke(ref, new DrawModeExitEvent(ref));
             

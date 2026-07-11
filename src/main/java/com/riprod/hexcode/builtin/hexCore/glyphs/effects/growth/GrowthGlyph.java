@@ -1,6 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.growth;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.hypixel.hytale.builtin.adventure.farming.states.FarmingBlock;
@@ -32,6 +33,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.growth.style.GrowthStyl
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
@@ -125,6 +127,13 @@ public static final String ID = "Growth";
             GrowthState state = new GrowthState(durationSeconds, effectId, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
                     accessor, ref, hexContext, glyph, GrowthGlyph.ID, state);
+        }
+
+        Slot immediate = glyph.getSlot(GrowthGlyphSlots.IMMEDIATE);
+        if (immediate != null && immediate.getLinks().length > 0) {
+            HexContext immediateCtx = hexContext.branch();
+            immediateCtx.setDefaultVariable(entityVar);
+            HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
         }
 
         LOGGER.atInfo().log("growth: applied regen buff for %.1fs to entity", durationSeconds);

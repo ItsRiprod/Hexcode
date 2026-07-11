@@ -31,7 +31,7 @@ public class MagicHealthDamageSystem extends DamageEventSystem {
     @Nullable
     @Override
     public SystemGroup<EntityStore> getGroup() {
-        return DamageModule.get().getInspectDamageGroup();
+        return DamageModule.get().getFilterDamageGroup();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.phase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.hypixel.hytale.codec.Codec;
@@ -24,6 +25,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
@@ -130,6 +132,12 @@ public class PhaseGlyph implements GlyphHandler {
                 new PhaseComponent(phasedBlocks, (float) duration));
 
         Ref<EntityStore> phaseRef = accessor.addEntity(holder, AddReason.SPAWN);
+
+        Slot immediate = glyph.getSlot(PhaseGlyphSlots.IMMEDIATE);
+        if (immediate != null && immediate.getLinks().length > 0) {
+            HexContext immediateCtx = hexContext.branch();
+            HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
+        }
 
         hexContext.getHexRoot().addDependency(hexContext, phaseRef);
 

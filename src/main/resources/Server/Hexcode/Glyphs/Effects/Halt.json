@@ -32,6 +32,11 @@
       "DefaultValue": 0,
       "Unique": true
     },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Halt.immediate.name",
+      "Description": "hexcode.glyphs.Halt.immediate.description"
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Halt.Next.name",

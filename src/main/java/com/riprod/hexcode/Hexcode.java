@@ -14,6 +14,7 @@ import com.riprod.hexcode.core.common.construct.system.MountOrphanReaperSystem;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.context.interactions.HexContextAbility;
 import com.riprod.hexcode.core.common.context.interactions.HexContextPrimary;
+import com.riprod.hexcode.core.common.drawing.DrawAnchorSystem;
 import com.riprod.hexcode.core.common.drawing.DrawModeLifecycleSystem;
 import com.riprod.hexcode.core.common.drawing.DrawRecognitionSystem;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
@@ -358,6 +359,7 @@ public class Hexcode extends JavaPlugin {
         entityStoreRegistry.registerSystem(new ImbuedBlockBreakHandler());
         entityStoreRegistry.registerSystem(new DrawModeLifecycleSystem());
         entityStoreRegistry.registerSystem(new DrawRecognitionSystem());
+        entityStoreRegistry.registerSystem(new DrawAnchorSystem());
 
         ResourceType<EntityStore, SpatialResource<Ref<EntityStore>, EntityStore>> hoverableSpatialResourceType = entityStoreRegistry
                 .registerSpatialResource(() -> new KDTree<>(Ref::isValid));

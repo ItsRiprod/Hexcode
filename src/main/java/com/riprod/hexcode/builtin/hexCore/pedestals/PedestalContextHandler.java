@@ -89,7 +89,7 @@ public class PedestalContextHandler implements Consumer<PedestalInteractEvent> {
 
         PedestalState state = session.getState();
         ImbuementProfileAsset profile = session.getProfile();
-        boolean skipSelecting = profile != null && profile.isSkipSelecting();
+        boolean skipSelecting = profile != null && profile.isSkipSelecting(storedItem);
         Vector3i loc = pedestal.getLocation();
 
         if (state == PedestalState.CRAFTING) {
@@ -111,8 +111,13 @@ public class PedestalContextHandler implements Consumer<PedestalInteractEvent> {
             HexcasterCraftingComponent craftingComp = buffer.ensureAndGetComponent(playerRef,
                     HexcasterCraftingComponent.getComponentType());
             craftingComp.setSessionRef(existingSessionRef);
-            ContextTransitionService.attemptEnter(buffer, playerRef,
-                    SelectingState.CONTEXT_ID, SelectingState.PRIORITY);
+            String entryContext = profile != null ? profile.getEntryContextId() : null;
+            int entryPriority = profile != null ? profile.getEntryPriority() : -1;
+            if (entryContext == null) {
+                entryContext = SelectingState.CONTEXT_ID;
+                entryPriority = SelectingState.PRIORITY;
+            }
+            ContextTransitionService.attemptEnter(buffer, playerRef, entryContext, entryPriority);
         }
     }
 

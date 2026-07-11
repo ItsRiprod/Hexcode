@@ -16,11 +16,14 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
+
+import java.util.Arrays;
 
 public class FortifyGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -59,7 +62,14 @@ public class FortifyGlyph implements GlyphHandler {
                 && applyToEntities(glyph, entityVar, (float) duration, config, hexContext, accessor);
 
         // sustained cast defers continuation to the construct's onEnd; otherwise pass through
-        if (!sustained) {
+        if (sustained) {
+            Slot immediate = glyph.getSlot(FortifyGlyphSlots.IMMEDIATE);
+            if (immediate != null && immediate.getLinks().length > 0) {
+                HexContext immediateCtx = hexContext.branch();
+                immediateCtx.setDefaultVariable(entityVar);
+                HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
+            }
+        } else {
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
         }
     }

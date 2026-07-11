@@ -51,7 +51,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     protected ArrayList<DrawnShapeComponent> shapes = new ArrayList<>();
     protected LinkedHashMap<String, SlotAsset> slots = new LinkedHashMap<>();
     protected String styleId;
-    protected String handlerId;
+    protected String handlerId = id;
 
     private transient Object2IntOpenHashMap<String> slotIndexCache;
 
@@ -105,6 +105,9 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     }
 
     public String getHandler() {
+        if (this.handlerId == null) {
+            return this.id;
+        }
         return this.handlerId;
     }
 

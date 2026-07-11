@@ -32,7 +32,7 @@ public final class SelectingScene {
 
         ImbuementProfileAsset profile = session.getProfile();
         if (profile == null) return;
-        Map<String, SlotAsset> slots = profile.getSlots();
+        Map<String, SlotAsset> slots = profile.resolveSlots(session.getStoredItem());
         if (slots.isEmpty()) return;
 
         Ref<EntityStore> anchorRef = session.getAnchorRef();

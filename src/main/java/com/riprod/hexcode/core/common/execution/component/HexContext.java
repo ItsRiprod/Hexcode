@@ -36,8 +36,6 @@ public class HexContext {
     @Nullable private HexStyleAsset style;
     @Nullable private HexVar defaultVariable;
     @Nullable private String castSlotKey;
-    private float currentComplexity = 0f;
-    private float complexityBudget = 0f;
     private Map<String, HexVar> variables = new HashMap<>();
     @Nullable
     private UUID executionId;
@@ -86,8 +84,6 @@ public class HexContext {
         copy.style = src.style != null ? src.style.clone() : null;
         copy.defaultVariable = src.defaultVariable;
         copy.castSlotKey = src.castSlotKey;
-        copy.currentComplexity = src.currentComplexity;
-        copy.complexityBudget = src.complexityBudget;
         copy.variables = new HashMap<>(src.variables);
         copy.executionId = src.executionId;
         copy.requireMagicCharges = src.requireMagicCharges;
@@ -98,10 +94,6 @@ public class HexContext {
     }
 
     public HexContext branch() {
-        return branch(2);
-    }
-
-    public HexContext branch(int splitFactor) {
         HexContext branch = new HexContext();
         branch.root = this.root;
         branch.accessor = this.accessor;
@@ -114,8 +106,6 @@ public class HexContext {
         branch.manaMultiplier = this.manaMultiplier;
         branch.defaultVariable = this.defaultVariable;
         branch.castSlotKey = this.castSlotKey;
-        branch.currentComplexity = this.currentComplexity / Math.max(1, splitFactor);
-        branch.complexityBudget = this.complexityBudget / Math.max(1, splitFactor);
         branch.requireMagicCharges = this.requireMagicCharges;
         branch.consumeMana = this.consumeMana;
         branch.applyVolatilityDecay = this.applyVolatilityDecay;
@@ -236,34 +226,31 @@ public class HexContext {
         this.hexStats = hexStats;
         if (hexStats != null) {
             hexStats.setExecutionId(this.executionId);
-            this.currentComplexity = hexStats.getInitialComplexity();
         }
     }
 
     public float getComplexity() {
-        return currentComplexity;
+        return hexStats != null ? hexStats.getComplexity() : 0f;
     }
 
     public void addComplexity(float amount) {
-        this.currentComplexity = Math.max(0f, this.currentComplexity + amount);
+        if (hexStats != null) hexStats.addComplexity(amount);
     }
 
     public float consumeComplexity() {
-        float pooled = this.currentComplexity;
-        this.currentComplexity = 0f;
-        return pooled;
+        return hexStats != null ? hexStats.consumeComplexity() : 0f;
+    }
+
+    public float consumeComplexity(float cap) {
+        return hexStats != null ? hexStats.consumeComplexity(cap) : 0f;
     }
 
     public void accrueComplexity(float nominalBase, float actualCost, float budgetRatio) {
-        this.complexityBudget += budgetRatio * nominalBase;
-        float accrued = Math.min(this.complexityBudget, actualCost);
-        if (accrued > 0f)
-            this.currentComplexity += accrued;
-        this.complexityBudget -= accrued;
+        if (hexStats != null) hexStats.accrueComplexity(nominalBase, actualCost, budgetRatio);
     }
 
     public float getComplexityBudget() {
-        return complexityBudget;
+        return hexStats != null ? hexStats.getComplexityBudget() : 0f;
     }
 
     public float getVolatilityOverride() {
@@ -429,16 +416,6 @@ public class HexContext {
             .append(new KeyedCodec<>("CastSlotKey", Codec.STRING),
                     (c, v) -> c.castSlotKey = v,
                     c -> c.castSlotKey)
-            .add()
-            .append(new KeyedCodec<>("CurrentComplexity", Codec.FLOAT),
-                    (c, v) -> c.currentComplexity = v,
-                    c -> c.currentComplexity)
-            .metadata(UIDisplayMode.HIDDEN)
-            .add()
-            .append(new KeyedCodec<>("ComplexityBudget", Codec.FLOAT),
-                    (c, v) -> c.complexityBudget = v,
-                    c -> c.complexityBudget)
-            .metadata(UIDisplayMode.HIDDEN)
             .add()
             .append(new KeyedCodec<>("Variables", new MapCodec<>(HexVar.CODEC, HashMap::new)),
                     (c, v) -> c.variables = v,

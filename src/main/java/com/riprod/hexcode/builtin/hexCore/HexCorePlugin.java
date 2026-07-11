@@ -15,6 +15,7 @@ import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.riprod.hexcode.builtin.hexCore.common.ContextForceExitSystem;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingChangeListener;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingDrawModeEnterListener;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingCleanupSystem;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingForceExitSystem;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingImportSystem;
@@ -41,6 +42,11 @@ import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphDrawNotificationLi
 import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphMemoryListener;
 import com.riprod.hexcode.builtin.hexCore.execution.config.EncodedConfig;
 import com.riprod.hexcode.builtin.hexCore.execution.config.ExecutionConfig;
+import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
+import com.riprod.hexcode.core.common.imbuement.asset.profiles.ArmorProfile;
+import com.riprod.hexcode.core.common.imbuement.asset.profiles.BlockProfile;
+import com.riprod.hexcode.core.common.imbuement.asset.profiles.BookProfile;
+import com.riprod.hexcode.core.common.imbuement.asset.profiles.WeaponProfile;
 import com.riprod.hexcode.builtin.hexCore.config.BasicConfig;
 import com.riprod.hexcode.builtin.hexCore.pedestals.PedestalContextHandler;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalInteractEvent;
@@ -212,6 +218,7 @@ public class HexCorePlugin extends JavaPlugin {
                 RegisterEvents();
                 RegisterHexConfigs();
                 RegisterGlyphConfigs();
+                RegisterProfiles();
         }
 
         private void RegisterImpacts() {
@@ -382,6 +389,13 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphConfig.CODEC.register(BasicConfig.ID, BasicConfig.class, BasicConfig.CODEC);
         }
 
+        private void RegisterProfiles() {
+                ImbuementProfileAsset.CODEC.register("Book", BookProfile.class, BookProfile.CODEC);
+                ImbuementProfileAsset.CODEC.register("Weapon", WeaponProfile.class, WeaponProfile.CODEC);
+                ImbuementProfileAsset.CODEC.register("Armor", ArmorProfile.class, ArmorProfile.CODEC);
+                ImbuementProfileAsset.CODEC.register("Block", BlockProfile.class, BlockProfile.CODEC);
+        }
+
         private void RegisterComponents() {
                 ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
 
@@ -461,6 +475,7 @@ public class HexCorePlugin extends JavaPlugin {
                 entityStoreRegistry.registerSystem(new SelectingForceExitSystem());
 
                 entityStoreRegistry.registerSystem(new CraftingChangeListener());
+                entityStoreRegistry.registerSystem(new CraftingDrawModeEnterListener());
                 entityStoreRegistry.registerSystem(new CraftingTickSystem());
                 entityStoreRegistry.registerSystem(new CraftingPrimarySystem());
                 entityStoreRegistry.registerSystem(new CraftingImportSystem());

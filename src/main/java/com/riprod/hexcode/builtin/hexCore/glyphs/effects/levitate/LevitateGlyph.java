@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate;
 
+import java.util.Arrays;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -15,6 +17,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.Levitate
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -90,6 +93,13 @@ public class LevitateGlyph implements GlyphHandler {
 
             HexConstructSpawner.applyWithState(
                     accessor, ref, hexContext, glyph, LevitateGlyph.ID, state);
+
+            Slot immediate = glyph.getSlot(LevitateGlyphSlots.IMMEDIATE);
+            if (immediate != null && immediate.getLinks().length > 0) {
+                HexContext immediateCtx = hexContext.branch();
+                immediateCtx.setDefaultVariable(entityVar);
+                HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
+            }
 
             TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
             if (tc != null) {

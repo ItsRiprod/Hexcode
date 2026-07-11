@@ -5,12 +5,15 @@
   "LightInfluence": 0,
   "Start": {
     "Color": "#8cc",
-    "Width": 0.02
+    "Width": 0.04
   },
   "End": {
     "Color": "#4488ffaa",
-    "Width": 0.01
+    "Width": 0.03
   },
   "RenderMode": "BlendAdd",
-  "Smooth": true
+  "Smooth": false,
+  "Animation": {
+    "FrameLifeSpan": 99999
+  }
 }

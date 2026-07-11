@@ -36,6 +36,11 @@
       "Description": "hexcode.glyphs.Delay.source.description",
       "Unique": true
     },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Delay.immediate.name",
+      "Description": "hexcode.glyphs.Delay.immediate.description"
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Delay.Next.name",

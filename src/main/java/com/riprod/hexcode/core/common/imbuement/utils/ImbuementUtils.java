@@ -20,7 +20,6 @@ import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 import com.riprod.hexcode.core.common.imbuement.ImbuementMetadata;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
-import com.riprod.hexcode.core.common.imbuement.asset.ImbuementType;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuedBlockComponent;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
 import com.riprod.hexcode.core.common.imbuement.registry.ImbuementProfileRegistry;
@@ -91,7 +90,7 @@ public class ImbuementUtils {
 
     private static boolean isBlockImbuement(ItemStack item) {
         ImbuementProfileAsset profile = resolveProfile(item);
-        return profile != null && profile.getType() == ImbuementType.Block;
+        return profile != null && profile.writesBlockHolder();
     }
 
     private static BsonValue encodeBlockHolder(Map<String, ImbuementData> slots) {

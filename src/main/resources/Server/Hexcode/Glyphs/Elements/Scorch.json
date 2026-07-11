@@ -26,6 +26,12 @@
     }
   ],
   "Slots": {
+    "ComplexityLimit": {
+      "Style": "Input",
+      "Label": "hexcode.glyphs.Scorch.ComplexityLimit.name",
+      "Description": "hexcode.glyphs.Scorch.ComplexityLimit.description",
+      "DefaultValue": -1
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Scorch.Next.name",

@@ -57,6 +57,11 @@
       "DefaultValue": 20,
       "Unique": true
     },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Erode.immediate.name",
+      "Description": "hexcode.glyphs.Erode.immediate.description"
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Erode.Next.name",

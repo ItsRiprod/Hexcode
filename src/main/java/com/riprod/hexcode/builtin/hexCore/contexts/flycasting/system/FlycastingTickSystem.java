@@ -38,10 +38,6 @@ public class FlycastingTickSystem extends EntityTickingSystem<EntityStore> {
             Ref<EntityStore> player = chunk.getReferenceTo(index);
             DrawCaptureComponent capture = chunk.getComponent(index, DrawCaptureComponent.getComponentType());
 
-            if (state.getDraggingHex() == null) {
-                FlycastingDragHandler.removeHeadAnchor(buffer, state);
-            }
-
             HeadRotation headRotation = chunk.getComponent(index, HeadRotation.getComponentType());
             Ref<EntityStore> castingRootRef = state.getCastingRootRef();
             if (headRotation == null || castingRootRef == null || !castingRootRef.isValid()) {
@@ -52,7 +48,7 @@ public class FlycastingTickSystem extends EntityTickingSystem<EntityStore> {
 
             if (capture != null) {
                 if (capture.getDraggingHex() != null && state.getDraggingHex() == null) {
-                    FlycastingDragHandler.beginDrag(buffer, player, state, capture.getDraggingHex());
+                    FlycastingDragHandler.beginDrag(buffer, player, state, capture, capture.getDraggingHex());
                 }
                 if (capture.consumeDragReleaseRequested()) {
                     FlycastingDragHandler.endDrag(buffer, player, state);

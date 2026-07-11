@@ -3,6 +3,8 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare;
 import java.util.List;
 import java.util.UUID;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
@@ -78,7 +80,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
         Vector3d min = new Vector3d(center.x - radius, center.y - config.getBoxPaddingYMin(), center.z - radius);
         Vector3d max = new Vector3d(center.x + radius, center.y + config.getBoxPaddingYMax(), center.z + radius);
 
-        List<Ref<EntityStore>> nearbyEntities = TargetUtil.getAllEntitiesInBox(min, max, buffer);
+        List<Ref<EntityStore>> nearbyEntities = new ObjectArrayList<>(TargetUtil.getAllEntitiesInBox(min, max, buffer));
         if (nearbyEntities.isEmpty()) return;
 
         for (Ref<EntityStore> targetRef : nearbyEntities) {

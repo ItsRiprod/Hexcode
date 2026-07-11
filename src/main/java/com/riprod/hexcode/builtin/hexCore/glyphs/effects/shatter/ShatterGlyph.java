@@ -153,7 +153,7 @@ public class ShatterGlyph implements GlyphHandler {
         for (Vector3d dir : shardDirections) {
             Vector3d shardSpawn = new Vector3d(spawnPos).add(new Vector3d(dir).mul(1.0));
             spawnShard(hexContext, glyph, parent, shardSpawn, dir, speed, gravity, model,
-                    shardDirections.size(), shardTtl);
+                    shardTtl);
         }
 
         ShatterStyle.renderLaunch(spawnPos, centralDir, hexContext, hexContext.getAccessor());
@@ -161,9 +161,9 @@ public class ShatterGlyph implements GlyphHandler {
 
     private void spawnShard(HexContext hexContext, Glyph glyph, Ref<EntityStore> parent,
             Vector3d position, Vector3d direction,
-            double speed, double gravity, Model model, int splitFactor, Duration shardTtl) {
+            double speed, double gravity, Model model, Duration shardTtl) {
 
-        HexContext branched = hexContext.branch(splitFactor);
+        HexContext branched = hexContext.branch();
 
         Rotation3f rotation = Rotation3f.lookAt(direction);
 

@@ -26,6 +26,12 @@
     }
   ],
   "Slots": {
+    "ComplexityLimit": {
+      "Style": "Input",
+      "Label": "hexcode.glyphs.Snap.ComplexityLimit.name",
+      "Description": "hexcode.glyphs.Snap.ComplexityLimit.description",
+      "DefaultValue": -1
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Snap.Next.name",

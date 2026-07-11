@@ -26,6 +26,17 @@
     }
   ],
   "Slots": {
+    "ComplexityLimit": {
+      "Style": "Input",
+      "Label": "hexcode.glyphs.Electrocute.ComplexityLimit.name",
+      "Description": "hexcode.glyphs.Electrocute.ComplexityLimit.description",
+      "DefaultValue": -1
+    },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Electrocute.immediate.name",
+      "Description": "hexcode.glyphs.Electrocute.immediate.description"
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Electrocute.Next.name",

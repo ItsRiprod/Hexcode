@@ -39,7 +39,7 @@
         "Y": 0,
         "Z": 2
       },
-      "FixedRotation": true
+      "FixedRotation": false
     }
   ]
 }

@@ -72,7 +72,7 @@ public class PedestalBlockEvent extends EntityEventSystem<EntityStore, BreakBloc
 
             Ref<EntityStore> anchorRef = pedestal.getAnchorRef();
             if (anchorRef != null && anchorRef.isValid()) {
-                buffer.removeEntity(anchorRef, RemoveReason.REMOVE);
+                buffer.tryRemoveEntity(anchorRef, RemoveReason.REMOVE);
                 pedestal.setAnchorRef(null);
             }
 

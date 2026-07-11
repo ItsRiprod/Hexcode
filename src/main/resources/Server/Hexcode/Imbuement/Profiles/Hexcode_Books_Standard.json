@@ -1,15 +1,4 @@
 {
-  "CategoryId": "Hexcode.Books",
-  "Slots": {
-    "1":  { "Label": "Page 1",  "Description": "Hex stored in book page 1",  "Style": "Next" },
-    "2":  { "Label": "Page 2",  "Description": "Hex stored in book page 2",  "Style": "Next" },
-    "3":  { "Label": "Page 3",  "Description": "Hex stored in book page 3",  "Style": "Next" },
-    "4":  { "Label": "Page 4",  "Description": "Hex stored in book page 4",  "Style": "Next" },
-    "5":  { "Label": "Page 5",  "Description": "Hex stored in book page 5",  "Style": "Next" },
-    "6":  { "Label": "Page 6",  "Description": "Hex stored in book page 6",  "Style": "Next" },
-    "7":  { "Label": "Page 7",  "Description": "Hex stored in book page 7",  "Style": "Next" },
-    "8":  { "Label": "Page 8",  "Description": "Hex stored in book page 8",  "Style": "Next" },
-    "9":  { "Label": "Page 9",  "Description": "Hex stored in book page 9",  "Style": "Next" },
-    "10": { "Label": "Page 10", "Description": "Hex stored in book page 10", "Style": "Next" }
-  }
+  "PedestalType": "Book",
+  "CategoryId": "Hexcode.Books"
 }

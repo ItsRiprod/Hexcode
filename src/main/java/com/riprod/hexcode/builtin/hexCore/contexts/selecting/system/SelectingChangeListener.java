@@ -2,6 +2,8 @@ package com.riprod.hexcode.builtin.hexCore.contexts.selecting.system;
 
 import javax.annotation.Nonnull;
 
+import java.util.Map;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -14,8 +16,10 @@ import com.riprod.hexcode.api.context.HexContextChangeEvent;
 import com.riprod.hexcode.api.event.CraftingEvent;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.SelectingState;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.GravityUtil;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.utils.SelectingScene;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
@@ -56,6 +60,7 @@ public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexCo
             return;
         }
         ContextTransitionService.setInContextStat(buffer, player, false);
+        GravityUtil.exitFly(buffer, player);
         endSessionIfOwner(buffer, player);
     }
 
@@ -63,6 +68,7 @@ public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexCo
         buffer.ensureComponent(player, HexcasterCraftingComponent.getComponentType());
         buffer.putComponent(player, SelectingState.getComponentType(), new SelectingState());
         ContextTransitionService.setInContextStat(buffer, player, true);
+        GravityUtil.enterFly(buffer, player);
 
         PedestalBlockComponent pedestal = PedestalBlockUtil.resolvePedestal(player, buffer);
         HexcodeSessionComponent session = pedestal != null
@@ -77,9 +83,11 @@ public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexCo
         PedestalSystem.registerObelisks(buffer, world, pedestal);
 
         ImbuementProfileAsset profile = session.getProfile();
-        if (profile != null && profile.isSkipSelecting() && !profile.getSlots().isEmpty()) {
-            String onlyKey = profile.getSlots().keySet().iterator().next();
-            session.setPendingReenterSlotKey(onlyKey);
+        if (profile != null) {
+            Map<String, SlotAsset> slots = profile.resolveSlots(session.getStoredItem());
+            if (profile.isSkipSelecting(session.getStoredItem()) && !slots.isEmpty()) {
+                session.setPendingReenterSlotKey(slots.keySet().iterator().next());
+            }
         }
 
         PedestalSystem.updateState(buffer, pedestal, session, world, PedestalState.SELECTING);

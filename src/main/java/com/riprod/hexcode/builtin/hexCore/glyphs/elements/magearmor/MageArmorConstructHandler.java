@@ -99,8 +99,6 @@ public class MageArmorConstructHandler implements ConstructHandler<MageArmorStat
             }
         }
 
-        if (buffer.getComponent(targetRef, MagicHealthComponent.getComponentType()) != null) {
-            buffer.removeComponent(targetRef, MagicHealthComponent.getComponentType());
-        }
+        buffer.tryRemoveComponent(targetRef, MagicHealthComponent.getComponentType());
     }
 }

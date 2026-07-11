@@ -57,7 +57,7 @@ public class PedestalSystem {
 
         Ref<EntityStore> oldDisplay = session.getImbuedItemDisplayRef();
         if (oldDisplay != null && oldDisplay.isValid()) {
-            buffer.removeEntity(oldDisplay, RemoveReason.REMOVE);
+            buffer.tryRemoveEntity(oldDisplay, RemoveReason.REMOVE);
         }
 
         Ref<EntityStore> newDisplayRef = PedestalEntity.spawnBookDisplay(

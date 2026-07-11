@@ -14,8 +14,11 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+
+import java.util.Arrays;
 
 public class IgniteGlyph implements GlyphHandler {
 
@@ -51,7 +54,8 @@ public class IgniteGlyph implements GlyphHandler {
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float seconds = ElementSupport.scaledDuration(hexContext.consumeComplexity(),
+        float limit = ElementSupport.complexityLimit(glyph, asset, hexContext);
+        float seconds = ElementSupport.scaledDuration(hexContext.consumeComplexity(limit),
                 config.getEfficiency(), config.getDurationPerComplexity(),
                 affinity);
 
@@ -77,6 +81,12 @@ public class IgniteGlyph implements GlyphHandler {
             IgniteState state = new IgniteState(seconds, effectId, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
                     accessor, target, hexContext, glyph, IgniteGlyph.ID, state);
+        }
+
+        Slot immediate = glyph.getSlot(IgniteGlyphSlots.IMMEDIATE);
+        if (immediate != null && immediate.getLinks().length > 0) {
+            HexContext immediateCtx = hexContext.branch();
+            HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
         }
     }
 }

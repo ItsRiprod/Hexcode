@@ -64,7 +64,6 @@ public final class FlycastingScene {
             }
             activeHexes.clear();
 
-            FlycastingDragHandler.removeHeadAnchor(buffer, state);
             CleanupUtils.safeRemoveEntity(buffer, state.getCastingRootRef());
             state.setCastingRootRef(null);
             state.setHoveredHex(null);

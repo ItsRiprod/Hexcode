@@ -53,6 +53,11 @@
       "DefaultValue": 3,
       "Unique": true
     },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Levitate.immediate.name",
+      "Description": "hexcode.glyphs.Levitate.immediate.description"
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Levitate.Next.name",

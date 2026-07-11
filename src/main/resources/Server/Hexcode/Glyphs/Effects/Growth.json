@@ -44,6 +44,11 @@
       "DefaultValue": 2.1,
       "Unique": true
     },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Growth.immediate.name",
+      "Description": "hexcode.glyphs.Growth.immediate.description"
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Growth.Next.name",

@@ -49,7 +49,7 @@ public final class ItemEquippedArmorCastDispatcher implements CastRootDispatcher
             if (ImbuementUtils.readAll(stack).isEmpty()) continue;
 
             ImbuementProfileAsset profile = ImbuementProfileRegistry.first(stack);
-            if (profile == null || profile.findSlot(trigger.getId()) == null) continue;
+            if (profile == null || profile.findSlot(stack, trigger.getId()) == null) continue;
 
             ImbuementData data = ImbuementUtils.read(stack, trigger.getId());
             if (data == null) continue;

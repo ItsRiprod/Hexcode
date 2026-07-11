@@ -171,6 +171,13 @@ public static final String ID = "Drain";
 
         HexConstructSpawner.applyWithState(
                 hexContext.getAccessor(), targetRef, hexContext, glyph, DrainGlyph.ID, state);
+
+        Slot immediate = glyph.getSlot(DrainGlyphSlots.IMMEDIATE);
+        if (immediate != null && immediate.getLinks().length > 0) {
+            HexContext immediateCtx = hexContext.branch();
+            immediateCtx.setDefaultVariable(entityVar);
+            HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
+        }
     }
 
     @Override

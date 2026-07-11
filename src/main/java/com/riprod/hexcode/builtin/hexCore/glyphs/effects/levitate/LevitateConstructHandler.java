@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffec
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
+import com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
@@ -57,7 +58,7 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
         if (vel == null)
             return;
         double rise = config.getRiseSpeedPerIntensity() * state.getAppliedIntensity();
-        vel.addInstruction(new Vector3d(0, rise, 0), null, ChangeVelocityType.Set);
+        vel.addInstruction(new Vector3d(0, rise, 0), new VelocityConfig(), ChangeVelocityType.Set);
     }
 
     private void emitTickVfx(float dt, LevitateState state, LevitateConfig config,

@@ -44,6 +44,9 @@ public class DrawRecognitionSystem extends EntityTickingSystem<EntityStore> {
             }
 
             if (!forceCommit) {
+                if (capture.getFinalizeDelaySeconds() < 0f) {
+                    return;
+                }
                 float timer = capture.getFinalizeTimer() + dt;
                 if (timer < capture.getFinalizeDelaySeconds()) {
                     capture.setFinalizeTimer(timer);

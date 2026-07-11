@@ -27,7 +27,6 @@ import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
-import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
@@ -135,11 +134,12 @@ public class SessionUtils {
             return;
         }
 
-        if (hex.getGlyphs().isEmpty()) {
-            stack = ImbuementUtils.clear(stack, slotKey);
-        } else {
-            stack = ImbuementUtils.write(stack, slotKey, ImbuementUtils.fromHex(hex));
+        ImbuementProfileAsset profile = session.getProfile();
+        if (profile == null) {
+            return;
         }
+
+        stack = profile.writeHex(stack, slotKey, hex);
         session.setStoredItem(stack);
     }
 
@@ -223,7 +223,7 @@ public class SessionUtils {
 
         Ref<EntityStore> displayRef = session.getImbuedItemDisplayRef();
         if (displayRef != null && displayRef.isValid()) {
-            buffer.removeEntity(displayRef, RemoveReason.REMOVE);
+            buffer.tryRemoveEntity(displayRef, RemoveReason.REMOVE);
             session.setImbuedItemDisplayRef(null);
         }
 
@@ -278,7 +278,7 @@ public class SessionUtils {
         if (profile == null) return null;
         List<Ref<EntityStore>> previews = session.getHexPreviewRefs();
         int i = 0;
-        for (Map.Entry<String, SlotAsset> entry : profile.getSlots().entrySet()) {
+        for (Map.Entry<String, SlotAsset> entry : profile.resolveSlots(session.getStoredItem()).entrySet()) {
             if (i >= previews.size()) break;
             if (slotKey.equals(entry.getKey())) return previews.get(i);
             i++;

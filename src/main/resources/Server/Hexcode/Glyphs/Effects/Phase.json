@@ -62,6 +62,11 @@
         "Min": 1.0
       }
     },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Phase.immediate.name",
+      "Description": "hexcode.glyphs.Phase.immediate.description"
+    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Phase.Next.name",

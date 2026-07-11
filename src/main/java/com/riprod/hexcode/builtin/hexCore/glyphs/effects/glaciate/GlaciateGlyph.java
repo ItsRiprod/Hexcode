@@ -1,5 +1,6 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +34,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.style.Glaciate
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -169,5 +171,12 @@ public static final String ID = "Glaciate";
         hexContext.getHexRoot().addDependency(hexContext, iceRef);
 
         GlaciateStyle.renderSpawn(spawnPos, hexContext, accessor);
+
+        Slot immediate = glyph.getSlot(GlaciateGlyphSlots.IMMEDIATE);
+        if (immediate != null && immediate.getLinks().length > 0) {
+            HexContext immediateCtx = hexContext.branch();
+            immediateCtx.setDefaultVariable(new EntityVar(iceUuid, iceRef));
+            HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
+        }
     }
 }
