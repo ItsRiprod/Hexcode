@@ -38,6 +38,10 @@ public final class HexExecutionQueue implements Resource<EntityStore> {
         return pending.size();
     }
 
+    public void clear() {
+        pending.clear();
+    }
+
     @Nullable
     public PendingGlyph poll() {
         return pending.poll();

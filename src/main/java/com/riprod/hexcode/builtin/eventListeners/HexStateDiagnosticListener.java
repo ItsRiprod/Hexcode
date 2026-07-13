@@ -11,7 +11,7 @@ public class HexStateDiagnosticListener implements Consumer<HexStateChangeEvent>
 
     @Override
     public void accept(HexStateChangeEvent event) {
-        LOGGER.atInfo().log("[state] player=%s %s -> %s",
+        LOGGER.atFine().log("[state] player=%s %s -> %s",
                 event.getPlayerRef(),
                 event.getPreviousState(),
                 event.getNewState());

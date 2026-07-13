@@ -197,7 +197,7 @@ public class DirectProjectionDetector implements ShapeDetector {
             sb.append(String.format(" #%d: %s (%.4f)", j + 1, names.get(idx), scores.get(idx)));
             if (j < 2 && j < indices.size() - 1) sb.append(" |");
         }
-        LOGGER.atInfo().log(sb.toString());
+        LOGGER.atFine().log(sb.toString());
     }
 
     @Override

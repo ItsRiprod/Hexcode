@@ -38,13 +38,13 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("scale: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("scale: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<ScaleState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("scale: terminated early; chain suppressed");
+        LOGGER.atFine().log("scale: terminated early; chain suppressed");
     }
 
     @Override

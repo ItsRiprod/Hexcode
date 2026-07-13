@@ -34,13 +34,13 @@ public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("fortify: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("fortify: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<FortifyState> status, ConstructTickContext ctx) {
         cleanup(ctx);
-        LOGGER.atInfo().log("fortify: terminated early; chain suppressed");
+        LOGGER.atFine().log("fortify: terminated early; chain suppressed");
     }
 
     @Override

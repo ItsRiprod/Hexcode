@@ -30,6 +30,9 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
+
+import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
+
 import com.riprod.hexcode.builtin.glyphs.domain.DomainGlyphSlots;
 
 public class DomainConstructHandler implements ConstructHandler<NoState> {
@@ -80,8 +83,9 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
 
             updateContestation(zone, center, ctx.getEntityRef(), ctx.getBuffer());
 
-            List<Ref<EntityStore>> found = TargetUtil.getAllEntitiesInSphere(
+            List<Ref<EntityStore>> foundScratch = TargetUtil.getAllEntitiesInSphere(
                     center, zone.getRadius(), ctx.getBuffer());
+            var found = new ReferenceArrayList<>(foundScratch);
 
             Set<UUID> previousOccupants = zone.getNewOccupants();
             Set<UUID> currentOccupants = zone.getLastOccupants();

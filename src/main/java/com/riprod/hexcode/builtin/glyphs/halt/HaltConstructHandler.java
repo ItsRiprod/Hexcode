@@ -49,13 +49,13 @@ public class HaltConstructHandler implements ConstructHandler<HaltState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("halt: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("halt: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<HaltState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("halt: terminated early; chain suppressed");
+        LOGGER.atFine().log("halt: terminated early; chain suppressed");
     }
 
     @Override

@@ -26,7 +26,7 @@ public class HexCastDiagnosticListener extends WorldEventSystem<EntityStore, Hex
         HexContext data = event.getContext();
         Hex hex = data != null ? data.getHex() : null;
         String firstGlyph = hex != null ? hex.get(hex.getFirstGlyphId()).getGlyphId() : "<null>";
-        LOGGER.atInfo().log(
+        LOGGER.atFine().log(
                 "firstGlyph=%s mana=%s cancelled=%s",
                 firstGlyph,
                 data != null ? data.getManaCost() : "<null>",

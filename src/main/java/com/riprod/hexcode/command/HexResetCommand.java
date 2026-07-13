@@ -128,6 +128,6 @@ public class HexResetCommand extends AbstractPlayerCommand {
     private void send(PlayerRef playerRef, String message, Object... args) {
         String formatted = args.length > 0 ? String.format(message, args) : message;
         playerRef.sendMessage(Message.raw(formatted));
-        LOGGER.atInfo().log(formatted);
+        LOGGER.atFine().log(formatted);
     }
 }

@@ -57,11 +57,11 @@ public class GlyphCreationManager {
                 bestMatch = asset;
             }
             if (score > 0f) {
-                LOGGER.atInfo().log("Scored glyph '%s' with %.2f accuracy", asset.getId(), score);
+                LOGGER.atFine().log("Scored glyph '%s' with %.2f accuracy", asset.getId(), score);
             }
         }
 
-        LOGGER.atInfo().log("Best glyph match: " + (bestMatch != null ? bestMatch.getId() : "none") + " with score " + bestScore);
+        LOGGER.atFine().log("Best glyph match: " + (bestMatch != null ? bestMatch.getId() : "none") + " with score " + bestScore);
 
         return bestMatch; // null if nothing matched
     }

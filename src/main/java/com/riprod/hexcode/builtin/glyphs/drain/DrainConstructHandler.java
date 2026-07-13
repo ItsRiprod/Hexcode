@@ -100,13 +100,13 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
 
-        LOGGER.atInfo().log("drain: completed (%.2f drained)", state.getDrainedSoFar());
+        LOGGER.atFine().log("drain: completed (%.2f drained)", state.getDrainedSoFar());
     }
 
     @Override
     public void onAbort(HexStatus<DrainState> status, ConstructTickContext ctx) {
         DrainState state = status.getState();
-        LOGGER.atInfo().log("drain: terminated early (%.2f drained); chain suppressed",
+        LOGGER.atFine().log("drain: terminated early (%.2f drained); chain suppressed",
                 state != null ? state.getDrainedSoFar() : 0f);
     }
 

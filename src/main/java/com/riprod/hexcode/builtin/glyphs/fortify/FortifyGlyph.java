@@ -127,7 +127,7 @@ public class FortifyGlyph implements GlyphHandler {
             FortifyStyle.renderEntityHit(tc.getPosition(), hexContext, accessor);
         }
 
-        LOGGER.atInfo().log("fortify: applied %.2f flat reduction for %.1fs to entity",
+        LOGGER.atFine().log("fortify: applied %.2f flat reduction for %.1fs to entity",
                 damageReduction, durationSeconds);
     }
 
@@ -161,6 +161,6 @@ public class FortifyGlyph implements GlyphHandler {
         Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
         FortifyStyle.renderBlockHit(blockCenter, hexContext, accessor);
 
-        LOGGER.atInfo().log("fortify: healed block at %s by %.2f", pos, healAmount);
+        LOGGER.atFine().log("fortify: healed block at %s by %.2f", pos, healAmount);
     }
 }

@@ -107,7 +107,7 @@ public class DebugGlyph implements GlyphHandler {
 
         String msg = sb.toString();
         pr.sendMessage(Message.raw(msg));
-        LOGGER.atInfo().log(msg);
+        LOGGER.atFine().log(msg);
     }
 
     private static String shortId(String id) {

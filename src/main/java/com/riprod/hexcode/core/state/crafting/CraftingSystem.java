@@ -279,7 +279,7 @@ public class CraftingSystem extends HexcodeManager {
         if (session == null)
             return;
 
-        logger.atInfo().log("[hexcode] recovering orphaned session for reconnecting player");
+        logger.atWarning().log("[hexcode] recovering orphaned session for reconnecting player");
         ItemStack item = session.getStoredItem();
         if (item == null || item.isEmpty()) {
             buffer.removeComponent(playerRef, HexcodeSessionComponent.getComponentType());

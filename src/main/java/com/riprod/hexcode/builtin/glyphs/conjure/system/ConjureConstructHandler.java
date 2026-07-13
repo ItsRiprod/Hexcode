@@ -26,6 +26,8 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 
+import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
+
 public class ConjureConstructHandler implements ConstructHandler<NoState> {
 
     private static final float SPATIAL_INTERVAL_SECONDS = 0.2f;
@@ -94,7 +96,8 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
             Vector3d min = new Vector3d(pos.x - half.x, pos.y - half.y, pos.z - half.z);
             Vector3d max = new Vector3d(pos.x + half.x, pos.y + half.y, pos.z + half.z);
 
-            List<Ref<EntityStore>> found = TargetUtil.getAllEntitiesInBox(min, max, ctx.getBuffer());
+            List<Ref<EntityStore>> foundScratch = TargetUtil.getAllEntitiesInBox(min, max, ctx.getBuffer());
+            List<Ref<EntityStore>> found = new ReferenceArrayList<>(foundScratch);
 
             Set<UUID> previousOccupants = zone.getNewOccupants();
             Set<UUID> currentOccupants = zone.getLastOccupants();

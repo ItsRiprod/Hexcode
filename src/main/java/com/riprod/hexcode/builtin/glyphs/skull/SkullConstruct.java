@@ -34,13 +34,13 @@ public class SkullConstruct implements ConstructHandler<SkullState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("ignite: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("ignite: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<SkullState> status, ConstructTickContext ctx) {
         cleanup(ctx);
-        LOGGER.atInfo().log("ignite: terminated early; chain suppressed");
+        LOGGER.atFine().log("ignite: terminated early; chain suppressed");
     }
 
     @Override

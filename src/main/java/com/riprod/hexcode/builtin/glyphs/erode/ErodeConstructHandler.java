@@ -34,13 +34,13 @@ public class ErodeConstructHandler implements ConstructHandler<ErodeState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("erode: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("erode: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<ErodeState> status, ConstructTickContext ctx) {
         cleanup(ctx);
-        LOGGER.atInfo().log("erode: terminated early; chain suppressed");
+        LOGGER.atFine().log("erode: terminated early; chain suppressed");
     }
 
     @Override

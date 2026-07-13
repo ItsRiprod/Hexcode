@@ -23,7 +23,6 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.builtin.glyphs.bolt.style.BoltStyle;
-import com.riprod.hexcode.builtin.glyphs.force.ForceGlyphSlots;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.VolatilityTracker;
@@ -34,7 +33,6 @@ import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.api.imbuement.ImbuedBlockActivator;
-import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class BoltGlyph implements GlyphHandler {
@@ -118,9 +116,9 @@ public class BoltGlyph implements GlyphHandler {
         double damageAmount = HexVarUtil.numberOrDefault(
                 glyph.readSlot(BoltGlyphSlots.POWER, hexContext), 5.0);
         damageAmount *= hexContext.getMagicPowerMultiplier();
-        applyDamage(accessor, targetRef, (float) damageAmount);
+        applyDamage(accessor, targetRef, (float) damageAmount, hexContext.getCasterRef());
 
-        LOGGER.atInfo().log("bolt: hit entity for %.1f damage", damageAmount);
+        LOGGER.atFine().log("bolt: hit entity for %.1f damage", damageAmount);
     }
 
     private void handleBlockTarget(Glyph glyph, HexContext hexContext, BlockVar blockVar,
@@ -144,7 +142,7 @@ public class BoltGlyph implements GlyphHandler {
 
         glyph.writeOutput(new BlockVar(blockPos), hexContext);
 
-        LOGGER.atInfo().log("bolt: hit block at %d %d %d (activation=%s)",
+        LOGGER.atFine().log("bolt: hit block at %d %d %d (activation=%s)",
                 blockPos.x, blockPos.y, blockPos.z, outcome.getStatus());
     }
 
@@ -154,7 +152,7 @@ public class BoltGlyph implements GlyphHandler {
         InteractionManager manager = accessor.getComponent(casterRef,
                 InteractionModule.get().getInteractionManagerComponent());
         if (manager == null) {
-            LOGGER.atInfo().log("bolt: no interaction manager on caster, skipping block interaction");
+            LOGGER.atFine().log("bolt: no interaction manager on caster, skipping block interaction");
             return;
         }
 
@@ -184,7 +182,7 @@ public class BoltGlyph implements GlyphHandler {
     }
 
     private static void applyDamage(CommandBuffer<EntityStore> accessor,
-            Ref<EntityStore> targetRef, float amount) {
+            Ref<EntityStore> targetRef, float amount, Ref<EntityStore> casterRef) {
         if (damageCauseIndex < 0) {
             damageCauseIndex = DamageCause.getAssetMap().getIndex("Environment");
         }
@@ -199,7 +197,7 @@ public class BoltGlyph implements GlyphHandler {
             return;
         }
 
-        Damage damage = new Damage(new Damage.EnvironmentSource("hex_bolt"), cause, amount);
+        Damage damage = new Damage(new Damage.EntitySource(casterRef), cause, amount);
         DamageSystems.executeDamage(targetRef, accessor, damage);
     }
 }

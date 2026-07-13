@@ -120,7 +120,7 @@ public class IdleSystem extends HexcodeManager {
 
         Hex activeHex = idleComp.getActiveHex();
         if (activeHex == null) {
-            LOGGER.atInfo().log("no active spell on staff, nothing to execute");
+            LOGGER.atFine().log("no active spell on staff, nothing to execute");
             return InteractionState.Finished;
         }
 

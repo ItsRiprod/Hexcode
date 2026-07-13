@@ -34,11 +34,11 @@ public class ShapeComparator {
                 bestMatch = asset;
             }
             if (accuracy > 0f) {
-                LOGGER.atInfo().log("Compared against shape " + asset.getId() + " with accuracy " + accuracy);
+                LOGGER.atFine().log("Compared against shape " + asset.getId() + " with accuracy " + accuracy);
             }
         }
 
-        LOGGER.atInfo().log("Best shape match: " + (bestMatch != null ? bestMatch.getId() : "none") + " with accuracy "
+        LOGGER.atFine().log("Best shape match: " + (bestMatch != null ? bestMatch.getId() : "none") + " with accuracy "
                 + bestAccuracy);
 
         return bestMatch != null ? new DrawnShapeComponent(bestMatch.getId(), bestAccuracy, bestMatch) : null;

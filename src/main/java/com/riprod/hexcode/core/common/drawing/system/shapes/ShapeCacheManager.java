@@ -47,7 +47,7 @@ public class ShapeCacheManager {
             }
         });
 
-        LOGGER.atInfo().log("ShapeCacheManager initialized with " + imageData.size() + " assets.");
+        LOGGER.atFine().log("ShapeCacheManager initialized with " + imageData.size() + " assets.");
     }
 
     private static boolean[][] importImageData(String key, String imageId) {

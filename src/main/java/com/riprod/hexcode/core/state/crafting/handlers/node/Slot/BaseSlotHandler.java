@@ -109,12 +109,12 @@ public abstract class BaseSlotHandler extends BaseNodeHandler {
 
         Slot slot = sourceGlyph.getGlyph().getSlot(slotComp.getSlotKey());
         if (slot != null && slot.isUnique() && slot.getLinks().length >= 1) {
-            LOGGER.atInfo().log("slot: rejected link to unique slot '%s' on %s (already has %d link(s))",
+            LOGGER.atFine().log("slot: rejected link to unique slot '%s' on %s (already has %d link(s))",
                     slotComp.getSlotKey(), sourceGlyph.getGlyphId(), slot.getLinks().length);
             return InteractionState.Failed;
         }
         sourceGlyph.getGlyph().addSlotLink(slotComp.getSlotKey(), targetGlyph.getId());
-        LOGGER.atInfo().log("slot: connected '%s' on %s to glyph %s",
+        LOGGER.atFine().log("slot: connected '%s' on %s to glyph %s",
                 slotComp.getSlotKey(), sourceGlyph.getGlyphId(), targetGlyph.getId());
         return InteractionState.Finished;
     }

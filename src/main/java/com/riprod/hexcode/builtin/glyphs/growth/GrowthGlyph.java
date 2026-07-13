@@ -130,7 +130,7 @@ public static final String ID = "Growth";
                     accessor, ref, hexContext, glyph, GrowthGlyph.ID, state);
         }
 
-        LOGGER.atInfo().log("growth: applied regen buff for %.1fs to entity", durationSeconds);
+        LOGGER.atFine().log("growth: applied regen buff for %.1fs to entity", durationSeconds);
     }
 
     private void applyToBlock(BlockVar blockVar, double amount,
@@ -218,7 +218,7 @@ public static final String ID = "Growth";
         Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
         GrowthStyle.renderBlockHit(blockCenter, hexContext, accessor);
 
-        LOGGER.atInfo().log("growth: advanced crop at %s from stage %d to %d", pos, currentStage, newStage);
+        LOGGER.atFine().log("growth: advanced crop at %s from stage %d to %d", pos, currentStage, newStage);
         return true;
     }
 
@@ -258,6 +258,6 @@ public static final String ID = "Growth";
             GrowthStyle.renderBlockHit(effectPos, hexContext, accessor);
         }
 
-        LOGGER.atInfo().log("growth: applied bonemeal around %s", pos);
+        LOGGER.atFine().log("growth: applied bonemeal around %s", pos);
     }
 }

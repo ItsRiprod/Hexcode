@@ -1,7 +1,5 @@
 package com.riprod.hexcode.builtin.glyphs.conjure;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,7 +15,6 @@ import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.PropComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollision;
 import com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig;
@@ -31,7 +28,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.builtin.glyphs.conjure.component.ConjureZoneComponent;
 import com.riprod.hexcode.builtin.glyphs.conjure.style.ConjureStyle;
-import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
@@ -44,7 +40,6 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
-import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ConjureGlyph implements GlyphHandler {

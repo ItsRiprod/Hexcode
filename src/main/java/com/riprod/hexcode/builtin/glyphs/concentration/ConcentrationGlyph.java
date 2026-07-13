@@ -20,6 +20,8 @@ import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.builtin.glyphs.concentration.style.ConcentrationStyle;
+import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
+import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
@@ -54,8 +56,14 @@ public class ConcentrationGlyph implements GlyphHandler {
         HexcasterIdleComponent execComp = accessor.getComponent(
                 casterRef, HexcasterIdleComponent.getComponentType());
         if (execComp == null || !execComp.isHoldingPrimary()) {
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Caster not holding primary");
+            HexExecuter.continueFromSlot(glyph, ConcentrationGlyphSlots.RELEASE, hexContext);
+            return;
+        }
+
+        ConcentrationState existing = ConstructStateUtil.findState(
+                accessor, casterRef, ConcentrationGlyph.ID, ConcentrationState.class);
+        if (existing != null) {
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
         }
 
@@ -63,7 +71,8 @@ public class ConcentrationGlyph implements GlyphHandler {
                 casterRef, TransformComponent.getComponentType());
         Ref<EntityStore> visualRef = null;
 
-        // only spawn visual if caster has a transform - otherwise just don't spawn one instead of failing the glyph
+        // only spawn visual if caster has a transform - otherwise just don't spawn one
+        // instead of failing the glyph
         if (casterTransform != null) {
             visualRef = spawnVisual(accessor, casterTransform, casterRef, hexContext);
             ConcentrationStyle.renderSpawn(casterTransform.getPosition(), hexContext, accessor);
@@ -93,7 +102,8 @@ public class ConcentrationGlyph implements GlyphHandler {
                 new NetworkId(accessor.getExternalData().takeNextNetworkId()));
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
         holder.addComponent(MountedComponent.getComponentType(),
-                new MountedComponent(casterRef, new Rotation3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z), MountController.Minecart));
+                new MountedComponent(casterRef, new Rotation3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z),
+                        MountController.Minecart));
 
         String modelId = ConcentrationStyle.resolveModelId(hexContext);
         ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;

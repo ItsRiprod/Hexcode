@@ -72,7 +72,7 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
                 boolean budgetDepleted = status.getHexContext() != null
                         && status.getHexContext().getVolatilityTracker().getRemainingBudget() <= 0;
                 if (killRequested || budgetDepleted) {
-                    LOGGER.atInfo().log("construct '%s' terminated (%s)",
+                    LOGGER.atFine().log("construct '%s' terminated (%s)",
                             status.getHandlerId(),
                             killRequested ? "kill requested" : "volatility depleted");
                     construct.removeEffect(effectId);

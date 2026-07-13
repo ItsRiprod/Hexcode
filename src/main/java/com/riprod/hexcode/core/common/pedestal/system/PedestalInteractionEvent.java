@@ -57,7 +57,7 @@ public class PedestalInteractionEvent {
                 PedestalBlockComponent.getComponentType(), world,
                 blockPos.x, blockPos.y, blockPos.z);
         if (pedestalComponent == null) {
-            logger.atInfo().log("pedestal interaction failed: no PedestalBlockComponent at %s", blockPos);
+            logger.atWarning().log("pedestal interaction failed: no PedestalBlockComponent at %s", blockPos);
             return;
         }
 
@@ -186,7 +186,7 @@ public class PedestalInteractionEvent {
         ImbuementProfileAsset currentProfile = session.getProfile();
         boolean skipSelecting = currentProfile != null && currentProfile.isSkipSelecting();
 
-        logger.atInfo().log("pedestal: hasItem, state=%s skipSelecting=%s", state, skipSelecting);
+        logger.atFine().log("pedestal: hasItem, state=%s skipSelecting=%s", state, skipSelecting);
         if (state == PedestalState.CRAFTING) {
             if (skipSelecting) {
                 Vector3i locA = pedestalComponent.getLocation();

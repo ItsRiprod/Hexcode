@@ -32,7 +32,7 @@ public class HexTick extends EntityTickingSystem<EntityStore> {
       HexState pending = comp.consumePendingState();
       if (pending != null) {
         HexState current = comp.getState();
-        LOGGER.atInfo().log("%s -> %s", current, pending);
+        LOGGER.atFine().log("%s -> %s", current, pending);
         HexcodeManager old = StateRouter.route(current);
         if (old != null) {
           old.lastTick(ref, comp, store, buffer, pending);

@@ -222,7 +222,7 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
 
     clearExpandedIfMatches(accessor, playerRef, nodeRef);
     accessor.tryRemoveEntity(nodeRef, RemoveReason.REMOVE);
-    LOGGER.atInfo().log("glyph node: deleted glyph %s", glyphId);
+    LOGGER.atFine().log("glyph node: deleted glyph %s", glyphId);
     return InteractionState.Finished;
   }
 

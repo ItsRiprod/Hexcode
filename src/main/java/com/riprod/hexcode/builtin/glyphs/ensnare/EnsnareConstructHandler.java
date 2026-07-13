@@ -29,6 +29,8 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.utils.VfxUtil;
 
+import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
+
 public class EnsnareConstructHandler implements ConstructHandler<NoState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -44,7 +46,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
         ensnare.incrementElapsed(dt);
         if (ensnare.getElapsedSeconds() >= ensnare.getDurationSeconds()) return true;
 
-        processDamage(ensnare, status, ctx);
+        processDamage(ensnare, status, ctx, status.getHexContext().getCasterRef());
         return !drainSustain(dt, status);
     }
 
@@ -54,7 +56,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
                 ctx.getIndex(), EnsnareComponent.getComponentType());
         if (ensnare != null) {
             removeSpikes(ensnare, status, ctx.getBuffer());
-            LOGGER.atInfo().log("ensnare: expired after %.1fs, removed %d spikes",
+            LOGGER.atFine().log("ensnare: expired after %.1fs, removed %d spikes",
                     ensnare.getDurationSeconds(), ensnare.getSpikes().size());
         }
 
@@ -62,15 +64,17 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
     }
 
     private void processDamage(EnsnareComponent ensnare, HexStatus<NoState> status,
-            ConstructTickContext ctx) {
+            ConstructTickContext ctx, Ref<EntityStore> casterRef) {
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Vector3d center = ensnare.getCenter();
         double radius = ensnare.getRadius() + 1.0;
         Vector3d min = new Vector3d(center.x - radius, center.y - 3, center.z - radius);
         Vector3d max = new Vector3d(center.x + radius, center.y + 4, center.z + radius);
 
-        List<Ref<EntityStore>> nearbyEntities = TargetUtil.getAllEntitiesInBox(min, max, buffer);
+        List<Ref<EntityStore>> nearbyEntitiesScratch = TargetUtil.getAllEntitiesInBox(min, max, buffer);
+        var nearbyEntities = new ReferenceArrayList<>(nearbyEntitiesScratch);
         if (nearbyEntities.isEmpty()) return;
+
 
         for (Ref<EntityStore> targetRef : nearbyEntities) {
             if (targetRef == null || !targetRef.isValid()) continue;
@@ -88,7 +92,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
             SpikeEntry nearestSpike = ensnare.findNearestSpike(entityPos, SPIKE_HIT_RADIUS_SQ);
             if (nearestSpike == null) continue;
 
-            applyDamage(buffer, targetRef, ensnare.getSpikeDamage());
+            applyDamage(buffer, targetRef, ensnare.getSpikeDamage(), casterRef);
             ensnare.recordDamage(targetId);
             EnsnareStyle.renderSpikeDamage(nearestSpike.getPosition(), status.getHexContext(), buffer);
 
@@ -107,7 +111,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
     }
 
     private static void applyDamage(CommandBuffer<EntityStore> buffer,
-            Ref<EntityStore> targetRef, float amount) {
+            Ref<EntityStore> targetRef, float amount, Ref<EntityStore> casterRef) {
         if (damageCauseIndex < 0) {
             damageCauseIndex = DamageCause.getAssetMap().getIndex("Environment");
         }
@@ -117,7 +121,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
         if (cause == null) return;
 
         Damage damage = new Damage(
-                new Damage.EnvironmentSource("hex_ensnare"), cause, amount);
+                new Damage.EntitySource(casterRef), cause, amount);
         DamageSystems.executeDamage(targetRef, buffer, damage);
     }
 

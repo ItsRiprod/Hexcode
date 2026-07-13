@@ -130,7 +130,7 @@ public class ErodeGlyph implements GlyphHandler {
             ErodeStyle.renderEntityHit(tc.getPosition(), hexContext, accessor);
         }
 
-        LOGGER.atInfo().log("erode: applied %.0f%% vulnerability for %.1fs to entity",
+        LOGGER.atFine().log("erode: applied %.0f%% vulnerability for %.1fs to entity",
                 vulnerabilityMultiplier * 100, durationSeconds);
     }
 
@@ -171,7 +171,7 @@ public class ErodeGlyph implements GlyphHandler {
                 accessor,
                 chunkStore.getStore());
 
-        LOGGER.atInfo().log("erode: routed block hit at %s through harvest pipeline (tier=%d, scale=%.2f)",
+        LOGGER.atFine().log("erode: routed block hit at %s through harvest pipeline (tier=%d, scale=%.2f)",
                 pos, tier, damageScale);
     }
 

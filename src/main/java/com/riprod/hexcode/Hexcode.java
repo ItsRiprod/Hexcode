@@ -1,8 +1,10 @@
 package com.riprod.hexcode;
 
 import com.riprod.hexcode.builtin.BuiltinPlugin;
+import com.riprod.hexcode.builtin.eventListeners.CastGateListener;
 import com.riprod.hexcode.builtin.eventListeners.CraftingNotificationListener;
 import com.riprod.hexcode.builtin.eventListeners.FizzleMessageListener;
+import com.riprod.hexcode.builtin.eventListeners.GlyphGateListener;
 import com.riprod.hexcode.builtin.eventListeners.GlyphDiagnosticListener;
 import com.riprod.hexcode.builtin.eventListeners.HexCastDiagnosticListener;
 import com.riprod.hexcode.builtin.eventListeners.HexStateDiagnosticListener;
@@ -30,6 +32,7 @@ import com.riprod.hexcode.core.common.execution.component.HexRoot;
 import com.riprod.hexcode.core.common.execution.component.HexcasterIdleComponent;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
 import com.riprod.hexcode.core.common.execution.events.HexCastEventSystem;
+import com.riprod.hexcode.core.common.execution.gate.GateStateResource;
 import com.riprod.hexcode.core.common.execution.queue.HexDrainEventSystem;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionTickSystem;
@@ -126,6 +129,7 @@ import com.riprod.hexcode.api.event.CraftingEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.GlyphDrawnEvent;
 import com.riprod.hexcode.builtin.eventListeners.GlyphDrawNotificationListener;
+import com.riprod.hexcode.builtin.eventListeners.GlyphDrawnDisabledNotificationListener;
 import com.riprod.hexcode.builtin.eventListeners.GlyphMemoryListener;
 import com.riprod.hexcode.core.common.memories.GlyphMemory;
 import com.riprod.hexcode.core.common.memories.GlyphMemoryProvider;
@@ -387,6 +391,12 @@ public class Hexcode extends JavaPlugin {
         entityStoreRegistry.registerSystem(new HexExecutionTickSystem());
         entityStoreRegistry.registerSystem(new HexDrainEventSystem());
 
+        ResourceType<EntityStore, GateStateResource> gateStateType = entityStoreRegistry
+                .registerResource(GateStateResource.class, GateStateResource::new);
+        GateStateResource.setResourceType(gateStateType);
+        entityStoreRegistry.registerSystem(new CastGateListener());
+        entityStoreRegistry.registerSystem(new GlyphGateListener());
+
     }
 
     private void registerBlockComponents() {
@@ -484,6 +494,7 @@ public class Hexcode extends JavaPlugin {
         this.getEventRegistry().registerGlobal(CraftingEvent.class, new CraftingNotificationListener());
         this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphMemoryListener());
         this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDrawNotificationListener());
+        this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDrawnDisabledNotificationListener());
         this.getEventRegistry().register(EventPriority.LAST, LoadAssetEvent.class, e -> {
             GlyphIconStore.generateMissing(this.getManifest());
             patchManager.rebuildAndApply("boot:LoadAssetEvent");

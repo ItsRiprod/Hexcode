@@ -87,11 +87,11 @@ public class DrawingSystem extends HexcodeManager {
       GlyphAsset matchedGlyph = GlyphCreationManager.MatchGlyph(drawnShapes);
 
       if (matchedGlyph == null) {
-        LOGGER.atInfo().log("no matching glyph found for drawn shape");
+        LOGGER.atFine().log("no matching glyph found for drawn shape");
       } else {
         float efficiency = ShapeComparator.calculateEfficiency(drawnShapes);
         float volatility = ShapeComparator.calculateVolatility(drawnShapes);
-        LOGGER.atInfo().log("Efficiency: %f | Volatility: %f", efficiency, volatility);
+        LOGGER.atFine().log("Efficiency: %f | Volatility: %f", efficiency, volatility);
 
         Glyph glyph = new Glyph(matchedGlyph, volatility, efficiency);
 
@@ -106,14 +106,14 @@ public class DrawingSystem extends HexcodeManager {
         Transform transform = new Transform(spawnPos, hRotation.getRotation());
 
         if (spawnPos == null) {
-          LOGGER.atInfo().log("cannot spawn drawn hex: missing pedestal or draw position");
+          LOGGER.atFine().log("cannot spawn drawn hex: missing pedestal or draw position");
         } else {
           Vector3d anchorPos = PedestalEntity.getAnchorPosition(session.getPedestalLocation());
           double maxRadius = pedestal.getMaxRadius();
           double distSq = spawnPos.distanceSquared(anchorPos);
 
           if (distSq > maxRadius * maxRadius) {
-            LOGGER.atInfo().log("drawn hex outside pedestal radius");
+            LOGGER.atFine().log("drawn hex outside pedestal radius");
             HytaleServer.get().getEventBus().dispatchFor(CraftingEvent.class)
                 .dispatch(CraftingEvent.builder(CraftingEvent.Reason.DENIED_OUT_OF_RANGE, ref)
                     .pedestal(pedestal)
@@ -217,7 +217,7 @@ public class DrawingSystem extends HexcodeManager {
       ShapeTemplateStore.Result result = ShapeTemplateStore.saveTemplate(trainingId, points, overridePack);
       if (result.success) {
         shapeDetector.clearCache();
-        LOGGER.atInfo().log("recorded training template for '%s' (%d points) into pack '%s'",
+        LOGGER.atFine().log("recorded training template for '%s' (%d points) into pack '%s'",
             trainingId, points.size() / 2, result.packName);
       } else {
         LOGGER.atWarning().log("training template for '%s' failed: %s", trainingId, result.error);
@@ -239,7 +239,7 @@ public class DrawingSystem extends HexcodeManager {
       return InteractionState.Finished;
     }
 
-    LOGGER.atInfo().log("%d ms (%f score) | S: %f | A: %f", drawDuration,
+    LOGGER.atFine().log("%d ms (%f score) | S: %f | A: %f", drawDuration,
         result.getEfficiency(), result.getSize(), result.getVolatility());
 
     drawingComp.addDrawnGlyph(result);

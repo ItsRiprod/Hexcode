@@ -12,7 +12,7 @@ import com.riprod.hexcode.api.event.GlyphDrawnEvent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
-public class GlyphDrawNotificationListener implements Consumer<GlyphDrawnEvent> {
+public class GlyphDrawnDisabledNotificationListener implements Consumer<GlyphDrawnEvent> {
 
     private static final String ICON_DIR = "UI/Custom/Pages/Memories/glyphs/";
 
@@ -32,9 +32,11 @@ public class GlyphDrawNotificationListener implements Consumer<GlyphDrawnEvent> 
             return;
 
         GlyphAsset asset = event.getMatchedGlyphAsset();
-        Message name = asset != null && asset.getTitle() != null
-                ? Message.translation(asset.getTitle())
-                : Message.raw(glyph.getGlyphId());
+        if (asset == null || asset.isEnabled())
+            return;
+
+        Message name = Message.translation("server.hexcode.notifications.glyphDisabled").param("glyphName",
+                Message.translation(asset.getTitle()));
 
         String icon = ICON_DIR + glyph.getGlyphId() + ".png";
         NotificationUtil.sendNotification(pr.getPacketHandler(), name, icon);

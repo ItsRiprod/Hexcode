@@ -60,7 +60,7 @@ public class RasterShapeDetector implements ShapeDetector {
                     Float.parseFloat(candidates.get(j)[1])));
             if (j < 2 && j < candidates.size() - 1) sb.append(" |");
         }
-        LOGGER.atInfo().log(sb.toString());
+        LOGGER.atFine().log(sb.toString());
     }
 
     @Override

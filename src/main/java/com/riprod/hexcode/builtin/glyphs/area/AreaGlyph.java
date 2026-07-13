@@ -31,6 +31,8 @@ import com.hypixel.hytale.server.core.entity.reference.PersistentRef;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
+import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
+
 public class AreaGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     
@@ -117,7 +119,8 @@ public class AreaGlyph implements GlyphHandler {
         Ref<EntityStore> casterRef = hexContext.getCasterRef();
         List<PersistentRef> gathered = new ArrayList<>();
 
-        List<Ref<EntityStore>> nearby = TargetUtil.getAllEntitiesInSphere(center, radius, accessor);
+        List<Ref<EntityStore>> nearbyScratch = TargetUtil.getAllEntitiesInSphere(center, radius, accessor);
+        var nearby = new ReferenceArrayList<>(nearbyScratch);
         for (Ref<EntityStore> ref : nearby) {
             if (ref == null || !ref.isValid()) continue;
             if (ref.equals(casterRef)) continue;

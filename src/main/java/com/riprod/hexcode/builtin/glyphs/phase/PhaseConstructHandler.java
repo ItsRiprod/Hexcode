@@ -20,6 +20,9 @@ import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+
+import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
+
 import com.riprod.hexcode.api.execution.HexExecuter;
 
 public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
@@ -49,13 +52,13 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("phase: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("phase: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<PhaseState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("phase: terminated early; chain suppressed");
+        LOGGER.atFine().log("phase: terminated early; chain suppressed");
     }
 
     @Override
@@ -90,7 +93,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
                 PhaseStyle.renderPhaseIn(blockCenter, status.getHexContext(), ctx.getBuffer());
             }
 
-            LOGGER.atInfo().log("phase: restored %d blocks", phase.getPhasedBlocks().size());
+            LOGGER.atFine().log("phase: restored %d blocks", phase.getPhasedBlocks().size());
         }
 
         ctx.getBuffer().tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
@@ -100,7 +103,8 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
             HexStatus<PhaseState> status, CommandBuffer<EntityStore> buffer) {
         Vector3d min = new Vector3d(pos.x, pos.y, pos.z);
         Vector3d max = new Vector3d(pos.x + 1.0, pos.y + 1.0, pos.z + 1.0);
-        List<Ref<EntityStore>> entities = TargetUtil.getAllEntitiesInBox(min, max, buffer);
+        List<Ref<EntityStore>> entitiesScratch = TargetUtil.getAllEntitiesInBox(min, max, buffer);
+        var entities = new ReferenceArrayList<>(entitiesScratch);
 
         if (damageCauseIndex < 0) {
             damageCauseIndex = DamageCause.getAssetMap().getIndex("Environment");
@@ -118,7 +122,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
                 DamageCause cause = DamageCause.getAssetMap().getAsset(damageCauseIndex);
                 if (cause != null) {
                     Damage damage = new Damage(
-                            new Damage.EnvironmentSource("hex_phase"), cause, BASE_CRUSH_DAMAGE);
+                            new Damage.EntitySource(status.getHexContext().getCasterRef()), cause, BASE_CRUSH_DAMAGE);
                     DamageSystems.executeDamage(ref, buffer, damage);
                 }
             }
