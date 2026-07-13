@@ -45,15 +45,15 @@
       "DefaultValue": 20,
       "Unique": true
     },
-    "immediate": {
-      "Style": "Next",
-      "Label": "hexcode.glyphs.Fortify.immediate.name",
-      "Description": "hexcode.glyphs.Fortify.immediate.description"
-    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Fortify.Next.name",
       "Description": "hexcode.glyphs.Fortify.Next.description"
+    },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Fortify.immediate.name",
+      "Description": "hexcode.glyphs.Fortify.immediate.description"
     }
   },
   "Volatility": {

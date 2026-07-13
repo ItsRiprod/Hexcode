@@ -58,15 +58,15 @@
         "Offset": 10.0
       }
     },
-    "immediate": {
-      "Style": "Next",
-      "Label": "hexcode.glyphs.Domain.immediate.name",
-      "Description": "hexcode.glyphs.Domain.immediate.description"
-    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Domain.Next.name",
       "Description": "hexcode.glyphs.Domain.Next.description"
+    },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Domain.immediate.name",
+      "Description": "hexcode.glyphs.Domain.immediate.description"
     }
   },
   "Volatility": {

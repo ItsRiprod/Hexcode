@@ -26,16 +26,16 @@
     }
   ],
   "Slots": {
+    "Next": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.HealthSurge.Next.name",
+      "Description": "hexcode.glyphs.HealthSurge.Next.description"
+    },
     "ComplexityLimit": {
       "Style": "Input",
       "Label": "hexcode.glyphs.HealthSurge.ComplexityLimit.name",
       "Description": "hexcode.glyphs.HealthSurge.ComplexityLimit.description",
       "DefaultValue": -1
-    },
-    "Next": {
-      "Style": "Next",
-      "Label": "hexcode.glyphs.HealthSurge.Next.name",
-      "Description": "hexcode.glyphs.HealthSurge.Next.description"
     }
   },
   "Config": {

@@ -32,6 +32,11 @@
     }
   ],
   "Slots": {
+    "Next": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Ignite.Next.name",
+      "Description": "hexcode.glyphs.Ignite.Next.description"
+    },
     "ComplexityLimit": {
       "Style": "Input",
       "Label": "hexcode.glyphs.Ignite.ComplexityLimit.name",
@@ -42,11 +47,6 @@
       "Style": "Next",
       "Label": "hexcode.glyphs.Ignite.immediate.name",
       "Description": "hexcode.glyphs.Ignite.immediate.description"
-    },
-    "Next": {
-      "Style": "Next",
-      "Label": "hexcode.glyphs.Ignite.Next.name",
-      "Description": "hexcode.glyphs.Ignite.Next.description"
     }
   },
   "Config": {

@@ -591,21 +591,19 @@ public class HexCodecV15 {
         if (br.read(1) == 0) return out;
         int schemaMatch = br.read(1);
         if (schemaMatch == 1) {
-            List<String> schema;
-            if (asset != null) {
-                schema = getOrderedSlotKeys(asset);
-                if (schema.isEmpty() && storedSlotCount > 0) {
-                    schema = new ArrayList<>(storedSlotCount);
-                    for (int k = 0; k < storedSlotCount; k++) schema.add("<slot_" + k + ">");
-                }
-            } else {
-                schema = new ArrayList<>(storedSlotCount);
-                for (int k = 0; k < storedSlotCount; k++) schema.add("<slot_" + k + ">");
-            }
+            List<String> schema = asset != null ? getOrderedSlotKeys(asset) : List.of();
             int allEmpty = br.read(1);
-            for (String name : schema) {
+            for (int k = 0; k < storedSlotCount; k++) {
+                String[] links = allEmpty == 1 ? new String[0] : readLinkPlaceholders(br, refBits);
+                String name = k < schema.size() ? schema.get(k) : "<slot_" + k + ">";
                 Slot slot = Slot.forAssetSlot(asset, name);
-                slot.setLinks(allEmpty == 1 ? new String[0] : readLinkPlaceholders(br, refBits));
+                slot.setLinks(links);
+                out.put(name, slot);
+            }
+            for (int k = storedSlotCount; k < schema.size(); k++) {
+                String name = schema.get(k);
+                Slot slot = Slot.forAssetSlot(asset, name);
+                slot.setLinks(new String[0]);
                 out.put(name, slot);
             }
         } else {

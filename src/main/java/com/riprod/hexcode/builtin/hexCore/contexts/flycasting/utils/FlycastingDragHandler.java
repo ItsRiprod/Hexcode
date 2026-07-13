@@ -69,6 +69,11 @@ public final class FlycastingDragHandler {
             return;
         }
 
+        Ref<EntityStore> draggedRef = draggedHex.getSelfRef();
+        if (draggedRef != null && draggedRef.isValid()) {
+            buffer.tryRemoveComponent(draggedRef, MountedComponent.getComponentType());
+        }
+
         GlyphComponent hoveredGlyph = state.getHoveredGlyph();
         if (hoveredGlyph != null) {
             try {

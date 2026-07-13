@@ -51,15 +51,15 @@
       "DefaultValue": 5,
       "Unique": true
     },
-    "immediate": {
-      "Style": "Next",
-      "Label": "hexcode.glyphs.Scale.immediate.name",
-      "Description": "hexcode.glyphs.Scale.immediate.description"
-    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Scale.Next.name",
       "Description": "hexcode.glyphs.Scale.Next.description"
+    },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Scale.immediate.name",
+      "Description": "hexcode.glyphs.Scale.immediate.description"
     }
   },
   "Volatility": {

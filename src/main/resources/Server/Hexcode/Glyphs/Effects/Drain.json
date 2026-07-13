@@ -52,15 +52,15 @@
       "Description": "hexcode.glyphs.Drain.destination.description",
       "Unique": true
     },
-    "immediate": {
-      "Style": "Next",
-      "Label": "hexcode.glyphs.Drain.immediate.name",
-      "Description": "hexcode.glyphs.Drain.immediate.description"
-    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Drain.Next.name",
       "Description": "hexcode.glyphs.Drain.Next.description"
+    },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Drain.immediate.name",
+      "Description": "hexcode.glyphs.Drain.immediate.description"
     }
   },
   "Volatility": {

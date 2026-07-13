@@ -56,15 +56,15 @@
       "DefaultValue": 15,
       "Unique": true
     },
-    "immediate": {
-      "Style": "Next",
-      "Label": "hexcode.glyphs.Glaciate.immediate.name",
-      "Description": "hexcode.glyphs.Glaciate.immediate.description"
-    },
     "Next": {
       "Style": "Next",
       "Label": "hexcode.glyphs.Glaciate.Next.name",
       "Description": "hexcode.glyphs.Glaciate.Next.description"
+    },
+    "immediate": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.Glaciate.immediate.name",
+      "Description": "hexcode.glyphs.Glaciate.immediate.description"
     }
   },
   "Volatility": {

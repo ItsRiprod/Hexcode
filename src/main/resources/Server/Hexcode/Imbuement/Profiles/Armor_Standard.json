@@ -7,5 +7,10 @@
       "Description": "Execute when taking damage from another entity",
       "Style": "Next"
     }
+  },
+  "Defaults": {
+    "HexStats": {
+      "InitialVolatility": 30
+    }
   }
 }

@@ -26,6 +26,11 @@
     }
   ],
   "Slots": {
+    "Next": {
+      "Style": "Next",
+      "Label": "hexcode.glyphs.MageArmor.Next.name",
+      "Description": "hexcode.glyphs.MageArmor.Next.description"
+    },
     "ComplexityLimit": {
       "Style": "Input",
       "Label": "hexcode.glyphs.MageArmor.ComplexityLimit.name",
@@ -36,11 +41,6 @@
       "Style": "Next",
       "Label": "hexcode.glyphs.MageArmor.immediate.name",
       "Description": "hexcode.glyphs.MageArmor.immediate.description"
-    },
-    "Next": {
-      "Style": "Next",
-      "Label": "hexcode.glyphs.MageArmor.Next.name",
-      "Description": "hexcode.glyphs.MageArmor.Next.description"
     }
   },
   "Config": {

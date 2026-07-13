@@ -53,7 +53,7 @@
   },
   "Defaults": {
     "HexStats": {
-      "StartingBudget": 20
+      "InitialVolatility": 30
     }
   }
 }

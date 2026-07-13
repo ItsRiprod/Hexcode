@@ -58,7 +58,6 @@ public final class ItemHeldCastDispatcher implements CastRootDispatcher {
         HexVar defaultVar = trigger.resolveDefaultVariable(event);
         if (defaultVar != null) context.setDefaultVariable(defaultVar);
         context.setCastSlotKey(trigger.getId());
-        context.setVolatilityOverride(volatilityMax);
 
         try {
             HexExecuter.cast(context, buffer);

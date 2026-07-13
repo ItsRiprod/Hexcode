@@ -1,5 +1,6 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +29,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.style.DomainStyl
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
@@ -39,6 +41,25 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
     private static final float DOMAIN_VOLATILITY_BOOST = 0.67f;
     private static final float SPATIAL_INTERVAL_SECONDS = 0.2f;
     private static final Vector3f CONTESTED_COLOR = new Vector3f(0.5f, 0.5f, 0.5f);
+
+    @Override
+    public void onFirstTick(HexStatus<NoState> status, ConstructTickContext ctx) {
+        Glyph triggering = status.getTriggeringGlyph();
+        if (triggering == null)
+            return;
+        Slot immediate = triggering.getSlot(DomainGlyphSlots.IMMEDIATE);
+        if (immediate == null)
+            return;
+        String[] links = immediate.getLinks();
+        if (links == null || links.length == 0)
+            return;
+        HexContext hexContext = status.getHexContext();
+        hexContext.updateRuntimeAccessors(ctx.getBuffer());
+        UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
+                .getUuid();
+        hexContext.setDefaultVariable(new EntityVar(entityId, ctx.getEntityRef()));
+        HexExecuter.continueExecution(Arrays.asList(links), hexContext);
+    }
 
     @Override
     public boolean onTick(float dt, HexStatus<NoState> status, ConstructTickContext ctx) {

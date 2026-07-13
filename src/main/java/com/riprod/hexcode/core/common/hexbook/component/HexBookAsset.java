@@ -99,7 +99,7 @@ public class HexBookAsset implements JsonAssetWithMap<String, DefaultAssetMap<St
                         (glyphAsset) -> glyphAsset.id,
                         (asset, data) -> asset.data = data,
                         (asset) -> asset.data)
-                .appendInherited(new KeyedCodec<>("SlotCount", Codec.INTEGER),
+                .appendInherited(new KeyedCodec<>("MaxGlyphs", Codec.INTEGER),
                         (a, v) -> a.slotCount = v,
                         a -> a.slotCount,
                         (a, p) -> a.slotCount = p.slotCount)

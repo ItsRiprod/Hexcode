@@ -1,10 +1,13 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.delay;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
@@ -12,10 +15,37 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.delay.style.DelayStyle;
+import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 
 public class DelayConstructHandler implements ConstructHandler<DelayState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+
+    @Override
+    public void onFirstTick(HexStatus<DelayState> status, ConstructTickContext ctx) {
+        Glyph triggering = status.getTriggeringGlyph();
+        if (triggering == null)
+            return;
+        Slot immediate = triggering.getSlot(DelayGlyphSlots.IMMEDIATE);
+        if (immediate == null)
+            return;
+        String[] links = immediate.getLinks();
+        if (links == null || links.length == 0)
+            return;
+        HexContext hexContext = status.getHexContext();
+        hexContext.updateRuntimeAccessors(ctx.getBuffer());
+        HexContext immediateCtx = hexContext.branch();
+        DelayState state = status.getState();
+        if (state != null && state.isCustom()) {
+            UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
+                    .getUuid();
+            immediateCtx.setDefaultVariable(new EntityVar(entityId, ctx.getEntityRef()));
+        }
+        HexExecuter.continueExecution(Arrays.asList(links), immediateCtx);
+    }
 
     @Override
     public boolean onTick(float dt, HexStatus<DelayState> status, ConstructTickContext ctx) {

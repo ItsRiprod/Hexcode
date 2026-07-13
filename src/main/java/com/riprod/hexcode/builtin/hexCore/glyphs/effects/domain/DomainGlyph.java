@@ -1,6 +1,5 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +24,6 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.style.DomainStyl
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
-import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
@@ -160,12 +158,5 @@ public static final String ID = "Domain";
         DomainStyle.renderSpawn(anchorPos, (float) radius, hexContext, hexContext.getAccessor());
 
         hexContext.getHexRoot().addDependency(hexContext, zoneRef);
-
-        Slot immediate = glyph.getSlot(DomainGlyphSlots.IMMEDIATE);
-        if (immediate != null && immediate.getLinks().length > 0) {
-            HexContext immediateCtx = hexContext.branch();
-            immediateCtx.setDefaultVariable(zoneEntityVar);
-            HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
-        }
     }
 }
