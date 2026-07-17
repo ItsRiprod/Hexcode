@@ -8,43 +8,32 @@
   "BasePower": 1.0,
   "ManaConsumption": 3.0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Circle",
-      "Size": 0.8
-    },
-    {
-      "ShapeId": "Circle",
-      "Size": 0.6
-    },
-    {
-      "ShapeId": "Circle",
-      "Size": 0.4
-    }
+    "Square",
+    { "Parent": "Circle", "RelativeSize": 0.8 },
+    { "Parent": "Circle", "RelativeSize": 0.6 },
+    { "Parent": "Circle", "RelativeSize": 0.4 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Electrocute.Next.name",
       "Description": "hexcode.glyphs.Electrocute.Next.description"
     },
-    "ComplexityLimit": {
-      "Style": "Input",
-      "Label": "hexcode.glyphs.Electrocute.ComplexityLimit.name",
-      "Description": "hexcode.glyphs.Electrocute.ComplexityLimit.description",
+    "ResourceLimit": {
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Electrocute.ResourceLimit.name",
+      "Description": "hexcode.glyphs.Electrocute.ResourceLimit.description",
       "DefaultValue": -1
     },
     "immediate": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Electrocute.immediate.name",
       "Description": "hexcode.glyphs.Electrocute.immediate.description"
     }
   },
   "Config": {
     "Type": "Electrocute",
+    "Resource": "Lightning",
     "StatusEffect": "Lightning",
     "Efficiency": 0.8,
     "DurationPerComplexity": 1.0,

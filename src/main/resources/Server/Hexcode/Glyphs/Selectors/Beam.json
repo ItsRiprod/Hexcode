@@ -19,37 +19,31 @@
   "BasePower": 1.0,
   "ManaConsumption": 0.8,
   "ShapeStructure": [
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Circle",
-      "Size": 0.8
-    }
+    "Square",
+    { "Parent": "Circle", "RelativeSize": 0.8 }
   ],
   "Slots": {
     "source": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Beam.source.name",
       "Description": "hexcode.glyphs.Beam.source.description",
       "Unique": true
     },
     "rotation": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Beam.rotation.name",
       "Description": "hexcode.glyphs.Beam.rotation.description",
       "Unique": true
     },
     "range": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Beam.range.name",
       "Description": "hexcode.glyphs.Beam.range.description",
       "DefaultValue": 48,
       "Unique": true
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Beam.Next.name",
       "Description": "hexcode.glyphs.Beam.Next.description"
     }

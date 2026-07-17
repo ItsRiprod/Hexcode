@@ -8,43 +8,32 @@
   "BasePower": 1.0,
   "ManaConsumption": 3.0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Triangle",
-      "Size": 0.8
-    },
-    {
-      "ShapeId": "Triangle",
-      "Size": 0.6
-    },
-    {
-      "ShapeId": "Triangle",
-      "Size": 0.4
-    }
+    "Square",
+    { "Parent": "Triangle", "RelativeSize": 0.8 },
+    { "Parent": "Triangle", "RelativeSize": 0.6 },
+    { "Parent": "Triangle", "RelativeSize": 0.4 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Rebreathing.Next.name",
       "Description": "hexcode.glyphs.Rebreathing.Next.description"
     },
-    "ComplexityLimit": {
-      "Style": "Input",
-      "Label": "hexcode.glyphs.Rebreathing.ComplexityLimit.name",
-      "Description": "hexcode.glyphs.Rebreathing.ComplexityLimit.description",
+    "ResourceLimit": {
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Rebreathing.ResourceLimit.name",
+      "Description": "hexcode.glyphs.Rebreathing.ResourceLimit.description",
       "DefaultValue": -1
     },
     "immediate": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Rebreathing.immediate.name",
       "Description": "hexcode.glyphs.Rebreathing.immediate.description"
     }
   },
   "Config": {
     "Type": "Rebreathing",
+    "Resource": "Water",
     "StatusEffect": "Water",
     "Efficiency": 0.6,
     "DurationPerComplexity": 1.0,

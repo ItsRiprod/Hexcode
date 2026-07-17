@@ -5,18 +5,12 @@
   "Description": "hexcode.glyphs.Number_3.description",
   "ModelPath": "Number_3",
   "ShapeStructure": [
-    {
-      "ShapeId": "Up",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Triangle",
-      "Size": 1.0
-    }
+    { "Parent": "Up", "StatContribution": 0 },
+    { "Parent": "Triangle", "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Number_3.Next.name",
       "Description": "hexcode.glyphs.Number_3.Next.description"
     }

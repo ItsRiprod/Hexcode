@@ -35,10 +35,6 @@ public class MageArmorGlyph implements GlyphHandler {
         return ConfigBinding.of(MageArmorConfig.class, MageArmorConfig.CODEC);
     }
 
-    @Override
-    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        return 0f;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -63,8 +59,8 @@ public class MageArmorGlyph implements GlyphHandler {
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float limit = ElementSupport.complexityLimit(glyph, asset, hexContext);
-        float complexity = hexContext.consumeComplexity(limit);
+        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
+        float complexity = ElementSupport.consumeResource(hexContext, config.getResource(), limit);
         float pool = complexity * config.getEfficiency() * affinity;
         float duration = pool * config.getDurationPerComplexity();
 

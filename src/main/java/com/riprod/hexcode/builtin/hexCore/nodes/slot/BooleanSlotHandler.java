@@ -4,9 +4,12 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.InteractionState;
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.modules.entity.component.DisplayNameComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
@@ -40,6 +43,13 @@ public final class BooleanSlotHandler extends BaseSlotHandler {
 
         DebugComponent debug = accessor.getComponent(node, DebugComponent.getComponentType());
         if (debug != null) styleMarker(debug, booleanSlot);
+
+        accessor.putComponent(node, DisplayNameComponent.getComponentType(),
+                new DisplayNameComponent(Message.translation(booleanSlot.displayLabel())));
+        HoverableComponent hover = accessor.getComponent(node, HoverableComponent.getComponentType());
+        if (hover != null) {
+            hover.setHintText("description", Message.translation(booleanSlot.displayDescription()));
+        }
 
         return InteractionState.Finished;
     }

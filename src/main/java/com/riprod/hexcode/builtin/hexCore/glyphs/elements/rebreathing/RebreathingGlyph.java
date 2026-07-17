@@ -32,10 +32,6 @@ public class RebreathingGlyph implements GlyphHandler {
         return ConfigBinding.of(RebreathingConfig.class, RebreathingConfig.CODEC);
     }
 
-    @Override
-    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        return 0f;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -52,8 +48,8 @@ public class RebreathingGlyph implements GlyphHandler {
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float limit = ElementSupport.complexityLimit(glyph, asset, hexContext);
-        float seconds = ElementSupport.scaledDuration(hexContext.consumeComplexity(limit),
+        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
+        float seconds = ElementSupport.scaledDuration(ElementSupport.consumeResource(hexContext, config.getResource(), limit),
                 config.getEfficiency(), config.getDurationPerComplexity(),
                 affinity);
 

@@ -69,8 +69,7 @@ public class ConcentrationGlyph implements GlyphHandler {
         CasterStateComponent execComp = accessor.getComponent(
                 casterRef, CasterStateComponent.getComponentType());
         if (execComp == null || !execComp.isHoldingPrimary()) {
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Caster not holding primary");
+            HexExecuter.continueFromSlot(glyph, ConcentrationGlyphSlots.RELEASE, hexContext);
             return;
         }
 

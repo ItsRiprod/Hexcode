@@ -56,11 +56,6 @@ public class AreaGlyph implements GlyphHandler {
                 : GlyphHandler.super.getVolatilityCost(glyph, hexContext, asset);
     }
 
-    @Override
-    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        return isPassive(glyph) ? PASSIVE_FLOOR
-                : GlyphHandler.super.getComplexity(glyph, hexContext, asset);
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

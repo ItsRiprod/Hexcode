@@ -7,14 +7,12 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.ScaleGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.components.ScaleStackComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.components.ScaleState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.style.ScaleStyle;
 
@@ -68,29 +66,7 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
             Ref<EntityStore> targetRef = ctx.getEntityRef();
 
             if (targetRef != null && targetRef.isValid()) {
-                ScaleStackComponent stack = buffer.getComponent(
-                        targetRef, ScaleStackComponent.getComponentType());
-                if (stack != null) {
-                    stack.remove(state.getConstructId());
-                    String baseAssetId = stack.getBaseAssetId() != null
-                            ? stack.getBaseAssetId()
-                            : state.getModelAssetId();
-
-                    if (stack.isEmpty()) {
-                        ScaleGlyph.applyAbsoluteScale(buffer, targetRef, baseAssetId, 1.0f);
-                        buffer.tryRemoveComponent(targetRef, ScaleStackComponent.getComponentType());
-                    } else {
-                        buffer.putComponent(targetRef, ScaleStackComponent.getComponentType(), stack);
-                        float absolute = stack.productOfContributions();
-                        ScaleGlyph.applyAbsoluteScale(buffer, targetRef, baseAssetId, absolute);
-                    }
-
-                    PlayerSkinComponent skinComp = buffer.getComponent(
-                            targetRef, PlayerSkinComponent.getComponentType());
-                    if (skinComp != null) {
-                        skinComp.setNetworkOutdated();
-                    }
-                }
+                HexAppearanceService.removeLayer(buffer, targetRef, state.getConstructId().toString());
 
                 TransformComponent tc = buffer.getComponent(
                         targetRef, TransformComponent.getComponentType());

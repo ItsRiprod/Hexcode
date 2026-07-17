@@ -21,6 +21,7 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 
@@ -596,15 +597,19 @@ public class HexCodecV15 {
             for (int k = 0; k < storedSlotCount; k++) {
                 String[] links = allEmpty == 1 ? new String[0] : readLinkPlaceholders(br, refBits);
                 String name = k < schema.size() ? schema.get(k) : "<slot_" + k + ">";
-                Slot slot = Slot.forAssetSlot(asset, name);
-                slot.setLinks(links);
-                out.put(name, slot);
+                Slot slot = createSlot(asset, name);
+                if (slot != null) {
+                    slot.setLinks(links);
+                    out.put(name, slot);
+                }
             }
             for (int k = storedSlotCount; k < schema.size(); k++) {
                 String name = schema.get(k);
-                Slot slot = Slot.forAssetSlot(asset, name);
-                slot.setLinks(new String[0]);
-                out.put(name, slot);
+                Slot slot = createSlot(asset, name);
+                if (slot != null) {
+                    slot.setLinks(new String[0]);
+                    out.put(name, slot);
+                }
             }
         } else {
             int entryCount = br.readVarInt();
@@ -612,12 +617,21 @@ public class HexCodecV15 {
                 int sIdx = br.read(spBits);
                 String name = sIdx < slotPalette.size() ? slotPalette.get(sIdx) : null;
                 if (name == null) name = "<unresolved_" + sIdx + ">";
-                Slot slot = Slot.forAssetSlot(asset, name);
-                slot.setLinks(readLinkPlaceholders(br, refBits));
-                out.put(name, slot);
+                String[] links = readLinkPlaceholders(br, refBits);
+                Slot slot = createSlot(asset, name);
+                if (slot != null) {
+                    slot.setLinks(links);
+                    out.put(name, slot);
+                }
             }
         }
         return out;
+    }
+
+    static Slot createSlot(String glyphId, String slotKey) {
+        GlyphAsset glyphAsset = GlyphAsset.getAssetMap().getAsset(glyphId);
+        SlotConfig config = glyphAsset != null ? glyphAsset.getSlot(slotKey) : null;
+        return config != null ? config.create() : null;
     }
 
     static String[] readLinkPlaceholders(BitReader br, int refBits) {
@@ -725,7 +739,7 @@ public class HexCodecV15 {
     static List<String> buildBareSlotDict() {
         TreeSet<String> all = new TreeSet<>();
         for (GlyphAsset asset : GlyphAsset.getAssetMap().getAssetMap().values()) {
-            all.addAll(asset.getSlots().keySet());
+            all.addAll(asset.getSlotKeys());
         }
         return List.copyOf(all);
     }
@@ -733,7 +747,7 @@ public class HexCodecV15 {
     static List<String> getOrderedSlotKeys(String glyphId) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
         if (asset == null) return List.of();
-        return new ArrayList<>(asset.getSlots().keySet());
+        return new ArrayList<>(asset.getSlotKeys());
     }
 
     static boolean schemaMatches(String glyphId, Map<String, Slot> slots) {

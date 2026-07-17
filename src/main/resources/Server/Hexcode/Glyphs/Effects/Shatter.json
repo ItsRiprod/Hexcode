@@ -23,62 +23,53 @@
   "BasePower": 1.0,
   "ManaConsumption": 2.4,
   "ShapeStructure": [
-    {
-      "ShapeId": "Anticircle",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Circle",
-      "Size": 0.8
-    },
-    {
-      "ShapeId": "Anticircle",
-      "Size": 0.55
-    }
+    "Anticircle",
+    { "Parent": "Circle", "RelativeSize": 0.8 },
+    { "Parent": "Anticircle", "RelativeSize": 0.55 }
   ],
   "Slots": {
     "source": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.source.name",
       "Description": "hexcode.glyphs.Shatter.source.description",
       "Unique": true
     },
     "direction": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.direction.name",
       "Description": "hexcode.glyphs.Shatter.direction.description",
       "Unique": true
     },
     "count": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.count.name",
       "Description": "hexcode.glyphs.Shatter.count.description",
       "DefaultValue": 5,
       "Unique": true
     },
     "spread": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.spread.name",
       "Description": "hexcode.glyphs.Shatter.spread.description",
       "DefaultValue": 0.5236,
       "Unique": true
     },
     "speed": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.speed.name",
       "Description": "hexcode.glyphs.Shatter.speed.description",
       "DefaultValue": 20,
       "Unique": true
     },
     "gravity": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.gravity.name",
       "Description": "hexcode.glyphs.Shatter.gravity.description",
       "DefaultValue": 10,
       "Unique": true
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Shatter.Next.name",
       "Description": "hexcode.glyphs.Shatter.Next.description"
     }

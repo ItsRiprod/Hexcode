@@ -21,16 +21,25 @@ import com.riprod.hexcode.utils.HexVarUtil;
 
 public final class ElementSupport {
 
-    public static final String COMPLEXITY_LIMIT_SLOT = "ComplexityLimit";
+    public static final String RESOURCE_LIMIT_SLOT = "ResourceLimit";
+    public static final String ARCANE_RESOURCE = "Arcane";
 
     private ElementSupport() {
     }
 
-    public static float complexityLimit(Glyph glyph, GlyphAsset asset, HexContext hexContext) {
-        if (asset == null || asset.getSlot(COMPLEXITY_LIMIT_SLOT) == null) return -1f;
+    public static float resourceLimit(Glyph glyph, GlyphAsset asset, HexContext hexContext) {
+        if (asset == null || asset.getSlot(RESOURCE_LIMIT_SLOT) == null) return -1f;
         return HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(COMPLEXITY_LIMIT_SLOT, hexContext),
-                asset.getSlot(COMPLEXITY_LIMIT_SLOT)).floatValue();
+                glyph.readSlot(RESOURCE_LIMIT_SLOT, hexContext),
+                asset.getSlot(RESOURCE_LIMIT_SLOT)).floatValue();
+    }
+
+    public static float consumeResource(HexContext hexContext, @Nullable String resource, float cap) {
+        float fromArcane = hexContext.consumeResource(ARCANE_RESOURCE, cap);
+        if (resource == null || resource.equals(ARCANE_RESOURCE)) return fromArcane;
+        float remaining = cap < 0f ? -1f : Math.max(0f, cap - fromArcane);
+        if (cap >= 0f && remaining <= 0f) return fromArcane;
+        return fromArcane + hexContext.consumeResource(resource, remaining);
     }
 
     @Nullable

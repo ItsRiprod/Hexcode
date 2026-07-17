@@ -23,62 +23,58 @@
   "BasePower": 1.0,
   "ManaConsumption": 0.5,
   "ShapeStructure": [
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Triangle",
-      "Size": 0.8
-    }
+    "Square",
+    { "Parent": "Triangle", "RelativeSize": 0.8 }
   ],
   "Slots": {
     "anchor": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Conjure.anchor.name",
       "Description": "hexcode.glyphs.Conjure.anchor.description",
       "Unique": true
     },
     "coordsA": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Conjure.coordsA.name",
       "Description": "hexcode.glyphs.Conjure.coordsA.description",
       "Unique": true
     },
     "coordsB": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Conjure.coordsB.name",
       "Description": "hexcode.glyphs.Conjure.coordsB.description",
       "Unique": true
     },
     "duration": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Conjure.duration.name",
       "Description": "hexcode.glyphs.Conjure.duration.description",
       "DefaultValue": 30,
       "Unique": true
     },
     "interval": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Conjure.interval.name",
       "Description": "hexcode.glyphs.Conjure.interval.description",
       "DefaultValue": -1,
       "Unique": true
     },
     "hitbox": {
-      "Style": "Boolean",
+      "Parent": "Boolean",
       "Label": "hexcode.glyphs.Conjure.hitbox.name",
       "Description": "hexcode.glyphs.Conjure.hitbox.description",
       "DefaultValue": 1,
-      "Unique": true
+      "PositiveLabel": "hexcode.glyphs.Conjure.hitbox.positive",
+      "NeutralLabel": "hexcode.glyphs.Conjure.hitbox.neutral",
+      "NegativeLabel": "hexcode.glyphs.Conjure.hitbox.negative"
     },
     "immediate": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Conjure.immediate.name",
       "Description": "hexcode.glyphs.Conjure.immediate.description"
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Conjure.Next.name",
       "Description": "hexcode.glyphs.Conjure.Next.description"
     }

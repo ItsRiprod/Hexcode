@@ -14,25 +14,22 @@
   "BasePower": 1.0,
   "ManaConsumption": 3.0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Circle",
-      "Size": 1.0
-    }
+    "Circle"
   ],
   "Slots": {
     "target": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Force.target.name",
       "Description": "hexcode.glyphs.Force.target.description"
     },
     "direction": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Force.direction.name",
       "Description": "hexcode.glyphs.Force.direction.description",
       "Unique": true
     },
     "magnitude": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Force.magnitude.name",
       "Description": "hexcode.glyphs.Force.magnitude.description",
       "DefaultValue": 20,
@@ -45,7 +42,7 @@
       }
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Force.Next.name",
       "Description": "hexcode.glyphs.Force.Next.description"
     }

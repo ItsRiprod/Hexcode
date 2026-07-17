@@ -7,30 +7,24 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Line",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Antiline",
-      "Size": 1.0
-    }
+    { "Parent": "Line", "StatContribution": 0 },
+    { "Parent": "Antiline", "StatContribution": 0 }
   ],
   "Slots": {
     "a": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Add.a.name",
       "Description": "hexcode.glyphs.Add.a.description",
       "DefaultValue": 0
     },
     "b": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Add.b.name",
       "Description": "hexcode.glyphs.Add.b.description",
       "DefaultValue": 0
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Add.Next.name",
       "Description": "hexcode.glyphs.Add.Next.description"
     }

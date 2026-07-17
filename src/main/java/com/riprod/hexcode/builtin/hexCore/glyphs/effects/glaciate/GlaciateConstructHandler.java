@@ -103,7 +103,7 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
             if (speed > config.getMinDamageSpeed()) {
                 float damage = (float) (speed * glaciate.getDamageMultiplier());
                 damage *= status.getHexContext().getMagicPowerMultiplier();
-                applyDamage(ref, damage, ctx);
+                applyDamage(ref, damage, ctx, casterRef);
                 applyKnockback(ref, iceVelocity, speed, config, ctx);
             }
 
@@ -160,7 +160,7 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         ctx.getBuffer().tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
     }
 
-    private void applyDamage(Ref<EntityStore> targetRef, float amount, ConstructTickContext ctx) {
+    private void applyDamage(Ref<EntityStore> targetRef, float amount, ConstructTickContext ctx, Ref<EntityStore> casterRef) {
         if (damageCauseIndex < 0) {
             damageCauseIndex = DamageCause.getAssetMap().getIndex("Environment");
         }
@@ -172,7 +172,7 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
             return;
 
         Damage damage = new Damage(
-                new Damage.EnvironmentSource("hex_glaciate"), cause, amount);
+                new Damage.EntitySource(casterRef), cause, amount);
         DamageSystems.executeDamage(targetRef, ctx.getBuffer(), damage);
     }
 

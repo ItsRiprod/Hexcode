@@ -17,32 +17,29 @@
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Triangle",
-      "Size": 1.0
-    }
+    { "Parent": "Triangle", "StatContribution": 0 }
   ],
   "Slots": {
     "duration": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Delay.duration.name",
       "Description": "hexcode.glyphs.Delay.duration.description",
       "Unique": true,
       "DefaultValue": 1
     },
     "Source": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Delay.source.name",
       "Description": "hexcode.glyphs.Delay.source.description",
       "Unique": true
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Delay.Next.name",
       "Description": "hexcode.glyphs.Delay.Next.description"
     },
     "immediate": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Delay.immediate.name",
       "Description": "hexcode.glyphs.Delay.immediate.description"
     }

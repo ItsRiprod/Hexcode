@@ -5,18 +5,12 @@
   "Description": "hexcode.glyphs.Number_4.description",
   "ModelPath": "Number_4",
   "ShapeStructure": [
-    {
-      "ShapeId": "Up",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    }
+    { "Parent": "Up", "StatContribution": 0 },
+    { "Parent": "Square", "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Number_4.Next.name",
       "Description": "hexcode.glyphs.Number_4.Next.description"
     }

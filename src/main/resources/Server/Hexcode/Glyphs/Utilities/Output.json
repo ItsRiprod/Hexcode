@@ -7,24 +7,18 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Antitriangle",
-      "Size": 0.5
-    }
+    { "Parent": "Square", "StatContribution": 0 },
+    { "Parent": "Antitriangle", "RelativeSize": 0.5, "StatContribution": 0 }
   ],
   "Slots": {
     "color": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Output.color.name",
       "Description": "hexcode.glyphs.Output.color.description",
       "Unique": true
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Output.Next.name",
       "Description": "hexcode.glyphs.Output.Next.description"
     }

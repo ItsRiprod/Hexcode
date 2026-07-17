@@ -19,27 +19,18 @@
   "BasePower": 1.0,
   "ManaConsumption": 2.0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Antisquare",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Anticircle",
-      "Size": 0.8
-    },
-    {
-      "ShapeId": "Antisquare",
-      "Size": 0.6
-    }
+    "Antisquare",
+    { "Parent": "Anticircle", "RelativeSize": 0.8 },
+    { "Parent": "Antisquare", "RelativeSize": 0.6 }
   ],
   "Slots": {
     "target": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Erode.target.name",
       "Description": "hexcode.glyphs.Erode.target.description"
     },
     "amount": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Erode.amount.name",
       "Description": "hexcode.glyphs.Erode.amount.description",
       "DefaultValue": 5,
@@ -51,19 +42,19 @@
       }
     },
     "duration": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Erode.duration.name",
       "Description": "hexcode.glyphs.Erode.duration.description",
       "DefaultValue": 20,
       "Unique": true
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Erode.Next.name",
       "Description": "hexcode.glyphs.Erode.Next.description"
     },
     "immediate": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Erode.immediate.name",
       "Description": "hexcode.glyphs.Erode.immediate.description"
     }

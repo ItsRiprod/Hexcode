@@ -1,4 +1,5 @@
 package com.riprod.hexcode.builtin.hexCore.nodes.container;
+import com.riprod.hexcode.core.common.node.BaseNodeHandler;
 
 import java.util.Map;
 import java.util.UUID;
@@ -32,7 +33,7 @@ import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hexes.utils.CreateHex;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableType;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
@@ -40,7 +41,6 @@ import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.builtin.hexCore.scene.GlyphStyler;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.CraftingColors;
-import com.riprod.hexcode.core.common.node.NodeTypeId;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 import com.riprod.hexcode.builtin.hexCore.nodes.GlyphSpawner;
 import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
@@ -48,7 +48,7 @@ import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 import com.hypixel.hytale.logger.HytaleLogger;
 
-public class ContainerNodeHandler extends BaseContainerHandler {
+public class ContainerNodeHandler extends BaseNodeHandler {
     private static final HytaleLogger logger = HytaleLogger.forEnclosingClass();
 
     public static final ContainerNodeHandler INSTANCE = new ContainerNodeHandler();
@@ -59,7 +59,7 @@ public class ContainerNodeHandler extends BaseContainerHandler {
 
     public Ref<EntityStore> spawnContainer(CommandBuffer<EntityStore> accessor, Hex hex,
             Ref<EntityStore> anchorRef, Vector3d anchorPos, Vector3f offset, Ref<EntityStore> playerRef,
-            SlotAsset slotAsset) {
+            PedestalSlot slotAsset) {
 
         Vector3d globalPos = new Vector3d(anchorPos.x + offset.x, anchorPos.y + offset.y, anchorPos.z + offset.z);
 
@@ -108,7 +108,7 @@ public class ContainerNodeHandler extends BaseContainerHandler {
             holder.addComponent(DisplayNameComponent.getComponentType(),
                     new DisplayNameComponent(Message.translation(slotAsset.getLabel())));
         }
-        holder.addComponent(NodeComponent.getComponentType(), new NodeComponent(anchorRef, NodeTypeId.CONTAINER));
+        holder.addComponent(NodeComponent.getComponentType(), new NodeComponent(anchorRef, ContainerNodeConfig.TYPE));
         holder.addComponent(DebugComponent.getComponentType(),
                 new DebugComponent(DebugShape.Sphere, isEmpty ? CraftingColors.EMPTY_SLOT : CraftingColors.FILLED_SLOT,
                         0.5, 2.0f));

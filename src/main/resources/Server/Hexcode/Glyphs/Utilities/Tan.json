@@ -7,24 +7,18 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Triangle",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Up",
-      "Size": 1.0
-    }
+    { "Parent": "Triangle", "StatContribution": 0 },
+    { "Parent": "Up", "StatContribution": 0 }
   ],
   "Slots": {
     "a": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Tan.a.name",
       "Description": "hexcode.glyphs.Tan.a.description",
       "DefaultValue": 0
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Tan.Next.name",
       "Description": "hexcode.glyphs.Tan.Next.description"
     }

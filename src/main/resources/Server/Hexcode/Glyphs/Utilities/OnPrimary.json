@@ -11,18 +11,12 @@
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Line",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Less",
-      "Size": 1.0
-    }
+    { "Parent": "Line", "StatContribution": 0 },
+    { "Parent": "Less", "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.OnPrimary.Next.name",
       "Description": "hexcode.glyphs.OnPrimary.Next.description"
     }

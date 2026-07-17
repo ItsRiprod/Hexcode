@@ -7,51 +7,42 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Less",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Greater",
-      "Size": 1.0
-    }
+    { "Parent": "Less", "StatContribution": 0 },
+    { "Parent": "Square", "StatContribution": 0 },
+    { "Parent": "Greater", "StatContribution": 0 }
   ],
   "Slots": {
     "style": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Style.style.name",
       "Description": "hexcode.glyphs.Style.style.description"
     },
     "r": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Style.r.name",
       "Description": "hexcode.glyphs.Style.r.description",
       "DefaultValue": 0
     },
     "g": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Style.g.name",
       "Description": "hexcode.glyphs.Style.g.description",
       "DefaultValue": 0
     },
     "b": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Style.b.name",
       "Description": "hexcode.glyphs.Style.b.description",
       "DefaultValue": 0
     },
     "a": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Style.a.name",
       "Description": "hexcode.glyphs.Style.a.description",
       "DefaultValue": 255
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Style.Next.name",
       "Description": "hexcode.glyphs.Style.Next.description"
     }

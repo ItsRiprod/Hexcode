@@ -7,23 +7,17 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Triangle",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Circle",
-      "Size": 0.55
-    }
+    "Triangle",
+    { "Parent": "Circle", "RelativeSize": 0.55 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Concentration.Next.name",
       "Description": "hexcode.glyphs.Concentration.Next.description"
     },
     "release": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Concentration.release.name",
       "Description": "hexcode.glyphs.Concentration.release.description"
     }

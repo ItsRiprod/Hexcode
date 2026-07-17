@@ -23,7 +23,7 @@ import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
@@ -97,10 +97,10 @@ public abstract class ImbuementProfileAsset
     }
 
     // per-type slot provider: books generate pages from the book asset, others return their JSON slots
-    public abstract Map<String, SlotAsset> resolveSlots(@Nullable ItemStack stored);
+    public abstract Map<String, PedestalSlot> resolveSlots(@Nullable ItemStack stored);
 
     @Nullable
-    public SlotAsset findSlot(@Nullable ItemStack stored, String key) {
+    public PedestalSlot findSlot(@Nullable ItemStack stored, String key) {
         return resolveSlots(stored).get(key);
     }
 

@@ -5,18 +5,12 @@
   "Description": "hexcode.glyphs.Number_7.description",
   "ModelPath": "Number_7",
   "ShapeStructure": [
-    {
-      "ShapeId": "Greater",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Triangle",
-      "Size": 1.0
-    }
+    { "Parent": "Greater", "StatContribution": 0 },
+    { "Parent": "Triangle", "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Number_7.Next.name",
       "Description": "hexcode.glyphs.Number_7.Next.description"
     }

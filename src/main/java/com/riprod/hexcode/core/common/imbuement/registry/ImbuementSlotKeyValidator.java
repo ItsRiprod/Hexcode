@@ -8,10 +8,10 @@ import com.hypixel.hytale.codec.schema.SchemaContext;
 import com.hypixel.hytale.codec.schema.config.Schema;
 import com.hypixel.hytale.codec.validation.ValidationResults;
 import com.hypixel.hytale.codec.validation.Validator;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerRegistry;
 
-public final class ImbuementSlotKeyValidator implements Validator<Map<String, SlotAsset>> {
+public final class ImbuementSlotKeyValidator implements Validator<Map<String, PedestalSlot>> {
 
     public static final ImbuementSlotKeyValidator INSTANCE = new ImbuementSlotKeyValidator();
 
@@ -19,7 +19,7 @@ public final class ImbuementSlotKeyValidator implements Validator<Map<String, Sl
     }
 
     @Override
-    public void accept(Map<String, SlotAsset> slots, @Nonnull ValidationResults results) {
+    public void accept(Map<String, PedestalSlot> slots, @Nonnull ValidationResults results) {
         if (slots == null || slots.isEmpty()) return;
         for (String key : slots.keySet()) {
             if (key == null || key.isEmpty()) continue;

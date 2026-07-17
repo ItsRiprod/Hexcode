@@ -2,7 +2,7 @@ package com.riprod.hexcode.core.common.imbuement.asset.profiles;
 
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.hexbook.component.HexBookAsset;
 import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
@@ -15,16 +15,15 @@ import java.util.Map;
 public final class BookProfile extends ImbuementProfileAsset {
 
     private static final int DEFAULT_SLOTS = 10;
-    private static final String PAGE_STYLE = "Next";
 
     @Override
-    public Map<String, SlotAsset> resolveSlots(@Nullable ItemStack stored) {
+    public Map<String, PedestalSlot> resolveSlots(@Nullable ItemStack stored) {
         HexBookAsset book = CasterInventory.getHexBookAsset(stored);
         int count = book != null ? book.getSlotCount() : DEFAULT_SLOTS;
-        Map<String, SlotAsset> pages = new LinkedHashMap<>();
+        Map<String, PedestalSlot> pages = new LinkedHashMap<>();
         for (int i = 1; i <= count; i++) {
             pages.put(String.valueOf(i),
-                    SlotAsset.of("Page " + i, "Hex stored in book page " + i, null, PAGE_STYLE));
+                    PedestalSlot.of("Page " + i, "Hex stored in book page " + i));
         }
         return pages;
     }

@@ -47,6 +47,7 @@ public class FizzleMessageListener implements Consumer<GlyphFizzleEvent> {
             case HANDLER_FAILED -> reason.getDetail();
             case NOT_IMPLEMENTED -> "Not Implemented!";
             case MANUALLY_CANCELLED -> "Dispelled by Caster.";
+            case GLYPH_DISABLED -> "Glyph is disabled.";
             case ERROR -> "Glyph not found!";
             default -> "The spell fizzled.";
         };

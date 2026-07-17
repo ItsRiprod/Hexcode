@@ -1,11 +1,5 @@
 package com.riprod.hexcode.core.common.node;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.protocol.InteractionState;
@@ -16,20 +10,6 @@ import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.utils.VfxUtil;
 
 public class NodeRouter {
-
-    private static final Map<String, NodeInterface> HANDLERS = new HashMap<>();
-
-    public static void register(NodeTypeId id, NodeInterface handler) {
-        HANDLERS.put(id.value(), handler);
-    }
-
-    public static NodeInterface get(NodeTypeId id) {
-        return HANDLERS.get(id.value());
-    }
-
-    public static Set<String> keys() {
-        return new HashSet<>(HANDLERS.keySet());
-    }
 
     public static InteractionState enter(CommandBuffer<EntityStore> accessor,
             Ref<EntityStore> nodeRef, Ref<EntityStore> playerRef) {
@@ -69,30 +49,9 @@ public class NodeRouter {
         if (handler == null)
             return InteractionState.Failed;
 
-        // check if this node has outgoing links before exit (to detect new link creation)
-        NodeComponent nodeComp = accessor.getComponent(nodeRef, NodeComponent.getComponentType());
-        int linksBefore = 0;
-        if (nodeComp != null) {
-            List<Ref<EntityStore>> outgoing = nodeComp.getOutgoingRefs();
-            linksBefore = outgoing != null ? outgoing.size() : 0;
-        }
-
         InteractionState result = handler.exit(accessor, nodeRef, playerRef);
-
         if (result == InteractionState.Finished) {
-            // re-read to check if a link was added
-            nodeComp = accessor.getComponent(nodeRef, NodeComponent.getComponentType());
-            int linksAfter = 0;
-            if (nodeComp != null) {
-                List<Ref<EntityStore>> outgoing = nodeComp.getOutgoingRefs();
-                linksAfter = outgoing != null ? outgoing.size() : 0;
-            }
-
-            if (linksAfter > linksBefore) {
-                playSound(NodeSounds.LINK, accessor, nodeRef);
-            } else {
-                playSound(NodeSounds.DROP, accessor, nodeRef);
-            }
+            playSound(NodeSounds.DROP, accessor, nodeRef);
         }
         return result;
     }
@@ -103,24 +62,9 @@ public class NodeRouter {
         if (handler == null)
             return InteractionState.Failed;
 
-        // check state before dispatch to determine if this will unlink or delete
-        boolean hadLinks = false;
-        NodeComponent nodeComp = accessor.getComponent(nodeRef, NodeComponent.getComponentType());
-        if (nodeComp != null) {
-            List<Ref<EntityStore>> outgoing = nodeComp.getOutgoingRefs();
-            List<Ref<EntityStore>> incoming = nodeComp.getIncomingRefs();
-            hadLinks = (outgoing != null && !outgoing.isEmpty())
-                    || (incoming != null && !incoming.isEmpty());
-        }
-
         InteractionState result = handler.ability(accessor, nodeRef, inputType, playerRef);
-
         if (result == InteractionState.Finished) {
-            if (hadLinks) {
-                playSound(NodeSounds.UNLINK, accessor, nodeRef);
-            } else {
-                playSound(NodeSounds.DELETE, accessor, nodeRef);
-            }
+            playSound(NodeSounds.DELETE, accessor, nodeRef);
         }
         return result;
     }
@@ -146,10 +90,11 @@ public class NodeRouter {
         NodeComponent nodeComp = accessor.getComponent(nodeRef, NodeComponent.getComponentType());
         if (nodeComp == null)
             return null;
-        NodeTypeId id = nodeComp.getNodeType();
-        if (id == null)
+        String configId = nodeComp.getConfigId();
+        if (configId == null)
             return null;
-        return HANDLERS.get(id.value());
+        NodeConfig config = NodeConfig.getAssetMap().getAsset(configId);
+        return config != null ? config.handler() : null;
     }
 
     private static void playSound(String soundId, CommandBuffer<EntityStore> accessor,

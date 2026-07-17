@@ -26,7 +26,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
@@ -56,7 +56,7 @@ public static final String ID = "Domain";
 
     private static Impact slotImpact(GlyphAsset asset, String key) {
         if (asset == null) return null;
-        SlotAsset slot = asset.getSlot(key);
+        SlotConfig slot = asset.getSlot(key);
         return slot == null ? null : slot.getImpact();
     }
 

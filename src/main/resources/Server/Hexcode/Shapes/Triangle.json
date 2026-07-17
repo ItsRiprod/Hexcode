@@ -1,5 +1,6 @@
 {
   "CenterFilled": false,
   "CanRotate": false,
-  "ExpectedSpeed": 600
+  "ExpectedSpeed": 600,
+  "StatResource": "Water"
 }

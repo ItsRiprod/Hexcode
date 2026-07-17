@@ -4,8 +4,7 @@
   "Slots": {
     "Default": {
       "Label": "Default Slot",
-      "Description": "The default slot of the block",
-      "Style": "Next"
+      "Description": "The default slot of the block"
     }
   }
 }

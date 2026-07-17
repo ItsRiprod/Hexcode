@@ -1,4 +1,5 @@
 package com.riprod.hexcode.builtin.hexCore.nodes.anchor;
+import com.riprod.hexcode.core.common.node.BaseNodeHandler;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,12 +35,11 @@ import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.CraftingColors;
-import com.riprod.hexcode.core.common.node.NodeTypeId;
 import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeHandler;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.builtin.hexCore.scene.LinkRenderer;
 
-public class AnchorNodeHandler extends BaseAnchorHandler {
+public class AnchorNodeHandler extends BaseNodeHandler {
 
     private static final double ROOT_NODE_SCALE = 0.2;
 
@@ -106,10 +106,6 @@ public class AnchorNodeHandler extends BaseAnchorHandler {
             return InteractionState.Failed;
         }
 
-        if (nodeComp.getOutgoingRefs() != null) {
-            nodeComp.getOutgoingRefs().clear();
-        }
-
         HexComponent hexComp = accessor.getComponent(hexRootRef,
                 HexComponent.getComponentType());
         GlyphComponent targetEffect = accessor.getComponent(targetGlyphRef,
@@ -141,12 +137,8 @@ public class AnchorNodeHandler extends BaseAnchorHandler {
         if (hexComp == null)
             return InteractionState.Failed;
 
-        boolean hasConnection = hexComp.getHex().getFirstGlyphId() != null
-                || !nodeComp.getOutgoingRefs().isEmpty();
-
-        if (hasConnection) {
+        if (hexComp.getHex().getFirstGlyphId() != null) {
             hexComp.getHex().setFirstGlyphId(null);
-            nodeComp.getOutgoingRefs().clear();
             return InteractionState.Finished;
         }
 
@@ -179,7 +171,7 @@ public class AnchorNodeHandler extends BaseAnchorHandler {
         holder.addComponent(TransformComponent.getComponentType(),
                 new TransformComponent(rootPos, new Rotation3f()));
 
-        NodeComponent node = new NodeComponent(parentRef, NodeTypeId.ANCHOR);
+        NodeComponent node = new NodeComponent(parentRef, AnchorNodeConfig.TYPE);
 
         holder.addComponent(NodeComponent.getComponentType(), node);
 

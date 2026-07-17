@@ -22,7 +22,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
@@ -278,7 +278,7 @@ public class SessionUtils {
         if (profile == null) return null;
         List<Ref<EntityStore>> previews = session.getHexPreviewRefs();
         int i = 0;
-        for (Map.Entry<String, SlotAsset> entry : profile.resolveSlots(session.getStoredItem()).entrySet()) {
+        for (Map.Entry<String, PedestalSlot> entry : profile.resolveSlots(session.getStoredItem()).entrySet()) {
             if (i >= previews.size()) break;
             if (slotKey.equals(entry.getKey())) return previews.get(i);
             i++;

@@ -229,28 +229,20 @@ public class HexContext {
         }
     }
 
-    public float getComplexity() {
-        return hexStats != null ? hexStats.getComplexity() : 0f;
+    public float getResource(String id) {
+        return hexStats != null ? hexStats.getResource(id) : 0f;
     }
 
-    public void addComplexity(float amount) {
-        if (hexStats != null) hexStats.addComplexity(amount);
+    public void addResource(String id, float amount) {
+        if (hexStats != null) hexStats.addResource(id, amount);
     }
 
-    public float consumeComplexity() {
-        return hexStats != null ? hexStats.consumeComplexity() : 0f;
+    public float consumeResource(String id, float cap) {
+        return hexStats != null ? hexStats.consumeResource(id, cap) : 0f;
     }
 
-    public float consumeComplexity(float cap) {
-        return hexStats != null ? hexStats.consumeComplexity(cap) : 0f;
-    }
-
-    public void accrueComplexity(float nominalBase, float actualCost, float budgetRatio) {
-        if (hexStats != null) hexStats.accrueComplexity(nominalBase, actualCost, budgetRatio);
-    }
-
-    public float getComplexityBudget() {
-        return hexStats != null ? hexStats.getComplexityBudget() : 0f;
+    public Map<String, Float> getResources() {
+        return hexStats != null ? hexStats.getResources() : Map.of();
     }
 
     public float getVolatilityOverride() {

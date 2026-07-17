@@ -5,36 +5,24 @@
   "Description": "hexcode.glyphs.Cross.description",
   "ModelPath": "Cross",
   "ShapeStructure": [
-    {
-      "ShapeId": "Less",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Greater",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Antislash",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Slash",
-      "Size": 1.0
-    }
+    { "Parent": "Less", "StatContribution": 0 },
+    { "Parent": "Greater", "StatContribution": 0 },
+    { "Parent": "Antislash", "StatContribution": 0 },
+    { "Parent": "Slash", "StatContribution": 0 }
   ],
   "Slots": {
     "v": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Cross.v.name",
       "Description": "hexcode.glyphs.Cross.v.description"
     },
     "w": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Cross.w.name",
       "Description": "hexcode.glyphs.Cross.w.description"
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Cross.Next.name",
       "Description": "hexcode.glyphs.Cross.Next.description"
     }

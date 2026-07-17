@@ -10,28 +10,25 @@
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Antisquare",
-      "Size": 1.0
-    }
+    "Antisquare"
   ],
   "Slots": {
     "min": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Chaos.min.name",
       "Description": "hexcode.glyphs.Chaos.min.description",
       "DefaultValue": 0,
       "Unique": true
     },
     "max": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Chaos.max.name",
       "Description": "hexcode.glyphs.Chaos.max.description",
       "DefaultValue": 1,
       "Unique": true
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Chaos.Next.name",
       "Description": "hexcode.glyphs.Chaos.Next.description"
     }

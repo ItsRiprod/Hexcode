@@ -7,18 +7,12 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Antiline",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Slash",
-      "Size": 0.7
-    }
+    { "Parent": "Antiline", "StatContribution": 0 },
+    { "Parent": "Slash", "RelativeSize": 0.7, "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.IsHolding.Next.name",
       "Description": "hexcode.glyphs.IsHolding.Next.description"
     }

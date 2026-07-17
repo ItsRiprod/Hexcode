@@ -17,47 +17,38 @@
   "BasePower": 1.0,
   "ManaConsumption": 2.4,
   "ShapeStructure": [
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Antisquare",
-      "Size": 0.55
-    },
-    {
-      "ShapeId": "Triangle",
-      "Size": 0.6
-    }
+    "Square",
+    { "Parent": "Antisquare", "RelativeSize": 0.55 },
+    { "Parent": "Triangle", "RelativeSize": 0.6 }
   ],
   "Slots": {
     "target": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Scale.target.name",
       "Description": "hexcode.glyphs.Scale.target.description",
       "Unique": true
     },
     "magnitude": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Scale.magnitude.name",
       "Description": "hexcode.glyphs.Scale.magnitude.description",
       "DefaultValue": 2.0,
       "Unique": true
     },
     "duration": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Scale.duration.name",
       "Description": "hexcode.glyphs.Scale.duration.description",
       "DefaultValue": 5,
       "Unique": true
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Scale.Next.name",
       "Description": "hexcode.glyphs.Scale.Next.description"
     },
     "immediate": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Scale.immediate.name",
       "Description": "hexcode.glyphs.Scale.immediate.description"
     }

@@ -7,24 +7,18 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Triangle",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Greater",
-      "Size": 1.0
-    }
+    { "Parent": "Triangle", "StatContribution": 0 },
+    { "Parent": "Greater", "StatContribution": 0 }
   ],
   "Slots": {
     "a": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Cos.a.name",
       "Description": "hexcode.glyphs.Cos.a.description",
       "DefaultValue": 0
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Cos.Next.name",
       "Description": "hexcode.glyphs.Cos.Next.description"
     }

@@ -68,7 +68,7 @@ public class CodecUtil {
         if (cachedSlotDictionary != null) return cachedSlotDictionary;
         TreeSet<String> all = new TreeSet<>();
         for (GlyphAsset asset : GlyphAsset.getAssetMap().getAssetMap().values()) {
-            all.addAll(asset.getSlots().keySet());
+            all.addAll(asset.getSlotKeys());
         }
         cachedSlotDictionary = List.copyOf(all);
         return cachedSlotDictionary;
@@ -91,7 +91,7 @@ public class CodecUtil {
     public static List<String> getOrderedSlotKeys(String glyphId) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
         if (asset == null) return List.of();
-        return new ArrayList<>(asset.getSlots().keySet());
+        return new ArrayList<>(asset.getSlotKeys());
     }
 
     public static void invalidateCache() {

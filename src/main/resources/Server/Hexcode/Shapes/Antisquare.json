@@ -1,5 +1,6 @@
 {
   "CenterFilled": false,
   "CanRotate": false,
-  "ExpectedSpeed": 1067
+  "ExpectedSpeed": 1067,
+  "StatResource": "Fire"
 }

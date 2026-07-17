@@ -22,13 +22,12 @@ import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.component.HexColors;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.StyleResolution;
-import com.riprod.hexcode.core.common.glyphs.registry.StyleResolution.ResolvedStyle;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.modules.entity.component.DisplayNameComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
@@ -55,7 +54,7 @@ public class SlotNodeHandler extends BaseSlotHandler {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         if (asset == null) return;
 
-        Map<String, SlotAsset> assetSlots = asset.getSlots();
+        Map<String, SlotConfig> assetSlots = asset.getSlots();
         if (assetSlots.isEmpty()) return;
 
         HeadRotation headRot = accessor.getComponent(playerRef, HeadRotation.getComponentType());
@@ -67,52 +66,34 @@ public class SlotNodeHandler extends BaseSlotHandler {
         float sy = (float) Math.sin(yaw);
         Vector3f right = new Vector3f(-cy, 0f, sy);
         Vector3f up = new Vector3f(sp * sy, cp, sp * cy);
-        Vector3f forward = new Vector3f(-cp * sy, sp, -cp * cy);
 
-        List<Vector3f> radialFallbacks = computeRadialFallbacks(assetSlots, right, up);
+        List<Vector3f> radialFallbacks =
+                RadialPositionUtil.calculateOffsets(assetSlots.size(), SLOT_RADIUS, 0f, right, up);
         int radialIndex = 0;
 
-        for (Map.Entry<String, SlotAsset> entry : assetSlots.entrySet()) {
+        for (Map.Entry<String, SlotConfig> entry : assetSlots.entrySet()) {
             String key = entry.getKey();
-            SlotAsset slotAsset = entry.getValue();
-            Vector3f authored = slotAsset.getOffset();
-            Vector3f offset;
-            if (authored == null) {
-                offset = radialFallbacks.get(radialIndex++);
-            } else {
-                offset = new Vector3f(right).mul(authored.x)
-                        .add(new Vector3f(up).mul(authored.y))
-                        .add(new Vector3f(forward).mul(authored.z));
-            }
+            SlotConfig config = entry.getValue();
+            Vector3f offset = radialFallbacks.get(radialIndex++);
 
             Slot slot = glyph.getOrCreateSlot(key);
-            slot.hydrateFrom(slotAsset, key, offset, glyph.getGlyphId());
+            if (slot == null) continue;
+            slot.hydrateFrom(config, key, offset);
 
             TransformComponent parentTransform = accessor.getComponent(glyphRef, TransformComponent.getComponentType());
             if (parentTransform == null) continue;
 
-            Ref<EntityStore> slotRef = spawnSlotEntityAt(accessor, glyphRef, key, slotAsset, offset,
-                    parentTransform.getPosition(), glyph.getGlyphId(), slot);
+            Ref<EntityStore> slotRef = spawnSlotEntityAt(accessor, glyphRef, key, config, offset,
+                    parentTransform.getPosition(), slot);
             if (slotRef != null) {
                 glyphComp.getSlotEntityRefs().add(slotRef);
             }
         }
     }
 
-    private List<Vector3f> computeRadialFallbacks(Map<String, SlotAsset> assetSlots, Vector3f right, Vector3f up) {
-        int unsetCount = 0;
-        for (SlotAsset s : assetSlots.values()) {
-            if (s.getOffset() == null) unsetCount++;
-        }
-        if (unsetCount == 0) return new ArrayList<>();
-        return RadialPositionUtil.calculateOffsets(unsetCount, SLOT_RADIUS, 0f, right, up);
-    }
-
     private Ref<EntityStore> spawnSlotEntityAt(CommandBuffer<EntityStore> accessor,
-            Ref<EntityStore> parentRef, String slotKey, SlotAsset asset, Vector3f offset,
-            Vector3d parentWorldPos, String glyphId, Slot slot) {
-        ResolvedStyle rs = StyleResolution.resolve(asset, glyphId, slotKey);
-
+            Ref<EntityStore> parentRef, String slotKey, SlotConfig config, Vector3f offset,
+            Vector3d parentWorldPos, Slot slot) {
         Vector3d slotPos = new Vector3d(
                 parentWorldPos.x + offset.x,
                 parentWorldPos.y + offset.y,
@@ -125,7 +106,8 @@ public class SlotNodeHandler extends BaseSlotHandler {
 
         holder.addComponent(SlotComponent.getComponentType(), new SlotComponent(slotKey));
 
-        DebugComponent debug = new DebugComponent(rs.shape(), rs.color(), SLOT_SCALE, SLOT_RESPAWN_INTERVAL);
+        DebugComponent debug = new DebugComponent(
+                slot.getShape(), slot.getColor(), SLOT_SCALE, SLOT_RESPAWN_INTERVAL);
         if (slot instanceof BooleanSlot booleanSlot) {
             BooleanSlotHandler.styleMarker(debug, booleanSlot);
         }
@@ -142,13 +124,13 @@ public class SlotNodeHandler extends BaseSlotHandler {
         holder.addComponent(NetworkId.getComponentType(), new NetworkId(networkId));
 
         HoverableComponent hoverable = new HoverableComponent(HoverableType.NODE);
-        hoverable.setHintText("description", Message.translation(asset.getDescription()));
+        hoverable.setHintText("description", Message.translation(slot.displayDescription()));
         holder.addComponent(HoverableComponent.getComponentType(), hoverable);
         holder.addComponent(DisplayNameComponent.getComponentType(),
-                new DisplayNameComponent(Message.translation(asset.getLabel())));
+                new DisplayNameComponent(Message.translation(slot.displayLabel())));
 
         holder.addComponent(NodeComponent.getComponentType(),
-                new NodeComponent(parentRef, rs.handlerId()));
+                new NodeComponent(parentRef, config.getId()));
 
         holder.addComponent(MountedComponent.getComponentType(),
                 new MountedComponent(parentRef, new Rotation3f(offset.x, offset.y, offset.z), MountController.Minecart));

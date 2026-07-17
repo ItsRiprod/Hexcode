@@ -76,11 +76,6 @@ public class ConjureGlyph implements GlyphHandler {
         return glyph.getNextLinks().isEmpty() && !hasLinks(glyph, ConjureGlyphSlots.IMMEDIATE);
     }
 
-    @Override
-    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        return isPassive(glyph) ? PASSIVE_FLOOR
-                : GlyphHandler.super.getComplexity(glyph, hexContext, asset);
-    }
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
