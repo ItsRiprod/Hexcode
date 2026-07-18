@@ -47,10 +47,10 @@ public class HexPageCommand extends AbstractPlayerCommand {
 
     @Nonnull
     private final OptionalArg<String> rarityArg =
-            this.withOptionalArg("rarity", "page rarity: Common, Uncommon, Rare, Epic or Legendary", ArgTypes.STRING);
+            this.withOptionalArg("rarity", "page rarity: Common, Rare or Legendary", ArgTypes.STRING);
 
     private static final Set<String> RARITIES =
-            Set.of("Common", "Uncommon", "Rare", "Epic", "Legendary");
+            Set.of("Common", "Rare", "Legendary");
 
     public HexPageCommand() {
         super("page", "create Spell Page item(s) inscribed with a saved hex");

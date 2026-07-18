@@ -28,13 +28,6 @@
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
   "Weapon": {
     "StatModifiers": {
-      "Magic_Power": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 0.7
-        }
-      ],
       "Volatility": [
         {
           "Target": "Max",
@@ -47,10 +40,23 @@
           "CalculationType": "Additive",
           "Amount": 5
         }
+      ],
+      "Stability": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 18
+        }
+      ],
+      "Affinity_Life": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 15
+        }
       ]
     },
     "EntityStatsToClear": [
-      "Magic_Power",
       "MagicCharges",
       "Volatility"
     ]
@@ -96,7 +102,11 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 30,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 15,
+                "Life": 15
+              }
             },
             "Style": "Hexstaff_Special_Life"
           }
@@ -114,7 +124,11 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 40,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 20,
+                "Life": 20
+              }
             },
             "Style": "Hexstaff_Special_Life"
           }
@@ -132,7 +146,11 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 50,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 25,
+                "Life": 25
+              }
             },
             "Style": "Hexstaff_Special_Life"
           }
@@ -150,7 +168,11 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 60,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 30,
+                "Life": 30
+              }
             },
             "Style": "Hexstaff_Special_Life"
           }

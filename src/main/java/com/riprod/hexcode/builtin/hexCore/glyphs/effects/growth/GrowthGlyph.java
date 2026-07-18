@@ -36,6 +36,8 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.core.common.protection.BlockAction;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -243,6 +245,9 @@ public static final String ID = "Growth";
         int attempts = Math.max(config.getAttemptsFloor(), (int) (amount * config.getAttemptsPerAmount()));
         int bonemealRadius = config.getBonemealRadius();
 
+        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        boolean blocked = false;
+
         for (int a = 0; a < attempts; a++) {
             int dx = rng.nextInt(-bonemealRadius, bonemealRadius + 1);
             int dz = rng.nextInt(-bonemealRadius, bonemealRadius + 1);
@@ -258,12 +263,22 @@ public static final String ID = "Growth";
 
             if (rng.nextFloat() > config.getBonemealChance()) continue;
 
+            if (!HexProtection.canModifyBlock(world, caster, accessor,
+                    new Vector3i(tx, ty + 1, tz), BlockAction.PLACE)) {
+                blocked = true;
+                continue;
+            }
+
             String[] vegetationBlocks = config.getVegetationBlocks();
             String vegetation = vegetationBlocks[rng.nextInt(vegetationBlocks.length)];
             world.setBlock(tx, ty + 1, tz, vegetation);
 
             Vector3d effectPos = new Vector3d(tx + 0.5, ty + 1.5, tz + 0.5);
             GrowthStyle.renderBlockHit(effectPos, hexContext, accessor);
+        }
+
+        if (blocked) {
+            HexProtection.notifyBlocked(caster, accessor, getId());
         }
 
         LOGGER.atInfo().log("growth: applied bonemeal around %s", pos);

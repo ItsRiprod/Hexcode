@@ -24,6 +24,8 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.protection.BlockAction;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -112,6 +114,13 @@ public class PhaseGlyph implements GlyphHandler {
 
         String typeId = blockType.getId();
         int rotationIndex = world.getBlockRotationIndex(pos.x, pos.y, pos.z);
+
+        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        if (!HexProtection.canModifyBlock(world, caster, accessor, pos, BlockAction.BREAK)) {
+            HexProtection.notifyBlocked(caster, accessor, getId());
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+            return;
+        }
 
         List<PhasedBlock> phasedBlocks = new ArrayList<>();
         phasedBlocks.add(new PhasedBlock(pos, typeId, rotationIndex));

@@ -26,13 +26,6 @@
   "Icon": "Icons/ItemsGenerated/Arcane_Hexstaff.png",
   "Weapon": {
     "StatModifiers": {
-      "Magic_Power": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 2
-        }
-      ],
       "Volatility": [
         {
           "Target": "Max",
@@ -45,10 +38,23 @@
           "CalculationType": "Additive",
           "Amount": 10
         }
+      ],
+      "Stability": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 18
+        }
+      ],
+      "Affinity_Arcane": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 15
+        }
       ]
     },
     "EntityStatsToClear": [
-      "Magic_Power",
       "MagicCharges",
       "Volatility"
     ]
@@ -98,7 +104,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 30,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 30
+              }
             },
             "Style": "Hexstaff_Special_Arcane"
           }
@@ -116,7 +125,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 40,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 40
+              }
             },
             "Style": "Hexstaff_Special_Arcane"
           }
@@ -134,7 +146,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 50,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 50
+              }
             },
             "Style": "Hexstaff_Special_Arcane"
           }
@@ -152,7 +167,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 60,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 60
+              }
             },
             "Style": "Hexstaff_Special_Arcane"
           }

@@ -35,7 +35,6 @@
       ]
     },
     "EntityStatsToClear": [
-      "Magic_Power",
       "MagicCharges",
       "Volatility"
     ]
@@ -83,7 +82,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 18,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 9
+              }
             },
             "Style": "Hexstaff_Basic_Crude"
           }
@@ -101,7 +103,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 20,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 10
+              }
             },
             "Style": "Hexstaff_Basic_Crude"
           }
@@ -119,7 +124,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 23,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 11.5
+              }
             },
             "Style": "Hexstaff_Basic_Crude"
           }
@@ -137,7 +145,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 25,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 12.5
+              }
             },
             "Style": "Hexstaff_Basic_Crude"
           }

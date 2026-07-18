@@ -29,22 +29,21 @@
   "Icon": "Icons/ItemsGenerated/Weapon_Staff_Cobalt.png",
   "Weapon": {
     "StatModifiers": {
-      "Magic_Power": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 1.0
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
           "Amount": 6
         }
+      ],
+      "Stability": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 16
+        }
       ]
     },
     "EntityStatsToClear": [
-      "Magic_Power",
       "MagicCharges",
       "Volatility"
     ]
@@ -89,7 +88,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 35,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 17.5
+              }
             },
             "Style": "Hexstaff_Basic_Cobalt"
           }
@@ -107,7 +109,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 40,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 20
+              }
             },
             "Style": "Hexstaff_Basic_Cobalt"
           }
@@ -125,7 +130,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 45,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 22.5
+              }
             },
             "Style": "Hexstaff_Basic_Cobalt"
           }
@@ -143,7 +151,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 50,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 25
+              }
             },
             "Style": "Hexstaff_Basic_Cobalt"
           }

@@ -37,22 +37,21 @@
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
   "Weapon": {
     "StatModifiers": {
-      "Magic_Power": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 0.1
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
           "Amount": 2
         }
+      ],
+      "Stability": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 6
+        }
       ]
     },
     "EntityStatsToClear": [
-      "Magic_Power",
       "MagicCharges",
       "Volatility"
     ]
@@ -70,7 +69,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 25,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 12.5
+              }
             },
             "Style": "Hexstaff_Basic_Bronze"
           }
@@ -88,7 +90,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 29,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 14.5
+              }
             },
             "Style": "Hexstaff_Basic_Bronze"
           }
@@ -106,7 +111,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 32,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 16
+              }
             },
             "Style": "Hexstaff_Basic_Bronze"
           }
@@ -124,7 +132,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 36,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 18
+              }
             },
             "Style": "Hexstaff_Basic_Bronze"
           }

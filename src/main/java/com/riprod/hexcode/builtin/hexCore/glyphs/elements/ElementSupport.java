@@ -78,6 +78,6 @@ public final class ElementSupport {
         if (index == Integer.MIN_VALUE) return 1.0f;
         EntityStatValue value = stats.get(index);
         if (value == null) return 1.0f;
-        return 1.0f + (value.get() / 100f) * scale;
+        return 1.0f + (value.getMax() / 100f) * scale;
     }
 }

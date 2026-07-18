@@ -1,2 +1,8 @@
-stats.Volatility=Spell Volatility: {value}
-stats.Magic_Power=Spell Power: {value}
+stats.Volatility=[Inert] Spell Stability: {value}
+stats.Stability=Casting Stability: {value}%
+stats.Affinity_Fire=Elemental Fire Bonus: {value}
+stats.Affinity_Ice=Elemental Ice Bonus: {value}
+stats.Affinity_Life=Elemental Life Bonus: {value}
+stats.Affinity_Lightning=Elemental Lightning Bonus: {value}
+stats.Affinity_Arcane=Elemental Arcane Bonus: {value}
+stats.Affinity_Void=Elemental Void Bonus: {value}

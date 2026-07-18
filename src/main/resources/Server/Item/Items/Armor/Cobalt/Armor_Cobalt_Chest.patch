@@ -12,6 +12,13 @@
           "Amount": 11,
           "CalculationType": "Additive"
         }
+      ],
+      "Affinity_Ice": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 15
+        }
       ]
     }
   }

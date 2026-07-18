@@ -42,11 +42,20 @@
           }
         },
         {
-          "Type": "ModifyInventory",
-          "AdjustHeldItemDurability": -1,
-          "BrokenItem": "Ingredient_Fabric_Scrap_Linen",
-          "NotifyOnBreak": true,
-          "NotifyOnBreakMessage": "hexcode.pages.page.break"
+          "Type": "Replace",
+          "Var": "PageSpend",
+          "DefaultOk": true,
+          "DefaultValue": {
+            "Interactions": [
+              {
+                "Type": "ModifyInventory",
+                "AdjustHeldItemDurability": -1,
+                "BrokenItem": "*Hex_Page_Common_State_Empty",
+                "NotifyOnBreak": true,
+                "NotifyOnBreakMessage": "hexcode.pages.page.spent"
+              }
+            ]
+          }
         }
       ]
     }

@@ -25,6 +25,39 @@
           }
         }
       ]
+    },
+    "PageSpend": {
+      "Interactions": [
+        {
+          "Type": "ModifyInventory",
+          "AdjustHeldItemDurability": -1,
+          "BrokenItem": "*Hex_Page_Common_State_Empty",
+          "NotifyOnBreak": true,
+          "NotifyOnBreakMessage": "hexcode.pages.page.spent"
+        }
+      ]
+    }
+  },
+  "State": {
+    "Empty": {
+      "Variant": true,
+      "TranslationProperties": {
+        "Name": "hexcode.pages.empty.name",
+        "Description": "hexcode.pages.empty.description"
+      },
+      "Texture": "Items/Consumable/Hexes/Hex_Page_Empty.png",
+      "MaxDurability": 0,
+      "MaxStack": 16,
+      "Interactions": {
+        "Secondary": {
+          "Interactions": [
+            {
+              "Type": "Interrupt",
+              "Entity": "Owner"
+            }
+          ]
+        }
+      }
     }
   }
 }

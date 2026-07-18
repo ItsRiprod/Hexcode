@@ -67,5 +67,7 @@
 - Fix: Scale Glyph properly removes itself if the server crashes
 - Feat: Aligned Nodes and Slots to be centrally fixed around a single pipeline (architectural cleanup - enables more Nodes and SlotTypes in the future)
 - Feat: Added support for arbitrary slot metadata in the codecs 
+- Fix: Block and Item imbuements work again
+- Fix: when out of range of a pedestal in selection mode, you properly get removed
 
 - Probably much more. I tried keeping a running note this time

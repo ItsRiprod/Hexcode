@@ -59,7 +59,7 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
             return;
         double targetVy = config.getRiseSpeedPerIntensity() * state.getAppliedIntensity();
         double currentVy = VelocityUtil.currentVelocity(target, ctx.getBuffer()).y;
-        if (currentVy >= targetVy)
+        if (currentVy >= targetVy && targetVy >= 0)
             return;
         double delta = Math.min(targetVy - currentVy, config.getMaxCatchAccel() * dt);
         vel.addInstruction(new Vector3d(0, delta, 0), null, ChangeVelocityType.Add);

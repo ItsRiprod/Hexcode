@@ -24,9 +24,9 @@ import com.riprod.hexcode.utils.GlyphMath;
 public class GlyphStyler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
-    public static final float SCALE_PER_GLYPH = 0.15f; // increase scale by 5% per glyph
+    public static final float SCALE_PER_GLYPH = 0.05f; // increase scale by 5% per glyph
     public static final float SCALE_SINGLE_GLYPH = 0.45f; // if only 1 glyph, make it slightly smaller to avoid clipping
-    public static final float SCALE_MULTIPLIER = 0.3f;
+    public static final float SCALE_MULTIPLIER = 0.2f;
 
     private static final float HOVER_SCALE = 1.2f;
 

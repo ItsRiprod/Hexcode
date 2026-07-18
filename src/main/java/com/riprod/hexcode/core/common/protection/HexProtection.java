@@ -12,13 +12,16 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.environment.config.Environment;
+import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
 import com.hypixel.hytale.server.core.event.events.ecs.PlaceBlockEvent;
 import com.hypixel.hytale.server.core.modules.entity.component.Intangible;
+import com.hypixel.hytale.server.core.modules.entity.component.Invulnerable;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
+import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
@@ -81,6 +84,8 @@ public final class HexProtection {
             return true;
         }
         if (accessor.getComponent(targetRef, Intangible.getComponentType()) != null) {
+            LOGGER.atFine().atMostEvery(5, TimeUnit.SECONDS)
+                    .log("Blocked glyph from affecting intangible entity");
             return false;
         }
         if (accessor.getComponent(targetRef, HexcodeComponent.getComponentType()) != null) {
@@ -90,7 +95,13 @@ public final class HexProtection {
         boolean targetIsPlayer = accessor.getComponent(targetRef, Player.getComponentType()) != null;
         boolean casterIsPlayer = accessor.getComponent(casterRef, Player.getComponentType()) != null;
         if (targetIsPlayer && casterIsPlayer && !world.getWorldConfig().isPvpEnabled()) {
+            LOGGER.atFine().atMostEvery(5, TimeUnit.SECONDS)
+                    .log("Blocked glyph from doing damage - PVP is Disabled");
             return false;
+        }
+
+        if (isDamageImmune(accessor, targetRef)) {
+            return true;
         }
 
         DamageCause cause = DamageCause.getAssetMap().getAsset(PROBE_CAUSE_ID);
@@ -99,6 +110,12 @@ public final class HexProtection {
         }
         Damage probe = new Damage(new Damage.EntitySource(casterRef), cause, 0f);
         DamageSystems.executeDamage(targetRef, accessor, probe);
+
+        if (probe.isCancelled()) {
+            LOGGER.atFine().atMostEvery(5, TimeUnit.SECONDS)
+                    .log("Blocked glyph from doing damage - Damage is Diabled");
+        }
+
         return !probe.isCancelled();
     }
 
@@ -116,6 +133,18 @@ public final class HexProtection {
         }
         Message notification = Message.translation(BLOCKED_NOTIFICATION).param("glyphName", glyphDisplayName);
         NotificationUtil.sendNotification(pr.getPacketHandler(), notification);
+    }
+
+    private static boolean isDamageImmune(CommandBuffer<EntityStore> accessor, Ref<EntityStore> targetRef) {
+        if (accessor.getComponent(targetRef, Invulnerable.getComponentType()) != null) {
+            return true;
+        }
+        if (accessor.getComponent(targetRef, DeathComponent.getComponentType()) != null) {
+            return true;
+        }
+        EffectControllerComponent effects = accessor.getComponent(
+                targetRef, EffectControllerComponent.getComponentType());
+        return effects != null && effects.isInvulnerable();
     }
 
     private static boolean isEnvironmentModifiable(World world, Vector3i pos) {
