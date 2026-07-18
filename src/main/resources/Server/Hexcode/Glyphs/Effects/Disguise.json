@@ -1,0 +1,65 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Disguise",
+  "Style": {
+    "PrimaryParticle": {
+      "SystemId": "Disguise_Apply"
+    },
+    "PrimarySound": "SFX_Portal_Neutral_Teleport_Local",
+    "SecondaryParticle": {
+      "SystemId": "Disguise_Restore"
+    },
+    "SecondarySound": "SFX_Divine_Respawn"
+  },
+  "Title": "hexcode.glyphs.Disguise.name",
+  "Description": "hexcode.glyphs.Disguise.description",
+  "ModelPath": "Disguise",
+  "BasePower": 1.0,
+  "ManaConsumption": 2.8,
+  "ShapeStructure": [
+    "Triangle",
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Antisquare",
+      "RelativeSize": 0.55
+    }
+  ],
+  "Slots": {
+    "target": {
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Disguise.target.name",
+      "Description": "hexcode.glyphs.Disguise.target.description",
+      "Unique": true
+    },
+    "reference": {
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Disguise.reference.name",
+      "Description": "hexcode.glyphs.Disguise.reference.description",
+      "Unique": true
+    },
+    "duration": {
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Disguise.duration.name",
+      "Description": "hexcode.glyphs.Disguise.duration.description",
+      "DefaultValue": 15,
+      "Unique": true
+    },
+    "Next": {
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Disguise.Next.name",
+      "Description": "hexcode.glyphs.Disguise.Next.description"
+    },
+    "immediate": {
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Disguise.immediate.name",
+      "Description": "hexcode.glyphs.Disguise.immediate.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 3,
+    "DrainPerSecond": 0.15
+  }
+}

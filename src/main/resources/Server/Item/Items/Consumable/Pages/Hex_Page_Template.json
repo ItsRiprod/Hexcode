@@ -1,9 +1,10 @@
 {
+  "Parent": "Recipe_Page",
   "TranslationProperties": {
     "Name": "hexcode.pages.page.name",
     "Description": "hexcode.pages.page.description"
   },
-  "Quality": "Common",
+  "Quality": "Template",
   "Model": "Items/Consumable/Hexes/Hex_Page.blockymodel",
   "Texture": "Items/Consumable/Hexes/Hex_Page_Common.png",
   "IconProperties": {
@@ -32,7 +33,6 @@
     "Secondary": "Page_Secondary"
   },
   "Icon": "Icons/ItemsGenerated/Hex_Page.png",
-  "Parent": "Recipe_Page",
   "MaxDurability": 10,
   "DurabilityLossOnDeath": false,
   "Repairable": false

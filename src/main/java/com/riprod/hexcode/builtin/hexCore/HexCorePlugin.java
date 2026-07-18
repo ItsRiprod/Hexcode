@@ -159,6 +159,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.equal.EqualGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.floor.FloorGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.isHolding.IsHoldingValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.less.LessGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.modulo.ModuloGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.multiply.MultiplyGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.number.NumberValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.onCast.OnCastGlyph;
@@ -249,6 +250,7 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new AddGlyph());
                 GlyphRegistry.register(new SubtractGlyph());
                 GlyphRegistry.register(new DivideGlyph());
+                GlyphRegistry.register(new ModuloGlyph());
                 GlyphRegistry.register(new EqualGlyph());
                 GlyphRegistry.register(new GreaterGlyph());
                 GlyphRegistry.register(new LessGlyph());

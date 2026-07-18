@@ -1,10 +1,13 @@
 package com.riprod.hexcode.core.common.execution.component;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIDisplayMode;
 
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
@@ -18,6 +21,7 @@ public class HexStats {
     private float complexityMultiplier;
     private final transient Object2FloatOpenHashMap<String> resources = new Object2FloatOpenHashMap<>();
     private final transient Object2FloatOpenHashMap<String> contributed = new Object2FloatOpenHashMap<>();
+    private Map<String, Float> initialResources;
     private UUID executionId;
     private transient String slotKey;
 
@@ -92,6 +96,10 @@ public class HexStats {
         return this.resources;
     }
 
+    public Map<String, Float> getInitialResources() {
+        return this.initialResources;
+    }
+
     public float getVolatilityMultiplier() {
         return volatilityMultiplier;
     }
@@ -142,6 +150,10 @@ public class HexStats {
             .append(new KeyedCodec<>("ComplexityMultiplier", Codec.FLOAT),
                     (c, v) -> c.complexityMultiplier = v,
                     (c) -> c.complexityMultiplier)
+            .add()
+            .append(new KeyedCodec<>("InitialResources", new MapCodec<>(Codec.FLOAT, HashMap::new)),
+                    (c, v) -> c.initialResources = v,
+                    (c) -> c.initialResources)
             .add()
             .append(new KeyedCodec<>("ExecutionId", Codec.UUID_STRING),
                     (c, v) -> c.executionId = v,

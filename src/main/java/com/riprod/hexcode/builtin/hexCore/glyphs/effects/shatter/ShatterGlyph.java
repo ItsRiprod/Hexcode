@@ -38,6 +38,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
@@ -168,6 +169,7 @@ public class ShatterGlyph implements GlyphHandler {
         Rotation3f rotation = Rotation3f.lookAt(direction);
 
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
+        holder.addComponent(HexcodeComponent.getComponentType(), new HexcodeComponent());
 
         holder.addComponent(TransformComponent.getComponentType(),
                 new TransformComponent(new Vector3d(position), rotation));

@@ -19,6 +19,7 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
+import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.state.NoState;
@@ -141,6 +142,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
                 EnsnareStyle.renderSpikeDespawn(
                         spike.getPosition(), status.getHexContext(), buffer, particleRecipients);
                 Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
+                holder.addComponent(HexcodeComponent.getComponentType(), new HexcodeComponent());
                 buffer.removeEntity(spikeRef, holder, RemoveReason.REMOVE);
             }
         }

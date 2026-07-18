@@ -12,6 +12,7 @@ import com.riprod.hexcode.command.HexcodeCommand;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.construct.system.MountOrphanReaperSystem;
 import com.riprod.hexcode.core.common.context.CasterComponent;
+import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.context.interactions.HexContextAbility;
 import com.riprod.hexcode.core.common.context.interactions.HexContextPrimary;
 import com.riprod.hexcode.core.common.drawing.DrawAnchorSystem;
@@ -302,6 +303,10 @@ public class Hexcode extends JavaPlugin {
         ComponentType<EntityStore, CasterComponent> casterComponentType = entityStoreRegistry
                 .registerComponent(CasterComponent.class, CasterComponent::new);
         CasterComponent.setComponentType(casterComponentType);
+
+        ComponentType<EntityStore, HexcodeComponent> hexcodeComponentType = entityStoreRegistry
+                .registerComponent(HexcodeComponent.class, HexcodeComponent::new);
+        HexcodeComponent.setComponentType(hexcodeComponentType);
 
         ComponentType<EntityStore, DrawCaptureComponent> drawCaptureComponentType = entityStoreRegistry
                 .registerComponent(DrawCaptureComponent.class, DrawCaptureComponent::new);

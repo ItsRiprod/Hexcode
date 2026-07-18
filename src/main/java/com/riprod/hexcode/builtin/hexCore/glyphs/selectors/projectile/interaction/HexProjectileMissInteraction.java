@@ -10,7 +10,6 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import org.joml.Vector4d;
-import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.WaitForDataFrom;
@@ -19,8 +18,10 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHa
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInteraction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.Collector;
+import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.core.common.glyphs.utils.BlockResolution;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
@@ -72,9 +73,13 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
             Glyph triggering = state.getTriggeringGlyph();
             if (hitPos != null) {
                 if (triggering != null) {
-                    BlockPosition hitBlock = ctx.getMetaStore().getMetaObject(Interaction.TARGET_BLOCK_RAW);
-                    triggering.writeOutput(hitBlock != null
-                            ? new BlockVar(new Vector3i(hitBlock.x, hitBlock.y, hitBlock.z))
+                    Velocity projVel = buffer.getComponent(projectileRef, Velocity.getComponentType());
+                    Vector3d travelDir = projVel != null && projVel.getVelocity().lengthSquared() > 1e-6
+                            ? new Vector3d(projVel.getVelocity()) : null;
+                    Vector3i snapped = BlockResolution.snapIntoBlock(
+                            buffer.getExternalData().getWorld(), hitPos, travelDir);
+                    triggering.writeOutput(snapped != null
+                            ? new BlockVar(snapped)
                             : new PositionVar(hitPos, true), hexContext);
                 }
                 ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);

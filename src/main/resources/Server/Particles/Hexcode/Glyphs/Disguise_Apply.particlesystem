@@ -1,0 +1,11 @@
+{
+  "Spawners": [
+    { "SpawnerId": "Potion_Morph_Implosion" },
+    { "SpawnerId": "Potion_Morph_Sparks", "PositionOffset": { "Y": 0.25 } },
+    { "SpawnerId": "Conjure_Spawn_Flash", "StartDelay": 0.02 }
+  ],
+  "LifeSpan": 1.5,
+  "CullDistance": 100,
+  "BoundingRadius": 4.0,
+  "IsImportant": true
+}

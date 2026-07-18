@@ -14,19 +14,31 @@
       "Type": "Serial",
       "Interactions": [
         {
-          "Type": "HexExecute",
-          "Config": {
-            "HexStorageType": "PageConfig",
-            "HexStats": {
-              "InitialVolatility": 60,
-              "VolatilityMultiplier": 1.0
-            },
-            "RequireMagicCharges": false,
-            "BypassVolatilityDepletion": true,
-            "ApplyVolatilityDecay": false
-          },
-          "Effects": {
-            "ItemAnimationId": "HexExecution_Primary"
+          "Type": "Replace",
+          "Var": "PageHexExecute",
+          "DefaultOk": true,
+          "DefaultValue": {
+            "Interactions": [
+              {
+                "Type": "HexExecute",
+                "Config": {
+                  "HexStorageType": "PageConfig",
+                  "HexStats": {
+                    "InitialVolatility": 40,
+                    "VolatilityMultiplier": 1.0,
+                    "InitialResources": {
+                      "Arcane": 8
+                    }
+                  },
+                  "RequireMagicCharges": false,
+                  "BypassVolatilityDepletion": true,
+                  "ApplyVolatilityDecay": false
+                },
+                "Effects": {
+                  "ItemAnimationId": "HexExecution_Primary"
+                }
+              }
+            ]
           }
         },
         {

@@ -1,0 +1,30 @@
+{
+  "Parent": "Hex_Page_Template",
+  "Quality": "Legendary",
+  "Texture": "Items/Consumable/Hexes/Hex_Page_Rare.png",
+  "InteractionVars": {
+    "PageHexExecute": {
+      "Interactions": [
+        {
+          "Type": "HexExecute",
+          "Config": {
+            "HexStorageType": "PageConfig",
+            "HexStats": {
+              "InitialVolatility": 150,
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 64
+              }
+            },
+            "RequireMagicCharges": false,
+            "BypassVolatilityDepletion": true,
+            "ApplyVolatilityDecay": false
+          },
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          }
+        }
+      ]
+    }
+  }
+}

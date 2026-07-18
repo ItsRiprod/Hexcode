@@ -19,6 +19,7 @@ import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
+import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
 import com.riprod.hexcode.api.execution.HexExecuter;
@@ -67,6 +68,7 @@ public class HexConstructSpawner {
         holder.addComponent(NetworkId.getComponentType(),
                 new NetworkId(buffer.getExternalData().takeNextNetworkId()));
         holder.addComponent(HexEffectsComponent.getComponentType(), component);
+        holder.addComponent(HexcodeComponent.getComponentType(), new HexcodeComponent());
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
 
         return holder;

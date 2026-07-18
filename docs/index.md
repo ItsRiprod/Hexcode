@@ -62,6 +62,7 @@ _Welcome to the craft. The door is open._
 
 # **GUIDES:**
 ### [Getting Started](Getting-Started)
+### [Server Owners Notice](Server-Owners)
 ### [Advanced Crafting](Advanced-Magic)
 ### [Working with Variables](Working-With-Variables)
 ### [Shapes](Glyph-Index)

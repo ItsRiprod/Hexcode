@@ -1,0 +1,10 @@
+{
+  "Spawners": [
+    { "SpawnerId": "Potion_Morph_Sparks" },
+    { "SpawnerId": "Conjure_Despawn", "StartDelay": 0.02 }
+  ],
+  "LifeSpan": 1.0,
+  "CullDistance": 100,
+  "BoundingRadius": 4.0,
+  "IsImportant": true
+}

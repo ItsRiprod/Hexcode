@@ -28,6 +28,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VelocityUtil;
 
 import java.util.Arrays;
 
@@ -69,9 +70,9 @@ public static final String ID = "Halt";
                 asset.getSlot(HaltGlyphSlots.DURATION));
 
         try {
-            StandardPhysicsProvider physics = accessor.getComponent(ref,
-                    StandardPhysicsProvider.getComponentType());
-            if (physics != null) {
+            if (VelocityUtil.isPhysicsTicked(ref, accessor)) {
+                StandardPhysicsProvider physics = accessor.getComponent(ref,
+                        StandardPhysicsProvider.getComponentType());
                 physics.getForceProviderStandardState().nextTickVelocity.set(0d, 0d, 0d);
                 if (duration > 0) {
                     physics.setState(StandardPhysicsProvider.STATE.INACTIVE);

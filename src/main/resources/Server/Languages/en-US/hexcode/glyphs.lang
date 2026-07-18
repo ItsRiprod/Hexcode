@@ -4,7 +4,7 @@ default.unlabeled=Slot
 default.nodescription=No description
 
 Absolute.name=Absolute
-Absolute.description=Absolute value of A. Numbers/Positions/Colors/Rotations become a positive number (magnitude). Entities and blocks pass through unchanged.
+Absolute.description=Absolute value of A
 Absolute.a.name=A
 Absolute.a.description=Value to take the absolute value of
 Absolute.Next.name=Next
@@ -20,14 +20,14 @@ Add.Next.name=Next
 Add.Next.description=The next glyph in the execution chain
 
 Ceiling.name=Ceiling
-Ceiling.description=Rounds A up to the nearest whole number. Preserves type: Positions and Rotations are ceiled component-wise. Entities, Blocks and Colors pass through unchanged.
+Ceiling.description=Rounds A up to the nearest whole number.
 Ceiling.a.name=A
 Ceiling.a.description=Value to ceil
 Ceiling.Next.name=Next
 Ceiling.Next.description=The next glyph in the execution chain
 
 Chaos.name=Chaos
-Chaos.description=Generates a random number in the range [Min, Max)
+Chaos.description=Generates a random number in the range
 Chaos.min.name=Min
 Chaos.min.description=Lower bound (inclusive)
 Chaos.max.name=Max
@@ -36,7 +36,7 @@ Chaos.Next.name=Next
 Chaos.Next.description=The next glyph in the execution chain
 
 Concentration.name=Concentration
-Concentration.description=Sustains downstream glyphs while the caster holds the primary interaction. Releasing too early invalidates the hex.
+Concentration.description=Boosts Volatility while holding click. Cancels glyph on release.
 Concentration.Next.name=Next
 Concentration.Next.description=Children sustained while concentrating
 Concentration.release.name=Release
@@ -108,7 +108,7 @@ Equal.Less.name=Less
 Equal.Less.description=If A is less than B
 
 Floor.name=Floor
-Floor.description=Rounds A down to the nearest whole number. Preserves type: Positions and Rotations are floored component-wise. Entities, Blocks and Colors pass through unchanged.
+Floor.description=Rounds A down to the nearest whole number.
 Floor.a.name=A
 Floor.a.description=Value to floor
 Floor.Next.name=Next
@@ -137,6 +137,15 @@ Less.b.description=Second operand
 Less.Next.name=Next
 Less.Next.description=The next glyph in the execution chain
 
+Modulo.name=Modulo
+Modulo.description=Returns the remainder of one value divided by another
+Modulo.a.name=A
+Modulo.a.description=First operand
+Modulo.b.name=B
+Modulo.b.description=Second operand
+Modulo.Next.name=Next
+Modulo.Next.description=The next glyph in the execution chain
+
 Multiply.name=Multiply
 Multiply.description=Multiplies two values together
 Multiply.a.name=A
@@ -147,82 +156,82 @@ Multiply.Next.name=Next
 Multiply.Next.description=The next glyph in the execution chain
 
 Number_1.name=Number 1
-Number_1.description=Provides the constant value 1
+Number_1.description=Value 1
 Number_1.Next.name=Next
 Number_1.Next.description=The next glyph in the execution chain
 
 Number_10.name=Number 10
-Number_10.description=Provides the constant value 10
+Number_10.description=Value 10
 Number_10.Next.name=Next
 Number_10.Next.description=The next glyph in the execution chain
 
 Number_11.name=Number 11
-Number_11.description=Provides the constant value 11
+Number_11.description=Value 11
 Number_11.Next.name=Next
 Number_11.Next.description=The next glyph in the execution chain
 
 Number_12.name=Number 12
-Number_12.description=Provides the constant value 12
+Number_12.description=Value 12
 Number_12.Next.name=Next
 Number_12.Next.description=The next glyph in the execution chain
 
 Number_13.name=Number 13
-Number_13.description=Provides the constant value 13
+Number_13.description=Value 13
 Number_13.Next.name=Next
 Number_13.Next.description=The next glyph in the execution chain
 
 Number_14.name=Number 14
-Number_14.description=Provides the constant value 14
+Number_14.description=Value 14
 Number_14.Next.name=Next
 Number_14.Next.description=The next glyph in the execution chain
 
 Number_15.name=Number 15
-Number_15.description=Provides the constant value 15
+Number_15.description=Value 15
 Number_15.Next.name=Next
 Number_15.Next.description=The next glyph in the execution chain
 
 Number_16.name=Number 16
-Number_16.description=Provides the constant value 16
+Number_16.description=Value 16
 Number_16.Next.name=Next
 Number_16.Next.description=The next glyph in the execution chain
 
 Number_2.name=Number 2
-Number_2.description=Provides the constant value 2
+Number_2.description=Value 2
 Number_2.Next.name=Next
 Number_2.Next.description=The next glyph in the execution chain
 
 Number_3.name=Number 3
-Number_3.description=Provides the constant value 3
+Number_3.description=Value 3
 Number_3.Next.name=Next
 Number_3.Next.description=The next glyph in the execution chain
 
 Number_4.name=Number 4
-Number_4.description=Provides the constant value 4
+Number_4.description=Value 4
 Number_4.Next.name=Next
 Number_4.Next.description=The next glyph in the execution chain
 
 Number_5.name=Number 5
-Number_5.description=Provides the constant value 5
+Number_5.description=Value 5
 Number_5.Next.name=Next
 Number_5.Next.description=The next glyph in the execution chain
 
 Number_6.name=Number 6
-Number_6.description=Provides the constant value 6
+Number_6.description=Value 6
 Number_6.Next.name=Next
 Number_6.Next.description=The next glyph in the execution chain
 
 Number_7.name=Number 7
-Number_7.description=Provides the constant value 7
+Number_7.description=Value 7
 Number_7.Next.name=Next
 Number_7.Next.description=The next glyph in the execution chain
 
 Number_8.name=Number 8
-Number_8.description=Provides the constant value 8
+Number_8.description=Value 8
 Number_8.Next.name=Next
 Number_8.Next.description=The next glyph in the execution chain
 
 Number_9.name=Number 9
-Number_9.description=Provides the constant value 9
+Number_9.description=Value 9
 Number_9.Next.name=Next
 Number_9.Next.description=The next glyph in the execution chain
 
@@ -237,17 +246,17 @@ OnDeath.Next.name=Next
 OnDeath.Next.description=Glyphs to run when the trigger fires
 
 OnPrimary.name=On Primary
-OnPrimary.description=Pauses execution. Resumes when the caster performs a primary interaction (e.g. weapon swing).
+OnPrimary.description=Pauses execution. Resumes when the caster performs a primary interaction
 OnPrimary.Next.name=Next
 OnPrimary.Next.description=Glyphs to run when the trigger fires
 
 OnSecondary.name=On Secondary
-OnSecondary.description=Pauses execution. Resumes when the caster performs a secondary interaction (e.g. block, charge).
+OnSecondary.description=Pauses execution. Resumes when the caster performs a secondary interaction
 OnSecondary.Next.name=Next
 OnSecondary.Next.description=Glyphs to run when the trigger fires
 
 OnUse.name=On Use
-OnUse.description=Pauses execution. Resumes when the caster uses an item (e.g. consumes food, activates).
+OnUse.description=Pauses execution. Resumes when the caster uses an item
 OnUse.Next.name=Next
 OnUse.Next.description=Glyphs to run when the trigger fires
 
@@ -301,12 +310,12 @@ Rotation.y.description=Y component
 Rotation.z.name=Roll
 Rotation.z.description=Z component
 Rotation.target.name=Target
-Rotation.target.description=Optional entity to apply this rotation to. If wired, the constructed rotation is teleported onto the target's body and head.
+Rotation.target.description=Optional entity to apply this rotation to
 Rotation.Next.name=Next
 Rotation.Next.description=The next glyph in the execution chain
 
 Round.name=Round
-Round.description=Rounds A to the nearest whole number. Preserves type: Positions and Rotations are rounded component-wise. Entities, Blocks and Colors pass through unchanged.
+Round.description=Rounds A to the nearest whole number.
 Round.a.name=A
 Round.a.description=Value to round
 Round.Next.name=Next
@@ -367,7 +376,7 @@ Variable.Next.description=The next glyph in the execution chain
 # Selectors
 
 Area.name=Area
-Area.description=Sweeps a sphere around a center point and fans out separately to its Blocks and Entities branches, executing each once per matching target
+Area.description=Selects a sphere around the caster
 Area.center.name=Center
 Area.center.description=Center point to gather around
 Area.radius.name=Radius
@@ -486,7 +495,7 @@ Drain.target.description=Entity to drain. Filter slot for Mana
 Drain.duration.name=Duration
 Drain.duration.description=Seconds to channel over
 Drain.destination.name=Destination
-Drain.destination.description=Entity whose Mana will receive the drained resource. Defaults to caster. HP source is only allowed when draining self.
+Drain.destination.description=[Broken] Entity whose Mana will receive the drained resource. Defaults to caster.
 Drain.immediate.name=Immediate
 Drain.immediate.description=Fires immediately when the effect is applied
 Drain.Next.name=Next
@@ -591,7 +600,7 @@ Halt.Next.name=Next
 Halt.Next.description=The next glyph in the execution chain
 
 Interfere.name=Interfere
-Interfere.description=Hijacks all active hex constructs on the target, replacing their continuation with this chain. Strips hex effects from targets without active constructs.
+Interfere.description=Strips effects and injects the following glyphs into the interfered hex.
 Interfere.target.name=Target
 Interfere.target.description=Entity to interfere with
 Interfere.Next.name=Next
@@ -633,7 +642,7 @@ Phase.Next.name=Next
 Phase.Next.description=The next glyph in the execution chain
 
 Resonate.name=Resonate
-Resonate.description=Appends a parallel glyph chain to an ally's active hex construct. Can transfer mana to the construct's owner or directly to entities with a mana pool.
+Resonate.description=Appends a parallel glyph chain to an ally's active hex construct.
 Resonate.target.name=Target
 Resonate.target.description=Hex construct entities to resonate with
 Resonate.Next.name=Next
@@ -697,7 +706,7 @@ Disguise.description=Disguises the target with the reference's appearance for a 
 Disguise.target.name=Target
 Disguise.target.description=Creature to disguise
 Disguise.reference.name=Reference
-Disguise.reference.description=Entity or block whose appearance is copied
+Disguise.reference.description=Creature whose appearance is copied
 Disguise.duration.name=Duration
 Disguise.duration.description=How long the disguise lasts in seconds
 Disguise.Next.name=Next
@@ -721,7 +730,7 @@ Scorch.description=Discharges accumulated complexity as a burst of fire damage
 Scorch.Next.name=Next
 Scorch.Next.description=The next glyph in the execution chain
 Scorch.ResourceLimit.name=Complexity Limit
-Scorch.ResourceLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
+Scorch.ResourceLimit.description=Caps how much Resource is used
 
 Ignite.name=Ignite
 Ignite.description=Sets the target ablaze, dealing fire damage over time
@@ -730,53 +739,53 @@ Ignite.immediate.description=Fires immediately when the status is applied
 Ignite.Next.name=Next
 Ignite.Next.description=The next glyph in the execution chain
 Ignite.ResourceLimit.name=Complexity Limit
-Ignite.ResourceLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
+Ignite.ResourceLimit.description=Caps how much Resource is used
 
 Snap.name=Snap
 Snap.description=Discharges accumulated complexity as a brittle burst of ice damage
 Snap.Next.name=Next
 Snap.Next.description=The next glyph in the execution chain
 Snap.ResourceLimit.name=Complexity Limit
-Snap.ResourceLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
+Snap.ResourceLimit.description=Caps how much Resource is used
 
 Freeze.name=Freeze
-Freeze.description=Freezes the target, dealing ice damage over time and slowing its movement as it stacks toward a full freeze
+Freeze.description=Freezes the target, slowing its movement
 Freeze.immediate.name=Immediate
 Freeze.immediate.description=Fires immediately when the status is applied
 Freeze.Next.name=Next
 Freeze.Next.description=The next glyph in the execution chain
 Freeze.ResourceLimit.name=Complexity Limit
-Freeze.ResourceLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
+Freeze.ResourceLimit.description=Caps how much Resource is used
 
 Bolt.name=Bolt
 Bolt.description=Discharges accumulated complexity as an instant burst of lightning damage
 Bolt.Next.name=Next
 Bolt.Next.description=The next glyph in the execution chain
 Bolt.ResourceLimit.name=Complexity Limit
-Bolt.ResourceLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
+Bolt.ResourceLimit.description=Caps how much Resource is used
 
 Electrocute.name=Electrocute
-Electrocute.description=Electrocutes the target, dealing lightning damage over time and jolting it into faster, frenzied movement
+Electrocute.description=Electrocutes the target, making it faster
 Electrocute.immediate.name=Immediate
 Electrocute.immediate.description=Fires immediately when the status is applied
 Electrocute.Next.name=Next
 Electrocute.Next.description=The next glyph in the execution chain
 Electrocute.ResourceLimit.name=Complexity Limit
-Electrocute.ResourceLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
+Electrocute.ResourceLimit.description=Caps how much Resource is used
 
 Drown.name=Drown
 Drown.description=Discharges accumulated complexity as a crushing surge of water damage
 Drown.Next.name=Next
 Drown.Next.description=The next glyph in the execution chain
 Drown.ResourceLimit.name=Complexity Limit
-Drown.ResourceLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
+Drown.ResourceLimit.description=Caps how much Resource is used
 
 HealthSurge.name=Health Surge
 HealthSurge.description=Converts accumulated complexity into healing, restoring the target's health
 HealthSurge.Next.name=Next
 HealthSurge.Next.description=The next glyph in the execution chain
 HealthSurge.ResourceLimit.name=Complexity Limit
-HealthSurge.ResourceLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
+HealthSurge.ResourceLimit.description=Caps how much Resource is used
 
 MageArmor.name=Mage Armor
 MageArmor.description=Grants the target temporary hitpoints that absorb incoming damage for a duration
@@ -785,7 +794,7 @@ MageArmor.immediate.description=Fires immediately when the status is applied
 MageArmor.Next.name=Next
 MageArmor.Next.description=The next glyph in the execution chain
 MageArmor.ResourceLimit.name=Complexity Limit
-MageArmor.ResourceLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
+MageArmor.ResourceLimit.description=Caps how much Resource is used
 
 Rebreathing.name=Rebreathing
 Rebreathing.description=Fills the target's lungs with air, letting it breathe underwater for a duration
@@ -794,4 +803,4 @@ Rebreathing.immediate.description=Fires immediately when the status is applied
 Rebreathing.Next.name=Next
 Rebreathing.Next.description=The next glyph in the execution chain
 Rebreathing.ResourceLimit.name=Complexity Limit
-Rebreathing.ResourceLimit.description=Caps how much complexity this glyph draws from the pool. Leave empty to draw all of it.
+Rebreathing.ResourceLimit.description=Caps how much Resource is used

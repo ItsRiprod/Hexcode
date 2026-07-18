@@ -1,4 +1,5 @@
 {
+  "$Requires": "Riprod:Hextreme",
   "Container": {
     "Containers+": [
       {

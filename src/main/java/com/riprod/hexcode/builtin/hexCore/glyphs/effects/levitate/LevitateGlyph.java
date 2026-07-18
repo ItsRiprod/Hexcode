@@ -60,10 +60,9 @@ public class LevitateGlyph implements GlyphHandler {
         LevitateConfig config = getConfig(LevitateConfig.class, asset);
         if (config == null) config = LevitateConfig.DEFAULTS;
 
-        float intensity = (float) Math.max(0,
-                HexVarUtil.numberOrSlotDefault(
-                        glyph.readSlot(LevitateGlyphSlots.INTENSITY, hexContext),
-                        asset.getSlot(LevitateGlyphSlots.INTENSITY)));
+        float intensity = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(LevitateGlyphSlots.INTENSITY, hexContext),
+                asset.getSlot(LevitateGlyphSlots.INTENSITY)).floatValue();
         float durationSeconds = (float) Math.max(config.getDurationFloor(),
                 HexVarUtil.numberOrSlotDefault(
                         glyph.readSlot(LevitateGlyphSlots.DURATION, hexContext),

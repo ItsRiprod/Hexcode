@@ -26,6 +26,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.EnsnareComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.SpikeEntry;
@@ -168,6 +169,7 @@ public static final String ID = "Ensnare";
     private Ref<EntityStore> spawnSpikeEntity(Vector3d position, Vector3f rotation,
             Model model, CommandBuffer<EntityStore> accessor) {
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
+        holder.addComponent(HexcodeComponent.getComponentType(), new HexcodeComponent());
         holder.addComponent(TransformComponent.getComponentType(),
                 new TransformComponent(new Vector3d(position), new Rotation3f(rotation.x, rotation.y, rotation.z)));
         holder.ensureComponent(UUIDComponent.getComponentType());

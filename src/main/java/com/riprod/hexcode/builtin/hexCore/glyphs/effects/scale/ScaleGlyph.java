@@ -39,6 +39,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
+import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ScaleGlyph implements GlyphHandler {
@@ -206,6 +207,7 @@ public class ScaleGlyph implements GlyphHandler {
     private Ref<EntityStore> spawnVisual(CommandBuffer<EntityStore> accessor,
             Vector3d spawnPos, Ref<EntityStore> targetRef, HexContext hexContext, ScaleConfig config) {
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
+        holder.addComponent(HexcodeComponent.getComponentType(), new HexcodeComponent());
         holder.addComponent(TransformComponent.getComponentType(),
                 new TransformComponent(spawnPos, new Rotation3f()));
         holder.ensureComponent(UUIDComponent.getComponentType());
