@@ -4,5 +4,5 @@ public final class IgniteGlyphSlots {
     private IgniteGlyphSlots() {
     }
 
-    public static final String IMMEDIATE = "immediate";
+    public static final String IMMEDIATE = "Immediate";
 }

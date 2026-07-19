@@ -4,8 +4,8 @@ public final class EnsnareGlyphSlots {
     private EnsnareGlyphSlots() {
     }
 
-    public static final String TARGET = "target";
-    public static final String RADIUS = "radius";
-    public static final String DURATION = "duration";
+    public static final String TARGET = "Target";
+    public static final String RADIUS = "Radius";
+    public static final String DURATION = "Duration";
     public static final String TRAPPED = "Trapped";
 }

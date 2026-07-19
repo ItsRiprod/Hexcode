@@ -24,12 +24,12 @@
     { "Parent": "Square", "RelativeSize": 0.6 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Fortify.target.name",
       "Description": "hexcode.glyphs.Fortify.target.description"
     },
-    "duration": {
+    "Duration": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Fortify.duration.name",
       "Description": "hexcode.glyphs.Fortify.duration.description",
@@ -41,7 +41,7 @@
       "Label": "hexcode.glyphs.Fortify.Next.name",
       "Description": "hexcode.glyphs.Fortify.Next.description"
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Fortify.immediate.name",
       "Description": "hexcode.glyphs.Fortify.immediate.description"

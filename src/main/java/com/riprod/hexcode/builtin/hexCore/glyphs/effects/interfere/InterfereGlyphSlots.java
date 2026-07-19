@@ -4,5 +4,5 @@ public final class InterfereGlyphSlots {
     private InterfereGlyphSlots() {
     }
 
-    public static final String TARGET = "target";
+    public static final String TARGET = "Target";
 }

@@ -4,5 +4,5 @@ public final class RebreathingGlyphSlots {
     private RebreathingGlyphSlots() {
     }
 
-    public static final String IMMEDIATE = "immediate";
+    public static final String IMMEDIATE = "Immediate";
 }

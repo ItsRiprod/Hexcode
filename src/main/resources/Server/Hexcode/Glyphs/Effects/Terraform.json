@@ -12,7 +12,7 @@
     { "Parent": "Square", "RelativeSize": 0.55 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Terraform.target.name",
       "Description": "hexcode.glyphs.Terraform.target.description"

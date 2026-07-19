@@ -7,10 +7,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.assetstore.AssetPack;
+import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.AssetModule;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
 public final class GlyphIconRenderer {
+    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     private GlyphIconRenderer() {
     }
@@ -25,6 +27,7 @@ public final class GlyphIconRenderer {
         if (modelPath == null || modelPath.isEmpty()) {
             modelPath = glyphId;
         }
+
         return GlyphIconRasterizer.rasterize(modelPath, GlyphIconRenderer::resolveExisting);
     }
 

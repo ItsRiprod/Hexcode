@@ -4,5 +4,5 @@ public final class ElectrocuteGlyphSlots {
     private ElectrocuteGlyphSlots() {
     }
 
-    public static final String IMMEDIATE = "immediate";
+    public static final String IMMEDIATE = "Immediate";
 }

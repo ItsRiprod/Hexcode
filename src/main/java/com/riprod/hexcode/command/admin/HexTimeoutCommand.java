@@ -22,7 +22,7 @@ public class HexTimeoutCommand extends AbstractAsyncCommand {
 
     @Nonnull
     private final OptionalArg<Integer> durationArg =
-            this.withOptionalArg("duration", "server.hexcode.commands.timeout.duration.desc", ArgTypes.INTEGER);
+            this.withOptionalArg("Duration", "server.hexcode.commands.timeout.duration.desc", ArgTypes.INTEGER);
 
     @Nonnull
     private final OptionalArg<PlayerRef> playerArg =

@@ -4,9 +4,9 @@ public final class GlaciateGlyphSlots {
     private GlaciateGlyphSlots() {
     }
 
-    public static final String TARGET = "target";
-    public static final String OFFSET = "offset";
-    public static final String DURATION = "duration";
+    public static final String TARGET = "Target";
+    public static final String OFFSET = "Offset";
+    public static final String DURATION = "Duration";
 
-    public static final String IMMEDIATE = "immediate";
+    public static final String IMMEDIATE = "Immediate";
 }

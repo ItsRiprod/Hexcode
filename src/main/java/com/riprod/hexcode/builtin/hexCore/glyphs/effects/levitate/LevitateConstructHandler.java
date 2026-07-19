@@ -20,6 +20,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.LevitateStyle;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.utils.VelocityUtil;
 
 public class LevitateConstructHandler implements ConstructHandler<LevitateState> {
 
@@ -37,7 +38,7 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
 
         LevitateConfig config = resolveConfig(status);
 
-        applyRise(state, config, ctx);
+        applyRise(dt, state, config, ctx);
         emitTickVfx(dt, state, config, status, ctx);
 
         return !drainSustain(dt, status);
@@ -51,7 +52,7 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
                 : LevitateConfig.DEFAULTS;
     }
 
-    private void applyRise(LevitateState state, LevitateConfig config, ConstructTickContext ctx) {
+    private void applyRise(float dt, LevitateState state, LevitateConfig config, ConstructTickContext ctx) {
         Ref<EntityStore> target = ctx.getEntityRef();
         if (target == null || !target.isValid())
             return;

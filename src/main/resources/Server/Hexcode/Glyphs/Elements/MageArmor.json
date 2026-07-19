@@ -8,23 +8,6 @@
   "BasePower": 1.0,
   "ManaConsumption": 3.0,
   "ShapeStructure": [
-<<<<<<< Updated upstream
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Square",
-      "Size": 0.8
-    },
-    {
-      "ShapeId": "Square",
-      "Size": 0.6
-    },
-    {
-      "ShapeId": "Square",
-      "Size": 0.4
-=======
     "Square",
     {
       "Parent": "Square",
@@ -37,35 +20,30 @@
     {
       "Parent": "Square",
       "RelativeSize": 0.4
->>>>>>> Stashed changes
     }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.MageArmor.Next.name",
       "Description": "hexcode.glyphs.MageArmor.Next.description"
     },
     "ComplexityLimit": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.MageArmor.ComplexityLimit.name",
       "Description": "hexcode.glyphs.MageArmor.ComplexityLimit.description",
       "DefaultValue": -1
     },
-    "immediate": {
-      "Style": "Next",
+    "Immediate": {
+      "Parent": "Next",
       "Label": "hexcode.glyphs.MageArmor.immediate.name",
       "Description": "hexcode.glyphs.MageArmor.immediate.description"
     }
   },
   "Config": {
     "Type": "MageArmor",
-<<<<<<< Updated upstream
-    "StatusEffect": "Life",
-=======
     "Resource": "Life",
     "StatusEffect": "Hexcode_Mage_Armor",
->>>>>>> Stashed changes
     "Efficiency": 1.0,
     "DurationPerComplexity": 1.0,
     "AffinityStat": "Affinity_Life"

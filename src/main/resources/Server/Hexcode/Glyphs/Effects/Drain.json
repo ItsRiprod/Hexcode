@@ -20,30 +20,30 @@
     "Anticircle"
   ],
   "Slots": {
-    "hp": {
+    "HP": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.hp.name",
       "Description": "hexcode.glyphs.Drain.hp.description"
     },
-    "stamina": {
+    "Stamina": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.stamina.name",
       "Description": "hexcode.glyphs.Drain.stamina.description"
     },
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.target.name",
       "Description": "hexcode.glyphs.Drain.target.description",
       "Unique": true
     },
-    "duration": {
+    "Duration": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.duration.name",
       "Description": "hexcode.glyphs.Drain.duration.description",
       "DefaultValue": 1,
       "Unique": true
     },
-    "destination": {
+    "Destination": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.destination.name",
       "Description": "hexcode.glyphs.Drain.destination.description",
@@ -54,7 +54,7 @@
       "Label": "hexcode.glyphs.Drain.Next.name",
       "Description": "hexcode.glyphs.Drain.Next.description"
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Drain.immediate.name",
       "Description": "hexcode.glyphs.Drain.immediate.description"

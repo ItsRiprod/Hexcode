@@ -9,25 +9,25 @@
     { "Parent": "Down", "StatContribution": 0 }
   ],
   "Slots": {
-    "x": {
+    "X": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.x.name",
       "Description": "hexcode.glyphs.Rotation.x.description",
       "DefaultValue": 0
     },
-    "y": {
+    "Y": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.y.name",
       "Description": "hexcode.glyphs.Rotation.y.description",
       "DefaultValue": 0
     },
-    "z": {
+    "Z": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.z.name",
       "Description": "hexcode.glyphs.Rotation.z.description",
       "DefaultValue": 0
     },
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.target.name",
       "Description": "hexcode.glyphs.Rotation.target.description"

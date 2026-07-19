@@ -33,7 +33,7 @@
       "Description": "hexcode.glyphs.Projectile.source.description",
       "Unique": true
     },
-    "direction": {
+    "Direction": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Projectile.direction.name",
       "Description": "hexcode.glyphs.Projectile.direction.description",
@@ -65,7 +65,7 @@
       "Label": "hexcode.glyphs.Projectile.Next.name",
       "Description": "hexcode.glyphs.Projectile.Next.description"
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Projectile.immediate.name",
       "Description": "hexcode.glyphs.Projectile.immediate.description"

@@ -35,7 +35,7 @@
       "Description": "hexcode.glyphs.Freeze.ResourceLimit.description",
       "DefaultValue": -1
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Freeze.immediate.name",
       "Description": "hexcode.glyphs.Freeze.immediate.description"

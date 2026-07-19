@@ -4,8 +4,8 @@ public final class GrowthGlyphSlots {
     private GrowthGlyphSlots() {
     }
 
-    public static final String TARGET = "target";
+    public static final String TARGET = "Target";
     public static final String AMOUNT = "amount";
-    public static final String DURATION = "duration";
-    public static final String IMMEDIATE = "immediate";
+    public static final String DURATION = "Duration";
+    public static final String IMMEDIATE = "Immediate";
 }

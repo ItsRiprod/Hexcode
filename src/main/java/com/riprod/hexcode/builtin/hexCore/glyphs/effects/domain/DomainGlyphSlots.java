@@ -4,9 +4,9 @@ public final class DomainGlyphSlots {
     private DomainGlyphSlots() {
     }
 
-    public static final String TARGET = "target";
-    public static final String MAGNITUDE = "magnitude";
-    public static final String DURATION = "duration";
-    public static final String POWER = "power";
-    public static final String IMMEDIATE = "immediate";
+    public static final String TARGET = "Target";
+    public static final String MAGNITUDE = "Magnitude";
+    public static final String DURATION = "Duration";
+    public static final String POWER = "Power";
+    public static final String IMMEDIATE = "Immediate";
 }

@@ -17,12 +17,12 @@
     "Antitriangle"
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Halt.target.name",
       "Description": "hexcode.glyphs.Halt.target.description"
     },
-    "duration": {
+    "Duration": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Halt.duration.name",
       "Description": "hexcode.glyphs.Halt.duration.description",
@@ -34,7 +34,7 @@
       "Label": "hexcode.glyphs.Halt.Next.name",
       "Description": "hexcode.glyphs.Halt.Next.description"
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Halt.immediate.name",
       "Description": "hexcode.glyphs.Halt.immediate.description"

@@ -5,7 +5,7 @@ public final class ShatterGlyphSlots {
     }
 
     public static final String SOURCE = "source";
-    public static final String DIRECTION = "direction";
+    public static final String DIRECTION = "Direction";
     public static final String COUNT = "count";
     public static final String SPREAD = "spread";
     public static final String SPEED = "speed";

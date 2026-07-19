@@ -34,7 +34,7 @@
       "Description": "hexcode.glyphs.Shatter.source.description",
       "Unique": true
     },
-    "direction": {
+    "Direction": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.direction.name",
       "Description": "hexcode.glyphs.Shatter.direction.description",

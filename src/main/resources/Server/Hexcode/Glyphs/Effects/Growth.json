@@ -23,7 +23,7 @@
     { "Parent": "Square", "RelativeSize": 0.6 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Growth.target.name",
       "Description": "hexcode.glyphs.Growth.target.description"
@@ -40,14 +40,14 @@
       "Label": "hexcode.glyphs.Growth.Next.name",
       "Description": "hexcode.glyphs.Growth.Next.description"
     },
-    "duration": {
+    "Duration": {
       "Label": "hexcode.glyphs.Growth.duration.name",
       "Description": "hexcode.glyphs.Growth.duration.description",
       "Parent": "Input",
       "Unique": true,
       "DefaultValue": 10
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Growth.immediate.name",
       "Description": "hexcode.glyphs.Growth.immediate.description"

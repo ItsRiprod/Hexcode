@@ -9,19 +9,19 @@
     { "Parent": "Greater", "StatContribution": 0 }
   ],
   "Slots": {
-    "x": {
+    "X": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Position.x.name",
       "Description": "hexcode.glyphs.Position.x.description",
       "DefaultValue": 0
     },
-    "y": {
+    "Y": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Position.y.name",
       "Description": "hexcode.glyphs.Position.y.description",
       "DefaultValue": 0
     },
-    "z": {
+    "Z": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Position.z.name",
       "Description": "hexcode.glyphs.Position.z.description",

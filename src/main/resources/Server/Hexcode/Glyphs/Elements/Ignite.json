@@ -31,7 +31,7 @@
       "Description": "hexcode.glyphs.Ignite.ResourceLimit.description",
       "DefaultValue": -1
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Ignite.immediate.name",
       "Description": "hexcode.glyphs.Ignite.immediate.description"

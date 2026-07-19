@@ -12,13 +12,13 @@
     { "Parent": "Square", "RelativeSize": 0.5 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Domain.target.name",
       "Description": "hexcode.glyphs.Domain.target.description",
       "Unique": true
     },
-    "magnitude": {
+    "Magnitude": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Domain.magnitude.name",
       "Description": "hexcode.glyphs.Domain.magnitude.description",
@@ -30,14 +30,14 @@
         "Offset": 0.0
       }
     },
-    "duration": {
+    "Duration": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Domain.duration.name",
       "Description": "hexcode.glyphs.Domain.duration.description",
       "DefaultValue": 10,
       "Unique": true
     },
-    "power": {
+    "Power": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Domain.power.name",
       "Description": "hexcode.glyphs.Domain.power.description",
@@ -54,7 +54,7 @@
       "Label": "hexcode.glyphs.Domain.Next.name",
       "Description": "hexcode.glyphs.Domain.Next.description"
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Domain.immediate.name",
       "Description": "hexcode.glyphs.Domain.immediate.description"

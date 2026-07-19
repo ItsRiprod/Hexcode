@@ -24,12 +24,12 @@
     { "Parent": "Circle", "RelativeSize": 0.55 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Warp.target.name",
       "Description": "hexcode.glyphs.Warp.target.description"
     },
-    "destination": {
+    "Destination": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Warp.destination.name",
       "Description": "hexcode.glyphs.Warp.destination.description",

@@ -25,7 +25,7 @@
       "Description": "hexcode.glyphs.Electrocute.ResourceLimit.description",
       "DefaultValue": -1
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Electrocute.immediate.name",
       "Description": "hexcode.glyphs.Electrocute.immediate.description"

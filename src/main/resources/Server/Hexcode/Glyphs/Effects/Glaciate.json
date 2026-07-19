@@ -27,20 +27,20 @@
     { "Parent": "Anticircle", "RelativeSize": 0.55 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Glaciate.target.name",
       "Description": "hexcode.glyphs.Glaciate.target.description",
       "Unique": true
     },
-    "offset": {
+    "Offset": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Glaciate.offset.name",
       "Description": "hexcode.glyphs.Glaciate.offset.description",
       "DefaultValue": 5,
       "Unique": true
     },
-    "duration": {
+    "Duration": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Glaciate.duration.name",
       "Description": "hexcode.glyphs.Glaciate.duration.description",
@@ -52,7 +52,7 @@
       "Label": "hexcode.glyphs.Glaciate.Next.name",
       "Description": "hexcode.glyphs.Glaciate.Next.description"
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Glaciate.immediate.name",
       "Description": "hexcode.glyphs.Glaciate.immediate.description"

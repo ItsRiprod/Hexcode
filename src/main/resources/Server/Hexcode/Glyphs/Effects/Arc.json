@@ -22,19 +22,19 @@
     { "Parent": "Circle", "RelativeSize": 0.55 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Arc.target.name",
       "Description": "hexcode.glyphs.Arc.target.description"
     },
-    "jump": {
+    "Jump": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Arc.jump.name",
       "Description": "hexcode.glyphs.Arc.jump.description",
       "DefaultValue": 15,
       "Unique": true
     },
-    "delay": {
+    "Delay": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Arc.delay.name",
       "Description": "hexcode.glyphs.Arc.delay.description",

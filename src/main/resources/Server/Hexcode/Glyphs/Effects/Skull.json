@@ -9,7 +9,7 @@
     "Skull"
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Skull.target.name",
       "Description": "hexcode.glyphs.Skull.target.description"

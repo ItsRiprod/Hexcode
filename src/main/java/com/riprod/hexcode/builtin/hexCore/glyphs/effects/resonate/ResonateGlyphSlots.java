@@ -4,5 +4,5 @@ public final class ResonateGlyphSlots {
     private ResonateGlyphSlots() {
     }
 
-    public static final String TARGET = "target";
+    public static final String TARGET = "Target";
 }

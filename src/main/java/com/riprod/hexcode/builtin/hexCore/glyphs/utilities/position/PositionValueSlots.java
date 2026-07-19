@@ -4,7 +4,7 @@ public final class PositionValueSlots {
     private PositionValueSlots() {
     }
 
-    public static final String X = "x";
-    public static final String Y = "y";
-    public static final String Z = "z";
+    public static final String X = "X";
+    public static final String Y = "Y";
+    public static final String Z = "Z";
 }

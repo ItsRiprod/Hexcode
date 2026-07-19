@@ -4,5 +4,5 @@ public final class TerraformGlyphSlots {
     private TerraformGlyphSlots() {
     }
 
-    public static final String TARGET = "target";
+    public static final String TARGET = "Target";
 }

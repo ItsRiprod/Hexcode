@@ -28,7 +28,7 @@
     }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Disguise.target.name",
       "Description": "hexcode.glyphs.Disguise.target.description",
@@ -40,7 +40,7 @@
       "Description": "hexcode.glyphs.Disguise.reference.description",
       "Unique": true
     },
-    "duration": {
+    "Duration": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Disguise.duration.name",
       "Description": "hexcode.glyphs.Disguise.duration.description",
@@ -52,7 +52,7 @@
       "Label": "hexcode.glyphs.Disguise.Next.name",
       "Description": "hexcode.glyphs.Disguise.Next.description"
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Disguise.immediate.name",
       "Description": "hexcode.glyphs.Disguise.immediate.description"

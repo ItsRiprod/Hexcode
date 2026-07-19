@@ -4,5 +4,5 @@ public final class MageArmorGlyphSlots {
     private MageArmorGlyphSlots() {
     }
 
-    public static final String IMMEDIATE = "immediate";
+    public static final String IMMEDIATE = "Immediate";
 }

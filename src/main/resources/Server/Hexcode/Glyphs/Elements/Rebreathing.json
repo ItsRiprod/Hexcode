@@ -25,7 +25,7 @@
       "Description": "hexcode.glyphs.Rebreathing.ResourceLimit.description",
       "DefaultValue": -1
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Rebreathing.immediate.name",
       "Description": "hexcode.glyphs.Rebreathing.immediate.description"

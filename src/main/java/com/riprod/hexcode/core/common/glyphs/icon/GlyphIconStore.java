@@ -27,7 +27,8 @@ public final class GlyphIconStore {
         public final int generated;
         public final int skipped;
         public final int failed;
-        @Nullable public final String packName;
+        @Nullable
+        public final String packName;
 
         private Result(int generated, int skipped, int failed, @Nullable String packName) {
             this.generated = generated;

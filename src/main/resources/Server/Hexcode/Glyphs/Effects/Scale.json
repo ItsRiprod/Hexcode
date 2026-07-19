@@ -22,20 +22,20 @@
     { "Parent": "Triangle", "RelativeSize": 0.6 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Scale.target.name",
       "Description": "hexcode.glyphs.Scale.target.description",
       "Unique": true
     },
-    "magnitude": {
+    "Magnitude": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Scale.magnitude.name",
       "Description": "hexcode.glyphs.Scale.magnitude.description",
       "DefaultValue": 2.0,
       "Unique": true
     },
-    "duration": {
+    "Duration": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Scale.duration.name",
       "Description": "hexcode.glyphs.Scale.duration.description",
@@ -47,7 +47,7 @@
       "Label": "hexcode.glyphs.Scale.Next.name",
       "Description": "hexcode.glyphs.Scale.Next.description"
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Scale.immediate.name",
       "Description": "hexcode.glyphs.Scale.immediate.description"

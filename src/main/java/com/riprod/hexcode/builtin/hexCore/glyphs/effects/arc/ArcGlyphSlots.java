@@ -4,7 +4,7 @@ public final class ArcGlyphSlots {
     private ArcGlyphSlots() {
     }
 
-    public static final String TARGET = "target";
-    public static final String JUMP = "jump";
-    public static final String DELAY = "delay";
+    public static final String TARGET = "Target";
+    public static final String JUMP = "Jump";
+    public static final String DELAY = "Delay";
 }

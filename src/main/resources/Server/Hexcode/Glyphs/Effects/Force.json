@@ -17,18 +17,18 @@
     "Circle"
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Force.target.name",
       "Description": "hexcode.glyphs.Force.target.description"
     },
-    "direction": {
+    "Direction": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Force.direction.name",
       "Description": "hexcode.glyphs.Force.direction.description",
       "Unique": true
     },
-    "magnitude": {
+    "Magnitude": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Force.magnitude.name",
       "Description": "hexcode.glyphs.Force.magnitude.description",

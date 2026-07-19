@@ -4,7 +4,7 @@ public final class BurningGlyphSlots {
     private BurningGlyphSlots() {
     }
 
-    public static final String CENTER = "center";
-    public static final String RADIUS = "radius";
-    public static final String MAGNITUDE = "magnitude";
+    public static final String CENTER = "Center";
+    public static final String RADIUS = "Radius";
+    public static final String MAGNITUDE = "Magnitude";
 }

@@ -16,7 +16,7 @@
       "Label": "hexcode.glyphs.Invoke.source.name",
       "Description": "hexcode.glyphs.Invoke.source.description"
     },
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Invoke.target.name",
       "Description": "hexcode.glyphs.Invoke.target.description"

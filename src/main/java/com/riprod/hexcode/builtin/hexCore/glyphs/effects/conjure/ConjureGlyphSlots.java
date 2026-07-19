@@ -7,8 +7,8 @@ public final class ConjureGlyphSlots {
     public static final String ANCHOR = "anchor";
     public static final String COORDS_A = "coordsA";
     public static final String COORDS_B = "coordsB";
-    public static final String DURATION = "duration";
+    public static final String DURATION = "Duration";
     public static final String INTERVAL = "interval";
-    public static final String IMMEDIATE = "immediate";
+    public static final String IMMEDIATE = "Immediate";
     public static final String HITBOX = "hitbox";
 }

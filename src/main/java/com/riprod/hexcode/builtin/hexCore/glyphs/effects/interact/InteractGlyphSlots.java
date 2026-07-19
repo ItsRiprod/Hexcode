@@ -4,5 +4,5 @@ public final class InteractGlyphSlots {
     private InteractGlyphSlots() {
     }
 
-    public static final String TARGET = "target";
+    public static final String TARGET = "Target";
 }

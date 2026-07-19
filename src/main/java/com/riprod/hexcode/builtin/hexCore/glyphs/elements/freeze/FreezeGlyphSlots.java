@@ -4,5 +4,5 @@ public final class FreezeGlyphSlots {
     private FreezeGlyphSlots() {
     }
 
-    public static final String IMMEDIATE = "immediate";
+    public static final String IMMEDIATE = "Immediate";
 }

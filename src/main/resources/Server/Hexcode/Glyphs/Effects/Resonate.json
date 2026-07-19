@@ -23,7 +23,7 @@
     { "Parent": "Circle", "RelativeSize": 0.8 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Resonate.target.name",
       "Description": "hexcode.glyphs.Resonate.target.description"

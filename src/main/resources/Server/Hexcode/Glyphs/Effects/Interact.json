@@ -24,7 +24,7 @@
     { "Parent": "Circle", "RelativeSize": 0.55 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Interact.target.name",
       "Description": "hexcode.glyphs.Interact.target.description"

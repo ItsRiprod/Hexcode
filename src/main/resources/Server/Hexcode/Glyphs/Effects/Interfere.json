@@ -27,7 +27,7 @@
     { "Parent": "Anticircle", "RelativeSize": 0.8 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Interfere.target.name",
       "Description": "hexcode.glyphs.Interfere.target.description"

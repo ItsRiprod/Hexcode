@@ -42,6 +42,7 @@ import com.riprod.hexcode.core.common.execution.queue.HexQueueDrainEventSystem;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionTickSystem;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
+import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconStore;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.node.NodeConfig;
@@ -105,9 +106,11 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.ResourceType;
 import com.hypixel.hytale.component.spatial.KDTree;
 import com.hypixel.hytale.component.spatial.SpatialResource;
+import com.hypixel.hytale.event.EventPriority;
 import com.hypixel.hytale.event.EventRegistry;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore;
+import com.hypixel.hytale.server.core.asset.LoadAssetEvent;
 import com.hypixel.hytale.builtin.adventure.memories.MemoriesPlugin;
 import com.hypixel.hytale.builtin.adventure.memories.memories.Memory;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
@@ -121,14 +124,14 @@ public class Hexcode extends JavaPlugin {
     private final PatchManager patchManager;
 
     // Deprecated, waiting on a fix from hytale for proper implementation
-//     private HexCorePlugin hexCore;
-//     private CounterspellPlugin counterspell;
-//     private HexabilityPlugin hexability;
-//     private HexomationPlugin hexomation;
-//     private HextrasPlugin hextras;
-//     private HextremePlugin hextreme;
-//     private ImbuedPlugin imbued;
-//     private RitualisticPlugin ritualistic;
+    // private HexCorePlugin hexCore;
+    // private CounterspellPlugin counterspell;
+    // private HexabilityPlugin hexability;
+    // private HexomationPlugin hexomation;
+    // private HextrasPlugin hextras;
+    // private HextremePlugin hextreme;
+    // private ImbuedPlugin imbued;
+    // private RitualisticPlugin ritualistic;
 
     public Hexcode(JavaPluginInit init) {
         super(init);
@@ -367,6 +370,10 @@ public class Hexcode extends JavaPlugin {
         entityStoreRegistry.registerSystem(new DrawModeLifecycleSystem());
         entityStoreRegistry.registerSystem(new DrawRecognitionSystem());
         entityStoreRegistry.registerSystem(new DrawAnchorSystem());
+
+        this.getEventRegistry().register(EventPriority.NORMAL, LoadAssetEvent.class, e -> {
+            GlyphIconStore.generateMissing(this.getManifest());
+        });
 
         ResourceType<EntityStore, SpatialResource<Ref<EntityStore>, EntityStore>> hoverableSpatialResourceType = entityStoreRegistry
                 .registerSpatialResource(() -> new KDTree<>(Ref::isValid));

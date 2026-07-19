@@ -13,20 +13,20 @@
     { "Parent": "Antisquare", "RelativeSize": 0.55 }
   ],
   "Slots": {
-    "center": {
+    "Center": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Burning.center.name",
       "Description": "hexcode.glyphs.Burning.center.description",
       "Unique": true
     },
-    "radius": {
+    "Radius": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Burning.radius.name",
       "Description": "hexcode.glyphs.Burning.radius.description",
       "DefaultValue": 2.1,
       "Unique": true
     },
-    "magnitude": {
+    "Magnitude": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Burning.magnitude.name",
       "Description": "hexcode.glyphs.Burning.magnitude.description",

@@ -8,12 +8,12 @@
     { "Parent": "Down", "StatContribution": 0 }
   ],
   "Slots": {
-    "target": {
+    "Target": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Variable.target.name",
       "Description": "hexcode.glyphs.Variable.target.description"
     },
-    "output": {
+    "Output": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Variable.output.name",
       "Description": "hexcode.glyphs.Variable.output.description",

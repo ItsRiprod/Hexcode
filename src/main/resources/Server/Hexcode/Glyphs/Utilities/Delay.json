@@ -20,7 +20,7 @@
     { "Parent": "Triangle", "StatContribution": 0 }
   ],
   "Slots": {
-    "duration": {
+    "Duration": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Delay.duration.name",
       "Description": "hexcode.glyphs.Delay.duration.description",
@@ -38,7 +38,7 @@
       "Label": "hexcode.glyphs.Delay.Next.name",
       "Description": "hexcode.glyphs.Delay.Next.description"
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Delay.immediate.name",
       "Description": "hexcode.glyphs.Delay.immediate.description"

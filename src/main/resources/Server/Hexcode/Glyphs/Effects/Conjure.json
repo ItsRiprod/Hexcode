@@ -45,7 +45,7 @@
       "Description": "hexcode.glyphs.Conjure.coordsB.description",
       "Unique": true
     },
-    "duration": {
+    "Duration": {
       "Parent": "Input",
       "Label": "hexcode.glyphs.Conjure.duration.name",
       "Description": "hexcode.glyphs.Conjure.duration.description",
@@ -68,7 +68,7 @@
       "NeutralLabel": "hexcode.glyphs.Conjure.hitbox.neutral",
       "NegativeLabel": "hexcode.glyphs.Conjure.hitbox.negative"
     },
-    "immediate": {
+    "Immediate": {
       "Parent": "Next",
       "Label": "hexcode.glyphs.Conjure.immediate.name",
       "Description": "hexcode.glyphs.Conjure.immediate.description"
