@@ -1,8 +1,9 @@
 {
   "ApplicationEffects": {
-    "EntityBottomTint": "#00260c",
-    "EntityTopTint": "#6aff89",
-    "ScreenEffect": "ScreenEffects/Immune.png"
+    "ScreenEffect": "ScreenEffects/Immune.png",
+    "ModelVFXId": "Elemental_Mage_Armor",
+    "EntityBottomTint": "#002a2f",
+    "EntityTopTint": "#005261"
   },
   "OverlapBehavior": "Overwrite",
   "Infinite": false,

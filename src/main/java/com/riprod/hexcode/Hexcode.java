@@ -30,6 +30,7 @@ import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
 import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
+import com.riprod.hexcode.core.common.execution.precast.CasterStateProvisionSystem;
 import com.riprod.hexcode.core.common.execution.precast.CastChargesSystem;
 import com.riprod.hexcode.core.common.execution.precast.CastDecaySystem;
 import com.riprod.hexcode.core.common.execution.precast.CastBookStyleSystem;
@@ -83,6 +84,7 @@ import com.riprod.hexcode.core.common.pedestal.session.SessionTickSystem;
 import com.riprod.hexcode.core.common.memories.GlyphMemory;
 import com.riprod.hexcode.core.common.memories.GlyphMemoryProvider;
 import com.riprod.hexcode.core.common.execution.interactions.HexExecuteInteraction;
+import com.riprod.hexcode.core.common.execution.interactions.HexHold;
 import com.riprod.hexcode.interaction.PedestalInteraction;
 import com.riprod.patchly.PatchManager;
 
@@ -352,6 +354,7 @@ public class Hexcode extends JavaPlugin {
         entityStoreRegistry.registerSystem(new ObeliskBreakEvent());
         entityStoreRegistry.registerSystem(new DebugTickSystem());
         entityStoreRegistry.registerSystem(new GlyphEffectSystem());
+        entityStoreRegistry.registerSystem(new CasterStateProvisionSystem());
         entityStoreRegistry.registerSystem(new CastChargesSystem());
         entityStoreRegistry.registerSystem(new CastDecaySystem());
         entityStoreRegistry.registerSystem(new CastBookStyleSystem());
@@ -439,6 +442,7 @@ public class Hexcode extends JavaPlugin {
         Interaction.CODEC.register("HexContextPrimary", HexContextPrimary.class, HexContextPrimary.CODEC);
         Interaction.CODEC.register("HexContextAbility", HexContextAbility.class, HexContextAbility.CODEC);
         Interaction.CODEC.register("HexDispel", HexDispel.class, HexDispel.CODEC);
+        Interaction.CODEC.register("HexHold", HexHold.class, HexHold.CODEC);
         Interaction.CODEC.register("PedestalInteraction", PedestalInteraction.class, PedestalInteraction.CODEC);
         Interaction.CODEC.register("HexExecute", HexExecuteInteraction.class, HexExecuteInteraction.CODEC);
     }

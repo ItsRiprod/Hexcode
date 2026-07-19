@@ -1,0 +1,31 @@
+{
+  "Type": "HexExecute",
+  "Config": {
+    "HexStorageType": "ExecutionConfig",
+    "HexStats": {
+      "InitialVolatility": 30,
+      "VolatilityMultiplier": 1.0
+    }
+  },
+  "Effects": {
+    "ItemAnimationId": "HexExecution_Primary"
+  },
+  "Next": {
+    "Type": "HexHold",
+    "HoldState": true,
+    "Next": {
+      "Type": "Charging",
+      "AllowIndefiniteHold": true,
+      "Next": {
+        "0.0": {
+          "Type": "HexHold",
+          "HoldState": false
+        }
+      },
+      "Failed": {
+        "Type": "HexHold",
+        "HoldState": false
+      }
+    }
+  }
+}

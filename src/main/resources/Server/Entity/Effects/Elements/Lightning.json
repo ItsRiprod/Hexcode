@@ -1,16 +1,4 @@
 {
-  "ApplicationEffects": {
-    "EntityBottomTint": "#0a2540",
-    "EntityTopTint": "#99e6ff",
-    "HorizontalSpeedMultiplier": 2,
-    "Particles": [
-      {
-        "SystemId": "Shock_Spawner_Temporary",
-        "TargetEntityPart": "Entity"
-      }
-    ],
-    "ScreenEffect": "ScreenEffects/Daggers.png"
-  },
   "DamageCalculatorCooldown": 0.5,
   "DamageCalculator": {
     "BaseDamage": {
@@ -29,5 +17,16 @@
       }
     ]
   },
-  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png"
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png",
+  "ApplicationEffects": {
+    "HorizontalSpeedMultiplier": 2,
+    "Particles": [
+      {
+        "SystemId": "Bolt_Hit",
+        "TargetEntityPart": "Entity"
+      }
+    ],
+    "ScreenEffect": "ScreenEffects/Daggers.png",
+    "ModelVFXId": "Elemental_Lightning"
+  }
 }

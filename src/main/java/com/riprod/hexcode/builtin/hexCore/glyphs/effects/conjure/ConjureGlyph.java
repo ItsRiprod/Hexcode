@@ -153,9 +153,9 @@ public class ConjureGlyph implements GlyphHandler {
         }
 
         boolean absA = (coordsAVar instanceof PositionVar pa && pa.isAbsolute())
-                || !(coordsAVar instanceof PositionVar);
+                || (!(coordsAVar instanceof PositionVar) && !(coordsAVar instanceof NumberVar));
         boolean absB = (coordsBVar instanceof PositionVar pb && pb.isAbsolute())
-                || !(coordsBVar instanceof PositionVar);
+                || (!(coordsBVar instanceof PositionVar) && !(coordsBVar instanceof NumberVar));
         Vector3d cornerA = absA ? coordsA : new Vector3d(anchorPos).add(coordsA);
         Vector3d cornerB = absB ? coordsB : new Vector3d(anchorPos).add(coordsB);
 

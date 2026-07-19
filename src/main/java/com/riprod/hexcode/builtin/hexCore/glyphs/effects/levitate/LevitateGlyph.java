@@ -11,9 +11,14 @@ import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
+import com.riprod.hexcode.core.common.construct.component.HexStatus;
+import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.LevitateStyle;
+import com.riprod.hexcode.builtin.hexCore.utils.ConstructSplicer;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.protection.HexProtection;
@@ -78,28 +83,33 @@ public class LevitateGlyph implements GlyphHandler {
 
         try {
             String effectId = config.getEffectId();
+            applyLevitateEffect(accessor, ref, effectId, durationSeconds);
 
-            LevitateState state = new LevitateState();
-            state.setAppliedIntensity(intensity);
-            state.setRemainingDuration(durationSeconds);
-            state.setColors(hexContext.getColors());
-            state.setNextGlyphIds(glyph.getNextLinks());
-            state.setEffectId(effectId);
+            HexEffectsComponent construct = accessor.getComponent(
+                    ref, HexEffectsComponent.getComponentType());
+            HexStatus<?> active = construct != null ? findActiveLevitate(construct) : null;
 
-            EntityEffect levitateEffect = EntityEffect.getAssetMap().getAsset(effectId);
-            if (levitateEffect != null) {
-                EffectControllerComponent controller = accessor.getComponent(
-                        ref, EffectControllerComponent.getComponentType());
-                if (controller != null) {
-                    controller.addEffect(ref, levitateEffect, durationSeconds,
-                            OverlapBehavior.OVERWRITE, accessor);
+            if (active != null && active.getState() instanceof LevitateState existing) {
+                existing.setAppliedIntensity(intensity);
+                existing.setRemainingDuration(durationSeconds);
+                existing.setColors(hexContext.getColors());
+                existing.setEffectId(effectId);
+                ConstructHandler<?> handler = ConstructRegistry.get(active.getHandlerId());
+                if (handler != null) {
+                    ConstructSplicer.splice(active, handler, hexContext, glyph,
+                            ConstructSplicer.ChainMode.APPEND_TAIL,
+                            ConstructSplicer.VariablePolicy.PREFER_TARGET, 0f);
                 }
             } else {
-                LOGGER.atWarning().log("levitate: %s effect asset not found", effectId);
+                LevitateState state = new LevitateState();
+                state.setAppliedIntensity(intensity);
+                state.setRemainingDuration(durationSeconds);
+                state.setColors(hexContext.getColors());
+                state.setNextGlyphIds(glyph.getNextLinks());
+                state.setEffectId(effectId);
+                HexConstructSpawner.applyWithState(
+                        accessor, ref, hexContext, glyph, LevitateGlyph.ID, state);
             }
-
-            HexConstructSpawner.applyWithState(
-                    accessor, ref, hexContext, glyph, LevitateGlyph.ID, state);
 
             Slot immediate = glyph.getSlot(LevitateGlyphSlots.IMMEDIATE);
             if (immediate != null && immediate.getLinks().length > 0) {
@@ -116,5 +126,29 @@ public class LevitateGlyph implements GlyphHandler {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Cannot apply levitate", e);
         }
+    }
+
+    private void applyLevitateEffect(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref,
+            String effectId, float durationSeconds) {
+        EntityEffect levitateEffect = EntityEffect.getAssetMap().getAsset(effectId);
+        if (levitateEffect == null) {
+            LOGGER.atWarning().log("levitate: %s effect asset not found", effectId);
+            return;
+        }
+        EffectControllerComponent controller = accessor.getComponent(
+                ref, EffectControllerComponent.getComponentType());
+        if (controller != null) {
+            controller.addEffect(ref, levitateEffect, durationSeconds,
+                    OverlapBehavior.OVERWRITE, accessor);
+        }
+    }
+
+    private static HexStatus<?> findActiveLevitate(HexEffectsComponent construct) {
+        for (HexStatus<?> status : construct.getEffects().values()) {
+            if (status != null && ID.equals(status.getHandlerId())) {
+                return status;
+            }
+        }
+        return null;
     }
 }

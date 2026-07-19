@@ -1,4 +1,4 @@
-stats.Volatility=[Inert] Spell Stability: {value}
+stats.Volatility=Spell Stability: {value}
 stats.Stability=Casting Stability: {value}%
 stats.Affinity_Fire=Elemental Fire Bonus: {value}
 stats.Affinity_Ice=Elemental Ice Bonus: {value}

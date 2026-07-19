@@ -1,19 +1,8 @@
 {
-  "ApplicationEffects": {
-    "EntityBottomTint": "#80ecff",
-    "EntityTopTint": "#da72ff",
-    "HorizontalSpeedMultiplier": 0.5,
-    "Particles": [
-      {
-        "SystemId": "Effect_Snow"
-      }
-    ],
-    "ScreenEffect": "ScreenEffects/Snow.png"
-  },
-  "DamageCalculatorCooldown": 0.5,
+  "DamageCalculatorCooldown": 2,
   "DamageCalculator": {
     "BaseDamage": {
-      "Ice": 0.5
+      "Ice": 3
     }
   },
   "OverlapBehavior": "Overwrite",
@@ -34,5 +23,21 @@
       }
     ]
   },
-  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png"
+  "Parent": "Freeze",
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png",
+  "ApplicationEffects": {
+    "MovementEffects": {
+      "DisableAll": false,
+      "DisableBackward": false,
+      "DisableLeft": false,
+      "DisableRight": false,
+      "DisableSprint": false,
+      "DisableJump": false,
+      "DisableCrouch": false,
+      "DisableForward": false
+    }
+  },
+  "DamageEffects": {
+    "CameraEffect": "Impact_Light"
+  }
 }

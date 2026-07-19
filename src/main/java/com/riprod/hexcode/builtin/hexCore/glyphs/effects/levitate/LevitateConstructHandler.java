@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffec
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
+import com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
@@ -19,11 +20,11 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.LevitateStyle;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.utils.VelocityUtil;
 
 public class LevitateConstructHandler implements ConstructHandler<LevitateState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final float TERMINAL_VELOCITY = 130.0f;
 
     @Override
     public boolean onTick(float dt, HexStatus<LevitateState> status, ConstructTickContext ctx) {
@@ -36,7 +37,7 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
 
         LevitateConfig config = resolveConfig(status);
 
-        applyRise(dt, state, config, ctx);
+        applyRise(state, config, ctx);
         emitTickVfx(dt, state, config, status, ctx);
 
         return !drainSustain(dt, status);
@@ -50,18 +51,21 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
                 : LevitateConfig.DEFAULTS;
     }
 
-    private void applyRise(float dt, LevitateState state, LevitateConfig config, ConstructTickContext ctx) {
+    private void applyRise(LevitateState state, LevitateConfig config, ConstructTickContext ctx) {
         Ref<EntityStore> target = ctx.getEntityRef();
         if (target == null || !target.isValid())
             return;
         Velocity vel = ctx.getBuffer().getComponent(target, Velocity.getComponentType());
         if (vel == null)
             return;
-        double targetVy = config.getRiseSpeedPerIntensity() * state.getAppliedIntensity();
+        double targetVy = Math.min(config.getRiseSpeedPerIntensity() * state.getAppliedIntensity(),
+                TERMINAL_VELOCITY);
         double currentVy = VelocityUtil.currentVelocity(target, ctx.getBuffer()).y;
-        if (currentVy >= targetVy && targetVy >= 0)
+        if (currentVy >= targetVy)
             return;
         double delta = Math.min(targetVy - currentVy, config.getMaxCatchAccel() * dt);
+        if (delta <= 0)
+            return;
         vel.addInstruction(new Vector3d(0, delta, 0), null, ChangeVelocityType.Add);
     }
 

@@ -7,5 +7,6 @@
     "MovementEffects": {
       "DisableAll": true
     }
-  }
+  },
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png"
 }

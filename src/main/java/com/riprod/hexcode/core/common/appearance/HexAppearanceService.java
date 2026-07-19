@@ -1,5 +1,7 @@
 package com.riprod.hexcode.core.common.appearance;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Nonnull;
@@ -11,6 +13,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.PlayerSkin;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
 import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
@@ -77,11 +80,20 @@ public final class HexAppearanceService {
         Model model = modelComponent.getModel();
         if (model.getModelAssetId() == null) return null;
 
-        HexAppearanceComponent appearance = new HexAppearanceComponent(model.toReference());
+        Model.ModelReference reference = model.toReference();
+        Map<String, String> attachments = reference.getRandomAttachmentIds();
+        HexAppearanceComponent appearance = new HexAppearanceComponent(
+                reference.getModelAssetId(), reference.getScale(), reference.isStaticModel(),
+                attachments != null ? new LinkedHashMap<>(attachments) : null);
 
         PlayerSkinComponent skinComponent = buffer.getComponent(ref, PlayerSkinComponent.getComponentType());
         if (skinComponent != null) {
             appearance.setOriginalSkin(skinComponent.getPlayerSkin());
+        }
+
+        Nameplate nameplateComponent = buffer.getComponent(ref, Nameplate.getComponentType());
+        if (nameplateComponent != null) {
+            appearance.setOriginalNameplate(nameplateComponent.getText());
         }
 
         return appearance;
@@ -89,21 +101,24 @@ public final class HexAppearanceService {
 
     private static boolean apply(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref,
             @Nonnull HexAppearanceComponent appearance) {
-        Model.ModelReference original = appearance.getOriginalModel();
-        if (original == null) return false;
+        String modelAssetId = appearance.getOriginalModelAssetId();
+        if (modelAssetId == null) return false;
 
-        String modelAssetId = original.getModelAssetId();
         PlayerSkin disguiseSkin = null;
+        String disguiseNameplate = null;
+        Float overriddenBaseScale = null;
         long modelSequence = Long.MIN_VALUE;
-        float scale = original.getScale();
+        float scaleProduct = 1.0f;
 
         for (AppearanceLayer layer : appearance.getLayers().values()) {
-            if (layer.scale() != null) {
-                scale *= layer.scale();
+            if (layer.scaleMultiplier() != null) {
+                scaleProduct *= layer.scaleMultiplier();
             }
             if (layer.modelAssetId() != null && layer.sequence() > modelSequence) {
                 modelAssetId = layer.modelAssetId();
                 disguiseSkin = layer.skin();
+                disguiseNameplate = layer.nameplate();
+                overriddenBaseScale = layer.baseScale();
                 modelSequence = layer.sequence();
             }
         }
@@ -115,14 +130,57 @@ public final class HexAppearanceService {
         }
 
         boolean overridden = modelSequence != Long.MIN_VALUE;
-        Model model = Model.createScaledModel(asset, scale,
-                overridden ? null : original.getRandomAttachmentIds());
+        float base = overridden
+                ? (overriddenBaseScale != null ? overriddenBaseScale : 1.0f)
+                : appearance.getOriginalScale();
+        if (base <= 0f) {
+            base = 1.0f;
+        }
+        float scale = base * scaleProduct;
+        if (scale <= 0f) {
+            scale = 1.0f;
+        }
+
+        Model model = overridden
+                ? Model.createScaledModel(asset, scale, null)
+                : Model.createScaledModel(asset, scale, appearance.getOriginalRandomAttachmentIds(),
+                        null, appearance.isOriginalStatic());
 
         buffer.putComponent(ref, ModelComponent.getComponentType(), new ModelComponent(model));
         buffer.putComponent(ref, EntityScaleComponent.getComponentType(), new EntityScaleComponent(scale));
 
         applySkin(buffer, ref, overridden, disguiseSkin, appearance.getOriginalSkin());
+        applyNameplate(buffer, ref, overridden, disguiseNameplate, appearance.getOriginalNameplate());
         return true;
+    }
+
+    private static void applyNameplate(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref,
+            boolean overridden, @Nullable String disguiseNameplate, @Nullable String originalNameplate) {
+        Nameplate current = buffer.getComponent(ref, Nameplate.getComponentType());
+
+        if (overridden) {
+            if (disguiseNameplate != null) {
+                setNameplate(buffer, ref, current, disguiseNameplate);
+            } else if (current != null) {
+                current.setText("");
+            }
+            return;
+        }
+
+        if (originalNameplate != null) {
+            setNameplate(buffer, ref, current, originalNameplate);
+        } else if (current != null) {
+            buffer.tryRemoveComponent(ref, Nameplate.getComponentType());
+        }
+    }
+
+    private static void setNameplate(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref,
+            @Nullable Nameplate current, @Nonnull String text) {
+        if (current != null) {
+            current.setText(text);
+        } else {
+            buffer.putComponent(ref, Nameplate.getComponentType(), new Nameplate(text));
+        }
     }
 
     private static void applySkin(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref,

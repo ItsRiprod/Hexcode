@@ -92,8 +92,9 @@
   },
   "InteractionVars": {
     "HexTier1": {
-      "Interactions": [
+     "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"
@@ -114,8 +115,9 @@
       ]
     },
     "HexTier2": {
-      "Interactions": [
+     "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"
@@ -136,8 +138,9 @@
       ]
     },
     "HexTier3": {
-      "Interactions": [
+     "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"
@@ -158,8 +161,9 @@
       ]
     },
     "HexTier4": {
-      "Interactions": [
+     "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"

@@ -119,13 +119,11 @@ public class AreaGlyph implements GlyphHandler {
 
     private List<PersistentRef> gatherEntities(Vector3d center, double radius, HexContext hexContext) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
         List<PersistentRef> gathered = new ArrayList<>();
 
         List<Ref<EntityStore>> nearby = TargetUtil.getAllEntitiesInSphere(center, radius, accessor);
         for (Ref<EntityStore> ref : nearby) {
             if (ref == null || !ref.isValid()) continue;
-            if (ref.equals(casterRef)) continue;
 
             UUIDComponent uuid = accessor.getComponent(ref, UUIDComponent.getComponentType());
             if (uuid == null) continue;

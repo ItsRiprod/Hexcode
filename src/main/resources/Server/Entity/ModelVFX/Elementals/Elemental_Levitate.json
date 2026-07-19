@@ -3,10 +3,10 @@
   "UseBloomOnHighlight": true,
   "HighlightThickness": 2.5,
   "LoopOption": "Loop",
-  "EffectDirection": "FromCenter",
+  "EffectDirection": "BottomUp",
   "NoiseScale": {
-    "X": 13,
-    "Y": 13
+    "X": 1,
+    "Y": 1
   },
   "AnimationDuration": 3,
   "UseProgessiveHighlight": false,
@@ -15,7 +15,7 @@
     "Y": 0
   },
   "CurveType": "QuartInOut",
-  "HighlightColor": "#00c1e9",
+  "HighlightColor": "#bae2ff",
   "PostColor": "#00f2ff",
   "PostColorOpacity": 0,
   "AnimationRange": {

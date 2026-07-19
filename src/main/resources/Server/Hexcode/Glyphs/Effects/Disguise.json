@@ -61,5 +61,9 @@
   "Volatility": {
     "InstantCost": 3,
     "DrainPerSecond": 0.15
+  },
+  "Config": {
+    "Type": "Disguise",
+    "DisguiseNametag": true
   }
 }

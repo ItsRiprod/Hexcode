@@ -6,6 +6,8 @@ import org.joml.Vector3d;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
+import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
@@ -25,6 +27,7 @@ import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
@@ -39,10 +42,18 @@ public class DisguiseGlyph implements GlyphHandler {
     }
 
     @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(DisguiseConfig.class, DisguiseConfig.CODEC);
+    }
+
+    @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar targetVar = glyph.readSlot(DisguiseGlyphSlots.TARGET, hexContext);
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+
+        DisguiseConfig config = getConfig(DisguiseConfig.class, asset);
+        if (config == null) config = DisguiseConfig.DEFAULTS;
 
         AppearanceLayer disguise = resolveDisguise(glyph, hexContext, accessor);
         if (disguise == null) {
@@ -61,11 +72,11 @@ public class DisguiseGlyph implements GlyphHandler {
                     "Target must be a creature");
             return;
         }
-        applyToEntity(glyph, hexContext, accessor, targetEntity, disguise, durationSeconds);
+        applyToEntity(glyph, hexContext, accessor, targetEntity, disguise, durationSeconds, config);
     }
 
     private void applyToEntity(Glyph glyph, HexContext hexContext, CommandBuffer<EntityStore> accessor,
-            EntityVar targetEntity, AppearanceLayer disguise, float durationSeconds) {
+            EntityVar targetEntity, AppearanceLayer disguise, float durationSeconds, DisguiseConfig config) {
         Ref<EntityStore> targetRef = targetEntity.getRef(accessor);
         if (targetRef == null || !targetRef.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -78,6 +89,12 @@ public class DisguiseGlyph implements GlyphHandler {
             HexProtection.notifyBlocked(caster, accessor, ID);
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
+        }
+
+        if (!config.disguiseNametag()) {
+            Nameplate targetNameplate = accessor.getComponent(targetRef, Nameplate.getComponentType());
+            disguise = AppearanceLayer.ofModel(disguise.modelAssetId(), disguise.skin(),
+                    targetNameplate != null ? targetNameplate.getText() : null, disguise.baseScale());
         }
 
         DisguiseState state = ConstructStateUtil.findState(
@@ -142,12 +159,28 @@ public class DisguiseGlyph implements GlyphHandler {
         String modelId = modelComp.getModel().getModelAssetId();
         if (modelId == null) return null;
 
+        float referenceScale = modelComp.getModel().getScale();
+        EntityScaleComponent scaleComp = accessor.getComponent(
+                referenceRef, EntityScaleComponent.getComponentType());
+        if (scaleComp != null && scaleComp.getScale() > 0f) {
+            referenceScale = scaleComp.getScale();
+        }
+        if (referenceScale <= 0f) {
+            referenceScale = 1.0f;
+        }
+
         PlayerSkin skin = null;
         PlayerSkinComponent skinComp = accessor.getComponent(referenceRef, PlayerSkinComponent.getComponentType());
         if (skinComp != null) {
             skin = skinComp.getPlayerSkin();
         }
 
-        return AppearanceLayer.ofModel(modelId, skin);
+        String nameplate = null;
+        Nameplate nameplateComp = accessor.getComponent(referenceRef, Nameplate.getComponentType());
+        if (nameplateComp != null && !nameplateComp.getText().isEmpty()) {
+            nameplate = nameplateComp.getText();
+        }
+
+        return AppearanceLayer.ofModel(modelId, skin, nameplate, referenceScale);
     }
 }

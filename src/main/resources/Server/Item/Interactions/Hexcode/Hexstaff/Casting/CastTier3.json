@@ -20,6 +20,7 @@
         "DefaultValue": {
           "Interactions": [
             {
+              "Parent": "CastSpell_Template",
               "Type": "HexExecute",
               "Config": {
                 "HexStorageType": "ExecutionConfig",

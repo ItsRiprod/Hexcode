@@ -3,8 +3,15 @@
   "Debuff": false,
   "OverlapBehavior": "Overwrite",
   "ApplicationEffects": {
-    "EntityBottomTint": "#9966CC",
-    "EntityTopTint": "#CC99FF",
-    "WorldSoundEventId": "SFX_Weapon_Charge_Swing"
-  }
+    "EntityBottomTint": "#4e6166",
+    "EntityTopTint": "#405261",
+    "WorldSoundEventId": "SFX_Weapon_Charge_Swing",
+    "ModelVFXId": "Elemental_Levitate",
+    "Particles": [
+      {
+        "SystemId": "Levitate_Active"
+      }
+    ]
+  },
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png"
 }
