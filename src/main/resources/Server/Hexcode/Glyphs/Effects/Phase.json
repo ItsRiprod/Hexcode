@@ -22,34 +22,25 @@
   "ModelPath": "Phase",
   "ManaConsumption": 0.5,
   "ShapeStructure": [
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Anticircle",
-      "Size": 0.8
-    },
-    {
-      "ShapeId": "Square",
-      "Size": 0.55
-    }
+    "Square",
+    { "Parent": "Anticircle", "RelativeSize": 0.8 },
+    { "Parent": "Square", "RelativeSize": 0.55 }
   ],
   "Slots": {
     "target": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Phase.target.name",
       "Description": "hexcode.glyphs.Phase.target.description"
     },
     "duration": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Phase.duration.name",
       "Description": "hexcode.glyphs.Phase.duration.description",
       "DefaultValue": 15,
       "Unique": true
     },
     "intensity": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Phase.intensity.name",
       "Description": "hexcode.glyphs.Phase.intensity.description",
       "DefaultValue": 20,
@@ -63,12 +54,12 @@
       }
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Phase.Next.name",
       "Description": "hexcode.glyphs.Phase.Next.description"
     },
     "immediate": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Phase.immediate.name",
       "Description": "hexcode.glyphs.Phase.immediate.description"
     }

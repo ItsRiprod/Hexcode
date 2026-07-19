@@ -7,7 +7,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.Message;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -100,8 +100,8 @@ public class GlyphMemory extends NPCMemory {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(this.glyphId);
         List<Message> entries = new ArrayList<>();
         if (asset != null) {
-            for (Map.Entry<String, SlotAsset> entry : asset.getSlots().entrySet()) {
-                SlotAsset slot = entry.getValue();
+            for (Map.Entry<String, SlotConfig> entry : asset.getSlots().entrySet()) {
+                SlotConfig slot = entry.getValue();
                 if (slot.getLabel() == null) {
                     continue;
                 }

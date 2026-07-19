@@ -5,18 +5,12 @@
   "Description": "hexcode.glyphs.Number_9.description",
   "ModelPath": "Number_9",
   "ShapeStructure": [
-    {
-      "ShapeId": "Down",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Circle",
-      "Size": 1.0
-    }
+    { "Parent": "Down", "StatContribution": 0 },
+    { "Parent": "Circle", "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Number_9.Next.name",
       "Description": "hexcode.glyphs.Number_9.Next.description"
     }

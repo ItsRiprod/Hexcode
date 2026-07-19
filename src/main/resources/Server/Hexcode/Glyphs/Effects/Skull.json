@@ -5,23 +5,17 @@
   "Description": "hexcode.glyphs.Skull.description",
   "ModelPath": "Skull",
   "ShapeStructure": [
-    {
-      "ShapeId": "Circle",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Skull",
-      "Size": 1.0
-    }
+    "Circle",
+    "Skull"
   ],
   "Slots": {
     "target": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Skull.target.name",
       "Description": "hexcode.glyphs.Skull.target.description"
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Skull.Next.name",
       "Description": "hexcode.glyphs.Skull.Next.description"
     }

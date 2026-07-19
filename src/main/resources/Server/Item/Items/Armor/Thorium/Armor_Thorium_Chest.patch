@@ -12,6 +12,13 @@
           "Amount": 11,
           "CalculationType": "Additive"
         }
+      ],
+      "Affinity_Life": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 15
+        }
       ]
     }
   }

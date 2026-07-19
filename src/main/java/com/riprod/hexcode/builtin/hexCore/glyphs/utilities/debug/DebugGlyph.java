@@ -148,7 +148,16 @@ public class DebugGlyph implements GlyphHandler {
     private static String complexityText(HexContext hexContext) {
         if (hexContext == null)
             return "-";
-        return String.format("%.1f", hexContext.getComplexity());
+        Map<String, Float> resources = hexContext.getResources();
+        if (resources.isEmpty())
+            return "-";
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Float> entry : resources.entrySet()) {
+            if (entry.getValue() <= 0f) continue;
+            if (sb.length() > 0) sb.append(' ');
+            sb.append(entry.getKey()).append('=').append(String.format("%.1f", entry.getValue()));
+        }
+        return sb.length() == 0 ? "-" : sb.toString();
     }
 
     private static String valueText(HexVar value) {

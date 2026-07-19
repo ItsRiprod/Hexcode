@@ -22,6 +22,8 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.io.PacketHandler;
 import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProvider;
 import com.riprod.hexcode.builtin.hexCore.common.ContextForceExitEvent;
+import com.riprod.hexcode.core.common.appearance.HexAppearanceComponent;
+import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponent;
@@ -98,6 +100,11 @@ public class HexResetCommand extends AbstractPlayerCommand {
         }
 
         if (stripLegacyStaffMetadata(store, ref)) {
+            cleaned++;
+        }
+
+        if (store.getComponent(ref, HexAppearanceComponent.getComponentType()) != null) {
+            HexAppearanceService.restoreOriginal(store, ref);
             cleaned++;
         }
 

@@ -12,6 +12,7 @@ import com.riprod.hexcode.command.HexcodeCommand;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.construct.system.MountOrphanReaperSystem;
 import com.riprod.hexcode.core.common.context.CasterComponent;
+import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.context.interactions.HexContextAbility;
 import com.riprod.hexcode.core.common.context.interactions.HexContextPrimary;
 import com.riprod.hexcode.core.common.drawing.DrawAnchorSystem;
@@ -43,7 +44,7 @@ import com.riprod.hexcode.core.common.execution.queue.HexExecutionTickSystem;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotStyleAsset;
+import com.riprod.hexcode.core.common.node.NodeConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -78,7 +79,6 @@ import com.riprod.hexcode.core.common.casting.registry.CastingStyleRegistry;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.core.common.node.component.SlotComponent;
-import com.riprod.hexcode.core.common.node.NodeRouter;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionTickSystem;
 import com.riprod.hexcode.core.common.memories.GlyphMemory;
@@ -180,11 +180,11 @@ public class Hexcode extends JavaPlugin {
     private void registerAssets() {
         AssetRegistry.register(
                 HytaleAssetStore
-                        .builder(SlotStyleAsset.class,
-                                new DefaultAssetMap<String, SlotStyleAsset>())
-                        .setPath("Hexcode/SlotStyles")
-                        .setCodec(SlotStyleAsset.CODEC)
-                        .setKeyFunction(SlotStyleAsset::getId)
+                        .builder(NodeConfig.class,
+                                new DefaultAssetMap<String, NodeConfig>())
+                        .setPath("Hexcode/NodeConfigs")
+                        .setCodec(NodeConfig.CODEC)
+                        .setKeyFunction(NodeConfig::getId)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
@@ -212,7 +212,7 @@ public class Hexcode extends JavaPlugin {
                         .setPath("Hexcode/Glyphs")
                         .setCodec(GlyphAsset.CODEC)
                         .setKeyFunction(GlyphAsset::getId)
-                        .loadsAfter(SlotStyleAsset.class)
+                        .loadsAfter(NodeConfig.class)
                         .loadsAfter(HexStyleAsset.class)
                         .loadsAfter(ParticleSystem.class)
                         .loadsAfter(SoundEvent.class)
@@ -253,7 +253,7 @@ public class Hexcode extends JavaPlugin {
                         .setCodec(SavedHexAsset.CODEC)
                         .setKeyFunction(SavedHexAsset::getId)
                         .loadsAfter(GlyphAsset.class)
-                        .loadsAfter(SlotStyleAsset.class)
+                        .loadsAfter(NodeConfig.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
@@ -262,7 +262,7 @@ public class Hexcode extends JavaPlugin {
                         .setPath("Hexcode/Imbuement/Profiles")
                         .setCodec(ImbuementProfileAsset.CODEC)
                         .setKeyFunction(ImbuementProfileAsset::getId)
-                        .loadsAfter(SlotStyleAsset.class)
+                        .loadsAfter(NodeConfig.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
@@ -305,6 +305,10 @@ public class Hexcode extends JavaPlugin {
         ComponentType<EntityStore, CasterComponent> casterComponentType = entityStoreRegistry
                 .registerComponent(CasterComponent.class, CasterComponent::new);
         CasterComponent.setComponentType(casterComponentType);
+
+        ComponentType<EntityStore, HexcodeComponent> hexcodeComponentType = entityStoreRegistry
+                .registerComponent(HexcodeComponent.class, HexcodeComponent::new);
+        HexcodeComponent.setComponentType(hexcodeComponentType);
 
         ComponentType<EntityStore, DrawCaptureComponent> drawCaptureComponentType = entityStoreRegistry
                 .registerComponent(DrawCaptureComponent.class, DrawCaptureComponent::new);
@@ -475,9 +479,6 @@ public class Hexcode extends JavaPlugin {
         events.register(AssetEditorRequestDataSetEvent.class, "HexcodeCastingStyles",
                 (Consumer<AssetEditorRequestDataSetEvent>) e -> e
                         .setResults(CastingStyleRegistry.keys().toArray(String[]::new)));
-        events.register(AssetEditorRequestDataSetEvent.class, "HexcodeNodeHandlers",
-                (Consumer<AssetEditorRequestDataSetEvent>) e -> e
-                        .setResults(NodeRouter.keys().toArray(String[]::new)));
         events.register(AssetEditorRequestDataSetEvent.class, "HexcodeGlyphHandlers",
                 (Consumer<AssetEditorRequestDataSetEvent>) e -> e
                         .setResults(GlyphRegistry.getAll().keySet().toArray(String[]::new)));

@@ -1,4 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.nodes.glyph;
+import com.hypixel.hytale.server.core.util.TargetUtil;
+import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.component.ComponentAccessor;
 
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -31,13 +34,11 @@ import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.builtin.hexCore.scene.GlyphStyler;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
-import com.riprod.hexcode.core.common.node.NodeTypeId;
 import com.riprod.hexcode.builtin.hexCore.scene.CraftingDragHandler;
 import com.riprod.hexcode.core.common.node.NodeInterface;
 import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
-import com.riprod.hexcode.builtin.hexCore.nodes.glyph.CraftingPositionUtil;
 
 public class GlyphNodeHandler extends BaseGlyphHandler {
   private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -85,9 +86,9 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
     if (session == null)
       return InteractionState.Finished;
 
-    Vector3f dropOffset = CraftingPositionUtil.lookToHexOffset(accessor, playerRef,
+    Vector3f dropOffset = lookToHexOffset(accessor, playerRef,
         session.getAnchorNodeRef(), 2.0f);
-    Vector3d dropWorldPos = CraftingPositionUtil.hexOffsetToWorld(accessor,
+    Vector3d dropWorldPos = hexOffsetToWorld(accessor,
         session.getAnchorNodeRef(), dropOffset);
 
     GlyphComponent glyphComp = accessor.getComponent(nodeRef, GlyphComponent.getComponentType());
@@ -172,7 +173,7 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
     if (headRot == null)
       return;
 
-    Vector3d dropWorldPos = CraftingPositionUtil.hexOffsetToWorld(accessor,
+    Vector3d dropWorldPos = hexOffsetToWorld(accessor,
         session.getAnchorNodeRef(), glyphComp.getOffset());
     TransformComponent transform = accessor.getComponent(nodeRef, TransformComponent.getComponentType());
     if (transform == null)
@@ -265,7 +266,7 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
       glyphHolder.addComponent(DisplayNameComponent.getComponentType(), new DisplayNameComponent(displayName));
     }
     glyphHolder.addComponent(NodeComponent.getComponentType(),
-        new NodeComponent(hexEntityRef, NodeTypeId.GLYPH));
+        new NodeComponent(hexEntityRef, GlyphNodeConfig.TYPE));
 
     Ref<EntityStore> glyphNodeRef = accessor.addEntity(glyphHolder, AddReason.SPAWN);
     glyphComp.setSelfRef(glyphNodeRef);
@@ -297,6 +298,30 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
 
     clearExpandedIfMatches(accessor, playerRef, nodeRef);
     accessor.tryRemoveEntity(nodeRef, RemoveReason.REMOVE);
+  }
+
+  private static Vector3f lookToHexOffset(ComponentAccessor<EntityStore> accessor,
+      Ref<EntityStore> playerRef, Ref<EntityStore> hexRootRef, float distance) {
+    Transform look = TargetUtil.getLook(playerRef, accessor);
+    Vector3d rayStart = look.getPosition();
+    Vector3d rayDir = look.getDirection();
+    Vector3d worldPoint = new Vector3d(
+        rayStart.x + rayDir.x * distance,
+        rayStart.y + rayDir.y * distance,
+        rayStart.z + rayDir.z * distance);
+    TransformComponent rootTransform = accessor.getComponent(hexRootRef, TransformComponent.getComponentType());
+    Vector3d rootPos = rootTransform.getPosition();
+    return new Vector3f(
+        (float) (worldPoint.x - rootPos.x),
+        (float) (worldPoint.y - rootPos.y),
+        (float) (worldPoint.z - rootPos.z));
+  }
+
+  private static Vector3d hexOffsetToWorld(ComponentAccessor<EntityStore> accessor,
+      Ref<EntityStore> hexRootRef, Vector3f offset) {
+    TransformComponent rootTransform = accessor.getComponent(hexRootRef, TransformComponent.getComponentType());
+    Vector3d rootPos = rootTransform.getPosition();
+    return new Vector3d(rootPos.x + offset.x, rootPos.y + offset.y, rootPos.z + offset.z);
   }
 
 }

@@ -6,6 +6,7 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.validation.Validators;
+import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 
@@ -24,6 +25,10 @@ public abstract class ElementGlyphConfig extends GlyphConfig {
             .append(new KeyedCodec<>("AffinityScale", Codec.FLOAT, true),
                     (c, v) -> c.affinityScale = v, c -> c.affinityScale)
             .add()
+            .append(new KeyedCodec<>("Resource", Codec.STRING, true),
+                    (c, v) -> c.resource = v, c -> c.resource)
+            .addValidatorLate(() -> DamageCause.VALIDATOR_CACHE.getValidator().late())
+            .add()
             .build();
 
     protected float efficiency = 1.0f;
@@ -32,6 +37,9 @@ public abstract class ElementGlyphConfig extends GlyphConfig {
     protected String affinityStat;
 
     protected float affinityScale = 1.0f;
+
+    @Nullable
+    protected String resource;
 
     public float getEfficiency() {
         return efficiency;
@@ -44,5 +52,10 @@ public abstract class ElementGlyphConfig extends GlyphConfig {
 
     public float getAffinityScale() {
         return affinityScale;
+    }
+
+    @Nullable
+    public String getResource() {
+        return resource;
     }
 }

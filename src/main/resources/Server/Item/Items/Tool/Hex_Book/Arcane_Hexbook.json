@@ -29,7 +29,17 @@
       "ArcaneHexBook"
     ]
   },
-  "Weapon": {},
+  "Weapon": {
+    "StatModifiers": {
+      "Affinity_Arcane": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 25
+        }
+      ]
+    }
+  },
   "ItemSoundSetId": "ISS_Weapons_Books",
   "Recipe": {
     "Input": [

@@ -106,6 +106,10 @@ public class CoreHexExecuter {
         HytaleServer.get().getEventBus().dispatchFor(GlyphExecuteEvent.class)
                 .dispatch(new GlyphExecuteEvent(nodeId, nextNode, hexContext));
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(nextNode.getGlyphId());
+        if (asset != null && !asset.isEnabled()) {
+            HexExecuter.fail(nextNode, hexContext, GlyphFizzleEvent.Reason.GLYPH_DISABLED);
+            return;
+        }
         GlyphHandler nextHandler = asset != null ? GlyphRegistry.get(asset.getHandler()) : null;
         if (nextHandler == null) {
             HexExecuter.fail(nextNode, hexContext);

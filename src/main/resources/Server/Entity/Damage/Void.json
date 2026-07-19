@@ -1,0 +1,6 @@
+{
+  "Parent": "Elemental",
+  "Inherits": "Elemental",
+  "BypassResistances": true,
+  "DamageTextColor": "#B36BFF"
+}

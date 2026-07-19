@@ -5,18 +5,12 @@
   "Description": "hexcode.glyphs.Number_12.description",
   "ModelPath": "Number_12",
   "ShapeStructure": [
-    {
-      "ShapeId": "Down",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    }
+    { "Parent": "Down", "StatContribution": 0 },
+    { "Parent": "Square", "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Number_12.Next.name",
       "Description": "hexcode.glyphs.Number_12.Next.description"
     }

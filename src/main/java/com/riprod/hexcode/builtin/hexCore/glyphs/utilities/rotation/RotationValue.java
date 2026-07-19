@@ -1,5 +1,6 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation;
 
+import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.util.ChunkUtil;
@@ -23,6 +24,8 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.protection.BlockAction;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -152,7 +155,13 @@ public class RotationValue implements GlyphHandler {
 
     private void applyToBlock(Vector3i pos, Rotation3f rotation, HexContext hexContext) {
         try {
-            World world = hexContext.getAccessor().getExternalData().getWorld();
+            CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+            World world = accessor.getExternalData().getWorld();
+            Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+            if (!HexProtection.canModifyBlock(world, caster, accessor, new Vector3i(pos), BlockAction.PLACE)) {
+                HexProtection.notifyBlocked(caster, accessor, getId());
+                return;
+            }
             int blockId = world.getBlock(pos.x, pos.y, pos.z);
             if (blockId == BlockType.EMPTY_ID)
                 return;

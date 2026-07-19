@@ -19,7 +19,7 @@ import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.Selecting
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.GravityUtil;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.utils.SelectingScene;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
@@ -84,7 +84,7 @@ public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexCo
 
         ImbuementProfileAsset profile = session.getProfile();
         if (profile != null) {
-            Map<String, SlotAsset> slots = profile.resolveSlots(session.getStoredItem());
+            Map<String, PedestalSlot> slots = profile.resolveSlots(session.getStoredItem());
             if (profile.isSkipSelecting(session.getStoredItem()) && !slots.isEmpty()) {
                 session.setPendingReenterSlotKey(slots.keySet().iterator().next());
             }

@@ -28,10 +28,6 @@ public class HealthSurgeGlyph implements GlyphHandler {
         return ConfigBinding.of(HealthSurgeConfig.class, HealthSurgeConfig.CODEC);
     }
 
-    @Override
-    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        return 0f;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -48,8 +44,8 @@ public class HealthSurgeGlyph implements GlyphHandler {
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float limit = ElementSupport.complexityLimit(glyph, asset, hexContext);
-        float heal = hexContext.consumeComplexity(limit) * config.getEfficiency() * affinity;
+        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
+        float heal = ElementSupport.consumeResource(hexContext, config.getResource(), limit) * config.getEfficiency() * affinity;
 
         EntityStatMap statMap = hexContext.getAccessor().getComponent(
                 target, EntityStatMap.getComponentType());

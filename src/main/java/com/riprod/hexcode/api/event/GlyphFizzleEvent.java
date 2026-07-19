@@ -12,7 +12,8 @@ public class GlyphFizzleEvent implements IEvent<Void> {
         HANDLER_FAILED,
         NOT_IMPLEMENTED,
         MANUALLY_CANCELLED,
-        ERROR
+        ERROR,
+        GLYPH_DISABLED
     }
 
     private final Glyph glyph;

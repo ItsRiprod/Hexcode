@@ -18,43 +18,32 @@
   "BasePower": 1.0,
   "ManaConsumption": 2.0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Anticircle",
-      "Size": 0.8
-    },
-    {
-      "ShapeId": "Anticircle",
-      "Size": 0.6
-    },
-    {
-      "ShapeId": "Anticircle",
-      "Size": 0.4
-    }
+    "Square",
+    { "Parent": "Anticircle", "RelativeSize": 0.8 },
+    { "Parent": "Anticircle", "RelativeSize": 0.6 },
+    { "Parent": "Anticircle", "RelativeSize": 0.4 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Freeze.Next.name",
       "Description": "hexcode.glyphs.Freeze.Next.description"
     },
-    "ComplexityLimit": {
-      "Style": "Input",
-      "Label": "hexcode.glyphs.Freeze.ComplexityLimit.name",
-      "Description": "hexcode.glyphs.Freeze.ComplexityLimit.description",
+    "ResourceLimit": {
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Freeze.ResourceLimit.name",
+      "Description": "hexcode.glyphs.Freeze.ResourceLimit.description",
       "DefaultValue": -1
     },
     "immediate": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Freeze.immediate.name",
       "Description": "hexcode.glyphs.Freeze.immediate.description"
     }
   },
   "Config": {
     "Type": "Freeze",
+    "Resource": "Ice",
     "StatusEffect": "Ice",
     "Efficiency": 0.75,
     "DurationPerComplexity": 1.0,

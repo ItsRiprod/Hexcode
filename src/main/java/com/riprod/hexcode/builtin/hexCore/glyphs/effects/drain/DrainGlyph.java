@@ -17,6 +17,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexColors;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -67,6 +68,13 @@ public static final String ID = "Drain";
             HexExecuter.fail(glyph, hexContext,
                     GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target entity not found");
+            return;
+        }
+
+        Ref<EntityStore> drainCaster = hexContext.getCasterRef(accessor);
+        if (!HexProtection.canAffectEntity(accessor.getExternalData().getWorld(), drainCaster, accessor, targetRef)) {
+            HexProtection.notifyBlocked(drainCaster, accessor, getId());
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
         }
 

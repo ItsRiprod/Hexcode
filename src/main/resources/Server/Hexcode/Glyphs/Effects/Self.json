@@ -10,14 +10,11 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    }
+    "Square"
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Self.Next.name",
       "Description": "hexcode.glyphs.Self.Next.description"
     }

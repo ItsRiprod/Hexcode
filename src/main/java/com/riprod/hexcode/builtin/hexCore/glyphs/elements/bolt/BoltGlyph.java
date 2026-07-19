@@ -29,10 +29,6 @@ public class BoltGlyph implements GlyphHandler {
         return ConfigBinding.of(BoltConfig.class, BoltConfig.CODEC);
     }
 
-    @Override
-    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        return 0f;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -49,8 +45,8 @@ public class BoltGlyph implements GlyphHandler {
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float limit = ElementSupport.complexityLimit(glyph, asset, hexContext);
-        float amount = hexContext.consumeComplexity(limit) * config.getEfficiency() * affinity;
+        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
+        float amount = ElementSupport.consumeResource(hexContext, config.getResource(), limit) * config.getEfficiency() * affinity;
 
         DamageCause cause = DamageCause.getAssetMap().getAsset(config.getDamageCause());
         if (cause != null) {

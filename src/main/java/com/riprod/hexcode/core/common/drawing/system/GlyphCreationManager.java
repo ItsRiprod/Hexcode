@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
+import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
 public class GlyphCreationManager {
@@ -23,16 +24,16 @@ public class GlyphCreationManager {
         }
     }
 
-    public static float ScoreAsset(List<DrawnShapeComponent> drawn, List<DrawnShapeComponent> asset) {
+    public static float ScoreAsset(List<DrawnShapeComponent> drawn, List<ShapeAsset> asset) {
         if (drawn.size() != asset.size())
             return 0f;
 
         float score = 0f;
         for (int i = 0; i < drawn.size(); i++) {
             DrawnShapeComponent d = drawn.get(i);
-            DrawnShapeComponent a = asset.get(i);
+            ShapeAsset a = asset.get(i);
 
-            if (!d.getShapeId().equals(a.getShapeId()))
+            if (!d.getShapeId().equals(a.getBaseShapeId()))
                 return 0f;
 
             float sizeDiff = Math.abs(d.getRelativeSize() - a.getRelativeSize());

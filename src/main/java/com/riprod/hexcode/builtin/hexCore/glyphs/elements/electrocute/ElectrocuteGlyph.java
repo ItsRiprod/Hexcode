@@ -12,6 +12,7 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -32,10 +33,6 @@ public class ElectrocuteGlyph implements GlyphHandler {
         return ConfigBinding.of(ElectrocuteConfig.class, ElectrocuteConfig.CODEC);
     }
 
-    @Override
-    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        return 0f;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -52,8 +49,8 @@ public class ElectrocuteGlyph implements GlyphHandler {
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float limit = ElementSupport.complexityLimit(glyph, asset, hexContext);
-        float seconds = ElementSupport.scaledDuration(hexContext.consumeComplexity(limit),
+        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
+        float seconds = ElementSupport.scaledDuration(ElementSupport.consumeResource(hexContext, config.getResource(), limit),
                 config.getEfficiency(), config.getDurationPerComplexity(),
                 affinity);
 

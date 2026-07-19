@@ -5,18 +5,12 @@
   "Description": "hexcode.glyphs.Number_13.description",
   "ModelPath": "Number_13",
   "ShapeStructure": [
-    {
-      "ShapeId": "Less",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Circle",
-      "Size": 1.0
-    }
+    { "Parent": "Less", "StatContribution": 0 },
+    { "Parent": "Circle", "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Number_13.Next.name",
       "Description": "hexcode.glyphs.Number_13.Next.description"
     }

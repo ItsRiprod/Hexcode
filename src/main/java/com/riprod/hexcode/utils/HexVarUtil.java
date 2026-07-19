@@ -9,7 +9,7 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -79,7 +79,7 @@ public class HexVarUtil {
         return s == null ? defaultValue : s;
     }
 
-    public static Double numberOrSlotDefault(@Nullable HexVar var, @Nullable SlotAsset slot) {
+    public static Double numberOrSlotDefault(@Nullable HexVar var, @Nullable SlotConfig slot) {
         Double fallback = slot != null ? slot.getDefaultValue() : null;
         return numberOrDefault(var, fallback != null ? fallback : 0.0);
     }

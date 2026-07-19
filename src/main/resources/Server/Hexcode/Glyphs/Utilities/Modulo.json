@@ -1,0 +1,36 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Modulo",
+  "Title": "hexcode.glyphs.Modulo.name",
+  "Description": "hexcode.glyphs.Modulo.description",
+  "ModelPath": "Modulo",
+  "BasePower": 0,
+  "ManaConsumption": 0,
+  "ShapeStructure": [
+    { "Parent": "Circle", "StatContribution": 0 },
+    { "Parent": "Slash", "StatContribution": 0 },
+    { "Parent": "Circle", "StatContribution": 0 }
+  ],
+  "Slots": {
+    "a": {
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Modulo.a.name",
+      "Description": "hexcode.glyphs.Modulo.a.description",
+      "DefaultValue": 0
+    },
+    "b": {
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Modulo.b.name",
+      "Description": "hexcode.glyphs.Modulo.b.description",
+      "DefaultValue": 1
+    },
+    "Next": {
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Modulo.Next.name",
+      "Description": "hexcode.glyphs.Modulo.Next.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.0}
+}

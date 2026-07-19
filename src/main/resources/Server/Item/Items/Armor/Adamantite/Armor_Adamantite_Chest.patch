@@ -12,6 +12,13 @@
           "Amount": 12,
           "CalculationType": "Additive"
         }
+      ],
+      "Affinity_Fire": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 15
+        }
       ]
     }
   }

@@ -4,8 +4,7 @@
   "Slots": {
     "Attacked": {
       "Label": "Attacked",
-      "Description": "Execute when taking damage from another entity",
-      "Style": "Next"
+      "Description": "Execute when taking damage from another entity"
     }
   },
   "Defaults": {

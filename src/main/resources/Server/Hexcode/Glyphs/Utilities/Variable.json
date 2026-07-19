@@ -5,24 +5,22 @@
   "Description": "hexcode.glyphs.Variable.description",
   "ModelPath": "Variable",
   "ShapeStructure": [
-    {
-      "ShapeId": "Down",
-      "Size": 1.0
-    }
+    { "Parent": "Down", "StatContribution": 0 }
   ],
   "Slots": {
     "target": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Variable.target.name",
       "Description": "hexcode.glyphs.Variable.target.description"
     },
     "output": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Variable.output.name",
-      "Description": "hexcode.glyphs.Variable.output.description"
+      "Description": "hexcode.glyphs.Variable.output.description",
+      "Unique": false
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Variable.Next.name",
       "Description": "hexcode.glyphs.Variable.Next.description"
     }

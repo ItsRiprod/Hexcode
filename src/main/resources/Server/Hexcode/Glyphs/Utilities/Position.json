@@ -5,36 +5,30 @@
   "Description": "hexcode.glyphs.Position.description",
   "ModelPath": "Position",
   "ShapeStructure": [
-    {
-      "ShapeId": "Less",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Greater",
-      "Size": 1.0
-    }
+    { "Parent": "Less", "StatContribution": 0 },
+    { "Parent": "Greater", "StatContribution": 0 }
   ],
   "Slots": {
     "x": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Position.x.name",
       "Description": "hexcode.glyphs.Position.x.description",
       "DefaultValue": 0
     },
     "y": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Position.y.name",
       "Description": "hexcode.glyphs.Position.y.description",
       "DefaultValue": 0
     },
     "z": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Position.z.name",
       "Description": "hexcode.glyphs.Position.z.description",
       "DefaultValue": 0
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Position.Next.name",
       "Description": "hexcode.glyphs.Position.Next.description"
     }

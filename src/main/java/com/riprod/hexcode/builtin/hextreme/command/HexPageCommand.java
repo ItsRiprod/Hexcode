@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hextreme.command;
 
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
@@ -43,6 +45,13 @@ public class HexPageCommand extends AbstractPlayerCommand {
     private final OptionalArg<Integer> quantityArg =
             this.withOptionalArg("quantity", "number of pages to create", ArgTypes.INTEGER);
 
+    @Nonnull
+    private final OptionalArg<String> rarityArg =
+            this.withOptionalArg("rarity", "page rarity: Common, Rare or Legendary", ArgTypes.STRING);
+
+    private static final Set<String> RARITIES =
+            Set.of("Common", "Rare", "Legendary");
+
     public HexPageCommand() {
         super("page", "create Spell Page item(s) inscribed with a saved hex");
         this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADMIN);
@@ -62,7 +71,13 @@ public class HexPageCommand extends AbstractPlayerCommand {
         int quantity = quantityArg.provided(context) ? quantityArg.get(context) : 1;
         if (quantity < 1) quantity = 1;
 
-        ItemStack page = new ItemStack("Hex_Page", 1)
+        String rarity = rarityArg.provided(context) ? rarityArg.get(context) : "Common";
+        if (!RARITIES.contains(rarity)) {
+            playerRef.sendMessage(Message.raw("unknown rarity '" + rarity + "', expected one of " + RARITIES));
+            return;
+        }
+
+        ItemStack page = new ItemStack("Hex_Page_" + rarity, 1)
                 .withMetadata(PageConfig.METADATA_KEY, Codec.STRING, hexId);
         if (nameArg.provided(context)) {
             page = page.withMetadata(ItemDisplayMetadata.KEYED_CODEC,

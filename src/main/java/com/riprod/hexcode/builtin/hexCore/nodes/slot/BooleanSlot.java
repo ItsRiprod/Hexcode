@@ -8,7 +8,7 @@ import com.hypixel.hytale.codec.codecs.EnumCodec;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.DebugShape;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
@@ -24,6 +24,8 @@ public final class BooleanSlot extends Slot {
     @Nullable
     private BooleanSlotState state;
 
+    private transient BooleanSlotConfig config;
+
     public BooleanSlotState getState() {
         return this.state != null ? this.state : BooleanSlotState.NEUTRAL;
     }
@@ -33,11 +35,26 @@ public final class BooleanSlot extends Slot {
     }
 
     @Override
-    public void hydrateFrom(SlotAsset asset, String key, Vector3f resolvedOffset, String glyphId) {
-        super.hydrateFrom(asset, key, resolvedOffset, glyphId);
-        if (this.state == null) {
-            this.state = BooleanSlotState.fromDefault(asset.getDefaultValue());
+    public void hydrateFrom(SlotConfig config, String key, Vector3f resolvedOffset) {
+        super.hydrateFrom(config, key, resolvedOffset);
+        if (config instanceof BooleanSlotConfig booleanConfig) {
+            this.config = booleanConfig;
+            if (this.state == null) {
+                this.state = BooleanSlotState.fromDefault(booleanConfig.getDefaultValue());
+            }
         }
+    }
+
+    @Override
+    public String displayLabel() {
+        String stateLabel = this.config != null ? this.config.labelFor(getState()) : null;
+        return stateLabel != null ? stateLabel : super.displayLabel();
+    }
+
+    @Override
+    public String displayDescription() {
+        String stateDescription = this.config != null ? this.config.descriptionFor(getState()) : null;
+        return stateDescription != null ? stateDescription : super.displayDescription();
     }
 
     @Override
@@ -72,6 +89,7 @@ public final class BooleanSlot extends Slot {
         BooleanSlot copy = new BooleanSlot();
         copyBaseState(copy);
         copy.state = this.state;
+        copy.config = this.config;
         return copy;
     }
 }

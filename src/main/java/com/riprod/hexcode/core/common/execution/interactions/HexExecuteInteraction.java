@@ -96,6 +96,9 @@ public class HexExecuteInteraction extends SimpleInteraction {
             if (config.getStyle() != null) style.compose(config.getStyle());
 
             HexStats tracker = new HexStats(volatility, volMult, 1.0f);
+            if (cfgStats.getInitialResources() != null) {
+                cfgStats.getInitialResources().forEach(tracker::addResource);
+            }
             HexContext context = new HexContext(hexClone, baseMana, hexRoot, style, tracker);
             context.setRequireMagicCharges(config.isRequireMagicCharges());
             context.setConsumeMana(config.isConsumeMana());

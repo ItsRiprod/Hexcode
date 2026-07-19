@@ -1,22 +1,27 @@
 package com.riprod.hexcode.core.common.execution.component;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIDisplayMode;
+
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 
 public class HexStats {
     private float manaCost;
     private float manaMultiplier;
     private float initialVolatility;
     private float currentVolatility;
-    private float initialComplexity;
-    private float currentComplexity;
-    private float complexityBudget;
     private float volatilityMultiplier;
     private float complexityMultiplier;
+    private final transient Object2FloatOpenHashMap<String> resources = new Object2FloatOpenHashMap<>();
+    private final transient Object2FloatOpenHashMap<String> contributed = new Object2FloatOpenHashMap<>();
+    private Map<String, Float> initialResources;
     private UUID executionId;
     private transient String slotKey;
 
@@ -63,45 +68,36 @@ public class HexStats {
         return this.currentVolatility;
     }
 
-    public float getInitialComplexity() {
-        return initialComplexity;
+    public float getResource(String id) {
+        return this.resources.getFloat(id);
     }
 
-    public void setInitialComplexity(float initialComplexity) {
-        this.initialComplexity = initialComplexity;
+    public void addResource(String id, float amount) {
+        this.resources.put(id, Math.max(0f, this.resources.getFloat(id) + amount));
     }
 
-    public float getComplexity() {
-        return currentComplexity;
-    }
-
-    public void addComplexity(float amount) {
-        this.currentComplexity = Math.max(0f, this.currentComplexity + amount);
-    }
-
-    public float consumeComplexity() {
-        float pooled = this.currentComplexity;
-        this.currentComplexity = 0f;
-        return pooled;
-    }
-
-    public float consumeComplexity(float cap) {
-        if (cap < 0f) return consumeComplexity();
-        float taken = Math.min(this.currentComplexity, cap);
-        this.currentComplexity -= taken;
+    public float consumeResource(String id, float cap) {
+        float pooled = this.resources.getFloat(id);
+        float taken = cap < 0f ? pooled : Math.min(pooled, cap);
+        if (taken <= 0f) return 0f;
+        this.resources.put(id, pooled - taken);
         return taken;
     }
 
-    public void accrueComplexity(float nominalBase, float actualCost, float budgetRatio) {
-        this.complexityBudget += budgetRatio * nominalBase;
-        float accrued = Math.min(this.complexityBudget, actualCost);
-        if (accrued > 0f)
-            this.currentComplexity += accrued;
-        this.complexityBudget -= accrued;
+    public float getContributed(String id) {
+        return this.contributed.getFloat(id);
     }
 
-    public float getComplexityBudget() {
-        return complexityBudget;
+    public void addContributed(String id, float amount) {
+        this.contributed.put(id, this.contributed.getFloat(id) + amount);
+    }
+
+    public Object2FloatOpenHashMap<String> getResources() {
+        return this.resources;
+    }
+
+    public Map<String, Float> getInitialResources() {
+        return this.initialResources;
     }
 
     public float getVolatilityMultiplier() {
@@ -142,22 +138,10 @@ public class HexStats {
                     (c, v) -> c.initialVolatility = v,
                     (c) -> c.initialVolatility)
             .add()
-            .append(new KeyedCodec<>("InitialComplexity", Codec.FLOAT),
-                    (c, v) -> c.initialComplexity = v,
-                    (c) -> c.initialComplexity)
-            .add()
             .append(new KeyedCodec<>("CurrentVolatility", Codec.FLOAT),
                     (c, v) -> c.currentVolatility = v,
                     (c) -> c.currentVolatility)
             .metadata(UIDisplayMode.HIDDEN)
-            .add()
-            .append(new KeyedCodec<>("CurrentComplexity", Codec.FLOAT),
-                    (c, v) -> c.currentComplexity = v,
-                    (c) -> c.currentComplexity)
-            .add()
-            .append(new KeyedCodec<>("ComplexityBudget", Codec.FLOAT),
-                    (c, v) -> c.complexityBudget = v,
-                    (c) -> c.complexityBudget)
             .add()
             .append(new KeyedCodec<>("VolatilityMultiplier", Codec.FLOAT),
                     (c, v) -> c.volatilityMultiplier = v,
@@ -166,6 +150,10 @@ public class HexStats {
             .append(new KeyedCodec<>("ComplexityMultiplier", Codec.FLOAT),
                     (c, v) -> c.complexityMultiplier = v,
                     (c) -> c.complexityMultiplier)
+            .add()
+            .append(new KeyedCodec<>("InitialResources", new MapCodec<>(Codec.FLOAT, HashMap::new)),
+                    (c, v) -> c.initialResources = v,
+                    (c) -> c.initialResources)
             .add()
             .append(new KeyedCodec<>("ExecutionId", Codec.UUID_STRING),
                     (c, v) -> c.executionId = v,
@@ -181,10 +169,6 @@ public class HexStats {
             this.initialVolatility = other.initialVolatility;
             this.currentVolatility = other.initialVolatility;
         }
-        if (other.initialComplexity > 0f) {
-            this.initialComplexity = other.initialComplexity;
-            this.currentComplexity = other.initialComplexity;
-        }
 
         if (other.volatilityMultiplier != 1.0f) {
             this.volatilityMultiplier *= other.volatilityMultiplier;
@@ -198,12 +182,11 @@ public class HexStats {
     public HexStats copy() {
         HexStats copy = new HexStats();
         copy.initialVolatility = this.initialVolatility;
-        copy.initialComplexity = this.initialComplexity;
-        copy.currentComplexity = this.currentComplexity;
-        copy.complexityBudget = this.complexityBudget;
         copy.currentVolatility = this.currentVolatility;
         copy.volatilityMultiplier = this.volatilityMultiplier;
         copy.complexityMultiplier = this.complexityMultiplier;
+        copy.resources.putAll(this.resources);
+        copy.contributed.putAll(this.contributed);
         copy.executionId = this.executionId;
         return copy;
     }

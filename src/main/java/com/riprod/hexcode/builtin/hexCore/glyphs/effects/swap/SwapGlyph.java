@@ -66,7 +66,7 @@ public static final String ID = "Swap";
         if (posA != null && posB != null) {
             SwapStyle.render(posA, posB, hexContext, hexContext.getAccessor());
         }
-        BlockUtils.swapPair(varsA, varsB, world, hexContext);
+        BlockUtils.swapPair(varsA, varsB, world, hexContext, ID);
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }

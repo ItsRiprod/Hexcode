@@ -12,6 +12,13 @@
           "Amount": 3.5,
           "CalculationType": "Additive"
         }
+      ],
+      "Affinity_Arcane": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 15
+        }
       ]
     }
   }

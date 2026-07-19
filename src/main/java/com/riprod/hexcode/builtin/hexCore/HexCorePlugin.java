@@ -2,6 +2,7 @@ package com.riprod.hexcode.builtin.hexCore;
 
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.component.ResourceType;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
@@ -36,9 +37,13 @@ import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingCha
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingForceExitSystem;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingSlotSelectSystem;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingTickSystem;
+import com.riprod.hexcode.builtin.hexCore.eventListeners.CastGateListener;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.CraftingNotificationListener;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.FizzleMessageListener;
+import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphGateListener;
+import com.riprod.hexcode.core.common.execution.gate.GateStateResource;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphDrawNotificationListener;
+import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphDrawnDisabledNotificationListener;
 import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphMemoryListener;
 import com.riprod.hexcode.builtin.hexCore.execution.config.EncodedConfig;
 import com.riprod.hexcode.builtin.hexCore.execution.config.ExecutionConfig;
@@ -51,15 +56,16 @@ import com.riprod.hexcode.builtin.hexCore.config.BasicConfig;
 import com.riprod.hexcode.builtin.hexCore.pedestals.PedestalContextHandler;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalInteractEvent;
 import com.riprod.hexcode.core.common.node.NodeRouter;
-import com.riprod.hexcode.core.common.node.NodeTypeId;
-import com.riprod.hexcode.builtin.hexCore.nodes.anchor.AnchorNodeHandler;
-import com.riprod.hexcode.builtin.hexCore.nodes.container.ContainerNodeHandler;
-import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeHandler;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.nodes.anchor.AnchorNodeConfig;
+import com.riprod.hexcode.builtin.hexCore.nodes.container.ContainerNodeConfig;
+import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeConfig;
 import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlot;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlotHandler;
-import com.riprod.hexcode.core.common.glyphs.component.LinkSlot;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlotConfig;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.InputSlotConfig;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.LinkSlot;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.NextSlotConfig;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.node.NodeConfig;
 import com.hypixel.hytale.codec.lookup.Priority;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.ArcConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.ArcGlyph;
@@ -70,6 +76,8 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.Concentra
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.ConjureGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.component.ConjureZoneComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.system.ConjureConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.DisguiseGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.handler.DisguiseConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.DomainAuraConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.DomainConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.DomainGlyph;
@@ -102,7 +110,6 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.phase.PhaseConstructHan
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.phase.PhaseGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.resonate.ResonateGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.ScaleGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.components.ScaleStackComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.handler.ScaleConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.ShatterGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
@@ -152,6 +159,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.equal.EqualGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.floor.FloorGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.isHolding.IsHoldingValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.less.LessGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.modulo.ModuloGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.multiply.MultiplyGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.number.NumberValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.onCast.OnCastGlyph;
@@ -180,6 +188,8 @@ import com.riprod.hexcode.builtin.hexCore.obelisks.seeker.SeekerObelisk;
 import com.riprod.hexcode.builtin.hexCore.staffStyles.ArcStyle;
 import com.riprod.hexcode.builtin.hexCore.staffStyles.RingStyle;
 import com.riprod.hexcode.builtin.hexCore.staffStyles.SphereStyle;
+import com.riprod.hexcode.core.common.appearance.HexAppearanceComponent;
+import com.riprod.hexcode.core.common.appearance.HexAppearanceRevertSystem;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
@@ -240,6 +250,7 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new AddGlyph());
                 GlyphRegistry.register(new SubtractGlyph());
                 GlyphRegistry.register(new DivideGlyph());
+                GlyphRegistry.register(new ModuloGlyph());
                 GlyphRegistry.register(new EqualGlyph());
                 GlyphRegistry.register(new GreaterGlyph());
                 GlyphRegistry.register(new LessGlyph());
@@ -293,6 +304,7 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new ErodeGlyph());
                 GlyphRegistry.register(new LevitateGlyph());
                 GlyphRegistry.register(new ScaleGlyph());
+                GlyphRegistry.register(new DisguiseGlyph());
                 GlyphRegistry.register(new DomainGlyph());
                 GlyphRegistry.register(new InteractGlyph());
                 GlyphRegistry.register(new ArcGlyph());
@@ -337,14 +349,15 @@ public class HexCorePlugin extends JavaPlugin {
         }
 
         private void RegisterNodes() {
-                NodeRouter.register(NodeTypeId.ANCHOR, AnchorNodeHandler.INSTANCE);
-                NodeRouter.register(NodeTypeId.CONTAINER, ContainerNodeHandler.INSTANCE);
-                NodeRouter.register(NodeTypeId.GLYPH, GlyphNodeHandler.INSTANCE);
-                NodeRouter.register(NodeTypeId.SLOT_STANDARD, SlotNodeHandler.INSTANCE);
-                NodeRouter.register(NodeTypeId.SLOT_BOOLEAN, BooleanSlotHandler.INSTANCE);
+                Slot.registerType(Priority.DEFAULT, "Link", LinkSlot.class, LinkSlot.CODEC);
+                Slot.registerType("Boolean", BooleanSlot.class, BooleanSlot.CODEC);
 
-                Slot.registerType(Priority.DEFAULT, "Link", LinkSlot.class, LinkSlot.CODEC, LinkSlot::new);
-                Slot.registerType("Boolean", BooleanSlot.class, BooleanSlot.CODEC, BooleanSlot::new);
+                NodeConfig.CODEC.register(InputSlotConfig.TYPE, InputSlotConfig.class, InputSlotConfig.CODEC);
+                NodeConfig.CODEC.register(NextSlotConfig.TYPE, NextSlotConfig.class, NextSlotConfig.CODEC);
+                NodeConfig.CODEC.register(BooleanSlotConfig.TYPE, BooleanSlotConfig.class, BooleanSlotConfig.CODEC);
+                NodeConfig.CODEC.register(AnchorNodeConfig.TYPE, AnchorNodeConfig.class, AnchorNodeConfig.CODEC);
+                NodeConfig.CODEC.register(ContainerNodeConfig.TYPE, ContainerNodeConfig.class, ContainerNodeConfig.CODEC);
+                NodeConfig.CODEC.register(GlyphNodeConfig.TYPE, GlyphNodeConfig.class, GlyphNodeConfig.CODEC);
         }
 
         private void RegisterInteractions() {
@@ -375,6 +388,7 @@ public class HexCorePlugin extends JavaPlugin {
                 this.getEventRegistry().registerGlobal(CraftingEvent.class, new CraftingNotificationListener());
                 this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphMemoryListener());
                 this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDrawNotificationListener());
+                this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDrawnDisabledNotificationListener());
                 this.getEventRegistry().registerGlobal(PedestalInteractEvent.class, new PedestalContextHandler());
                 this.getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
                                 ContextForceExitSystem::onPlayerDisconnect);
@@ -431,10 +445,10 @@ public class HexCorePlugin extends JavaPlugin {
                                 .registerComponent(HexEffectsComponent.class, HexEffectsComponent::new);
                 HexEffectsComponent.setComponentType(hexConstructType);
 
-                ComponentType<EntityStore, ScaleStackComponent> scaleStackComponentType = entityStoreRegistry
-                                .registerComponent(ScaleStackComponent.class, "ScaleStack",
-                                                ScaleStackComponent.CODEC);
-                ScaleStackComponent.setComponentType(scaleStackComponentType);
+                ComponentType<EntityStore, HexAppearanceComponent> hexAppearanceComponentType = entityStoreRegistry
+                                .registerComponent(HexAppearanceComponent.class, "HexAppearance",
+                                                HexAppearanceComponent.CODEC);
+                HexAppearanceComponent.setComponentType(hexAppearanceComponentType);
 
                 ComponentType<EntityStore, MagicHealthComponent> magicHealthComponentType = entityStoreRegistry
                                 .registerComponent(MagicHealthComponent.class, MagicHealthComponent::new);
@@ -455,6 +469,8 @@ public class HexCorePlugin extends JavaPlugin {
 
         private void RegisterSystems() {
                 ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
+
+                entityStoreRegistry.registerSystem(new HexAppearanceRevertSystem());
 
                 entityStoreRegistry.registerSystem(new MagicHealthDamageSystem());
 
@@ -482,10 +498,17 @@ public class HexCorePlugin extends JavaPlugin {
                 entityStoreRegistry.registerSystem(new CraftingShapeDrawnSystem());
                 entityStoreRegistry.registerSystem(new CraftingForceExitSystem());
                 entityStoreRegistry.registerSystem(new CraftingCleanupSystem());
+
+                ResourceType<EntityStore, GateStateResource> gateStateType = entityStoreRegistry
+                        .registerResource(GateStateResource.class, GateStateResource::new);
+                GateStateResource.setResourceType(gateStateType);
+                entityStoreRegistry.registerSystem(new CastGateListener());
+                entityStoreRegistry.registerSystem(new GlyphGateListener());
         }
 
         private void RegisterConstructs() {
                 ConstructRegistry.register(ScaleGlyph.ID, new ScaleConstructHandler());
+                ConstructRegistry.register(DisguiseGlyph.ID, new DisguiseConstructHandler());
                 ConstructRegistry.register(ConcentrationGlyph.ID, new ConcentrationConstructHandler());
                 ConstructRegistry.register(DomainGlyph.ID, new DomainConstructHandler());
                 ConstructRegistry.register(DomainGlyph.AURA_ID, new DomainAuraConstructHandler());

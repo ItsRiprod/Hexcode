@@ -12,7 +12,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import com.riprod.hexcode.builtin.hexCore.nodes.container.ContainerNodeHandler;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
@@ -32,7 +32,7 @@ public final class SelectingScene {
 
         ImbuementProfileAsset profile = session.getProfile();
         if (profile == null) return;
-        Map<String, SlotAsset> slots = profile.resolveSlots(session.getStoredItem());
+        Map<String, PedestalSlot> slots = profile.resolveSlots(session.getStoredItem());
         if (slots.isEmpty()) return;
 
         Ref<EntityStore> anchorRef = session.getAnchorRef();
@@ -46,10 +46,10 @@ public final class SelectingScene {
         List<Ref<EntityStore>> spawnedRefs = new ArrayList<>();
 
         int i = 0;
-        for (Map.Entry<String, SlotAsset> entry : slots.entrySet()) {
+        for (Map.Entry<String, PedestalSlot> entry : slots.entrySet()) {
             Vector3f offset = offsets.get(i++);
             String slotKey = entry.getKey();
-            SlotAsset slotAsset = entry.getValue();
+            PedestalSlot slotAsset = entry.getValue();
             Hex hex = session.getHexAt(slotKey, buffer);
             Ref<EntityStore> hexRef = ContainerNodeHandler.INSTANCE.spawnContainer(buffer, hex, anchorRef,
                     anchorPos, offset, playerRef, slotAsset);

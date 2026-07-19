@@ -17,48 +17,45 @@
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Anticircle",
-      "Size": 1.0
-    }
+    "Anticircle"
   ],
   "Slots": {
     "hp": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.hp.name",
       "Description": "hexcode.glyphs.Drain.hp.description"
     },
     "stamina": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.stamina.name",
       "Description": "hexcode.glyphs.Drain.stamina.description"
     },
     "target": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.target.name",
       "Description": "hexcode.glyphs.Drain.target.description",
       "Unique": true
     },
     "duration": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.duration.name",
       "Description": "hexcode.glyphs.Drain.duration.description",
       "DefaultValue": 1,
       "Unique": true
     },
     "destination": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.destination.name",
       "Description": "hexcode.glyphs.Drain.destination.description",
       "Unique": true
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Drain.Next.name",
       "Description": "hexcode.glyphs.Drain.Next.description"
     },
     "immediate": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Drain.immediate.name",
       "Description": "hexcode.glyphs.Drain.immediate.description"
     }

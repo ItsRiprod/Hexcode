@@ -25,13 +25,6 @@
   "Icon": "Icons/ItemsGenerated/Arcane_Hexstaff.png",
   "Weapon": {
     "StatModifiers": {
-      "Magic_Power": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 2
-        }
-      ],
       "Volatility": [
         {
           "Target": "Max",
@@ -44,10 +37,16 @@
           "CalculationType": "Additive",
           "Amount": 10
         }
+      ],
+      "Stability": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 18
+        }
       ]
     },
     "EntityStatsToClear": [
-      "Magic_Power",
       "MagicCharges",
       "Volatility"
     ]

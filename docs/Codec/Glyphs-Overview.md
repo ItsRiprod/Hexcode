@@ -158,6 +158,12 @@ Scales an entity momentarily for a duration, reverting their shape once expired.
 
 ---
 
+### \[△□◇\] Disguise
+
+Disguises a target creature as a reference creature for a duration, copying its model (and player skin) then reverting once expired. Entity to entity only.
+
+---
+
 ### \[◯◇◯\] Gust
 
 Radial force explosion pushing all targets away from a center point. Small fixed concussive damage as a side effect
@@ -452,6 +458,12 @@ Multiplies two values together. First number type is authoritative. If the first
 ### \[/\] Divide
 
 Divides one value by another. Division by zero returns the original value.
+
+---
+
+### \[◯/◯\] Modulo
+
+Returns the remainder of one value divided by another.
 
 ---
 

@@ -1,0 +1,63 @@
+{
+  "Parent": "Hex_Page_Template",
+  "Quality": "Legendary",
+  "Texture": "Items/Consumable/Hexes/Hex_Page_Rare.png",
+  "InteractionVars": {
+    "PageHexExecute": {
+      "Interactions": [
+        {
+          "Type": "HexExecute",
+          "Config": {
+            "HexStorageType": "PageConfig",
+            "HexStats": {
+              "InitialVolatility": 79,
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 32
+              }
+            },
+            "RequireMagicCharges": false,
+            "BypassVolatilityDepletion": true,
+            "ApplyVolatilityDecay": false
+          },
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          }
+        }
+      ]
+    },
+    "PageSpend": {
+      "Interactions": [
+        {
+          "Type": "ModifyInventory",
+          "AdjustHeldItemDurability": -1,
+          "BrokenItem": "*Hex_Page_Legendary_State_Empty",
+          "NotifyOnBreak": true,
+          "NotifyOnBreakMessage": "hexcode.pages.page.spent"
+        }
+      ]
+    }
+  },
+  "State": {
+    "Empty": {
+      "Variant": true,
+      "TranslationProperties": {
+        "Name": "hexcode.pages.empty.name",
+        "Description": "hexcode.pages.empty.description"
+      },
+      "Texture": "Items/Consumable/Hexes/Hex_Page_Empty.png",
+      "MaxDurability": 0,
+      "MaxStack": 16,
+      "Interactions": {
+        "Secondary": {
+          "Interactions": [
+            {
+              "Type": "Interrupt",
+              "Entity": "Owner"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

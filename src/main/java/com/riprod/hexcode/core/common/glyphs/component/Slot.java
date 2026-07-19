@@ -2,9 +2,6 @@ package com.riprod.hexcode.core.common.glyphs.component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -15,11 +12,8 @@ import com.hypixel.hytale.codec.lookup.CodecMapCodec;
 import com.hypixel.hytale.codec.lookup.Priority;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.DebugShape;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotStyleAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.StyleResolution;
-import com.riprod.hexcode.core.common.glyphs.registry.StyleResolution.ResolvedStyle;
+import com.riprod.hexcode.core.common.execution.component.HexColors;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public abstract class Slot {
@@ -30,8 +24,6 @@ public abstract class Slot {
                     s -> s.links)
             .add()
             .build();
-
-    private static final Map<String, Supplier<? extends Slot>> FACTORIES = new HashMap<>();
 
     protected String[] links = new String[0];
 
@@ -44,34 +36,13 @@ public abstract class Slot {
     protected transient boolean unique;
 
     public static void registerType(String id, Class<? extends Slot> type,
-            BuilderCodec<? extends Slot> codec, Supplier<? extends Slot> factory) {
-        registerType(Priority.NORMAL, id, type, codec, factory);
+            BuilderCodec<? extends Slot> codec) {
+        registerType(Priority.NORMAL, id, type, codec);
     }
 
     public static void registerType(Priority priority, String id, Class<? extends Slot> type,
-            BuilderCodec<? extends Slot> codec, Supplier<? extends Slot> factory) {
+            BuilderCodec<? extends Slot> codec) {
         CODEC.register(priority, id, type, codec);
-        FACTORIES.put(id, factory);
-    }
-
-    public static Slot create(@Nullable String typeId) {
-        Supplier<? extends Slot> factory = typeId != null ? FACTORIES.get(typeId) : null;
-        return factory != null ? factory.get() : new LinkSlot();
-    }
-
-    public static Slot forAssetSlot(@Nullable String glyphId, String slotKey) {
-        return create(resolveTypeId(glyphId, slotKey));
-    }
-
-    @Nullable
-    private static String resolveTypeId(@Nullable String glyphId, String slotKey) {
-        if (glyphId == null) return null;
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
-        SlotAsset slotAsset = asset != null ? asset.getSlot(slotKey) : null;
-        String styleId = slotAsset != null ? slotAsset.getStyleId() : null;
-        if (styleId == null) return null;
-        SlotStyleAsset style = SlotStyleAsset.getAssetMap().getAsset(styleId);
-        return style != null ? style.getSlotType() : null;
     }
 
     public String[] getLinks() {
@@ -110,15 +81,14 @@ public abstract class Slot {
         return this.links.length > 0 ? this.links[0] : null;
     }
 
-    public void hydrateFrom(SlotAsset asset, String key, Vector3f resolvedOffset, String glyphId) {
-        ResolvedStyle rs = StyleResolution.resolve(asset, glyphId, key);
+    public void hydrateFrom(SlotConfig config, String key, Vector3f resolvedOffset) {
         this.key = key;
-        this.label = asset.getLabel();
-        this.description = asset.getDescription();
-        this.color = rs.color();
+        this.label = config.getLabel();
+        this.description = config.getDescription();
+        this.color = HexColors.toVector3f(config.getColor());
         this.offset = resolvedOffset;
-        this.shape = rs.shape();
-        this.unique = asset.isUnique();
+        this.shape = config.getShape();
+        this.unique = config.isUnique();
     }
 
     public boolean isUnique() {
@@ -134,6 +104,14 @@ public abstract class Slot {
     }
 
     public String getDescription() {
+        return this.description;
+    }
+
+    public String displayLabel() {
+        return this.label;
+    }
+
+    public String displayDescription() {
         return this.description;
     }
 

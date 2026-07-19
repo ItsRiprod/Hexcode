@@ -20,6 +20,7 @@ import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
+import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
@@ -69,8 +70,7 @@ public class ConcentrationGlyph implements GlyphHandler {
         CasterStateComponent execComp = accessor.getComponent(
                 casterRef, CasterStateComponent.getComponentType());
         if (execComp == null || !execComp.isHoldingPrimary()) {
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Caster not holding primary");
+            HexExecuter.continueFromSlot(glyph, ConcentrationGlyphSlots.RELEASE, hexContext);
             return;
         }
 
@@ -101,6 +101,7 @@ public class ConcentrationGlyph implements GlyphHandler {
     private Ref<EntityStore> spawnVisual(CommandBuffer<EntityStore> accessor,
             TransformComponent casterTransform, Ref<EntityStore> casterRef, HexContext hexContext) {
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
+        holder.addComponent(HexcodeComponent.getComponentType(), new HexcodeComponent());
         holder.addComponent(TransformComponent.getComponentType(),
                 new TransformComponent(casterTransform.getPosition(), new Rotation3f()));
         holder.ensureComponent(UUIDComponent.getComponentType());

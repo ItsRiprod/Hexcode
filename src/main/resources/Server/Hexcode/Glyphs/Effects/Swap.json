@@ -15,34 +15,25 @@
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Antitriangle",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Circle",
-      "Size": 0.8
-    },
-    {
-      "ShapeId": "Antitriangle",
-      "Size": 0.55
-    }
+    "Antitriangle",
+    { "Parent": "Circle", "RelativeSize": 0.8 },
+    { "Parent": "Antitriangle", "RelativeSize": 0.55 }
   ],
   "Slots": {
     "a": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Swap.a.name",
       "Description": "hexcode.glyphs.Swap.a.description",
       "Unique": true
     },
     "b": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Swap.b.name",
       "Description": "hexcode.glyphs.Swap.b.description",
       "Unique": true
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Swap.Next.name",
       "Description": "hexcode.glyphs.Swap.Next.description"
     }

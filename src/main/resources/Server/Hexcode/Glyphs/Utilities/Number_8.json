@@ -5,18 +5,12 @@
   "Description": "hexcode.glyphs.Number_8.description",
   "ModelPath": "Number_8",
   "ShapeStructure": [
-    {
-      "ShapeId": "Greater",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    }
+    { "Parent": "Greater", "StatContribution": 0 },
+    { "Parent": "Square", "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Number_8.Next.name",
       "Description": "hexcode.glyphs.Number_8.Next.description"
     }

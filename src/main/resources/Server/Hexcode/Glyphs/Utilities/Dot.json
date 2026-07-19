@@ -5,32 +5,23 @@
   "Description": "hexcode.glyphs.Dot.description",
   "ModelPath": "Dot",
   "ShapeStructure": [
-    {
-      "ShapeId": "Less",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Greater",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Circle",
-      "Size": 1.0
-    }
+    { "Parent": "Less", "StatContribution": 0 },
+    { "Parent": "Greater", "StatContribution": 0 },
+    { "Parent": "Circle", "StatContribution": 0 }
   ],
   "Slots": {
     "v": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Dot.v.name",
       "Description": "hexcode.glyphs.Dot.v.description"
     },
     "w": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Dot.w.name",
       "Description": "hexcode.glyphs.Dot.w.description"
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Dot.Next.name",
       "Description": "hexcode.glyphs.Dot.Next.description"
     }

@@ -28,22 +28,21 @@
   "Icon": "Icons/ItemsGenerated/Weapon_Staff_Onyxium.png",
   "Weapon": {
     "StatModifiers": {
-      "Magic_Power": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 2.5
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
           "Amount": 10
         }
+      ],
+      "Stability": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 25
+        }
       ]
     },
     "EntityStatsToClear": [
-      "Magic_Power",
       "MagicCharges",
       "Volatility"
     ]
@@ -62,7 +61,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 63,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 31.5
+              }
             },
             "Style": "Hexstaff_Basic_Onyxium"
           }
@@ -81,7 +83,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 72,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 36
+              }
             },
             "Style": "Hexstaff_Basic_Onyxium"
           }
@@ -100,7 +105,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 82,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 41
+              }
             },
             "Style": "Hexstaff_Basic_Onyxium"
           }
@@ -119,7 +127,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 91,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 45.5
+              }
             },
             "Style": "Hexstaff_Basic_Onyxium"
           }

@@ -7,23 +7,18 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Triangle",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Triangle",
-      "Size": 0.5
-    }
+    { "Parent": "Triangle", "StatContribution": 0 },
+    { "Parent": "Triangle", "RelativeSize": 0.5, "StatContribution": 0 }
   ],
   "Slots": {
     "slot": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Debug.slot.name",
-      "Description": "hexcode.glyphs.Debug.slot.description"
+      "Description": "hexcode.glyphs.Debug.slot.description",
+      "Unique": false
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Debug.Next.name",
       "Description": "hexcode.glyphs.Debug.Next.description"
     }

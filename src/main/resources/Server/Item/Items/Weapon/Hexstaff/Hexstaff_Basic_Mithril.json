@@ -28,22 +28,21 @@
   "Icon": "Icons/ItemsGenerated/Weapon_Staff_Mithril.png",
   "Weapon": {
     "StatModifiers": {
-      "Magic_Power": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 1.9
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
           "Amount": 8
         }
+      ],
+      "Stability": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 22
+        }
       ]
     },
     "EntityStatsToClear": [
-      "Magic_Power",
       "MagicCharges",
       "Volatility"
     ]
@@ -62,7 +61,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 55,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 27.5
+              }
             },
             "Style": "Hexstaff_Basic_Mithril"
           }
@@ -81,7 +83,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 63,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 31.5
+              }
             },
             "Style": "Hexstaff_Basic_Mithril"
           }
@@ -100,7 +105,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 71,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 35.5
+              }
             },
             "Style": "Hexstaff_Basic_Mithril"
           }
@@ -119,7 +127,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 79,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 39.5
+              }
             },
             "Style": "Hexstaff_Basic_Mithril"
           }

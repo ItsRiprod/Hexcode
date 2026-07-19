@@ -29,7 +29,17 @@
       "LifeHexBook"
     ]
   },
-  "Weapon": {},
+  "Weapon": {
+    "StatModifiers": {
+      "Affinity_Fire": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 25
+        }
+      ]
+    }
+  },
   "ItemSoundSetId": "ISS_Weapons_Books",
   "Recipe": {
     "Input": [

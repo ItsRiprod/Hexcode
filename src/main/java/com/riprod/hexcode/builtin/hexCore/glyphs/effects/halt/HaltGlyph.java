@@ -20,6 +20,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.halt.style.HaltStyle;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -28,6 +29,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VelocityUtil;
 
 import java.util.Arrays;
 
@@ -60,6 +62,13 @@ public static final String ID = "Halt";
             return;
         }
 
+        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        if (!HexProtection.canAffectEntity(accessor.getExternalData().getWorld(), caster, accessor, ref)) {
+            HexProtection.notifyBlocked(caster, accessor, getId());
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+            return;
+        }
+
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         HaltConfig config = getConfig(HaltConfig.class, asset);
         if (config == null) config = HaltConfig.DEFAULTS;
@@ -69,9 +78,9 @@ public static final String ID = "Halt";
                 asset.getSlot(HaltGlyphSlots.DURATION));
 
         try {
-            StandardPhysicsProvider physics = accessor.getComponent(ref,
-                    StandardPhysicsProvider.getComponentType());
-            if (physics != null) {
+            if (VelocityUtil.isPhysicsTicked(ref, accessor)) {
+                StandardPhysicsProvider physics = accessor.getComponent(ref,
+                        StandardPhysicsProvider.getComponentType());
                 physics.getForceProviderStandardState().nextTickVelocity.set(0d, 0d, 0d);
                 if (duration > 0) {
                     physics.setState(StandardPhysicsProvider.STATE.INACTIVE);

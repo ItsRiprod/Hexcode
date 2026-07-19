@@ -18,7 +18,7 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
@@ -123,17 +123,24 @@ public class Glyph {
         return slots.get(key);
     }
 
+    @Nullable
     public Slot getOrCreateSlot(String key) {
         Slot existing = slots.get(key);
         if (existing != null)
             return existing;
-        Slot created = Slot.forAssetSlot(this.glyphId, key);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(this.glyphId);
+        SlotConfig config = asset != null ? asset.getSlot(key) : null;
+        if (config == null)
+            return null;
+        Slot created = config.create();
         slots.put(key, created);
         return created;
     }
 
     public void addSlotLink(String key, String linkedGlyphId) {
-        getOrCreateSlot(key).addLink(linkedGlyphId);
+        Slot slot = getOrCreateSlot(key);
+        if (slot != null)
+            slot.addLink(linkedGlyphId);
     }
 
     public void removeSlotLink(String key, String linkedGlyphId) {
@@ -222,8 +229,8 @@ public class Glyph {
                 return inline;
         }
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
-        SlotAsset slotAsset = asset != null ? asset.getSlot(key) : null;
-        Double defaultNum = slotAsset != null ? slotAsset.getDefaultValue() : null;
+        SlotConfig slotConfig = asset != null ? asset.getSlot(key) : null;
+        Double defaultNum = slotConfig != null ? slotConfig.getDefaultValue() : null;
         if (defaultNum != null)
             return new NumberVar(defaultNum);
         if (javaDefault != null)

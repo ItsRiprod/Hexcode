@@ -36,4 +36,38 @@
 - Feat: Added several new elemental glyphs
 - Fix: rebalanced Bolt/Erode/Fortify/Drain/Concentrate
 - Feat: Finalized Complexity balancing
+
+- Fix: Rebalanced Hexcode stats and damage outputs
+    - Staffs now give a base Arcane elemental value (converts to damage)
+    - Glyphs give 2 of a stat per shape present relative to the respective element
+        - Circle = Lightning
+        - Square = Life
+        - Triangle = Water
+        - Oval = Freeze 
+        - Diamond = Fire
+        - Upside-Down Triangle = Void
+    - Each time a glyph is repeated, it will provide less down to 50% of the original contribution (1 instead of 2)
+    - `DebugGlyph` will properly show the current stats available
+- Feat: Getting the value of `Force` will give you the current velocity of the entity
+- Feat: Modulo glyph added to get remainders
+- Feat: Disguise Glyph added to disguise one glyph as another
+    - Note: I really did try and make this work with blocks but hit atlas issues. Restricting it to only entities was FAR less cursed
+- Feat: Added permission boundaries. Now hexcode will respect Simple Claims and other claims boundaries and prevent griefing
+- Feat: Added operator commands
+    - Added /hexcode stop to stop hexcode from functioning (panic mode)
+    - Added /hexcode resume to resume hexcode
+    - Added /hexcode stop --player=<player\> or --world=<world\> (or both) for targeted timeouts
+    - Added /hexcode timeout --player=<player\> and/or --world=<world\> --duration=<time\> for targeted timeouts
+- Feat: Fixed a few UI / interaction bugs pertaining to selecting
+- Feat: Fixed hexcode hitting itself
+- Fix: Logging levels are now `fine` instead of `info` by default for runtime logs
+- Fix: Levitate now attempts to normalize levitation amount
+- Fix: Force now properly applies to Conjured entities
+- Fix: Projectile and Beam now resolve on the block correctly
+- Fix: Scale Glyph properly removes itself if the server crashes
+- Feat: Aligned Nodes and Slots to be centrally fixed around a single pipeline (architectural cleanup - enables more Nodes and SlotTypes in the future)
+- Feat: Added support for arbitrary slot metadata in the codecs 
+- Fix: Block and Item imbuements work again
+- Fix: when out of range of a pedestal in selection mode, you properly get removed
+
 - Probably much more. I tried keeping a running note this time

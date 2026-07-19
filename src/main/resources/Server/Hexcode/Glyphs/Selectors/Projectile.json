@@ -23,61 +23,55 @@
   "BasePower": 1.0,
   "ManaConsumption": 0.6,
   "ShapeStructure": [
-    {
-      "ShapeId": "Circle",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Triangle",
-      "Size": 0.8
-    }
+    "Circle",
+    { "Parent": "Triangle", "RelativeSize": 0.8 }
   ],
   "Slots": {
     "source": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Projectile.source.name",
       "Description": "hexcode.glyphs.Projectile.source.description",
       "Unique": true
     },
     "direction": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Projectile.direction.name",
       "Description": "hexcode.glyphs.Projectile.direction.description",
       "Unique": true
     },
     "speed": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Projectile.speed.name",
       "Description": "hexcode.glyphs.Projectile.speed.description",
       "DefaultValue": 30,
       "Unique": true
     },
     "gravity": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Projectile.gravity.name",
       "Description": "hexcode.glyphs.Projectile.gravity.description",
       "DefaultValue": 0,
       "Unique": true
     },
     "bounces": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Projectile.bounces.name",
       "Description": "hexcode.glyphs.Projectile.bounces.description",
       "DefaultValue": 0,
       "Unique": true
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Projectile.Next.name",
       "Description": "hexcode.glyphs.Projectile.Next.description"
     },
     "immediate": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Projectile.immediate.name",
       "Description": "hexcode.glyphs.Projectile.immediate.description"
     },
     "bounce": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Projectile.bounce.name",
       "Description": "hexcode.glyphs.Projectile.bounce.description"
     }

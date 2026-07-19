@@ -23,28 +23,19 @@
   "BasePower": 1.0,
   "ManaConsumption": 2.6,
   "ShapeStructure": [
-    {
-      "ShapeId": "Square",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Antitriangle",
-      "Size": 0.8
-    },
-    {
-      "ShapeId": "Square",
-      "Size": 0.55
-    }
+    "Square",
+    { "Parent": "Antitriangle", "RelativeSize": 0.8 },
+    { "Parent": "Square", "RelativeSize": 0.55 }
   ],
   "Slots": {
     "target": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Ensnare.target.name",
       "Description": "hexcode.glyphs.Ensnare.target.description",
       "Unique": true
     },
     "radius": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Ensnare.radius.name",
       "Description": "hexcode.glyphs.Ensnare.radius.description",
       "DefaultValue": 2.1,
@@ -57,19 +48,19 @@
       }
     },
     "duration": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Ensnare.duration.name",
       "Description": "hexcode.glyphs.Ensnare.duration.description",
       "DefaultValue": 4,
       "Unique": true
     },
     "Trapped": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Ensnare.Trapped.name",
       "Description": "hexcode.glyphs.Ensnare.Trapped.description"
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Ensnare.Next.name",
       "Description": "hexcode.glyphs.Ensnare.Next.description"
     }

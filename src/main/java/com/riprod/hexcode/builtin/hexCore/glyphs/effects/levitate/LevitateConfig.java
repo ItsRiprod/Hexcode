@@ -13,6 +13,7 @@ public final class LevitateConfig extends GlyphConfig {
     private double durationFloor = 1.0;
     private float tickInterval = 0.5f;
     private double riseSpeedPerIntensity = 1.5;
+    private double maxCatchAccel = 40.0;
     private String effectId = "Hexcode_Levitate";
 
     public double getDurationFloor() {
@@ -25,6 +26,10 @@ public final class LevitateConfig extends GlyphConfig {
 
     public double getRiseSpeedPerIntensity() {
         return riseSpeedPerIntensity;
+    }
+
+    public double getMaxCatchAccel() {
+        return maxCatchAccel;
     }
 
     public String getEffectId() {
@@ -41,6 +46,9 @@ public final class LevitateConfig extends GlyphConfig {
             .add()
             .append(new KeyedCodec<>("RiseSpeedPerIntensity", Codec.DOUBLE, true),
                     (c, v) -> c.riseSpeedPerIntensity = v, c -> c.riseSpeedPerIntensity)
+            .add()
+            .append(new KeyedCodec<>("MaxCatchAccel", Codec.DOUBLE, true),
+                    (c, v) -> c.maxCatchAccel = v, c -> c.maxCatchAccel)
             .add()
             .append(new KeyedCodec<>("Effect", EntityEffect.CHILD_ASSET_CODEC, true),
                     (c, v) -> c.effectId = v, c -> c.effectId)

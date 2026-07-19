@@ -5,41 +5,35 @@
   "Description": "hexcode.glyphs.Rotation.description",
   "ModelPath": "Rotation",
   "ShapeStructure": [
-    {
-      "ShapeId": "Up",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Down",
-      "Size": 1.0
-    }
+    { "Parent": "Up", "StatContribution": 0 },
+    { "Parent": "Down", "StatContribution": 0 }
   ],
   "Slots": {
     "x": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.x.name",
       "Description": "hexcode.glyphs.Rotation.x.description",
       "DefaultValue": 0
     },
     "y": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.y.name",
       "Description": "hexcode.glyphs.Rotation.y.description",
       "DefaultValue": 0
     },
     "z": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.z.name",
       "Description": "hexcode.glyphs.Rotation.z.description",
       "DefaultValue": 0
     },
     "target": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.target.name",
       "Description": "hexcode.glyphs.Rotation.target.description"
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Rotation.Next.name",
       "Description": "hexcode.glyphs.Rotation.Next.description"
     }

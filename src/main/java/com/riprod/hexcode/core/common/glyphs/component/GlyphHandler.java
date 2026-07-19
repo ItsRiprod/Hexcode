@@ -9,6 +9,7 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -48,14 +49,16 @@ public interface GlyphHandler {
             return;
         }
 
-        float nominalBase = getComplexity(glyph, hexContext, asset);
-        if (nominalBase > 0f) {
-            GlyphConfig config = asset != null ? asset.getConfig() : null;
-            Impact budgetImpact = config != null
-                    ? config.getComplexityImpact()
-                    : GlyphConfig.DEFAULT_COMPLEXITY_IMPACT;
-            float budgetRatio = Impact.scale(budgetImpact, nominalBase);
-            hexContext.accrueComplexity(nominalBase, volatilityCost, budgetRatio);
+        if (asset != null) {
+            for (ShapeAsset shape : asset.getShapes()) {
+                String resource = shape.getStatResource();
+                if (resource == null) continue;
+                float raw = Impact.scale(shape.getStatResourceImpact(), shape.getStatContribution());
+                if (raw <= 0f) continue;
+                float effectiveness = GlyphCostUtil.contributionEffectiveness(tracker.getContributed(resource));
+                tracker.addResource(resource, raw * effectiveness);
+                tracker.addContributed(resource, raw);
+            }
         }
 
         execute(glyph, hexContext);
@@ -63,12 +66,6 @@ public interface GlyphHandler {
 
     default float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         return GlyphCostUtil.volatilityCost(glyph, hexContext, asset);
-    }
-
-    default float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        if (asset == null)
-            return 0f;
-        return asset.getVolatility().getInstantCost();
     }
 
 

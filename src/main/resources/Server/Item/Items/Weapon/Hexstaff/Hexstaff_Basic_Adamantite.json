@@ -28,22 +28,21 @@
   "Icon": "Icons/ItemsGenerated/Weapon_Staff_Adamantite.png",
   "Weapon": {
     "StatModifiers": {
-      "Magic_Power": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 1.4
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
           "Amount": 7
         }
+      ],
+      "Stability": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 19
+        }
       ]
     },
     "EntityStatsToClear": [
-      "Magic_Power",
       "MagicCharges",
       "Volatility"
     ]
@@ -89,7 +88,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 44,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 22
+              }
             },
             "Style": "Hexstaff_Basic_Adamantite"
           }
@@ -108,7 +110,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 50,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 25
+              }
             },
             "Style": "Hexstaff_Basic_Adamantite"
           }
@@ -127,7 +132,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 57,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 28.5
+              }
             },
             "Style": "Hexstaff_Basic_Adamantite"
           }
@@ -146,7 +154,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 63,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 31.5
+              }
             },
             "Style": "Hexstaff_Basic_Adamantite"
           }

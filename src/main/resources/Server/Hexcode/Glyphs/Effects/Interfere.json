@@ -23,23 +23,17 @@
   "BasePower": 1.0,
   "ManaConsumption": 1.5,
   "ShapeStructure": [
-    {
-      "ShapeId": "Antisquare",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Anticircle",
-      "Size": 0.8
-    }
+    "Antisquare",
+    { "Parent": "Anticircle", "RelativeSize": 0.8 }
   ],
   "Slots": {
     "target": {
-      "Style": "Input",
+      "Parent": "Input",
       "Label": "hexcode.glyphs.Interfere.target.name",
       "Description": "hexcode.glyphs.Interfere.target.description"
     },
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Interfere.Next.name",
       "Description": "hexcode.glyphs.Interfere.Next.description"
     }

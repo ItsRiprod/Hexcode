@@ -1,5 +1,6 @@
 {
   "CenterFilled": false,
   "CanRotate": true,
-  "ExpectedSpeed": 934
+  "ExpectedSpeed": 934,
+  "StatResource": "Ice"
 }

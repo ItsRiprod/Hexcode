@@ -1,5 +1,6 @@
 {
   "CenterFilled": false,
   "CanRotate": false,
-  "ExpectedSpeed": 900
+  "ExpectedSpeed": 900,
+  "StatResource": "Life"
 }

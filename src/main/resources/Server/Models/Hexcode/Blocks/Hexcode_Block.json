@@ -1,0 +1,10 @@
+{
+  "Model": "Characters/Empty_Cube.blockymodel",
+  "Texture": "Characters/Empty_Cube_Texture.png",
+  "HitBox": {
+    "Min": { "X": -0.5, "Y": 0.0, "Z": -0.5 },
+    "Max": { "X": 0.5, "Y": 1.0, "Z": 0.5 }
+  },
+  "MinScale": 1,
+  "MaxScale": 1
+}

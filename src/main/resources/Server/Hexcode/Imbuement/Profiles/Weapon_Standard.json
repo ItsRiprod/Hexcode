@@ -7,48 +7,39 @@
   "Slots": {
     "Primary": {
       "Label": "Primary",
-      "Description": "Execute when hitting Primary",
-      "Style": "Next"
+      "Description": "Execute when hitting Primary"
     },
     "Secondary": {
       "Label": "Secondary",
-      "Description": "Execute when hitting Secondary",
-      "Style": "Next"
+      "Description": "Execute when hitting Secondary"
     },
     "Use": {
       "Label": "Use",
-      "Description": "Execute when using the item",
-      "Style": "Next"
+      "Description": "Execute when using the item"
     },
     "Ability1": {
       "Label": "Ability 1",
-      "Description": "Execute on the Ability 1 keybind (Q)",
-      "Style": "Next"
+      "Description": "Execute on the Ability 1 keybind (Q)"
     },
     "Ability2": {
       "Label": "Ability 2",
-      "Description": "Execute on the Ability 2 keybind (E)",
-      "Style": "Next"
+      "Description": "Execute on the Ability 2 keybind (E)"
     },
     "Ability3": {
       "Label": "Ability 3",
-      "Description": "Execute on the Ability 3 keybind (R)",
-      "Style": "Next"
+      "Description": "Execute on the Ability 3 keybind (R)"
     },
     "OnAttack": {
       "Label": "On Hit",
-      "Description": "Execute when a melee attack lands; defaults to the entity hit",
-      "Style": "Next"
+      "Description": "Execute when a melee attack lands; defaults to the entity hit"
     },
     "OnShoot": {
       "Label": "On Shoot",
-      "Description": "Execute when a projectile fired by this weapon hits an entity",
-      "Style": "Next"
+      "Description": "Execute when a projectile fired by this weapon hits an entity"
     },
     "Block": {
       "Label": "On Block",
-      "Description": "Execute when blocking incoming damage with this weapon",
-      "Style": "Next"
+      "Description": "Execute when blocking incoming damage with this weapon"
     }
   },
   "Defaults": {

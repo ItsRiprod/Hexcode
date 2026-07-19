@@ -26,7 +26,9 @@ import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import javax.annotation.Nullable;
 
-import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
+import com.riprod.hexcode.core.common.node.NodeConfig;
+
+import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -48,8 +50,8 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     protected boolean isEnabled = true;
     protected VolatilityAsset volatility = new VolatilityAsset();
     protected GlyphConfig config;
-    protected ArrayList<DrawnShapeComponent> shapes = new ArrayList<>();
-    protected LinkedHashMap<String, SlotAsset> slots = new LinkedHashMap<>();
+    protected ArrayList<String> shapes = new ArrayList<>();
+    protected LinkedHashMap<String, String> slots = new LinkedHashMap<>();
     protected String styleId;
     protected String handlerId = id;
 
@@ -111,16 +113,29 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
         return this.handlerId;
     }
 
-    public List<DrawnShapeComponent> getShapes() {
-        return Collections.unmodifiableList(this.shapes);
+    public List<ShapeAsset> getShapes() {
+        List<ShapeAsset> resolved = new ArrayList<>(this.shapes.size());
+        for (String shapeId : this.shapes) {
+            ShapeAsset shape = ShapeAsset.getAssetMap().getAsset(shapeId);
+            if (shape != null) resolved.add(shape);
+        }
+        return Collections.unmodifiableList(resolved);
     }
 
-    public Map<String, SlotAsset> getSlots() {
-        return Collections.unmodifiableMap(this.slots);
+    public Map<String, SlotConfig> getSlots() {
+        LinkedHashMap<String, SlotConfig> resolved = new LinkedHashMap<>(this.slots.size());
+        for (Map.Entry<String, String> entry : this.slots.entrySet()) {
+            NodeConfig config = NodeConfig.getAssetMap().getAsset(entry.getValue());
+            if (config instanceof SlotConfig slotConfig) resolved.put(entry.getKey(), slotConfig);
+        }
+        return resolved;
     }
 
-    public SlotAsset getSlot(String key) {
-        return this.slots.get(key);
+    @Nullable
+    public SlotConfig getSlot(String key) {
+        String id = this.slots.get(key);
+        NodeConfig config = id != null ? NodeConfig.getAssetMap().getAsset(id) : null;
+        return config instanceof SlotConfig slotConfig ? slotConfig : null;
     }
 
     public Set<String> getSlotKeys() {
@@ -181,8 +196,8 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
 
     @SuppressWarnings("unchecked")
     private static AssetBuilderCodec<String, GlyphAsset> buildCodec() {
-        Codec<Map<String, SlotAsset>> slotMapCodec = (Codec<Map<String, SlotAsset>>) (Codec<?>) new MapCodec<>(
-                SlotAsset.CODEC, LinkedHashMap::new, false);
+        Codec<Map<String, String>> slotMapCodec = (Codec<Map<String, String>>) (Codec<?>) new MapCodec<>(
+                NodeConfig.CHILD_ASSET_CODEC, LinkedHashMap::new, false);
         return AssetBuilderCodec
                 .builder(GlyphAsset.class, GlyphAsset::new, Codec.STRING, (glyphAsset, s) -> {
                     glyphAsset.id = s;
@@ -244,7 +259,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                 .add()
                 .appendInherited(
                         new KeyedCodec<>("ShapeStructure",
-                                new ArrayCodec<>(DrawnShapeComponent.CODEC, DrawnShapeComponent[]::new)),
+                                new ArrayCodec<>(ShapeAsset.CHILD_ASSET_CODEC, String[]::new)),
                         (c, v) -> {
                             if (v != null) {
                                 c.shapes = new ArrayList<>(Arrays.asList(v));
@@ -252,7 +267,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                                 c.shapes = new ArrayList<>();
                             }
                         },
-                        c -> c.shapes.toArray(DrawnShapeComponent[]::new),
+                        c -> c.shapes.toArray(String[]::new),
                         (a, p) -> a.shapes = new ArrayList<>(p.shapes))
                 .documentation("The shape of the glyph - determines what it takes to draw")
                 .add()

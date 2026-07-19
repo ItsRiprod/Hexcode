@@ -5,18 +5,12 @@
   "Description": "hexcode.glyphs.Pi.description",
   "ModelPath": "Pi",
   "ShapeStructure": [
-    {
-      "ShapeId": "Triangle",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Down",
-      "Size": 1.0
-    }
+    { "Parent": "Triangle", "StatContribution": 0 },
+    { "Parent": "Down", "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Pi.Next.name",
       "Description": "hexcode.glyphs.Pi.Next.description"
     }

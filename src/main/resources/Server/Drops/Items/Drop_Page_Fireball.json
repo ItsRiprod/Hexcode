@@ -8,7 +8,7 @@
         "Type": "Single",
         "Weight": 100,
         "Item": {
-          "ItemId": "Hex_Page",
+          "ItemId": "Hex_Page_Common",
           "QuantityMin": 1,
           "QuantityMax": 1,
           "Metadata": {
@@ -25,7 +25,7 @@
         "Type": "Single",
         "Weight": 100,
         "Item": {
-          "ItemId": "Hex_Page",
+          "ItemId": "Hex_Page_Common",
           "QuantityMin": 1,
           "QuantityMax": 1,
           "Metadata": {
@@ -42,7 +42,7 @@
         "Type": "Single",
         "Weight": 100,
         "Item": {
-          "ItemId": "Hex_Page",
+          "ItemId": "Hex_Page_Common",
           "QuantityMin": 1,
           "QuantityMax": 1,
           "Metadata": {
@@ -59,7 +59,7 @@
         "Type": "Single",
         "Weight": 100,
         "Item": {
-          "ItemId": "Hex_Page",
+          "ItemId": "Hex_Page_Common",
           "QuantityMin": 1,
           "QuantityMax": 1,
           "Metadata": {

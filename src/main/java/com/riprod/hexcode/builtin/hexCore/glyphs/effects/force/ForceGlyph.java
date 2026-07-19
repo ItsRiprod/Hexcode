@@ -12,9 +12,11 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.utils.VelocityUtil;
 import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
@@ -31,6 +33,16 @@ public class ForceGlyph implements GlyphHandler {
     };
 
     @Override
+    public HexVar readValue(Glyph glyph, HexContext hexContext) {
+        HexVar targets = glyph.readSlot(ForceGlyphSlots.TARGET, hexContext);
+        EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
+        if (entityVar == null) return null;
+        Ref<EntityStore> ref = entityVar.getRef(hexContext.getAccessor());
+        if (ref == null || !ref.isValid()) return null;
+        return new PositionVar(VelocityUtil.currentVelocity(ref, hexContext.getAccessor()));
+    }
+
+    @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar targets = glyph.readSlot(ForceGlyphSlots.TARGET, hexContext);
         EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
@@ -44,6 +56,14 @@ public class ForceGlyph implements GlyphHandler {
         if (ref == null || !ref.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target is invalid");
+            return;
+        }
+
+        Ref<EntityStore> caster = hexContext.getCasterRef(hexContext.getAccessor());
+        if (!HexProtection.canAffectEntity(hexContext.getAccessor().getExternalData().getWorld(),
+                caster, hexContext.getAccessor(), ref)) {
+            HexProtection.notifyBlocked(caster, hexContext.getAccessor(), getId());
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
         }
 

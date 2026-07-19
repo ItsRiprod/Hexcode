@@ -29,7 +29,7 @@ import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotAsset;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.NextSlotConfig;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 
 public class HexInspectCommand extends AbstractPlayerCommand {
@@ -215,9 +215,7 @@ public class HexInspectCommand extends AbstractPlayerCommand {
     private static boolean isBranchSlot(Glyph glyph, String slotKey) {
         if (Glyph.NEXT_SLOT.equals(slotKey)) return true;
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        if (asset == null) return false;
-        SlotAsset slotAsset = asset.getSlot(slotKey);
-        return slotAsset != null && "Next".equals(slotAsset.getStyleId());
+        return asset != null && asset.getSlot(slotKey) instanceof NextSlotConfig;
     }
 
     private String formatGlyph(Glyph glyph) {

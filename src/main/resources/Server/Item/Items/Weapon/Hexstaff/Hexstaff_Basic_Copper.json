@@ -28,22 +28,21 @@
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
   "Weapon": {
     "StatModifiers": {
-      "Magic_Power": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 0.25
-        }
-      ],
       "MagicCharges": [
         {
+          "CalculationType": "Additive",
+          "Amount": 3
+        }
+      ],
+      "Stability": [
+        {
+          "Target": "Max",
           "CalculationType": "Additive",
           "Amount": 3
         }
       ]
     },
     "EntityStatsToClear": [
-      "Magic_Power",
       "MagicCharges",
       "Volatility"
     ]
@@ -93,7 +92,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 22,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 11
+              }
             },
             "Style": "Hexstaff_Basic_Copper"
           }
@@ -112,7 +114,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 25,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 12.5
+              }
             },
             "Style": "Hexstaff_Basic_Copper"
           }
@@ -131,7 +136,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 29,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 14.5
+              }
             },
             "Style": "Hexstaff_Basic_Copper"
           }
@@ -150,7 +158,10 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 32,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 16
+              }
             },
             "Style": "Hexstaff_Basic_Copper"
           }

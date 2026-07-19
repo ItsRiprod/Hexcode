@@ -14,6 +14,7 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -34,10 +35,6 @@ public class IgniteGlyph implements GlyphHandler {
         return ConfigBinding.of(IgniteConfig.class, IgniteConfig.CODEC);
     }
 
-    @Override
-    public float getComplexity(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        return 0f;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -48,14 +45,22 @@ public class IgniteGlyph implements GlyphHandler {
             return;
         }
 
+        Ref<EntityStore> caster = hexContext.getCasterRef(hexContext.getAccessor());
+        if (!HexProtection.canAffectEntity(hexContext.getAccessor().getExternalData().getWorld(),
+                caster, hexContext.getAccessor(), target)) {
+            HexProtection.notifyBlocked(caster, hexContext.getAccessor(), getId());
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+            return;
+        }
+
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         IgniteConfig config = getConfig(IgniteConfig.class, asset);
         if (config == null) config = IgniteConfig.DEFAULTS;
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float limit = ElementSupport.complexityLimit(glyph, asset, hexContext);
-        float seconds = ElementSupport.scaledDuration(hexContext.consumeComplexity(limit),
+        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
+        float seconds = ElementSupport.scaledDuration(ElementSupport.consumeResource(hexContext, config.getResource(), limit),
                 config.getEfficiency(), config.getDurationPerComplexity(),
                 affinity);
 

@@ -21,6 +21,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.Levitate
 import com.riprod.hexcode.builtin.hexCore.utils.ConstructSplicer;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -61,14 +62,20 @@ public class LevitateGlyph implements GlyphHandler {
             return;
         }
 
+        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        if (!HexProtection.canAffectEntity(accessor.getExternalData().getWorld(), caster, accessor, ref)) {
+            HexProtection.notifyBlocked(caster, accessor, getId());
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+            return;
+        }
+
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         LevitateConfig config = getConfig(LevitateConfig.class, asset);
         if (config == null) config = LevitateConfig.DEFAULTS;
 
-        float intensity = (float) Math.max(0,
-                HexVarUtil.numberOrSlotDefault(
-                        glyph.readSlot(LevitateGlyphSlots.INTENSITY, hexContext),
-                        asset.getSlot(LevitateGlyphSlots.INTENSITY)));
+        float intensity = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(LevitateGlyphSlots.INTENSITY, hexContext),
+                asset.getSlot(LevitateGlyphSlots.INTENSITY)).floatValue();
         float durationSeconds = (float) Math.max(config.getDurationFloor(),
                 HexVarUtil.numberOrSlotDefault(
                         glyph.readSlot(LevitateGlyphSlots.DURATION, hexContext),

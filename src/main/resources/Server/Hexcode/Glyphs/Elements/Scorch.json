@@ -8,38 +8,27 @@
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    {
-      "ShapeId": "Circle",
-      "Size": 1.0
-    },
-    {
-      "ShapeId": "Antisquare",
-      "Size": 0.8
-    },
-    {
-      "ShapeId": "Antisquare",
-      "Size": 0.6
-    },
-    {
-      "ShapeId": "Antisquare",
-      "Size": 0.4
-    }
+    "Circle",
+    { "Parent": "Antisquare", "RelativeSize": 0.8 },
+    { "Parent": "Antisquare", "RelativeSize": 0.6 },
+    { "Parent": "Antisquare", "RelativeSize": 0.4 }
   ],
   "Slots": {
     "Next": {
-      "Style": "Next",
+      "Parent": "Next",
       "Label": "hexcode.glyphs.Scorch.Next.name",
       "Description": "hexcode.glyphs.Scorch.Next.description"
     },
-    "ComplexityLimit": {
-      "Style": "Input",
-      "Label": "hexcode.glyphs.Scorch.ComplexityLimit.name",
-      "Description": "hexcode.glyphs.Scorch.ComplexityLimit.description",
+    "ResourceLimit": {
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Scorch.ResourceLimit.name",
+      "Description": "hexcode.glyphs.Scorch.ResourceLimit.description",
       "DefaultValue": -1
     }
   },
   "Config": {
     "Type": "Scorch",
+    "Resource": "Fire",
     "DamageCause": "Fire",
     "Efficiency": 0.95,
     "AffinityStat": "Affinity_Fire"

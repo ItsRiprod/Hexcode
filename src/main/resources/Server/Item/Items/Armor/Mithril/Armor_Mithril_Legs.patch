@@ -12,6 +12,13 @@
           "Amount": 9.5,
           "CalculationType": "Additive"
         }
+      ],
+      "Affinity_Lightning": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 15
+        }
       ]
     }
   }

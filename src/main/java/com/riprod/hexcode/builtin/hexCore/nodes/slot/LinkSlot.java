@@ -1,6 +1,7 @@
-package com.riprod.hexcode.core.common.glyphs.component;
+package com.riprod.hexcode.builtin.hexCore.nodes.slot;
 
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 
 public final class LinkSlot extends Slot {
     public static final BuilderCodec<LinkSlot> CODEC = BuilderCodec

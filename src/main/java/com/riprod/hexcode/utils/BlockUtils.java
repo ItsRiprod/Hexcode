@@ -20,6 +20,8 @@ import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
+import com.riprod.hexcode.core.common.protection.BlockAction;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 
 public class BlockUtils {
     public static void moveBlock(Vector3i source, Vector3d destination, World world, CommandBuffer<EntityStore> accessor) {
@@ -84,47 +86,71 @@ public class BlockUtils {
         return null;
     }
 
-    public static void moveToDestination(HexVar var, Vector3d dest, World world, HexContext hexContext) {
+    public static void moveToDestination(HexVar var, Vector3d dest, World world, HexContext hexContext,
+            String glyphName) {
+        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
         if (var instanceof EntityVar entityVar) {
-            Ref<EntityStore> entityRef = entityVar.getRef(hexContext.getAccessor());
+            Ref<EntityStore> entityRef = entityVar.getRef(accessor);
             if (entityRef == null || !entityRef.isValid()) return;
 
-            TransformComponent tc = hexContext.getAccessor().getComponent(entityRef,
+            if (!HexProtection.canAffectEntity(world, caster, accessor, entityRef)) {
+                HexProtection.notifyBlocked(caster, accessor, glyphName);
+                return;
+            }
+
+            TransformComponent tc = accessor.getComponent(entityRef,
                     TransformComponent.getComponentType());
             if (tc == null) return;
 
-            Player player = hexContext.getAccessor().getComponent(entityRef, Player.getComponentType());
+            Player player = accessor.getComponent(entityRef, Player.getComponentType());
             if (player != null) {
                 Rotation3f rotation = tc.getRotation();
                 Teleport teleport = Teleport.createForPlayer(dest, rotation);
-                hexContext.getAccessor().addComponent(entityRef, Teleport.getComponentType(), teleport);
+                accessor.addComponent(entityRef, Teleport.getComponentType(), teleport);
             } else {
                 tc.setPosition(new Vector3d(dest.x(), dest.y(), dest.z()));
             }
         } else if (var instanceof BlockVar blockVar && blockVar.getValue() != null) {
-            moveBlock(blockVar.getValue(), dest, world, hexContext.getAccessor());
+            moveBlockGated(blockVar.getValue(), dest, world, accessor, caster, glyphName);
         } else if (var instanceof PositionVar posVar && posVar.getValue() != null) {
             Vector3i sourceBlock = new Vector3i(
                     (int) Math.floor(posVar.getValue().x()),
                     (int) Math.floor(posVar.getValue().y()),
                     (int) Math.floor(posVar.getValue().z()));
-            moveBlock(sourceBlock, dest, world, hexContext.getAccessor());
+            moveBlockGated(sourceBlock, dest, world, accessor, caster, glyphName);
         }
     }
 
-    public static void swapPair(HexVar a, HexVar b, World world, HexContext hexContext) {
-        Vector3d posA = HexVarUtil.position(a, hexContext.getAccessor());
-        Vector3d posB = HexVarUtil.position(b, hexContext.getAccessor());
+    private static void moveBlockGated(Vector3i source, Vector3d dest, World world,
+            CommandBuffer<EntityStore> accessor, Ref<EntityStore> caster, String glyphName) {
+        if (!HexProtection.canModifyBlock(world, caster, accessor, new Vector3i(source), BlockAction.BREAK)) {
+            HexProtection.notifyBlocked(caster, accessor, glyphName);
+            return;
+        }
+        Vector3i placement = findAirBlock(world,
+                (int) Math.floor(dest.x()), (int) Math.floor(dest.y()), (int) Math.floor(dest.z()));
+        if (placement == null) return;
+        if (!HexProtection.canModifyBlock(world, caster, accessor, new Vector3i(placement), BlockAction.PLACE)) {
+            HexProtection.notifyBlocked(caster, accessor, glyphName);
+            return;
+        }
+        moveBlock(source, dest, world, accessor);
+    }
+
+    public static void swapPair(HexVar a, HexVar b, World world, HexContext hexContext, String glyphName) {
+        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Vector3d posA = HexVarUtil.position(a, accessor);
+        Vector3d posB = HexVarUtil.position(b, accessor);
         if (posA == null || posB == null) return;
 
         // an entity on either side can't be block-captured; fall back to the teleport-based move
         if (a instanceof EntityVar || b instanceof EntityVar) {
-            moveToDestination(a, posB, world, hexContext);
-            moveToDestination(b, posA, world, hexContext);
+            moveToDestination(a, posB, world, hexContext, glyphName);
+            moveToDestination(b, posA, world, hexContext, glyphName);
             return;
         }
-
-        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         int ax = (int) Math.floor(posA.x());
         int ay = (int) Math.floor(posA.y());
@@ -132,6 +158,12 @@ public class BlockUtils {
         int bx = (int) Math.floor(posB.x());
         int by = (int) Math.floor(posB.y());
         int bz = (int) Math.floor(posB.z());
+
+        if (!HexProtection.canModifyBlock(world, caster, accessor, new Vector3i(ax, ay, az), BlockAction.BREAK)
+                || !HexProtection.canModifyBlock(world, caster, accessor, new Vector3i(bx, by, bz), BlockAction.BREAK)) {
+            HexProtection.notifyBlocked(caster, accessor, glyphName);
+            return;
+        }
 
         WorldChunk chunkA = world.getChunk(ChunkUtil.indexChunkFromBlock(ax, az));
         WorldChunk chunkB = world.getChunk(ChunkUtil.indexChunkFromBlock(bx, bz));

@@ -80,7 +80,7 @@ public static final String ID = "Warp";
         World world = hexContext.getAccessor().getExternalData().getWorld();
 
         Vector3d departurePos = HexVarUtil.position(targets, hexContext.getAccessor());
-        BlockUtils.moveToDestination(targets, destination, world, hexContext);
+        BlockUtils.moveToDestination(targets, destination, world, hexContext, ID);
         if (departurePos != null) {
             WarpStyle.render(departurePos, destination, hexContext, hexContext.getAccessor());
         }

@@ -1,0 +1,7 @@
+{
+  "Parent": "Elemental",
+  "Inherits": "Elemental",
+  "BypassResistances": true,
+  "DurabilityLoss": false,
+  "StaminaLoss": false
+}
