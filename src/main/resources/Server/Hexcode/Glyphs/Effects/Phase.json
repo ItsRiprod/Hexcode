@@ -77,7 +77,6 @@
     "InstantCost": 3,
     "DrainPerSecond": 0.1
   },
-  "IsEnabled": false,
   "IsReversable": false,
   "Config": {
     "Type": "Phase",

@@ -93,9 +93,7 @@ public class PlayerHexRoot implements HexRoot {
         if (casterState != null) {
             casterState.addDependency(ctx.getExecutionId(), ref);
         } else {
-            CasterStateComponent newComp = new CasterStateComponent();
-            newComp.addDependency(ctx.getExecutionId(), ref);
-            ctx.getAccessor().putComponent(playerRef, CasterStateComponent.getComponentType(), newComp);
+            ctx.getAccessor().ensureComponent(playerRef, CasterStateComponent.getComponentType());
         }
     }
 

@@ -24,6 +24,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 public class LevitateConstructHandler implements ConstructHandler<LevitateState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final float TERMINAL_VELOCITY = 130.0f;
 
     @Override
     public boolean onTick(float dt, HexStatus<LevitateState> status, ConstructTickContext ctx) {
@@ -57,8 +58,15 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
         Velocity vel = ctx.getBuffer().getComponent(target, Velocity.getComponentType());
         if (vel == null)
             return;
-        double rise = config.getRiseSpeedPerIntensity() * state.getAppliedIntensity();
-        vel.addInstruction(new Vector3d(0, rise, 0), new VelocityConfig(), ChangeVelocityType.Set);
+        double targetVy = Math.min(config.getRiseSpeedPerIntensity() * state.getAppliedIntensity(),
+                TERMINAL_VELOCITY);
+        double currentVy = VelocityUtil.currentVelocity(target, ctx.getBuffer()).y;
+        if (currentVy >= targetVy)
+            return;
+        double delta = Math.min(targetVy - currentVy, config.getMaxCatchAccel() * dt);
+        if (delta <= 0)
+            return;
+        vel.addInstruction(new Vector3d(0, delta, 0), null, ChangeVelocityType.Add);
     }
 
     private void emitTickVfx(float dt, LevitateState state, LevitateConfig config,

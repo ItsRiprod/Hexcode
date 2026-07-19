@@ -81,6 +81,7 @@
     "HexTier1": {
       "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"
@@ -99,6 +100,7 @@
     "HexTier2": {
       "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"
@@ -117,6 +119,7 @@
     "HexTier3": {
       "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"
@@ -135,6 +138,7 @@
     "HexTier4": {
       "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"

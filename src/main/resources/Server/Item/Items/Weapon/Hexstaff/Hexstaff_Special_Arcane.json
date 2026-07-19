@@ -45,6 +45,20 @@
           "CalculationType": "Additive",
           "Amount": 10
         }
+      ],
+      "Stability": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 20
+        }
+      ],
+      "Affinity_Arcane": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 15
+        }
       ]
     },
     "EntityStatsToClear": [
@@ -88,8 +102,9 @@
   },
   "InteractionVars": {
     "HexTier1": {
-      "Interactions": [
+     "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"
@@ -106,8 +121,9 @@
       ]
     },
     "HexTier2": {
-      "Interactions": [
+     "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"
@@ -124,8 +140,9 @@
       ]
     },
     "HexTier3": {
-      "Interactions": [
+     "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"
@@ -142,8 +159,9 @@
       ]
     },
     "HexTier4": {
-      "Interactions": [
+     "Interactions": [
         {
+          "Parent": "CastSpell_Template",
           "Type": "HexExecute",
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"

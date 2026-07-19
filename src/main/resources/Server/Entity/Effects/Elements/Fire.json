@@ -1,17 +1,4 @@
 {
-  "ApplicationEffects": {
-    "EntityBottomTint": "#100600",
-    "EntityTopTint": "#cf2302",
-    "Particles": [
-      {
-        "SystemId": "Effect_Fire"
-      }
-    ],
-    "ScreenEffect": "ScreenEffects/Fire.png",
-    "LocalSoundEventId": "SFX_Effect_Burn_Local",
-    "WorldSoundEventId": "SFX_Effect_Burn_World",
-    "ModelVFXId": "GlyphGlow"
-  },
   "DamageCalculatorCooldown": 1,
   "DamageCalculator": {
     "BaseDamage": {
@@ -42,5 +29,5 @@
       }
     ]
   },
-  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png"
+  "Parent": "Burn"
 }

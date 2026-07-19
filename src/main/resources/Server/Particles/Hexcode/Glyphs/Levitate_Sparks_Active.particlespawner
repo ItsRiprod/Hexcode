@@ -3,15 +3,16 @@
   "ParticleRotationInfluence": "BillboardVelocity",
   "LinearFiltering": true,
   "LightInfluence": 0,
+  "MaxConcurrentParticles": 12,
   "ParticleLifeSpan": {
-    "Min": 0.3,
+    "Min": 0.4,
     "Max": 0.6
   },
   "SpawnRate": {
-    "Min": 0,
+    "Min": 1,
     "Max": 2
   },
-  "SpawnBurst": false,
+  "SpawnBurst": true,
   "EmitOffset": {
     "X": {
       "Min": -0.4,
@@ -32,8 +33,8 @@
       "Max": 360
     },
     "Speed": {
-      "Min": 4,
-      "Max": 8
+      "Min": 2,
+      "Max": 4
     }
   },
   "Particle": {
@@ -45,29 +46,30 @@
     "ScaleRatioConstraint": "None",
     "Animation": {
       "0": {
-        "Opacity": 1.0,
         "Color": "#ffffff",
         "Scale": {
           "X": {
-            "Min": 0.08,
-            "Max": 0.08
+            "Min": 0.03,
+            "Max": 0.03
           },
           "Y": {
             "Min": 0.08,
             "Max": 0.08
           }
-        }
+        },
+        "Opacity": 0
       },
-      "25": {
+      "50": {
+        "Opacity": 1,
         "Color": "#ffffff",
         "Scale": {
           "X": {
-            "Min": 0.06,
-            "Max": 0.06
+            "Min": 0.03,
+            "Max": 0.03
           },
           "Y": {
-            "Min": 1.0,
-            "Max": 1.0
+            "Min": 0.5,
+            "Max": 0.5
           }
         }
       },

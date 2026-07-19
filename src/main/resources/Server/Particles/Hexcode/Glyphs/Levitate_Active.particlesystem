@@ -1,0 +1,9 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Levitate_Sparks_Active"
+    }
+  ],
+  "CullDistance": 100,
+  "BoundingRadius": 10.0
+}

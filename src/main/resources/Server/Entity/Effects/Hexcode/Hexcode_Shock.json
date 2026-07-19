@@ -6,5 +6,6 @@
     "EntityBottomTint": "#88ccff",
     "EntityTopTint": "#ffffff",
     "WorldSoundEventId": "SFX_Staff_Fire_Shoot"
-  }
+  },
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/Glyphs/Bolt.png"
 }
