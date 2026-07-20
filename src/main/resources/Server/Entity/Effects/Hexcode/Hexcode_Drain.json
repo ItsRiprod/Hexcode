@@ -1,0 +1,7 @@
+{
+  "Duration": 5,
+  "Debuff": true,
+  "OverlapBehavior": "Overwrite",
+  "Name": "hexcode.effects.drain",
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/Drain.png"
+}

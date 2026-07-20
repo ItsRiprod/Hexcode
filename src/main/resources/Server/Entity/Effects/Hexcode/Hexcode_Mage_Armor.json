@@ -23,6 +23,6 @@
       }
     ]
   },
-  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png",
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/MageArmor.png",
   "Parent": "Food_Health_Boost_Large"
 }

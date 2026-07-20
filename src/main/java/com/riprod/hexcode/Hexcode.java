@@ -371,7 +371,7 @@ public class Hexcode extends JavaPlugin {
         entityStoreRegistry.registerSystem(new DrawRecognitionSystem());
         entityStoreRegistry.registerSystem(new DrawAnchorSystem());
 
-        this.getEventRegistry().register(EventPriority.NORMAL, LoadAssetEvent.class, e -> {
+        this.getEventRegistry().register(EventPriority.LATE, LoadAssetEvent.class, e -> {
             GlyphIconStore.generateMissing(this.getManifest());
         });
 

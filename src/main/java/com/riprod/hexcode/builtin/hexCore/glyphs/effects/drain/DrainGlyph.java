@@ -6,7 +6,10 @@ import java.util.List;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
@@ -173,9 +176,19 @@ public static final String ID = "Drain";
                 ? new ArrayList<>(Arrays.asList(nextSlot.getLinks()))
                 : new ArrayList<>();
 
+        String effectId = config.getDrainEffectId();
+        EntityEffect drainEffect = effectId != null ? EntityEffect.getAssetMap().getAsset(effectId) : null;
+        if (drainEffect != null) {
+            EffectControllerComponent controller = accessor.getComponent(
+                    targetRef, EffectControllerComponent.getComponentType());
+            if (controller != null) {
+                controller.addEffect(targetRef, drainEffect, duration, OverlapBehavior.OVERWRITE, accessor);
+            }
+        }
+
         DrainState state = new DrainState(
                 sourceStatIndex, destRef, rate, totalDrainAmount, duration, nextGlyphIds, colors,
-                config.getHpFloor());
+                config.getHpFloor(), effectId);
 
         HexConstructSpawner.applyWithState(
                 hexContext.getAccessor(), targetRef, hexContext, glyph, DrainGlyph.ID, state);

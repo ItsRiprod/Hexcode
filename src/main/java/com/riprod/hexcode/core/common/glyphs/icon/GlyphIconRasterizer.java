@@ -5,22 +5,20 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import com.google.gson.Gson;
+import com.hypixel.hytale.server.core.asset.common.CommonAsset;
+import com.hypixel.hytale.server.core.asset.common.CommonAssetRegistry;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 
 public final class GlyphIconRasterizer {
-
-    @FunctionalInterface
-    public interface Resolver {
-        Path resolve(String relPath);
-    }
 
     private static final Gson GSON = new Gson();
 
@@ -30,18 +28,10 @@ public final class GlyphIconRasterizer {
     private static final double REFERENCE_FILL = 0.55;
     private static final double PX_PER_UNIT = INTERNAL * REFERENCE_FILL / REFERENCE_QUAD_UNITS;
 
-    private static final String MODELDEF_SUBPATH = "Server/Models/Hexcode/Glyphs";
-    private static final String COMMON_ROOT = "Common";
-
     private GlyphIconRasterizer() {
     }
 
-    public static byte[] rasterize(String modelPath, Resolver resolver) {
-        ModelDef def = loadModelDef(modelPath, resolver);
-        if (def == null || def.DefaultAttachments == null || def.DefaultAttachments.isEmpty()) {
-            return null;
-        }
-
+    public static byte[] rasterize(ModelAttachment[] attachments) {
         BufferedImage canvas = new BufferedImage(INTERNAL, INTERNAL, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = canvas.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -53,12 +43,12 @@ public final class GlyphIconRasterizer {
         base.scale(PX_PER_UNIT, -PX_PER_UNIT);
 
         boolean drewAny = false;
-        for (Attachment att : def.DefaultAttachments) {
-            if (att == null || att.Model == null || att.Texture == null) {
+        for (ModelAttachment att : attachments) {
+            if (att == null || att.getModel() == null || att.getTexture() == null) {
                 continue;
             }
-            BlockyModel model = loadJson(resolver.resolve(COMMON_ROOT + "/" + att.Model), BlockyModel.class);
-            BufferedImage tex = loadImage(resolver.resolve(COMMON_ROOT + "/" + att.Texture));
+            BlockyModel model = parseJson(loadBlob(att.getModel()), BlockyModel.class);
+            BufferedImage tex = loadImage(loadBlob(att.getTexture()));
             if (model == null || tex == null || model.nodes == null) {
                 continue;
             }
@@ -138,26 +128,34 @@ public final class GlyphIconRasterizer {
         return true;
     }
 
-    private static ModelDef loadModelDef(String modelPath, Resolver resolver) {
-        return loadJson(resolver.resolve(MODELDEF_SUBPATH + "/" + modelPath + ".json"), ModelDef.class);
-    }
-
-    private static <T> T loadJson(Path p, Class<T> type) {
-        if (p == null) {
+    private static byte[] loadBlob(String name) {
+        CommonAsset asset = CommonAssetRegistry.getByName(name);
+        if (asset == null) {
             return null;
         }
         try {
-            return GSON.fromJson(Files.readString(p), type);
+            return asset.getBlob().join();
         } catch (Exception e) {
             return null;
         }
     }
 
-    private static BufferedImage loadImage(Path p) {
-        if (p == null) {
+    private static <T> T parseJson(byte[] bytes, Class<T> type) {
+        if (bytes == null) {
             return null;
         }
-        try (InputStream in = Files.newInputStream(p)) {
+        try {
+            return GSON.fromJson(new String(bytes, StandardCharsets.UTF_8), type);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static BufferedImage loadImage(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+        try (InputStream in = new ByteArrayInputStream(bytes)) {
             return ImageIO.read(in);
         } catch (Exception e) {
             return null;
@@ -195,22 +193,6 @@ public final class GlyphIconRasterizer {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    // gson pojos -------------------------------------------------------------
-
-    @SuppressWarnings("unused")
-    static final class ModelDef {
-        String Parent;
-        String Model;
-        String Texture;
-        List<Attachment> DefaultAttachments;
-    }
-
-    @SuppressWarnings("unused")
-    static final class Attachment {
-        String Model;
-        String Texture;
     }
 
     @SuppressWarnings("unused")

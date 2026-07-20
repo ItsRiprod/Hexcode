@@ -17,7 +17,7 @@
       }
     ]
   },
-  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png",
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/Electrocute.png",
   "ApplicationEffects": {
     "HorizontalSpeedMultiplier": 2,
     "Particles": [

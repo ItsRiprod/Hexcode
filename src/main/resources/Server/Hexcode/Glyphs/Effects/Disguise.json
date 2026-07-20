@@ -64,6 +64,7 @@
   },
   "Config": {
     "Type": "Disguise",
-    "DisguiseNametag": true
+    "DisguiseNametag": true,
+    "DisguiseEffect": "Hexcode_Disguise"
   }
 }

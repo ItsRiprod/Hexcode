@@ -1,3 +1,6 @@
 hexcode.effects.erode=Weakened
 hexcode.effects.fortify=Strengthened
 hexcode.effects.growth=Healing
+hexcode.effects.drain=Drained
+hexcode.effects.scale=Resized
+hexcode.effects.disguise=Disguised

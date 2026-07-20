@@ -71,6 +71,7 @@
     "DefaultConversionRate": 1.0,
     "DefaultDrainPercent": 15.0,
     "HpFloor": 1.0,
-    "DurationFloor": 0.01
+    "DurationFloor": 0.01,
+    "DrainEffect": "Hexcode_Drain"
   }
 }

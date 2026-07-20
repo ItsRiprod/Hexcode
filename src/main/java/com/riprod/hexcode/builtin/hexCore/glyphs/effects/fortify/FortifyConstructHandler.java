@@ -18,6 +18,7 @@ public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
     public boolean onTick(float dt, HexStatus<FortifyState> status, ConstructTickContext ctx) {
         FortifyState state = status.getState();
         if (state == null) return true;
+        if (effectRemoved(ctx, state.getEffectId())) return true;
         if (state.isExpired()) return true;
         state.tick(dt);
         return !drainSustain(dt, status);
@@ -27,6 +28,7 @@ public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
     public void onEnd(HexStatus<FortifyState> status, ConstructTickContext ctx) {
         FortifyState state = status.getState();
         if (state == null) return;
+        cleanup(ctx, state.getEffectId());
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
     }
@@ -64,5 +66,16 @@ public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
                 controller.removeEffect(target, effectIndex, buffer);
             }
         }
+    }
+
+    private static boolean effectRemoved(ConstructTickContext ctx, String effectId) {
+        if (effectId == null) return false;
+        Ref<EntityStore> target = ctx.getEntityRef();
+        if (target == null || !target.isValid()) return false;
+        int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
+        if (effectIndex == Integer.MIN_VALUE) return false;
+        EffectControllerComponent controller = ctx.getBuffer().getComponent(
+                target, EffectControllerComponent.getComponentType());
+        return controller == null || !controller.hasEffect(effectIndex);
     }
 }

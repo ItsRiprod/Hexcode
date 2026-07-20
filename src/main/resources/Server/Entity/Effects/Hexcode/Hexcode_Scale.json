@@ -1,0 +1,7 @@
+{
+  "Duration": 5,
+  "Debuff": false,
+  "OverlapBehavior": "Overwrite",
+  "Name": "hexcode.effects.scale",
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/Scale.png"
+}

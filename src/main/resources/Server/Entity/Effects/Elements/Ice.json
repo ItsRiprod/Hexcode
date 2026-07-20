@@ -24,7 +24,7 @@
     ]
   },
   "Parent": "Freeze",
-  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png",
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/Freeze.png",
   "ApplicationEffects": {
     "MovementEffects": {
       "DisableAll": false,
@@ -35,7 +35,9 @@
       "DisableJump": false,
       "DisableCrouch": false,
       "DisableForward": false
-    }
+    },
+    "HorizontalSpeedMultiplier": 0.3,
+    "MouseSensitivityAdjustmentTarget": 0.544
   },
   "DamageEffects": {
     "CameraEffect": "Impact_Light"

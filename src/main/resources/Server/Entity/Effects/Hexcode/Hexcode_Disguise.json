@@ -1,0 +1,7 @@
+{
+  "Duration": 15,
+  "Debuff": false,
+  "OverlapBehavior": "Overwrite",
+  "Name": "hexcode.effects.disguise",
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/Disguise.png"
+}

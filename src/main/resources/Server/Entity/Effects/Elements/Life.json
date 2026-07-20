@@ -22,6 +22,6 @@
       }
     ]
   },
-  "StatusEffectIcon": "UI/Custom/Pages/Memories/categories/Hexcode@2x.png",
+  "StatusEffectIcon": "UI/StatusEffects/HealthRegen.png",
   "Parent": "Food_Health_Boost_Large"
 }

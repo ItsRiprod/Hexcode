@@ -67,6 +67,7 @@
     "MinMagnitude": 0.01,
     "MaxMagnitude": 32.0,
     "MinDuration": 0.1,
-    "MountOffsetY": 2.5
+    "MountOffsetY": 2.5,
+    "ScaleEffect": "Hexcode_Scale"
   }
 }
