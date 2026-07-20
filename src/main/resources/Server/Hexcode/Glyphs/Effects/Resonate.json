@@ -17,18 +17,23 @@
   "Description": "hexcode.glyphs.Resonate.description",
   "ModelPath": "Resonate",
   "BasePower": 1.0,
-  "ManaConsumption": 1.0,
+  "ManaConsumption": 2,
   "ShapeStructure": [
     "Antisquare",
-    { "Parent": "Circle", "RelativeSize": 0.8 }
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.8
+    }
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Resonate.target.name",
       "Description": "hexcode.glyphs.Resonate.target.description"
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Resonate.Next.name",
       "Description": "hexcode.glyphs.Resonate.Next.description"

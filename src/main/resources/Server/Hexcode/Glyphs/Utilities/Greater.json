@@ -11,18 +11,21 @@
   ],
   "Slots": {
     "a": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Greater.a.name",
       "Description": "hexcode.glyphs.Greater.a.description",
       "DefaultValue": 0
     },
     "b": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Greater.b.name",
       "Description": "hexcode.glyphs.Greater.b.description",
       "DefaultValue": 0
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Greater.Next.name",
       "Description": "hexcode.glyphs.Greater.Next.description"

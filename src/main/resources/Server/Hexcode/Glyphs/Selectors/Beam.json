@@ -24,18 +24,21 @@
   ],
   "Slots": {
     "source": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Beam.source.name",
       "Description": "hexcode.glyphs.Beam.source.description",
       "Unique": true
     },
     "rotation": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Beam.rotation.name",
       "Description": "hexcode.glyphs.Beam.rotation.description",
       "Unique": true
     },
     "range": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Beam.range.name",
       "Description": "hexcode.glyphs.Beam.range.description",
@@ -43,6 +46,7 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Beam.Next.name",
       "Description": "hexcode.glyphs.Beam.Next.description"

@@ -35,6 +35,12 @@ public class NumberValue implements GlyphHandler {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        NumberConfig config = getConfig(NumberConfig.class, asset);
+        if (config == null) {
+            config = NumberConfig.DEFAULTS;
+        }
+        hexContext.setDefaultVariable(new NumberVar(config.getValue()));
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 }

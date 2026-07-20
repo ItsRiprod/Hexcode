@@ -6,20 +6,31 @@
   "Description": "hexcode.glyphs.Bolt.description",
   "ModelPath": "Bolt",
   "BasePower": 1.0,
-  "ManaConsumption": 0,
+  "ManaConsumption": 25,
   "ShapeStructure": [
     "Circle",
-    { "Parent": "Circle", "RelativeSize": 0.8 },
-    { "Parent": "Circle", "RelativeSize": 0.6 },
-    { "Parent": "Circle", "RelativeSize": 0.4 }
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.6
+    },
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.4
+    }
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Bolt.Next.name",
       "Description": "hexcode.glyphs.Bolt.Next.description"
     },
     "ResourceLimit": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Bolt.ResourceLimit.name",
       "Description": "hexcode.glyphs.Bolt.ResourceLimit.description",
@@ -34,7 +45,7 @@
     "AffinityStat": "Affinity_Lightning"
   },
   "Volatility": {
-    "InstantCost": 0.1,
+    "InstantCost": 2,
     "DrainPerSecond": 0.0
   }
 }

@@ -6,20 +6,31 @@
   "Description": "hexcode.glyphs.HealthSurge.description",
   "ModelPath": "HealthSurge",
   "BasePower": 1.0,
-  "ManaConsumption": 0,
+  "ManaConsumption": 25,
   "ShapeStructure": [
     "Circle",
-    { "Parent": "Square", "RelativeSize": 0.8 },
-    { "Parent": "Square", "RelativeSize": 0.6 },
-    { "Parent": "Square", "RelativeSize": 0.4 }
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.6
+    },
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.4
+    }
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.HealthSurge.Next.name",
       "Description": "hexcode.glyphs.HealthSurge.Next.description"
     },
     "ResourceLimit": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.HealthSurge.ResourceLimit.name",
       "Description": "hexcode.glyphs.HealthSurge.ResourceLimit.description",
@@ -33,7 +44,7 @@
     "AffinityStat": "Affinity_Life"
   },
   "Volatility": {
-    "InstantCost": 0.1,
+    "InstantCost": 2,
     "DrainPerSecond": 0.0
   }
 }

@@ -6,20 +6,28 @@
   "Description": "hexcode.glyphs.Burning.description",
   "ModelPath": "Burning",
   "BasePower": 1.0,
-  "ManaConsumption": 0,
+  "ManaConsumption": 1,
   "ShapeStructure": [
     "Square",
-    { "Parent": "Circle", "RelativeSize": 0.8 },
-    { "Parent": "Antisquare", "RelativeSize": 0.55 }
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Antisquare",
+      "RelativeSize": 0.55
+    }
   ],
   "Slots": {
     "Center": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Burning.center.name",
       "Description": "hexcode.glyphs.Burning.center.description",
       "Unique": true
     },
     "Radius": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Burning.radius.name",
       "Description": "hexcode.glyphs.Burning.radius.description",
@@ -27,6 +35,7 @@
       "Unique": true
     },
     "Magnitude": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Burning.magnitude.name",
       "Description": "hexcode.glyphs.Burning.magnitude.description",
@@ -34,12 +43,14 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Burning.Next.name",
       "Description": "hexcode.glyphs.Burning.Next.description"
     }
   },
   "Volatility": {
-    "InstantCost": 0.1,
-    "DrainPerSecond": 0.0}
+    "InstantCost": 1,
+    "DrainPerSecond": 0.0
+  }
 }

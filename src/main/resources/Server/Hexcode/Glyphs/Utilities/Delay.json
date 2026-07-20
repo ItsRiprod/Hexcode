@@ -21,6 +21,7 @@
   ],
   "Slots": {
     "Duration": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Delay.duration.name",
       "Description": "hexcode.glyphs.Delay.duration.description",
@@ -28,17 +29,20 @@
       "DefaultValue": 1
     },
     "Source": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Delay.source.name",
       "Description": "hexcode.glyphs.Delay.source.description",
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Delay.Next.name",
       "Description": "hexcode.glyphs.Delay.Next.description"
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Delay.immediate.name",
       "Description": "hexcode.glyphs.Delay.immediate.description"

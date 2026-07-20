@@ -6,20 +6,31 @@
   "Description": "hexcode.glyphs.Drown.description",
   "ModelPath": "Drown",
   "BasePower": 1.0,
-  "ManaConsumption": 0,
+  "ManaConsumption": 25,
   "ShapeStructure": [
     "Circle",
-    { "Parent": "Triangle", "RelativeSize": 0.8 },
-    { "Parent": "Triangle", "RelativeSize": 0.6 },
-    { "Parent": "Triangle", "RelativeSize": 0.4 }
+    {
+      "Parent": "Triangle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Triangle",
+      "RelativeSize": 0.6
+    },
+    {
+      "Parent": "Triangle",
+      "RelativeSize": 0.4
+    }
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Drown.Next.name",
       "Description": "hexcode.glyphs.Drown.Next.description"
     },
     "ResourceLimit": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Drown.ResourceLimit.name",
       "Description": "hexcode.glyphs.Drown.ResourceLimit.description",
@@ -34,7 +45,7 @@
     "AffinityStat": "Affinity_Water"
   },
   "Volatility": {
-    "InstantCost": 0.1,
+    "InstantCost": 2,
     "DrainPerSecond": 0.0
   }
 }

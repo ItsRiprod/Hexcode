@@ -9,17 +9,20 @@
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Variable.target.name",
       "Description": "hexcode.glyphs.Variable.target.description"
     },
     "Output": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Variable.output.name",
       "Description": "hexcode.glyphs.Variable.output.description",
       "Unique": false
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Variable.Next.name",
       "Description": "hexcode.glyphs.Variable.Next.description"

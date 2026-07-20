@@ -17,12 +17,14 @@
   ],
   "Slots": {
     "a": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Ceiling.a.name",
       "Description": "hexcode.glyphs.Ceiling.a.description",
       "DefaultValue": 0
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Ceiling.Next.name",
       "Description": "hexcode.glyphs.Ceiling.Next.description"

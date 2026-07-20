@@ -17,25 +17,34 @@
   "Description": "hexcode.glyphs.Warp.description",
   "ModelPath": "Warp",
   "BasePower": 1.0,
-  "ManaConsumption": 2.0,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Circle",
-    { "Parent": "Antitriangle", "RelativeSize": 0.8 },
-    { "Parent": "Circle", "RelativeSize": 0.55 }
+    {
+      "Parent": "Antitriangle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.55
+    }
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Warp.target.name",
       "Description": "hexcode.glyphs.Warp.target.description"
     },
     "Destination": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Warp.destination.name",
       "Description": "hexcode.glyphs.Warp.destination.description",
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Warp.Next.name",
       "Description": "hexcode.glyphs.Warp.Next.description"

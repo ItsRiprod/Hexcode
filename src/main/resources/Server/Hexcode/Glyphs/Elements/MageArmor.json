@@ -6,7 +6,7 @@
   "Description": "hexcode.glyphs.MageArmor.description",
   "ModelPath": "MageArmor",
   "BasePower": 1.0,
-  "ManaConsumption": 3.0,
+  "ManaConsumption": 25,
   "ShapeStructure": [
     "Square",
     {
@@ -24,17 +24,20 @@
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.MageArmor.Next.name",
       "Description": "hexcode.glyphs.MageArmor.Next.description"
     },
     "ResourceLimit": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.MageArmor.ResourceLimit.name",
       "Description": "hexcode.glyphs.MageArmor.ResourceLimit.description",
       "DefaultValue": -1
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.MageArmor.immediate.name",
       "Description": "hexcode.glyphs.MageArmor.immediate.description"
@@ -49,7 +52,7 @@
     "AffinityStat": "Affinity_Life"
   },
   "Volatility": {
-    "InstantCost": 0.1,
+    "InstantCost": 2,
     "DrainPerSecond": 0.2
   }
 }

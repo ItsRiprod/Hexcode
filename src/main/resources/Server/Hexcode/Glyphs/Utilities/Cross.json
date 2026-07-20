@@ -12,16 +12,19 @@
   ],
   "Slots": {
     "v": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Cross.v.name",
       "Description": "hexcode.glyphs.Cross.v.description"
     },
     "w": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Cross.w.name",
       "Description": "hexcode.glyphs.Cross.w.description"
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Cross.Next.name",
       "Description": "hexcode.glyphs.Cross.Next.description"

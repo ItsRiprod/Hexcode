@@ -17,19 +17,27 @@
   "Description": "hexcode.glyphs.Fortify.description",
   "ModelPath": "Fortify",
   "BasePower": 1.0,
-  "ManaConsumption": 2.0,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Square",
-    { "Parent": "Circle", "RelativeSize": 0.8 },
-    { "Parent": "Square", "RelativeSize": 0.6 }
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.6
+    }
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Fortify.target.name",
       "Description": "hexcode.glyphs.Fortify.target.description"
     },
     "Duration": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Fortify.duration.name",
       "Description": "hexcode.glyphs.Fortify.duration.description",
@@ -37,11 +45,13 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Fortify.Next.name",
       "Description": "hexcode.glyphs.Fortify.Next.description"
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Fortify.immediate.name",
       "Description": "hexcode.glyphs.Fortify.immediate.description"

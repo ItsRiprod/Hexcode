@@ -12,6 +12,7 @@
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.IsHolding.Next.name",
       "Description": "hexcode.glyphs.IsHolding.Next.description"

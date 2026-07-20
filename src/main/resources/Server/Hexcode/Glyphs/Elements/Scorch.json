@@ -6,20 +6,31 @@
   "Description": "hexcode.glyphs.Scorch.description",
   "ModelPath": "Scorch",
   "BasePower": 1.0,
-  "ManaConsumption": 0,
+  "ManaConsumption": 25,
   "ShapeStructure": [
     "Circle",
-    { "Parent": "Antisquare", "RelativeSize": 0.8 },
-    { "Parent": "Antisquare", "RelativeSize": 0.6 },
-    { "Parent": "Antisquare", "RelativeSize": 0.4 }
+    {
+      "Parent": "Antisquare",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Antisquare",
+      "RelativeSize": 0.6
+    },
+    {
+      "Parent": "Antisquare",
+      "RelativeSize": 0.4
+    }
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Scorch.Next.name",
       "Description": "hexcode.glyphs.Scorch.Next.description"
     },
     "ResourceLimit": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Scorch.ResourceLimit.name",
       "Description": "hexcode.glyphs.Scorch.ResourceLimit.description",
@@ -34,7 +45,7 @@
     "AffinityStat": "Affinity_Fire"
   },
   "Volatility": {
-    "InstantCost": 0.1,
+    "InstantCost": 2,
     "DrainPerSecond": 0.0
   }
 }

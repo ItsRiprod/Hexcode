@@ -12,17 +12,19 @@
   "Description": "hexcode.glyphs.Halt.description",
   "ModelPath": "Halt",
   "BasePower": 1.0,
-  "ManaConsumption": 0.5,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Antitriangle"
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Halt.target.name",
       "Description": "hexcode.glyphs.Halt.target.description"
     },
     "Duration": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Halt.duration.name",
       "Description": "hexcode.glyphs.Halt.duration.description",
@@ -30,11 +32,13 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Halt.Next.name",
       "Description": "hexcode.glyphs.Halt.Next.description"
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Halt.immediate.name",
       "Description": "hexcode.glyphs.Halt.immediate.description"

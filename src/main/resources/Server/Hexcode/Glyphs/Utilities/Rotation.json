@@ -10,29 +10,34 @@
   ],
   "Slots": {
     "X": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.x.name",
       "Description": "hexcode.glyphs.Rotation.x.description",
       "DefaultValue": 0
     },
     "Y": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.y.name",
       "Description": "hexcode.glyphs.Rotation.y.description",
       "DefaultValue": 0
     },
     "Z": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.z.name",
       "Description": "hexcode.glyphs.Rotation.z.description",
       "DefaultValue": 0
     },
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Rotation.target.name",
       "Description": "hexcode.glyphs.Rotation.target.description"
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Rotation.Next.name",
       "Description": "hexcode.glyphs.Rotation.Next.description"

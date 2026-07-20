@@ -6,20 +6,31 @@
   "Description": "hexcode.glyphs.Snap.description",
   "ModelPath": "Snap",
   "BasePower": 1.0,
-  "ManaConsumption": 0,
+  "ManaConsumption": 25,
   "ShapeStructure": [
     "Circle",
-    { "Parent": "Anticircle", "RelativeSize": 0.8 },
-    { "Parent": "Anticircle", "RelativeSize": 0.6 },
-    { "Parent": "Anticircle", "RelativeSize": 0.4 }
+    {
+      "Parent": "Anticircle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Anticircle",
+      "RelativeSize": 0.6
+    },
+    {
+      "Parent": "Anticircle",
+      "RelativeSize": 0.4
+    }
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Snap.Next.name",
       "Description": "hexcode.glyphs.Snap.Next.description"
     },
     "ResourceLimit": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Snap.ResourceLimit.name",
       "Description": "hexcode.glyphs.Snap.ResourceLimit.description",
@@ -36,7 +47,7 @@
     "AffinityStat": "Affinity_Ice"
   },
   "Volatility": {
-    "InstantCost": 0.1,
+    "InstantCost": 2,
     "DrainPerSecond": 0.0
   }
 }

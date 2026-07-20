@@ -16,19 +16,27 @@
   "Description": "hexcode.glyphs.Growth.description",
   "ModelPath": "Growth",
   "BasePower": 1.0,
-  "ManaConsumption": 1.4,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Square",
-    { "Parent": "Triangle", "RelativeSize": 0.8 },
-    { "Parent": "Square", "RelativeSize": 0.6 }
+    {
+      "Parent": "Triangle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.6
+    }
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Growth.target.name",
       "Description": "hexcode.glyphs.Growth.target.description"
     },
     "amount": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Growth.amount.name",
       "Description": "hexcode.glyphs.Growth.amount.description",
@@ -36,6 +44,7 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Growth.Next.name",
       "Description": "hexcode.glyphs.Growth.Next.description"
@@ -48,6 +57,7 @@
       "DefaultValue": 10
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Growth.immediate.name",
       "Description": "hexcode.glyphs.Growth.immediate.description"

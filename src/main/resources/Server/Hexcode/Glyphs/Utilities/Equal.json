@@ -12,27 +12,32 @@
   ],
   "Slots": {
     "a": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Equal.a.name",
       "Description": "hexcode.glyphs.Equal.a.description",
       "DefaultValue": 1
     },
     "b": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Equal.b.name",
       "Description": "hexcode.glyphs.Equal.b.description"
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Equal.Next.name",
       "Description": "hexcode.glyphs.Equal.Next.description"
     },
     "Greater": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Equal.Greater.name",
       "Description": "hexcode.glyphs.Equal.Greater.description"
     },
     "Less": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Equal.Less.name",
       "Description": "hexcode.glyphs.Equal.Less.description"

@@ -13,19 +13,24 @@
   "Description": "hexcode.glyphs.Area.description",
   "ModelPath": "Area",
   "BasePower": 1.0,
-  "ManaConsumption": 1.0,
+  "ManaConsumption": 2,
   "ShapeStructure": [
     "Circle",
-    { "Parent": "Square", "RelativeSize": 0.8 }
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.8
+    }
   ],
   "Slots": {
     "Center": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Area.center.name",
       "Description": "hexcode.glyphs.Area.center.description",
       "Unique": true
     },
     "Radius": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Area.radius.name",
       "Description": "hexcode.glyphs.Area.radius.description",
@@ -39,11 +44,13 @@
       }
     },
     "Blocks": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Area.Blocks.name",
       "Description": "hexcode.glyphs.Area.Blocks.description"
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Area.Next.name",
       "Description": "hexcode.glyphs.Area.Next.description"

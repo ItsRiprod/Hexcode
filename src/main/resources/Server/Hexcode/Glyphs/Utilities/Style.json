@@ -13,35 +13,41 @@
   ],
   "Slots": {
     "style": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Style.style.name",
       "Description": "hexcode.glyphs.Style.style.description"
     },
     "r": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Style.r.name",
       "Description": "hexcode.glyphs.Style.r.description",
       "DefaultValue": 0
     },
     "g": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Style.g.name",
       "Description": "hexcode.glyphs.Style.g.description",
       "DefaultValue": 0
     },
     "b": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Style.b.name",
       "Description": "hexcode.glyphs.Style.b.description",
       "DefaultValue": 0
     },
     "a": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Style.a.name",
       "Description": "hexcode.glyphs.Style.a.description",
       "DefaultValue": 255
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Style.Next.name",
       "Description": "hexcode.glyphs.Style.Next.description"

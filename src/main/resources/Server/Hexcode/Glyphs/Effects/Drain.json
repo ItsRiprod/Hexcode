@@ -21,22 +21,26 @@
   ],
   "Slots": {
     "HP": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.hp.name",
       "Description": "hexcode.glyphs.Drain.hp.description"
     },
     "Stamina": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.stamina.name",
       "Description": "hexcode.glyphs.Drain.stamina.description"
     },
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.target.name",
       "Description": "hexcode.glyphs.Drain.target.description",
       "Unique": true
     },
     "Duration": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.duration.name",
       "Description": "hexcode.glyphs.Drain.duration.description",
@@ -44,17 +48,20 @@
       "Unique": true
     },
     "Destination": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Drain.destination.name",
       "Description": "hexcode.glyphs.Drain.destination.description",
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Drain.Next.name",
       "Description": "hexcode.glyphs.Drain.Next.description"
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Drain.immediate.name",
       "Description": "hexcode.glyphs.Drain.immediate.description"

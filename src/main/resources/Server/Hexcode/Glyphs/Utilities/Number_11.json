@@ -5,11 +5,18 @@
   "Description": "hexcode.glyphs.Number_11.description",
   "ModelPath": "Number_11",
   "ShapeStructure": [
-    { "Parent": "Down", "StatContribution": 0 },
-    { "Parent": "Triangle", "StatContribution": 0 }
+    {
+      "Parent": "Down",
+      "StatContribution": 0
+    },
+    {
+      "Parent": "Triangle",
+      "StatContribution": 0
+    }
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Number_11.Next.name",
       "Description": "hexcode.glyphs.Number_11.Next.description"
@@ -22,5 +29,6 @@
   "ManaConsumption": 0,
   "Volatility": {
     "InstantCost": 0.1,
-    "DrainPerSecond": 0.0}
+    "DrainPerSecond": 0.0
+  }
 }

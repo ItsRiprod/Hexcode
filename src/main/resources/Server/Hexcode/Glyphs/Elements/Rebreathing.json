@@ -6,26 +6,38 @@
   "Description": "hexcode.glyphs.Rebreathing.description",
   "ModelPath": "Rebreathing",
   "BasePower": 1.0,
-  "ManaConsumption": 3.0,
+  "ManaConsumption": 25,
   "ShapeStructure": [
     "Square",
-    { "Parent": "Triangle", "RelativeSize": 0.8 },
-    { "Parent": "Triangle", "RelativeSize": 0.6 },
-    { "Parent": "Triangle", "RelativeSize": 0.4 }
+    {
+      "Parent": "Triangle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Triangle",
+      "RelativeSize": 0.6
+    },
+    {
+      "Parent": "Triangle",
+      "RelativeSize": 0.4
+    }
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Rebreathing.Next.name",
       "Description": "hexcode.glyphs.Rebreathing.Next.description"
     },
     "ResourceLimit": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Rebreathing.ResourceLimit.name",
       "Description": "hexcode.glyphs.Rebreathing.ResourceLimit.description",
       "DefaultValue": -1
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Rebreathing.immediate.name",
       "Description": "hexcode.glyphs.Rebreathing.immediate.description"
@@ -40,7 +52,7 @@
     "AffinityStat": "Affinity_Water"
   },
   "Volatility": {
-    "InstantCost": 0.1,
+    "InstantCost": 2,
     "DrainPerSecond": 0.2
   }
 }

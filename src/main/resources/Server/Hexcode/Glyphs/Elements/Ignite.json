@@ -12,26 +12,38 @@
   "Description": "hexcode.glyphs.Ignite.description",
   "ModelPath": "Ignite",
   "BasePower": 1.0,
-  "ManaConsumption": 3.0,
+  "ManaConsumption": 25,
   "ShapeStructure": [
     "Square",
-    { "Parent": "Antisquare", "RelativeSize": 0.8 },
-    { "Parent": "Antisquare", "RelativeSize": 0.6 },
-    { "Parent": "Antisquare", "RelativeSize": 0.4 }
+    {
+      "Parent": "Antisquare",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Antisquare",
+      "RelativeSize": 0.6
+    },
+    {
+      "Parent": "Antisquare",
+      "RelativeSize": 0.4
+    }
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Ignite.Next.name",
       "Description": "hexcode.glyphs.Ignite.Next.description"
     },
     "ResourceLimit": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Ignite.ResourceLimit.name",
       "Description": "hexcode.glyphs.Ignite.ResourceLimit.description",
       "DefaultValue": -1
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Ignite.immediate.name",
       "Description": "hexcode.glyphs.Ignite.immediate.description"
@@ -46,7 +58,7 @@
     "AffinityStat": "Affinity_Fire"
   },
   "Volatility": {
-    "InstantCost": 0.1,
+    "InstantCost": 2,
     "DrainPerSecond": 0.2
   }
 }

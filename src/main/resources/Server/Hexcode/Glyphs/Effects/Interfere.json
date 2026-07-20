@@ -21,18 +21,23 @@
   "Description": "hexcode.glyphs.Interfere.description",
   "ModelPath": "Interfere",
   "BasePower": 1.0,
-  "ManaConsumption": 1.5,
+  "ManaConsumption": 2,
   "ShapeStructure": [
     "Antisquare",
-    { "Parent": "Anticircle", "RelativeSize": 0.8 }
+    {
+      "Parent": "Anticircle",
+      "RelativeSize": 0.8
+    }
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Interfere.target.name",
       "Description": "hexcode.glyphs.Interfere.target.description"
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Interfere.Next.name",
       "Description": "hexcode.glyphs.Interfere.Next.description"

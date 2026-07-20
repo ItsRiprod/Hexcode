@@ -15,7 +15,7 @@
   "Description": "hexcode.glyphs.Disguise.description",
   "ModelPath": "Disguise",
   "BasePower": 1.0,
-  "ManaConsumption": 2.8,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Triangle",
     {
@@ -29,18 +29,21 @@
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Disguise.target.name",
       "Description": "hexcode.glyphs.Disguise.target.description",
       "Unique": true
     },
     "reference": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Disguise.reference.name",
       "Description": "hexcode.glyphs.Disguise.reference.description",
       "Unique": true
     },
     "Duration": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Disguise.duration.name",
       "Description": "hexcode.glyphs.Disguise.duration.description",
@@ -48,11 +51,13 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Disguise.Next.name",
       "Description": "hexcode.glyphs.Disguise.Next.description"
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Disguise.immediate.name",
       "Description": "hexcode.glyphs.Disguise.immediate.description"

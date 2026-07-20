@@ -5,20 +5,28 @@
   "Description": "hexcode.glyphs.Domain.description",
   "ModelPath": "Domain",
   "BasePower": 1.0,
-  "ManaConsumption": 3.0,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Square",
-    { "Parent": "Square", "RelativeSize": 0.75 },
-    { "Parent": "Square", "RelativeSize": 0.5 }
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.75
+    },
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.5
+    }
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Domain.target.name",
       "Description": "hexcode.glyphs.Domain.target.description",
       "Unique": true
     },
     "Magnitude": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Domain.magnitude.name",
       "Description": "hexcode.glyphs.Domain.magnitude.description",
@@ -31,6 +39,7 @@
       }
     },
     "Duration": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Domain.duration.name",
       "Description": "hexcode.glyphs.Domain.duration.description",
@@ -38,6 +47,7 @@
       "Unique": true
     },
     "Power": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Domain.power.name",
       "Description": "hexcode.glyphs.Domain.power.description",
@@ -50,11 +60,13 @@
       }
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Domain.Next.name",
       "Description": "hexcode.glyphs.Domain.Next.description"
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Domain.immediate.name",
       "Description": "hexcode.glyphs.Domain.immediate.description"
