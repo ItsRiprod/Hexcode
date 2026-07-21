@@ -17,11 +17,17 @@
   "Description": "hexcode.glyphs.Interact.description",
   "ModelPath": "Interact",
   "BasePower": 1.0,
-  "ManaConsumption": 0.3,
+  "ManaConsumption": 0.1,
   "ShapeStructure": [
     "Circle",
-    { "Parent": "Circle", "RelativeSize": 0.8 },
-    { "Parent": "Circle", "RelativeSize": 0.55 }
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.55
+    }
   ],
   "Slots": {
     "Target": {

@@ -68,5 +68,8 @@
         "Id": "Arcanebench"
       }
     ]
+  },
+  "Light": {
+    "Color": "#522"
   }
 }

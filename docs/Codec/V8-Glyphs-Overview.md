@@ -1,10 +1,11 @@
 ---
-title: "Glyph Index"
+title: "V8 Glyph Index"
 order: 1
 published: true
 draft: false
 ---
-# Introduction
+# V8 Glyph Index
+> All of the following shapes are from the v0.8.X version of Hexcode for backwards compatibility reasons.
 
 Hexcode is built upon Three Basic Shapes. That is…
 

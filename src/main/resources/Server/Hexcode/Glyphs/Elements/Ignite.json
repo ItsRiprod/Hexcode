@@ -12,7 +12,7 @@
   "Description": "hexcode.glyphs.Ignite.description",
   "ModelPath": "Ignite",
   "BasePower": 1.0,
-  "ManaConsumption": 25,
+  "ManaConsumption": 15,
   "ShapeStructure": [
     "Square",
     {

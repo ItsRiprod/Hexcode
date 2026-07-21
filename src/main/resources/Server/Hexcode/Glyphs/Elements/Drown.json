@@ -6,7 +6,7 @@
   "Description": "hexcode.glyphs.Drown.description",
   "ModelPath": "Drown",
   "BasePower": 1.0,
-  "ManaConsumption": 25,
+  "ManaConsumption": 15,
   "ShapeStructure": [
     "Circle",
     {

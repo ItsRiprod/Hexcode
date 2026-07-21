@@ -36,15 +36,15 @@ hexstaff.style.arc=<color is="#cc88ff"><b>Arc</b></color> <color is="#aaaaaa">St
 hexstaff.style.sphere=<color is="#cc88ff"><b>Sphere</b></color> <color is="#aaaaaa">Style</color>
 
 hexstaff.basic.crude.name=Crude Hex Staff
-hexstaff.basic.crude.stats=<color is="#ffcc00"><b>+18-25</b></color> <color is="#aaaaaa">Volatility</color>\n<color is="#cc88ff"><b>+9-12.5</b></color> <color is="#aaaaaa">Elemental Arcane Bonus</color>
+hexstaff.basic.crude.stats=<color is="#ffcc00"><b>+18-25</b></color> <color is="#aaaaaa">Volatility</color>\n<color is="#cc88ff"><b>+1-8</b></color> <color is="#aaaaaa">Elemental Arcane Bonus</color>
 hexstaff.basic.crude.description=<msg key="hexcode.items.hexstaff.basic.crude.stats"/>\n<msg key="hexcode.items.hexstaff.charges.1"/>\n<msg key="hexcode.items.hexstaff.style.ring"/><msg key="hexcode.items.hexstaff.body"/>
 
 hexstaff.basic.bronze.name=Bronze Hex Staff
-hexstaff.basic.bronze.stats=<color is="#ffcc00"><b>+25-36</b></color> <color is="#aaaaaa">Volatility</color>\n<color is="#cc88ff"><b>+12.5-18</b></color> <color is="#aaaaaa">Elemental Arcane Bonus</color>
+hexstaff.basic.bronze.stats=<color is="#ffcc00"><b>+25-36</b></color> <color is="#aaaaaa">Volatility</color>\n<color is="#cc88ff"><b>+7-13</b></color> <color is="#aaaaaa">Elemental Arcane Bonus</color>
 hexstaff.basic.bronze.description=<msg key="hexcode.items.hexstaff.basic.bronze.stats"/>\n<msg key="hexcode.items.hexstaff.charges.2"/>\n<msg key="hexcode.items.hexstaff.style.ring"/><msg key="hexcode.items.hexstaff.body"/>
 
 hexstaff.basic.copper.name=Copper Hex Staff
-hexstaff.basic.copper.stats=<color is="#ffcc00"><b>+22-32</b></color> <color is="#aaaaaa">Volatility</color>\n<color is="#cc88ff"><b>+11-16</b></color> <color is="#aaaaaa">Elemental Arcane Bonus</color>
+hexstaff.basic.copper.stats=<color is="#ffcc00"><b>+22-32</b></color> <color is="#aaaaaa">Volatility</color>\n<color is="#cc88ff"><b>+7-13</b></color> <color is="#aaaaaa">Elemental Arcane Bonus</color>
 hexstaff.basic.copper.description=<msg key="hexcode.items.hexstaff.basic.copper.stats"/>\n<msg key="hexcode.items.hexstaff.charges.3"/>\n<msg key="hexcode.items.hexstaff.style.ring"/><msg key="hexcode.items.hexstaff.body"/>
 
 hexstaff.basic.iron.name=Iron Hex Staff
@@ -88,7 +88,7 @@ hexstaff.special.astral.stats=<color is="#ffcc00"><b>+30-60</b></color> <color i
 hexstaff.special.astral.description=<msg key="hexcode.items.hexstaff.special.astral.stats"/>\n<msg key="hexcode.items.hexstaff.charges.8"/>\n<msg key="hexcode.items.hexstaff.style.sphere"/><msg key="hexcode.items.hexstaff.body"/>
 
 hexstaff.special.arcane.name=Arcane Hex Staff
-hexstaff.special.arcane.stats=<color is="#ffcc00"><b>+30-60</b></color> <color is="#aaaaaa">Volatility</color>\n<color is="#cc88ff"><b>+30-60</b></color> <color is="#aaaaaa">Elemental Arcane Bonus</color>
+hexstaff.special.arcane.stats=<color is="#ffcc00"><b>+40-70</b></color> <color is="#aaaaaa">Volatility</color>\n<color is="#cc88ff"><b>+30-60</b></color> <color is="#aaaaaa">Elemental Arcane Bonus</color>
 hexstaff.special.arcane.description=<msg key="hexcode.items.hexstaff.special.arcane.stats"/>\n<msg key="hexcode.items.hexstaff.charges.10"/>\n<msg key="hexcode.items.hexstaff.style.ring"/><msg key="hexcode.items.hexstaff.body"/>
 
 ingredient.essence.fire_concentrated=Greater Essence of Fire

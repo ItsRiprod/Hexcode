@@ -5,7 +5,7 @@
   "Description": "hexcode.glyphs.Concentration.description",
   "ModelPath": "Concentration",
   "BasePower": 0,
-  "ManaConsumption": 5,
+  "ManaConsumption": 2,
   "ShapeStructure": [
     "Triangle",
     {

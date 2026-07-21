@@ -12,6 +12,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.component.FlycastingState;
+import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils.FlycastingDragHandler;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils.FlycastingHover;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
@@ -46,7 +47,10 @@ public class FlycastingTickSystem extends EntityTickingSystem<EntityStore> {
 
             GlyphPositioner.PositionGlyphs(buffer, player, castingRootRef);
 
-            if (capture != null) {
+            CasterComponent caster = chunk.getComponent(index, CasterComponent.getComponentType());
+            boolean inContext = caster != null
+                    && FlycastingState.CONTEXT_ID.equals(caster.getCurrentContext());
+            if (capture != null && inContext) {
                 if (capture.getDraggingHex() != null && state.getDraggingHex() == null) {
                     FlycastingDragHandler.beginDrag(buffer, player, state, capture, capture.getDraggingHex());
                 }

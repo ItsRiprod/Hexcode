@@ -6,7 +6,7 @@
   "Description": "hexcode.glyphs.MageArmor.description",
   "ModelPath": "MageArmor",
   "BasePower": 1.0,
-  "ManaConsumption": 25,
+  "ManaConsumption": 15,
   "ShapeStructure": [
     "Square",
     {

@@ -20,7 +20,7 @@
   "Description": "hexcode.glyphs.Glaciate.description",
   "ModelPath": "Glaciate",
   "BasePower": 1.0,
-  "ManaConsumption": 5,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Anticircle",
     {
