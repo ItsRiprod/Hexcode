@@ -73,6 +73,11 @@ public class ProjectileGlyph implements GlyphHandler {
     }
 
     @Override
+    public float collectMana(Glyph glyph, GlyphAsset asset) {
+        return isPassive(glyph) ? PASSIVE_FLOOR : GlyphHandler.super.collectMana(glyph, asset);
+    }
+
+    @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         return isPassive(glyph) ? PASSIVE_FLOOR
                 : GlyphHandler.super.getVolatilityCost(glyph, hexContext, asset);

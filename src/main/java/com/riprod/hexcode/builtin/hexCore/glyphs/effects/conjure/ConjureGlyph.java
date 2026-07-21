@@ -76,13 +76,22 @@ public class ConjureGlyph implements GlyphHandler {
         return glyph.getNextLinks().isEmpty() && !hasLinks(glyph, ConjureGlyphSlots.IMMEDIATE);
     }
 
+    @Override
+    public float collectMana(Glyph glyph, GlyphAsset asset) {
+        if (isPassive(glyph))
+            return PASSIVE_FLOOR;
+        if (asset == null)
+            return 0f;
+        return asset.getManaConsumption()
+                * ((1 - glyph.getEfficiency()) * 0.25f + 0.75f);
+    }
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        if (isPassive(glyph)) return PASSIVE_FLOOR;
 
         ConjureConfig config = getConfig(ConjureConfig.class, asset);
-        if (config == null) config = ConjureConfig.DEFAULTS;
+        if (config == null)
+            config = ConjureConfig.DEFAULTS;
         double half = config.getBoxHalfExtent();
 
         Vector3d a = HexVarUtil.position(
@@ -102,16 +111,23 @@ public class ConjureGlyph implements GlyphHandler {
             volume = dx * dy * dz;
         }
 
+        float passiveImpact = 1.0f;
+        if (isPassive(glyph)) {
+            passiveImpact = 0.1f;
+        }
+
         Impact impact = asset == null || asset.getConfig() == null
-                ? null : asset.getConfig().getVolatilityImpact();
-        return glyph.computeBaseCost(asset) * Impact.scale(impact, volume);
+                ? null
+                : asset.getConfig().getVolatilityImpact();
+        return glyph.computeBaseCost(asset) * Impact.scale(impact, volume) * passiveImpact;
     }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         ConjureConfig config = getConfig(ConjureConfig.class, asset);
-        if (config == null) config = ConjureConfig.DEFAULTS;
+        if (config == null)
+            config = ConjureConfig.DEFAULTS;
         double half = config.getBoxHalfExtent();
 
         HexVar coordsAVar = glyph.readSlot(ConjureGlyphSlots.COORDS_A, hexContext,
@@ -189,7 +205,7 @@ public class ConjureGlyph implements GlyphHandler {
                 asset.getSlot(ConjureGlyphSlots.HITBOX)).doubleValue();
         String collisionId = hitboxMode > 0 ? config.getHardCollisionId()
                 : hitboxMode < 0 ? config.getSoftCollisionId()
-                : null;
+                        : null;
         HitboxCollisionConfig collisionConfig = collisionId != null
                 ? HitboxCollisionConfig.getAssetMap().getAsset(collisionId)
                 : null;
@@ -201,7 +217,8 @@ public class ConjureGlyph implements GlyphHandler {
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());
         if (hexContext.getColors().getPrimaryAlpha() != 0f) {
-            Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+            Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext,
+                    GlyphAsset.getAssetMap().getAsset(ID));
             DebugComponent debugComp = new DebugComponent(DebugShape.Cube, debugColor, size, 0.1f);
             debugComp.setOpacity(hexContext.getColors().getPrimaryAlpha() * 0.5f);
             debugComp.setIntervalMultiplier(0.01f);
@@ -230,9 +247,11 @@ public class ConjureGlyph implements GlyphHandler {
                     -halfExtents.x, -halfExtents.y, -halfExtents.z,
                     halfExtents.x, halfExtents.y, halfExtents.z);
             Model model = new Model(
-                    modelAsset.getId(), 1.0f, (Map<String, String>) null, modelAsset.getAttachments(null),
+                    modelAsset.getId(), 1.0f, (Map<String, String>) null,
+                    modelAsset.getAttachments(null),
                     modelBox, modelAsset.getModel(), modelAsset.getTexture(),
-                    modelAsset.getGradientSet(), modelAsset.getGradientId(), modelAsset.getEyeHeight(),
+                    modelAsset.getGradientSet(), modelAsset.getGradientId(),
+                    modelAsset.getEyeHeight(),
                     modelAsset.getCrouchOffset(), modelAsset.getSittingOffset(),
                     modelAsset.getSleepingOffset(),
                     modelAsset.getAnimationSetMap(), modelAsset.getCamera(),
