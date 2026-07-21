@@ -27,6 +27,12 @@ public class CoreHexExecuter {
     private CoreHexExecuter() {
     }
 
+    /**
+     * Handler for the post-gate execution after the ECS event is emitted and
+     * mutated.
+     * 
+     * Should not be called directly, but rather through the HexExecuter.
+     */
     public static void runPostGate(HexContext context, CommandBuffer<EntityStore> buffer) {
         context.updateRuntimeAccessors(buffer);
 
@@ -66,34 +72,79 @@ public class CoreHexExecuter {
         continueExecution(List.of(startingGlyph), context);
     }
 
-    public static void continueFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {
+    /**
+     * Continues the execution of the branch from a specific slot - adding the
+     * glyphs to the queue for tick-deferral and handles proper branch
+     * copying/tracking.
+     * Ends branch if list is empty.
+     */
+    public static boolean continueFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {
         Slot slot = glyph.getSlot(slotKey);
-        if (slot == null)
-            return;
-        String[] links = slot.getLinks();
-        if (links.length == 0)
-            return;
-        continueExecution(Arrays.asList(links), hexContext);
+        List<String> links = slot != null ? Arrays.asList(slot.getLinks()) : List.of();
+        return continueExecution(links, hexContext);
     }
 
-    public static void continueExecution(List<String> nextGlyphs, HexContext hexContext) {
+    /**
+     * Branches off of the primary execution flow to execute any glyphs connected to
+     * the slot in parallel.
+     * Adds glyphs to the execution queue and returns true if any glyphs were added,
+     * false otherwise.
+     */
+    public static boolean branchFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {
+        Slot slot = glyph.getSlot(slotKey);
+        if (slot == null)
+            return false;
+        return branchExecution(Arrays.asList(slot.getLinks()), hexContext);
+    }
+
+    /**
+     * Continues the execution of the branch - adding the glyphs to the queue for
+     * tick-deferral and handles proper branch copying/tracking.
+     * Ends branch if list is empty.
+     */
+    public static boolean continueExecution(List<String> nextGlyphs, HexContext hexContext) {
         if (nextGlyphs.isEmpty()) {
-            return;
+            hexContext.endBranch();
+            return false;
         }
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         if (accessor == null) {
             LOGGER.atSevere().log("continueExecution with null accessor; dropping %d glyph(s)", nextGlyphs.size());
-            return;
+            hexContext.endBranch();
+            return false;
         }
 
         HexExecutionQueue queue = accessor.getResource(HexExecutionQueue.getResourceType());
-        boolean multiBranch = nextGlyphs.size() > 1;
-
-        for (String nextNodeId : nextGlyphs) {
-            queue.enqueue(new HexExecutionQueue.PendingGlyph(nextNodeId,
-                    multiBranch ? hexContext.branch() : hexContext));
+        queue.enqueue(new HexExecutionQueue.PendingGlyph(nextGlyphs.get(0), hexContext));
+        if (nextGlyphs.size() > 1) {
+            branchExecution(nextGlyphs.subList(1, nextGlyphs.size()), hexContext);
         }
+        return true;
+    }
+
+    /**
+     * Branches off of the primary execution flow to execute the given glyphs in
+     * parallel.
+     * Adds glyphs to the execution queue and returns true if any glyphs were added,
+     * false otherwise.
+     */
+    public static boolean branchExecution(List<String> nextGlyphs, HexContext hexContext) {
+        if (nextGlyphs.isEmpty()) {
+            return false;
+        }
+
+        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        if (accessor == null) {
+            LOGGER.atSevere().log("branchExecution with null accessor; dropping %d glyph(s)", nextGlyphs.size());
+            return false;
+        }
+
+        HexExecutionQueue queue = accessor.getResource(HexExecutionQueue.getResourceType());
+        for (String nextNodeId : nextGlyphs) {
+            queue.enqueue(new HexExecutionQueue.PendingGlyph(nextNodeId, hexContext.branch()));
+        }
+        return true;
     }
 
     public static void executeQueuedGlyph(String nodeId, HexContext hexContext) {

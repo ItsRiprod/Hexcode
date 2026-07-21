@@ -70,4 +70,8 @@
 - Fix: Block and Item imbuements work again
 - Fix: when out of range of a pedestal in selection mode, you properly get removed
 
+- Feat: added `Target` slot to every elemental effect
+- Fix: updated `Levitate` to work on entities
+- Fix: updated branch `Ids` to properly track active branches to better guess when a spell has ended naturally 
+
 - Probably much more. I tried keeping a running note this time

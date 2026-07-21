@@ -51,6 +51,12 @@
       "Parent": "Next",
       "Label": "hexcode.glyphs.Freeze.immediate.name",
       "Description": "hexcode.glyphs.Freeze.immediate.description"
+    },
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Freeze.target.name",
+      "Description": "hexcode.glyphs.Freeze.target.description"
     }
   },
   "Config": {

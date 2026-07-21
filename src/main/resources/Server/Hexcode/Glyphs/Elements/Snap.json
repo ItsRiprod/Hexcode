@@ -35,6 +35,12 @@
       "Label": "hexcode.glyphs.Snap.ResourceLimit.name",
       "Description": "hexcode.glyphs.Snap.ResourceLimit.description",
       "DefaultValue": -1
+    },
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Snap.target.name",
+      "Description": "hexcode.glyphs.Snap.target.description"
     }
   },
   "Config": {

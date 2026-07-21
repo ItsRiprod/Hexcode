@@ -47,6 +47,12 @@
       "Parent": "Next",
       "Label": "hexcode.glyphs.Ignite.immediate.name",
       "Description": "hexcode.glyphs.Ignite.immediate.description"
+    },
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Ignite.target.name",
+      "Description": "hexcode.glyphs.Ignite.target.description"
     }
   },
   "Config": {

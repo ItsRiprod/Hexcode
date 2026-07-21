@@ -72,6 +72,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
 
         HexContext releaseCtx = HexContext.cloneState(heldCtx);
         releaseCtx.updateRuntimeAccessors(buffer);
+        releaseCtx.beginRootBranch();
 
         CasterStateComponent idle = buffer.getComponent(
                 casterRef, CasterStateComponent.getComponentType());

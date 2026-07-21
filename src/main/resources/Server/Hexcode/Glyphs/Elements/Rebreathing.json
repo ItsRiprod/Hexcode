@@ -41,6 +41,12 @@
       "Parent": "Next",
       "Label": "hexcode.glyphs.Rebreathing.immediate.name",
       "Description": "hexcode.glyphs.Rebreathing.immediate.description"
+    },
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Rebreathing.target.name",
+      "Description": "hexcode.glyphs.Rebreathing.target.description"
     }
   },
   "Config": {

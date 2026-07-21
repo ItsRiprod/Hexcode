@@ -56,8 +56,9 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
         UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
                 .getUuid();
 
-        hexContext.setDefaultVariable(new EntityVar(entityId, ctx.getEntityRef()));
-        HexExecuter.continueExecution(Arrays.asList(links), hexContext);
+        HexContext immediateCtx = hexContext.branch();
+        immediateCtx.setDefaultVariable(new EntityVar(entityId, ctx.getEntityRef()));
+        HexExecuter.continueExecution(Arrays.asList(links), immediateCtx);
     }
 
     @Override

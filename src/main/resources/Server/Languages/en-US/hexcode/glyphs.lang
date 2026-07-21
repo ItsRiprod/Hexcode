@@ -731,6 +731,8 @@ Scorch.Next.name=Next
 Scorch.Next.description=The next glyph in the execution chain
 Scorch.ResourceLimit.name=Complexity Limit
 Scorch.ResourceLimit.description=Caps how much Resource is used
+Scorch.target.name=Target
+Scorch.target.description=Variable containing the target to affect
 
 Ignite.name=Ignite
 Ignite.description=Sets the target ablaze, dealing fire damage over time
@@ -740,6 +742,8 @@ Ignite.Next.name=Next
 Ignite.Next.description=The next glyph in the execution chain
 Ignite.ResourceLimit.name=Complexity Limit
 Ignite.ResourceLimit.description=Caps how much Resource is used
+Ignite.target.name=Target
+Ignite.target.description=Variable containing the target to affect
 
 Snap.name=Snap
 Snap.description=Discharges accumulated complexity as a brittle burst of ice damage
@@ -747,6 +751,8 @@ Snap.Next.name=Next
 Snap.Next.description=The next glyph in the execution chain
 Snap.ResourceLimit.name=Complexity Limit
 Snap.ResourceLimit.description=Caps how much Resource is used
+Snap.target.name=Target
+Snap.target.description=Variable containing the target to affect
 
 Freeze.name=Freeze
 Freeze.description=Freezes the target, slowing its movement
@@ -756,6 +762,8 @@ Freeze.Next.name=Next
 Freeze.Next.description=The next glyph in the execution chain
 Freeze.ResourceLimit.name=Complexity Limit
 Freeze.ResourceLimit.description=Caps how much Resource is used
+Freeze.target.name=Target
+Freeze.target.description=Variable containing the target to affect
 
 Bolt.name=Bolt
 Bolt.description=Discharges accumulated complexity as an instant burst of lightning damage
@@ -763,6 +771,8 @@ Bolt.Next.name=Next
 Bolt.Next.description=The next glyph in the execution chain
 Bolt.ResourceLimit.name=Complexity Limit
 Bolt.ResourceLimit.description=Caps how much Resource is used
+Bolt.target.name=Target
+Bolt.target.description=Variable containing the target to affect
 
 Electrocute.name=Electrocute
 Electrocute.description=Electrocutes the target, making it faster
@@ -772,6 +782,8 @@ Electrocute.Next.name=Next
 Electrocute.Next.description=The next glyph in the execution chain
 Electrocute.ResourceLimit.name=Complexity Limit
 Electrocute.ResourceLimit.description=Caps how much Resource is used
+Electrocute.target.name=Target
+Electrocute.target.description=Variable containing the target to affect
 
 Drown.name=Drown
 Drown.description=Discharges accumulated complexity as a crushing surge of water damage
@@ -779,6 +791,8 @@ Drown.Next.name=Next
 Drown.Next.description=The next glyph in the execution chain
 Drown.ResourceLimit.name=Complexity Limit
 Drown.ResourceLimit.description=Caps how much Resource is used
+Drown.target.name=Target
+Drown.target.description=Variable containing the target to affect
 
 HealthSurge.name=Health Surge
 HealthSurge.description=Converts accumulated complexity into healing, restoring the target's health
@@ -786,6 +800,8 @@ HealthSurge.Next.name=Next
 HealthSurge.Next.description=The next glyph in the execution chain
 HealthSurge.ResourceLimit.name=Complexity Limit
 HealthSurge.ResourceLimit.description=Caps how much Resource is used
+HealthSurge.target.name=Target
+HealthSurge.target.description=Variable containing the target to affect
 
 MageArmor.name=Mage Armor
 MageArmor.description=Grants the target temporary hitpoints that absorb incoming damage for a duration
@@ -795,6 +811,8 @@ MageArmor.Next.name=Next
 MageArmor.Next.description=The next glyph in the execution chain
 MageArmor.ResourceLimit.name=Complexity Limit
 MageArmor.ResourceLimit.description=Caps how much Resource is used
+MageArmor.target.name=Target
+MageArmor.target.description=Variable containing the target to affect
 
 Rebreathing.name=Rebreathing
 Rebreathing.description=Fills the target's lungs with air, letting it breathe underwater for a duration
@@ -804,3 +822,5 @@ Rebreathing.Next.name=Next
 Rebreathing.Next.description=The next glyph in the execution chain
 Rebreathing.ResourceLimit.name=Complexity Limit
 Rebreathing.ResourceLimit.description=Caps how much Resource is used
+Rebreathing.target.name=Target
+Rebreathing.target.description=Variable containing the target to affect

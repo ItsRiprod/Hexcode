@@ -35,6 +35,12 @@
       "Label": "hexcode.glyphs.HealthSurge.ResourceLimit.name",
       "Description": "hexcode.glyphs.HealthSurge.ResourceLimit.description",
       "DefaultValue": -1
+    },
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.HealthSurge.target.name",
+      "Description": "hexcode.glyphs.HealthSurge.target.description"
     }
   },
   "Config": {

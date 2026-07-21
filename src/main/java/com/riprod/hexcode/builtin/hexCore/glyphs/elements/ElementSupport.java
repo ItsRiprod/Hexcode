@@ -22,6 +22,7 @@ import com.riprod.hexcode.utils.HexVarUtil;
 public final class ElementSupport {
 
     public static final String RESOURCE_LIMIT_SLOT = "ResourceLimit";
+    public static final String TARGET_SLOT = "Target";
     public static final String ARCANE_RESOURCE = "Arcane";
 
     private ElementSupport() {
@@ -44,7 +45,7 @@ public final class ElementSupport {
 
     @Nullable
     public static Ref<EntityStore> resolveTarget(Glyph glyph, HexContext hexContext) {
-        HexVar subject = hexContext.getDefaultVariable();
+        HexVar subject = glyph.readSlot(TARGET_SLOT, hexContext);
         EntityVar entityVar = subject != null ? HexVarUtil.resolveEntityVar(subject, hexContext) : null;
         if (entityVar == null) return null;
         Ref<EntityStore> ref = entityVar.getRef(hexContext.getAccessor());

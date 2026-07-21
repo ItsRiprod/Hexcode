@@ -41,6 +41,12 @@
       "Parent": "Next",
       "Label": "hexcode.glyphs.MageArmor.immediate.name",
       "Description": "hexcode.glyphs.MageArmor.immediate.description"
+    },
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.MageArmor.target.name",
+      "Description": "hexcode.glyphs.MageArmor.target.description"
     }
   },
   "Config": {
