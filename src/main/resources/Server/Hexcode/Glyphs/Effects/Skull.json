@@ -10,11 +10,13 @@
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Skull.target.name",
       "Description": "hexcode.glyphs.Skull.target.description"
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Skull.Next.name",
       "Description": "hexcode.glyphs.Skull.Next.description"
@@ -24,7 +26,7 @@
     "Type": "Interaction",
     "RootInteraction": "Flamethrower_Goblin_Primary"
   },
-  "ManaConsumption": 0,
+  "ManaConsumption": 80,
   "Volatility": {
     "InstantCost": 0.1,
     "DrainPerSecond": 0.0

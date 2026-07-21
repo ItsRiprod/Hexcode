@@ -3,6 +3,7 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 
 public final class ScaleConfig extends GlyphConfig {
@@ -13,6 +14,7 @@ public final class ScaleConfig extends GlyphConfig {
     private double maxMagnitude = 32.0;
     private double minDuration = 0.1;
     private float mountOffsetY = 2.5f;
+    private String scaleEffectId;
 
     public double getMinMagnitude() {
         return minMagnitude;
@@ -30,6 +32,10 @@ public final class ScaleConfig extends GlyphConfig {
         return mountOffsetY;
     }
 
+    public String getScaleEffectId() {
+        return scaleEffectId;
+    }
+
     public static final BuilderCodec<ScaleConfig> CODEC = BuilderCodec
             .builder(ScaleConfig.class, ScaleConfig::new, GlyphConfig.BASE_CODEC)
             .append(new KeyedCodec<>("MinMagnitude", Codec.DOUBLE, true),
@@ -43,6 +49,10 @@ public final class ScaleConfig extends GlyphConfig {
             .add()
             .append(new KeyedCodec<>("MountOffsetY", Codec.FLOAT, true),
                     (c, v) -> c.mountOffsetY = v, c -> c.mountOffsetY)
+            .add()
+            .append(new KeyedCodec<>("ScaleEffect", Codec.STRING, true),
+                    (c, v) -> c.scaleEffectId = v, c -> c.scaleEffectId)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
             .add()
             .build();
 }

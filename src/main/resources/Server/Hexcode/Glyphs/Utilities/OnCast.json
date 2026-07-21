@@ -16,6 +16,7 @@
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.OnCast.Next.name",
       "Description": "hexcode.glyphs.OnCast.Next.description"

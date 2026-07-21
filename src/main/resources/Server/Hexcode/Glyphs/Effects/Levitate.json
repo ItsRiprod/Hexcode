@@ -13,19 +13,27 @@
   "Description": "hexcode.glyphs.Levitate.description",
   "ModelPath": "Levitate",
   "BasePower": 1.0,
-  "ManaConsumption": 1.0,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Antisquare",
-    { "Parent": "Antitriangle", "RelativeSize": 0.8 },
-    { "Parent": "Anticircle", "RelativeSize": 0.6 }
+    {
+      "Parent": "Antitriangle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Anticircle",
+      "RelativeSize": 0.6
+    }
   ],
   "Slots": {
     "T": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Levitate.target.name",
       "Description": "hexcode.glyphs.Levitate.target.description"
     },
     "Intensity": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Levitate.intensity.name",
       "Description": "hexcode.glyphs.Levitate.intensity.description",
@@ -38,6 +46,7 @@
       }
     },
     "Duration": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Levitate.duration.name",
       "Description": "hexcode.glyphs.Levitate.duration.description",
@@ -45,11 +54,13 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Levitate.Next.name",
       "Description": "hexcode.glyphs.Levitate.Next.description"
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Levitate.immediate.name",
       "Description": "hexcode.glyphs.Levitate.immediate.description"

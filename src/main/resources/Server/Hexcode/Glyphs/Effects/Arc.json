@@ -15,19 +15,27 @@
   "Title": "hexcode.glyphs.Arc.name",
   "Description": "hexcode.glyphs.Arc.description",
   "ModelPath": "Arc",
-  "ManaConsumption": 2.0,
+  "ManaConsumption": 2,
   "ShapeStructure": [
     "Circle",
-    { "Parent": "Square", "RelativeSize": 0.8 },
-    { "Parent": "Circle", "RelativeSize": 0.55 }
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.55
+    }
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Arc.target.name",
       "Description": "hexcode.glyphs.Arc.target.description"
     },
     "Jump": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Arc.jump.name",
       "Description": "hexcode.glyphs.Arc.jump.description",
@@ -35,6 +43,7 @@
       "Unique": true
     },
     "Delay": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Arc.delay.name",
       "Description": "hexcode.glyphs.Arc.delay.description",
@@ -42,6 +51,7 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Arc.Next.name",
       "Description": "hexcode.glyphs.Arc.Next.description"

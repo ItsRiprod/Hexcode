@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
 
 public class DisguiseState implements ConstructState {
 
     private UUID constructId;
     private float remainingSeconds;
+    @Nullable
+    private String effectId;
     private List<String> nextGlyphIds;
 
     public DisguiseState() {
@@ -17,14 +21,25 @@ public class DisguiseState implements ConstructState {
         this.nextGlyphIds = new ArrayList<>();
     }
 
-    public DisguiseState(UUID constructId, float remainingSeconds, List<String> nextGlyphIds) {
+    public DisguiseState(UUID constructId, float remainingSeconds, @Nullable String effectId,
+            List<String> nextGlyphIds) {
         this.constructId = constructId;
         this.remainingSeconds = remainingSeconds;
+        this.effectId = effectId;
         this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
     }
 
     public UUID getConstructId() {
         return constructId;
+    }
+
+    public void setEffectId(@Nullable String effectId) {
+        this.effectId = effectId;
+    }
+
+    @Nullable
+    public String getEffectId() {
+        return effectId;
     }
 
     public void setRemainingSeconds(float seconds) {
@@ -49,6 +64,6 @@ public class DisguiseState implements ConstructState {
 
     @Override
     public DisguiseState copy() {
-        return new DisguiseState(constructId, remainingSeconds, new ArrayList<>(nextGlyphIds));
+        return new DisguiseState(constructId, remainingSeconds, effectId, new ArrayList<>(nextGlyphIds));
     }
 }

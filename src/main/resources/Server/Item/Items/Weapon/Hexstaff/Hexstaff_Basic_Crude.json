@@ -72,7 +72,7 @@
   },
   "InteractionVars": {
     "HexTier1": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -85,7 +85,7 @@
               "InitialVolatility": 18,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 9
+                "Arcane": 1
               }
             },
             "Style": "Hexstaff_Basic_Crude"
@@ -94,7 +94,7 @@
       ]
     },
     "HexTier2": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -107,7 +107,7 @@
               "InitialVolatility": 20,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 10
+                "Arcane": 4
               }
             },
             "Style": "Hexstaff_Basic_Crude"
@@ -116,7 +116,7 @@
       ]
     },
     "HexTier3": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -129,7 +129,7 @@
               "InitialVolatility": 23,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 11.5
+                "Arcane": 6
               }
             },
             "Style": "Hexstaff_Basic_Crude"
@@ -138,7 +138,7 @@
       ]
     },
     "HexTier4": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -151,7 +151,7 @@
               "InitialVolatility": 25,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 12.5
+                "Arcane": 8
               }
             },
             "Style": "Hexstaff_Basic_Crude"

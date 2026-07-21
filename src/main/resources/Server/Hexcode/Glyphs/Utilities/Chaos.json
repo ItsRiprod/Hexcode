@@ -14,6 +14,7 @@
   ],
   "Slots": {
     "min": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Chaos.min.name",
       "Description": "hexcode.glyphs.Chaos.min.description",
@@ -21,6 +22,7 @@
       "Unique": true
     },
     "max": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Chaos.max.name",
       "Description": "hexcode.glyphs.Chaos.max.description",
@@ -28,6 +30,7 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Chaos.Next.name",
       "Description": "hexcode.glyphs.Chaos.Next.description"

@@ -10,6 +10,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIDisplayMode;
 
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 
 public class HexStats {
@@ -24,6 +25,8 @@ public class HexStats {
     private Map<String, Float> initialResources;
     private UUID executionId;
     private transient String slotKey;
+    private final transient LongOpenHashSet activeBranches = new LongOpenHashSet();
+    private transient long branchIdSeq = 0L;
 
     public HexStats() {
     }
@@ -66,6 +69,20 @@ public class HexStats {
     public float consumeVolatility(float cost) {
         this.currentVolatility = Math.max(0f, this.currentVolatility - cost * volatilityMultiplier);
         return this.currentVolatility;
+    }
+
+    public long openBranch() {
+        long id = ++branchIdSeq;
+        activeBranches.add(id);
+        return id;
+    }
+
+    public void closeBranch(long id) {
+        activeBranches.remove(id);
+    }
+
+    public int getActiveBranchCount() {
+        return activeBranches.size();
     }
 
     public float getResource(String id) {

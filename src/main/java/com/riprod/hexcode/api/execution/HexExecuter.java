@@ -8,10 +8,8 @@ import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.CoreHexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class HexExecuter {
@@ -32,14 +30,12 @@ public class HexExecuter {
         buffer.invoke(new HexCastEvent(context));
     }
 
-    public static void continueFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {
-        Slot slot = glyph.getSlot(slotKey);
-        if (slot == null)
-            return;
-        String[] links = slot.getLinks();
-        if (links.length == 0)
-            return;
-        continueExecution(Arrays.asList(links), hexContext);
+    public static boolean continueFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {
+        return CoreHexExecuter.continueFromSlot(glyph, slotKey, hexContext);
+    }
+
+    public static boolean branchFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {
+        return CoreHexExecuter.branchFromSlot(glyph, slotKey, hexContext);
     }
 
     public static void fail(HexContext hexContext) {
@@ -68,9 +64,16 @@ public class HexExecuter {
             String detail, Throwable cause) {
         HytaleServer.get().getEventBus().dispatchFor(GlyphFizzleEvent.class)
                 .dispatch(new GlyphFizzleEvent(glyph, reason, hexContext, detail, cause));
+        if (hexContext != null) {
+            hexContext.endBranch();
+        }
     }
 
-    public static void continueExecution(List<String> nextGlyphs, HexContext hexContext) {
-        CoreHexExecuter.continueExecution(nextGlyphs, hexContext);
+    public static boolean continueExecution(List<String> nextGlyphs, HexContext hexContext) {
+        return CoreHexExecuter.continueExecution(nextGlyphs, hexContext);
+    }
+
+    public static boolean branchExecution(List<String> nextGlyphs, HexContext hexContext) {
+        return CoreHexExecuter.branchExecution(nextGlyphs, hexContext);
     }
 }

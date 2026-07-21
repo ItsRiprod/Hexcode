@@ -21,20 +21,28 @@
   "Description": "hexcode.glyphs.Gust.description",
   "ModelPath": "Gust",
   "BasePower": 1.0,
-  "ManaConsumption": 1.0,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Circle",
-    { "Parent": "Antisquare", "RelativeSize": 0.8 },
-    { "Parent": "Circle", "RelativeSize": 0.6 }
+    {
+      "Parent": "Antisquare",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.6
+    }
   ],
   "Slots": {
     "Center": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Gust.center.name",
       "Description": "hexcode.glyphs.Gust.center.description",
       "Unique": true
     },
     "Radius": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Gust.radius.name",
       "Description": "hexcode.glyphs.Gust.radius.description",
@@ -42,6 +50,7 @@
       "Unique": true
     },
     "Magnitude": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Gust.magnitude.name",
       "Description": "hexcode.glyphs.Gust.magnitude.description",
@@ -49,6 +58,7 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Gust.Next.name",
       "Description": "hexcode.glyphs.Gust.Next.description"

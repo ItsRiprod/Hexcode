@@ -5,19 +5,27 @@
   "Description": "hexcode.glyphs.Terraform.description",
   "ModelPath": "Terraform",
   "BasePower": 1.0,
-  "ManaConsumption": 7.0,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Square",
-    { "Parent": "Antisquare", "RelativeSize": 0.8 },
-    { "Parent": "Square", "RelativeSize": 0.55 }
+    {
+      "Parent": "Antisquare",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.55
+    }
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Terraform.target.name",
       "Description": "hexcode.glyphs.Terraform.target.description"
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Terraform.Next.name",
       "Description": "hexcode.glyphs.Terraform.Next.description"

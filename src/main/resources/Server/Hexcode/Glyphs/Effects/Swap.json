@@ -13,26 +13,35 @@
   "Description": "hexcode.glyphs.Swap.description",
   "ModelPath": "Swap",
   "BasePower": 1.0,
-  "ManaConsumption": 0,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Antitriangle",
-    { "Parent": "Circle", "RelativeSize": 0.8 },
-    { "Parent": "Antitriangle", "RelativeSize": 0.55 }
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Antitriangle",
+      "RelativeSize": 0.55
+    }
   ],
   "Slots": {
     "a": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Swap.a.name",
       "Description": "hexcode.glyphs.Swap.a.description",
       "Unique": true
     },
     "b": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Swap.b.name",
       "Description": "hexcode.glyphs.Swap.b.description",
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Swap.Next.name",
       "Description": "hexcode.glyphs.Swap.Next.description"

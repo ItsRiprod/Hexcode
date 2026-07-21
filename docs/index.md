@@ -63,3 +63,4 @@ _Welcome to the craft. The door is open._
 ### [Advanced Crafting](Advanced-Magic)
 ### [Working with Variables](Working-With-Variables)
 ### [Shapes](Glyph-Index)
+### [Legacy Shapes](V8-Glyph-Index)

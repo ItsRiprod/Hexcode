@@ -13,12 +13,14 @@
   ],
   "Slots": {
     "a": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Floor.a.name",
       "Description": "hexcode.glyphs.Floor.a.description",
       "DefaultValue": 0
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Floor.Next.name",
       "Description": "hexcode.glyphs.Floor.Next.description"

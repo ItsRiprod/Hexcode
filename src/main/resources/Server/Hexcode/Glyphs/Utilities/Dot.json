@@ -11,16 +11,19 @@
   ],
   "Slots": {
     "v": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Dot.v.name",
       "Description": "hexcode.glyphs.Dot.v.description"
     },
     "w": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Dot.w.name",
       "Description": "hexcode.glyphs.Dot.w.description"
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Dot.Next.name",
       "Description": "hexcode.glyphs.Dot.Next.description"

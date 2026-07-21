@@ -45,7 +45,8 @@ public class CasterStateComponent implements Component<EntityStore> {
     public void pruneCompletedTrackers() {
         if (activeTrackers == null || activeTrackers.isEmpty())
             return;
-        activeTrackers.removeIf(t -> t == null || t.getCurrentVolatility() <= 0f);
+        activeTrackers.removeIf(t -> t == null || t.getCurrentVolatility() <= 0f
+                || t.getActiveBranchCount() <= 0);
     }
 
     public int getActiveCount() {

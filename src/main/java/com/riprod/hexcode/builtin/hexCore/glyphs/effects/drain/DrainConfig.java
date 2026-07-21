@@ -3,6 +3,7 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.drain;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 
 public final class DrainConfig extends GlyphConfig {
@@ -15,6 +16,7 @@ public final class DrainConfig extends GlyphConfig {
     private float defaultDrainPercent = 15.0f;
     private float hpFloor = 1.0f;
     private float durationFloor = 0.01f;
+    private String drainEffectId;
 
     public float getHpToManaRate() {
         return hpToManaRate;
@@ -40,6 +42,10 @@ public final class DrainConfig extends GlyphConfig {
         return durationFloor;
     }
 
+    public String getDrainEffectId() {
+        return drainEffectId;
+    }
+
     public static final BuilderCodec<DrainConfig> CODEC = BuilderCodec
             .builder(DrainConfig.class, DrainConfig::new, GlyphConfig.BASE_CODEC)
             .append(new KeyedCodec<>("HpToManaRate", Codec.FLOAT, true),
@@ -59,6 +65,10 @@ public final class DrainConfig extends GlyphConfig {
             .add()
             .append(new KeyedCodec<>("DurationFloor", Codec.FLOAT, true),
                     (c, v) -> c.durationFloor = v, c -> c.durationFloor)
+            .add()
+            .append(new KeyedCodec<>("DrainEffect", Codec.STRING, true),
+                    (c, v) -> c.drainEffectId = v, c -> c.drainEffectId)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
             .add()
             .build();
 }

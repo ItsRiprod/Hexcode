@@ -47,6 +47,7 @@ public class HexContext {
     private transient boolean consumeMana = true;
     private transient boolean applyVolatilityDecay = true;
     private transient boolean bypassVolatilityDepletion = false;
+    private transient long branchId = -1L;
 
     public HexContext() {
     }
@@ -59,6 +60,7 @@ public class HexContext {
         this.style = style;
         this.executionId = UUID.randomUUID();
         setHexStats(hexStats);
+        this.branchId = hexStats != null ? hexStats.openBranch() : -1L;
     }
 
     public HexContext applyNonDefaultsFrom(@Nullable HexContext other) {
@@ -110,7 +112,24 @@ public class HexContext {
         branch.consumeMana = this.consumeMana;
         branch.applyVolatilityDecay = this.applyVolatilityDecay;
         branch.bypassVolatilityDepletion = this.bypassVolatilityDepletion;
+        branch.branchId = this.hexStats != null ? this.hexStats.openBranch() : -1L;
         return branch;
+    }
+
+    public long getBranchId() {
+        return branchId;
+    }
+
+    public void beginRootBranch() {
+        if (hexStats != null && branchId < 0L) {
+            this.branchId = hexStats.openBranch();
+        }
+    }
+
+    public void endBranch() {
+        if (hexStats != null) {
+            hexStats.closeBranch(branchId);
+        }
     }
 
     public CommandBuffer<EntityStore> getAccessor() {

@@ -91,15 +91,20 @@ public final class ContextTransitionService {
             return;
         }
 
-        forfeitDrawCapture(buffer, player);
+        settleDrawCapture(buffer, player);
         caster.setContext(null, 0);
         caster.clearInput();
         announce(buffer, player, null);
     }
 
-    // preemption and service-driven exits forfeit any in-flight draw; the blackboard is
-    // cleared BEFORE removal so the lifecycle's exit-commit cannot emit forfeited strokes
-    // into whichever context marker is still physically present
+    private static void settleDrawCapture(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
+        DrawCaptureComponent capture = buffer.getComponent(player, DrawCaptureComponent.getComponentType());
+        if (capture == null) {
+            return;
+        }
+        cancelDragAndRemove(buffer, player, capture);
+    }
+
     private static void forfeitDrawCapture(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
         DrawCaptureComponent capture = buffer.getComponent(player, DrawCaptureComponent.getComponentType());
         if (capture == null) {
@@ -109,6 +114,13 @@ public final class ContextTransitionService {
         capture.setStrokeActive(false);
         capture.getPendingShapes().clear();
         capture.setFinalizePending(false);
+        cancelDragAndRemove(buffer, player, capture);
+    }
+
+    private static void cancelDragAndRemove(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player,
+            DrawCaptureComponent capture) {
+        capture.setDraggingHex(null);
+        capture.consumeDragReleaseRequested();
         buffer.tryRemoveComponent(player, DrawCaptureComponent.getComponentType());
     }
 

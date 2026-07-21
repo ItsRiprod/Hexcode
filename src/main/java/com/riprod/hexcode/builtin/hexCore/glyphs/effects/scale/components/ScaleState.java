@@ -19,6 +19,8 @@ public class ScaleState implements ConstructState {
     private float remainingSeconds;
     @Nullable
     private String modelAssetId;
+    @Nullable
+    private String effectId;
     private List<String> nextGlyphIds;
 
     public ScaleState() {
@@ -27,12 +29,14 @@ public class ScaleState implements ConstructState {
     }
 
     public ScaleState(UUID constructId, float appliedMagnitude, @Nullable Ref<EntityStore> visualRef,
-            float remainingSeconds, @Nullable String modelAssetId, List<String> nextGlyphIds) {
+            float remainingSeconds, @Nullable String modelAssetId, @Nullable String effectId,
+            List<String> nextGlyphIds) {
         this.constructId = constructId;
         this.appliedMagnitude = appliedMagnitude;
         this.visualRef = visualRef;
         this.remainingSeconds = remainingSeconds;
         this.modelAssetId = modelAssetId;
+        this.effectId = effectId;
         this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
     }
 
@@ -70,6 +74,15 @@ public class ScaleState implements ConstructState {
         return modelAssetId;
     }
 
+    public void setEffectId(@Nullable String effectId) {
+        this.effectId = effectId;
+    }
+
+    @Nullable
+    public String getEffectId() {
+        return effectId;
+    }
+
     public void tick(float dt) {
         remainingSeconds -= dt;
     }
@@ -89,6 +102,6 @@ public class ScaleState implements ConstructState {
     @Override
     public ScaleState copy() {
         return new ScaleState(constructId, appliedMagnitude, visualRef, remainingSeconds, modelAssetId,
-                new ArrayList<>(nextGlyphIds));
+                effectId, new ArrayList<>(nextGlyphIds));
     }
 }

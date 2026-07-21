@@ -72,7 +72,7 @@
               "InitialVolatility": 25,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 12.5
+                "Arcane": 7
               }
             },
             "Style": "Hexstaff_Basic_Bronze"
@@ -94,7 +94,7 @@
               "InitialVolatility": 29,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 14.5
+                "Arcane": 9
               }
             },
             "Style": "Hexstaff_Basic_Bronze"
@@ -116,7 +116,7 @@
               "InitialVolatility": 32,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 16
+                "Arcane": 11
               }
             },
             "Style": "Hexstaff_Basic_Bronze"
@@ -138,7 +138,7 @@
               "InitialVolatility": 36,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 18
+                "Arcane": 13
               }
             },
             "Style": "Hexstaff_Basic_Bronze"

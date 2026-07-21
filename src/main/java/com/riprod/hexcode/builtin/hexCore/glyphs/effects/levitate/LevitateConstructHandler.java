@@ -9,6 +9,7 @@ import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig;
@@ -56,18 +57,27 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
         Ref<EntityStore> target = ctx.getEntityRef();
         if (target == null || !target.isValid())
             return;
-        Velocity vel = ctx.getBuffer().getComponent(target, Velocity.getComponentType());
-        if (vel == null)
-            return;
+        CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         double targetVy = Math.min(config.getRiseSpeedPerIntensity() * state.getAppliedIntensity(),
                 TERMINAL_VELOCITY);
-        double currentVy = VelocityUtil.currentVelocity(target, ctx.getBuffer()).y;
-        if (currentVy >= targetVy)
+        if (targetVy <= 0)
             return;
-        double delta = Math.min(targetVy - currentVy, config.getMaxCatchAccel() * dt);
-        if (delta <= 0)
-            return;
-        vel.addInstruction(new Vector3d(0, delta, 0), null, ChangeVelocityType.Add);
+
+        if (buffer.getComponent(target, Player.getComponentType()) != null) {
+            Velocity vel = buffer.getComponent(target, Velocity.getComponentType());
+            if (vel == null)
+                return;
+            double currentVy = VelocityUtil.currentVelocity(target, buffer).y;
+            if (currentVy >= targetVy)
+                return;
+            double delta = Math.min(targetVy - currentVy, config.getMaxCatchAccel() * dt);
+            if (delta <= 0)
+                return;
+            vel.addInstruction(new Vector3d(0, delta, 0), null, ChangeVelocityType.Add);
+        } else {
+            VelocityUtil.applyVelocity(target, new Vector3d(0, targetVy, 0),
+                    ChangeVelocityType.Set, null, buffer);
+        }
     }
 
     private void emitTickVfx(float dt, LevitateState state, LevitateConfig config,

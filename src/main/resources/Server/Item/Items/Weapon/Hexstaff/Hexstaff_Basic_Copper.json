@@ -81,7 +81,7 @@
   },
   "InteractionVars": {
     "HexTier1": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -94,7 +94,7 @@
               "InitialVolatility": 22,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 11
+                "Arcane": 7
               }
             },
             "Style": "Hexstaff_Basic_Copper"
@@ -103,7 +103,7 @@
       ]
     },
     "HexTier2": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -116,7 +116,7 @@
               "InitialVolatility": 25,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 12.5
+                "Arcane": 9
               }
             },
             "Style": "Hexstaff_Basic_Copper"
@@ -125,7 +125,7 @@
       ]
     },
     "HexTier3": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -138,7 +138,7 @@
               "InitialVolatility": 29,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 14.5
+                "Arcane": 11
               }
             },
             "Style": "Hexstaff_Basic_Copper"
@@ -147,7 +147,7 @@
       ]
     },
     "HexTier4": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -160,7 +160,7 @@
               "InitialVolatility": 32,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
-                "Arcane": 16
+                "Arcane": 13
               }
             },
             "Style": "Hexstaff_Basic_Copper"

@@ -13,18 +13,21 @@
   ],
   "Slots": {
     "a": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Modulo.a.name",
       "Description": "hexcode.glyphs.Modulo.a.description",
       "DefaultValue": 0
     },
     "b": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Modulo.b.name",
       "Description": "hexcode.glyphs.Modulo.b.description",
       "DefaultValue": 1
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Modulo.Next.name",
       "Description": "hexcode.glyphs.Modulo.Next.description"

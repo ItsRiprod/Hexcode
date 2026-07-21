@@ -33,13 +33,6 @@
           "Amount": 2
         }
       ],
-      "Volatility": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 250
-        }
-      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
@@ -102,26 +95,7 @@
   },
   "InteractionVars": {
     "HexTier1": {
-     "Interactions": [
-        {
-          "Parent": "CastSpell_Template",
-          "Type": "HexExecute",
-          "Effects": {
-            "ItemAnimationId": "HexExecution_Primary"
-          },
-          "Config": {
-            "HexStorageType": "ExecutionConfig",
-            "HexStats": {
-              "InitialVolatility": 30,
-              "VolatilityMultiplier": 1.0
-            },
-            "Style": "Hexstaff_Special_Arcane"
-          }
-        }
-      ]
-    },
-    "HexTier2": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -132,15 +106,18 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 40,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 30
+              }
             },
             "Style": "Hexstaff_Special_Arcane"
           }
         }
       ]
     },
-    "HexTier3": {
-     "Interactions": [
+    "HexTier2": {
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -151,15 +128,18 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 50,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 40
+              }
             },
             "Style": "Hexstaff_Special_Arcane"
           }
         }
       ]
     },
-    "HexTier4": {
-     "Interactions": [
+    "HexTier3": {
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -170,7 +150,32 @@
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
               "InitialVolatility": 60,
-              "VolatilityMultiplier": 1.0
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 50
+              }
+            },
+            "Style": "Hexstaff_Special_Arcane"
+          }
+        }
+      ]
+    },
+    "HexTier4": {
+      "Interactions": [
+        {
+          "Parent": "CastSpell_Template",
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "HexStats": {
+              "InitialVolatility": 70,
+              "VolatilityMultiplier": 1.0,
+              "InitialResources": {
+                "Arcane": 60
+              }
             },
             "Style": "Hexstaff_Special_Arcane"
           }
@@ -219,5 +224,9 @@
       ]
     }
   },
-  "Scale": 1.3
+  "Scale": 1.3,
+  "Light": {
+    "Color": "#357",
+    "Radius": 2
+  }
 }

@@ -12,12 +12,14 @@
   ],
   "Slots": {
     "color": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Output.color.name",
       "Description": "hexcode.glyphs.Output.color.description",
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Output.Next.name",
       "Description": "hexcode.glyphs.Output.Next.description"

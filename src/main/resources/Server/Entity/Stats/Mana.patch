@@ -12,7 +12,7 @@
         },
         {
           "Id": "NoDamageTaken",
-          "Delay": 15
+          "Delay": 5
         },
         {
           "Id": "Charging",

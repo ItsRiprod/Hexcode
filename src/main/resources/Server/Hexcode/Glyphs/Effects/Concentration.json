@@ -5,18 +5,23 @@
   "Description": "hexcode.glyphs.Concentration.description",
   "ModelPath": "Concentration",
   "BasePower": 0,
-  "ManaConsumption": 0,
+  "ManaConsumption": 2,
   "ShapeStructure": [
     "Triangle",
-    { "Parent": "Circle", "RelativeSize": 0.55 }
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.55
+    }
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Concentration.Next.name",
       "Description": "hexcode.glyphs.Concentration.Next.description"
     },
     "release": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Concentration.release.name",
       "Description": "hexcode.glyphs.Concentration.release.description"
@@ -24,7 +29,8 @@
   },
   "Volatility": {
     "InstantCost": 0.1,
-    "DrainPerSecond": 0.0},
+    "DrainPerSecond": 0.0
+  },
   "Style": {
     "PrimaryColor": "#00E5FF",
     "SecondaryColor": "#B2EBF2",

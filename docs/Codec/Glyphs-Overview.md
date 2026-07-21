@@ -79,6 +79,7 @@ Randomly generates a number between the Min (default 0\) and Max (default 1\) va
 ---
 
 ### \[𝟢\] Drain
+> Drain is in the middle of a refactor - it may not behave properly
 
 Used to modify Entity Stats like mana / stamina / health  
 Can be used to either gain knowledge of the target’s current stats OR to transfer from one stat to another (stamina \-\> mana or mana \-\> hp \- etc)  
@@ -171,6 +172,7 @@ Radial force explosion pushing all targets away from a center point. Small fixed
 ---
 
 ### \[□△□\] Growth\*
+> Growth is currently under development and may not heal properly
 
 Restores the natural state of targets. Heals entities, grows crops, repairs damaged blocks
 
@@ -201,6 +203,7 @@ Sets targets on fire. Fire does damage over time and can spread to adjacent flam
 ---
 
 ### \[□◯◇\] Burning Hands\*
+> Not implemented - shape structure pending change
 
 Shoots fire from your hands in a cone in front of you, selecting all entities as well in the area. Does some fire damage	
 
@@ -208,19 +211,13 @@ Shoots fire from your hands in a cone in front of you, selecting all entities as
 
 ### \[◯◯◯\] Interact
 
-On blocks\*: triggers block interactions remotely (opens doors, flips levers). The only glyph that can activate block interactions from a distance.
+On blocks\: triggers block interactions remotely (opens doors, flips levers). The only glyph that can activate block interactions from a distance.
 
 ---
 
 ### \[◯□◯\] Arc
 
 Chain lightning. Hops from entity to entity, executing one child glyph per hop in order. More children means more hops. Volatility is rechecked each hop, so long chains naturally fizzle out.
-
----
-
-### \[𝟢𝟢𝟢\] Freeze
-
-Slows down and freezes the target and makes the ground below them ice.
 
 ---
 
@@ -237,6 +234,7 @@ Spawns ice blocks above targets that fall with gravity. Deals impact damage base
 ---
 
 ### \[□◇□\] Terraform\*
+> Rebalancing to prevent abuse. Disabled
 
 Moves existing natural blocks (dirt, stone, sand, gravel) from one position to another. Block telekinesis. Only works on natural block types.
 
@@ -278,12 +276,36 @@ Clashing occurs when two domains interset. The domain with the higher Energy win
 
 Four-shape glyphs make up the elemental tier. Every element ships as a **pair**: a `◯`-leading **offensive** glyph that deals direct elemental damage, and a `□`-leading **defensive** glyph that applies a lingering **status condition** to the target.
 
-All tier 4 glyphs convert Complexity into Damage. Defensive will convert that into duration, offensive will convert that into raw damage output.
+All tier 4 glyphs convert a `Resource` into `Damage`. Defensive will convert that into duration, offensive will convert that into raw damage output.
+
+## Resources
+Accumulating `Resource` is the primary way of dealing damage in Hexcode.
+Larger spells will naturally accumulate more resources to expend on the glyph.
+
+Each shape pertains to a certain resource
+| Shape | Resource | Essence |
+| --- | --- | --- |
+| ◇ | Fire | Fire_Essence | 
+| △ | Water | Water_Essence |
+| ◯ | Lightning | Lightning_Essence |
+| □ | Life | Life_Essence |
+| 𝟢 | Ice | Ice_Essence |
+| ▽ | Void | Void_Essence |
+
+Whenever the shape appears in the hex, it will add to it's resource.
+
+For instance, Projectile (◯△) will add `+2 Lightning` and `+2 Water` resources. 
+
+At any moment, you can run a `Debug Glyph` (△△) to view the current resources accumulated
+
+> Note: Each time a GLYPH is executed, it becomes less and less effective. First execution is +2, second is +1.8, third is +1.5, etc. Eventually, it will contribute 0. Use a variety of glyphs to more effectively build up your `Resources`
+
+> Note x2: When an Elemental consumes a resource, it lowers **ALL** resources available. So choose wisely which elemental you hope to execute - as you can't choose them all.
 
 ---
 
 ## Fire
-
+*consumes the Fire resource*
 ### \[◯◇◇◇\] Scorch
 
 | Element | Type |
@@ -303,7 +325,7 @@ Applies the **Burning** condition. Fire damage over time that ticks for a durati
 ---
 
 ## Water
-
+*consumes the Water resource*
 ### \[◯△△△\] Drown
 
 | Element | Type |
@@ -323,7 +345,7 @@ Applies the **Drenched** condition. Soaks the target, leaving them dripping and 
 ---
 
 ## Lightning
-
+*consumes the Lightning resource*
 ### \[◯◯◯◯\] Bolt
 
 | Element | Type |
@@ -343,7 +365,7 @@ Applies the **Shocked** condition. Static charge that interrupts the target's ac
 ---
 
 ## Life
-
+*consumes the Life resource*
 ### \[◯□□□\] Health Surge
 
 | Element | Type |
@@ -363,7 +385,7 @@ Applies the **Mage Armor** condition. Gives temporary hitpoints equal to the pro
 ---
 
 ## Ice
-
+*consumes the Ice resource*
 ### \[◯𝟢𝟢𝟢\] Snap
 
 | Element | Type |
@@ -383,7 +405,7 @@ Applies the **Chilled** condition. Slows movement and attack speed, stacking tow
 ---
 
 ## Void
-
+*consumes the Void resource*
 ### \[◯▽▽▽\] Extinguish
 
 | Element | Type |

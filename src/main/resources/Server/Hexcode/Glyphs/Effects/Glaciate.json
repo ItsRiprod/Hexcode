@@ -20,20 +20,28 @@
   "Description": "hexcode.glyphs.Glaciate.description",
   "ModelPath": "Glaciate",
   "BasePower": 1.0,
-  "ManaConsumption": 3.0,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Anticircle",
-    { "Parent": "Square", "RelativeSize": 0.8 },
-    { "Parent": "Anticircle", "RelativeSize": 0.55 }
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Anticircle",
+      "RelativeSize": 0.55
+    }
   ],
   "Slots": {
     "Target": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Glaciate.target.name",
       "Description": "hexcode.glyphs.Glaciate.target.description",
       "Unique": true
     },
     "Offset": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Glaciate.offset.name",
       "Description": "hexcode.glyphs.Glaciate.offset.description",
@@ -41,6 +49,7 @@
       "Unique": true
     },
     "Duration": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Glaciate.duration.name",
       "Description": "hexcode.glyphs.Glaciate.duration.description",
@@ -48,11 +57,13 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Glaciate.Next.name",
       "Description": "hexcode.glyphs.Glaciate.Next.description"
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Glaciate.immediate.name",
       "Description": "hexcode.glyphs.Glaciate.immediate.description"

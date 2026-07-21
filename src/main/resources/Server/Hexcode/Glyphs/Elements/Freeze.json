@@ -16,29 +16,47 @@
   "Description": "hexcode.glyphs.Freeze.description",
   "ModelPath": "Freeze",
   "BasePower": 1.0,
-  "ManaConsumption": 2.0,
+  "ManaConsumption": 15,
   "ShapeStructure": [
     "Square",
-    { "Parent": "Anticircle", "RelativeSize": 0.8 },
-    { "Parent": "Anticircle", "RelativeSize": 0.6 },
-    { "Parent": "Anticircle", "RelativeSize": 0.4 }
+    {
+      "Parent": "Anticircle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Anticircle",
+      "RelativeSize": 0.6
+    },
+    {
+      "Parent": "Anticircle",
+      "RelativeSize": 0.4
+    }
   ],
   "Slots": {
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Freeze.Next.name",
       "Description": "hexcode.glyphs.Freeze.Next.description"
     },
     "ResourceLimit": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Freeze.ResourceLimit.name",
       "Description": "hexcode.glyphs.Freeze.ResourceLimit.description",
       "DefaultValue": -1
     },
     "Immediate": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Freeze.immediate.name",
       "Description": "hexcode.glyphs.Freeze.immediate.description"
+    },
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Freeze.target.name",
+      "Description": "hexcode.glyphs.Freeze.target.description"
     }
   },
   "Config": {
@@ -50,7 +68,7 @@
     "AffinityStat": "Affinity_Ice"
   },
   "Volatility": {
-    "InstantCost": 0.1,
+    "InstantCost": 2,
     "DrainPerSecond": 0.2
   }
 }

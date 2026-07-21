@@ -6,6 +6,8 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
+import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
@@ -24,6 +26,7 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
     public boolean onTick(float dt, HexStatus<ScaleState> status, ConstructTickContext ctx) {
         ScaleState state = status.getState();
         if (state == null) return true;
+        if (effectRemoved(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId())) return true;
         if (state.isExpired()) return true;
         state.tick(dt);
         return !drainSustain(dt, status);
@@ -67,6 +70,7 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
 
             if (targetRef != null && targetRef.isValid()) {
                 HexAppearanceService.removeLayer(buffer, targetRef, state.getConstructId().toString());
+                removeEffect(buffer, targetRef, state.getEffectId());
 
                 TransformComponent tc = buffer.getComponent(
                         targetRef, TransformComponent.getComponentType());
@@ -81,6 +85,29 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
             }
         } catch (Exception e) {
             LOGGER.atSevere().log("[hexcode] ScaleConstructHandler cleanup failed: %s", e.getMessage());
+        }
+    }
+
+    private static boolean effectRemoved(CommandBuffer<EntityStore> buffer,
+            Ref<EntityStore> target, String effectId) {
+        if (effectId == null || target == null || !target.isValid()) return false;
+        int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
+        if (effectIndex == Integer.MIN_VALUE) return false;
+        EffectControllerComponent controller = buffer.getComponent(
+                target, EffectControllerComponent.getComponentType());
+        return controller == null || !controller.hasEffect(effectIndex);
+    }
+
+    private static void removeEffect(CommandBuffer<EntityStore> buffer,
+            Ref<EntityStore> target, String effectId) {
+        if (effectId == null) return;
+        EffectControllerComponent controller = buffer.getComponent(
+                target, EffectControllerComponent.getComponentType());
+        if (controller != null) {
+            int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
+            if (effectIndex != Integer.MIN_VALUE) {
+                controller.removeEffect(target, effectIndex, buffer);
+            }
         }
     }
 }

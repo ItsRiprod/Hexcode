@@ -21,26 +21,35 @@
   "Description": "hexcode.glyphs.Shatter.description",
   "ModelPath": "Shatter",
   "BasePower": 1.0,
-  "ManaConsumption": 2.4,
+  "ManaConsumption": 2,
   "ShapeStructure": [
     "Anticircle",
-    { "Parent": "Circle", "RelativeSize": 0.8 },
-    { "Parent": "Anticircle", "RelativeSize": 0.55 }
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Anticircle",
+      "RelativeSize": 0.55
+    }
   ],
   "Slots": {
     "source": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.source.name",
       "Description": "hexcode.glyphs.Shatter.source.description",
       "Unique": true
     },
     "Direction": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.direction.name",
       "Description": "hexcode.glyphs.Shatter.direction.description",
       "Unique": true
     },
     "count": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.count.name",
       "Description": "hexcode.glyphs.Shatter.count.description",
@@ -48,6 +57,7 @@
       "Unique": true
     },
     "spread": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.spread.name",
       "Description": "hexcode.glyphs.Shatter.spread.description",
@@ -55,6 +65,7 @@
       "Unique": true
     },
     "speed": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.speed.name",
       "Description": "hexcode.glyphs.Shatter.speed.description",
@@ -62,6 +73,7 @@
       "Unique": true
     },
     "gravity": {
+      "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.gravity.name",
       "Description": "hexcode.glyphs.Shatter.gravity.description",
@@ -69,6 +81,7 @@
       "Unique": true
     },
     "Next": {
+      "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Shatter.Next.name",
       "Description": "hexcode.glyphs.Shatter.Next.description"
