@@ -30,8 +30,8 @@ public class HexExecuter {
         buffer.invoke(new HexCastEvent(context));
     }
 
-    public static boolean continueFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {
-        return CoreHexExecuter.continueFromSlot(glyph, slotKey, hexContext);
+    public static void continueFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {
+        CoreHexExecuter.continueFromSlot(glyph, slotKey, hexContext);
     }
 
     public static boolean branchFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {
@@ -69,8 +69,8 @@ public class HexExecuter {
         }
     }
 
-    public static boolean continueExecution(List<String> nextGlyphs, HexContext hexContext) {
-        return CoreHexExecuter.continueExecution(nextGlyphs, hexContext);
+    public static void continueExecution(List<String> nextGlyphs, HexContext hexContext) {
+        CoreHexExecuter.continueExecution(nextGlyphs, hexContext);
     }
 
     public static boolean branchExecution(List<String> nextGlyphs, HexContext hexContext) {
