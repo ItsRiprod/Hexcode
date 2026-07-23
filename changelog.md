@@ -1,14 +1,4 @@
-## v0.8.5
-
-- Migrated to new gradle properties
-- Fixed ping comp issue
-- Updated to a new patchly version
-- General code cleanup
-- Made glyphs defer-tick during execution
-- Made branches share context for cross-branch refs
-- Groundwork for client-driven casting/drawing
-
-## v0.9.0
+## v0.9.0 - The Everything Update
 
 - Added `Complexity` stat
 - Added Config on glyphs (so glyphs can have unique config values)
