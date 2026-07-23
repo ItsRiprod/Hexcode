@@ -26,6 +26,13 @@
   "Icon": "Icons/ItemsGenerated/Arcane_Hexstaff.png",
   "Weapon": {
     "StatModifiers": {
+      "Flag_IsHolding": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 1
+        }
+      ],
       "Magic_Power": [
         {
           "Target": "Max",
@@ -55,6 +62,7 @@
       ]
     },
     "EntityStatsToClear": [
+      "Flag_IsHolding",
       "Magic_Power",
       "MagicCharges",
       "Volatility"

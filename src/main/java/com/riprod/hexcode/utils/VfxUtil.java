@@ -45,6 +45,8 @@ public class VfxUtil {
 
   private static final Color WHITE = new Color((byte) 255, (byte) 255, (byte) 255);
 
+  private static final float DEFAULT_LINE_OPACITY = 0.7f;
+
   public static Color resolvePrimaryColorRaw(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {
     HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
     Color c = resolveColor(overrides != null ? overrides.getPrimaryColor() : null,
@@ -54,6 +56,15 @@ public class VfxUtil {
 
   public static Vector3f resolvePrimaryColor(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {
     return HexColors.toVector3f(resolvePrimaryColorRaw(ctx, glyphAsset));
+  }
+
+  public static float resolveAlpha(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {
+    HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
+    if (overrides != null && overrides.getAlpha() != null) {
+      return overrides.getAlpha();
+    }
+    HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
+    return glyphStyle != null ? glyphStyle.getAlphaOrDefault() : 1.0f;
   }
 
   private static @Nullable Color glyphStyleColor(@Nullable GlyphAsset glyphAsset, boolean primary) {
@@ -263,12 +274,26 @@ public class VfxUtil {
   public static void line(ComponentAccessor<EntityStore> accessor, World world, Vector3d start, Vector3d end,
       Vector3f color,
       double thickness, float time, int flags) {
-    line(accessor, world, start, end, color, thickness, time, flags, null);
+    line(accessor, world, start, end, color, thickness, time, flags, DEFAULT_LINE_OPACITY, null);
   }
 
   public static void line(ComponentAccessor<EntityStore> accessor, World world, Vector3d start, Vector3d end,
       Vector3f color,
       double thickness, float time, int flags, @Nullable Ref<EntityStore> ref) {
+    line(accessor, world, start, end, color, thickness, time, flags, DEFAULT_LINE_OPACITY, ref);
+  }
+
+  public static void line(ComponentAccessor<EntityStore> accessor, World world, Vector3d start, Vector3d end,
+      Vector3f color,
+      double thickness, float time, int flags, float opacity) {
+    line(accessor, world, start, end, color, thickness, time, flags, opacity, null);
+  }
+
+  public static void line(ComponentAccessor<EntityStore> accessor, World world, Vector3d start, Vector3d end,
+      Vector3f color,
+      double thickness, float time, int flags, float opacity, @Nullable Ref<EntityStore> ref) {
+    if (opacity <= 0f)
+      return;
     double dirX = end.x - start.x;
     double dirY = end.y - start.y;
     double dirZ = end.z - start.z;
@@ -287,7 +312,7 @@ public class VfxUtil {
     int allFlags = flags | DebugUtils.FLAG_NO_WIREFRAME;
 
     if (ref == null || !ref.isValid()) {
-      DebugUtils.add(world, DebugShape.Cube, matrix, color, 0.7f, time, allFlags);
+      DebugUtils.add(world, DebugShape.Cube, matrix, color, opacity, time, allFlags);
       return;
     }
 
@@ -299,7 +324,7 @@ public class VfxUtil {
           DebugShape.Cube, arr,
           new Vector3f(
               color.x, color.y, color.z),
-          time, (byte) allFlags, null, 0.7f);
+          time, (byte) allFlags, null, opacity);
       playerRef.getPacketHandler().write(packet);
     }
   }

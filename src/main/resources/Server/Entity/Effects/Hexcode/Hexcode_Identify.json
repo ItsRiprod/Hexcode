@@ -3,5 +3,5 @@
   "Infinite": false,
   "OverlapBehavior": "Overwrite",
   "Name": "hexcode.effects.identify",
-  "StatusEffectIcon": "Icons/ModelsGenerated/Glyph_Identify.png"
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/Identify.png"
 }

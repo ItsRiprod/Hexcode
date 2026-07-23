@@ -41,6 +41,10 @@ Concentration.Next.name=Next
 Concentration.Next.description=Children sustained while concentrating
 Concentration.release.name=Release
 Concentration.release.description=Executes when you release concentration
+Concentration.Target.name=Target
+Concentration.Target.description=Entity to ward. No defaults
+Concentration.Deferral.name=Deferral
+Concentration.Deferral.description=Entity to defer the references to. No Defaults
 
 Cos.name=Cos
 Cos.description=Cosine of A (radians)
@@ -119,6 +123,15 @@ Equal.Greater.name=Greater
 Equal.Greater.description=If A is greater than B
 Equal.Less.name=Less
 Equal.Less.description=If A is less than B
+
+Identify.name=Identify
+Identify.description=-1 diff, 0 identical, +1 same. Executed, Makes the Target glow.
+Identify.Target.name=Target
+Identify.Target.description=The variable to identify, or to make glow
+Identify.Reference.name=Reference
+Identify.Reference.description=The variable to compare against, or the player who sees the glow
+Identify.Next.name=Next
+Identify.Next.description=The next glyph in the execution chain
 
 Floor.name=Floor
 Floor.description=Rounds A down to the nearest whole number.
@@ -640,6 +653,17 @@ Levitate.immediate.name=Immediate
 Levitate.immediate.description=Fires immediately when the effect is applied
 Levitate.Next.name=Next
 Levitate.Next.description=The next glyph in the execution chain
+
+Invisibility.name=Invisibility
+Invisibility.description=Fades a target out of sight for a duration; reading its value returns the remaining seconds
+Invisibility.target.name=Target
+Invisibility.target.description=Variable containing the targets to affect
+Invisibility.duration.name=Duration
+Invisibility.duration.description=How long the effect lasts in seconds
+Invisibility.immediate.name=Immediate
+Invisibility.immediate.description=Fires immediately when the effect is applied
+Invisibility.Next.name=Next
+Invisibility.Next.description=The next glyph in the execution chain
 
 Phase.name=Phase
 Phase.description=Temporarily removes blocks from reality, restoring them after a delay

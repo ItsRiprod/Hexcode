@@ -29,7 +29,8 @@ public class ArcStyle {
             Vector3d sourcePos, Vector3d targetPos, HexContext ctx) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset());
-        VfxUtil.line(accessor, world, sourcePos, targetPos, color, BEAM_THICKNESS, BEAM_DURATION, 0);
+        VfxUtil.line(accessor, world, sourcePos, targetPos, color, BEAM_THICKNESS, BEAM_DURATION, 0,
+                VfxUtil.resolveAlpha(ctx, asset()));
         Color tint = VfxUtil.resolvePrimaryColorRaw(ctx, asset());
         VfxUtil.particleAlongPath(particleSystemId(), sourcePos, targetPos, PARTICLES_PER_ARC, tint, null, accessor);
         if (asset() != null && asset().getStyle() != null && asset().getStyle().getPrimarySound() != null) {

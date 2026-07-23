@@ -11,6 +11,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.BlockUtils;
 
@@ -22,6 +23,11 @@ public class SwapGlyph implements GlyphHandler {
 public String getId() { return ID; };
 
 public static final String ID = "Swap";
+
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(SwapConfig.class, SwapConfig.CODEC);
+    }
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
@@ -67,6 +73,8 @@ public static final String ID = "Swap";
             SwapStyle.render(posA, posB, hexContext, hexContext.getAccessor());
         }
         BlockUtils.swapPair(varsA, varsB, world, hexContext, ID);
+        SwapStyle.applyEffect(varsA, hexContext, hexContext.getAccessor());
+        SwapStyle.applyEffect(varsB, hexContext, hexContext.getAccessor());
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }

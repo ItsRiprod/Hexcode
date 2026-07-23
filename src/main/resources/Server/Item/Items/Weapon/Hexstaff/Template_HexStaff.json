@@ -34,8 +34,18 @@
     ]
   },
   "Weapon": {
+    "StatModifiers": {
+      "Flag_IsHolding": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 1
+        }
+      ]
+    },
     "RenderDualWielded": false,
     "EntityStatsToClear": [
+      "Flag_IsHolding",
       "MagicCharges",
       "Volatility"
     ]

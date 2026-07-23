@@ -1,0 +1,68 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Invisibility",
+  "Style": {
+    "PrimaryColor": "#8ea1aa",
+    "SecondaryColor": "#a7e8ff",
+    "PrimaryParticle": {
+      "SystemId": "Conjure_Despawn"
+    },
+    "PrimarySound": "SFX_Avatar_Powers_Enable",
+    "SecondaryParticle": {
+      "SystemId": "Conjure_Despawn"
+    },
+    "SecondarySound": "SFX_Avatar_Powers_Enable"
+  },
+  "Title": "hexcode.glyphs.Invisibility.name",
+  "Description": "hexcode.glyphs.Invisibility.description",
+  "ModelPath": "Invisibility",
+  "BasePower": 1.0,
+  "ManaConsumption": 15,
+  "ShapeStructure": [
+    "Antitriangle",
+    {
+      "Parent": "Triangle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Antitriangle",
+      "RelativeSize": 0.6
+    }
+  ],
+  "Slots": {
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Invisibility.target.name",
+      "Description": "hexcode.glyphs.Invisibility.target.description"
+    },
+    "Duration": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Invisibility.duration.name",
+      "Description": "hexcode.glyphs.Invisibility.duration.description",
+      "DefaultValue": 20,
+      "Unique": true
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Invisibility.Next.name",
+      "Description": "hexcode.glyphs.Invisibility.Next.description"
+    },
+    "Immediate": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Invisibility.immediate.name",
+      "Description": "hexcode.glyphs.Invisibility.immediate.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 5,
+    "DrainPerSecond": 2
+  },
+  "Config": {
+    "Type": "Invisibility",
+    "Effect": "Hexcode_Invisibility"
+  }
+}

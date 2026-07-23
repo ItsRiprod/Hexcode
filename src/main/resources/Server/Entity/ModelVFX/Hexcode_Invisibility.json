@@ -1,0 +1,12 @@
+{
+  "SwitchTo": "Distortion",
+  "EffectDirection": "BottomUp",
+  "AnimationDuration": 3,
+  "NoiseScale": {
+    "X": 20.0,
+    "Y": 20.0
+  },
+  "CurveType": "QuartOut",
+  "HighlightThickness": 0.0,
+  "UseBloomOnHighlight": false
+}

@@ -52,7 +52,8 @@
     "DrainPerSecond": 0.0
   },
   "Config": {
-    "Type": "Basic",
+    "Type": "Swap",
+    "Effect": "Teleportation",
     "VolatilityImpact": {
       "Type": "PowerLaw",
       "DefaultMagnitude": 5.0,

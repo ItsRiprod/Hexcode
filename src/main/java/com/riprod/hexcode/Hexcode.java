@@ -86,7 +86,6 @@ import com.riprod.hexcode.core.common.pedestal.session.SessionTickSystem;
 import com.riprod.hexcode.core.common.memories.GlyphMemory;
 import com.riprod.hexcode.core.common.memories.GlyphMemoryProvider;
 import com.riprod.hexcode.core.common.execution.interactions.HexExecuteInteraction;
-import com.riprod.hexcode.core.common.execution.interactions.HexHold;
 import com.riprod.hexcode.interaction.PedestalInteraction;
 import com.riprod.patchly.PatchManager;
 
@@ -454,7 +453,6 @@ public class Hexcode extends JavaPlugin {
         Interaction.CODEC.register("HexContextPrimary", HexContextPrimary.class, HexContextPrimary.CODEC);
         Interaction.CODEC.register("HexContextAbility", HexContextAbility.class, HexContextAbility.CODEC);
         Interaction.CODEC.register("HexDispel", HexDispel.class, HexDispel.CODEC);
-        Interaction.CODEC.register("HexHold", HexHold.class, HexHold.CODEC);
         Interaction.CODEC.register("PedestalInteraction", PedestalInteraction.class, PedestalInteraction.CODEC);
         Interaction.CODEC.register("HexExecute", HexExecuteInteraction.class, HexExecuteInteraction.CODEC);
     }

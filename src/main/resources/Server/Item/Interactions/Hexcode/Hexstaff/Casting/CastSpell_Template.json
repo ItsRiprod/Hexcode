@@ -11,21 +11,33 @@
     "ItemAnimationId": "HexExecution_Primary"
   },
   "Next": {
-    "Type": "HexHold",
-    "HoldState": true,
+    "Type": "ChangeStat",
+    "Behaviour": "Set",
+    "StatModifiers": {
+      "Flag_IsHolding": 1
+    },
     "Next": {
       "Type": "Charging",
       "AllowIndefiniteHold": true,
       "Next": {
         "0.0": {
-          "Type": "HexHold",
-          "HoldState": false
+          "Type": "ChangeStat",
+          "Behaviour": "Set",
+          "StatModifiers": {
+            "Flag_IsHolding": 0
+          }
         }
       },
       "Failed": {
-        "Type": "HexHold",
-        "HoldState": false
-      }
+        "Type": "ChangeStat",
+        "Behaviour": "Set",
+        "StatModifiers": {
+          "Flag_IsHolding": 0
+        }
+      },
+      "CancelOnItemChange": true,
+      "FailOnDamage": true,
+      "CancelOnOtherClick": true
     }
   }
 }

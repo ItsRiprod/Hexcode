@@ -285,13 +285,13 @@ Utility glyphs are generally used to setup and prop up effect glyphs. They take 
 
 ### \[\>\] Greater
 
-Branches execution based on comparison. If A is greater than B, the first child executes. Otherwise, the second child executes. Costs no mana.
+Branches execution based on comparison. If A is greater than B, the first child executes. Otherwise, the second child executes
 
 ---
 
 ### \[\<\] Less
 
-Branches execution based on comparison. If A is less than B, the first child executes. Otherwise, the second child executes. Costs no mana.
+Branches execution based on comparison. If A is less than B, the first child executes. Otherwise, the second child executes
 
 ---
 

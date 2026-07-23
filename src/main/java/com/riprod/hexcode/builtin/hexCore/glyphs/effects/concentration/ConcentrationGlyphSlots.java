@@ -6,7 +6,7 @@ public final class ConcentrationGlyphSlots {
 
     public static final String RELEASE = "release";
 
-    public static final String TARGET = "target";
+    public static final String TARGET = "Target";
 
-    public static final String DEFERRAL = "deferral";
+    public static final String DEFERRAL = "Deferral";
 }

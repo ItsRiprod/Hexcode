@@ -1,7 +1,8 @@
 {
   "Spawners": [
     {
-      "SpawnerId": "Levitate_Sparks_Active"
+      "SpawnerId": "Levitate_Sparks_Active",
+      "MaxConcurrent": 1
     }
   ],
   "CullDistance": 100,

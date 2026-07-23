@@ -26,7 +26,6 @@ public class CasterStateComponent implements Component<EntityStore> {
         return componentType;
     }
 
-    private boolean holdingPrimary = false;
     private Map<UUID, List<Ref<EntityStore>>> dependencies = new HashMap<>();
     private List<HexStats> activeTrackers = new ArrayList<>();
 
@@ -105,14 +104,6 @@ public class CasterStateComponent implements Component<EntityStore> {
         }
     }
 
-    public boolean isHoldingPrimary() {
-        return holdingPrimary;
-    }
-
-    public void setHoldingPrimary(boolean holding) {
-        this.holdingPrimary = holding;
-    }
-
     public void addDependency(UUID hexId, Ref<EntityStore> dependent) {
         dependencies.computeIfAbsent(hexId, k -> new ArrayList<>()).add(dependent);
     }
@@ -133,7 +124,6 @@ public class CasterStateComponent implements Component<EntityStore> {
     @Override
     public CasterStateComponent clone() {
         CasterStateComponent copy = new CasterStateComponent();
-        copy.holdingPrimary = this.holdingPrimary;
         copy.dependencies = new HashMap<>();
         for (Map.Entry<UUID, List<Ref<EntityStore>>> entry : this.dependencies.entrySet()) {
             copy.dependencies.put(entry.getKey(), new ArrayList<>(entry.getValue()));

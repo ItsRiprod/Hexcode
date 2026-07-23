@@ -4,6 +4,10 @@
     {
       "Model": "NPC/Glyphs/Models/Glyph_1.blockymodel",
       "Texture": "NPC/Glyphs/Textures/Square.png"
+    },
+    {
+      "Model": "NPC/Glyphs/Models/Glyph_3.blockymodel",
+      "Texture": "NPC/Glyphs/Textures/Down.png"
     }
   ]
 }

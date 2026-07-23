@@ -1,0 +1,11 @@
+{
+  "Duration": 20.0,
+  "Debuff": false,
+  "OverlapBehavior": "Overwrite",
+  "ApplicationEffects": {
+    "WorldSoundEventId": "SFX_Avatar_Powers_Enable",
+    "ModelVFXId": "Hexcode_Invisibility"
+  },
+  "Name": "hexcode.effects.invisibility",
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/Invisibility.png"
+}

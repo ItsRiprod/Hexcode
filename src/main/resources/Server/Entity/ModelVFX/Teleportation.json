@@ -1,0 +1,24 @@
+{
+  "SwitchTo": "Disappear",
+  "UseBloomOnHighlight": true,
+  "HighlightThickness": 2.5,
+  "LoopOption": "LoopMirror",
+  "EffectDirection": "TopDown",
+  "NoiseScale": {
+    "X": 13,
+    "Y": 13
+  },
+  "AnimationDuration": 0.5,
+  "UseProgessiveHighlight": false,
+  "NoiseScrollSpeed": {
+    "X": 0,
+    "Y": 0
+  },
+  "CurveType": "Linear",
+  "HighlightColor": "#00c1e9",
+  "PostColor": "#00f2ff",
+  "PostColorOpacity": 0,
+  "AnimationRange": {
+    "X": 1
+  }
+}

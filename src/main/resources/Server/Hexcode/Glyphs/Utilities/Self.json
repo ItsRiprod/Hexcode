@@ -10,8 +10,8 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    "Down",
-    "Square"
+    "Square",
+    "Down"
   ],
   "Slots": {
     "Next": {

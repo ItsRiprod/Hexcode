@@ -12,7 +12,7 @@ Hexcode is built upon Three Basic Shapes. That is…
 
 #### 1- □ **Square**
 
-*It means Divinity, the idea of Self or Creation.*
+*It means Divinity, the idea of Identity or Creation.*
 
 #### 2- ◯ **Circle**
 
@@ -66,9 +66,9 @@ Instantly zeros all velocity on targets. Things stop moving. Useful for freezing
 
 ---
 
-### \[□\] Self
+### \[□\] Identify
 
-Returns a reference to the caster entity. The starting point for any self-targeting hex. As a value, it provides the caster reference directly. As an effect, stores the caster in a variable slot.
+Compares two values by identity. As a value, returns \-1 if Target and Reference are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position. As an effect, makes the Target glow for the Reference \- only that player can see it, and it shows through walls \- for a duration drawn from the Life resource.
 
 ---
 
@@ -193,6 +193,12 @@ Weakens targets for a duration, increasing damage taken from all sources includi
 ### \[◇▽𝟢\] Levitate\*
 
 Reverses or nullifies gravity on targets for a duration. Zero intensity means weightless. Positive intensity means active upward pull.
+
+---
+
+### \[▽△▽\] Invisibility
+
+Fades a target out of sight for a duration. As a value, returns how many seconds of the effect remain on the target (0 if none is active).
 
 ---
 
@@ -429,7 +435,7 @@ Delays execution of child glyphs. Everything after this glyph in the chain waits
 
 ---
 
-### \[□\] Self
+### \[□V\] Self
 
 Returns a reference to the caster entity. The starting point for any self-targeting hex. As a value, it provides the caster reference directly. As an effect, stores the caster in a variable slot.
 
@@ -441,15 +447,15 @@ Randomly generates a number between the Min (default 0\) and Max (default 1\) va
 
 ---
 
-### \[\>\] Greater
+### \[/\>\] Greater
 
-Branches execution based on comparison. If A is greater than B, the first child executes. Otherwise, the second child executes. Costs no mana.
+Deprecated. Branches execution based on comparison. If A is greater than B, the first child executes. Otherwise, the second child executes
 
 ---
 
-### \[\<\] Less
+### \[/\<\] Less
 
-Branches execution based on comparison. If A is less than B, the first child executes. Otherwise, the second child executes. Costs no mana.
+Deprecated. Branches execution based on comparison. If A is less than B, the first child executes. Otherwise, the second child executes
 
 ---
 
@@ -483,9 +489,21 @@ Returns the remainder of one value divided by another.
 
 ---
 
-### \[― ―\] Equal
+### \[/― ―\] Equal
 
-Two modes. With both inputs wired: branches execution (first child if equal, second child if not). With only A/B wired: assigns A/B's value to the output slot.
+Deprecated. Two modes. With both inputs wired: branches execution (first child if equal, second child if not). With only A/B wired: assigns A/B's value to the output slot.
+
+---
+
+### \[― ―\] Compare
+
+Compares A and B (both default to zero) and branches to the Greater, Less, or Equal output. As a value, returns whatever is wired into the winning branch \- unless it has already executed, in which case it returns the last result (\-1 for Less, 0 for Equal, \+1 for Greater). Entities compare by UUID: identical entities are Equal, two different entities are Greater, and an entity compared against another type is converted to that type first
+
+---
+
+### \[□\] Identify
+
+Compares two values by identity. As a value, returns \-1 if Target and Reference are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position. As an effect, makes the Target glow for the Reference \- only that player can see it, and it shows through walls \- for a duration drawn from the Life resource.
 
 ---
 

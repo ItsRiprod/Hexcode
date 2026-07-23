@@ -37,7 +37,8 @@ public class BeamStyle {
 
         World world = accessor.getExternalData().getWorld();
         VfxUtil.spawnPrimaryDirected(overrides, asset(), origin, new Rotation3f(rotation.x, rotation.y, rotation.z), accessor);
-        VfxUtil.line(accessor, world, origin, endPoint, beamColor, LINE_THICKNESS, LINE_DURATION, DebugUtils.FLAG_FADE);
+        VfxUtil.line(accessor, world, origin, endPoint, beamColor, LINE_THICKNESS, LINE_DURATION,
+                DebugUtils.FLAG_FADE, VfxUtil.resolveAlpha(ctx, asset()));
 
         if (hitType != HitType.MISS) {
             VfxUtil.spawnSecondary(overrides, asset(), endPoint, accessor);

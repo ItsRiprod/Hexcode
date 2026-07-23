@@ -216,11 +216,12 @@ public class ConjureGlyph implements GlyphHandler {
         holder.ensureComponent(PropComponent.getComponentType());
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());
-        if (hexContext.getColors().getPrimaryAlpha() != 0f) {
+        float debugAlpha = VfxUtil.resolveAlpha(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+        if (debugAlpha > 0f) {
             Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext,
                     GlyphAsset.getAssetMap().getAsset(ID));
             DebugComponent debugComp = new DebugComponent(DebugShape.Cube, debugColor, size, 0.1f);
-            debugComp.setOpacity(hexContext.getColors().getPrimaryAlpha() * 0.5f);
+            debugComp.setOpacity(debugAlpha * 0.5f);
             debugComp.setIntervalMultiplier(0.01f);
             debugComp.setFlags(DebugUtils.FLAG_NO_WIREFRAME);
             holder.addComponent(DebugComponent.getComponentType(), debugComp);

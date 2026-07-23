@@ -28,6 +28,13 @@
   "Icon": "Icons/ItemsGenerated/Weapon_Staff_Onyxium.png",
   "Weapon": {
     "StatModifiers": {
+      "Flag_IsHolding": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 1
+        }
+      ],
       "MagicCharges": [
         {
           "CalculationType": "Additive",
@@ -43,6 +50,7 @@
       ]
     },
     "EntityStatsToClear": [
+      "Flag_IsHolding",
       "MagicCharges",
       "Volatility"
     ]

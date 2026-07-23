@@ -1,0 +1,50 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Compare",
+  "Title": "hexcode.glyphs.Compare.name",
+  "Description": "hexcode.glyphs.Compare.description",
+  "ModelPath": "Compare",
+  "BasePower": 0,
+  "ManaConsumption": 0,
+  "ShapeStructure": [
+    { "Parent": "Antiline", "StatContribution": 0 },
+    { "Parent": "Antiline", "StatContribution": 0 }
+  ],
+  "Slots": {
+    "a": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Compare.a.name",
+      "Description": "hexcode.glyphs.Compare.a.description",
+      "DefaultValue": 0
+    },
+    "b": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Compare.b.name",
+      "Description": "hexcode.glyphs.Compare.b.description",
+      "DefaultValue": 0
+    },
+    "Greater": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Compare.Greater.name",
+      "Description": "hexcode.glyphs.Compare.Greater.description"
+    },
+    "Equal": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Compare.Equal.name",
+      "Description": "hexcode.glyphs.Compare.Equal.description"
+    },
+    "Less": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Compare.Less.name",
+      "Description": "hexcode.glyphs.Compare.Less.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.0}
+}

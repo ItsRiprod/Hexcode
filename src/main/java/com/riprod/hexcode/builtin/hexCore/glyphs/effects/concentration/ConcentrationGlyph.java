@@ -27,8 +27,10 @@ import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
-import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -73,9 +75,11 @@ public class ConcentrationGlyph implements GlyphHandler {
                 accessor, casterRef, ConcentrationGlyph.ID, ConcentrationState.class);
         if (existing != null) return;
 
-        CasterStateComponent execComp = accessor.getComponent(
-                casterRef, CasterStateComponent.getComponentType());
-        if (execComp == null || !execComp.isHoldingPrimary()) {
+        EntityStatMap statMap = accessor.getComponent(
+                casterRef, EntityStatMap.getComponentType());
+        EntityStatValue holdStat = statMap != null
+                ? statMap.get(HexcodeEntityStatTypes.getIsHolding()) : null;
+        if (holdStat == null || holdStat.get() < 1f) {
             HexExecuter.continueFromSlot(glyph, ConcentrationGlyphSlots.RELEASE, hexContext);
             return;
         }

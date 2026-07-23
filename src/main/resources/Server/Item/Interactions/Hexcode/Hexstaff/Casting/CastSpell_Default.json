@@ -6,7 +6,7 @@
     "ItemAnimationId": "CastSpellCharging",
     "ClearAnimationOnFinish": true
   },
-  "CancelOnOtherClick": false,
+  "CancelOnOtherClick": true,
   "Next": {
     "0.0": "CastTier1",
     "0.33": "CastTier2",

@@ -47,6 +47,10 @@ public class DebugTickSystem extends EntityTickingSystem<EntityStore> {
 
             debug.setTimer(debug.getRespawnInterval());
 
+            if (debug.getOpacity() <= 0f) {
+                return;
+            }
+
             TransformComponent transform = chunk.getComponent(index, TransformComponent.getComponentType());
             if (transform == null) {
                 return;
