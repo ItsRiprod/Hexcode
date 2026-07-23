@@ -58,7 +58,7 @@
     "AffinityStat": "Affinity_Water"
   },
   "Volatility": {
-    "InstantCost": 2,
+    "InstantCost": 6,
     "DrainPerSecond": 0.2
   }
 }

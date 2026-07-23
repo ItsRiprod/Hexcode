@@ -1,0 +1,68 @@
+name: Publish Mod
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: HYTALE
+
+    env:
+      MODTALE_KEY: ${{ secrets.MODTALE_KEY }}
+      CURSE_KEY: ${{ secrets.CURSE_KEY }}
+      MODIFOLD_KEY: ${{ secrets.MODIFOLD_KEY }}
+      TCLI_AUTH_TOKEN: ${{ secrets.TCLI_AUTH_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Resolve release tag
+        id: release
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            TAG="${GITHUB_REF_NAME}"
+          else
+            VERSION="$(./gradlew -q properties --property version -Dorg.gradle.java.home="$JAVA_HOME" | awk '/^version:/ { print $2 }')"
+            if [ -z "$VERSION" ] || [ "$VERSION" = "unspecified" ]; then
+              echo "::error::Could not resolve project version from Gradle."
+              exit 1
+            fi
+            TAG="v${VERSION}"
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "Release tag: ${TAG}"
+
+      - name: Build artifacts
+        run: ./gradlew build -Dorg.gradle.java.home="$JAVA_HOME"
+
+      - name: Publish enabled platforms
+        run: ./gradlew publishAll -Dorg.gradle.java.home="$JAVA_HOME"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release.outputs.tag }}
+          name: ${{ steps.release.outputs.tag }}
+          body_path: changelog.md
+          files: |
+            build/libs/Hexcode-*.jar

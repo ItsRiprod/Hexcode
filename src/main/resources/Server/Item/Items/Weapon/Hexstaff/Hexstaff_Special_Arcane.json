@@ -113,7 +113,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
-              "InitialVolatility": 40,
+              "InitialVolatility": 60,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 30
@@ -135,7 +135,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
-              "InitialVolatility": 50,
+              "InitialVolatility": 70,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 40
@@ -157,7 +157,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
-              "InitialVolatility": 60,
+              "InitialVolatility": 80,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 50
@@ -179,7 +179,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
-              "InitialVolatility": 70,
+              "InitialVolatility": 90,
               "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 60

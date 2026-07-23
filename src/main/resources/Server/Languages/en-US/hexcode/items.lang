@@ -88,7 +88,7 @@ hexstaff.special.astral.stats=<color is="#ffcc00"><b>+30-60</b></color> <color i
 hexstaff.special.astral.description=<msg key="hexcode.items.hexstaff.special.astral.stats"/>\n<msg key="hexcode.items.hexstaff.charges.8"/>\n<msg key="hexcode.items.hexstaff.style.sphere"/><msg key="hexcode.items.hexstaff.body"/>
 
 hexstaff.special.arcane.name=Arcane Hex Staff
-hexstaff.special.arcane.stats=<color is="#ffcc00"><b>+40-70</b></color> <color is="#aaaaaa">Volatility</color>\n<color is="#cc88ff"><b>+30-60</b></color> <color is="#aaaaaa">Elemental Arcane Bonus</color>
+hexstaff.special.arcane.stats=<color is="#ffcc00"><b>+60-90</b></color> <color is="#aaaaaa">Volatility</color>\n<color is="#cc88ff"><b>+30-60</b></color> <color is="#aaaaaa">Elemental Arcane Bonus</color>
 hexstaff.special.arcane.description=<msg key="hexcode.items.hexstaff.special.arcane.stats"/>\n<msg key="hexcode.items.hexstaff.charges.10"/>\n<msg key="hexcode.items.hexstaff.style.ring"/><msg key="hexcode.items.hexstaff.body"/>
 
 ingredient.essence.fire_concentrated=Greater Essence of Fire

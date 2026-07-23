@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'com.gradleup.shadow' version '9.4.2'
     id 'com.azuredoom.hytale-tools' version '1.0.38'
+    id 'com.azuredoom.hytalepublisher' version '1.+'
 }
 
 repositories {
@@ -79,6 +80,29 @@ hytaleTools {
     // The debug code
     subPlugin("Counterspell", "com.riprod.hexcode.builtin.counterspell.CounterspellPlugin", true, false)
 } 
+
+hytalePublisher {
+    version       = project.version
+    releaseType   = "release"
+    changelogFile = "changelog.md"
+    gameVersion   = project.hytale_version.toString()
+
+    modtale {
+        enabled   = true
+        projectId = project.modtale_uuid
+        patchline = project.patchline.toString()
+    }
+
+    curseforge {
+        enabled   = true
+        projectId = project.curseforgeID
+    }
+
+    modifold {
+        enabled   = true
+        projectId = project.modifold_id
+    }
+}
 
 shadowJar {
     archiveClassifier.set('')

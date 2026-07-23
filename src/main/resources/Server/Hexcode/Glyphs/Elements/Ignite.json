@@ -64,7 +64,7 @@
     "AffinityStat": "Affinity_Fire"
   },
   "Volatility": {
-    "InstantCost": 2,
+    "InstantCost": 6,
     "DrainPerSecond": 0.2
   }
 }
