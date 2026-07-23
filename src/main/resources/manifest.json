@@ -20,7 +20,7 @@
     "IncludesAssetPack": true,
     "Main": "com.riprod.hexcode.Hexcode",
     "UpdateChecker": {
-        "CurseForge": "1414678"
+        "CurseForge": "1448311"
     },
     "SubPlugins": [
         {
