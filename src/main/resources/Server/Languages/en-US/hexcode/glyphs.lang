@@ -94,7 +94,20 @@ Cross.w.description=The second vector of the cross product
 Cross.Next.name=Next Glyph
 Cross.Next.description=The next glyph in the execution chain
 
-Equal.name=Equal
+Compare.name=Compare
+Compare.description=Compares A and B's value, branching depending on the result.
+Compare.a.name=A
+Compare.a.description=First operand (defaults to zero)
+Compare.b.name=B
+Compare.b.description=Second operand (defaults to zero)
+Compare.Greater.name=Greater
+Compare.Greater.description=If A is greater than B
+Compare.Less.name=Less
+Compare.Less.description=If A is less than B
+Compare.Equal.name=Equal
+Compare.Equal.description=If A equals B
+
+Equal.name=Equal (Deprecated - use Compare)
 Equal.description=Branches execution if A equals B. Assigns A to output if B is absent.
 Equal.a.name=A
 Equal.a.description=First operand or value to assign
@@ -114,7 +127,7 @@ Floor.a.description=Value to floor
 Floor.Next.name=Next
 Floor.Next.description=The next glyph in the execution chain
 
-Greater.name=Greater
+Greater.name=Greater (Deprecated - use Compare)
 Greater.description=Branches execution if A is greater than B
 Greater.a.name=A
 Greater.a.description=First operand
@@ -128,7 +141,7 @@ IsHolding.description=Returns 1 if the caster is holding the primary cast button
 IsHolding.Next.name=Next
 IsHolding.Next.description=The next glyph in the execution chain
 
-Less.name=Less
+Less.name=Less (Deprecated - use Compare)
 Less.description=Branches execution if A is less than B
 Less.a.name=A
 Less.a.description=First operand

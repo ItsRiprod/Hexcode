@@ -10,6 +10,7 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
+    "Down",
     "Square"
   ],
   "Slots": {

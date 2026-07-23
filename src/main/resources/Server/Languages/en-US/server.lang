@@ -17,6 +17,7 @@ ui.itemcategory.subcategory.books.description=Used to store hexes across casts
 hexcode.notifications.castTimeout=You are timed out from casting for {seconds}s
 hexcode.notifications.castDisabled=Spellcasting is currently disabled
 hexcode.notifications.glyphDisabled={glyphName} won't work on this server! (disabled by config)
+hexcode.notifications.glyphDeprecated={glyphName} is deprecated.
 hexcode.notifications.glyphBlocked={glyphName} Blocked
 
 hexcode.commands.stop.desc=Halt all spellcasting in a world until resumed

@@ -36,7 +36,7 @@ public class CastBookStyleSystem extends WorldEventSystem<EntityStore, HexCastEv
 
         if (context.getStyle() != null && bookAsset.getStyle() != null
                 && bookAsset.getStyle().getSecondaryColor() != null) {
-            context.getStyle().setSecondaryColor(bookAsset.getStyle().getSecondaryColor().clone());
+            context.mutableStyle().setSecondaryColor(bookAsset.getStyle().getSecondaryColor().clone());
         }
         context.applyNonDefaultsFrom(bookAsset.getDefaults());
     }

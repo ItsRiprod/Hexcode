@@ -33,11 +33,6 @@ public final class BlockVar extends HexVar {
     }
 
     @Override
-    public Object getRawValue() {
-        return position;
-    }
-
-    @Override
     public Double toScalar() {
         return position == null ? 0.0 : 1.0;
     }

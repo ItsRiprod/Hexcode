@@ -3,13 +3,13 @@
     "StatModifiers": {
       "Mana?": [
         {
-          "Amount": 4,
+          "Amount#": "round($Cloth_Wool.Mana * $Armor.Spread_Head * $Armor.Mult_Mana)",
           "CalculationType": "Additive"
         }
       ],
       "Volatility?": [
         {
-          "Amount": 4.5,
+          "Amount#": "round($Cloth_Wool.Volatility * $Armor.Spread_Head * $Armor.Mult_Volatility * 2) / 2",
           "CalculationType": "Additive"
         }
       ]

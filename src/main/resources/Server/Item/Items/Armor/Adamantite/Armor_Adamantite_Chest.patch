@@ -3,13 +3,13 @@
     "StatModifiers": {
       "Mana?": [
         {
-          "Amount": 16,
+          "Amount#": "round($Adamantite.Mana * $Armor.Spread_Chest * $Armor.Mult_Mana)",
           "CalculationType": "Additive"
         }
       ],
       "Volatility?": [
         {
-          "Amount": 12,
+          "Amount#": "round($Adamantite.Volatility * $Armor.Spread_Chest * $Armor.Mult_Volatility * 2) / 2",
           "CalculationType": "Additive"
         }
       ],
@@ -17,7 +17,7 @@
         {
           "Target": "Max",
           "CalculationType": "Additive",
-          "Amount": 15
+          "Amount#": "round($Adamantite.Affinity * $Armor.Spread_Chest * $Armor.Mult_Affinity)"
         }
       ]
     }

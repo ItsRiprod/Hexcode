@@ -40,7 +40,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.utils.HexDirectionUtil;
+
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
@@ -102,7 +102,7 @@ public class ProjectileGlyph implements GlyphHandler {
             return;
         }
 
-        Vector3d spawnPos = HexDirectionUtil.resolveEyePosition(sourceVar, hexContext.getAccessor());
+        Vector3d spawnPos = HexVarUtil.resolveEyePosition(sourceVar, hexContext.getAccessor());
         if (spawnPos == null) {
             spawnPos = HexVarUtil.position(sourceVar, hexContext.getAccessor());
         }
@@ -112,7 +112,7 @@ public class ProjectileGlyph implements GlyphHandler {
             return;
         }
 
-        Vector3d direction = HexDirectionUtil.resolveDirection(directionVar, spawnPos, hexContext.getAccessor());
+        Vector3d direction = HexVarUtil.resolveDirection(directionVar, spawnPos, hexContext.getAccessor());
         if (direction == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Cannot determine direction");

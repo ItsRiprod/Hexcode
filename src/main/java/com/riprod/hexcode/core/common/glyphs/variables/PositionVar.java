@@ -43,11 +43,6 @@ public final class PositionVar extends HexVar {
     }
 
     @Override
-    public Object getRawValue() {
-        return position;
-    }
-
-    @Override
     public Double toScalar() {
         if (position == null) return 0.0;
         double x = position.x, y = position.y, z = position.z;

@@ -6,7 +6,9 @@
   "ModelPath": "Equal",
   "BasePower": 0,
   "ManaConsumption": 0,
+  "IsDeprecated": true,
   "ShapeStructure": [
+    { "Parent": "Slash", "StatContribution": 0 },
     { "Parent": "Antiline", "StatContribution": 0 },
     { "Parent": "Antiline", "StatContribution": 0 }
   ],

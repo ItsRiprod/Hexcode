@@ -34,11 +34,6 @@ public final class ColorVar extends HexVar {
     }
 
     @Override
-    public Object getRawValue() {
-        return new double[] { r, g, b, a };
-    }
-
-    @Override
     public Double toScalar() {
         return 0.299 * r + 0.587 * g + 0.114 * b;
     }

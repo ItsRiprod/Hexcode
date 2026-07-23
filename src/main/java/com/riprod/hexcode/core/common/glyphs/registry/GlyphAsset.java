@@ -48,6 +48,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     protected float manaConsumption = 1.0f;
     protected boolean isReversable = false;
     protected boolean isEnabled = true;
+    protected boolean isDeprecated = false;
     protected VolatilityAsset volatility = new VolatilityAsset();
     protected GlyphConfig config;
     protected ArrayList<String> shapes = new ArrayList<>();
@@ -83,6 +84,10 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
 
     public boolean isReversable() {
         return this.isReversable;
+    }
+
+    public boolean isDeprecated() {
+        return this.isDeprecated;
     }
 
     public String getModelPath() {
@@ -275,6 +280,11 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, v) -> a.isReversable = v, a -> a.isReversable,
                         (a, p) -> a.isReversable = p.isReversable)
                 .documentation("Whether or not the shape is reversable (drawn in any order)")
+                .add()
+                .appendInherited(new KeyedCodec<>("IsDeprecated", Codec.BOOLEAN),
+                        (a, v) -> a.isDeprecated = v, a -> a.isDeprecated,
+                        (a, p) -> a.isDeprecated = p.isDeprecated)
+                .documentation("Whether or not the glyph is deprecated")
                 .add()
                 .appendInherited(new KeyedCodec<>("Config", GlyphConfig.CODEC),
                         (a, v) -> a.config = v, a -> a.config,

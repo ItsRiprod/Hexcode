@@ -22,7 +22,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.utils.HexDirectionUtil;
+
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.TargetFilter;
 
@@ -78,14 +78,14 @@ public class BeamGlyph implements GlyphHandler {
             return;
         }
 
-        Vector3d origin = HexDirectionUtil.resolveEyePosition(posVar, hexContext.getAccessor());
+        Vector3d origin = HexVarUtil.resolveEyePosition(posVar, hexContext.getAccessor());
         if (origin == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Source entity is invalid");
             return;
         }
 
-        Vector3d direction = HexDirectionUtil.resolveDirection(rotVar, origin, hexContext.getAccessor());
+        Vector3d direction = HexVarUtil.resolveDirection(rotVar, origin, hexContext.getAccessor());
         if (direction == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Rotation variable is not valid");

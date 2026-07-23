@@ -10,7 +10,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
-import com.riprod.hexcode.utils.HexDirectionUtil;
+
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class PositionValue implements GlyphHandler {

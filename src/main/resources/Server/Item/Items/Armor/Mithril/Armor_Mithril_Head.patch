@@ -3,13 +3,13 @@
     "StatModifiers": {
       "Mana?": [
         {
-          "Amount": 16,
+          "Amount#": "round($Mithril.Mana * $Armor.Spread_Head * $Armor.Mult_Mana)",
           "CalculationType": "Additive"
         }
       ],
       "Volatility?": [
         {
-          "Amount": 7,
+          "Amount#": "round($Mithril.Volatility * $Armor.Spread_Head * $Armor.Mult_Volatility * 2) / 2",
           "CalculationType": "Additive"
         }
       ],
@@ -17,7 +17,7 @@
         {
           "Target": "Max",
           "CalculationType": "Additive",
-          "Amount": 15
+          "Amount#": "round($Mithril.Affinity * $Armor.Spread_Head * $Armor.Mult_Affinity)"
         }
       ]
     }

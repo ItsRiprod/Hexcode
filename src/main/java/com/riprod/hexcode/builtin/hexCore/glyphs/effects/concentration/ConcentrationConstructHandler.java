@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration;
 
+import java.util.UUID;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
@@ -13,7 +15,9 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.component.HexRoot;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.redirect.EntityRedirectSpawner;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -48,8 +52,46 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         }
 
         emitSecondary(dt, status, buffer, casterRef);
+        chargeUpkeep(dt, status, buffer);
 
         return !drainSustain(dt, status);
+    }
+
+    private void chargeUpkeep(float dt, HexStatus<ConcentrationState> status,
+            CommandBuffer<EntityStore> buffer) {
+        ConcentrationState state = status.getState();
+        if (state == null || !state.isUpkeepActive())
+            return;
+        HexContext ctx = status.getHexContext();
+        if (ctx == null || !ctx.isConsumeMana())
+            return;
+        double perSecond = resolveConfig(status).getManaPerSecond();
+        if (perSecond <= 0)
+            return;
+        HexRoot root = ctx.getHexRoot();
+        if (root == null)
+            return;
+
+        float accum = state.getManaAccum() + dt;
+        while (accum >= 1.0f) {
+            if (root.tryConsumeMana((float) perSecond, buffer)) {
+                accum -= 1.0f;
+            } else {
+                state.setUpkeepActive(false);
+                accum = 0f;
+                break;
+            }
+        }
+        state.setManaAccum(accum);
+    }
+
+    private void teardownWard(ConcentrationState state, CommandBuffer<EntityStore> buffer) {
+        if (state == null || !state.isWarded())
+            return;
+        Ref<EntityStore> targetRef = state.getTargetRef() != null
+                ? state.getTargetRef().getEntity(buffer) : null;
+        UUID deferralUuid = state.getDeferralRef() != null ? state.getDeferralRef().getUuid() : null;
+        EntityRedirectSpawner.unstamp(buffer, targetRef, deferralUuid);
     }
 
     private void fireReleaseAndKillHeld(HexStatus<ConcentrationState> status,
@@ -120,6 +162,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             if (visualRef != null && visualRef.isValid()) {
                 ctx.getBuffer().tryRemoveEntity(visualRef, RemoveReason.REMOVE);
             }
+            teardownWard(state, ctx.getBuffer());
         }
 
         HexExecuter.fail(status.getHexContext());

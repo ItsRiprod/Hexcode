@@ -1,0 +1,42 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Identify",
+  "Title": "hexcode.glyphs.Identify.name",
+  "Description": "hexcode.glyphs.Identify.description",
+  "ModelPath": "Identify",
+  "BasePower": 0,
+  "ManaConsumption": 0,
+  "ShapeStructure": [
+    "Square"
+  ],
+  "Slots": {
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Identify.Target.name",
+      "Description": "hexcode.glyphs.Identify.Target.description"
+    },
+    "Reference": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Identify.Reference.name",
+      "Description": "hexcode.glyphs.Identify.Reference.description"
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Identify.Next.name",
+      "Description": "hexcode.glyphs.Identify.Next.description"
+    }
+  },
+  "Config": {
+    "Type": "Identify",
+    "Resource": "Life",
+    "DurationPerLife": 1.0,
+    "Cap": -1
+  },
+  "Volatility": {
+    "InstantCost": 0.5,
+    "DrainPerSecond": 0.0
+  }
+}

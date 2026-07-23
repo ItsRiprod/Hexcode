@@ -32,11 +32,6 @@ public final class RotationVar extends HexVar {
     }
 
     @Override
-    public Object getRawValue() {
-        return rotation;
-    }
-
-    @Override
     public Double toScalar() {
         return rotation == null ? 0.0 : 1.0;
     }

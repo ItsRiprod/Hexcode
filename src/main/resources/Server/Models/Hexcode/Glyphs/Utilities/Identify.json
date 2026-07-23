@@ -1,0 +1,9 @@
+{
+  "Parent": "Glyph_Template",
+  "DefaultAttachments": [
+    {
+      "Model": "NPC/Glyphs/Models/Glyph_1.blockymodel",
+      "Texture": "NPC/Glyphs/Textures/Square.png"
+    }
+  ]
+}

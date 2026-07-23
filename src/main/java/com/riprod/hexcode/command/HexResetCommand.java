@@ -30,6 +30,8 @@ import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponen
 import com.riprod.hexcode.core.common.drawing.system.InterfaceManager;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 import com.riprod.hexcode.utils.HexSlot;
 
 import org.bson.BsonDocument;
@@ -57,19 +59,37 @@ public class HexResetCommand extends AbstractPlayerCommand {
                 store.invoke(ref, new ContextForceExitEvent(ref));
             }
 
+            boolean sessionReclaimed = reclaimOrphanSession(store, ref, world);
             int cleaned = cleanupAll(store, ref);
 
-            if (currentContext == null && cleaned == 0) {
+            if (currentContext == null && cleaned == 0 && !sessionReclaimed) {
                 send(playerRef, "no active context, nothing to reset");
             } else if (currentContext == null) {
-                send(playerRef, "no active context, cleaned %d orphaned components", cleaned);
+                send(playerRef, "no active context, cleaned %d orphaned components%s", cleaned,
+                        sessionReclaimed ? " and returned a stranded item" : "");
             } else {
-                send(playerRef, "force-exited %s (cleaned %d components)", currentContext, cleaned);
+                send(playerRef, "force-exited %s (cleaned %d components)%s", currentContext, cleaned,
+                        sessionReclaimed ? " and returned a stranded item" : "");
             }
         } catch (Exception e) {
             LOGGER.atSevere().log("reset command failed: %s", e.getMessage());
             send(playerRef, "reset failed: %s", e.getMessage());
         }
+    }
+
+    private boolean reclaimOrphanSession(Store<EntityStore> store, Ref<EntityStore> ref, World world) {
+        if (store.getComponent(ref, HexcodeSessionComponent.getComponentType()) == null) {
+            return false;
+        }
+        boolean[] handled = {false};
+        store.forEachChunk(HexcodeSessionComponent.getComponentType(), (chunk, buffer) -> {
+            if (handled[0]) {
+                return;
+            }
+            handled[0] = true;
+            SessionUtils.endSession(buffer, ref, world);
+        });
+        return handled[0];
     }
 
     private int cleanupAll(Store<EntityStore> store, Ref<EntityStore> ref) {

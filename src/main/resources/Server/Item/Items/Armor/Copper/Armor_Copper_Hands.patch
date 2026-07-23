@@ -3,13 +3,13 @@
     "StatModifiers": {
       "Mana?": [
         {
-          "Amount": 7,
+          "Amount#": "round($Copper.Mana * $Armor.Spread_Hands * $Armor.Mult_Mana)",
           "CalculationType": "Additive"
         }
       ],
       "Volatility?": [
         {
-          "Amount": 2,
+          "Amount#": "round($Copper.Volatility * $Armor.Spread_Hands * $Armor.Mult_Volatility * 2) / 2",
           "CalculationType": "Additive"
         }
       ]

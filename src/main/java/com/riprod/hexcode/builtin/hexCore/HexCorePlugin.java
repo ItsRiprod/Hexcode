@@ -155,6 +155,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.delay.DelayConstructH
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.delay.DelayGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.divide.DivideGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.dot.DotGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.compare.CompareGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.equal.EqualGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.floor.FloorGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.isHolding.IsHoldingValue;
@@ -252,6 +253,7 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new DivideGlyph());
                 GlyphRegistry.register(new ModuloGlyph());
                 GlyphRegistry.register(new EqualGlyph());
+                GlyphRegistry.register(new CompareGlyph());
                 GlyphRegistry.register(new GreaterGlyph());
                 GlyphRegistry.register(new LessGlyph());
                 GlyphRegistry.register(new SinGlyph());

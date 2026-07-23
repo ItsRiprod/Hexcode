@@ -116,8 +116,6 @@ public class CraftingChangeListener extends WorldEventSystem<EntityStore, HexCon
     }
 
     private static void enter(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
-        HexcasterCraftingComponent craftingComp = buffer.ensureAndGetComponent(player,
-                HexcasterCraftingComponent.getComponentType());
         GravityUtil.enterFly(buffer, player);
         buffer.putComponent(player, CraftingState.getComponentType(), new CraftingState());
         ContextTransitionService.setInContextStat(buffer, player, true);
@@ -155,7 +153,12 @@ public class CraftingChangeListener extends WorldEventSystem<EntityStore, HexCon
         Ref<EntityStore> rootNodeRef = AnchorNodeHandler.INSTANCE.spawnNode(buffer, hex,
                 containerRef, activePos, player);
         session.setAnchorNodeRef(rootNodeRef);
-        craftingComp.setHoveredRef(null);
+
+        HexcasterCraftingComponent craftingComp = buffer.getComponent(player,
+                HexcasterCraftingComponent.getComponentType());
+        if (craftingComp != null) {
+            craftingComp.setHoveredRef(null);
+        }
 
         World world = buffer.getExternalData().getWorld();
         ObeliskDispatcher.dispatchEnterCrafting(buffer, pedestal, player);

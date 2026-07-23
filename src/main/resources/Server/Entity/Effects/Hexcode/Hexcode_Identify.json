@@ -1,0 +1,7 @@
+{
+  "Duration": 10.0,
+  "Infinite": false,
+  "OverlapBehavior": "Overwrite",
+  "Name": "hexcode.effects.identify",
+  "StatusEffectIcon": "Icons/ModelsGenerated/Glyph_Identify.png"
+}

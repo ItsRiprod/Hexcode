@@ -196,12 +196,6 @@ Reverses or nullifies gravity on targets for a duration. Zero intensity means we
 
 ---
 
-### \[◇◯◇\] Ignite
-
-Sets targets on fire. Fire does damage over time and can spread to adjacent flammable blocks. Entities can extinguish by entering water.
-
----
-
 ### \[□◯◇\] Burning Hands\*
 > Not implemented - shape structure pending change
 

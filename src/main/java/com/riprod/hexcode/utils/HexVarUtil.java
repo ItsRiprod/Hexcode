@@ -4,10 +4,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.math.util.TrigMathUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
+import org.joml.Vector3i;
+
+import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
@@ -24,26 +31,30 @@ public class HexVarUtil {
 
     @Nullable
     public static Vector3d position(@Nullable HexVar var, @Nonnull ComponentAccessor<EntityStore> accessor) {
-        if (var == null) return null;
+        if (var == null)
+            return null;
         PositionVar pv = var.toPosition(accessor);
         return pv == null ? null : pv.getValue();
     }
 
     @Nullable
     public static Rotation3f rotation(@Nullable HexVar var, @Nonnull ComponentAccessor<EntityStore> accessor) {
-        if (var == null) return null;
+        if (var == null)
+            return null;
         RotationVar rv = var.toRotation(accessor);
         return rv == null ? null : rv.getValue();
     }
 
     public static double positionAxis(@Nullable HexVar var, int axis,
             @Nonnull ComponentAccessor<EntityStore> accessor) {
-        if (var == null) return 0.0;
+        if (var == null)
+            return 0.0;
         if (var instanceof NumberVar nv) {
             return nv.getValue() == null ? 0.0 : nv.getValue();
         }
         Vector3d v = position(var, accessor);
-        if (v == null) return 0.0;
+        if (v == null)
+            return 0.0;
         return switch (axis) {
             case 0 -> v.x;
             case 1 -> v.y;
@@ -54,12 +65,14 @@ public class HexVarUtil {
 
     public static double rotationAxis(@Nullable HexVar var, int axis,
             @Nonnull ComponentAccessor<EntityStore> accessor) {
-        if (var == null) return 0.0;
+        if (var == null)
+            return 0.0;
         if (var instanceof NumberVar nv) {
             return nv.getValue() == null ? 0.0 : nv.getValue();
         }
         Rotation3f v = rotation(var, accessor);
-        if (v == null) return 0.0;
+        if (v == null)
+            return 0.0;
         return switch (axis) {
             case 0 -> v.x;
             case 1 -> v.y;
@@ -74,7 +87,8 @@ public class HexVarUtil {
     }
 
     public static Double numberOrDefault(@Nullable HexVar var, Double defaultValue) {
-        if (var == null) return defaultValue;
+        if (var == null)
+            return defaultValue;
         Double s = var.toScalar();
         return s == null ? defaultValue : s;
     }
@@ -102,5 +116,88 @@ public class HexVarUtil {
     @Nullable
     public static RotationVar resolveRotationVar(@Nullable HexVar var, @Nonnull HexContext ctx) {
         return var == null ? null : var.toRotation(ctx.getAccessor());
+    }
+
+    @Nullable
+    public static Vector3d resolveEyePosition(@Nullable HexVar var,
+            @Nonnull ComponentAccessor<EntityStore> accessor) {
+        if (var instanceof EntityVar entityVar) {
+            var entityRef = entityVar.getRef(accessor);
+            if (entityRef != null && entityRef.isValid()) {
+                HeadRotation headRot = accessor.getComponent(entityRef, HeadRotation.getComponentType());
+                if (headRot != null) {
+                    return TargetUtil.getLook(entityRef, accessor).getPosition();
+                }
+                TransformComponent tc = accessor.getComponent(entityRef, TransformComponent.getComponentType());
+                if (tc != null)
+                    return new Vector3d(tc.getPosition());
+            }
+        }
+        return HexVarUtil.position(var, accessor);
+    }
+
+    @Nullable
+    public static Vector3d resolveDirection(@Nullable HexVar var,
+            @Nullable Vector3d sourcePosition,
+            @Nonnull ComponentAccessor<EntityStore> accessor) {
+        if (var == null)
+            return null;
+
+        if (var instanceof EntityVar entityVar) {
+            Ref<EntityStore> entityRef = entityVar.getRef(accessor);
+            if (entityRef == null || !entityRef.isValid())
+                return null;
+            try {
+                HeadRotation headRot = accessor.getComponent(entityRef, HeadRotation.getComponentType());
+                if (headRot != null)
+                    return headRot.getDirection();
+            } catch (Exception e) {
+            }
+            Rotation3f bodyRot = accessor.getComponent(entityRef, TransformComponent.getComponentType()).getRotation();
+            return new RotationVar(bodyRot).forward();
+        }
+        if (var instanceof RotationVar rotVar && rotVar.getValue() != null) {
+            return rotVar.forward();
+        }
+        if (var instanceof PositionVar posVar && posVar.getValue() != null) {
+            if (posVar.isAbsolute()) {
+                if (sourcePosition != null) {
+                    Vector3d dir = new Vector3d(posVar.getValue()).sub(sourcePosition);
+                    if (dir.length() > 1e-9)
+                        return dir.normalize();
+                }
+                return null;
+            }
+            Vector3d offset = new Vector3d(posVar.getValue());
+            if (offset.length() < 1e-9)
+                return null;
+            return offset.normalize();
+        }
+        if (var instanceof BlockVar blockVar) {
+            Vector3i bv = blockVar.getValue();
+            if (bv != null && sourcePosition != null) {
+                Vector3d blockCenter = new Vector3d(bv.x + 0.5, bv.y + 0.5, bv.z + 0.5);
+                Vector3d dir = blockCenter.sub(sourcePosition);
+                if (dir.length() > 1e-9)
+                    return dir.normalize();
+            }
+            return blockVar.toRotation(accessor).forward();
+        }
+        return null;
+    }
+
+    @Nullable
+    public static Rotation3f resolveRotation(@Nullable HexVar var,
+            @Nonnull ComponentAccessor<EntityStore> accessor) {
+        Vector3d dir = resolveDirection(var, null, accessor);
+        if (dir == null)
+            return null;
+        double dlen = dir.length();
+        double nx = dlen > 1e-9 ? dir.x / dlen : 0;
+        double ny = dlen > 1e-9 ? dir.y / dlen : 0;
+        double nz = dlen > 1e-9 ? dir.z / dlen : 0;
+        float yaw = TrigMathUtil.atan2((float) -nx, (float) -nz);
+        float pitch = (float) Math.asin(Math.max(-1.0, Math.min(1.0, ny)));
+        return new Rotation3f(pitch, yaw, 0f);
     }
 }
