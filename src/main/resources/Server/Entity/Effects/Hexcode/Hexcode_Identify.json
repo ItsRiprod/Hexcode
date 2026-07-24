@@ -1,7 +1,0 @@
-{
-  "Duration": 10.0,
-  "Infinite": false,
-  "OverlapBehavior": "Overwrite",
-  "Name": "hexcode.effects.identify",
-  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/Identify.png"
-}

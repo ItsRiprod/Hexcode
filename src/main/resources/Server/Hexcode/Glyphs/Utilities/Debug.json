@@ -3,7 +3,6 @@
   "Handler": "Debug",
   "Title": "hexcode.glyphs.Debug.name",
   "Description": "hexcode.glyphs.Debug.description",
-  "ModelPath": "Debug",
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [

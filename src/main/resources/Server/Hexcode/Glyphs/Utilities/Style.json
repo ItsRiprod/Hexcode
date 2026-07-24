@@ -6,10 +6,12 @@
   "ModelPath": "Style",
   "BasePower": 0,
   "ManaConsumption": 0,
+  "IsDeprecated": true,
   "ShapeStructure": [
-    { "Parent": "Less", "StatContribution": 0 },
-    { "Parent": "Square", "StatContribution": 0 },
-    { "Parent": "Greater", "StatContribution": 0 }
+    { "Parent": "Slash", "StatContribution": 0 },
+    { "Parent": "Less", "RelativeSize": 0.4, "StatContribution": 0 },
+    { "Parent": "Square", "RelativeSize": 0.8, "StatContribution": 0 },
+    { "Parent": "Greater", "RelativeSize": 0.4, "StatContribution": 0 }
   ],
   "Slots": {
     "style": {

@@ -7,9 +7,13 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.component.FortifyWardComponent;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.api.execution.HexExecuter;
 
 public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
@@ -18,6 +22,7 @@ public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
     public boolean onTick(float dt, HexStatus<FortifyState> status, ConstructTickContext ctx) {
         FortifyState state = status.getState();
         if (state == null) return true;
+        if (state.isConsumed()) return true;
         if (effectRemoved(ctx, state.getEffectId())) return true;
         if (state.isExpired()) return true;
         state.tick(dt);
@@ -29,8 +34,20 @@ public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
         FortifyState state = status.getState();
         if (state == null) return;
         cleanup(ctx, state.getEffectId());
-        status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
-        HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
+        HexContext hexContext = status.getHexContext();
+        hexContext.updateRuntimeAccessors(ctx.getBuffer());
+
+        EntityVar attacker = state.getAttacker();
+        if (attacker != null) {
+            Glyph trigger = status.getTriggeringGlyph();
+            if (trigger != null) {
+                trigger.writeOutput(attacker, hexContext);
+            } else {
+                hexContext.setDefaultVariable(attacker);
+            }
+        }
+
+        HexExecuter.continueExecution(state.getNextGlyphIds(), hexContext);
     }
 
     @Override
@@ -52,12 +69,13 @@ public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
     }
 
     private void cleanup(ConstructTickContext ctx, String effectId) {
-        if (effectId == null) return;
-
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Ref<EntityStore> target = ctx.getEntityRef();
         if (target == null || !target.isValid()) return;
 
+        buffer.tryRemoveComponent(target, FortifyWardComponent.getComponentType());
+
+        if (effectId == null) return;
         EffectControllerComponent controller = buffer.getComponent(
                 target, EffectControllerComponent.getComponentType());
         if (controller != null) {

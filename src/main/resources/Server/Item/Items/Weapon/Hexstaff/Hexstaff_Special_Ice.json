@@ -191,6 +191,7 @@
         {
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
+          "CastStyleId": "arc",
           "AuraParticles": [
             {
               "SystemId": "Hexstaff_Generic_Rune",

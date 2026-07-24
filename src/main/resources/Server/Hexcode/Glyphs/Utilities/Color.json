@@ -1,0 +1,54 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Color",
+  "Title": "hexcode.glyphs.Color.name",
+  "Description": "hexcode.glyphs.Color.description",
+  "ModelPath": "Glyph_Template",
+  "BasePower": 0,
+  "ManaConsumption": 0,
+  "ShapeStructure": [
+    { "Parent": "Less", "RelativeSize": 0.4, "StatContribution": 0 },
+    { "Parent": "Square", "RelativeSize": 0.8, "StatContribution": 0 },
+    { "Parent": "Greater", "RelativeSize": 0.4, "StatContribution": 0 }
+  ],
+  "Slots": {
+    "R": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Color.R.name",
+      "Description": "hexcode.glyphs.Color.R.description",
+      "DefaultValue": 0
+    },
+    "G": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Color.G.name",
+      "Description": "hexcode.glyphs.Color.G.description",
+      "DefaultValue": 0
+    },
+    "B": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Color.B.name",
+      "Description": "hexcode.glyphs.Color.B.description",
+      "DefaultValue": 0
+    },
+    "A": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Color.A.name",
+      "Description": "hexcode.glyphs.Color.A.description",
+      "DefaultValue": 255
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Color.Next.name",
+      "Description": "hexcode.glyphs.Color.Next.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.0
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "InteractionConfig": {
+    "UseDistance": {
+      "Adventure": 1000.0,
+      "Creative": 1000.0
+    },
+    "AllEntities": true
+  },
+  "MaxStack": 1,
+  "DropOnDeath": false
+}

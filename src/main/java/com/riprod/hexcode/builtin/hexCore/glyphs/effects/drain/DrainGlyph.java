@@ -17,7 +17,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.core.common.execution.component.HexColors;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.protection.HexProtection;
@@ -170,7 +169,6 @@ public static final String ID = "Drain";
                     HexVarUtil.numberOrSlotDefault(durationVar, asset.getSlot(DrainGlyphSlots.DURATION)).floatValue());
         }
 
-        HexColors colors = hexContext.getColors();
         Slot nextSlot = glyph.getSlot(Glyph.NEXT_SLOT);
         List<String> nextGlyphIds = nextSlot != null
                 ? new ArrayList<>(Arrays.asList(nextSlot.getLinks()))
@@ -187,7 +185,7 @@ public static final String ID = "Drain";
         }
 
         DrainState state = new DrainState(
-                sourceStatIndex, destRef, rate, totalDrainAmount, duration, nextGlyphIds, colors,
+                sourceStatIndex, destRef, rate, totalDrainAmount, duration, nextGlyphIds,
                 config.getHpFloor(), effectId);
 
         HexConstructSpawner.applyWithState(

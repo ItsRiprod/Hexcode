@@ -1,5 +1,7 @@
 package com.riprod.hexcode.core.common.execution.component;
 
+import javax.annotation.Nullable;
+
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -11,7 +13,8 @@ public class HexColors {
 
     private Color primaryColor;
     private Color secondaryColor;
-    private float primaryAlpha = 1.0f;
+    @Nullable
+    private Float primaryAlpha;
 
     public Color getPrimaryColor() {
         return primaryColor;
@@ -29,12 +32,13 @@ public class HexColors {
         this.secondaryColor = secondaryColor;
     }
 
-    public float getPrimaryAlpha() {
+    @Nullable
+    public Float getPrimaryAlpha() {
         return primaryAlpha;
     }
 
-    public void setPrimaryAlpha(float primaryAlpha) {
-        this.primaryAlpha = clamp01(primaryAlpha);
+    public void setPrimaryAlpha(@Nullable Float primaryAlpha) {
+        this.primaryAlpha = primaryAlpha == null ? null : clamp01(primaryAlpha);
     }
 
     public void setOverride(double r, double g, double b, double a) {

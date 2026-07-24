@@ -84,7 +84,7 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
 
         TransformComponent tc = buffer.getComponent(target, TransformComponent.getComponentType());
         if (tc != null) {
-            DrainStyle.renderTick(tc.getPosition(), state.getColors(), buffer);
+            DrainStyle.renderTick(tc.getPosition(), status.getHexContext(), buffer);
         }
 
         return false;
@@ -100,7 +100,7 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
         TransformComponent tc = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), TransformComponent.getComponentType());
         if (tc != null) {
-            DrainStyle.renderComplete(tc.getPosition(), state.getColors(), ctx.getBuffer());
+            DrainStyle.renderComplete(tc.getPosition(), status.getHexContext(), ctx.getBuffer());
         }
 
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());

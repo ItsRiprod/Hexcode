@@ -65,7 +65,7 @@ public class DelayConstructHandler implements ConstructHandler<DelayState> {
             TransformComponent tc = buffer.getComponent(
                     ctx.getEntityRef(), TransformComponent.getComponentType());
             if (tc != null) {
-                DelayStyle.renderExpiry(tc.getPosition(), state.getColors(), buffer);
+                DelayStyle.renderExpiry(tc.getPosition(), status.getHexContext(), buffer);
             }
             status.getHexContext().updateRuntimeAccessors(buffer);
             HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());

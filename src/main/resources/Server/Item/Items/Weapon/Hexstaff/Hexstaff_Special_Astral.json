@@ -194,6 +194,7 @@
         {
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
+          "CastStyleId": "sphere",
           "AuraParticles": [
             {
               "SystemId": "Hexstaff_Motes_Slow",

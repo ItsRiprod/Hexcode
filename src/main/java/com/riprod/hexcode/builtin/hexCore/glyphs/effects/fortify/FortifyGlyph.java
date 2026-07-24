@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.component.FortifyWardComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.style.FortifyStyle;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
@@ -93,11 +94,12 @@ public class FortifyGlyph implements GlyphHandler {
                     OverlapBehavior.OVERWRITE, accessor);
         }
 
+        accessor.putComponent(ref, FortifyWardComponent.getComponentType(), FortifyWardComponent.INSTANCE);
+
         FortifyState existing = ConstructStateUtil.findState(
                 accessor, ref, FortifyGlyph.ID, FortifyState.class);
         if (existing != null) {
-            existing.setRemainingDuration(durationSeconds);
-            existing.setNextGlyphIds(glyph.getNextLinks());
+            existing.refresh(durationSeconds, glyph.getNextLinks());
         } else {
             FortifyState state = new FortifyState(durationSeconds, effectId, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(

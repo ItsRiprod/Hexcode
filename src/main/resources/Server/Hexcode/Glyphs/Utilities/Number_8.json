@@ -3,10 +3,9 @@
   "Handler": "Number",
   "Title": "hexcode.glyphs.Number_8.name",
   "Description": "hexcode.glyphs.Number_8.description",
-  "ModelPath": "Number_8",
   "ShapeStructure": [
     { "Parent": "Greater", "StatContribution": 0 },
-    { "Parent": "Square", "StatContribution": 0 }
+    { "Parent": "Square", "RelativeSize": 0.8, "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {

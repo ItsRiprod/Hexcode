@@ -180,7 +180,8 @@ Restores the natural state of targets. Heals entities, grows crops, repairs dama
 
 ### \[□◯□\] Fortify
 
-Increases resilience of targets for a duration. On entities: flat damage reduction per hit. On blocks: increased hardness.
+Fully nullifies the damage from the next attack
+On blocks: increased hardness.
 
 ---
 

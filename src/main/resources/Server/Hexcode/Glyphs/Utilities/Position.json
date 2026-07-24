@@ -3,7 +3,6 @@
   "Handler": "Position",
   "Title": "hexcode.glyphs.Position.name",
   "Description": "hexcode.glyphs.Position.description",
-  "ModelPath": "Position",
   "ShapeStructure": [
     { "Parent": "Less", "StatContribution": 0 },
     { "Parent": "Greater", "StatContribution": 0 }

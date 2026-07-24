@@ -1,0 +1,33 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Sound",
+  "Title": "hexcode.glyphs.Sound.name",
+  "Description": "hexcode.glyphs.Sound.description",
+  "ModelPath": "Glyph_Template",
+  "BasePower": 0,
+  "ManaConsumption": 0,
+  "ShapeStructure": [
+    { "Parent": "Less", "RelativeSize": 0.4, "StatContribution": 0 },
+    { "Parent": "Triangle", "RelativeSize": 0.8, "StatContribution": 0 },
+    { "Parent": "Greater", "RelativeSize": 0.4, "StatContribution": 0 }
+  ],
+  "Slots": {
+    "Volume": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Sound.Volume.name",
+      "Description": "hexcode.glyphs.Sound.Volume.description",
+      "DefaultValue": 256
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Sound.Next.name",
+      "Description": "hexcode.glyphs.Sound.Next.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.0
+  }
+}

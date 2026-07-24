@@ -3,7 +3,6 @@
   "Handler": "Identify",
   "Title": "hexcode.glyphs.Identify.name",
   "Description": "hexcode.glyphs.Identify.description",
-  "ModelPath": "Identify",
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
@@ -28,12 +27,6 @@
       "Label": "hexcode.glyphs.Identify.Next.name",
       "Description": "hexcode.glyphs.Identify.Next.description"
     }
-  },
-  "Config": {
-    "Type": "Identify",
-    "Resource": "Life",
-    "DurationPerLife": 1.0,
-    "Cap": -1
   },
   "Volatility": {
     "InstantCost": 0.5,

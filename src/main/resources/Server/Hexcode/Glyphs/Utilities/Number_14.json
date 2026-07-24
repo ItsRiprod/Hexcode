@@ -3,10 +3,9 @@
   "Handler": "Number",
   "Title": "hexcode.glyphs.Number_14.name",
   "Description": "hexcode.glyphs.Number_14.description",
-  "ModelPath": "Number_14",
   "ShapeStructure": [
     { "Parent": "Less", "StatContribution": 0 },
-    { "Parent": "Line", "StatContribution": 0 }
+    { "Parent": "Line", "RelativeSize": 0.8, "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {

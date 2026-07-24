@@ -8,6 +8,7 @@
       "SystemId": "Shock_Spawner_Temporary"
     },
     "PrimarySound": "SFX_Staff_Fire_Shoot",
+    "SecondarySound": "SFX_Staff_Fire_Shoot",
     "SecondaryParticle": {
       "SystemId": "Shock_Spawner_Temporary"
     }
@@ -19,12 +20,8 @@
   "ShapeStructure": [
     "Circle",
     {
-      "Parent": "Square",
+      "Parent": "Antisquare",
       "RelativeSize": 0.8
-    },
-    {
-      "Parent": "Circle",
-      "RelativeSize": 0.55
     }
   ],
   "Slots": {
@@ -34,20 +31,28 @@
       "Label": "hexcode.glyphs.Arc.target.name",
       "Description": "hexcode.glyphs.Arc.target.description"
     },
-    "Jump": {
+    "Iterations": {
       "Type": "Input",
       "Parent": "Input",
-      "Label": "hexcode.glyphs.Arc.jump.name",
-      "Description": "hexcode.glyphs.Arc.jump.description",
+      "Label": "hexcode.glyphs.Arc.iterations.name",
+      "Description": "hexcode.glyphs.Arc.iterations.description",
       "DefaultValue": 15,
       "Unique": true
     },
-    "Delay": {
+    "Interval": {
       "Type": "Input",
       "Parent": "Input",
-      "Label": "hexcode.glyphs.Arc.delay.name",
-      "Description": "hexcode.glyphs.Arc.delay.description",
+      "Label": "hexcode.glyphs.Arc.interval.name",
+      "Description": "hexcode.glyphs.Arc.interval.description",
       "DefaultValue": 0.75,
+      "Unique": true
+    },
+    "Range": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Arc.range.name",
+      "Description": "hexcode.glyphs.Arc.range.description",
+      "DefaultValue": 15,
       "Unique": true
     },
     "Next": {
@@ -64,11 +69,12 @@
   "Config": {
     "Type": "Arc",
     "VolatilityImpact": {
-      "Type": "RatioToDefault",
-      "Reference": 15.0,
-      "Min": 0.0
+      "Type": "SphereVolume",
+      "DefaultMagnitude": 523.0,
+      "Exponent": 0.6667,
+      "Multiplier": 1.0
     },
-    "ShockOverlapSeconds": 0.25,
-    "Effect": "Hexcode_Shock"
+    "Model": "Conjured_Anchor",
+    "ReferenceInterval": 0.75
   }
 }

@@ -92,7 +92,10 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.erode.ErodeGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.force.ForceGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.FortifyConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.FortifyGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.FortifyWardDamageSystem;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.component.FortifyWardComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.InvisibilityConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.InvisibilityDamageSystem;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.InvisibilityGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.GlaciateConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.GlaciateGlyph;
@@ -179,8 +182,12 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation.RotationValu
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.round.RoundGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.self.SelfGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.identify.IdentifyGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.identify.IdentifyConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.IlluminateGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.IlluminateConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.sin.SinGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.color.ColorGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.shape.ShapeGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.sound.SoundGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.style.StyleGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.subtract.SubtractGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.tan.TanGlyph;
@@ -270,6 +277,9 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new PowerGlyph());
                 GlyphRegistry.register(new RootGlyph());
                 GlyphRegistry.register(new StyleGlyph());
+                GlyphRegistry.register(new ColorGlyph());
+                GlyphRegistry.register(new ShapeGlyph());
+                GlyphRegistry.register(new SoundGlyph());
                 GlyphRegistry.register(new PositionValue());
                 GlyphRegistry.register(new RotationValue());
                 GlyphRegistry.register(new DotGlyph());
@@ -337,6 +347,7 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new HealthSurgeGlyph());
                 GlyphRegistry.register(new MageArmorGlyph());
                 GlyphRegistry.register(new IdentifyGlyph());
+                GlyphRegistry.register(new IlluminateGlyph());
 
 
                 
@@ -462,6 +473,10 @@ public class HexCorePlugin extends JavaPlugin {
                                 .registerComponent(MagicHealthComponent.class, MagicHealthComponent::new);
                 MagicHealthComponent.setComponentType(magicHealthComponentType);
 
+                ComponentType<EntityStore, FortifyWardComponent> fortifyWardComponentType = entityStoreRegistry
+                                .registerComponent(FortifyWardComponent.class, () -> FortifyWardComponent.INSTANCE);
+                FortifyWardComponent.setComponentType(fortifyWardComponentType);
+
                 ComponentType<EntityStore, FlycastingState> flycastingStateType = entityStoreRegistry
                                 .registerComponent(FlycastingState.class, FlycastingState::new);
                 FlycastingState.setComponentType(flycastingStateType);
@@ -481,6 +496,9 @@ public class HexCorePlugin extends JavaPlugin {
                 entityStoreRegistry.registerSystem(new HexAppearanceRevertSystem());
 
                 entityStoreRegistry.registerSystem(new MagicHealthDamageSystem());
+                entityStoreRegistry.registerSystem(new FortifyWardDamageSystem());
+
+                entityStoreRegistry.registerSystem(new InvisibilityDamageSystem());
 
                 entityStoreRegistry.registerSystem(new ContextForceExitSystem.OnDeath());
 
@@ -539,6 +557,6 @@ public class HexCorePlugin extends JavaPlugin {
                 ConstructRegistry.register(ProjectileGlyph.ID, new ProjectileConstructHandler());
                 ConstructRegistry.register(IgniteGlyph.ID, new IgniteConstructHandler());
                 ConstructRegistry.register(GrowthGlyph.ID, new GrowthConstructHandler());
-                ConstructRegistry.register(IdentifyGlyph.ID, new IdentifyConstructHandler());
+                ConstructRegistry.register(IlluminateGlyph.ID, new IlluminateConstructHandler());
         }
 }

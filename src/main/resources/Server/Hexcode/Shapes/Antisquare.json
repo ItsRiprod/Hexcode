@@ -2,5 +2,7 @@
   "CenterFilled": false,
   "CanRotate": false,
   "ExpectedSpeed": 1067,
-  "StatResource": "Fire"
+  "StatResource": "Fire",
+  "Model": "NPC/Glyphs/Models/Glyph_1.blockymodel",
+  "Texture": "NPC/Glyphs/Textures/Antisquare.png"
 }

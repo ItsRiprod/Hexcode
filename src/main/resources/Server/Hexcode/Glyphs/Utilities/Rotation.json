@@ -3,7 +3,6 @@
   "Handler": "Rotation",
   "Title": "hexcode.glyphs.Rotation.name",
   "Description": "hexcode.glyphs.Rotation.description",
-  "ModelPath": "Rotation",
   "ShapeStructure": [
     { "Parent": "Up", "StatContribution": 0 },
     { "Parent": "Down", "StatContribution": 0 }

@@ -19,7 +19,6 @@
   },
   "Title": "hexcode.glyphs.Conjure.name",
   "Description": "hexcode.glyphs.Conjure.description",
-  "ModelPath": "Conjure",
   "BasePower": 1.0,
   "ManaConsumption": 1,
   "ShapeStructure": [
@@ -59,7 +58,7 @@
       "DefaultValue": 30,
       "Unique": true
     },
-    "interval": {
+    "Interval": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Conjure.interval.name",
@@ -67,8 +66,13 @@
       "DefaultValue": -1,
       "Unique": true
     },
-    "hitbox": {
-      "Parent": "Boolean"
+    "Hitbox": {
+      "Parent": "Boolean",
+      "Description": "hexcode.glyphs.Conjure.hitbox.description",
+      "DefaultValue": 1,
+      "PositiveLabel": "hexcode.glyphs.Conjure.hitbox.positive",
+      "NeutralLabel": "hexcode.glyphs.Conjure.hitbox.neutral",
+      "NegativeLabel": "hexcode.glyphs.Conjure.hitbox.negative"
     },
     "Immediate": {
       "Type": "Next",

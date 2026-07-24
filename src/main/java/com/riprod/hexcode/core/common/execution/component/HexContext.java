@@ -333,7 +333,7 @@ public class HexContext {
         if (style != null) {
             if (style.getPrimaryColor() != null) c.setPrimaryColor(style.getPrimaryColor().clone());
             if (style.getSecondaryColor() != null) c.setSecondaryColor(style.getSecondaryColor().clone());
-            c.setPrimaryAlpha(style.getAlphaOrDefault());
+            c.setPrimaryAlpha(style.getAlpha());
         }
         return c;
     }
@@ -343,7 +343,7 @@ public class HexContext {
         HexStyleAsset s = mutableStyle();
         s.setPrimaryColor(colors.getPrimaryColor() != null ? colors.getPrimaryColor().clone() : null);
         s.setSecondaryColor(colors.getSecondaryColor() != null ? colors.getSecondaryColor().clone() : null);
-        s.setAlpha(colors.getPrimaryAlpha());
+        if (colors.getPrimaryAlpha() != null) s.setAlpha(colors.getPrimaryAlpha());
     }
 
     @Nullable

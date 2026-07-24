@@ -2,5 +2,7 @@
   "CenterFilled": false,
   "CanRotate": false,
   "ExpectedSpeed": 900,
-  "StatResource": "Life"
+  "StatResource": "Life",
+  "Model": "NPC/Glyphs/Models/Glyph_1.blockymodel",
+  "Texture": "NPC/Glyphs/Textures/Square.png"
 }

@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.InteractionChain;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.InteractionManager;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.InteractionModule;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
@@ -22,6 +23,8 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -37,6 +40,11 @@ public class InteractGlyph implements GlyphHandler {
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(InteractConfig.class, InteractConfig.CODEC);
     }
 
     @Override
@@ -98,7 +106,7 @@ public class InteractGlyph implements GlyphHandler {
 
         ImbuedBlockActivator.ActivationOutcome outcome = ImbuedBlockActivator.tryConsume(world, blockPos);
         if (!outcome.isReady()) {
-            triggerBlockInteraction(accessor, hexContext.getCasterRef(accessor), world, blockPos);
+            triggerBlockInteraction(glyph, accessor, hexContext.getCasterRef(accessor), world, blockPos);
         }
 
         glyph.writeOutput(new BlockVar(blockPos), hexContext);
@@ -107,7 +115,7 @@ public class InteractGlyph implements GlyphHandler {
                 blockPos.x, blockPos.y, blockPos.z, outcome.getStatus());
     }
 
-    private void triggerBlockInteraction(CommandBuffer<EntityStore> accessor,
+    private void triggerBlockInteraction(Glyph glyph, CommandBuffer<EntityStore> accessor,
             Ref<EntityStore> casterRef, World world, Vector3i blockPos) {
 
         InteractionManager manager = accessor.getComponent(casterRef,
@@ -134,6 +142,13 @@ public class InteractGlyph implements GlyphHandler {
 
         InteractionContext ctx = InteractionContext.forInteraction(
                 manager, casterRef, InteractionType.Use, accessor);
+
+        InteractConfig config = getConfig(InteractConfig.class,
+                GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId()));
+        if (config != null && config.getReachProxyItem() != null) {
+            ctx.setHeldItem(new ItemStack(config.getReachProxyItem(), 1));
+        }
+
         BlockPosition blockPosition = new BlockPosition(blockPos.x, blockPos.y, blockPos.z);
         ctx.getMetaStore().putMetaObject(Interaction.TARGET_BLOCK, blockPosition);
         ctx.getMetaStore().putMetaObject(Interaction.TARGET_BLOCK_RAW, blockPosition);

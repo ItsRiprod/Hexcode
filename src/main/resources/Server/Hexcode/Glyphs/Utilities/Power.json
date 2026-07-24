@@ -3,7 +3,6 @@
   "Handler": "Power",
   "Title": "hexcode.glyphs.Power.name",
   "Description": "hexcode.glyphs.Power.description",
-  "ModelPath": "Power",
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [

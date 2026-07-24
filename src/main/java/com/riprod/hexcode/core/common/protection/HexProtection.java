@@ -32,7 +32,7 @@ public final class HexProtection {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
-    private static final String PROBE_CAUSE_ID = "Hex_Protection_Probe";
+    public static final String PROBE_CAUSE_ID = "Hex_Protection_Probe";
     private static final String BLOCKED_NOTIFICATION = "server.hexcode.notifications.glyphBlocked";
 
     private HexProtection() {

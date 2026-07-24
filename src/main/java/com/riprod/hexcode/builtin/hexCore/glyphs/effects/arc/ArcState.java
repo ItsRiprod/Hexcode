@@ -12,68 +12,61 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 public class ArcState implements ConstructState {
 
     private Glyph arcGlyph;
-    private List<String> branches;
-    private int branchIndex;
+    private List<String> outputLinks;
     private Set<UUID> visited;
-    private float maxJumpDistance;
-    private float delay;
+    private float range;
+    private float interval;
+    private int remainingIterations;
     private float elapsedSeconds;
-    private boolean hasFired;
-    private String effectId;
+    private boolean spawnedHost;
 
     public ArcState() {
-        this.branches = new ArrayList<>();
+        this.outputLinks = new ArrayList<>();
         this.visited = new HashSet<>();
     }
 
-    public ArcState(Glyph arcGlyph, List<String> branches, Set<UUID> visited,
-            float maxJumpDistance, float delay, String effectId) {
+    public ArcState(Glyph arcGlyph, List<String> outputLinks, Set<UUID> visited,
+            float range, float interval, int remainingIterations, boolean spawnedHost) {
         this.arcGlyph = arcGlyph;
-        this.branches = branches;
-        this.branchIndex = 0;
+        this.outputLinks = outputLinks;
         this.visited = visited;
-        this.maxJumpDistance = maxJumpDistance;
-        this.delay = delay;
+        this.range = range;
+        this.interval = interval;
+        this.remainingIterations = remainingIterations;
         this.elapsedSeconds = 0f;
-        this.hasFired = false;
-        this.effectId = effectId;
+        this.spawnedHost = spawnedHost;
     }
 
     public Glyph getArcGlyph() {
         return arcGlyph;
     }
 
-    public List<String> getBranches() {
-        return branches;
-    }
-
-    public int getBranchIndex() {
-        return branchIndex;
-    }
-
-    public String getCurrentBranch() {
-        if (branchIndex >= branches.size()) return null;
-        return branches.get(branchIndex);
-    }
-
-    public void advanceBranch() {
-        branchIndex++;
-    }
-
-    public boolean hasMoreBranches() {
-        return branchIndex < branches.size();
+    public List<String> getOutputLinks() {
+        return outputLinks;
     }
 
     public Set<UUID> getVisited() {
         return visited;
     }
 
-    public float getMaxJumpDistance() {
-        return maxJumpDistance;
+    public float getRange() {
+        return range;
     }
 
-    public float getDelay() {
-        return delay;
+    public float getInterval() {
+        return interval;
+    }
+
+    public int getRemainingIterations() {
+        return remainingIterations;
+    }
+
+    public void consumeIteration() {
+        remainingIterations--;
+    }
+
+    public boolean isSpawnedHost() {
+        return spawnedHost;
     }
 
     public float getElapsedSeconds() {
@@ -88,25 +81,11 @@ public class ArcState implements ConstructState {
         elapsedSeconds = 0f;
     }
 
-    public boolean hasFired() {
-        return hasFired;
-    }
-
-    public void setHasFired(boolean hasFired) {
-        this.hasFired = hasFired;
-    }
-
-    public String getEffectId() {
-        return effectId;
-    }
-
     @Override
     public ArcState copy() {
-        ArcState c = new ArcState(arcGlyph, new ArrayList<>(branches),
-                new HashSet<>(visited), maxJumpDistance, delay, effectId);
-        c.branchIndex = this.branchIndex;
+        ArcState c = new ArcState(arcGlyph, new ArrayList<>(outputLinks),
+                new HashSet<>(visited), range, interval, remainingIterations, spawnedHost);
         c.elapsedSeconds = this.elapsedSeconds;
-        c.hasFired = this.hasFired;
         return c;
     }
 }

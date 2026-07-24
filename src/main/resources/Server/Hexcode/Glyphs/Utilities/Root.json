@@ -3,12 +3,11 @@
   "Handler": "Root",
   "Title": "hexcode.glyphs.Root.name",
   "Description": "hexcode.glyphs.Root.description",
-  "ModelPath": "Root",
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
     { "Parent": "Antiline", "StatContribution": 0 },
-    { "Parent": "Up", "StatContribution": 0 }
+    { "Parent": "Up", "RelativeSize": 0.8, "StatContribution": 0 }
   ],
   "Slots": {
     "a": {

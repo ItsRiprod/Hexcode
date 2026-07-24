@@ -2,27 +2,17 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.identify;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import org.joml.Vector3f;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.reference.PersistentRef;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.identify.IdentifyState.Glow;
-import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.identify.style.IdentifyStyle;
-import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.identify.utils.GlowUtil;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
-import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.ColorVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -30,7 +20,6 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
-import com.riprod.hexcode.utils.HexVarUtil;
 
 public class IdentifyGlyph implements GlyphHandler {
 
@@ -45,11 +34,6 @@ public class IdentifyGlyph implements GlyphHandler {
     }
 
     @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(IdentifyConfig.class, IdentifyConfig.CODEC);
-    }
-
-    @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
         HexVar cached = hexContext.getVariable(glyph.getId());
         if (cached != null) return cached;
@@ -60,72 +44,10 @@ public class IdentifyGlyph implements GlyphHandler {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
-        if (caster == null || !caster.isValid()) {
-            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
-            return;
-        }
-
-        EntityVar viewerVar = HexVarUtil.resolveEntityVar(
-                glyph.readSlot(IdentifyGlyphSlots.REFERENCE, hexContext), hexContext);
-        Ref<EntityStore> viewerRef = viewerVar != null ? viewerVar.getRef(accessor) : null;
-        PersistentRef viewerPref = viewerVar != null ? viewerVar.getPersistentRef() : null;
-        if (viewerRef == null || !viewerRef.isValid() || viewerPref == null
-                || accessor.getComponent(viewerRef, PlayerRef.getComponentType()) == null) {
-            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
-            return;
-        }
-
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        IdentifyConfig config = getConfig(IdentifyConfig.class, asset);
-        if (config == null) config = IdentifyConfig.DEFAULTS;
-
-        float life = hexContext.consumeResource(config.getResourceId(), config.getCap());
-        float seconds = life * config.getDurationPerLife();
-        if (seconds <= 0f) {
-            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
-            return;
-        }
-
-        Vector3f color = IdentifyStyle.resolveColor(hexContext, asset, config);
-        Glow glow = buildGlow(glyph.readSlot(IdentifyGlyphSlots.TARGET, hexContext), viewerPref, color, hexContext);
-        if (glow == null) {
-            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
-            return;
-        }
-
-        IdentifyState state = ConstructStateUtil.findState(accessor, caster, ID, IdentifyState.class);
-        if (state == null) {
-            state = new IdentifyState(config.getEffectId());
-            state.add(glow);
-            state.extend(seconds);
-            HexConstructSpawner.applyWithState(accessor, caster, hexContext, glyph, ID, state);
-        } else {
-            state.add(glow);
-            state.extend(seconds);
-        }
-
-        GlowUtil.applyCasterEffect(accessor, caster, state.getEffectId(), state.getRemainingSeconds());
-        GlowUtil.sendGlow(accessor, glow);
-
+        HexVar a = glyph.readSlot(IdentifyGlyphSlots.TARGET, hexContext);
+        HexVar b = glyph.readSlot(IdentifyGlyphSlots.REFERENCE, hexContext);
+        glyph.writeOutput(new NumberVar(compareIdentity(a, b, hexContext)), hexContext);
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
-    }
-
-    private Glow buildGlow(HexVar targetSlot, PersistentRef viewer, Vector3f color, HexContext ctx) {
-        EntityVar targetVar = HexVarUtil.resolveEntityVar(targetSlot, ctx);
-        if (targetVar != null) {
-            Ref<EntityStore> ref = targetVar.getRef(ctx.getAccessor());
-            PersistentRef pref = targetVar.getPersistentRef();
-            if (ref != null && ref.isValid() && pref != null) {
-                return new Glow(viewer, pref, null, GlowUtil.nextVolumeId(), color);
-            }
-        }
-        BlockVar blockVar = HexVarUtil.resolveBlockVar(targetSlot, ctx);
-        if (blockVar != null && blockVar.getValue() != null) {
-            return new Glow(viewer, null, blockVar.getValue(), GlowUtil.nextVolumeId(), color);
-        }
-        return null;
     }
 
     private int compareIdentity(HexVar a, HexVar b, HexContext ctx) {

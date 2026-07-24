@@ -12,6 +12,8 @@ public record AppearanceLayer(
         @Nullable Float scaleMultiplier,
         long sequence) {
 
+    public static final String NAMEPLATE_HIDDEN = "";
+
     public static AppearanceLayer ofScale(float scaleMultiplier) {
         return new AppearanceLayer(null, null, null, null, scaleMultiplier, 0L);
     }
@@ -19,6 +21,10 @@ public record AppearanceLayer(
     public static AppearanceLayer ofModel(String modelAssetId, @Nullable PlayerSkin skin,
             @Nullable String nameplate, @Nullable Float baseScale) {
         return new AppearanceLayer(modelAssetId, skin, nameplate, baseScale, null, 0L);
+    }
+
+    public static AppearanceLayer ofNameplateHidden() {
+        return new AppearanceLayer(null, null, NAMEPLATE_HIDDEN, null, null, 0L);
     }
 
     AppearanceLayer withSequence(long value) {

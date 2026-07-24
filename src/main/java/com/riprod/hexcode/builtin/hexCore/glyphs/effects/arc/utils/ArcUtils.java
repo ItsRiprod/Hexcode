@@ -12,33 +12,10 @@ import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.selector.Selector;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 
 public class ArcUtils {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     private ArcUtils() {
-    }
-
-    public static void applyShockEffect(CommandBuffer<EntityStore> accessor,
-            Ref<EntityStore> targetRef, String effectId, float durationSeconds) {
-        EntityEffect shockEffect = EntityEffect.getAssetMap().getAsset(effectId);
-        if (shockEffect == null) {
-            LOGGER.atWarning().log("arc: %s effect asset not found", effectId);
-            return;
-        }
-
-        EffectControllerComponent controller = accessor.getComponent(
-                targetRef, EffectControllerComponent.getComponentType());
-        if (controller == null) {
-            LOGGER.atFine().log("arc: target has no EffectControllerComponent, skipping shock");
-            return;
-        }
-
-        controller.addEffect(targetRef, shockEffect, durationSeconds, OverlapBehavior.OVERWRITE, accessor);
     }
 
     public static Ref<EntityStore> getNextArcTarget(

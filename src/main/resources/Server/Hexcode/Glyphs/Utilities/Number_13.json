@@ -3,10 +3,9 @@
   "Handler": "Number",
   "Title": "hexcode.glyphs.Number_13.name",
   "Description": "hexcode.glyphs.Number_13.description",
-  "ModelPath": "Number_13",
   "ShapeStructure": [
     { "Parent": "Less", "StatContribution": 0 },
-    { "Parent": "Circle", "StatContribution": 0 }
+    { "Parent": "Circle", "RelativeSize": 0.8, "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {

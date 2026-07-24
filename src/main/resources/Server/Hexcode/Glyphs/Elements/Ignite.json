@@ -10,7 +10,6 @@
   },
   "Title": "hexcode.glyphs.Ignite.name",
   "Description": "hexcode.glyphs.Ignite.description",
-  "ModelPath": "Ignite",
   "BasePower": 1.0,
   "ManaConsumption": 15,
   "ShapeStructure": [

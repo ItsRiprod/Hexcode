@@ -11,6 +11,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.style.InvisibilityStyle;
+import com.riprod.hexcode.core.common.appearance.AppearanceLayer;
+import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
@@ -116,6 +118,9 @@ public class InvisibilityGlyph implements GlyphHandler {
             HexConstructSpawner.applyWithState(
                     accessor, ref, hexContext, glyph, InvisibilityGlyph.ID, state);
         }
+
+        HexAppearanceService.addLayer(accessor, ref, InvisibilityGlyph.ID,
+                AppearanceLayer.ofNameplateHidden());
 
         TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
         if (tc != null) {

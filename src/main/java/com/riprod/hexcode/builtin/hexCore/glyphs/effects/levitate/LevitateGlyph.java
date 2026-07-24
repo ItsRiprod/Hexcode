@@ -92,7 +92,6 @@ public class LevitateGlyph implements GlyphHandler {
             if (active != null && active.getState() instanceof LevitateState existing) {
                 existing.setAppliedIntensity(intensity);
                 existing.setRemainingDuration(durationSeconds);
-                existing.setColors(hexContext.getColors());
                 existing.setEffectId(effectId);
                 ConstructHandler<?> handler = ConstructRegistry.get(active.getHandlerId());
                 if (handler != null) {
@@ -104,7 +103,6 @@ public class LevitateGlyph implements GlyphHandler {
                 LevitateState state = new LevitateState();
                 state.setAppliedIntensity(intensity);
                 state.setRemainingDuration(durationSeconds);
-                state.setColors(hexContext.getColors());
                 state.setNextGlyphIds(glyph.getNextLinks());
                 state.setEffectId(effectId);
                 HexConstructSpawner.applyWithState(

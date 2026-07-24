@@ -105,9 +105,10 @@ public final class HexAppearanceService {
         if (modelAssetId == null) return false;
 
         PlayerSkin disguiseSkin = null;
-        String disguiseNameplate = null;
         Float overriddenBaseScale = null;
         long modelSequence = Long.MIN_VALUE;
+        String nameplate = null;
+        long nameplateSequence = Long.MIN_VALUE;
         float scaleProduct = 1.0f;
 
         for (AppearanceLayer layer : appearance.getLayers().values()) {
@@ -117,9 +118,12 @@ public final class HexAppearanceService {
             if (layer.modelAssetId() != null && layer.sequence() > modelSequence) {
                 modelAssetId = layer.modelAssetId();
                 disguiseSkin = layer.skin();
-                disguiseNameplate = layer.nameplate();
                 overriddenBaseScale = layer.baseScale();
                 modelSequence = layer.sequence();
+            }
+            if (layer.nameplate() != null && layer.sequence() > nameplateSequence) {
+                nameplate = layer.nameplate();
+                nameplateSequence = layer.sequence();
             }
         }
 
@@ -150,19 +154,19 @@ public final class HexAppearanceService {
         buffer.putComponent(ref, EntityScaleComponent.getComponentType(), new EntityScaleComponent(scale));
 
         applySkin(buffer, ref, overridden, disguiseSkin, appearance.getOriginalSkin());
-        applyNameplate(buffer, ref, overridden, disguiseNameplate, appearance.getOriginalNameplate());
+        applyNameplate(buffer, ref, nameplate, appearance.getOriginalNameplate());
         return true;
     }
 
     private static void applyNameplate(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref,
-            boolean overridden, @Nullable String disguiseNameplate, @Nullable String originalNameplate) {
+            @Nullable String nameplate, @Nullable String originalNameplate) {
         Nameplate current = buffer.getComponent(ref, Nameplate.getComponentType());
 
-        if (overridden) {
-            if (disguiseNameplate != null) {
-                setNameplate(buffer, ref, current, disguiseNameplate);
-            } else if (current != null) {
-                current.setText("");
+        if (nameplate != null) {
+            if (current != null) {
+                current.setText(nameplate);
+            } else if (!nameplate.isEmpty()) {
+                buffer.putComponent(ref, Nameplate.getComponentType(), new Nameplate(nameplate));
             }
             return;
         }

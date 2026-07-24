@@ -11,7 +11,6 @@
   },
   "Title": "hexcode.glyphs.Swap.name",
   "Description": "hexcode.glyphs.Swap.description",
-  "ModelPath": "Swap",
   "BasePower": 1.0,
   "ManaConsumption": 10,
   "ShapeStructure": [

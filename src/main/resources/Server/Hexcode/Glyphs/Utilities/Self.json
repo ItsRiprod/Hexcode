@@ -6,12 +6,11 @@
   },
   "Title": "hexcode.glyphs.Self.name",
   "Description": "hexcode.glyphs.Self.description",
-  "ModelPath": "Self",
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
     "Square",
-    "Down"
+    { "Parent": "Down", "RelativeSize": 0.6 }
   ],
   "Slots": {
     "Next": {

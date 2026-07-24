@@ -4,7 +4,6 @@
   "Style": "Essence_Life",
   "Title": "hexcode.glyphs.MageArmor.name",
   "Description": "hexcode.glyphs.MageArmor.description",
-  "ModelPath": "MageArmor",
   "BasePower": 1.0,
   "ManaConsumption": 15,
   "ShapeStructure": [

@@ -5,6 +5,7 @@ public final class ArcGlyphSlots {
     }
 
     public static final String TARGET = "Target";
-    public static final String JUMP = "Jump";
-    public static final String DELAY = "Delay";
+    public static final String ITERATIONS = "Iterations";
+    public static final String INTERVAL = "Interval";
+    public static final String RANGE = "Range";
 }

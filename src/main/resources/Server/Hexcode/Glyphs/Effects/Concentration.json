@@ -3,7 +3,6 @@
   "Handler": "Concentration",
   "Title": "hexcode.glyphs.Concentration.name",
   "Description": "hexcode.glyphs.Concentration.description",
-  "ModelPath": "Concentration",
   "BasePower": 0,
   "ManaConsumption": 2,
   "ShapeStructure": [

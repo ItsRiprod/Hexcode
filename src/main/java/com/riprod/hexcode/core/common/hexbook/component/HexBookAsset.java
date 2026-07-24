@@ -88,7 +88,7 @@ public class HexBookAsset implements JsonAssetWithMap<String, DefaultAssetMap<St
         HexColors c = new HexColors();
         if (style.getPrimaryColor() != null) c.setPrimaryColor(style.getPrimaryColor().clone());
         if (style.getSecondaryColor() != null) c.setSecondaryColor(style.getSecondaryColor().clone());
-        c.setPrimaryAlpha(style.getAlphaOrDefault());
+        c.setPrimaryAlpha(style.getAlpha());
         return c;
     }
 

@@ -10,7 +10,6 @@
   },
   "Title": "hexcode.glyphs.Force.name",
   "Description": "hexcode.glyphs.Force.description",
-  "ModelPath": "Force",
   "BasePower": 1.0,
   "ManaConsumption": 10,
   "ShapeStructure": [

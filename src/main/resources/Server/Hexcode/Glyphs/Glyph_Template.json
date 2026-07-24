@@ -1,5 +1,5 @@
 {
-  "ModelPath": "Base_Glyph",
+  "ModelPath": "Glyph_Template",
   "ManaConsumption": 1,
   "Volatility": {
     "InstantCost": 1,

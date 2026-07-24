@@ -3,7 +3,6 @@
   "Handler": "Domain",
   "Title": "hexcode.glyphs.Domain.name",
   "Description": "hexcode.glyphs.Domain.description",
-  "ModelPath": "Domain",
   "BasePower": 1.0,
   "ManaConsumption": 2,
   "ShapeStructure": [
@@ -88,7 +87,15 @@
     "TriggerImpact": {
       "Type": "Constant",
       "Value": 5.0
-    }
+    },
+    "DespawnParticle": {
+      "SystemId": "Conjure_Despawn"
+    },
+    "DespawnSound": "SFX_Fireball_Miss",
+    "ContestedParticle": {
+      "SystemId": "Halt_Crystallize"
+    },
+    "ContestedSound": "SFX_Ice_Break"
   },
   "Style": {
     "PrimaryColor": "#8033CC",

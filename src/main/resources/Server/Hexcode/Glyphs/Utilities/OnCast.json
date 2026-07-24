@@ -7,7 +7,6 @@
   },
   "Title": "hexcode.glyphs.OnCast.name",
   "Description": "hexcode.glyphs.OnCast.description",
-  "ModelPath": "OnCast",
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [

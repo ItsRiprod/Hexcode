@@ -4,7 +4,6 @@
   "Style": "Essence_Life",
   "Title": "hexcode.glyphs.HealthSurge.name",
   "Description": "hexcode.glyphs.HealthSurge.description",
-  "ModelPath": "HealthSurge",
   "BasePower": 1.0,
   "ManaConsumption": 15,
   "ShapeStructure": [

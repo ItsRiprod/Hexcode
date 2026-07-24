@@ -3,11 +3,10 @@
   "Handler": "Dot",
   "Title": "hexcode.glyphs.Dot.name",
   "Description": "hexcode.glyphs.Dot.description",
-  "ModelPath": "Dot",
   "ShapeStructure": [
     { "Parent": "Less", "StatContribution": 0 },
     { "Parent": "Greater", "StatContribution": 0 },
-    { "Parent": "Circle", "StatContribution": 0 }
+    { "Parent": "Circle", "RelativeSize": 0.8, "StatContribution": 0 }
   ],
   "Slots": {
     "v": {

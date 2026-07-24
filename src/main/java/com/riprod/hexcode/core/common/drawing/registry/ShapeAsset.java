@@ -17,7 +17,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.math.codec.Vector2dArrayCodec;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import com.hypixel.hytale.server.core.asset.common.CommonAssetValidator;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 
 import com.riprod.hexcode.core.common.execution.impact.Impact;
@@ -44,7 +44,7 @@ public class ShapeAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     protected float relativeSize = 1.0f;
     protected Vector2d relativePosition = new Vector2d();
     protected String statResource;
-    protected float statContribution = 2.0f;
+    protected float statContribution = 5.0f;
     protected Impact statResourceImpact = IDENTITY_IMPACT;
     protected String texture;
     protected String model;
@@ -172,14 +172,15 @@ public class ShapeAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, v) -> a.statResourceImpact = v, a -> a.statResourceImpact,
                         (a, p) -> a.statResourceImpact = p.statResourceImpact)
                 .add()
-                .appendInherited(new KeyedCodec<>("Texture", Codec.STRING, true),
+                .<String>appendInherited(new KeyedCodec<>("Texture", Codec.STRING, true),
                         (a, v) -> a.texture = v, a -> a.texture,
                         (a, p) -> a.texture = p.texture)
+                .addValidator(CommonAssetValidator.TEXTURE_CHARACTER_ATTACHMENT)
                 .add()
-                .appendInherited(new KeyedCodec<>("Model", Codec.STRING, true),
+                .<String>appendInherited(new KeyedCodec<>("Model", Codec.STRING, true),
                         (a, v) -> a.model = v, a -> a.model,
                         (a, p) -> a.model = p.model)
-                .addValidatorLate(() -> ModelAsset.VALIDATOR_CACHE.getValidator().late())
+                .addValidator(CommonAssetValidator.MODEL_CHARACTER_ATTACHMENT)
                 .add()
                 .build();
         CHILD_ASSET_CODEC = new ContainedAssetCodec<>(ShapeAsset.class, CODEC);

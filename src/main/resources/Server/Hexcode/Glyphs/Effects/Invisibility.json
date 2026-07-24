@@ -15,7 +15,6 @@
   },
   "Title": "hexcode.glyphs.Invisibility.name",
   "Description": "hexcode.glyphs.Invisibility.description",
-  "ModelPath": "Invisibility",
   "BasePower": 1.0,
   "ManaConsumption": 15,
   "ShapeStructure": [

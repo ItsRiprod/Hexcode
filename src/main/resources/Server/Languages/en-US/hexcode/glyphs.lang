@@ -125,13 +125,29 @@ Equal.Less.name=Less
 Equal.Less.description=If A is less than B
 
 Identify.name=Identify
-Identify.description=-1 diff, 0 identical, +1 same. Executed, Makes the Target glow.
+Identify.description=Compares Target and Reference by identity: -1 different category, 0 identical, +1 same category. Locks in the result as its value.
 Identify.Target.name=Target
-Identify.Target.description=The variable to identify, or to make glow
+Identify.Target.description=The first value to compare
 Identify.Reference.name=Reference
-Identify.Reference.description=The variable to compare against, or the player who sees the glow
+Identify.Reference.description=The value to compare against
 Identify.Next.name=Next
 Identify.Next.description=The next glyph in the execution chain
+
+Illuminate.name=Illuminate
+Illuminate.description=Makes the Target glow 
+Illuminate.Target.name=Target
+Illuminate.Target.description=The entity or block to illuminate
+Illuminate.Duration.name=Duration
+Illuminate.Duration.description=How long the glow lasts, in seconds
+Illuminate.Mode.name=Mode
+Illuminate.Mode.description=How the glow is applied to the Target
+Illuminate.Mode.positive=Glow
+Illuminate.Mode.neutral=Glow + Volume
+Illuminate.Mode.negative=Spawn Entity
+Illuminate.Immediate.name=Immediate
+Illuminate.Immediate.description=Fires immediately when the glow is applied
+Illuminate.Next.name=Next
+Illuminate.Next.description=Fires when the glow ends
 
 Floor.name=Floor
 Floor.description=Rounds A down to the nearest whole number.
@@ -359,8 +375,35 @@ Sin.a.description=Angle in radians
 Sin.Next.name=Next
 Sin.Next.description=The next glyph in the execution chain
 
-Style.name=Style
-Style.description=Override the active hex color with RGBA (0-255)
+Color.name=Color
+Color.description=Override the active hex color with RGBA (0-255)
+Color.R.name=R
+Color.R.description=Red (0-255)
+Color.G.name=G
+Color.G.description=Green (0-255)
+Color.B.name=B
+Color.B.description=Blue (0-255)
+Color.A.name=A
+Color.A.description=Alpha (0-255). At 0 the hex spawns no particles. Only applied when wired
+Color.Next.name=Next
+Color.Next.description=The next glyph in the execution chain
+
+Shape.name=Shape
+Shape.description=Adopt the appearance of another glyph for the rest of the hex
+Shape.Shape.name=Shape
+Shape.Shape.description=Linked glyph whose style is applied as an override (overridable fields only)
+Shape.Next.name=Next
+Shape.Next.description=The next glyph in the execution chain
+
+Sound.name=Sound
+Sound.description=Scale the volume of sounds emitted by the rest of the hex
+Sound.Volume.name=Volume
+Sound.Volume.description=Volume (0-512, where 256 is unchanged and 512 is twice as loud)
+Sound.Next.name=Next
+Sound.Next.description=The next glyph in the execution chain
+
+Style.name=Style (Legacy)
+Style.description=Deprecated. Superseded by Color, Shape and Sound
 Style.style.name=Style
 Style.style.description=Linked glyph whose style is applied as an override (overridable fields only)
 Style.r.name=R
@@ -456,13 +499,15 @@ Projectile.bounce.description=Fires once for every bounce
 # Effects
 
 Arc.name=Arc
-Arc.description=Chain lightning that fires each child on the next chain target
+Arc.description=Chains outward from a target, firing the wired output on the nearest entity each iteration
 Arc.target.name=Target
-Arc.target.description=Variable containing the targets to affect
-Arc.jump.name=Jump
-Arc.jump.description=Number of blocks to jump
-Arc.delay.name=Delay
-Arc.delay.description=Seconds between each arc jump
+Arc.target.description=Entity, block, or position the arc chains from
+Arc.iterations.name=Iterations
+Arc.iterations.description=Number of arc attempts to make
+Arc.interval.name=Interval
+Arc.interval.description=Seconds between each arc; a longer interval makes each arc cheaper
+Arc.range.name=Range
+Arc.range.description=Maximum distance to search for the next entity
 Arc.Next.name=Next
 Arc.Next.description=The next glyph in the execution chain
 
@@ -565,17 +610,15 @@ Force.Next.name=Next
 Force.Next.description=The next glyph in the execution chain
 
 Fortify.name=Fortify
-Fortify.description=Increases resilience of targets for a duration
+Fortify.description=Nullifies the full force of the damage from the next attack
 Fortify.target.name=Target
 Fortify.target.description=Variable containing the targets to affect
-Fortify.amount.name=Amount
-Fortify.amount.description=Damage reduction per incoming hit
 Fortify.duration.name=Duration
 Fortify.duration.description=How long the effect lasts in seconds
 Fortify.immediate.name=Immediate
 Fortify.immediate.description=Fires immediately when the effect is applied
 Fortify.Next.name=Next
-Fortify.Next.description=The next glyph in the execution chain
+Fortify.Next.description=Fires when the ward breaks or expires, carrying the attacker that broke it
 
 Glaciate.name=Glaciate
 Glaciate.description=Conjures a solid ice block at a target with gravity and speed-based impact damage
