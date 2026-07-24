@@ -18,7 +18,6 @@
   },
   "Title": "hexcode.glyphs.Glaciate.name",
   "Description": "hexcode.glyphs.Glaciate.description",
-  "ModelPath": "Glaciate",
   "BasePower": 1.0,
   "ManaConsumption": 10,
   "ShapeStructure": [

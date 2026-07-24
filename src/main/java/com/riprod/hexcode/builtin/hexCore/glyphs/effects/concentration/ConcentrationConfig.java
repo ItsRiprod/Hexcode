@@ -11,6 +11,7 @@ public final class ConcentrationConfig extends GlyphConfig {
 
     private double volatilityBonusFraction = 0.5;
     private double secondaryIntervalSeconds = 1.0;
+    private double manaPerSecond = 1.0;
 
     public double getVolatilityBonusFraction() {
         return volatilityBonusFraction;
@@ -20,6 +21,10 @@ public final class ConcentrationConfig extends GlyphConfig {
         return secondaryIntervalSeconds;
     }
 
+    public double getManaPerSecond() {
+        return manaPerSecond;
+    }
+
     public static final BuilderCodec<ConcentrationConfig> CODEC = BuilderCodec
             .builder(ConcentrationConfig.class, ConcentrationConfig::new, GlyphConfig.BASE_CODEC)
             .append(new KeyedCodec<>("VolatilityBonusFraction", Codec.DOUBLE, true),
@@ -27,6 +32,9 @@ public final class ConcentrationConfig extends GlyphConfig {
             .add()
             .append(new KeyedCodec<>("SecondaryIntervalSeconds", Codec.DOUBLE, true),
                     (c, v) -> c.secondaryIntervalSeconds = v, c -> c.secondaryIntervalSeconds)
+            .add()
+            .append(new KeyedCodec<>("ManaPerSecond", Codec.DOUBLE, true),
+                    (c, v) -> c.manaPerSecond = v, c -> c.manaPerSecond)
             .add()
             .build();
 }

@@ -3,13 +3,13 @@
     "StatModifiers": {
       "Mana?": [
         {
-          "Amount": 30,
+          "Amount#": "round($Prisma.Mana * $Armor.Spread_Chest * $Armor.Mult_Mana)",
           "CalculationType": "Additive"
         }
       ],
       "Volatility?": [
         {
-          "Amount": 8.5,
+          "Amount#": "round($Prisma.Volatility * $Armor.Spread_Chest * $Armor.Mult_Volatility * 2) / 2",
           "CalculationType": "Additive"
         }
       ],
@@ -17,7 +17,7 @@
         {
           "Target": "Max",
           "CalculationType": "Additive",
-          "Amount": 15
+          "Amount#": "round($Prisma.Affinity * $Armor.Spread_Chest * $Armor.Mult_Affinity)"
         }
       ]
     }

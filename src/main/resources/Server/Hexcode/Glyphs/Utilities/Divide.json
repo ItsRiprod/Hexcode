@@ -3,7 +3,6 @@
   "Handler": "Divide",
   "Title": "hexcode.glyphs.Divide.name",
   "Description": "hexcode.glyphs.Divide.description",
-  "ModelPath": "Divide",
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [

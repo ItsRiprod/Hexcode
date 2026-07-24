@@ -3,7 +3,6 @@
   "Handler": "Concentration",
   "Title": "hexcode.glyphs.Concentration.name",
   "Description": "hexcode.glyphs.Concentration.description",
-  "ModelPath": "Concentration",
   "BasePower": 0,
   "ManaConsumption": 2,
   "ShapeStructure": [
@@ -14,6 +13,20 @@
     }
   ],
   "Slots": {
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Concentration.Target.name",
+      "Description": "hexcode.glyphs.Concentration.Target.description",
+      "Unique": true
+    },
+    "Deferral": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Concentration.Deferral.name",
+      "Description": "hexcode.glyphs.Concentration.Deferral.description",
+      "Unique": true
+    },
     "Next": {
       "Type": "Next",
       "Parent": "Next",
@@ -48,6 +61,7 @@
   "Config": {
     "Type": "Concentration",
     "VolatilityBonusFraction": 0.5,
-    "SecondaryIntervalSeconds": 1.0
+    "SecondaryIntervalSeconds": 1.0,
+    "ManaPerSecond": 1.0
   }
 }

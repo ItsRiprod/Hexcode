@@ -97,7 +97,8 @@ public class DisguiseGlyph implements GlyphHandler {
         if (!config.disguiseNametag()) {
             Nameplate targetNameplate = accessor.getComponent(targetRef, Nameplate.getComponentType());
             disguise = AppearanceLayer.ofModel(disguise.modelAssetId(), disguise.skin(),
-                    targetNameplate != null ? targetNameplate.getText() : null, disguise.baseScale());
+                    targetNameplate != null ? targetNameplate.getText() : AppearanceLayer.NAMEPLATE_HIDDEN,
+                    disguise.baseScale());
         }
 
         DisguiseState state = ConstructStateUtil.findState(
@@ -190,7 +191,7 @@ public class DisguiseGlyph implements GlyphHandler {
             skin = skinComp.getPlayerSkin();
         }
 
-        String nameplate = null;
+        String nameplate = AppearanceLayer.NAMEPLATE_HIDDEN;
         Nameplate nameplateComp = accessor.getComponent(referenceRef, Nameplate.getComponentType());
         if (nameplateComp != null && !nameplateComp.getText().isEmpty()) {
             nameplate = nameplateComp.getText();

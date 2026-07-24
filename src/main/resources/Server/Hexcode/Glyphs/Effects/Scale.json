@@ -13,7 +13,6 @@
   },
   "Title": "hexcode.glyphs.Scale.name",
   "Description": "hexcode.glyphs.Scale.description",
-  "ModelPath": "Scale",
   "BasePower": 1.0,
   "ManaConsumption": 10,
   "ShapeStructure": [

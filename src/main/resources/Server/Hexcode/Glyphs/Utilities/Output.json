@@ -3,7 +3,6 @@
   "Handler": "Output",
   "Title": "hexcode.glyphs.Output.name",
   "Description": "hexcode.glyphs.Output.description",
-  "ModelPath": "Output",
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [

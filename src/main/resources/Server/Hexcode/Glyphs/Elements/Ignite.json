@@ -10,7 +10,6 @@
   },
   "Title": "hexcode.glyphs.Ignite.name",
   "Description": "hexcode.glyphs.Ignite.description",
-  "ModelPath": "Ignite",
   "BasePower": 1.0,
   "ManaConsumption": 15,
   "ShapeStructure": [
@@ -64,7 +63,7 @@
     "AffinityStat": "Affinity_Fire"
   },
   "Volatility": {
-    "InstantCost": 2,
+    "InstantCost": 6,
     "DrainPerSecond": 0.2
   }
 }

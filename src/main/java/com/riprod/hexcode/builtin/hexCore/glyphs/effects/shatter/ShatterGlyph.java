@@ -39,7 +39,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
-import com.riprod.hexcode.utils.HexDirectionUtil;
+
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
@@ -94,7 +94,7 @@ public class ShatterGlyph implements GlyphHandler {
             return;
         }
 
-        Vector3d spawnPos = HexDirectionUtil.resolveEyePosition(sourceVar, hexContext.getAccessor());
+        Vector3d spawnPos = HexVarUtil.resolveEyePosition(sourceVar, hexContext.getAccessor());
         if (spawnPos == null) {
             spawnPos = HexVarUtil.position(sourceVar, hexContext.getAccessor());
         }
@@ -104,7 +104,7 @@ public class ShatterGlyph implements GlyphHandler {
             return;
         }
 
-        Vector3d centralDir = HexDirectionUtil.resolveDirection(
+        Vector3d centralDir = HexVarUtil.resolveDirection(
                 directionVar, spawnPos, hexContext.getAccessor());
         if (centralDir == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,

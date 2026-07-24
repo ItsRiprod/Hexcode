@@ -3,13 +3,13 @@
     "StatModifiers": {
       "Mana?": [
         {
-          "Amount": 17,
+          "Amount#": "round($Thorium.Mana * $Armor.Spread_Legs * $Armor.Mult_Mana)",
           "CalculationType": "Additive"
         }
       ],
       "Volatility?": [
         {
-          "Amount": 8.5,
+          "Amount#": "round($Thorium.Volatility * $Armor.Spread_Legs * $Armor.Mult_Volatility * 2) / 2",
           "CalculationType": "Additive"
         }
       ],
@@ -17,7 +17,7 @@
         {
           "Target": "Max",
           "CalculationType": "Additive",
-          "Amount": 15
+          "Amount#": "round($Thorium.Affinity * $Armor.Spread_Legs * $Armor.Mult_Affinity)"
         }
       ]
     }

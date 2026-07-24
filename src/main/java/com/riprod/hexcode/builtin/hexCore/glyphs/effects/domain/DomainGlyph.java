@@ -30,7 +30,6 @@ import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
-import com.riprod.hexcode.utils.HexDirectionUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
@@ -134,11 +133,12 @@ public static final String ID = "Domain";
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());
 
-        if (hexContext.getColors().getPrimaryAlpha() != 0f) {
+        float debugAlpha = VfxUtil.resolveAlpha(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+        if (debugAlpha > 0f) {
             Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
             Vector3d debugScale = new Vector3d(radius * 2, radius * 2, radius * 2);
             DebugComponent debugComp = new DebugComponent(DebugShape.Sphere, debugColor, debugScale, 0.1f);
-            debugComp.setOpacity(0.15f);
+            debugComp.setOpacity(debugAlpha * 0.15f);
             debugComp.setIntervalMultiplier(0.01f);
             debugComp.setFadeMultiplier(2.0f);
             debugComp.setFlags(DebugUtils.FLAG_NO_WIREFRAME);

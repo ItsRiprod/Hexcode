@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration;
 
+import java.util.Objects;
+
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -13,6 +15,7 @@ import com.hypixel.hytale.protocol.MountController;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.entity.reference.PersistentRef;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -24,12 +27,17 @@ import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
-import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
+import com.riprod.hexcode.core.common.redirect.EntityRedirectSpawner;
+import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
 public class ConcentrationGlyph implements GlyphHandler {
@@ -67,9 +75,11 @@ public class ConcentrationGlyph implements GlyphHandler {
                 accessor, casterRef, ConcentrationGlyph.ID, ConcentrationState.class);
         if (existing != null) return;
 
-        CasterStateComponent execComp = accessor.getComponent(
-                casterRef, CasterStateComponent.getComponentType());
-        if (execComp == null || !execComp.isHoldingPrimary()) {
+        EntityStatMap statMap = accessor.getComponent(
+                casterRef, EntityStatMap.getComponentType());
+        EntityStatValue holdStat = statMap != null
+                ? statMap.get(HexcodeEntityStatTypes.getIsHolding()) : null;
+        if (holdStat == null || holdStat.get() < 1f) {
             HexExecuter.continueFromSlot(glyph, ConcentrationGlyphSlots.RELEASE, hexContext);
             return;
         }
@@ -92,10 +102,37 @@ public class ConcentrationGlyph implements GlyphHandler {
 
         ConcentrationState state = new ConcentrationState(visualRef);
         state.setVolatilityBonus(bonus);
+        applyWard(glyph, hexContext, accessor, casterRef, state);
         HexConstructSpawner.applyWithState(
                 accessor, casterRef, hexContext, glyph, ConcentrationGlyph.ID, state);
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+    }
+
+    private void applyWard(Glyph glyph, HexContext hexContext, CommandBuffer<EntityStore> accessor,
+            Ref<EntityStore> casterRef, ConcentrationState state) {
+        EntityVar targetVar = HexVarUtil.resolveEntityVar(
+                glyph.readSlot(ConcentrationGlyphSlots.TARGET, hexContext), hexContext);
+        EntityVar deferralVar = HexVarUtil.resolveEntityVar(
+                glyph.readSlot(ConcentrationGlyphSlots.DEFERRAL, hexContext), hexContext);
+        if (targetVar == null || deferralVar == null) return;
+
+        Ref<EntityStore> targetRef = targetVar.getRawRef(accessor);
+        Ref<EntityStore> deferralRef = deferralVar.getRawRef(accessor);
+        if (targetRef == null || !targetRef.isValid()
+                || deferralRef == null || !deferralRef.isValid()) return;
+
+        PersistentRef target = new PersistentRef();
+        target.setEntity(targetRef, accessor);
+        PersistentRef deferral = new PersistentRef();
+        deferral.setEntity(deferralRef, accessor);
+        if (Objects.equals(target.getUuid(), deferral.getUuid())) return;
+
+        EntityRedirectSpawner.stamp(accessor, targetRef, casterRef, deferralRef);
+        state.setTargetRef(target);
+        state.setDeferralRef(deferral);
+        state.setWarded(true);
+        state.setUpkeepActive(true);
     }
 
     private Ref<EntityStore> spawnVisual(CommandBuffer<EntityStore> accessor,

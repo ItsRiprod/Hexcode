@@ -88,7 +88,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         if (zone.getSpatialQueryTimer() <= 0f) {
             zone.setSpatialQueryTimer(SPATIAL_INTERVAL_SECONDS);
 
-            updateContestation(zone, center, ctx.getEntityRef(), ctx.getBuffer());
+            updateContestation(zone, center, ctx.getEntityRef(), status, ctx.getBuffer());
 
             List<Ref<EntityStore>> found = new ObjectArrayList<>(TargetUtil.getAllEntitiesInSphere(
                     center, zone.getRadius(), ctx.getBuffer()));
@@ -176,7 +176,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         if (transform != null) {
             float radius = zone != null ? zone.getRadius() : 5.0f;
             DomainStyle.renderDespawn(transform.getPosition(), radius,
-                    status.getHexContext().getColors(), ctx.getBuffer());
+                    status.getHexContext(), ctx.getBuffer());
         }
 
         ctx.getBuffer().tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
@@ -206,7 +206,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
     }
 
     private void updateContestation(DomainZoneComponent self, Vector3d selfCenter,
-            Ref<EntityStore> selfRef, CommandBuffer<EntityStore> buffer) {
+            Ref<EntityStore> selfRef, HexStatus<NoState> status, CommandBuffer<EntityStore> buffer) {
         Store<EntityStore> store = buffer.getExternalData().getWorld().getEntityStore().getStore();
         boolean wasContested = self.isContested();
         final boolean[] nowContested = { false };
@@ -243,8 +243,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         self.setContested(nowContested[0]);
 
         if (nowContested[0] && !wasContested) {
-            DomainStyle.renderContested(selfCenter,
-                    null, buffer);
+            DomainStyle.renderContested(selfCenter, status.getHexContext(), buffer);
 
             DebugComponent debug = buffer.getComponent(selfRef, DebugComponent.getComponentType());
             if (debug != null) {

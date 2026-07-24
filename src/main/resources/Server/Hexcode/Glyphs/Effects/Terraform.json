@@ -3,7 +3,6 @@
   "Handler": "Terraform",
   "Title": "hexcode.glyphs.Terraform.name",
   "Description": "hexcode.glyphs.Terraform.description",
-  "ModelPath": "Terraform",
   "BasePower": 1.0,
   "ManaConsumption": 10,
   "ShapeStructure": [

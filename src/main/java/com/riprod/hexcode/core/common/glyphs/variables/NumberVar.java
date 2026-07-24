@@ -36,11 +36,6 @@ public final class NumberVar extends HexVar {
     }
 
     @Override
-    public Object getRawValue() {
-        return number;
-    }
-
-    @Override
     public Double toScalar() {
         return number;
     }

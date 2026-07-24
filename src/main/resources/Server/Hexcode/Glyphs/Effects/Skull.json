@@ -3,7 +3,6 @@
   "Handler": "Interaction",
   "Title": "hexcode.glyphs.Skull.name",
   "Description": "hexcode.glyphs.Skull.description",
-  "ModelPath": "Skull",
   "ShapeStructure": [
     "Circle",
     "Skull"

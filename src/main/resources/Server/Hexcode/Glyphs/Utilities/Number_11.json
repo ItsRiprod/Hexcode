@@ -3,7 +3,6 @@
   "Handler": "Number",
   "Title": "hexcode.glyphs.Number_11.name",
   "Description": "hexcode.glyphs.Number_11.description",
-  "ModelPath": "Number_11",
   "ShapeStructure": [
     {
       "Parent": "Down",
@@ -11,6 +10,7 @@
     },
     {
       "Parent": "Triangle",
+      "RelativeSize": 0.8,
       "StatContribution": 0
     }
   ],

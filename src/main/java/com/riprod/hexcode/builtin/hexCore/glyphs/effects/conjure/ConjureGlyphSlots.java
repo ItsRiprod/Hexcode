@@ -8,7 +8,7 @@ public final class ConjureGlyphSlots {
     public static final String COORDS_A = "coordsA";
     public static final String COORDS_B = "coordsB";
     public static final String DURATION = "Duration";
-    public static final String INTERVAL = "interval";
+    public static final String INTERVAL = "Interval";
     public static final String IMMEDIATE = "Immediate";
-    public static final String HITBOX = "hitbox";
+    public static final String HITBOX = "Hitbox";
 }

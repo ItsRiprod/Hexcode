@@ -4,3 +4,5 @@ hexcode.effects.growth=Healing
 hexcode.effects.drain=Drained
 hexcode.effects.scale=Resized
 hexcode.effects.disguise=Disguised
+hexcode.effects.invisibility=Invisible
+hexcode.effects.teleportation=Displaced

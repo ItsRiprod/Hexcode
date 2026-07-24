@@ -1,0 +1,32 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Shape",
+  "Title": "hexcode.glyphs.Shape.name",
+  "Description": "hexcode.glyphs.Shape.description",
+  "ModelPath": "Glyph_Template",
+  "BasePower": 0,
+  "ManaConsumption": 0,
+  "ShapeStructure": [
+    { "Parent": "Less", "RelativeSize": 0.4, "StatContribution": 0 },
+    { "Parent": "Circle", "RelativeSize": 0.8, "StatContribution": 0 },
+    { "Parent": "Greater", "RelativeSize": 0.4, "StatContribution": 0 }
+  ],
+  "Slots": {
+    "Shape": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Shape.Shape.name",
+      "Description": "hexcode.glyphs.Shape.Shape.description"
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Shape.Next.name",
+      "Description": "hexcode.glyphs.Shape.Next.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.0
+  }
+}

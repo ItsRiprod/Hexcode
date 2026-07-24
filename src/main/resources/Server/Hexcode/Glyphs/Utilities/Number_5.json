@@ -3,10 +3,9 @@
   "Handler": "Number",
   "Title": "hexcode.glyphs.Number_5.name",
   "Description": "hexcode.glyphs.Number_5.description",
-  "ModelPath": "Number_5",
   "ShapeStructure": [
     { "Parent": "Greater", "StatContribution": 0 },
-    { "Parent": "Circle", "StatContribution": 0 }
+    { "Parent": "Circle", "RelativeSize": 0.8, "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {

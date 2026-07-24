@@ -19,7 +19,6 @@
   },
   "Title": "hexcode.glyphs.Ensnare.name",
   "Description": "hexcode.glyphs.Ensnare.description",
-  "ModelPath": "Ensnare",
   "BasePower": 1.0,
   "ManaConsumption": 2,
   "ShapeStructure": [

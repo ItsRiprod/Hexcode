@@ -4,7 +4,6 @@
   "Style": "Essence_Lightning",
   "Title": "hexcode.glyphs.Bolt.name",
   "Description": "hexcode.glyphs.Bolt.description",
-  "ModelPath": "Bolt",
   "BasePower": 1.0,
   "ManaConsumption": 15,
   "ShapeStructure": [
@@ -51,7 +50,7 @@
     "AffinityStat": "Affinity_Lightning"
   },
   "Volatility": {
-    "InstantCost": 2,
+    "InstantCost": 6,
     "DrainPerSecond": 0.0
   }
 }

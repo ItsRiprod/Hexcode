@@ -13,7 +13,6 @@
   },
   "Title": "hexcode.glyphs.Disguise.name",
   "Description": "hexcode.glyphs.Disguise.description",
-  "ModelPath": "Disguise",
   "BasePower": 1.0,
   "ManaConsumption": 10,
   "ShapeStructure": [

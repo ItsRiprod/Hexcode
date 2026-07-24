@@ -4,7 +4,6 @@
   "Style": "Element_Chaos",
   "Title": "hexcode.glyphs.Scorch.name",
   "Description": "hexcode.glyphs.Scorch.description",
-  "ModelPath": "Scorch",
   "BasePower": 1.0,
   "ManaConsumption": 15,
   "ShapeStructure": [
@@ -51,7 +50,7 @@
     "AffinityStat": "Affinity_Fire"
   },
   "Volatility": {
-    "InstantCost": 2,
+    "InstantCost": 6,
     "DrainPerSecond": 0.0
   }
 }

@@ -80,8 +80,7 @@ public class DelayGlyph implements GlyphHandler {
 
         List<String> nextLinks = glyph.getNextLinks();
 
-        DelayState state = new DelayState(seconds, new ArrayList<>(nextLinks),
-                hexContext.getColors(), entityVar == null);
+        DelayState state = new DelayState(seconds, new ArrayList<>(nextLinks), entityVar == null);
 
         if (entityVar != null) {
             Ref<EntityStore> targetRef = entityVar.getRef(accessor);

@@ -10,8 +10,6 @@ public abstract sealed class HexVar
     public static final CodecMapCodec<HexVar> CODEC = new CodecMapCodec<>("Type");
     public static final BuilderCodec<HexVar> BASE_CODEC = BuilderCodec.abstractBuilder(HexVar.class).build();
 
-    public abstract Object getRawValue();
-
     public abstract Double toScalar();
 
     public abstract String describe();

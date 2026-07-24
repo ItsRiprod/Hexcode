@@ -68,7 +68,7 @@
     "AffinityStat": "Affinity_Ice"
   },
   "Volatility": {
-    "InstantCost": 2,
+    "InstantCost": 6,
     "DrainPerSecond": 0.2
   }
 }

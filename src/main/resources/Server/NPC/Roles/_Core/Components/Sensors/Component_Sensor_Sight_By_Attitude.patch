@@ -1,0 +1,13 @@
+{
+  "Content": {
+    "Filters+": [
+      {
+        "Type": "Not",
+        "Filter": {
+          "Type": "EntityEffect",
+          "EffectId": "Hexcode_Invisibility"
+        }
+      }
+    ]
+  }
+}

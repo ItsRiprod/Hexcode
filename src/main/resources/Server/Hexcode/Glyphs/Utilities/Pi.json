@@ -3,10 +3,9 @@
   "Handler": "Pi",
   "Title": "hexcode.glyphs.Pi.name",
   "Description": "hexcode.glyphs.Pi.description",
-  "ModelPath": "Pi",
   "ShapeStructure": [
     { "Parent": "Triangle", "StatContribution": 0 },
-    { "Parent": "Down", "StatContribution": 0 }
+    { "Parent": "Down", "RelativeSize": 0.4, "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {

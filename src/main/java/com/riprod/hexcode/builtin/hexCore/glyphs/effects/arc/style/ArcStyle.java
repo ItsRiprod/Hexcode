@@ -25,15 +25,21 @@ public class ArcStyle {
         return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
     }
 
+    public static void renderCast(ComponentAccessor<EntityStore> accessor, Vector3d position,
+            HexContext ctx) {
+        HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
+        VfxUtil.spawnPrimary(overrides, asset(), position, accessor);
+    }
+
     public static void renderArc(ComponentAccessor<EntityStore> accessor, World world,
             Vector3d sourcePos, Vector3d targetPos, HexContext ctx) {
-        HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset());
-        VfxUtil.line(accessor, world, sourcePos, targetPos, color, BEAM_THICKNESS, BEAM_DURATION, 0);
-        Color tint = VfxUtil.resolvePrimaryColorRaw(ctx, asset());
-        VfxUtil.particleAlongPath(particleSystemId(), sourcePos, targetPos, PARTICLES_PER_ARC, tint, null, accessor);
-        if (asset() != null && asset().getStyle() != null && asset().getStyle().getPrimarySound() != null) {
-            VfxUtil.sound(asset().getStyle().getPrimarySound(), sourcePos, accessor);
+        VfxUtil.line(accessor, world, sourcePos, targetPos, color, BEAM_THICKNESS, BEAM_DURATION, 0,
+                VfxUtil.resolveAlpha(ctx, asset()));
+        if (VfxUtil.resolveAlpha(ctx, asset()) > 0f) {
+            Color tint = VfxUtil.resolvePrimaryColorRaw(ctx, asset());
+            VfxUtil.particleAlongPath(particleSystemId(), sourcePos, targetPos, PARTICLES_PER_ARC, tint, null,
+                    accessor);
         }
     }
 
@@ -41,12 +47,6 @@ public class ArcStyle {
             HexContext ctx) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         VfxUtil.spawnSecondary(overrides, asset(), position, accessor);
-    }
-
-    public static void renderFizzle(ComponentAccessor<EntityStore> accessor, Vector3d position,
-            HexContext ctx) {
-        HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnStyleParticle(overrides, asset(), position, accessor);
     }
 
     private static String particleSystemId() {

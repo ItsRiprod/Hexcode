@@ -78,10 +78,8 @@ public class StyleGlyph implements GlyphHandler {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        if (hexContext.getStyle() == null) hexContext.setStyle(HexStyleAsset.empty());
-
         HexStyleAsset linkedStyle = resolveLinkedGlyphStyle(glyph, hexContext);
-        if (linkedStyle != null) hexContext.getStyle().applyOverride(linkedStyle);
+        if (linkedStyle != null) hexContext.mutableStyle().applyOverride(linkedStyle);
 
         if (hasAnyColorInput(glyph)) {
             double[] rgba = resolveRgba(glyph, hexContext);

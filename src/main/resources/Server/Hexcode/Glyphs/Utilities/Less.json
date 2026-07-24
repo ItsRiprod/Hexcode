@@ -3,10 +3,11 @@
   "Handler": "Less",
   "Title": "hexcode.glyphs.Less.name",
   "Description": "hexcode.glyphs.Less.description",
-  "ModelPath": "Less",
   "BasePower": 0,
   "ManaConsumption": 0,
+  "IsDeprecated": true,
   "ShapeStructure": [
+    { "Parent": "Slash", "StatContribution": 0 },
     { "Parent": "Less", "StatContribution": 0 }
   ],
   "Slots": {

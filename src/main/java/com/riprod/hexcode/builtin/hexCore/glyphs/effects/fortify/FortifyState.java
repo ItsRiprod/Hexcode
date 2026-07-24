@@ -3,13 +3,20 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
+import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 
 public class FortifyState implements ConstructState {
 
     private float remainingDuration;
     private String effectId;
     private List<String> nextGlyphIds;
+
+    private boolean consumed;
+    @Nullable
+    private EntityVar attacker;
 
     public FortifyState() {
         this.nextGlyphIds = new ArrayList<>();
@@ -37,6 +44,21 @@ public class FortifyState implements ConstructState {
         return remainingDuration <= 0f;
     }
 
+    public boolean isConsumed() {
+        return consumed;
+    }
+
+    // attacker is null when the breaking hit had no entity source (fall, lava, explosion)
+    public void consume(@Nullable EntityVar attacker) {
+        this.consumed = true;
+        this.attacker = attacker;
+    }
+
+    @Nullable
+    public EntityVar getAttacker() {
+        return attacker;
+    }
+
     public List<String> getNextGlyphIds() {
         return nextGlyphIds;
     }
@@ -45,8 +67,18 @@ public class FortifyState implements ConstructState {
         this.nextGlyphIds = ids != null ? ids : new ArrayList<>();
     }
 
+    public void refresh(float remainingDuration, List<String> nextGlyphIds) {
+        this.remainingDuration = remainingDuration;
+        this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
+        this.consumed = false;
+        this.attacker = null;
+    }
+
     @Override
     public FortifyState copy() {
-        return new FortifyState(remainingDuration, effectId, new ArrayList<>(nextGlyphIds));
+        FortifyState c = new FortifyState(remainingDuration, effectId, new ArrayList<>(nextGlyphIds));
+        c.consumed = this.consumed;
+        c.attacker = this.attacker != null ? (EntityVar) this.attacker.copy() : null;
+        return c;
     }
 }

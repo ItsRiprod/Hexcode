@@ -1,5 +1,7 @@
 {
   "CenterFilled": true,
   "CanRotate": false,
-  "ExpectedSpeed": 166
+  "ExpectedSpeed": 166,
+  "Model": "NPC/Glyphs/Models/Glyph_1.blockymodel",
+  "Texture": "NPC/Glyphs/Textures/Antiline.png"
 }

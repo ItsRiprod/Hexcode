@@ -2,5 +2,7 @@
   "CenterFilled": false,
   "CanRotate": true,
   "ExpectedSpeed": 934,
-  "StatResource": "Ice"
+  "StatResource": "Ice",
+  "Model": "NPC/Glyphs/Models/Glyph_1.blockymodel",
+  "Texture": "NPC/Glyphs/Textures/Anticircle.png"
 }

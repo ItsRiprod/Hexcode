@@ -1,0 +1,59 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Illuminate",
+  "Title": "hexcode.glyphs.Illuminate.name",
+  "Description": "hexcode.glyphs.Illuminate.description",
+  "BasePower": 0,
+  "ManaConsumption": 0,
+  "ShapeStructure": [
+    "Circle",
+    { "Parent": "Antisquare", "RelativeSize": 0.8 },
+    { "Parent": "Triangle", "RelativeSize": 0.6 }
+  ],
+  "Slots": {
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Illuminate.Target.name",
+      "Description": "hexcode.glyphs.Illuminate.Target.description"
+    },
+    "Duration": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Illuminate.Duration.name",
+      "Description": "hexcode.glyphs.Illuminate.Duration.description",
+      "DefaultValue": 5,
+      "Unique": true
+    },
+    "Mode": {
+      "Parent": "Boolean",
+      "DefaultValue": 0,
+      "Label": "hexcode.glyphs.Illuminate.Mode.name",
+      "Description": "hexcode.glyphs.Illuminate.Mode.description",
+      "PositiveLabel": "hexcode.glyphs.Illuminate.Mode.positive",
+      "NeutralLabel": "hexcode.glyphs.Illuminate.Mode.neutral",
+      "NegativeLabel": "hexcode.glyphs.Illuminate.Mode.negative"
+    },
+    "Immediate": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Illuminate.Immediate.name",
+      "Description": "hexcode.glyphs.Illuminate.Immediate.description"
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Illuminate.Next.name",
+      "Description": "hexcode.glyphs.Illuminate.Next.description"
+    }
+  },
+  "Config": {
+    "Type": "Illuminate",
+    "LightRadius": 12,
+    "DefaultColor": "#00CCCC"
+  },
+  "Volatility": {
+    "InstantCost": 5,
+    "DrainPerSecond": 0.0
+  }
+}

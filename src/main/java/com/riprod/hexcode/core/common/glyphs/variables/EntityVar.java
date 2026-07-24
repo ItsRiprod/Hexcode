@@ -15,6 +15,7 @@ import com.hypixel.hytale.server.core.entity.reference.PersistentRef;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.redirect.EntityRedirectComponent;
 
 public final class EntityVar extends HexVar {
     private PersistentRef entity;
@@ -36,10 +37,6 @@ public final class EntityVar extends HexVar {
         return persistent;
     }
 
-    public PersistentRef getValue() {
-        return entity;
-    }
-
     @Override
     public HexVar copy() {
         return new EntityVar(entity);
@@ -47,12 +44,22 @@ public final class EntityVar extends HexVar {
 
     @Nullable
     public Ref<EntityStore> getRef(ComponentAccessor<EntityStore> accessor) {
+        Ref<EntityStore> ref = getRawRef(accessor);
+        if (ref == null) return null;
+        EntityRedirectComponent redirect = accessor.getComponent(ref, EntityRedirectComponent.getComponentType());
+        if (redirect == null) return ref;
+        Ref<EntityStore> deferral = redirect.resolveDeferral(accessor);
+        return deferral != null ? deferral : ref;
+    }
+
+    @Nullable
+    public Ref<EntityStore> getRawRef(ComponentAccessor<EntityStore> accessor) {
         if (entity == null) return null;
         return entity.getEntity(accessor);
     }
 
-    @Override
-    public Object getRawValue() {
+    @Nullable
+    public PersistentRef getPersistentRef() {
         return entity;
     }
 

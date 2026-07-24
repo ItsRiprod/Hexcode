@@ -22,4 +22,8 @@ public abstract class HexcodeEntityStatTypes {
     public static int getInContext() {
         return EntityStatType.getAssetMap().getIndex("InContext");
     }
+
+    public static int getIsHolding() {
+        return EntityStatType.getAssetMap().getIndex("Flag_IsHolding");
+    }
 }

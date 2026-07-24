@@ -19,7 +19,6 @@
   },
   "Title": "hexcode.glyphs.Phase.name",
   "Description": "hexcode.glyphs.Phase.description",
-  "ModelPath": "Phase",
   "ManaConsumption": 5,
   "ShapeStructure": [
     "Square",

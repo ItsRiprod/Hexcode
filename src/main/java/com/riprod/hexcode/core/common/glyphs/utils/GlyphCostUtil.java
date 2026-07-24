@@ -12,9 +12,9 @@ import com.riprod.hexcode.utils.HexVarUtil;
 
 public final class GlyphCostUtil {
 
-    private static final float CONTRIBUTION_FLOOR = 0.1f;
-    private static final float CONTRIBUTION_RANGE = 0.9f;
-    private static final float CONTRIBUTION_SCALE = 10.0f;
+    private static final float CONTRIBUTION_FLOOR = 0f;
+    private static final float CONTRIBUTION_RANGE = 1f;
+    private static final float CONTRIBUTION_SCALE = 20.0f;
 
     private GlyphCostUtil() {
     }

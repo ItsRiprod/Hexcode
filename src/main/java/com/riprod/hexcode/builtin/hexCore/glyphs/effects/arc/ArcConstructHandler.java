@@ -1,25 +1,19 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
-import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.style.ArcStyle;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.utils.ArcUtils;
@@ -28,27 +22,22 @@ import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 
 public class ArcConstructHandler implements ConstructHandler<ArcState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final float MIN_INTERVAL = 0.05f;
 
     @Override
     public void onFirstTick(HexStatus<ArcState> status, ConstructTickContext ctx) {
         ArcState state = status.getState();
         if (state == null) return;
-        ArcConfig config = resolveConfig(state.getArcGlyph());
-        ArcUtils.applyShockEffect(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId(),
-                state.getDelay() + (float) config.getShockOverlapSeconds());
-    }
 
-    private ArcConfig resolveConfig(Glyph arcGlyph) {
-        if (arcGlyph == null) return ArcConfig.DEFAULTS;
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(arcGlyph.getGlyphId());
-        GlyphConfig raw = asset != null ? asset.getConfig() : null;
-        return raw instanceof ArcConfig arcConfig ? arcConfig : ArcConfig.DEFAULTS;
+        Vector3d origin = originPosition(ctx);
+        if (origin != null) {
+            ArcStyle.renderCast(ctx.getBuffer(), origin, status.getHexContext());
+        }
     }
 
     @Override
@@ -56,64 +45,67 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         ArcState state = status.getState();
         if (state == null) return true;
 
-        if (!state.hasFired()) {
-            return fireCurrentBranch(state, status, ctx);
-        }
-
         state.tick(dt);
-        if (state.getElapsedSeconds() < state.getDelay()) return false;
+        if (state.getElapsedSeconds() < state.getInterval()) return false;
+        state.resetTimer();
 
-        return hopToNext(state, status, ctx);
+        state.consumeIteration();
+
+        boolean depleted = pulse(state, status, ctx);
+        return depleted || state.getRemainingIterations() <= 0;
     }
 
     @Override
     public void onCleanup(HexStatus<ArcState> status, ConstructTickContext ctx) {
         ArcState state = status.getState();
-        Ref<EntityStore> target = ctx.getEntityRef();
-        if (state != null && state.getEffectId() != null && target != null && target.isValid()) {
-            EffectControllerComponent controller = ctx.getBuffer().getComponent(
-                    target, EffectControllerComponent.getComponentType());
-            if (controller != null) {
-                int effectIndex = EntityEffect.getAssetMap().getIndex(state.getEffectId());
-                if (effectIndex != Integer.MIN_VALUE) {
-                    controller.removeEffect(target, effectIndex, ctx.getBuffer());
-                }
+        if (state != null && state.isSpawnedHost()) {
+            Ref<EntityStore> host = ctx.getEntityRef();
+            if (host != null && host.isValid()) {
+                ctx.getBuffer().tryRemoveEntity(host, RemoveReason.REMOVE);
             }
         }
     }
 
-    private boolean fireCurrentBranch(ArcState state, HexStatus<ArcState> status,
-            ConstructTickContext ctx) {
-        String branch = state.getCurrentBranch();
-        if (branch == null) return true;
+    private boolean pulse(ArcState state, HexStatus<ArcState> status, ConstructTickContext ctx) {
+        CommandBuffer<EntityStore> buffer = ctx.getBuffer();
+        Vector3d origin = originPosition(ctx);
+        if (origin == null) return true;
 
         HexContext hexContext = status.getHexContext();
-        if (!tryConsumePerHopVolatility(state, hexContext)) {
+
+        Ref<EntityStore> target = ArcUtils.getNextArcTarget(
+                origin, state.getRange(), state.getVisited(), buffer);
+        if (target == null) {
+            return false;
+        }
+
+        TransformComponent targetTc = buffer.getComponent(target, TransformComponent.getComponentType());
+        Vector3d targetPos = targetTc != null ? targetTc.getPosition() : origin;
+        double distance = origin.distance(targetPos);
+
+        if (!consumeArcCost(state, hexContext, (float) distance)) {
             return true;
         }
 
-        Ref<EntityStore> targetRef = ctx.getEntityRef();
-        UUIDComponent targetUuid = ctx.getBuffer().getComponent(
-                targetRef, UUIDComponent.getComponentType());
-        Glyph triggeringGlyph = status.getTriggeringGlyph();
-        HexContext branchContext = hexContext.branch();
-        branchContext.updateRuntimeAccessors(ctx.getBuffer());
+        UUIDComponent targetUuid = buffer.getComponent(target, UUIDComponent.getComponentType());
+        if (targetUuid != null) state.getVisited().add(targetUuid.getUuid());
 
-        if (targetRef.isValid() && targetUuid != null && triggeringGlyph != null) {
-            triggeringGlyph.writeOutput(
-                    new EntityVar(targetUuid.getUuid(), targetRef), branchContext);
+        World world = buffer.getExternalData().getWorld();
+        ArcStyle.renderArc(buffer, world, origin, targetPos, hexContext);
+        ArcStyle.renderHit(buffer, targetPos, hexContext);
+
+        Glyph triggeringGlyph = status.getTriggeringGlyph();
+        if (triggeringGlyph != null && targetUuid != null) {
+            HexContext branchContext = hexContext.branch();
+            branchContext.updateRuntimeAccessors(buffer);
+            triggeringGlyph.writeOutput(new EntityVar(targetUuid.getUuid(), target), branchContext);
+            HexExecuter.continueExecution(List.copyOf(state.getOutputLinks()), branchContext);
         }
 
-        HexExecuter.continueExecution(List.of(branch), branchContext);
-
-        state.advanceBranch();
-        state.setHasFired(true);
-        state.resetTimer();
-
-        return !state.hasMoreBranches();
+        return false;
     }
 
-    private boolean tryConsumePerHopVolatility(ArcState state, HexContext hexContext) {
+    private boolean consumeArcCost(ArcState state, HexContext hexContext, float distance) {
         Glyph arcGlyph = state.getArcGlyph();
         if (arcGlyph == null) return true;
 
@@ -122,57 +114,21 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
 
         HexStats tracker = hexContext.getHexStats();
         if (tracker == null) return false;
-
-        Impact impact = asset.getConfig() == null ? null : asset.getConfig().getVolatilityImpact();
-        float finalCost = arcGlyph.computeBaseCost() * Impact.scale(impact, state.getMaxJumpDistance());
-
         if (hexContext.getHexRoot() == null) return true;
-        return tracker.consumeVolatility(finalCost) > 0f;
+
+        ArcConfig config = asset.getConfig() instanceof ArcConfig arcConfig ? arcConfig : ArcConfig.DEFAULTS;
+        Impact impact = asset.getConfig() == null ? null : asset.getConfig().getVolatilityImpact();
+        float intervalFactor = (float) (config.getReferenceInterval()
+                / Math.max(MIN_INTERVAL, state.getInterval()));
+        float cost = arcGlyph.computeBaseCost(asset) * Impact.scale(impact, distance) * intervalFactor;
+
+        return tracker.consumeVolatility(cost) > 0f;
     }
 
-    private boolean hopToNext(ArcState state, HexStatus<ArcState> status, ConstructTickContext ctx) {
-        CommandBuffer<EntityStore> buffer = ctx.getBuffer();
-        Ref<EntityStore> currentRef = ctx.getEntityRef();
-
-        TransformComponent fromTc = buffer.getComponent(
-                currentRef, TransformComponent.getComponentType());
-        if (fromTc == null) {
-            LOGGER.atWarning().log("arc: current hop entity lost transform; ending chain");
-            return true;
-        }
-
-        Vector3d fromPos = fromTc.getPosition();
-        HexContext hexContext = status.getHexContext();
-
-        Ref<EntityStore> nextTarget = ArcUtils.getNextArcTarget(
-                fromPos, state.getMaxJumpDistance(), state.getVisited(), buffer);
-        if (nextTarget == null) {
-            LOGGER.atInfo().log("arc: no nearby unvisited entity within %.1f; ending chain",
-                    state.getMaxJumpDistance());
-            return true;
-        }
-
-        UUIDComponent nextUuid = buffer.getComponent(nextTarget, UUIDComponent.getComponentType());
-        Set<UUID> nextVisited = new HashSet<>(state.getVisited());
-        if (nextUuid != null) nextVisited.add(nextUuid.getUuid());
-
-        TransformComponent nextTc = buffer.getComponent(nextTarget, TransformComponent.getComponentType());
-        Vector3d nextPos = nextTc != null ? nextTc.getPosition() : fromPos;
-
-        World world = buffer.getExternalData().getWorld();
-        ArcStyle.renderArc(buffer, world, fromPos, nextPos, hexContext);
-        ArcStyle.renderHit(buffer, nextPos, hexContext);
-
-        List<String> remaining = new ArrayList<>(
-                state.getBranches().subList(state.getBranchIndex(), state.getBranches().size()));
-
-        ArcState nextState = new ArcState(state.getArcGlyph(), remaining, nextVisited,
-                state.getMaxJumpDistance(), state.getDelay(), state.getEffectId());
-
-        HexConstructSpawner.applyWithState(
-                buffer, nextTarget, hexContext, status.getTriggeringGlyph(),
-                ArcGlyph.ID, nextState);
-
-        return true;
+    private Vector3d originPosition(ConstructTickContext ctx) {
+        Ref<EntityStore> host = ctx.getEntityRef();
+        if (host == null || !host.isValid()) return null;
+        TransformComponent tc = ctx.getBuffer().getComponent(host, TransformComponent.getComponentType());
+        return tc != null ? tc.getPosition() : null;
     }
 }

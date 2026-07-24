@@ -22,7 +22,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.utils.HexDirectionUtil;
+
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.TargetFilter;
 
@@ -31,9 +31,11 @@ import java.util.List;
 
 public class BeamGlyph implements GlyphHandler {
     @Override
-public String getId() { return ID; };
+    public String getId() {
+        return ID;
+    };
 
-public static final String ID = "Beam";
+    public static final String ID = "Beam";
 
     @Override
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
@@ -47,22 +49,28 @@ public static final String ID = "Beam";
     }
 
     @Override
+    public float collectMana(Glyph glyph, GlyphAsset asset) {
+        return isPassive(glyph) ? PASSIVE_FLOOR : GlyphHandler.super.collectMana(glyph, asset);
+    }
+
+    @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         return isPassive(glyph) ? PASSIVE_FLOOR
                 : GlyphHandler.super.getVolatilityCost(glyph, hexContext, asset);
     }
 
-
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         BeamConfig config = getConfig(BeamConfig.class, asset);
-        if (config == null) config = BeamConfig.DEFAULTS;
+        if (config == null)
+            config = BeamConfig.DEFAULTS;
         boolean passive = isPassive(glyph);
 
         HexVar posVar = glyph.readSlot(BeamGlyphSlots.SOURCE, hexContext);
         HexVar rotVar = glyph.readSlot(BeamGlyphSlots.ROTATION, hexContext);
-        if (rotVar == null) rotVar = posVar;
+        if (rotVar == null)
+            rotVar = posVar;
 
         if (posVar == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -70,14 +78,14 @@ public static final String ID = "Beam";
             return;
         }
 
-        Vector3d origin = HexDirectionUtil.resolveEyePosition(posVar, hexContext.getAccessor());
+        Vector3d origin = HexVarUtil.resolveEyePosition(posVar, hexContext.getAccessor());
         if (origin == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Source entity is invalid");
             return;
         }
 
-        Vector3d direction = HexDirectionUtil.resolveDirection(rotVar, origin, hexContext.getAccessor());
+        Vector3d direction = HexVarUtil.resolveDirection(rotVar, origin, hexContext.getAccessor());
         if (direction == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Rotation variable is not valid");
@@ -146,17 +154,21 @@ public static final String ID = "Beam";
         } else if (blockHitLocation != null) {
             endPoint = blockHitLocation;
             hitType = BeamStyle.HitType.BLOCK;
-            if (!passive) glyph.writeOutput(
-                    new PositionVar(BlockResolution.nudgeIntoBlock(blockHitLocation, direction), true),
-                    hexContext);
+            if (!passive)
+                glyph.writeOutput(
+                        new PositionVar(BlockResolution.nudgeIntoBlock(blockHitLocation, direction), true),
+                        hexContext);
         } else {
             endPoint = new Vector3d(origin).add(new Vector3d(direction).mul(beamLength));
             hitType = BeamStyle.HitType.MISS;
-            if (!passive) glyph.writeOutput(new PositionVar(endPoint, true), hexContext);
+            if (!passive)
+                glyph.writeOutput(new PositionVar(endPoint, true), hexContext);
         }
 
-        BeamStyle.render(beamOrigin, endPoint, new Vector3f(rotation.x, rotation.y, rotation.z), hitType, hexContext, hexContext.getAccessor());
+        BeamStyle.render(beamOrigin, endPoint, new Vector3f(rotation.x, rotation.y, rotation.z), hitType, hexContext,
+                hexContext.getAccessor());
 
-        if (!passive) HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+        if (!passive)
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 }

@@ -3,7 +3,6 @@
   "Handler": "Subtract",
   "Title": "hexcode.glyphs.Subtract.name",
   "Description": "hexcode.glyphs.Subtract.description",
-  "ModelPath": "Subtract",
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [

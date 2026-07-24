@@ -41,8 +41,11 @@ public class AreaStyle {
         matrix.translate(center.x, center.y, center.z);
         matrix.scale(radius * 2.0, radius * 2.0, radius * 2.0);
 
-        int flags = DebugUtils.FLAG_FADE | DebugUtils.FLAG_NO_WIREFRAME;
-        DebugUtils.add(world, DebugShape.Sphere, matrix, color, SPHERE_DURATION, flags);
+        float opacity = VfxUtil.resolveAlpha(ctx, asset());
+        if (opacity > 0f) {
+            int flags = DebugUtils.FLAG_FADE | DebugUtils.FLAG_NO_WIREFRAME;
+            DebugUtils.add(world, DebugShape.Sphere, matrix, color, opacity, SPHERE_DURATION, flags);
+        }
 
         VfxUtil.spawnPrimary(overrides, asset(), center, accessor);
     }

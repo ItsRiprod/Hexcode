@@ -3,12 +3,11 @@
   "Handler": "Cos",
   "Title": "hexcode.glyphs.Cos.name",
   "Description": "hexcode.glyphs.Cos.description",
-  "ModelPath": "Cos",
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
     { "Parent": "Triangle", "StatContribution": 0 },
-    { "Parent": "Greater", "StatContribution": 0 }
+    { "Parent": "Greater", "RelativeSize": 0.4, "StatContribution": 0 }
   ],
   "Slots": {
     "a": {

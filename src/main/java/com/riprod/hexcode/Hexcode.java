@@ -13,6 +13,7 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.construct.system.MountOrphanReaperSystem;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
+import com.riprod.hexcode.core.common.redirect.EntityRedirectComponent;
 import com.riprod.hexcode.core.common.context.interactions.HexContextAbility;
 import com.riprod.hexcode.core.common.context.interactions.HexContextPrimary;
 import com.riprod.hexcode.core.common.drawing.DrawAnchorSystem;
@@ -85,7 +86,6 @@ import com.riprod.hexcode.core.common.pedestal.session.SessionTickSystem;
 import com.riprod.hexcode.core.common.memories.GlyphMemory;
 import com.riprod.hexcode.core.common.memories.GlyphMemoryProvider;
 import com.riprod.hexcode.core.common.execution.interactions.HexExecuteInteraction;
-import com.riprod.hexcode.core.common.execution.interactions.HexHold;
 import com.riprod.hexcode.interaction.PedestalInteraction;
 import com.riprod.patchly.PatchManager;
 
@@ -313,6 +313,10 @@ public class Hexcode extends JavaPlugin {
                 .registerComponent(HexcodeComponent.class, HexcodeComponent::new);
         HexcodeComponent.setComponentType(hexcodeComponentType);
 
+        ComponentType<EntityStore, EntityRedirectComponent> entityRedirectComponentType = entityStoreRegistry
+                .registerComponent(EntityRedirectComponent.class, EntityRedirectComponent::new);
+        EntityRedirectComponent.setComponentType(entityRedirectComponentType);
+
         ComponentType<EntityStore, DrawCaptureComponent> drawCaptureComponentType = entityStoreRegistry
                 .registerComponent(DrawCaptureComponent.class, DrawCaptureComponent::new);
         DrawCaptureComponent.setComponentType(drawCaptureComponentType);
@@ -449,7 +453,6 @@ public class Hexcode extends JavaPlugin {
         Interaction.CODEC.register("HexContextPrimary", HexContextPrimary.class, HexContextPrimary.CODEC);
         Interaction.CODEC.register("HexContextAbility", HexContextAbility.class, HexContextAbility.CODEC);
         Interaction.CODEC.register("HexDispel", HexDispel.class, HexDispel.CODEC);
-        Interaction.CODEC.register("HexHold", HexHold.class, HexHold.CODEC);
         Interaction.CODEC.register("PedestalInteraction", PedestalInteraction.class, PedestalInteraction.CODEC);
         Interaction.CODEC.register("HexExecute", HexExecuteInteraction.class, HexExecuteInteraction.CODEC);
     }

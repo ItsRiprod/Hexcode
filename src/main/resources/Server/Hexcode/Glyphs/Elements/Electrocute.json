@@ -4,7 +4,6 @@
   "Style": "Essence_Lightning",
   "Title": "hexcode.glyphs.Electrocute.name",
   "Description": "hexcode.glyphs.Electrocute.description",
-  "ModelPath": "Electrocute",
   "BasePower": 1.0,
   "ManaConsumption": 15,
   "ShapeStructure": [
@@ -58,7 +57,7 @@
     "AffinityStat": "Affinity_Lightning"
   },
   "Volatility": {
-    "InstantCost": 2,
+    "InstantCost": 6,
     "DrainPerSecond": 0.2
   }
 }

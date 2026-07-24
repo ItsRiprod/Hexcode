@@ -19,6 +19,9 @@ import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.codec.ProtocolCodecs;
 
 public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<String, HexStyleAsset>> {
+    public static final float MIN_VOLUME = 0.0f;
+    public static final float MAX_VOLUME = 2.0f;
+
     public static final AssetBuilderCodec<String, HexStyleAsset> CODEC;
     public static final Codec<String> CHILD_ASSET_CODEC;
     private static AssetStore<String, HexStyleAsset, DefaultAssetMap<String, HexStyleAsset>> ASSET_STORE;
@@ -31,6 +34,8 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
     protected Color primaryColor;
     protected Color secondaryColor;
     protected Float alpha;
+    protected Float scale;
+    protected Float volume;
     protected ModelParticle styleParticle;
     protected String primaryModel;
 
@@ -87,6 +92,23 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         return this.alpha != null ? this.alpha : 1.0f;
     }
 
+    public Float getScale() {
+        return this.scale;
+    }
+
+    public float getScaleOrDefault() {
+        return this.scale != null ? this.scale : 1.0f;
+    }
+
+    public Float getVolume() {
+        return this.volume;
+    }
+
+    public float getVolumeOrDefault() {
+        if (this.volume == null) return 1.0f;
+        return this.volume < MIN_VOLUME ? MIN_VOLUME : Math.min(this.volume, MAX_VOLUME);
+    }
+
     public ModelParticle getStyleParticle() {
         return this.styleParticle;
     }
@@ -131,6 +153,14 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         this.alpha = alpha;
     }
 
+    public void setScale(Float scale) {
+        this.scale = scale;
+    }
+
+    public void setVolume(Float volume) {
+        this.volume = volume;
+    }
+
     public void setStyleParticle(ModelParticle particle) {
         this.styleParticle = particle;
     }
@@ -144,6 +174,8 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         copy.primaryColor = this.primaryColor != null ? this.primaryColor.clone() : null;
         copy.secondaryColor = this.secondaryColor != null ? this.secondaryColor.clone() : null;
         copy.alpha = this.alpha;
+        copy.scale = this.scale;
+        copy.volume = this.volume;
         copy.styleParticle = this.styleParticle;
         copy.primaryParticle = this.primaryParticle;
         copy.secondaryParticle = this.secondaryParticle;
@@ -161,6 +193,8 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         if (other.primaryColor != null) this.primaryColor = other.primaryColor.clone();
         if (other.secondaryColor != null) this.secondaryColor = other.secondaryColor.clone();
         if (other.alpha != null) this.alpha = other.alpha;
+        if (other.scale != null) this.scale = other.scale;
+        if (other.volume != null) this.volume = other.volume;
         if (other.styleParticle != null) this.styleParticle = other.styleParticle;
         if (other.primaryParticle != null) this.primaryParticle = other.primaryParticle;
         if (other.secondaryParticle != null) this.secondaryParticle = other.secondaryParticle;
@@ -178,6 +212,8 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         if (other.primaryColor != null) this.primaryColor = other.primaryColor.clone();
         if (other.secondaryColor != null) this.secondaryColor = other.secondaryColor.clone();
         if (other.alpha != null) this.alpha = other.alpha;
+        if (other.scale != null) this.scale = other.scale;
+        if (other.volume != null) this.volume = other.volume;
         if (other.styleParticle != null) this.styleParticle = other.styleParticle;
         if (other.primaryModel != null) this.primaryModel = other.primaryModel;
         return this;
@@ -208,6 +244,16 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
                         (a, v) -> a.alpha = v,
                         a -> a.alpha,
                         (a, p) -> a.alpha = p.alpha)
+                .add()
+                .<Float>appendInherited(new KeyedCodec<>("Scale", Codec.FLOAT),
+                        (a, v) -> a.scale = v,
+                        a -> a.scale,
+                        (a, p) -> a.scale = p.scale)
+                .add()
+                .<Float>appendInherited(new KeyedCodec<>("Volume", Codec.FLOAT),
+                        (a, v) -> a.volume = v,
+                        a -> a.volume,
+                        (a, p) -> a.volume = p.volume)
                 .add()
                 .appendInherited(new KeyedCodec<>("StyleParticle", ModelParticle.CODEC),
                         (a, v) -> a.styleParticle = v,

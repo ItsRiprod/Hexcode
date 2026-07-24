@@ -4,7 +4,6 @@
   "Style": "Essence_Water",
   "Title": "hexcode.glyphs.Drown.name",
   "Description": "hexcode.glyphs.Drown.description",
-  "ModelPath": "Drown",
   "BasePower": 1.0,
   "ManaConsumption": 15,
   "ShapeStructure": [
@@ -51,7 +50,7 @@
     "AffinityStat": "Affinity_Water"
   },
   "Volatility": {
-    "InstantCost": 2,
+    "InstantCost": 6,
     "DrainPerSecond": 0.0
   }
 }

@@ -1,9 +1,0 @@
-{
-  "Parent": "Glyph_Template",
-  "DefaultAttachments": [
-    {
-      "Model": "NPC/Glyphs/Models/Triangle_1.blockymodel",
-      "Texture": "NPC/Glyphs/Textures/Triangle.png"
-    }
-  ]
-}

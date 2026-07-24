@@ -57,6 +57,19 @@ That is the promise of Hexcode. Not spells handed down from a menu, but spells b
 
 _Welcome to the craft. The door is open._
 
+# Hexcode Extensions
+
+*   [Hexcessibility](https://www.curseforge.com/hytale/mods/hexcessibility) Changes some keybinds and timings to make hexcode easier to use!
+*   Hextreme (work in progress) The survival-specifc pack enabling opinionated progression in adventure
+*   Hextras (work in progress) A central place for tests, stresses, and funny extensions to Hexcode that didn't fit with the core mod
+*   [Pillows 'n Plushies](https://www.curseforge.com/hytale/mods/pillows-n-plushies) Adds a new staff, a new book, and a few different compatibilities
+*   [More Magic Spells](https://www.curseforge.com/hytale/mods/more-magic-spells) Adds petrify and wall glyphs
+*   [Arcane Relays](https://www.curseforge.com/hytale/mods/arcane-relay) Enables interacting with the Nodes using the BOLT glyph
+*   Icarus (in development) Enables intertwined hexcode progression with classes, monsters, and dungeons
+*   [Trail Of Orbis](https://www.curseforge.com/hytale/mods/trail-of-orbis) Adds hexcode skills and abilities - interweaving it with progression
+*   [Hexcode Magic-By-Cosmetics](https://www.curseforge.com/hytale/mods/hexcode-octas-magic-by-cosmetics) Made by Octarock, adds a lot of hexcode-themed aesthetics!
+*   [Hexcode Evoke](https://www.curseforge.com/hytale/mods/hexcode-evoke) Adds the ability to spawn and control constructs with Hexcode spells!
+
 # **GUIDES:**
 ### [Getting Started](Getting-Started)
 ### [Server Owners Notice](Server-Owners)

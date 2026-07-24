@@ -7,7 +7,6 @@
   },
   "Title": "hexcode.glyphs.OnSecondary.name",
   "Description": "hexcode.glyphs.OnSecondary.description",
-  "ModelPath": "OnSecondary",
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [

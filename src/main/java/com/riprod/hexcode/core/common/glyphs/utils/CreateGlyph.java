@@ -15,6 +15,7 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.MountController;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
@@ -83,7 +84,9 @@ public class CreateGlyph {
       return holder;
     }
 
-    Model model = Model.createScaledModel(modelAsset, glyph.getScale() * MERGED_HANDLER_SCALE_BUMP);
+    Model model = withAttachments(
+        Model.createScaledModel(modelAsset, glyph.getScale() * MERGED_HANDLER_SCALE_BUMP),
+        asset);
 
     holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
 
@@ -106,6 +109,25 @@ public class CreateGlyph {
     }
 
     return holder;
+  }
+
+  private static Model withAttachments(Model scaled, GlyphAsset asset) {
+    if (scaled.getAttachments() != null && scaled.getAttachments().length > 0) {
+      return scaled;
+    }
+
+    ModelAttachment[] derived = GlyphAttachments.derive(asset);
+    if (derived.length == 0) {
+      return scaled;
+    }
+
+    return new Model(scaled.getModelAssetId(), scaled.getScale(), scaled.getRandomAttachmentIds(),
+        derived, scaled.getBoundingBox(), scaled.getModel(), scaled.getTexture(),
+        scaled.getGradientSet(), scaled.getGradientId(), scaled.getEyeHeight(),
+        scaled.getCrouchOffset(), scaled.getSittingOffset(), scaled.getSleepingOffset(),
+        scaled.getAnimationSetMap(), scaled.getCamera(), scaled.getLight(), scaled.getParticles(),
+        scaled.getTrails(), scaled.getPhysicsValues(), scaled.getDetailBoxes(), scaled.getPhobia(),
+        scaled.getPhobiaModelAssetId());
   }
 
   public static Ref<EntityStore> createGlyph(CommandBuffer<EntityStore> accessor, GlyphComponent glyph,

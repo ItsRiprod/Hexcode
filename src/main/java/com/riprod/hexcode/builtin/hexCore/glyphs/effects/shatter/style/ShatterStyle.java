@@ -40,7 +40,8 @@ public class ShatterStyle {
         Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset());
         World world = accessor.getExternalData().getWorld();
         Vector3d lineEnd = new Vector3d(hitPos).add(0, 0.5, 0);
-        VfxUtil.line(accessor, world, hitPos, lineEnd, color, HIT_LINE_THICKNESS, HIT_LINE_DURATION, 0);
+        VfxUtil.line(accessor, world, hitPos, lineEnd, color, HIT_LINE_THICKNESS, HIT_LINE_DURATION, 0,
+                VfxUtil.resolveAlpha(ctx, asset()));
     }
 
     public static void renderMiss(Vector3d endPos, HexContext ctx,

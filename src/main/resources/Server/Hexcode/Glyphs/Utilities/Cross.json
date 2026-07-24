@@ -3,12 +3,11 @@
   "Handler": "Cross",
   "Title": "hexcode.glyphs.Cross.name",
   "Description": "hexcode.glyphs.Cross.description",
-  "ModelPath": "Cross",
   "ShapeStructure": [
     { "Parent": "Less", "StatContribution": 0 },
     { "Parent": "Greater", "StatContribution": 0 },
-    { "Parent": "Antislash", "StatContribution": 0 },
-    { "Parent": "Slash", "StatContribution": 0 }
+    { "Parent": "Antislash", "RelativeSize": 0.8, "StatContribution": 0 },
+    { "Parent": "Slash", "RelativeSize": 0.8, "StatContribution": 0 }
   ],
   "Slots": {
     "v": {

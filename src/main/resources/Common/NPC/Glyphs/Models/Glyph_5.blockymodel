@@ -6,26 +6,48 @@
       "position": {"x": 0, "y": 0, "z": 0},
       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
       "shape": {
-        "type": "quad",
+        "type": "none",
         "offset": {"x": 0, "y": 0, "z": 0},
-        "stretch": {"x": 0.1, "y": 0.1, "z": 0.1},
+        "stretch": {"x": 1, "y": 1, "z": 1},
         "settings": {
-          "isPiece": true,
-          "size": {"x": 128, "y": 128},
-          "normal": "+Z"
+          "isPiece": true
         },
-        "textureLayout": {
-          "front": {
-            "offset": {"x": 0, "y": 0},
-            "mirror": {"x": false, "y": false},
-            "angle": 0
-          }
-        },
+        "textureLayout": {},
         "unwrapMode": "custom",
         "visible": true,
-        "doubleSided": true,
-        "shadingMode": "fullbright"
-      }
+        "doubleSided": false,
+        "shadingMode": "flat"
+      },
+      "children": [
+        {
+          "id": "2",
+          "name": "Glyph_5--C1",
+          "position": {"x": 0, "y": 0, "z": 0},
+          "orientation": {"x": 0, "y": -1, "z": 0, "w": 0},
+          "shape": {
+            "type": "quad",
+            "offset": {"x": 0, "y": 0, "z": 0},
+            "stretch": {"x": 0.1, "y": 0.1, "z": 0.1},
+            "settings": {
+              "isPiece": false,
+              "size": {"x": 128, "y": 128},
+              "normal": "+Z",
+              "isStaticBox": true
+            },
+            "textureLayout": {
+              "front": {
+                "offset": {"x": 0, "y": 0},
+                "mirror": {"x": false, "y": false},
+                "angle": 0
+              }
+            },
+            "unwrapMode": "custom",
+            "visible": true,
+            "doubleSided": true,
+            "shadingMode": "fullbright"
+          }
+        }
+      ]
     }
   ],
   "format": "character",

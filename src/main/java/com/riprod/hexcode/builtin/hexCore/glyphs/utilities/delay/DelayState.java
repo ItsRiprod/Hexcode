@@ -7,14 +7,11 @@ import javax.annotation.Nullable;
 
 import com.hypixel.hytale.math.util.MathUtil;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
-import com.riprod.hexcode.core.common.execution.component.HexColors;
 
 public class DelayState implements ConstructState {
 
     private float remainingSeconds;
     private List<String> nextGlyphIds;
-    @Nullable
-    private HexColors colors;
     private boolean isCustom = false;
 
     public DelayState() {
@@ -22,10 +19,9 @@ public class DelayState implements ConstructState {
     }
 
     public DelayState(float remainingSeconds, List<String> nextGlyphIds,
-            @Nullable HexColors colors, boolean isCustom) {
+            boolean isCustom) {
         this.remainingSeconds = remainingSeconds;
         this.nextGlyphIds = nextGlyphIds;
-        this.colors = colors;
         this.isCustom = isCustom;
     }
 
@@ -52,16 +48,12 @@ public class DelayState implements ConstructState {
     }
 
     @Nullable
-    public HexColors getColors() {
-        return colors;
-    }
-
     public boolean isCustom() {
         return isCustom;
     }
 
     @Override
     public DelayState copy() {
-        return new DelayState(remainingSeconds, new ArrayList<>(nextGlyphIds), colors, isCustom);
+        return new DelayState(remainingSeconds, new ArrayList<>(nextGlyphIds), isCustom);
     }
 }

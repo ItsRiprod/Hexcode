@@ -13,7 +13,6 @@
   },
   "Title": "hexcode.glyphs.Delay.name",
   "Description": "hexcode.glyphs.Delay.description",
-  "ModelPath": "Delay",
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [

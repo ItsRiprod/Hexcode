@@ -24,6 +24,18 @@ public final class OrientedDebugUtil {
         DebugUtils.add(world, DebugShape.Cone, matrix, color, time, DebugUtils.FLAG_NO_WIREFRAME);
     }
 
+    public static void addCylinder(World world, Vector3d from, Vector3d to,
+            Vector3f color, double diameter, float time, int flags, float opacity) {
+        if (opacity <= 0f) return;
+        Vector3d direction = new Vector3d(to.x - from.x, to.y - from.y, to.z - from.z);
+        double length = direction.length();
+        if (length < EPSILON) return;
+
+        Matrix4d matrix = buildOrientedMatrix(from, direction, length, diameter);
+        DebugUtils.add(world, DebugShape.Cylinder, matrix, color, opacity, time,
+                flags | DebugUtils.FLAG_NO_WIREFRAME);
+    }
+
     private static Matrix4d buildOrientedMatrix(Vector3d origin, Vector3d direction,
             double length, double diameter) {
         Matrix4d matrix = new Matrix4d();

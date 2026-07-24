@@ -14,9 +14,10 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.BlockUtils;
-import com.riprod.hexcode.utils.HexDirectionUtil;
+
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class WarpGlyph implements GlyphHandler {
@@ -25,6 +26,11 @@ public class WarpGlyph implements GlyphHandler {
 public String getId() { return ID; };
 
 public static final String ID = "Warp";
+
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(WarpConfig.class, WarpConfig.CODEC);
+    }
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
@@ -81,6 +87,7 @@ public static final String ID = "Warp";
 
         Vector3d departurePos = HexVarUtil.position(targets, hexContext.getAccessor());
         BlockUtils.moveToDestination(targets, destination, world, hexContext, ID);
+        WarpStyle.applyEffect(targets, hexContext, hexContext.getAccessor());
         if (departurePos != null) {
             WarpStyle.render(departurePos, destination, hexContext, hexContext.getAccessor());
         }

@@ -29,11 +29,11 @@
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
   "Weapon": {
     "StatModifiers": {
-      "Volatility": [
+      "Flag_IsHolding": [
         {
           "Target": "Max",
           "CalculationType": "Additive",
-          "Amount": 95
+          "Amount": 1
         }
       ],
       "MagicCharges": [
@@ -58,6 +58,7 @@
       ]
     },
     "EntityStatsToClear": [
+      "Flag_IsHolding",
       "MagicCharges",
       "Volatility"
     ]

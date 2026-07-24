@@ -15,7 +15,10 @@
   },
   "Title": "hexcode.glyphs.Interact.name",
   "Description": "hexcode.glyphs.Interact.description",
-  "ModelPath": "Interact",
+  "Config": {
+    "Type": "Interact",
+    "ReachProxyItem": "Hexcode_Reach_Proxy"
+  },
   "BasePower": 1.0,
   "ManaConsumption": 0.1,
   "ShapeStructure": [

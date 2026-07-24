@@ -1,0 +1,10 @@
+{
+  "Duration": 0.5,
+  "Debuff": false,
+  "OverlapBehavior": "Overwrite",
+  "Invulnerable": true,
+  "ApplicationEffects": {
+    "ModelVFXId": "Teleportation"
+  },
+  "Name": "hexcode.effects.teleportation"
+}

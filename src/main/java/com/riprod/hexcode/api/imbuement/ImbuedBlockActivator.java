@@ -128,11 +128,7 @@ public final class ImbuedBlockActivator {
         }
         HexStyleAsset overlay = essence.getColors();
         if (overlay != null) {
-            HexStyleAsset target = ctx.getStyle();
-            if (target == null) {
-                target = HexStyleAsset.empty();
-                ctx.setStyle(target);
-            }
+            HexStyleAsset target = ctx.mutableStyle();
             if (overlay.getPrimaryColor() != null) target.setPrimaryColor(overlay.getPrimaryColor().clone());
             if (overlay.getSecondaryColor() != null) target.setSecondaryColor(overlay.getSecondaryColor().clone());
             target.setAlpha(overlay.getAlphaOrDefault());

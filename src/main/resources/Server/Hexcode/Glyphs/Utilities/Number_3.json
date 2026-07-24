@@ -3,7 +3,6 @@
   "Handler": "Number",
   "Title": "hexcode.glyphs.Number_3.name",
   "Description": "hexcode.glyphs.Number_3.description",
-  "ModelPath": "Number_3",
   "ShapeStructure": [
     { "Parent": "Up", "StatContribution": 0 },
     { "Parent": "Triangle", "StatContribution": 0 }

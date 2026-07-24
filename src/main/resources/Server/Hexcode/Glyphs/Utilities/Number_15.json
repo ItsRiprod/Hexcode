@@ -3,10 +3,9 @@
   "Handler": "Number",
   "Title": "hexcode.glyphs.Number_15.name",
   "Description": "hexcode.glyphs.Number_15.description",
-  "ModelPath": "Number_15",
   "ShapeStructure": [
     { "Parent": "Less", "StatContribution": 0 },
-    { "Parent": "Triangle", "StatContribution": 0 }
+    { "Parent": "Triangle", "RelativeSize": 0.8, "StatContribution": 0 }
   ],
   "Slots": {
     "Next": {

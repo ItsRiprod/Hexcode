@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
-import com.riprod.hexcode.core.common.execution.component.HexColors;
 
 public class DrainState implements ConstructState {
 
@@ -20,8 +19,6 @@ public class DrainState implements ConstructState {
     private float remainingSeconds;
     private float drainedSoFar;
     private List<String> nextGlyphIds;
-    @Nullable
-    private HexColors colors;
     private float hpFloor;
     @Nullable
     private String effectId;
@@ -32,7 +29,7 @@ public class DrainState implements ConstructState {
 
     public DrainState(int sourceStatIndex, @Nullable Ref<EntityStore> destEntityRef,
             float conversionRate, float totalDrainAmount, float durationSeconds,
-            List<String> nextGlyphIds, @Nullable HexColors colors, float hpFloor,
+            List<String> nextGlyphIds, float hpFloor,
             @Nullable String effectId) {
         this.sourceStatIndex = sourceStatIndex;
         this.destEntityRef = destEntityRef;
@@ -41,7 +38,6 @@ public class DrainState implements ConstructState {
         this.remainingSeconds = durationSeconds;
         this.drainedSoFar = 0f;
         this.nextGlyphIds = nextGlyphIds;
-        this.colors = colors;
         this.hpFloor = hpFloor;
         this.effectId = effectId;
     }
@@ -91,11 +87,6 @@ public class DrainState implements ConstructState {
         this.nextGlyphIds = ids != null ? ids : new ArrayList<>();
     }
 
-    @Nullable
-    public HexColors getColors() {
-        return colors;
-    }
-
     public float getHpFloor() {
         return hpFloor;
     }
@@ -115,7 +106,6 @@ public class DrainState implements ConstructState {
         c.remainingSeconds = this.remainingSeconds;
         c.drainedSoFar = this.drainedSoFar;
         c.nextGlyphIds = new ArrayList<>(this.nextGlyphIds);
-        c.colors = this.colors;
         c.hpFloor = this.hpFloor;
         c.effectId = this.effectId;
         return c;

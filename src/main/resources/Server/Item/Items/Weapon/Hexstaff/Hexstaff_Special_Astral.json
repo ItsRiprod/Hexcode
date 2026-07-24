@@ -29,11 +29,11 @@
   "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
   "Weapon": {
     "StatModifiers": {
-      "Volatility": [
+      "Flag_IsHolding": [
         {
           "Target": "Max",
           "CalculationType": "Additive",
-          "Amount": 200
+          "Amount": 1
         }
       ],
       "MagicCharges": [
@@ -58,6 +58,7 @@
       ]
     },
     "EntityStatsToClear": [
+      "Flag_IsHolding",
       "MagicCharges",
       "Volatility"
     ]
@@ -193,6 +194,7 @@
         {
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
+          "CastStyleId": "sphere",
           "AuraParticles": [
             {
               "SystemId": "Hexstaff_Motes_Slow",

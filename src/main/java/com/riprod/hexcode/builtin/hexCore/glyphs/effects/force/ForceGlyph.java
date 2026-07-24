@@ -18,7 +18,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.utils.VelocityUtil;
-import com.riprod.hexcode.utils.HexDirectionUtil;
+
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ForceGlyph implements GlyphHandler {
@@ -78,7 +78,7 @@ public class ForceGlyph implements GlyphHandler {
                 Vector3d targetPos = tc.getPosition();
                 Vector3d direction = null;
                 if (dirInput != null) {
-                    direction = HexDirectionUtil.resolveDirection(dirInput, targetPos,
+                    direction = HexVarUtil.resolveDirection(dirInput, targetPos,
                             hexContext.getAccessor());
                 }
                 if (direction == null) {

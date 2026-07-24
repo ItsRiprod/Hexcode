@@ -103,7 +103,7 @@ public class HexContext {
         branch.hexStats = this.hexStats;
         branch.executionId = this.executionId;
         branch.variables = this.variables;
-        branch.style = this.style != null ? this.style.clone() : null;
+        branch.style = this.style;
         branch.manaCost = this.manaCost;
         branch.manaMultiplier = this.manaMultiplier;
         branch.defaultVariable = this.defaultVariable;
@@ -323,22 +323,27 @@ public class HexContext {
         this.style = style;
     }
 
+    public HexStyleAsset mutableStyle() {
+        style = style == null ? HexStyleAsset.empty() : style.clone();
+        return style;
+    }
+
     public HexColors getColors() {
         HexColors c = new HexColors();
         if (style != null) {
             if (style.getPrimaryColor() != null) c.setPrimaryColor(style.getPrimaryColor().clone());
             if (style.getSecondaryColor() != null) c.setSecondaryColor(style.getSecondaryColor().clone());
-            c.setPrimaryAlpha(style.getAlphaOrDefault());
+            c.setPrimaryAlpha(style.getAlpha());
         }
         return c;
     }
 
     public void setColors(@Nullable HexColors colors) {
         if (colors == null) return;
-        if (style == null) style = HexStyleAsset.empty();
-        style.setPrimaryColor(colors.getPrimaryColor() != null ? colors.getPrimaryColor().clone() : null);
-        style.setSecondaryColor(colors.getSecondaryColor() != null ? colors.getSecondaryColor().clone() : null);
-        style.setAlpha(colors.getPrimaryAlpha());
+        HexStyleAsset s = mutableStyle();
+        s.setPrimaryColor(colors.getPrimaryColor() != null ? colors.getPrimaryColor().clone() : null);
+        s.setSecondaryColor(colors.getSecondaryColor() != null ? colors.getSecondaryColor().clone() : null);
+        if (colors.getPrimaryAlpha() != null) s.setAlpha(colors.getPrimaryAlpha());
     }
 
     @Nullable

@@ -12,7 +12,7 @@ Hexcode is built upon Three Basic Shapes. That is…
 
 #### 1- □ **Square**
 
-*It means Divinity, the idea of Self or Creation.*
+*It means Divinity, the idea of Identity or Creation.*
 
 #### 2- ◯ **Circle**
 
@@ -66,9 +66,9 @@ Instantly zeros all velocity on targets. Things stop moving. Useful for freezing
 
 ---
 
-### \[□\] Self
+### \[□\] Identify
 
-Returns a reference to the caster entity. The starting point for any self-targeting hex. As a value, it provides the caster reference directly. As an effect, stores the caster in a variable slot.
+Compares two values by identity and locks in the result as its value (like a math glyph). Returns \-1 if Target and Reference are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position.
 
 ---
 
@@ -107,6 +107,12 @@ Raycasts from an entity in a direction and stores the first thing it hits. Your 
 ### \[◯□\] Area
 
 Collects all targets within a radius around a center point. Your area-of-effect selector. For every entity in the area, it triggers downstream glyphs. This can get pricey very quickly and typically eats up all your volatility immediately. If you hit a block, it selects all blocks. If you hit an entity, it selects all entities.  
+
+---
+
+### \[◯◇\] Arc
+
+Chaining selector. Fixed to a target (entity, block, or position - block/position spawn a marker entity to host the chain), it fires the wired output on the nearest unvisited entity once per `Iterations`, waiting `Interval` seconds between arcs and searching within `Range`. Each entity is hit at most once; a miss (no entity in range) still consumes an iteration. Per-arc volatility scales quadratically with the jump distance (a longer `Interval` makes each arc cheaper), so long-range chains naturally fizzle out. Applies no effect of its own - downstream glyphs act on each selected entity.
 
 ---
 
@@ -180,7 +186,8 @@ Restores the natural state of targets. Heals entities, grows crops, repairs dama
 
 ### \[□◯□\] Fortify
 
-Increases resilience of targets for a duration. On entities: flat damage reduction per hit. On blocks: increased hardness.
+Fully nullifies the damage from the next attack
+On blocks: increased hardness.
 
 ---
 
@@ -196,9 +203,9 @@ Reverses or nullifies gravity on targets for a duration. Zero intensity means we
 
 ---
 
-### \[◇◯◇\] Ignite
+### \[▽△▽\] Invisibility
 
-Sets targets on fire. Fire does damage over time and can spread to adjacent flammable blocks. Entities can extinguish by entering water.
+Fades a target out of sight for a duration. As a value, returns how many seconds of the effect remain on the target (0 if none is active).
 
 ---
 
@@ -212,12 +219,6 @@ Shoots fire from your hands in a cone in front of you, selecting all entities as
 ### \[◯◯◯\] Interact
 
 On blocks\: triggers block interactions remotely (opens doors, flips levers). The only glyph that can activate block interactions from a distance.
-
----
-
-### \[◯□◯\] Arc
-
-Chain lightning. Hops from entity to entity, executing one child glyph per hop in order. More children means more hops. Volatility is rechecked each hop, so long chains naturally fizzle out.
 
 ---
 
@@ -271,6 +272,12 @@ Domain Expansion. Decreases volatility cost while within your own domain. Enable
 **Clashing**
 
 Clashing occurs when two domains interset. The domain with the higher Energy wins the clash. Energy has no use outside of this.
+
+---
+
+### \[◯◇△\] Illuminate
+
+Makes the Target glow with an emissive colored light for a duration, visible to everyone. The Mode toggle picks how: \+1 lights the target entity in place, 0 also shows a colored volume box around it, and \-1 spawns a separate glowing entity mounted to the target. Blocks are lit by a spawned light entity placed at them, since block light cannot be injected without replacing the block. The glowing entity owns the effect (like Ignite or Freeze), and the light color comes from the cast Style.
 
 # Tier 4
 
@@ -435,7 +442,7 @@ Delays execution of child glyphs. Everything after this glyph in the chain waits
 
 ---
 
-### \[□\] Self
+### \[□V\] Self
 
 Returns a reference to the caster entity. The starting point for any self-targeting hex. As a value, it provides the caster reference directly. As an effect, stores the caster in a variable slot.
 
@@ -447,15 +454,15 @@ Randomly generates a number between the Min (default 0\) and Max (default 1\) va
 
 ---
 
-### \[\>\] Greater
+### \[/\>\] Greater
 
-Branches execution based on comparison. If A is greater than B, the first child executes. Otherwise, the second child executes. Costs no mana.
+Deprecated. Branches execution based on comparison. If A is greater than B, the first child executes. Otherwise, the second child executes
 
 ---
 
-### \[\<\] Less
+### \[/\<\] Less
 
-Branches execution based on comparison. If A is less than B, the first child executes. Otherwise, the second child executes. Costs no mana.
+Deprecated. Branches execution based on comparison. If A is less than B, the first child executes. Otherwise, the second child executes
 
 ---
 
@@ -489,9 +496,21 @@ Returns the remainder of one value divided by another.
 
 ---
 
-### \[― ―\] Equal
+### \[/― ―\] Equal
 
-Two modes. With both inputs wired: branches execution (first child if equal, second child if not). With only A/B wired: assigns A/B's value to the output slot.
+Deprecated. Two modes. With both inputs wired: branches execution (first child if equal, second child if not). With only A/B wired: assigns A/B's value to the output slot.
+
+---
+
+### \[― ―\] Compare
+
+Compares A and B (both default to zero) and branches to the Greater, Less, or Equal output. As a value, returns whatever is wired into the winning branch \- unless it has already executed, in which case it returns the last result (\-1 for Less, 0 for Equal, \+1 for Greater). Entities compare by UUID: identical entities are Equal, two different entities are Greater, and an entity compared against another type is converted to that type first
+
+---
+
+### \[□\] Identify
+
+Compares two values by identity and locks in the result as its value (like a math glyph). Returns \-1 if Target and Reference are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position.
 
 ---
 
@@ -507,9 +526,33 @@ Constructs a rotation from pitch, yaw, roll components. Wire number glyphs into 
 
 ---
 
-### \[\<□\>\] Style
+### \[/\<□\>\] Style (Deprecated - use Color)
 
 Sets the color of the execution at this point. Returns a 4 param vector (R, G, B, A) if value extracted
+
+---
+
+### \[\<□\>\] Color
+
+Overrides the active hex color with RGBA (0-255) for the rest of the hex.
+
+---
+
+### \[\<◯\>\] Shape
+
+Adopts the appearance of another glyph for the rest of the hex.
+
+---
+
+### \[\<△\>\] Sound
+
+Scales the volume of sounds emitted by the rest of the hex.
+
+---
+
+### \[―/\] Is Holding
+
+Returns 1 if the caster is holding the primary cast button, 0 otherwise.
 
 ---
 

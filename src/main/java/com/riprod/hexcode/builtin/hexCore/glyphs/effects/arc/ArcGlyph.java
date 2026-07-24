@@ -1,24 +1,24 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
+import com.hypixel.hytale.server.core.asset.type.model.config.Model;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.style.ArcStyle;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.utils.ArcUtils;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -26,18 +26,17 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.utils.HexDirectionUtil;
+
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ArcGlyph implements GlyphHandler {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+
+    public static final String ID = "Arc";
 
     @Override
     public String getId() {
         return ID;
     }
-
-    public static final String ID = "Arc";
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
@@ -55,76 +54,72 @@ public class ArcGlyph implements GlyphHandler {
         ArcConfig config = getConfig(ArcConfig.class, asset);
         if (config == null) config = ArcConfig.DEFAULTS;
 
-        HexVar targets = glyph.readSlot(ArcGlyphSlots.TARGET, hexContext);
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
-        if (entityVar == null) {
+        List<String> outputLinks = glyph.getNextLinks();
+        if (outputLinks.isEmpty()) {
+            return;
+        }
+
+        HexVar targetVar = glyph.readSlot(ArcGlyphSlots.TARGET, hexContext);
+        if (targetVar == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Target must be an Entity");
+                    "Target is required");
             return;
         }
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        Ref<EntityStore> originRef = entityVar.getRef(accessor);
-        if (originRef == null || !originRef.isValid()) {
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Target is invalid");
+        int iterations = (int) Math.round(HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ArcGlyphSlots.ITERATIONS, hexContext), asset.getSlot(ArcGlyphSlots.ITERATIONS)));
+        float interval = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ArcGlyphSlots.INTERVAL, hexContext), asset.getSlot(ArcGlyphSlots.INTERVAL)).floatValue();
+        float range = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ArcGlyphSlots.RANGE, hexContext), asset.getSlot(ArcGlyphSlots.RANGE)).floatValue();
+
+        if (iterations <= 0) {
             return;
         }
-
-        List<String> branches = glyph.getNextLinks();
-        if (branches.isEmpty()) {
-            return;
-        }
-
-        double maxJump = HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(ArcGlyphSlots.JUMP, hexContext), asset.getSlot(ArcGlyphSlots.JUMP));
-        double delay = HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(ArcGlyphSlots.DELAY, hexContext), asset.getSlot(ArcGlyphSlots.DELAY));
 
         Set<UUID> visited = new HashSet<>();
         UUIDComponent casterUuid = accessor.getComponent(
                 hexContext.getCasterRef(accessor), UUIDComponent.getComponentType());
         if (casterUuid != null) visited.add(casterUuid.getUuid());
 
-        UUIDComponent originUuid = accessor.getComponent(
-                originRef, UUIDComponent.getComponentType());
-        if (originUuid != null) visited.add(originUuid.getUuid());
+        if (targetVar instanceof EntityVar entityVar) {
+            Ref<EntityStore> hostRef = entityVar.getRef(accessor);
+            if (hostRef == null || !hostRef.isValid()) {
+                HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                        "Target is invalid");
+                return;
+            }
+            UUIDComponent hostUuid = accessor.getComponent(hostRef, UUIDComponent.getComponentType());
+            if (hostUuid != null) visited.add(hostUuid.getUuid());
 
-        TransformComponent originTc = accessor.getComponent(
-                originRef, TransformComponent.getComponentType());
-        if (originTc == null) {
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Target does not have a position");
-            return;
-        }
-        Vector3d originPos = originTc.getPosition();
-
-        Ref<EntityStore> firstJump = ArcUtils.getNextArcTarget(
-                originPos, (float) maxJump, visited, accessor);
-        if (firstJump == null) {
-            ArcStyle.renderFizzle(accessor, originPos, hexContext);
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "No entities in range to arc to");
+            ArcState state = new ArcState(glyph, outputLinks, visited, range, interval, iterations, false);
+            HexConstructSpawner.applyWithState(accessor, hostRef, hexContext, glyph, ArcGlyph.ID, state);
             return;
         }
 
-        UUIDComponent firstJumpUuid = accessor.getComponent(
-                firstJump, UUIDComponent.getComponentType());
-        if (firstJumpUuid != null) visited.add(firstJumpUuid.getUuid());
+        Vector3d origin = HexVarUtil.position(targetVar, accessor);
+        if (origin == null) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "Target must be an entity, block, or position");
+            return;
+        }
 
-        TransformComponent firstJumpTc = accessor.getComponent(
-                firstJump, TransformComponent.getComponentType());
-        Vector3d firstJumpPos = firstJumpTc != null ? firstJumpTc.getPosition() : originPos;
+        ArcState state = new ArcState(glyph, outputLinks, visited, range, interval, iterations, true);
+        Holder<EntityStore> holder = HexConstructSpawner.createWithState(
+                accessor, hexContext, glyph, ArcGlyph.ID, new Vector3d(origin), state);
+        applyMarkerModel(holder, config.getModel());
+        accessor.addEntity(holder, AddReason.SPAWN);
+    }
 
-        World world = accessor.getExternalData().getWorld();
-        ArcStyle.renderArc(accessor, world, originPos, firstJumpPos, hexContext);
-        ArcStyle.renderHit(accessor, firstJumpPos, hexContext);
+    private static void applyMarkerModel(Holder<EntityStore> holder, String modelId) {
+        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(modelId);
+        if (modelAsset == null) return;
 
-        ArcState state = new ArcState(glyph, new ArrayList<>(branches), visited,
-                (float) maxJump, (float) delay, config.getEffectId());
-
-        HexConstructSpawner.applyWithState(
-                accessor, firstJump, hexContext, glyph, ArcGlyph.ID, state);
+        Model model = Model.createUnitScaleModel(modelAsset);
+        holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
+        holder.addComponent(PersistentModel.getComponentType(),
+                new PersistentModel(model.toReference()));
     }
 }

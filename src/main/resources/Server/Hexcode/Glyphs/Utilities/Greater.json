@@ -3,10 +3,11 @@
   "Handler": "Greater",
   "Title": "hexcode.glyphs.Greater.name",
   "Description": "hexcode.glyphs.Greater.description",
-  "ModelPath": "Greater",
   "BasePower": 0,
   "ManaConsumption": 0,
+  "IsDeprecated": true,
   "ShapeStructure": [
+    { "Parent": "Slash", "StatContribution": 0 },
     { "Parent": "Greater", "StatContribution": 0 }
   ],
   "Slots": {

@@ -26,6 +26,13 @@
   "Icon": "Icons/ItemsGenerated/Arcane_Hexstaff.png",
   "Weapon": {
     "StatModifiers": {
+      "Flag_IsHolding": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 1
+        }
+      ],
       "Magic_Power": [
         {
           "Target": "Max",
@@ -55,6 +62,7 @@
       ]
     },
     "EntityStatsToClear": [
+      "Flag_IsHolding",
       "Magic_Power",
       "MagicCharges",
       "Volatility"
@@ -105,8 +113,8 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
-              "InitialVolatility": 40,
-              "VolatilityMultiplier": 1.0,
+              "InitialVolatility": 60,
+              "VolatilityMultiplier": 0.75,
               "InitialResources": {
                 "Arcane": 30
               }
@@ -127,8 +135,8 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
-              "InitialVolatility": 50,
-              "VolatilityMultiplier": 1.0,
+              "InitialVolatility": 70,
+              "VolatilityMultiplier": 0.75,
               "InitialResources": {
                 "Arcane": 40
               }
@@ -149,8 +157,8 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
-              "InitialVolatility": 60,
-              "VolatilityMultiplier": 1.0,
+              "InitialVolatility": 80,
+              "VolatilityMultiplier": 0.75,
               "InitialResources": {
                 "Arcane": 50
               }
@@ -171,8 +179,8 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "HexStats": {
-              "InitialVolatility": 70,
-              "VolatilityMultiplier": 1.0,
+              "InitialVolatility": 90,
+              "VolatilityMultiplier": 0.75,
               "InitialResources": {
                 "Arcane": 60
               }

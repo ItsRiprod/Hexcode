@@ -3,7 +3,6 @@
   "Handler": "IsHolding",
   "Title": "hexcode.glyphs.IsHolding.name",
   "Description": "hexcode.glyphs.IsHolding.description",
-  "ModelPath": "IsHolding",
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
