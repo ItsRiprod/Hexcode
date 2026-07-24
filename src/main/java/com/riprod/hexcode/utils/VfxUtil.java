@@ -30,6 +30,8 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.component.HexColors;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
@@ -390,5 +392,49 @@ public class VfxUtil {
           time, (byte) allFlags, null, opacity);
       playerRef.getPacketHandler().write(packet);
     }
+  }
+
+  public static boolean applyEffect(@Nullable HexContext hexContext, @Nullable Ref<EntityStore> target,
+      @Nullable String effectId, float duration, OverlapBehavior overlap) {
+    if (hexContext == null || target == null || !target.isValid() || effectId == null)
+      return false;
+    EntityEffect effect = EntityEffect.getAssetMap().getAsset(effectId);
+    if (effect == null)
+      return false;
+    ComponentAccessor<EntityStore> accessor = hexContext.getAccessor();
+    EffectControllerComponent controller = accessor.getComponent(
+        target, EffectControllerComponent.getComponentType());
+    if (controller == null)
+      return false;
+    controller.addEffect(target, effect, duration, overlap, accessor);
+    return true;
+  }
+
+  public static boolean applyBoundedEffect(@Nullable HexContext hexContext, @Nullable Ref<EntityStore> target,
+      @Nullable Glyph glyph, @Nullable String effectId, float requestedDuration, OverlapBehavior overlap) {
+    return applyEffect(hexContext, target, effectId,
+        volatilityBoundedDuration(hexContext, glyph, requestedDuration), overlap);
+  }
+
+  public static float volatilityBoundedDuration(@Nullable HexContext hexContext, @Nullable Glyph glyph,
+      float requestedDuration) {
+    float rate = drainRate(glyph);
+    if (rate <= 0f)
+      return requestedDuration;
+    HexStats stats = hexContext != null ? hexContext.getHexStats() : null;
+    if (stats == null)
+      return requestedDuration;
+    float multiplier = stats.getVolatilityMultiplier();
+    float effectiveRate = rate * (multiplier > 0f ? multiplier : 1f);
+    if (effectiveRate <= 0f)
+      return requestedDuration;
+    return Math.min(requestedDuration, stats.getCurrentVolatility() / effectiveRate);
+  }
+
+  private static float drainRate(@Nullable Glyph glyph) {
+    if (glyph == null)
+      return 0f;
+    GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+    return asset != null ? asset.getVolatility().getDrainPerSecond() : 0f;
   }
 }

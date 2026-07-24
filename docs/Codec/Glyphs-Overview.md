@@ -68,7 +68,7 @@ Instantly zeros all velocity on targets. Things stop moving. Useful for freezing
 
 ### \[□\] Identify
 
-Compares two values by identity. As a value, returns \-1 if Target and Reference are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position. As an effect, makes the Target glow for the Reference \- only that player can see it, and it shows through walls \- for a duration drawn from the Life resource.
+Compares two values by identity and locks in the result as its value (like a math glyph). Returns \-1 if Target and Reference are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position.
 
 ---
 
@@ -107,6 +107,12 @@ Raycasts from an entity in a direction and stores the first thing it hits. Your 
 ### \[◯□\] Area
 
 Collects all targets within a radius around a center point. Your area-of-effect selector. For every entity in the area, it triggers downstream glyphs. This can get pricey very quickly and typically eats up all your volatility immediately. If you hit a block, it selects all blocks. If you hit an entity, it selects all entities.  
+
+---
+
+### \[◯◇\] Arc
+
+Chaining selector. Fixed to a target (entity, block, or position - block/position spawn a marker entity to host the chain), it fires the wired output on the nearest unvisited entity once per `Iterations`, waiting `Interval` seconds between arcs and searching within `Range`. Each entity is hit at most once; a miss (no entity in range) still consumes an iteration. Per-arc volatility scales quadratically with the jump distance (a longer `Interval` makes each arc cheaper), so long-range chains naturally fizzle out. Applies no effect of its own - downstream glyphs act on each selected entity.
 
 ---
 
@@ -216,12 +222,6 @@ On blocks\: triggers block interactions remotely (opens doors, flips levers). Th
 
 ---
 
-### \[◯□◯\] Arc
-
-Chain lightning. Hops from entity to entity, executing one child glyph per hop in order. More children means more hops. Volatility is rechecked each hop, so long chains naturally fizzle out.
-
----
-
 ### \[𝟢◯𝟢\] Shatter
 
 Launches ice shard projectiles in a cone from a position. Each shard is a mini-projectile dealing ice damage on impact and allowing further execution of the hex.
@@ -272,6 +272,12 @@ Domain Expansion. Decreases volatility cost while within your own domain. Enable
 **Clashing**
 
 Clashing occurs when two domains interset. The domain with the higher Energy wins the clash. Energy has no use outside of this.
+
+---
+
+### \[◯◇△\] Illuminate
+
+Makes the Target glow with an emissive colored light for a duration, visible to everyone. The Mode toggle picks how: \+1 lights the target entity in place, 0 also shows a colored volume box around it, and \-1 spawns a separate glowing entity mounted to the target. Blocks are lit by a spawned light entity placed at them, since block light cannot be injected without replacing the block. The glowing entity owns the effect (like Ignite or Freeze), and the light color comes from the cast Style.
 
 # Tier 4
 
@@ -504,7 +510,7 @@ Compares A and B (both default to zero) and branches to the Greater, Less, or Eq
 
 ### \[□\] Identify
 
-Compares two values by identity. As a value, returns \-1 if Target and Reference are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position. As an effect, makes the Target glow for the Reference \- only that player can see it, and it shows through walls \- for a duration drawn from the Life resource.
+Compares two values by identity and locks in the result as its value (like a math glyph). Returns \-1 if Target and Reference are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position.
 
 ---
 
@@ -520,9 +526,33 @@ Constructs a rotation from pitch, yaw, roll components. Wire number glyphs into 
 
 ---
 
-### \[\<□\>\] Style
+### \[/\<□\>\] Style (Deprecated - use Color)
 
 Sets the color of the execution at this point. Returns a 4 param vector (R, G, B, A) if value extracted
+
+---
+
+### \[\<□\>\] Color
+
+Overrides the active hex color with RGBA (0-255) for the rest of the hex.
+
+---
+
+### \[\<◯\>\] Shape
+
+Adopts the appearance of another glyph for the rest of the hex.
+
+---
+
+### \[\<△\>\] Sound
+
+Scales the volume of sounds emitted by the rest of the hex.
+
+---
+
+### \[―/\] Is Holding
+
+Returns 1 if the caster is holding the primary cast button, 0 otherwise.
 
 ---
 

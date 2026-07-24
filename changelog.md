@@ -64,4 +64,10 @@
 - Fix: updated `Levitate` to work on entities
 - Fix: updated branch `Ids` to properly track active branches to better guess when a spell has ended naturally 
 
+- Feat: Reworked `Arc` into a Tier 2 chaining selector (shape `◯□◯` -> `◯◇`)
+    - Target can now be an entity, block, or position (block/position spawn a marker entity to host the chain)
+    - Replaced the child-per-hop model + `Shock` effect with `Iterations`/`Interval`/`Range` slots: fires the wired output on the nearest unvisited entity each iteration, fixed to the original target
+    - Per-arc volatility now scales quadratically with jump distance (`SphereVolume` impact); a longer `Interval` makes each arc cheaper
+    - `PrimarySound` plays on the initial cast, `SecondarySound` on each arc
+
 - Probably much more. I tried keeping a running note this time

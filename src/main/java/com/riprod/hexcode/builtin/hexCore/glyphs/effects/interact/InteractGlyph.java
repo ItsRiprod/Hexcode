@@ -145,8 +145,13 @@ public class InteractGlyph implements GlyphHandler {
 
         InteractConfig config = getConfig(InteractConfig.class,
                 GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId()));
-        if (config != null && config.getReachProxyItem() != null) {
-            ctx.setHeldItem(new ItemStack(config.getReachProxyItem(), 1));
+        String reachProxyItem = config != null ? config.getReachProxyItem() : null;
+        if (reachProxyItem != null) {
+            ctx.setHeldItem(new ItemStack(reachProxyItem, 1));
+            LOGGER.atInfo().log("interact: applied reach proxy '%s' to interaction context", reachProxyItem);
+        } else {
+            LOGGER.atInfo().log("interact: no reach proxy configured, using caster reach (config=%s)",
+                    config != null);
         }
 
         BlockPosition blockPosition = new BlockPosition(blockPos.x, blockPos.y, blockPos.z);
