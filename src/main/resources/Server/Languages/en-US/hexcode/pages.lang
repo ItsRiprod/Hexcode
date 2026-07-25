@@ -6,10 +6,30 @@ page.spent={itemName} is spent
 empty.name=Spent Page
 empty.description=<color is="#aaaaaa">A spell page whose charges have run out. Its inscription has faded.</color>
 
+slot.label=Inscription
+slot.description=<color is="#aaaaaa">The single hex inscribed on this page.</color>
+
+obelisk.not_crafting=You must be drawing at a pedestal to use this obelisk
+obelisk.not_owner=You don't own this pedestal
+obelisk.no_slot=Select a slot first
+load.no_hex=Hold a page inscribed with a spell
+write.no_hex=There is nothing drawn to write
+write.success=The spell flows onto the page
+
 fireball.name=Spell Page: Fireball
-fireball.description=<color is="#aaaaaa">A page inscribed with</color> <color is="#ff5555"><b>Fireball</b></color><color is="#aaaaaa">.</color>\n\n<b>To cast</b>\nPress and Hold <b>Secondary</b> to channel the inscribed spell\nThe page is <color is="#ff5555">consumed</color> on cast
+fireball.description=A page inscribed with Fireball.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.
 
 energy_bolt.name=Spell Page: Energy Bolt
+energy_bolt.description=A page inscribed with Energy Bolt.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.
 
 ice_bolt.name=Spell Page: Ice Bolt
+ice_bolt.description=A page inscribed with Ice Bolt.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.
+
 launch.name=Spell Page: Launch
+launch.description=A page inscribed with Launch.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.
+
+warp.name=Spell Page: Warp
+warp.description=A page inscribed with Warp.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.
+
+levitate.name=Spell Page: Levitate
+levitate.description=A page inscribed with Levitate.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.

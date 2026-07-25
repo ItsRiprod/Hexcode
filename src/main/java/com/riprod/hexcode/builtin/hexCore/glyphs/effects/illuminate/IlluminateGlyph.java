@@ -85,6 +85,7 @@ public class IlluminateGlyph implements GlyphHandler {
             // blocks can't be lit, and mode -1 wants a separate entity: spawn a light holder that owns the effect
             Vector3d spawnPos;
             Ref<EntityStore> mountTo = null;
+            Vector3i blockPos = null;
             if (isEntity) {
                 TransformComponent tc = accessor.getComponent(targetRef, TransformComponent.getComponentType());
                 spawnPos = tc != null ? new Vector3d(tc.getPosition()) : new Vector3d();
@@ -95,12 +96,12 @@ public class IlluminateGlyph implements GlyphHandler {
                     finish(glyph, hexContext);
                     return;
                 }
-                Vector3i b = blockVar.getValue();
-                spawnPos = new Vector3d(b.x + 0.5, b.y + 0.5, b.z + 0.5);
+                blockPos = blockVar.getValue();
+                spawnPos = new Vector3d(blockPos.x + 0.5, blockPos.y + 0.5, blockPos.z + 0.5);
             }
 
             IlluminateState state = new IlluminateState(seconds, showBox, true,
-                    GlowUtil.nextVolumeId(), boxColor, glyph.getNextLinks());
+                    GlowUtil.nextVolumeId(), boxColor, glyph.getNextLinks(), blockPos);
             // createWithState bakes the construct into the holder so a fresh (not-yet-valid) ref is never used
             Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                     accessor, hexContext, glyph, ID, spawnPos, state);

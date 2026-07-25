@@ -9,7 +9,6 @@ import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffec
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.BlockHarvestUtils;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -28,6 +27,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 import java.util.Arrays;
@@ -104,12 +104,8 @@ public class ErodeGlyph implements GlyphHandler {
             return false;
         }
 
-        EffectControllerComponent controller = accessor.getComponent(
-                ref, EffectControllerComponent.getComponentType());
-        if (controller != null) {
-            controller.addEffect(ref, erodeEffect, durationSeconds,
-                    OverlapBehavior.OVERWRITE, accessor);
-        }
+        VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId, durationSeconds,
+                OverlapBehavior.OVERWRITE);
 
         ErodeState existing = ConstructStateUtil.findState(
                 accessor, ref, ErodeGlyph.ID, ErodeState.class);

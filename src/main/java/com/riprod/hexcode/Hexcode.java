@@ -37,6 +37,8 @@ import com.riprod.hexcode.core.common.execution.precast.CastDecaySystem;
 import com.riprod.hexcode.core.common.execution.precast.CastBookStyleSystem;
 import com.riprod.hexcode.core.common.execution.precast.CastSpellPowerSystem;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
+import com.riprod.hexcode.core.common.execution.condition.HexHoldingCondition;
+import com.riprod.hexcode.core.common.execution.interactions.HexCastHoldInteraction;
 import com.riprod.hexcode.core.common.execution.interactions.HexDispel;
 import com.riprod.hexcode.core.common.execution.events.HexCastEventSystem;
 import com.riprod.hexcode.core.common.execution.queue.HexQueueDrainEventSystem;
@@ -111,6 +113,7 @@ import com.hypixel.hytale.event.EventRegistry;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore;
 import com.hypixel.hytale.server.core.asset.LoadAssetEvent;
+import com.hypixel.hytale.server.core.modules.entity.condition.Condition;
 import com.hypixel.hytale.builtin.adventure.memories.MemoriesPlugin;
 import com.hypixel.hytale.builtin.adventure.memories.memories.Memory;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
@@ -163,6 +166,7 @@ public class Hexcode extends JavaPlugin {
         this.registerBlockComponents();
         this.registerHexContent();
         this.registerInteractions();
+        this.registerConditions();
         this.registerEvents();
         this.registerCommands();
 
@@ -204,7 +208,7 @@ public class Hexcode extends JavaPlugin {
                 HytaleAssetStore
                         .builder(HexConfigAsset.class,
                                 new DefaultAssetMap<String, HexConfigAsset>())
-                        .setPath("Hexcode/Hex")
+                        .setPath("Hexcode/Execution/HexConfig")
                         .setCodec(HexConfigAsset.CODEC)
                         .setKeyFunction(HexConfigAsset::getId)
                         .loadsAfter(HexStyleAsset.class)
@@ -455,6 +459,11 @@ public class Hexcode extends JavaPlugin {
         Interaction.CODEC.register("HexDispel", HexDispel.class, HexDispel.CODEC);
         Interaction.CODEC.register("PedestalInteraction", PedestalInteraction.class, PedestalInteraction.CODEC);
         Interaction.CODEC.register("HexExecute", HexExecuteInteraction.class, HexExecuteInteraction.CODEC);
+        Interaction.CODEC.register("HexCastHold", HexCastHoldInteraction.class, HexCastHoldInteraction.CODEC);
+    }
+
+    private void registerConditions() {
+        Condition.CODEC.register("HexHolding", HexHoldingCondition.class, HexHoldingCondition.CODEC);
     }
 
     private void registerEvents() {

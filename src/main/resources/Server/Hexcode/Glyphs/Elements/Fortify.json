@@ -1,0 +1,81 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Fortify",
+  "Style": {
+    "PrimaryColor": "#607D8B",
+    "SecondaryColor": "#B0BEC5",
+    "PrimaryParticle": {
+      "SystemId": "Halt_Crystallize"
+    },
+    "PrimarySound": "SFX_Block_Break",
+    "SecondaryParticle": {
+      "SystemId": "Conjure_Despawn"
+    },
+    "SecondarySound": "SFX_Block_Break"
+  },
+  "Title": "hexcode.glyphs.Fortify.name",
+  "Description": "hexcode.glyphs.Fortify.description",
+  "BasePower": 1.0,
+  "ManaConsumption": 15,
+  "ShapeStructure": [
+    {
+      "Parent": "Square",
+      "StatContribution": 2.0
+    },
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.8,
+      "StatContribution": 2.0
+    },
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.6,
+      "StatContribution": 2.0
+    },
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.4,
+      "StatContribution": 2.0
+    }
+  ],
+  "Slots": {
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Fortify.target.name",
+      "Description": "hexcode.glyphs.Fortify.target.description"
+    },
+    "ResourceLimit": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Fortify.ResourceLimit.name",
+      "Description": "hexcode.glyphs.Fortify.ResourceLimit.description",
+      "DefaultValue": -1
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Fortify.Next.name",
+      "Description": "hexcode.glyphs.Fortify.Next.description"
+    },
+    "Immediate": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Fortify.immediate.name",
+      "Description": "hexcode.glyphs.Fortify.immediate.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 6,
+    "DrainPerSecond": 0.2
+  },
+  "Config": {
+    "Type": "Fortify",
+    "Resource": "Life",
+    "Effect": "Hexcode_Fortify",
+    "Efficiency": 1.0,
+    "DurationPerResource": 1.0,
+    "AffinityStat": "Affinity_Life",
+    "AffinityScale": 1.0
+  }
+}

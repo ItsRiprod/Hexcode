@@ -15,6 +15,7 @@ public class PhaseComponent implements Component<EntityStore> {
 
     private List<PhasedBlock> phasedBlocks;
     private float duration;
+    private float initialDuration;
 
     public PhaseComponent() {
     }
@@ -22,6 +23,7 @@ public class PhaseComponent implements Component<EntityStore> {
     public PhaseComponent(List<PhasedBlock> phasedBlocks, float duration) {
         this.phasedBlocks = phasedBlocks;
         this.duration = duration;
+        this.initialDuration = duration;
     }
 
     public static void setComponentType(ComponentType<EntityStore, PhaseComponent> type) {
@@ -41,12 +43,17 @@ public class PhaseComponent implements Component<EntityStore> {
         return duration <= 0;
     }
 
+    public float getElapsedSeconds() {
+        return Math.max(0f, initialDuration - duration);
+    }
+
     @Nonnull
     @Override
     public PhaseComponent clone() {
         PhaseComponent copy = new PhaseComponent();
         copy.phasedBlocks = this.phasedBlocks != null ? new ArrayList<>(this.phasedBlocks) : null;
         copy.duration = this.duration;
+        copy.initialDuration = this.initialDuration;
         return copy;
     }
 }

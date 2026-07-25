@@ -24,6 +24,11 @@ public abstract class StaticSlotProfile extends ImbuementProfileAsset {
     }
 
     protected static <T extends StaticSlotProfile> BuilderCodec<T> slotCodec(Class<T> cls, Supplier<T> ctor) {
+        return slotCodecBuilder(cls, ctor).build();
+    }
+
+    protected static <T extends StaticSlotProfile> BuilderCodec.Builder<T> slotCodecBuilder(Class<T> cls,
+            Supplier<T> ctor) {
         return BuilderCodec
                 .builder(cls, ctor, ImbuementProfileAsset.BASE_CODEC)
                 .append(new KeyedCodec<>("Slots",
@@ -32,7 +37,6 @@ public abstract class StaticSlotProfile extends ImbuementProfileAsset {
                         a -> a.slots)
                 .documentation("Slot key -> PedestalSlot. Insertion order drives radial layout. Keys must match a registered Trigger id (TriggerRegistry).")
                 .addValidatorLate(() -> ImbuementSlotKeyValidator.INSTANCE.late())
-                .add()
-                .build();
+                .add();
     }
 }

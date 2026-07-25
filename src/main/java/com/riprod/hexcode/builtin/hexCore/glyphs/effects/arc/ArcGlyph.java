@@ -79,10 +79,10 @@ public class ArcGlyph implements GlyphHandler {
             return;
         }
 
-        Set<UUID> visited = new HashSet<>();
+        Set<UUID> exclusions = new HashSet<>();
         UUIDComponent casterUuid = accessor.getComponent(
                 hexContext.getCasterRef(accessor), UUIDComponent.getComponentType());
-        if (casterUuid != null) visited.add(casterUuid.getUuid());
+        if (casterUuid != null) exclusions.add(casterUuid.getUuid());
 
         if (targetVar instanceof EntityVar entityVar) {
             Ref<EntityStore> hostRef = entityVar.getRef(accessor);
@@ -92,9 +92,9 @@ public class ArcGlyph implements GlyphHandler {
                 return;
             }
             UUIDComponent hostUuid = accessor.getComponent(hostRef, UUIDComponent.getComponentType());
-            if (hostUuid != null) visited.add(hostUuid.getUuid());
+            if (hostUuid != null) exclusions.add(hostUuid.getUuid());
 
-            ArcState state = new ArcState(glyph, outputLinks, visited, range, interval, iterations, false);
+            ArcState state = new ArcState(glyph, outputLinks, exclusions, range, interval, iterations, false);
             HexConstructSpawner.applyWithState(accessor, hostRef, hexContext, glyph, ArcGlyph.ID, state);
             return;
         }
@@ -106,7 +106,7 @@ public class ArcGlyph implements GlyphHandler {
             return;
         }
 
-        ArcState state = new ArcState(glyph, outputLinks, visited, range, interval, iterations, true);
+        ArcState state = new ArcState(glyph, outputLinks, exclusions, range, interval, iterations, true);
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                 accessor, hexContext, glyph, ArcGlyph.ID, new Vector3d(origin), state);
         applyMarkerModel(holder, config.getModel());

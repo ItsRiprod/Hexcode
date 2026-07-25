@@ -9,17 +9,19 @@
     { "Parent": "Circle", "RelativeSize": 0.8, "StatContribution": 0 }
   ],
   "Slots": {
-    "v": {
+    "V": {
       "Type": "Input",
       "Parent": "Input",
-      "Label": "hexcode.glyphs.Dot.v.name",
-      "Description": "hexcode.glyphs.Dot.v.description"
+      "Label": "hexcode.glyphs.Dot.V.name",
+      "Description": "hexcode.glyphs.Dot.V.description",
+      "DefaultValue": 0
     },
-    "w": {
+    "W": {
       "Type": "Input",
       "Parent": "Input",
-      "Label": "hexcode.glyphs.Dot.w.name",
-      "Description": "hexcode.glyphs.Dot.w.description"
+      "Label": "hexcode.glyphs.Dot.W.name",
+      "Description": "hexcode.glyphs.Dot.W.description",
+      "DefaultValue": 0
     },
     "Next": {
       "Type": "Next",

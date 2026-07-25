@@ -47,6 +47,7 @@ public class HexContext {
     private transient boolean consumeMana = true;
     private transient boolean applyVolatilityDecay = true;
     private transient boolean bypassVolatilityDepletion = false;
+    private transient float tierScale = 1.0f;
     private transient long branchId = -1L;
 
     public HexContext() {
@@ -92,6 +93,7 @@ public class HexContext {
         copy.consumeMana = src.consumeMana;
         copy.applyVolatilityDecay = src.applyVolatilityDecay;
         copy.bypassVolatilityDepletion = src.bypassVolatilityDepletion;
+        copy.tierScale = src.tierScale;
         return copy;
     }
 
@@ -112,6 +114,7 @@ public class HexContext {
         branch.consumeMana = this.consumeMana;
         branch.applyVolatilityDecay = this.applyVolatilityDecay;
         branch.bypassVolatilityDepletion = this.bypassVolatilityDepletion;
+        branch.tierScale = this.tierScale;
         branch.branchId = this.hexStats != null ? this.hexStats.openBranch() : -1L;
         return branch;
     }
@@ -190,6 +193,14 @@ public class HexContext {
 
     public void setBypassVolatilityDepletion(boolean bypassVolatilityDepletion) {
         this.bypassVolatilityDepletion = bypassVolatilityDepletion;
+    }
+
+    public float getTierScale() {
+        return tierScale;
+    }
+
+    public void setTierScale(float tierScale) {
+        this.tierScale = tierScale;
     }
 
     // === root + caster ref ===

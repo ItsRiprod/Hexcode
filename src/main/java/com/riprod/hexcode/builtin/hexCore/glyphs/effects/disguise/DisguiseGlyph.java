@@ -6,9 +6,7 @@ import org.joml.Vector3d;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
 import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
@@ -33,6 +31,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class DisguiseGlyph implements GlyphHandler {
@@ -119,16 +118,9 @@ public class DisguiseGlyph implements GlyphHandler {
         }
 
         String effectId = config.getDisguiseEffectId();
-        EntityEffect disguiseEffect = effectId != null ? EntityEffect.getAssetMap().getAsset(effectId) : null;
-        if (disguiseEffect != null) {
-            EffectControllerComponent controller = accessor.getComponent(
-                    targetRef, EffectControllerComponent.getComponentType());
-            if (controller != null) {
-                controller.addEffect(targetRef, disguiseEffect, durationSeconds,
-                        OverlapBehavior.OVERWRITE, accessor);
-            }
-        }
-        state.setEffectId(effectId);
+        boolean effectApplied = VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, effectId,
+                durationSeconds, OverlapBehavior.OVERWRITE);
+        state.setEffectId(effectApplied ? effectId : null);
 
         if (isNew) {
             HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, ID, state);

@@ -4,8 +4,13 @@
     "Containers+": [
       {
         "Type": "Droplist",
-        "Weight": 100,
+        "Weight": 38,
         "DroplistId": "Drop_Page_Common"
+      },
+      {
+        "Type": "Droplist",
+        "Weight": 12,
+        "DroplistId": "Drop_Page_Rare"
       }
     ]
   }

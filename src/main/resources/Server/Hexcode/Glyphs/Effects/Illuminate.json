@@ -27,7 +27,7 @@
     },
     "Mode": {
       "Parent": "Boolean",
-      "DefaultValue": 0,
+      "DefaultValue": 1,
       "Label": "hexcode.glyphs.Illuminate.Mode.name",
       "Description": "hexcode.glyphs.Illuminate.Mode.description",
       "PositiveLabel": "hexcode.glyphs.Illuminate.Mode.positive",

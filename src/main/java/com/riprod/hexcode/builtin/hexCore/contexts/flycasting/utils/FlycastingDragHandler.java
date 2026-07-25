@@ -47,7 +47,7 @@ public final class FlycastingDragHandler {
 
         HexComponent targetHex = GlyphSelector.findHoveredHex(buffer, headRotation.getRotation(),
                 state.getActiveHexes());
-        FlycastingHover.applyHexHover(buffer, state, targetHex);
+        FlycastingHover.applyHexHover(buffer, player, state, targetHex);
 
         GlyphComponent targetGlyph = null;
         if (targetHex != null && targetHex != state.getDraggingHex()) {
@@ -88,7 +88,7 @@ public final class FlycastingDragHandler {
         }
 
         state.setDraggingHex(null);
-        FlycastingHover.applyHexHover(buffer, state, null);
+        FlycastingHover.applyHexHover(buffer, player, state, null);
         FlycastingHover.applyGlyphHover(buffer, state, null);
 
         Rotation3f dhr = draggedHex.getRotation();

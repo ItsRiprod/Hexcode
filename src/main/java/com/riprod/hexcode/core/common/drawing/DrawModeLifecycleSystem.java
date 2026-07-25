@@ -77,13 +77,14 @@ public class DrawModeLifecycleSystem extends RefChangeSystem<EntityStore, DrawCa
             capture.getPersistentStrokeRefs().clear();
             DrawAnchorUtils.removeAnchor(buffer, capture);
 
-            buffer.invoke(ref, new DrawModeExitEvent(ref));
-            
+            CasterComponent caster = buffer.getComponent(ref, CasterComponent.getComponentType());
+            String contextId = caster != null ? caster.getCurrentContext() : null;
+
+            buffer.invoke(ref, new DrawModeExitEvent(ref, capture));
+
             if (capture.getPendingShapes().isEmpty()) {
                 return;
             }
-            CasterComponent caster = buffer.getComponent(ref, CasterComponent.getComponentType());
-            String contextId = caster != null ? caster.getCurrentContext() : null;
             ShapeStructure structure = DrawCaptureService.computeStructure(capture.getPendingShapes());
             capture.getPendingShapes().clear();
             capture.setFinalizePending(false);

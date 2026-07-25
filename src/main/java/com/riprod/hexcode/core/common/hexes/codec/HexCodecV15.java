@@ -2,6 +2,7 @@ package com.riprod.hexcode.core.common.hexes.codec;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -45,6 +46,7 @@ public class HexCodecV15 {
     private static final int SECTION_GLYPH_STREAM = 0x04;
     private static final int SECTION_EXTRAS = 0x05;
     static final int SECTION_SLOT_STATE = 0x06;
+    static final int SECTION_META = 0x07;
 
     private static final int EXTRAS_KIND_ROTATION = 0x01;
 
@@ -188,9 +190,11 @@ public class HexCodecV15 {
                 slotIdxMap, spBits, idToIdx, refBits);
         byte[] extrasBytes = encodeRotationExtras(glyphs);
         byte[] slotStateBytes = encodeSlotStates(glyphs);
+        byte[] metaBytes = encodeMeta(hex);
 
         ByteArrayOutputStream body = new ByteArrayOutputStream();
-        int sectionCount = 4 + (extrasBytes != null ? 1 : 0) + (slotStateBytes != null ? 1 : 0);
+        int sectionCount = 4 + (extrasBytes != null ? 1 : 0) + (slotStateBytes != null ? 1 : 0)
+                + (metaBytes != null ? 1 : 0);
         CodecUtil.writeByteVarInt(body, sectionCount);
         appendSection(body, SECTION_HEADER, header);
         appendSection(body, SECTION_ASSET_PALETTE, assetPaletteBytes);
@@ -198,6 +202,7 @@ public class HexCodecV15 {
         appendSection(body, SECTION_GLYPH_STREAM, glyphStreamBytes);
         if (extrasBytes != null) appendSection(body, SECTION_EXTRAS, extrasBytes);
         if (slotStateBytes != null) appendSection(body, SECTION_SLOT_STATE, slotStateBytes);
+        if (metaBytes != null) appendSection(body, SECTION_META, metaBytes);
         return body.toByteArray();
     }
 
@@ -392,6 +397,31 @@ public class HexCodecV15 {
         }
     }
 
+    @Nullable
+    static byte[] encodeMeta(Hex hex) {
+        String name = hex.getDisplayName();
+        if (name == null || name.isBlank()) return null;
+        BitWriter bw = new BitWriter();
+        // writeBareString throws past the 255-byte pstr cap, and a name can arrive from an
+        // imported string or legacy document that never passed the page's length limit
+        CodecUtil.writeBareString(bw, clampToPstr(name));
+        return bw.flush();
+    }
+
+    private static String clampToPstr(String s) {
+        byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
+        if (bytes.length <= 255) return s;
+        int end = 255;
+        while (end > 0 && (bytes[end] & 0xC0) == 0x80) end--;
+        return new String(bytes, 0, end, StandardCharsets.UTF_8);
+    }
+
+    static void decodeMeta(byte[] data, Hex hex) {
+        BitReader br = new BitReader(data);
+        String name = CodecUtil.readBareString(br);
+        if (name != null && !name.isBlank()) hex.setDisplayName(name);
+    }
+
     static void writeLinks(BitWriter bw, String[] links, Map<String, Integer> idToIdx, int refBits) {
         if (links == null || links.length == 0) { bw.write(0, 1); return; }
         bw.write(1, 1);
@@ -578,6 +608,15 @@ public class HexCodecV15 {
             } catch (Exception e) {
                 issues.add(new DecodeIssue("slot state failed: " + e.getMessage()
                         + "; slot toggles default", DecodeIssue.Severity.INFO));
+            }
+        }
+
+        if (sections.containsKey(SECTION_META)) {
+            try {
+                decodeMeta(sections.get(SECTION_META), hex);
+            } catch (Exception e) {
+                issues.add(new DecodeIssue("meta failed: " + e.getMessage()
+                        + "; hex stays unnamed", DecodeIssue.Severity.INFO));
             }
         }
 

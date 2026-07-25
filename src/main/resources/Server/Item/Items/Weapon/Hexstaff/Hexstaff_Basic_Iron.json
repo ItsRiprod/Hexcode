@@ -47,6 +47,13 @@
           "CalculationType": "Additive",
           "Amount": 9
         }
+      ],
+      "Volatility": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 29
+        }
       ]
     },
     "EntityStatsToClear": [
@@ -85,7 +92,7 @@
   },
   "InteractionVars": {
     "HexTier1": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -94,20 +101,19 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier1",
+            "Style": "Hexstaff_Basic_Iron",
             "HexStats": {
-              "InitialVolatility": 28,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 14
               }
-            },
-            "Style": "Hexstaff_Basic_Iron"
+            }
           }
         }
       ]
     },
     "HexTier2": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -116,20 +122,19 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier2",
+            "Style": "Hexstaff_Basic_Iron",
             "HexStats": {
-              "InitialVolatility": 32,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 16
               }
-            },
-            "Style": "Hexstaff_Basic_Iron"
+            }
           }
         }
       ]
     },
     "HexTier3": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -138,20 +143,19 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier3",
+            "Style": "Hexstaff_Basic_Iron",
             "HexStats": {
-              "InitialVolatility": 36,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 18
               }
-            },
-            "Style": "Hexstaff_Basic_Iron"
+            }
           }
         }
       ]
     },
     "HexTier4": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -160,14 +164,13 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier4",
+            "Style": "Hexstaff_Basic_Iron",
             "HexStats": {
-              "InitialVolatility": 40,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 20
               }
-            },
-            "Style": "Hexstaff_Basic_Iron"
+            }
           }
         }
       ]

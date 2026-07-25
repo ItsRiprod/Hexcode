@@ -16,6 +16,9 @@
             "ItemDisplay": {
               "Name": {
                 "MessageId": "hexcode.pages.fireball.name"
+              },
+              "Description": {
+                "MessageId": "hexcode.pages.fireball.description"
               }
             }
           }
@@ -33,6 +36,9 @@
             "ItemDisplay": {
               "Name": {
                 "MessageId": "hexcode.pages.energy_bolt.name"
+              },
+              "Description": {
+                "MessageId": "hexcode.pages.energy_bolt.description"
               }
             }
           }
@@ -50,6 +56,9 @@
             "ItemDisplay": {
               "Name": {
                 "MessageId": "hexcode.pages.ice_bolt.name"
+              },
+              "Description": {
+                "MessageId": "hexcode.pages.ice_bolt.description"
               }
             }
           }
@@ -67,14 +76,13 @@
             "ItemDisplay": {
               "Name": {
                 "MessageId": "hexcode.pages.launch.name"
+              },
+              "Description": {
+                "MessageId": "hexcode.pages.launch.description"
               }
             }
           }
         }
-      },
-      {
-        "Type": "Empty",
-        "Weight": 100
       }
     ]
   }

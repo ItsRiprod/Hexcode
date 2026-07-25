@@ -4,6 +4,6 @@ public final class IdentifyGlyphSlots {
     private IdentifyGlyphSlots() {
     }
 
-    public static final String TARGET = "Target";
-    public static final String REFERENCE = "Reference";
+    public static final String A = "A";
+    public static final String B = "B";
 }

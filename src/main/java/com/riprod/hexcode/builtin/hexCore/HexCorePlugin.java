@@ -73,6 +73,8 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact.InteractGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.chaos.ChaosGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.ConcentrationConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.ConcentrationGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ward.WardConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ward.WardGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.ConjureGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.component.ConjureZoneComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.system.ConjureConstructHandler;
@@ -90,10 +92,10 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.Ensna
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.erode.ErodeConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.erode.ErodeGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.force.ForceGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.FortifyConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.FortifyGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.FortifyWardDamageSystem;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.fortify.component.FortifyWardComponent;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.FortifyConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.FortifyGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.FortifyWardDamageSystem;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.component.FortifyWardComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.InvisibilityConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.InvisibilityDamageSystem;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.InvisibilityGlyph;
@@ -126,10 +128,10 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.terraform.TerraformGlyp
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.warp.WarpGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.bolt.BoltGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.healthsurge.HealthSurgeGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.magearmor.MageArmorConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.magearmor.MageArmorGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.magearmor.MagicHealthDamageSystem;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.magearmor.component.MagicHealthComponent;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor.MageArmorConstructHandler;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor.MageArmorGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor.MagicHealthDamageSystem;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor.component.MagicHealthComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.rebreathing.RebreathingConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.rebreathing.RebreathingGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.drown.DrownGlyph;
@@ -197,6 +199,7 @@ import com.riprod.hexcode.builtin.hexCore.obelisks.efficiency.EfficiencyObelisk;
 import com.riprod.hexcode.builtin.hexCore.obelisks.importexport.ImportExportObelisk;
 import com.riprod.hexcode.builtin.hexCore.obelisks.importexport.interactions.ImportInteraction;
 import com.riprod.hexcode.builtin.hexCore.obelisks.seeker.SeekerObelisk;
+import com.riprod.hexcode.builtin.hexCore.obelisks.seeker.interactions.HexNameInteraction;
 import com.riprod.hexcode.builtin.hexCore.staffStyles.ArcStyle;
 import com.riprod.hexcode.builtin.hexCore.staffStyles.RingStyle;
 import com.riprod.hexcode.builtin.hexCore.staffStyles.SphereStyle;
@@ -334,6 +337,7 @@ public class HexCorePlugin extends JavaPlugin {
                 GlyphRegistry.register(new SwapGlyph());
                 GlyphRegistry.register(new InteractionGlyph());
                 GlyphRegistry.register(new ConcentrationGlyph());
+                GlyphRegistry.register(new WardGlyph());
                 
                 // tier 4 glyphs
                 GlyphRegistry.register(new FreezeGlyph());
@@ -382,6 +386,8 @@ public class HexCorePlugin extends JavaPlugin {
         private void RegisterInteractions() {
                 Interaction.CODEC.register("HexImportExportInteraction", ImportInteraction.class,
                                 ImportInteraction.CODEC);
+                Interaction.CODEC.register("HexNameInteraction", HexNameInteraction.class,
+                                HexNameInteraction.CODEC);
                 Interaction.CODEC.register("HexProjectileHit",
                                 HexProjectileHitInteraction.class,
                                 HexProjectileHitInteraction.CODEC);
@@ -536,6 +542,7 @@ public class HexCorePlugin extends JavaPlugin {
                 ConstructRegistry.register(ScaleGlyph.ID, new ScaleConstructHandler());
                 ConstructRegistry.register(DisguiseGlyph.ID, new DisguiseConstructHandler());
                 ConstructRegistry.register(ConcentrationGlyph.ID, new ConcentrationConstructHandler());
+                ConstructRegistry.register(WardGlyph.ID, new WardConstructHandler());
                 ConstructRegistry.register(DomainGlyph.ID, new DomainConstructHandler());
                 ConstructRegistry.register(DomainGlyph.AURA_ID, new DomainAuraConstructHandler());
                 ConstructRegistry.register(GlaciateGlyph.ID, new GlaciateConstructHandler());

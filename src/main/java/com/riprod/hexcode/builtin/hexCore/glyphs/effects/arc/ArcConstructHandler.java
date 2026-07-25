@@ -75,6 +75,11 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
 
         Ref<EntityStore> target = ArcUtils.getNextArcTarget(
                 origin, state.getRange(), state.getVisited(), buffer);
+        if (target == null && state.hasHitThisCycle()) {
+            state.resetCycle();
+            target = ArcUtils.getNextArcTarget(
+                    origin, state.getRange(), state.getVisited(), buffer);
+        }
         if (target == null) {
             return false;
         }

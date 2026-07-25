@@ -12,12 +12,10 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.MountController;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
@@ -185,15 +183,8 @@ public class ScaleGlyph implements GlyphHandler {
             }
 
             String effectId = config.getScaleEffectId();
-            EntityEffect scaleEffect = effectId != null ? EntityEffect.getAssetMap().getAsset(effectId) : null;
-            if (scaleEffect != null) {
-                EffectControllerComponent controller = accessor.getComponent(
-                        targetRef, EffectControllerComponent.getComponentType());
-                if (controller != null) {
-                    controller.addEffect(targetRef, scaleEffect, durationSeconds,
-                            OverlapBehavior.OVERWRITE, accessor);
-                }
-            }
+            VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, effectId, durationSeconds,
+                    OverlapBehavior.OVERWRITE);
             state.setEffectId(effectId);
 
             Vector3d spawnPos;

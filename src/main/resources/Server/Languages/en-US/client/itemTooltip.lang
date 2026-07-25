@@ -1,8 +1,12 @@
-stats.Volatility=Spell Stability: {value}
-stats.Stability=Casting Stability: {value}%
-stats.Affinity_Fire=Elemental Fire Bonus: {value}
-stats.Affinity_Ice=Elemental Ice Bonus: {value}
-stats.Affinity_Life=Elemental Life Bonus: {value}
-stats.Affinity_Lightning=Elemental Lightning Bonus: {value}
-stats.Affinity_Arcane=Elemental Arcane Bonus: {value}
-stats.Affinity_Void=Elemental Void Bonus: {value}
+stats.Volatility={value} Spell Stability
+stats.Stability={value}% Casting Stability
+stats.MagicCharges={value} Spell Slots
+
+stats.Flag_IsHolding=Can Charge
+
+stats.Affinity_Fire={value} Fire Elemental Bonus
+stats.Affinity_Ice={value} Ice Elemental Bonus
+stats.Affinity_Life={value} Life Elemental Bonus
+stats.Affinity_Lightning={value} Lightning Elemental Bonus
+stats.Affinity_Arcane={value} Arcane Elemental Bonus
+stats.Affinity_Void={value} Void Elemental Bonus

@@ -2,11 +2,13 @@ package com.riprod.hexcode.utils;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
 import org.joml.Vector3i;
+import com.hypixel.hytale.server.core.asset.type.blockhitbox.BlockBoundingBoxes;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -24,6 +26,16 @@ import com.riprod.hexcode.core.common.protection.BlockAction;
 import com.riprod.hexcode.core.common.protection.HexProtection;
 
 public class BlockUtils {
+
+    public static Box resolveBlockDisplayBox(World world, Vector3i blockPos) {
+        int rotation = world.getBlockRotationIndex(blockPos.x(), blockPos.y(), blockPos.z());
+        BlockType blockType = BlockType.getAssetMap().getAsset(world.getBlock(blockPos.x(), blockPos.y(), blockPos.z()));
+        if (blockType == null) return null;
+        var hitbox = BlockBoundingBoxes.getAssetMap().getAsset(blockType.getHitboxTypeIndex());
+        if (hitbox == null) return null;
+        return hitbox.get(rotation).getBoundingBox().clone();
+    }
+
     public static void moveBlock(Vector3i source, Vector3d destination, World world, CommandBuffer<EntityStore> accessor) {
         int srcX = source.x();
         int srcY = source.y();
@@ -103,14 +115,12 @@ public class BlockUtils {
                     TransformComponent.getComponentType());
             if (tc == null) return;
 
+            Rotation3f rotation = tc.getRotation();
             Player player = accessor.getComponent(entityRef, Player.getComponentType());
-            if (player != null) {
-                Rotation3f rotation = tc.getRotation();
-                Teleport teleport = Teleport.createForPlayer(dest, rotation);
-                accessor.addComponent(entityRef, Teleport.getComponentType(), teleport);
-            } else {
-                tc.setPosition(new Vector3d(dest.x(), dest.y(), dest.z()));
-            }
+            Teleport teleport = player != null
+                    ? Teleport.createForPlayer(dest, rotation)
+                    : new Teleport(dest, rotation);
+            accessor.addComponent(entityRef, Teleport.getComponentType(), teleport);
         } else if (var instanceof BlockVar blockVar && blockVar.getValue() != null) {
             moveBlockGated(blockVar.getValue(), dest, world, accessor, caster, glyphName);
         } else if (var instanceof PositionVar posVar && posVar.getValue() != null) {

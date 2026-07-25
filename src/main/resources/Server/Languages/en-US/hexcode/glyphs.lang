@@ -41,10 +41,11 @@ Concentration.Next.name=Next
 Concentration.Next.description=Children sustained while concentrating
 Concentration.release.name=Release
 Concentration.release.description=Executes when you release concentration
-Concentration.Target.name=Target
-Concentration.Target.description=Entity to ward. No defaults
-Concentration.Deferral.name=Deferral
-Concentration.Deferral.description=Entity to defer the references to. No Defaults
+Concentration.Resource.name=Resource
+Concentration.Resource.description=Extra per-second stat drained on top of the mana upkeep while concentrating
+Concentration.Resource.positive=Stamina
+Concentration.Resource.neutral=None
+Concentration.Resource.negative=Mana
 
 Cos.name=Cos
 Cos.description=Cosine of A (radians)
@@ -82,19 +83,19 @@ Divide.Next.description=The next glyph in the execution chain
 
 Dot.name=Dot Product
 Dot.description=Derives the dot product of two vector inputs.
-Dot.v.name=The first vector
-Dot.w.name=The second vector
-Dot.w.description=The second vector of the dot product
-Dot.v.description=The first vector of the dot product
+Dot.V.name=V
+Dot.W.name=W
+Dot.W.description=The second vector of the dot product
+Dot.V.description=The first vector of the dot product
 Dot.Next.name=Next Glyph
 Dot.Next.description=The next glyph in the execution chain 
 
 Cross.name=Cross Product
 Cross.description=Derives the cross product of two vector inputs.
-Cross.v.name=The first vector
-Cross.w.name=The second vector
-Cross.v.description=The first vector of the cross product
-Cross.w.description=The second vector of the cross product
+Cross.V.name=V
+Cross.W.name=W
+Cross.V.description=The first vector of the cross product
+Cross.W.description=The second vector of the cross product
 Cross.Next.name=Next Glyph
 Cross.Next.description=The next glyph in the execution chain
 
@@ -125,11 +126,11 @@ Equal.Less.name=Less
 Equal.Less.description=If A is less than B
 
 Identify.name=Identify
-Identify.description=Compares Target and Reference by identity: -1 different category, 0 identical, +1 same category. Locks in the result as its value.
-Identify.Target.name=Target
-Identify.Target.description=The first value to compare
-Identify.Reference.name=Reference
-Identify.Reference.description=The value to compare against
+Identify.description=Compares A and B by identity: -1 different category, 0 identical, +1 same category. Locks in the result as its value.
+Identify.A.name=A
+Identify.A.description=The first value to compare
+Identify.B.name=B
+Identify.B.description=The value to compare against
 Identify.Next.name=Next
 Identify.Next.description=The next glyph in the execution chain
 
@@ -613,8 +614,8 @@ Fortify.name=Fortify
 Fortify.description=Nullifies the full force of the damage from the next attack
 Fortify.target.name=Target
 Fortify.target.description=Variable containing the targets to affect
-Fortify.duration.name=Duration
-Fortify.duration.description=How long the effect lasts in seconds
+Fortify.ResourceLimit.name=Resource Limit
+Fortify.ResourceLimit.description=Caps how much Life is spent fueling the ward
 Fortify.immediate.name=Immediate
 Fortify.immediate.description=Fires immediately when the effect is applied
 Fortify.Next.name=Next
@@ -803,6 +804,15 @@ Warp.destination.description=Position to teleport to
 Warp.Next.name=Next
 Warp.Next.description=The next glyph in the execution chain
 
+Ward.name=Ward
+Ward.description=Redirects references to Target through Deferral and drains Volatility while held
+Ward.Target.name=Target
+Ward.Target.description=Entity to ward. No defaults
+Ward.Deferral.name=Deferral
+Ward.Deferral.description=Entity to defer the references to. No defaults
+Ward.Next.name=Next
+Ward.Next.description=Fires when the ward ends, either on release or Volatility exhaustion
+
 # Elementals
 
 Scorch.name=Scorch
@@ -889,10 +899,10 @@ MageArmor.immediate.name=Immediate
 MageArmor.immediate.description=Fires immediately when the status is applied
 MageArmor.Next.name=Next
 MageArmor.Next.description=The next glyph in the execution chain
-MageArmor.ResourceLimit.name=Complexity Limit
-MageArmor.ResourceLimit.description=Caps how much Resource is used
 MageArmor.target.name=Target
 MageArmor.target.description=Variable containing the target to affect
+MageArmor.duration.name=Duration
+MageArmor.duration.description=How long the status lasts in seconds
 
 Rebreathing.name=Rebreathing
 Rebreathing.description=Fills the target's lungs with air, letting it breathe underwater for a duration

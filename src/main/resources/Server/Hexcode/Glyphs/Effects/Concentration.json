@@ -13,19 +13,14 @@
     }
   ],
   "Slots": {
-    "Target": {
-      "Type": "Input",
-      "Parent": "Input",
-      "Label": "hexcode.glyphs.Concentration.Target.name",
-      "Description": "hexcode.glyphs.Concentration.Target.description",
-      "Unique": true
-    },
-    "Deferral": {
-      "Type": "Input",
-      "Parent": "Input",
-      "Label": "hexcode.glyphs.Concentration.Deferral.name",
-      "Description": "hexcode.glyphs.Concentration.Deferral.description",
-      "Unique": true
+    "Resource": {
+      "Parent": "Boolean",
+      "DefaultValue": 0,
+      "Label": "hexcode.glyphs.Concentration.Resource.name",
+      "Description": "hexcode.glyphs.Concentration.Resource.description",
+      "PositiveLabel": "hexcode.glyphs.Concentration.Resource.positive",
+      "NeutralLabel": "hexcode.glyphs.Concentration.Resource.neutral",
+      "NegativeLabel": "hexcode.glyphs.Concentration.Resource.negative"
     },
     "Next": {
       "Type": "Next",
@@ -60,8 +55,12 @@
   },
   "Config": {
     "Type": "Concentration",
-    "VolatilityBonusFraction": 0.5,
+    "SustainImpact": {
+      "Type": "Constant",
+      "Value": 3.0
+    },
     "SecondaryIntervalSeconds": 1.0,
-    "ManaPerSecond": 1.0
+    "ManaPerSecond": 1.0,
+    "ResourceDrainPerSecond": 6.0
   }
 }

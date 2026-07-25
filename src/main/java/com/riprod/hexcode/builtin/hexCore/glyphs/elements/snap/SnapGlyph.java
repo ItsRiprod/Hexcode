@@ -60,7 +60,7 @@ public class SnapGlyph implements GlyphHandler {
 
         String onHitEffect = config.getOnHitEffect();
         if (onHitEffect != null && !onHitEffect.isEmpty()) {
-            ElementSupport.applyStatus(target, hexContext.getAccessor(),
+            ElementSupport.applyStatus(hexContext, target, glyph,
                     onHitEffect, config.getOnHitDuration());
         }
 

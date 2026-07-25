@@ -102,15 +102,20 @@ public class HexCodecV16 {
                 accBits, speedVals, defaultSpeed, slotIdxMap, spBits, idToIdx, refBits);
 
         byte[] slotStateBytes = HexCodecV15.encodeSlotStates(glyphs);
+        byte[] metaBytes = HexCodecV15.encodeMeta(hex);
 
         ByteArrayOutputStream body = new ByteArrayOutputStream();
-        CodecUtil.writeByteVarInt(body, 4 + (slotStateBytes != null ? 1 : 0));
+        CodecUtil.writeByteVarInt(body,
+                4 + (slotStateBytes != null ? 1 : 0) + (metaBytes != null ? 1 : 0));
         HexCodecV15.appendSection(body, SECTION_HEADER, header);
         HexCodecV15.appendSection(body, SECTION_ASSET_PALETTE, assetPaletteBytes);
         HexCodecV15.appendSection(body, SECTION_SLOT_PALETTE, slotPaletteBytes);
         HexCodecV15.appendSection(body, SECTION_GLYPH_STREAM, glyphStreamBytes);
         if (slotStateBytes != null) {
             HexCodecV15.appendSection(body, HexCodecV15.SECTION_SLOT_STATE, slotStateBytes);
+        }
+        if (metaBytes != null) {
+            HexCodecV15.appendSection(body, HexCodecV15.SECTION_META, metaBytes);
         }
         return body.toByteArray();
     }
@@ -275,6 +280,15 @@ public class HexCodecV16 {
             } catch (Exception e) {
                 issues.add(new DecodeIssue("slot state failed: " + e.getMessage()
                         + "; slot toggles default", DecodeIssue.Severity.INFO));
+            }
+        }
+
+        if (sections.containsKey(HexCodecV15.SECTION_META)) {
+            try {
+                HexCodecV15.decodeMeta(sections.get(HexCodecV15.SECTION_META), hex);
+            } catch (Exception e) {
+                issues.add(new DecodeIssue("meta failed: " + e.getMessage()
+                        + "; hex stays unnamed", DecodeIssue.Severity.INFO));
             }
         }
 

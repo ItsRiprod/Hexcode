@@ -5,9 +5,7 @@ import java.util.Arrays;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
@@ -28,6 +26,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class LevitateGlyph implements GlyphHandler {
@@ -83,7 +82,8 @@ public class LevitateGlyph implements GlyphHandler {
 
         try {
             String effectId = config.getEffectId();
-            applyLevitateEffect(accessor, ref, effectId, durationSeconds);
+            VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId, durationSeconds,
+                    OverlapBehavior.OVERWRITE);
 
             HexEffectsComponent construct = accessor.getComponent(
                     ref, HexEffectsComponent.getComponentType());
@@ -123,21 +123,6 @@ public class LevitateGlyph implements GlyphHandler {
         } catch (Exception e) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Cannot apply levitate", e);
-        }
-    }
-
-    private void applyLevitateEffect(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref,
-            String effectId, float durationSeconds) {
-        EntityEffect levitateEffect = EntityEffect.getAssetMap().getAsset(effectId);
-        if (levitateEffect == null) {
-            LOGGER.atWarning().log("levitate: %s effect asset not found", effectId);
-            return;
-        }
-        EffectControllerComponent controller = accessor.getComponent(
-                ref, EffectControllerComponent.getComponentType());
-        if (controller != null) {
-            controller.addEffect(ref, levitateEffect, durationSeconds,
-                    OverlapBehavior.OVERWRITE, accessor);
         }
     }
 

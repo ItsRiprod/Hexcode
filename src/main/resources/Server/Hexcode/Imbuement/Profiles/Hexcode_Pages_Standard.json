@@ -1,0 +1,10 @@
+{
+  "PedestalType": "Page",
+  "CategoryId": "Hexcode.Pages",
+  "Slots": {
+    "Default": {
+      "Label": "hexcode.pages.slot.label",
+      "Description": "hexcode.pages.slot.description"
+    }
+  }
+}

@@ -4,5 +4,19 @@
   "Max": 0,
   "Shared": true,
   "ResetType": "InitialValue",
-  "IgnoreInvulnerability": true
+  "IgnoreInvulnerability": true,
+  "Regenerating": [
+    {
+      "Interval": 0.1,
+      "Amount": -1,
+      "RegenType": "Additive",
+      "ClampAtZero": true,
+      "Conditions": [
+        {
+          "Id": "HexHolding",
+          "Inverse": true
+        }
+      ]
+    }
+  ]
 }

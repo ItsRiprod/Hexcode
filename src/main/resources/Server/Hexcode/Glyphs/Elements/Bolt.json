@@ -7,18 +7,24 @@
   "BasePower": 1.0,
   "ManaConsumption": 15,
   "ShapeStructure": [
-    "Circle",
     {
       "Parent": "Circle",
-      "RelativeSize": 0.8
+      "StatContribution": 2.0
     },
     {
       "Parent": "Circle",
-      "RelativeSize": 0.6
+      "RelativeSize": 0.8,
+      "StatContribution": 2.0
     },
     {
       "Parent": "Circle",
-      "RelativeSize": 0.4
+      "RelativeSize": 0.6,
+      "StatContribution": 2.0
+    },
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.4,
+      "StatContribution": 2.0
     }
   ],
   "Slots": {

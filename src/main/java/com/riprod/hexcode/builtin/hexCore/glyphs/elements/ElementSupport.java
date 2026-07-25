@@ -4,9 +4,7 @@ import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType;
@@ -17,6 +15,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public final class ElementSupport {
@@ -52,15 +51,10 @@ public final class ElementSupport {
         return ref != null && ref.isValid() ? ref : null;
     }
 
-    public static boolean applyStatus(Ref<EntityStore> target, CommandBuffer<EntityStore> accessor,
+    public static boolean applyStatus(HexContext hexContext, Ref<EntityStore> target, Glyph glyph,
             String effectId, float seconds) {
-        EntityEffect effect = EntityEffect.getAssetMap().getAsset(effectId);
-        if (effect == null) return false;
-        EffectControllerComponent controller = accessor.getComponent(
-                target, EffectControllerComponent.getComponentType());
-        if (controller == null) return false;
-        controller.addEffect(target, effect, seconds, OverlapBehavior.OVERWRITE, accessor);
-        return true;
+        return VfxUtil.applyBoundedEffect(hexContext, target, glyph, effectId, seconds,
+                OverlapBehavior.OVERWRITE);
     }
 
     public static float scaledDuration(float complexity, float efficiency, float perComplexity,

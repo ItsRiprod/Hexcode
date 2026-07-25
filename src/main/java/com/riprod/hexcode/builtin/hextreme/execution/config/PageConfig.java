@@ -11,7 +11,11 @@ import com.riprod.hexcode.core.common.execution.component.HexRoot;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
+import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
+import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
 import com.riprod.hexcode.utils.HexSlot;
+
+import javax.annotation.Nullable;
 
 public class PageConfig extends HexConfigAsset {
 
@@ -22,13 +26,34 @@ public class PageConfig extends HexConfigAsset {
         if (playerRef == null || !playerRef.isValid()) {
             return null;
         }
-        return resolvePageHex(PlayerUtils.getHandItem(accessor, playerRef, HexSlot.MainHand));
+        return resolvePageHex(accessor, PlayerUtils.getHandItem(accessor, playerRef, HexSlot.MainHand));
     }
 
-    public static Hex resolvePageHex(ItemStack page) {
+    public static Hex resolvePageHex(ComponentAccessor<EntityStore> accessor, ItemStack page) {
         if (page == null || page.isEmpty()) {
             return null;
         }
+        Hex imbued = resolveImbuedHex(accessor, page);
+        return imbued != null ? imbued : resolveSavedHex(page);
+    }
+
+    @Nullable
+    private static Hex resolveImbuedHex(ComponentAccessor<EntityStore> accessor, ItemStack page) {
+        ImbuementProfileAsset profile = ImbuementUtils.resolveProfile(page);
+        if (profile == null) {
+            return null;
+        }
+        for (String slotKey : profile.resolveSlots(page).keySet()) {
+            Hex hex = profile.readHex(page, slotKey, accessor);
+            if (hex != null) {
+                return hex;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private static Hex resolveSavedHex(ItemStack page) {
         String hexId = page.getFromMetadataOrNull(METADATA_KEY, Codec.STRING);
         if (hexId == null) {
             return null;

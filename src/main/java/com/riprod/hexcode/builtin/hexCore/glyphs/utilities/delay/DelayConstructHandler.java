@@ -2,7 +2,6 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.delay;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.RemoveReason;
@@ -40,9 +39,11 @@ public class DelayConstructHandler implements ConstructHandler<DelayState> {
         HexContext immediateCtx = hexContext.branch();
         DelayState state = status.getState();
         if (state != null && state.isCustom()) {
-            UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
-                    .getUuid();
-            immediateCtx.setDefaultVariable(new EntityVar(entityId, ctx.getEntityRef()));
+            UUIDComponent uuidComponent = ctx.getBuffer().getComponent(
+                    ctx.getEntityRef(), UUIDComponent.getComponentType());
+            if (uuidComponent != null) {
+                immediateCtx.setDefaultVariable(new EntityVar(uuidComponent.getUuid(), ctx.getEntityRef()));
+            }
         }
         HexExecuter.continueExecution(Arrays.asList(links), immediateCtx);
     }
@@ -79,7 +80,8 @@ public class DelayConstructHandler implements ConstructHandler<DelayState> {
 
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
 
-        if (status.getState().isCustom()) {
+        DelayState state = status.getState();
+        if (state != null && state.isCustom()) {
             buffer.tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
         }
     }

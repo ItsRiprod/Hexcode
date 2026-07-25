@@ -18,6 +18,7 @@ public class Hex {
     private Map<String, Glyph> hexGraph;
     private String hexId;
     private String firstGlyphId;
+    private String displayName;
 
     public Hex() {
         this.hexGraph = new HashMap<>();
@@ -44,6 +45,7 @@ public class Hex {
         this.hexGraph.putAll(other.hexGraph);
         this.hexId = other.hexId;
         this.firstGlyphId = other.firstGlyphId;
+        this.displayName = other.displayName;
     }
 
     public void absorb(Hex other, String insertLocation) {
@@ -125,6 +127,14 @@ public class Hex {
         this.hexId = hexId;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     public static final BuilderCodec<Hex> CODEC = BuilderCodec
             .builder(Hex.class, Hex::new)
             .append(new KeyedCodec<>("HexGraph", new MapCodec<>(Glyph.CODEC, HashMap::new, false)),
@@ -139,6 +149,10 @@ public class Hex {
                     (c, v) -> c.firstGlyphId = v,
                     c -> c.firstGlyphId)
             .add()
+            .append(new KeyedCodec<>("DisplayName", Codec.STRING),
+                    (c, v) -> c.displayName = v,
+                    c -> c.displayName)
+            .add()
             .build();
 
     public Hex clone() {
@@ -148,11 +162,13 @@ public class Hex {
         }
         newHex.setFirstGlyphId(this.firstGlyphId);
         newHex.set(this.hexId);
+        newHex.setDisplayName(this.displayName);
         return newHex;
     }
 
     @Override
     public String toString() {
-        return "Hex{id=" + hexId + ", firstGlyphId=" + firstGlyphId + ", glyphs=" + hexGraph.values() + "}";
+        return "Hex{id=" + hexId + ", displayName=" + displayName + ", firstGlyphId=" + firstGlyphId
+                + ", glyphs=" + hexGraph.values() + "}";
     }
 }

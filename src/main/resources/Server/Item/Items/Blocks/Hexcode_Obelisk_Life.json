@@ -37,11 +37,7 @@
       "Use": {
         "Interactions": [
           {
-            "Type": "HexPageLoadInteraction",
-            "Next": {
-              "Type": "ModifyInventory",
-              "AdjustHeldItemQuantity": -1
-            }
+            "Type": "HexPageLoadInteraction"
           }
         ]
       }

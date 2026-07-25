@@ -65,7 +65,7 @@ public class FlycastingTickSystem extends EntityTickingSystem<EntityStore> {
             } else {
                 HexComponent hovered = GlyphSelector.findHoveredHex(buffer,
                         headRotation.getRotation(), state.getActiveHexes());
-                FlycastingHover.applyHexHover(buffer, state, hovered);
+                FlycastingHover.applyHexHover(buffer, player, state, hovered);
                 if (capture != null) {
                     capture.setHoveredHex(state.getHoveredHex());
                 }

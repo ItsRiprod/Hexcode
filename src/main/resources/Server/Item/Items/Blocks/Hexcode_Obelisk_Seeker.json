@@ -19,6 +19,16 @@
     "HitboxType": "Full",
     "BlockSoundSetId": "Stone",
     "BlockParticleSetId": "Stone",
+    "InteractionHint": "hexcode.blocks.Hexcode_Obelisk_Seeker.hint",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "HexNameInteraction"
+          }
+        ]
+      }
+    },
     "Flags": {},
     "Gathering": {
       "Breaking": {

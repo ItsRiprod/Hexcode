@@ -6,6 +6,8 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.modules.entity.component.DisplayNameComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.hexes.component.Hex;
+import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hud.controller.HudController;
 import com.riprod.hexcode.core.common.obelisk.component.ObeliskBlockComponent;
@@ -25,6 +27,13 @@ public class SeekerObelisk implements ObeliskInterface {
             Ref<EntityStore> hoveredRef, ObeliskBlockComponent obelisk) {
         DisplayNameComponent displayName = buffer.getComponent(hoveredRef, DisplayNameComponent.getComponentType());
         Message title = displayName != null ? displayName.getDisplayName() : null;
+
+        HexComponent hexComp = buffer.getComponent(hoveredRef, HexComponent.getComponentType());
+        Hex hex = hexComp != null ? hexComp.getHex() : null;
+        String hexName = hex != null ? hex.getDisplayName() : null;
+        if (hexName != null && !hexName.isBlank()) {
+            title = Message.raw(hexName);
+        }
 
         HoverableComponent hoverable = buffer.getComponent(hoveredRef, HoverableComponent.getComponentType());
         Message description = hoverable != null ? hoverable.getHintText("description") : null;

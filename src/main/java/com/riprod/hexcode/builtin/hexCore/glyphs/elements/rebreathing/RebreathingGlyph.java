@@ -55,7 +55,7 @@ public class RebreathingGlyph implements GlyphHandler {
 
         String effectId = config.getStatusEffect();
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        if (!ElementSupport.applyStatus(target, accessor, effectId, seconds)) {
+        if (!ElementSupport.applyStatus(hexContext, target, glyph, effectId, seconds)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Rebreathing could not apply " + effectId);
             return;

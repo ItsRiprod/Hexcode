@@ -50,7 +50,7 @@ public class CastDecaySystem extends WorldEventSystem<EntityStore, HexCastEvent.
 
         float stability = Math.max(0f, Math.min(100f, playerRoot.resolveStability(buffer)));
         float retention = (float) Math.pow(stability / 100f, exec.getCastCount());
-        float volMax = tracker.getInitialVolatility() + playerRoot.resolveVolatility(buffer);
+        float volMax = (tracker.getInitialVolatility() + playerRoot.resolveVolatility(buffer)) * context.getTierScale();
         float startingBudget = Math.max(0f, volMax * retention);
         tracker.setVolatility(startingBudget);
         tracker.setInitialVolatility(startingBudget);

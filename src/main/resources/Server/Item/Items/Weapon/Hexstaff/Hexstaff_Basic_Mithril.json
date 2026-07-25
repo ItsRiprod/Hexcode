@@ -47,6 +47,13 @@
           "CalculationType": "Additive",
           "Amount": 22
         }
+      ],
+      "Volatility": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 56
+        }
       ]
     },
     "EntityStatsToClear": [
@@ -58,7 +65,7 @@
   "ItemSoundSetId": "ISS_Weapons_Wood",
   "InteractionVars": {
     "HexTier1": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -67,20 +74,19 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier1",
+            "Style": "Hexstaff_Basic_Mithril",
             "HexStats": {
-              "InitialVolatility": 55,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 27.5
               }
-            },
-            "Style": "Hexstaff_Basic_Mithril"
+            }
           }
         }
       ]
     },
     "HexTier2": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -89,20 +95,19 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier2",
+            "Style": "Hexstaff_Basic_Mithril",
             "HexStats": {
-              "InitialVolatility": 63,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 31.5
               }
-            },
-            "Style": "Hexstaff_Basic_Mithril"
+            }
           }
         }
       ]
     },
     "HexTier3": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -111,20 +116,19 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier3",
+            "Style": "Hexstaff_Basic_Mithril",
             "HexStats": {
-              "InitialVolatility": 71,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 35.5
               }
-            },
-            "Style": "Hexstaff_Basic_Mithril"
+            }
           }
         }
       ]
     },
     "HexTier4": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -133,14 +137,13 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier4",
+            "Style": "Hexstaff_Basic_Mithril",
             "HexStats": {
-              "InitialVolatility": 79,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 39.5
               }
-            },
-            "Style": "Hexstaff_Basic_Mithril"
+            }
           }
         }
       ]

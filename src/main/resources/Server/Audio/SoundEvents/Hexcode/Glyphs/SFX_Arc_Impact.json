@@ -1,0 +1,13 @@
+{
+  "Layers": [
+    {
+      "Looping": false,
+      "Files": [
+        "Sounds/Hexcode/Glyphs/Arc/Arc_Impact.ogg"
+      ]
+    }
+  ],
+  "Volume": 1.0,
+  "MaxDistance": 40,
+  "StartAttenuationDistance": 4
+}

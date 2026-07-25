@@ -55,7 +55,7 @@
 - Fix: Force now properly applies to Conjured entities
 - Fix: Projectile and Beam now resolve on the block correctly
 - Fix: Scale Glyph properly removes itself if the server crashes
-- Feat: Aligned Nodes and Slots to be centrally fixed around a single pipeline (architectural cleanup - enables more Nodes and SlotTypes in the future)
+- Feat: Aligned Nodes and Slots to be centrally Fixed around a single pipeline (architectural cleanup - enables more Nodes and SlotTypes in the future)
 - Feat: Added support for arbitrary slot metadata in the codecs 
 - Fix: Block and Item imbuements work again
 - Fix: when out of range of a pedestal in selection mode, you properly get removed
@@ -66,8 +66,38 @@
 
 - Feat: Reworked `Arc` into a Tier 2 chaining selector (shape `◯□◯` -> `◯◇`)
     - Target can now be an entity, block, or position (block/position spawn a marker entity to host the chain)
-    - Replaced the child-per-hop model + `Shock` effect with `Iterations`/`Interval`/`Range` slots: fires the wired output on the nearest unvisited entity each iteration, fixed to the original target
+    - Replaced the child-per-hop model + `Shock` effect with `Iterations`/`Interval`/`Range` slots: fires the wired output on the nearest unvisited entity each iteration, Fixed to the original target
     - Per-arc volatility now scales quadratically with jump distance (`SphereVolume` impact); a longer `Interval` makes each arc cheaper
     - `PrimarySound` plays on the initial cast, `SecondarySound` on each arc
+    - Repeats over the in-range entities: hits each once, then cycles the list again until iterations run out
+    - Added custom sounds: `SFX_Arc_Impact` (cast) and `SFX_Arc_Shock` (per-arc, 4 randomized variants on one event)
+
+- Feat: Added Ward (drains volatility, has the Ward ability of concentrate)
+- Feat: Removed Ward ability from concentrate 
+- Feat: Made concentrate passively generate volatility 
+- Feat: Made it so you can generate MORE volatility with concentrate if you drain another resource (i.e. mana) in the process
+- Feat: Made Arc have repeat-damage. Scales volatility cost depending on how far away the target is. Longer intervals make that cost less expensive
+- Feat: Spell Pages can be found in more chests  (spell selection is still quite limited and underwhelming)
+- Feat: Spell Pages can be refilled from the table (like while flycasting) as well as saved/loaded to any slot (makes re-organizing spells WAY easier and is a budget void obelisk)
+- Feat: Spell Page Rarity pertains to Base Volatility of that spell page (higher rarity = less casts though)
+- Feat: **ADDED NAMING GLYPHS** 
+- Feat: Named Hexes show up while Flycasting and hovering
+- Feat: Named hexes show up as the Name of a page
+- Feat: Named hexes show up when hovering over a slot above the slot name itself 
+- Feat: Named hexes can be added/changed directly from the Seeker Obelisk
+- Feat: Hex Names will persist across sharing with other people (encoded)
+- Feat: Swapped Mage Armor and Fortify
+- Feat: Fortify now lasts as long as there is Life Resource to run it (can't chain off itself) 
+- Feat: Mage Armor now takes a duration and consumed Volatility on hit until depleted 
+- Fix: Held State now properly removes across warping
+- Fix: Delay now has physics
+- Fix: Projectile can be disguised
+- Fix: Illuminate now defaults to Glow
+- Fix: Illuminate TV hitbox now properly covers block
+- Fix: Ability2 now properly early-ends the commit
+- Fix: Arc/Sphere now properly displays 
+- Fix: Most math glyphs properly resolve to ZERO instead of DEFAULT VARIABLE
+- Increased Resource to 8 per shape (was 2) 
+- Decreased Base Resource on staffs
 
 - Probably much more. I tried keeping a running note this time
