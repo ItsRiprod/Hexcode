@@ -143,17 +143,6 @@ public class InteractGlyph implements GlyphHandler {
         InteractionContext ctx = InteractionContext.forInteraction(
                 manager, casterRef, InteractionType.Use, accessor);
 
-        InteractConfig config = getConfig(InteractConfig.class,
-                GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId()));
-        String reachProxyItem = config != null ? config.getReachProxyItem() : null;
-        if (reachProxyItem != null) {
-            ctx.setHeldItem(new ItemStack(reachProxyItem, 1));
-            LOGGER.atInfo().log("interact: applied reach proxy '%s' to interaction context", reachProxyItem);
-        } else {
-            LOGGER.atInfo().log("interact: no reach proxy configured, using caster reach (config=%s)",
-                    config != null);
-        }
-
         BlockPosition blockPosition = new BlockPosition(blockPos.x, blockPos.y, blockPos.z);
         ctx.getMetaStore().putMetaObject(Interaction.TARGET_BLOCK, blockPosition);
         ctx.getMetaStore().putMetaObject(Interaction.TARGET_BLOCK_RAW, blockPosition);
