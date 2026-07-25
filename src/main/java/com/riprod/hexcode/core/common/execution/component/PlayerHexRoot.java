@@ -46,7 +46,10 @@ public class PlayerHexRoot implements HexRoot {
 
     @Override
     public Ref<EntityStore> getSourceRef(ComponentAccessor<EntityStore> accessor) {
-        return playerRef;
+        if (playerRef != null && playerRef.isValid()) {
+            return playerRef;
+        }
+        return entity != null ? entity.getEntity(accessor) : playerRef;
     }
 
     @Override

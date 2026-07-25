@@ -68,7 +68,7 @@ Instantly zeros all velocity on targets. Things stop moving. Useful for freezing
 
 ### \[□\] Identify
 
-Compares two values by identity and locks in the result as its value (like a math glyph). Returns \-1 if Target and Reference are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position.
+Compares two values by identity and locks in the result as its value (like a math glyph). Returns \-1 if A and B are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position.
 
 ---
 
@@ -112,7 +112,7 @@ Collects all targets within a radius around a center point. Your area-of-effect 
 
 ### \[◯◇\] Arc
 
-Chaining selector. Fixed to a target (entity, block, or position - block/position spawn a marker entity to host the chain), it fires the wired output on the nearest unvisited entity once per `Iterations`, waiting `Interval` seconds between arcs and searching within `Range`. Each entity is hit at most once; a miss (no entity in range) still consumes an iteration. Per-arc volatility scales quadratically with the jump distance (a longer `Interval` makes each arc cheaper), so long-range chains naturally fizzle out. Applies no effect of its own - downstream glyphs act on each selected entity.
+Chaining selector. Fixed to a target (entity, block, or position - block/position spawn a marker entity to host the chain), it fires the wired output on the nearest entity once per `Iterations`, waiting `Interval` seconds between arcs and searching within `Range`. It hits each in-range entity once, then cycles the list again from nearest, repeating until the iterations run out (a miss only happens when no entity is in range at all). Per-arc volatility scales quadratically with the jump distance (a longer `Interval` makes each arc cheaper), so long-range chains naturally fizzle out. Applies no effect of its own - downstream glyphs act on each selected entity.
 
 ---
 
@@ -142,14 +142,14 @@ Appends a parallel glyph chain to an ally's active hex construct. You pay for yo
 
 ### \[□▽\] Output
 
-Specifies an output location. Notably useful in Interfere to determine the "continuation" point of the existing glyph. 
-**Future Version:** Will enable specifying as an "anchor point" for flycasting, making it easier to nest a flycasted glyhp deep inside another glyph. Also enables COLORING that output, making it easier to quickly identify the glyph itself.
+Specifies an output location. Notably useful in Interfere to determine the "continuation" point of the existing glyph. The Color slot recolors the output so you can tell outputs apart at a glance: a plain number is grayscale (0-255), a Position variable is RGB (x\=R, y\=G, z\=B, 0-255 each).
+**Future Version:** Will enable specifying as an "anchor point" for flycasting, making it easier to nest a flycasted glyhp deep inside another glyph.
 
 ---
 
 ### \[△◯\] Concentrate
 
-Sustains downstream glyphs while the caster holds the primary interaction. Releasing early cancels the hex. Increases volatility by 50% for longer hexes.
+Sustains downstream glyphs while the caster holds the primary interaction. Releasing early cancels the hex. While sustained it feeds **\+3 volatility budget per second** back into the hex, which is what lets a long channel keep paying for its glyphs. Upkeep is 1 mana per second. The boolean Resource slot adds a second drain of 6 per second on top of that: \+1 spends **Stamina**, \-1 spends **Mana**, 0 spends nothing. Running dry on either drain ends the channel exactly as if you had released.
 
 ---
 
@@ -184,10 +184,15 @@ Restores the natural state of targets. Heals entities, grows crops, repairs dama
 
 ---
 
-### \[□◯□\] Fortify
+### \[△◯◯\] Ward
 
-Fully nullifies the damage from the next attack
-On blocks: increased hardness.
+Wards a Target entity by pointing every reference at a Deferral entity: while the ward holds, any glyph that resolves the Target acts on the Deferral instead. 
+
+---
+
+### \[□◯□\] Mage Armor
+
+Gives a target temporary hitpoints for a set Duration. Received damage reduces the Mage Armor first instead of the caster's HP. Once it runs out, the status effect ends.
 
 ---
 
@@ -249,7 +254,7 @@ Disrupts terrain in a radius. Raises spike formations from the earth that damage
 
 ### \[□𝟢□\] Phase
 
-Temporarily removes blocks from reality. Blocks become air for a duration, then snap back. Entities caught inside restoring blocks take crush damage. Children execute after blocks are restored.
+Temporarily removes blocks from reality. Blocks become air for a duration, then snap back. Entities caught inside restoring blocks take crush damage, and that damage grows the longer the blocks were phased out. Children execute after blocks are restored.
 
 ---
 
@@ -299,13 +304,17 @@ Each shape pertains to a certain resource
 | 𝟢 | Ice | Ice_Essence |
 | ▽ | Void | Void_Essence |
 
-Whenever the shape appears in the hex, it will add to it's resource.
+Whenever the shape appears in the hex, it will add to it's resource. Every shape contributes `8` to its resource by default, though a glyph can override that per shape.
 
-For instance, Projectile (◯△) will add `+2 Lightning` and `+2 Water` resources. 
+For instance, Projectile (◯△) will add `+8 Lightning` and `+8 Water` resources.
+
+The Tier 4 elemental glyphs deliberately dial this down to `2` per shape. They are what *spends* resources, so they are poor at building them \- a Bolt (◯◯◯◯) contributes far less Lightning than its four Circles would suggest.
+
+Utility glyphs (the math, comparison and vector glyphs) contribute nothing at all.
 
 At any moment, you can run a `Debug Glyph` (△△) to view the current resources accumulated
 
-> Note: Each time a GLYPH is executed, it becomes less and less effective. First execution is +2, second is +1.8, third is +1.5, etc. Eventually, it will contribute 0. Use a variety of glyphs to more effectively build up your `Resources`
+> Note: Contribution decays **per resource**, not per glyph. Effectiveness is `10^(-contributed / 20)` against everything you have already put into that resource, so the first shape to touch a resource converts at full value and every later one converts for less. Two glyphs both feeding `Lightning` share the same decay curve. Use a variety of shapes, not just a variety of glyphs, to build broadly.
 
 > Note x2: When an Elemental consumes a resource, it lowers **ALL** resources available. So choose wisely which elemental you hope to execute - as you can't choose them all.
 
@@ -341,13 +350,13 @@ Applies the **Burning** condition. Fire damage over time that ticks for a durati
 
 A crushing surge of water damage. A solid mid-weight strike with a heavy, deliberate cadence. No conditions to satisfy, just weight behind the hit.
 
-### \[□△△△\] Drench
+### \[□△△△\] Rebreathing
 
 | Element | Type | Weak | Resistant |
 | --- | --- | --- | --- |
-| Water | Defensive | Lightning, Life | Fire, Water, Ice |
+| Water | Defensive | Lightning | Fire, Water, Ice |
 
-Applies the **Drenched** condition. Soaks the target, leaving them dripping and conductive for a duration. Near-zero damage on its own: most of its Complexity buys the condition, not a health bar.
+Applies the **Soaked** condition. Floods the target's lungs with air so it can breathe underwater for the duration, and leaves it dripping wet \- resistant to Fire, Water and Ice, but conductive enough to take double damage from Lightning. Deals nothing on its own.
 
 ---
 
@@ -361,13 +370,13 @@ Applies the **Drenched** condition. Soaks the target, leaving them dripping and 
 
 Instant high-voltage discharge. The burst option: front-loaded damage with no travel time and no wind-up. Some of its Complexity pays for that instantaneous, unavoidable delivery.
 
-### \[□◯◯◯\] Shocking
+### \[□◯◯◯\] Electrocute
 
 | Element | Type | Weak | Resistant |
 | --- | --- | --- | --- |
 | Lightning | Defensive | N/A | Lightning |
 
-Applies the **Shocked** condition. Static charge that interrupts the target's actions and briefly staggers them, jittering their inputs. A control condition first, damage second.
+Applies the **Electrocuted** condition. Static charge that ticks small lightning damage over the duration and doubles the target's horizontal movement speed while it holds. Note that it cuts incoming Lightning damage in half, so it is a poor setup for a follow-up Bolt \- it is a mobility tool as much as a debuff, on you or on someone else.
 
 ---
 
@@ -381,13 +390,13 @@ Applies the **Shocked** condition. Static charge that interrupts the target's ac
 
 Heals the target for the provided Complexity. 
 
-### \[□□□□\] Mage Armor
+### \[□□□□\] Fortify
 
 | Element | Type | Weak | Resistant |
 | --- | --- | --- | --- |
-| Life | Defensive | N/A | Water, Lightning, Life |
+| Life | Defensive | N/A | N/A |
 
-Applies the **Mage Armor** condition. Gives temporary hitpoints equal to the provided complexity and lasts for the duration of the complexity. Received damage will reduce the mage armor instead of the caster's HP. Once the mage armor runs out, the status effect ends.
+Wards the target against a single hit. The next instance of damage they take is nullified **entirely**, no matter how large, and the ward is spent. The Life resource spent buys the window it stays up for, and `ResourceLimit` caps how much Life it is allowed to eat. `Immediate` fires when the ward goes up; `Next` fires when it breaks or expires, carrying the attacker that broke it. Entity-only; does not act on blocks.
 
 ---
 
@@ -510,7 +519,7 @@ Compares A and B (both default to zero) and branches to the Greater, Less, or Eq
 
 ### \[□\] Identify
 
-Compares two values by identity and locks in the result as its value (like a math glyph). Returns \-1 if Target and Reference are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position.
+Compares two values by identity and locks in the result as its value (like a math glyph). Returns \-1 if A and B are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position.
 
 ---
 
@@ -694,23 +703,35 @@ If it has not been run inside the glyph execution (i.e. linked to a Slot of anot
 
 ## Conditions
 
-### \[|△\] OnEating\*
+Condition glyphs pause execution and resume the chain when a game event happens. The following are implemented:
+
+### \[|\<\] OnPrimary
+
+Resumes when the caster performs a primary (attack) interaction.
+
+### \[|\>\] OnSecondary
+
+Resumes when the caster performs a secondary (use) interaction.
+
+### \[|△\] OnUse
+
+Resumes when the caster uses an item.
+
+### \[|□\] OnCast
+
+Resumes when the caster casts another hex.
+
+### \[|𝟢\] OnDeath
+
+Resumes when the subject dies; the killer (if known) is placed in slot 0.
+
+The following are planned but not yet implemented:
 
 ### \[|◯\] OnAttack\*
 
-### \[|𝟢\] OnAttacked\*
-
 ### \[|\>\<\] OnMove\*
 
-### \[|\>\] OnRightClick\*
-
-### \[|\<\] OnLeftClick\*
-
 ### \[|ΛV\] OnRotate\*
-
-### \[|◇\] OnDeath\*
-
-### \[|□\] OnCast\*
 
 ### \[|▽\] OnSleep\*
 

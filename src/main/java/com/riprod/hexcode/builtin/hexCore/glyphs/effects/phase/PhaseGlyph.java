@@ -134,7 +134,7 @@ public class PhaseGlyph implements GlyphHandler {
 
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                 accessor, hexContext, glyph, PhaseGlyph.ID, blockCenter,
-                new PhaseState(glyph.getNextLinks(), (float) config.getCrushDamage(),
+                new PhaseState(glyph.getNextLinks(), config.getCrushDamageImpact(),
                         config.getDamageCauseId()));
 
         holder.addComponent(PhaseComponent.getComponentType(),

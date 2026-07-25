@@ -37,15 +37,15 @@ public class IdentifyGlyph implements GlyphHandler {
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
         HexVar cached = hexContext.getVariable(glyph.getId());
         if (cached != null) return cached;
-        HexVar a = glyph.readSlot(IdentifyGlyphSlots.TARGET, hexContext);
-        HexVar b = glyph.readSlot(IdentifyGlyphSlots.REFERENCE, hexContext);
+        HexVar a = glyph.readSlot(IdentifyGlyphSlots.A, hexContext);
+        HexVar b = glyph.readSlot(IdentifyGlyphSlots.B, hexContext);
         return new NumberVar(compareIdentity(a, b, hexContext));
     }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        HexVar a = glyph.readSlot(IdentifyGlyphSlots.TARGET, hexContext);
-        HexVar b = glyph.readSlot(IdentifyGlyphSlots.REFERENCE, hexContext);
+        HexVar a = glyph.readSlot(IdentifyGlyphSlots.A, hexContext);
+        HexVar b = glyph.readSlot(IdentifyGlyphSlots.B, hexContext);
         glyph.writeOutput(new NumberVar(compareIdentity(a, b, hexContext)), hexContext);
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }

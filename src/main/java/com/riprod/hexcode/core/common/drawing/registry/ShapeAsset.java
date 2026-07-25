@@ -44,7 +44,7 @@ public class ShapeAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     protected float relativeSize = 1.0f;
     protected Vector2d relativePosition = new Vector2d();
     protected String statResource;
-    protected float statContribution = 5.0f;
+    protected float statContribution = 8.0f;
     protected Impact statResourceImpact = IDENTITY_IMPACT;
     protected String texture;
     protected String model;

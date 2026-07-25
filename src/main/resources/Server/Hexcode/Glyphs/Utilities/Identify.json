@@ -9,17 +9,19 @@
     "Square"
   ],
   "Slots": {
-    "Target": {
+    "A": {
       "Type": "Input",
       "Parent": "Input",
-      "Label": "hexcode.glyphs.Identify.Target.name",
-      "Description": "hexcode.glyphs.Identify.Target.description"
+      "Label": "hexcode.glyphs.Identify.A.name",
+      "Description": "hexcode.glyphs.Identify.A.description",
+      "DefaultValue": 0
     },
-    "Reference": {
+    "B": {
       "Type": "Input",
       "Parent": "Input",
-      "Label": "hexcode.glyphs.Identify.Reference.name",
-      "Description": "hexcode.glyphs.Identify.Reference.description"
+      "Label": "hexcode.glyphs.Identify.B.name",
+      "Description": "hexcode.glyphs.Identify.B.description",
+      "DefaultValue": 0
     },
     "Next": {
       "Type": "Next",

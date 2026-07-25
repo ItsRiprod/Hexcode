@@ -13,16 +13,20 @@ import com.riprod.hexcode.utils.CleanupUtils;
 public class IlluminateConstructHandler implements ConstructHandler<IlluminateState> {
 
     @Override
+    public void onFirstTick(HexStatus<IlluminateState> status, ConstructTickContext ctx) {
+        IlluminateState state = status.getState();
+        if (state != null && state.isShowBox()) {
+            GlowUtil.broadcastBox(ctx.getBuffer(), ctx.getEntityRef(), state);
+        }
+    }
+
+    @Override
     public boolean onTick(float dt, HexStatus<IlluminateState> status, ConstructTickContext ctx) {
         IlluminateState state = status.getState();
         if (state == null) return true;
 
         state.tick(dt);
         if (state.isExpired()) return true;
-
-        if (state.isShowBox()) {
-            GlowUtil.broadcastBox(ctx.getBuffer(), ctx.getEntityRef(), state);
-        }
 
         return !drainSustain(dt, status);
     }

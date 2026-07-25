@@ -44,6 +44,13 @@
           "CalculationType": "Additive",
           "Amount": 18
         }
+      ],
+      "Volatility": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 200
+        }
       ]
     },
     "EntityStatsToClear": [
@@ -54,6 +61,90 @@
   },
   "ItemSoundSetId": "ISS_Weapons_Wood",
   "InteractionVars": {
+    "HexTier1": {
+      "Interactions": [
+        {
+          "Parent": "CastSpell_Template",
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier1",
+            "Style": "Hexstaff_Special_Arcane",
+            "HexStats": {
+              "InitialResources": {
+                "Arcane": 100
+              }
+            }
+          }
+        }
+      ]
+    },
+    "HexTier2": {
+      "Interactions": [
+        {
+          "Parent": "CastSpell_Template",
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier2",
+            "Style": "Hexstaff_Special_Arcane",
+            "HexStats": {
+              "InitialResources": {
+                "Arcane": 100
+              }
+            }
+          }
+        }
+      ]
+    },
+    "HexTier3": {
+      "Interactions": [
+        {
+          "Parent": "CastSpell_Template",
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier3",
+            "Style": "Hexstaff_Special_Arcane",
+            "HexStats": {
+              "InitialResources": {
+                "Arcane": 100
+              }
+            }
+          }
+        }
+      ]
+    },
+    "HexTier4": {
+      "Interactions": [
+        {
+          "Parent": "CastSpell_Template",
+          "Type": "HexExecute",
+          "Effects": {
+            "ItemAnimationId": "HexExecution_Primary"
+          },
+          "Config": {
+            "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier4",
+            "Style": "Hexstaff_Special_Arcane",
+            "HexStats": {
+              "InitialResources": {
+                "Arcane": 100
+              }
+            }
+          }
+        }
+      ]
+    },
     "Drawmode": {
       "Interactions": [
         {

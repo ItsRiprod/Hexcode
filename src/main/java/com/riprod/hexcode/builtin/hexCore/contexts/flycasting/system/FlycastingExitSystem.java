@@ -8,6 +8,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
+import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.context.DrawModeExitEvent;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.component.FlycastingState;
@@ -19,6 +20,7 @@ import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 
 public class FlycastingExitSystem extends EntityEventSystem<EntityStore, DrawModeExitEvent> {
+    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     public FlycastingExitSystem() {
         super(DrawModeExitEvent.class);
@@ -33,28 +35,32 @@ public class FlycastingExitSystem extends EntityEventSystem<EntityStore, DrawMod
     public void handle(int index, @Nonnull ArchetypeChunk<EntityStore> chunk,
             @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull DrawModeExitEvent event) {
-        FlycastingState state = chunk.getComponent(index, FlycastingState.getComponentType());
-        if (state == null) {
-            return;
-        }
-        Ref<EntityStore> player = chunk.getReferenceTo(index);
+        try {
+            FlycastingState state = chunk.getComponent(index, FlycastingState.getComponentType());
+            if (state == null) {
+                return;
+            }
+            Ref<EntityStore> player = chunk.getReferenceTo(index);
 
-        CasterComponent caster = chunk.getComponent(index, CasterComponent.getComponentType());
-        if (caster == null || !FlycastingState.CONTEXT_ID.equals(caster.getCurrentContext())) {
-            return;
-        }
-        DrawCaptureComponent capture = chunk.getComponent(index, DrawCaptureComponent.getComponentType());
+            CasterComponent caster = chunk.getComponent(index, CasterComponent.getComponentType());
+            if (caster == null || !FlycastingState.CONTEXT_ID.equals(caster.getCurrentContext())) {
+                return;
+            }
+            DrawCaptureComponent capture = event.getCapture();
 
-        Hex queued = FlycastingCommit.finalizeDraft(buffer, player, capture);
-        if (queued == null && state.getLastHoveredHex() != null) {
-            queued = state.getLastHoveredHex().getHex();
-        }
-        if (queued != null) {
-            ExecutionComponent execution = buffer.ensureAndGetComponent(player,
-                    ExecutionComponent.getComponentType());
-            execution.setQueuedHex(queued);
-        }
+            Hex queued = FlycastingCommit.finalizeDraft(buffer, player, capture);
+            if (queued == null && state.getLastHoveredHex() != null) {
+                queued = state.getLastHoveredHex().getHex();
+            }
+            if (queued != null) {
+                ExecutionComponent execution = buffer.ensureAndGetComponent(player,
+                        ExecutionComponent.getComponentType());
+                execution.setQueuedHex(queued);
+            }
 
-        ContextTransitionService.exit(buffer, player, FlycastingState.CONTEXT_ID);
+            ContextTransitionService.exit(buffer, player, FlycastingState.CONTEXT_ID);
+        } catch (Exception e) {
+            LOGGER.atSevere().withCause(e).log("[hexcode] flycasting exit failed");
+        }
     }
 }

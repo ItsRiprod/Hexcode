@@ -1,0 +1,56 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "MageArmor",
+  "Style": "Essence_Life",
+  "Title": "hexcode.glyphs.MageArmor.name",
+  "Description": "hexcode.glyphs.MageArmor.description",
+  "BasePower": 1.0,
+  "ManaConsumption": 15,
+  "ShapeStructure": [
+    "Square",
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.8
+    },
+    {
+      "Parent": "Square",
+      "RelativeSize": 0.6
+    }
+  ],
+  "Slots": {
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.MageArmor.target.name",
+      "Description": "hexcode.glyphs.MageArmor.target.description"
+    },
+    "Duration": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.MageArmor.duration.name",
+      "Description": "hexcode.glyphs.MageArmor.duration.description",
+      "DefaultValue": 20,
+      "Unique": true
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.MageArmor.Next.name",
+      "Description": "hexcode.glyphs.MageArmor.Next.description"
+    },
+    "Immediate": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.MageArmor.immediate.name",
+      "Description": "hexcode.glyphs.MageArmor.immediate.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 6,
+    "DrainPerSecond": 0.1
+  },
+  "Config": {
+    "Type": "MageArmor",
+    "StatusEffect": "Hexcode_Mage_Armor"
+  }
+}

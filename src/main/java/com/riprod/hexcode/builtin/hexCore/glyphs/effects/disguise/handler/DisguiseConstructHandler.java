@@ -87,7 +87,8 @@ public class DisguiseConstructHandler implements ConstructHandler<DisguiseState>
         if (effectIndex == Integer.MIN_VALUE) return false;
         EffectControllerComponent controller = buffer.getComponent(
                 target, EffectControllerComponent.getComponentType());
-        return controller == null || !controller.hasEffect(effectIndex);
+        if (controller == null) return false;
+        return !controller.hasEffect(effectIndex);
     }
 
     private static void removeEffect(CommandBuffer<EntityStore> buffer,

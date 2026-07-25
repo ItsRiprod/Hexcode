@@ -28,11 +28,13 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 
 public class HexConstructSpawner {
 
-    // tick-local cache of pending HexEffectsComponent adds per target ref.
+    // tick-local cache of pending HexEffectsComponent adds per target entity.
     // solves the check-then-add race: a second apply() in the same tick sees
-    // the instance the first apply() queued (via weak ref, map cleared by GC after
-    // ref becomes unreachable at tick boundary).
-    private static final WeakHashMap<Ref<EntityStore>, HexEffectsComponent> PENDING_APPLIES = new WeakHashMap<>();
+    // the instance the first apply() queued. keyed on entity UUID rather than Ref -
+    // Ref overrides neither equals nor hashCode, so two Ref instances for the same
+    // entity (common when re-resolved from different call sites) would otherwise
+    // never collide and the race guard would silently miss.
+    private static final WeakHashMap<UUID, HexEffectsComponent> PENDING_APPLIES = new WeakHashMap<>();
 
     private HexConstructSpawner() {
     }
@@ -108,17 +110,47 @@ public class HexConstructSpawner {
             return;
         }
 
+        UUIDComponent uuidComponent = buffer.getComponent(targetRef, UUIDComponent.getComponentType());
+        UUID targetUuid = uuidComponent != null ? uuidComponent.getUuid() : null;
+        if (targetUuid == null) {
+            HexEffectsComponent fresh = new HexEffectsComponent();
+            fresh.addEffect(constructId, construct);
+            buffer.addComponent(targetRef, HexEffectsComponent.getComponentType(), fresh);
+            return;
+        }
+
         HexEffectsComponent pending;
         synchronized (PENDING_APPLIES) {
-            pending = PENDING_APPLIES.get(targetRef);
+            pending = PENDING_APPLIES.get(targetUuid);
             if (pending == null || pending.getEffects().isEmpty()) {
                 pending = new HexEffectsComponent();
                 pending.addEffect(constructId, construct);
-                PENDING_APPLIES.put(targetRef, pending);
+                PENDING_APPLIES.put(targetUuid, pending);
                 buffer.addComponent(targetRef, HexEffectsComponent.getComponentType(), pending);
                 return;
             }
         }
         pending.addEffect(constructId, construct);
+    }
+
+    // read-only: lets a caller close the same-tick window where a component add is queued in
+    // the buffer but not yet visible to buffer.getComponent lookups elsewhere
+    public static boolean hasPendingApply(@Nonnull Ref<EntityStore> ref, @Nonnull String handlerId) {
+        if (!ref.isValid()) return false;
+
+        UUIDComponent uuidComponent = ref.getStore().getComponent(ref, UUIDComponent.getComponentType());
+        if (uuidComponent == null) return false;
+        UUID targetUuid = uuidComponent.getUuid();
+
+        HexEffectsComponent pending;
+        synchronized (PENDING_APPLIES) {
+            pending = PENDING_APPLIES.get(targetUuid);
+        }
+        if (pending == null) return false;
+
+        for (HexStatus<?> status : pending.getEffects().values()) {
+            if (handlerId.equals(status.getHandlerId())) return true;
+        }
+        return false;
     }
 }

@@ -24,10 +24,7 @@
               "Type": "HexExecute",
               "Config": {
                 "HexStorageType": "ExecutionConfig",
-                "HexStats": {
-                  "InitialVolatility": 40,
-                  "VolatilityMultiplier": 1.0
-                }
+                "Parent": "CastConfig_Tier2"
               },
               "Effects": {
                 "ItemAnimationId": "HexExecution_Primary"

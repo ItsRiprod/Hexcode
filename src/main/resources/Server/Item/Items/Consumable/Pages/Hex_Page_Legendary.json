@@ -47,7 +47,7 @@
       },
       "Texture": "Items/Consumable/Hexes/Hex_Page_Empty.png",
       "MaxDurability": 0,
-      "MaxStack": 16,
+      "MaxStack": 1,
       "Interactions": {
         "Secondary": {
           "Interactions": [
@@ -57,7 +57,10 @@
             }
           ]
         }
-      }
+      },
+      "Quality": "Legendary",
+      "Icon": "Icons/ItemsGenerated/Hex_Page_Empty.png"
     }
-  }
+  },
+  "MaxDurability": 4
 }

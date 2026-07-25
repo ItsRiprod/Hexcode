@@ -5,7 +5,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
@@ -24,6 +23,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
+import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 import java.util.Arrays;
@@ -101,12 +101,8 @@ public class InvisibilityGlyph implements GlyphHandler {
             return false;
         }
 
-        EffectControllerComponent controller = accessor.getComponent(
-                ref, EffectControllerComponent.getComponentType());
-        if (controller != null) {
-            controller.addEffect(ref, invisibilityEffect, durationSeconds,
-                    OverlapBehavior.OVERWRITE, accessor);
-        }
+        VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId, durationSeconds,
+                OverlapBehavior.OVERWRITE);
 
         InvisibilityState existing = ConstructStateUtil.findState(
                 accessor, ref, InvisibilityGlyph.ID, InvisibilityState.class);

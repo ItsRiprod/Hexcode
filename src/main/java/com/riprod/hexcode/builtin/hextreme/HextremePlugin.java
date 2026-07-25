@@ -5,9 +5,12 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Int
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.riprod.hexcode.builtin.hextreme.execution.config.PageConfig;
+import com.riprod.hexcode.builtin.hextreme.execution.system.CraftingExportSystem;
+import com.riprod.hexcode.builtin.hextreme.imbuement.PageProfile;
 import com.riprod.hexcode.builtin.hextreme.obelisk.PageLoadInteraction;
 import com.riprod.hexcode.builtin.hextreme.obelisk.PageLoaderObelisk;
 import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
+import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerRegistry;
 
 public class HextremePlugin extends JavaPlugin {
@@ -22,6 +25,7 @@ public class HextremePlugin extends JavaPlugin {
     @Override
     public void setup() {
         RegisterConfigs();
+        RegisterProfiles();
         RegisterObelisks();
         RegisterInteractions();
         RegisterSystems();
@@ -30,6 +34,10 @@ public class HextremePlugin extends JavaPlugin {
 
     private void RegisterConfigs() {
         HexConfigAsset.CODEC.register("PageConfig", PageConfig.class, PageConfig.CODEC);
+    }
+
+    private void RegisterProfiles() {
+        ImbuementProfileAsset.CODEC.register("Page", PageProfile.class, PageProfile.CODEC);
     }
 
     private void RegisterObelisks() {
@@ -44,6 +52,7 @@ public class HextremePlugin extends JavaPlugin {
     }
 
     private void RegisterSystems() {
+        this.getEntityStoreRegistry().registerSystem(new CraftingExportSystem());
     }
 
 }

@@ -1,0 +1,23 @@
+{
+  "Layers": [
+    {
+      "Looping": false,
+      "Files": [
+        "Sounds/Hexcode/Glyphs/Arc/Arc_Shock.ogg",
+        "Sounds/Hexcode/Glyphs/Arc/Arc_Shock_2.ogg",
+        "Sounds/Hexcode/Glyphs/Arc/Arc_Shock_3.ogg",
+        "Sounds/Hexcode/Glyphs/Arc/Arc_Shock_4.ogg"
+      ],
+      "RandomSettings": {
+        "MinVolume": -2,
+        "MinPitch": -1.5,
+        "MaxPitch": 1.5
+      },
+      "RoundRobinHistorySize": 3
+    }
+  ],
+  "Volume": 0.0,
+  "MaxInstance": 24,
+  "MaxDistance": 40,
+  "StartAttenuationDistance": 4
+}

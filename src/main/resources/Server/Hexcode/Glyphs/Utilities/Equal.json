@@ -18,13 +18,14 @@
       "Parent": "Input",
       "Label": "hexcode.glyphs.Equal.a.name",
       "Description": "hexcode.glyphs.Equal.a.description",
-      "DefaultValue": 1
+      "DefaultValue": 0
     },
     "b": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Equal.b.name",
-      "Description": "hexcode.glyphs.Equal.b.description"
+      "Description": "hexcode.glyphs.Equal.b.description",
+      "DefaultValue": 0
     },
     "Next": {
       "Type": "Next",

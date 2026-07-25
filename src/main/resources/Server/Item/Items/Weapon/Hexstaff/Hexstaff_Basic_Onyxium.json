@@ -47,6 +47,13 @@
           "CalculationType": "Additive",
           "Amount": 25
         }
+      ],
+      "Volatility": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 65
+        }
       ]
     },
     "EntityStatsToClear": [
@@ -58,7 +65,7 @@
   "ItemSoundSetId": "ISS_Weapons_Wood",
   "InteractionVars": {
     "HexTier1": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -67,20 +74,19 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier1",
+            "Style": "Hexstaff_Basic_Onyxium",
             "HexStats": {
-              "InitialVolatility": 63,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 31.5
               }
-            },
-            "Style": "Hexstaff_Basic_Onyxium"
+            }
           }
         }
       ]
     },
     "HexTier2": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -89,20 +95,19 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier2",
+            "Style": "Hexstaff_Basic_Onyxium",
             "HexStats": {
-              "InitialVolatility": 72,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 36
               }
-            },
-            "Style": "Hexstaff_Basic_Onyxium"
+            }
           }
         }
       ]
     },
     "HexTier3": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -111,20 +116,19 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier3",
+            "Style": "Hexstaff_Basic_Onyxium",
             "HexStats": {
-              "InitialVolatility": 82,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 41
               }
-            },
-            "Style": "Hexstaff_Basic_Onyxium"
+            }
           }
         }
       ]
     },
     "HexTier4": {
-     "Interactions": [
+      "Interactions": [
         {
           "Parent": "CastSpell_Template",
           "Type": "HexExecute",
@@ -133,14 +137,13 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier4",
+            "Style": "Hexstaff_Basic_Onyxium",
             "HexStats": {
-              "InitialVolatility": 91,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 45.5
               }
-            },
-            "Style": "Hexstaff_Basic_Onyxium"
+            }
           }
         }
       ]

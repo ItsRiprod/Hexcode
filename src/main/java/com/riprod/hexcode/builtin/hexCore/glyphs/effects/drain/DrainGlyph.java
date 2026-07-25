@@ -6,10 +6,8 @@ import java.util.List;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
@@ -28,6 +26,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
+import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class DrainGlyph implements GlyphHandler {
@@ -175,14 +174,8 @@ public static final String ID = "Drain";
                 : new ArrayList<>();
 
         String effectId = config.getDrainEffectId();
-        EntityEffect drainEffect = effectId != null ? EntityEffect.getAssetMap().getAsset(effectId) : null;
-        if (drainEffect != null) {
-            EffectControllerComponent controller = accessor.getComponent(
-                    targetRef, EffectControllerComponent.getComponentType());
-            if (controller != null) {
-                controller.addEffect(targetRef, drainEffect, duration, OverlapBehavior.OVERWRITE, accessor);
-            }
-        }
+        VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, effectId, duration,
+                OverlapBehavior.OVERWRITE);
 
         DrainState state = new DrainState(
                 sourceStatIndex, destRef, rate, totalDrainAmount, duration, nextGlyphIds,

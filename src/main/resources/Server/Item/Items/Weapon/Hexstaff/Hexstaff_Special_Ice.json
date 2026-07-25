@@ -55,6 +55,13 @@
           "CalculationType": "Additive",
           "Amount": 15
         }
+      ],
+      "Volatility": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 43
+        }
       ]
     },
     "EntityStatsToClear": [
@@ -104,15 +111,14 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier1",
+            "Style": "Hexstaff_Special_Ice",
             "HexStats": {
-              "InitialVolatility": 30,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 15,
                 "Ice": 15
               }
-            },
-            "Style": "Hexstaff_Special_Ice"
+            }
           }
         }
       ]
@@ -127,15 +133,14 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier2",
+            "Style": "Hexstaff_Special_Ice",
             "HexStats": {
-              "InitialVolatility": 40,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 20,
                 "Ice": 20
               }
-            },
-            "Style": "Hexstaff_Special_Ice"
+            }
           }
         }
       ]
@@ -150,15 +155,14 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier3",
+            "Style": "Hexstaff_Special_Ice",
             "HexStats": {
-              "InitialVolatility": 50,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 25,
                 "Ice": 25
               }
-            },
-            "Style": "Hexstaff_Special_Ice"
+            }
           }
         }
       ]
@@ -173,15 +177,14 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier4",
+            "Style": "Hexstaff_Special_Ice",
             "HexStats": {
-              "InitialVolatility": 60,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 30,
                 "Ice": 30
               }
-            },
-            "Style": "Hexstaff_Special_Ice"
+            }
           }
         }
       ]

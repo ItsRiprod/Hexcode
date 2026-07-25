@@ -1,6 +1,7 @@
 package com.riprod.hexcode.builtin.hextreme.obelisk;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -15,7 +16,13 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Sim
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.riprod.hexcode.builtin.hextreme.execution.config.PageConfig;
+import com.riprod.hexcode.builtin.hextreme.imbuement.PageProfile;
+import com.riprod.hexcode.builtin.hextreme.imbuement.PageStateResolver;
+import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
+import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
+import com.riprod.hexcode.utils.HexSlot;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
@@ -53,7 +60,7 @@ public class PageLoadInteraction extends SimpleInteraction {
 
             CasterComponent caster = buffer.getComponent(playerRef, CasterComponent.getComponentType());
             if (caster == null || !CraftingState.CONTEXT_ID.equals(caster.getCurrentContext())) {
-                if (ref != null) ref.sendMessage(Message.raw("You must be in Crafting Mode to load a page"));
+                notify(ref, "hexcode.pages.obelisk.not_crafting");
                 return InteractionState.Failed;
             }
 
@@ -64,26 +71,52 @@ public class PageLoadInteraction extends SimpleInteraction {
 
             Ref<EntityStore> ownerRef = session.getOwnerRef();
             if (ownerRef == null || !ownerRef.isValid() || !ownerRef.equals(playerRef)) {
-                if (ref != null) ref.sendMessage(Message.raw("You don't own this pedestal"));
+                notify(ref, "hexcode.pages.obelisk.not_owner");
                 return InteractionState.Failed;
             }
 
             if (session.getActiveSlotKey() == null) {
-                if (ref != null) ref.sendMessage(Message.raw("Select a slot first"));
+                notify(ref, "hexcode.pages.obelisk.no_slot");
                 return InteractionState.Failed;
             }
 
-            Hex hex = PageConfig.resolvePageHex(ctx.getHeldItem());
-            if (hex == null) {
-                if (ref != null) ref.sendMessage(Message.raw("Hold a page inscribed with a spell"));
-                return InteractionState.Failed;
+            ItemStack held = ctx.getHeldItem();
+
+            Hex hex = PageConfig.resolvePageHex(buffer, held);
+            if (hex != null) {
+                session.setPendingImportHex(hex);
+                spendPage(buffer, playerRef, held);
+                return InteractionState.Finished;
             }
 
-            session.setPendingImportHex(hex);
-            return InteractionState.Finished;
+            if (isBlankPage(held)) {
+                session.setPendingExportPage(held);
+                return InteractionState.Finished;
+            }
+
+            notify(ref, "hexcode.pages.load.no_hex");
+            return InteractionState.Failed;
         } catch (Exception e) {
             LOGGER.atSevere().log("[hexcode] PageLoadInteraction failed: %s", e.getMessage());
             return InteractionState.Failed;
+        }
+    }
+
+    private static void spendPage(CommandBuffer<EntityStore> buffer, Ref<EntityStore> playerRef, ItemStack page) {
+        if (ImbuementUtils.resolveProfile(page) instanceof PageProfile profile) {
+            PlayerUtils.setHandItem(buffer, playerRef, HexSlot.MainHand,
+                    profile.writeHex(page, profile.getSlotKey(), null));
+        }
+    }
+
+    private static boolean isBlankPage(ItemStack item) {
+        return ImbuementUtils.resolveProfile(item) instanceof PageProfile profile
+                && PageStateResolver.resolveBase(item, profile.getEmptyStateKey()) != null;
+    }
+
+    private static void notify(@Nullable PlayerRef ref, String key) {
+        if (ref != null) {
+            ref.sendMessage(Message.translation(key));
         }
     }
 

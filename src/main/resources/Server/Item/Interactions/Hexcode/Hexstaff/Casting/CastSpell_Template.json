@@ -3,7 +3,7 @@
   "Config": {
     "HexStorageType": "ExecutionConfig",
     "HexStats": {
-      "InitialVolatility": 30,
+      "InitialVolatility": 0,
       "VolatilityMultiplier": 1.0
     }
   },
@@ -17,7 +17,7 @@
       "Flag_IsHolding": 1
     },
     "Next": {
-      "Type": "Charging",
+      "Type": "HexCastHold",
       "AllowIndefiniteHold": true,
       "Next": {
         "0.0": {

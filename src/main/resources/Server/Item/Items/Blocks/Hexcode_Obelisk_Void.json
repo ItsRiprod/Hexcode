@@ -67,6 +67,7 @@
       }
     },
     "HitboxType": "Full",
+    "InteractionHint": "hexcode.blocks.Hexcode_Obelisk_Void.hint",
     "Interactions": {
       "Use": {
         "Interactions": [

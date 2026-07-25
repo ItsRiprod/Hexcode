@@ -3,21 +3,25 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.phase;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 
 public class PhaseState implements ConstructState {
 
     private List<String> nextGlyphIds;
-    private float crushDamage;
+    @Nullable
+    private Impact crushDamageImpact;
     private String damageCauseId;
 
     public PhaseState() {
         this.nextGlyphIds = new ArrayList<>();
     }
 
-    public PhaseState(List<String> nextGlyphIds, float crushDamage, String damageCauseId) {
+    public PhaseState(List<String> nextGlyphIds, @Nullable Impact crushDamageImpact, String damageCauseId) {
         this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
-        this.crushDamage = crushDamage;
+        this.crushDamageImpact = crushDamageImpact;
         this.damageCauseId = damageCauseId;
     }
 
@@ -29,8 +33,9 @@ public class PhaseState implements ConstructState {
         this.nextGlyphIds = ids != null ? ids : new ArrayList<>();
     }
 
-    public float getCrushDamage() {
-        return crushDamage;
+    @Nullable
+    public Impact getCrushDamageImpact() {
+        return crushDamageImpact;
     }
 
     public String getDamageCauseId() {
@@ -39,6 +44,6 @@ public class PhaseState implements ConstructState {
 
     @Override
     public PhaseState copy() {
-        return new PhaseState(new ArrayList<>(nextGlyphIds), crushDamage, damageCauseId);
+        return new PhaseState(new ArrayList<>(nextGlyphIds), crushDamageImpact, damageCauseId);
     }
 }

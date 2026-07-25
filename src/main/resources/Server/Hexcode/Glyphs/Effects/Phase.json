@@ -81,7 +81,12 @@
   "IsReversable": false,
   "Config": {
     "Type": "Phase",
-    "CrushDamage": 4.0,
+    "CrushDamageImpact": {
+      "Type": "Linear",
+      "Slope": 2.0,
+      "Offset": 4.0,
+      "OutputMax": 25.0
+    },
     "DamageCause": "Environment"
   }
 }

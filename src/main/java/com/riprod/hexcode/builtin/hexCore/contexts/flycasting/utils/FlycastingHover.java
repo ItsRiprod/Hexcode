@@ -3,8 +3,10 @@ package com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.component.FlycastingState;
+import com.riprod.hexcode.core.common.hud.controller.HudController;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.builtin.hexCore.scene.GlyphStyler;
@@ -16,8 +18,8 @@ public final class FlycastingHover {
     private FlycastingHover() {
     }
 
-    public static void applyHexHover(CommandBuffer<EntityStore> buffer, FlycastingState state,
-            HexComponent hovered) {
+    public static void applyHexHover(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player,
+            FlycastingState state, HexComponent hovered) {
         if (state.getHoveredGlyph() != null) {
             return;
         }
@@ -33,6 +35,19 @@ public final class FlycastingHover {
             state.setLastHoveredHex(hovered);
             setHexHover(buffer, hovered, true);
         }
+        applyHoverInfo(buffer, player, hovered);
+    }
+
+    private static void applyHoverInfo(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player,
+            HexComponent hovered) {
+        String name = hovered != null && hovered.getHex() != null
+                ? hovered.getHex().getDisplayName()
+                : null;
+        if (name == null || name.isBlank()) {
+            HudController.hideInfo(buffer, player);
+            return;
+        }
+        HudController.showInfo(buffer, player, Message.raw(name), null);
     }
 
     public static void applyGlyphHover(CommandBuffer<EntityStore> buffer, FlycastingState state,

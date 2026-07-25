@@ -15,7 +15,8 @@
       "Parent": "Input",
       "Label": "hexcode.glyphs.Output.color.name",
       "Description": "hexcode.glyphs.Output.color.description",
-      "Unique": true
+      "Unique": true,
+      "DefaultValue": 0
     },
     "Next": {
       "Type": "Next",

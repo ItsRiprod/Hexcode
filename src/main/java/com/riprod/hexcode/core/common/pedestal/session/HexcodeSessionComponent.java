@@ -91,6 +91,7 @@ public class HexcodeSessionComponent implements Component<EntityStore> {
 
     private String activeSlotKey = null;
     private Hex pendingImportHex = null;
+    private ItemStack pendingExportPage = null;
     private String pendingReenterSlotKey = null;
 
     public HexcodeSessionComponent() {
@@ -296,6 +297,15 @@ public class HexcodeSessionComponent implements Component<EntityStore> {
     }
 
     @Nullable
+    public ItemStack getPendingExportPage() {
+        return pendingExportPage;
+    }
+
+    public void setPendingExportPage(@Nullable ItemStack page) {
+        this.pendingExportPage = page;
+    }
+
+    @Nullable
     public String getPendingReenterSlotKey() {
         return pendingReenterSlotKey;
     }
@@ -336,6 +346,7 @@ public class HexcodeSessionComponent implements Component<EntityStore> {
         copy.activeContainerRef = this.activeContainerRef;
         copy.activeSlotKey = this.activeSlotKey;
         copy.pendingImportHex = this.pendingImportHex;
+        copy.pendingExportPage = this.pendingExportPage;
         copy.pendingReenterSlotKey = this.pendingReenterSlotKey;
         return copy;
     }

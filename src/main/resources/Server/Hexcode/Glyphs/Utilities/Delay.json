@@ -50,5 +50,9 @@
   "Volatility": {
     "InstantCost": 0.25,
     "DrainPerSecond": 0.1
+  },
+  "Config": {
+    "Type": "Delay",
+    "Gravity": 0.0
   }
 }

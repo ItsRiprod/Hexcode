@@ -9,15 +9,20 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
+import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
+import com.hypixel.hytale.server.core.modules.projectile.ProjectileModule;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
@@ -31,6 +36,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.utils.HexVarUtil;
@@ -46,9 +52,21 @@ public class DelayGlyph implements GlyphHandler {
 
     public static final String ID = "Delay";
 
+    private static final Box FALLBACK_BOX = Box.horizontallyCentered(0.5, 0.5, 0.5);
+
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(DelayConfig.class, DelayConfig.CODEC);
+    }
+
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        if (asset == null) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "delay glyph asset not found");
+            return;
+        }
         float seconds = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(DelayGlyphSlots.DURATION, hexContext),
                 asset.getSlot(DelayGlyphSlots.DURATION)).floatValue();
@@ -142,8 +160,10 @@ public class DelayGlyph implements GlyphHandler {
 
         String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
         ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
+        Box box = FALLBACK_BOX;
         if (modelAsset != null) {
             Model model = Model.createScaledModel(modelAsset, 1.0f);
+            box = model.getBoundingBox();
 
             holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
             holder.addComponent(PersistentModel.getComponentType(),
@@ -152,8 +172,21 @@ public class DelayGlyph implements GlyphHandler {
             LOGGER.atWarning().log("delay: model asset '%s' not found", modelId);
         }
 
+        DelayConfig config = getConfig(DelayConfig.class, asset);
+        if (config == null)
+            config = DelayConfig.DEFAULTS;
+
+        holder.addComponent(BoundingBox.getComponentType(), new BoundingBox(box));
+        holder.addComponent(Velocity.getComponentType(), new Velocity());
+        holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
+        holder.ensureComponent(HeadRotation.getComponentType());
+        new DelayPhysicsConfig(config.getGravity()).apply(holder,
+                hexContext.getCasterRef(accessor), new Vector3d(), accessor, false);
+
         Ref<EntityStore> delayRef = accessor.addEntity(holder, AddReason.SPAWN);
 
-        hexContext.getHexRoot().addDependency(hexContext, delayRef);
+        if (hexContext.getHexRoot() != null) {
+            hexContext.getHexRoot().addDependency(hexContext, delayRef);
+        }
     }
 }

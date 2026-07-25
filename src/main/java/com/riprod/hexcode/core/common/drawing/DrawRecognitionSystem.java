@@ -87,18 +87,22 @@ public class DrawRecognitionSystem extends EntityTickingSystem<EntityStore> {
             return false;
         }
         if (ability != InteractionType.Ability2) {
-            caster.pressAbility(ability);
+            if (capture.getFinalizeDelaySeconds() < 0f) {
+                caster.pressAbility(ability);
+            }
             return false;
         }
 
         Ref<EntityStore> ref = chunk.getReferenceTo(index);
-        if (capture.isStrokeActive()) {
+        boolean strokeEnded = capture.isStrokeActive();
+        if (strokeEnded) {
             DrawCaptureService.endStroke(buffer, ref, capture, resolveUuid(buffer, ref));
         }
-        if (!capture.getPendingShapes().isEmpty()) {
+        boolean hasPendingShapes = !capture.getPendingShapes().isEmpty();
+        if (hasPendingShapes) {
             capture.setFinalizePending(true);
         }
-        return true;
+        return strokeEnded || hasPendingShapes;
     }
 
     @Nullable

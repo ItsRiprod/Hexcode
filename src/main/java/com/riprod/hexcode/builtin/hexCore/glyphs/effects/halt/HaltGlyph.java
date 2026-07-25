@@ -5,9 +5,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.entity.EntityUtils;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
@@ -28,6 +26,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
+import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VelocityUtil;
 
@@ -106,17 +105,8 @@ public static final String ID = "Halt";
             }
 
             if (duration > 0) {
-                EntityEffect haltEffect = EntityEffect.getAssetMap().getAsset(config.getEffectId());
-                if (haltEffect != null) {
-                    EffectControllerComponent controller = accessor.getComponent(
-                            ref, EffectControllerComponent.getComponentType());
-                    if (controller != null) {
-                        controller.addEffect(ref, haltEffect, (float) duration,
-                                OverlapBehavior.OVERWRITE, accessor);
-                    }
-                } else {
-                    LOGGER.atWarning().log("halt: %s effect asset not found", config.getEffectId());
-                }
+                VfxUtil.applyBoundedEffect(hexContext, ref, glyph, config.getEffectId(),
+                        (float) duration, OverlapBehavior.OVERWRITE);
             }
 
             TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());

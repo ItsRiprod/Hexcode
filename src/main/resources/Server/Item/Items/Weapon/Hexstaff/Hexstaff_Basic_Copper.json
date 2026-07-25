@@ -47,6 +47,13 @@
           "CalculationType": "Additive",
           "Amount": 3
         }
+      ],
+      "Volatility": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 23
+        }
       ]
     },
     "EntityStatsToClear": [
@@ -98,14 +105,13 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier1",
+            "Style": "Hexstaff_Basic_Copper",
             "HexStats": {
-              "InitialVolatility": 22,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 7
               }
-            },
-            "Style": "Hexstaff_Basic_Copper"
+            }
           }
         }
       ]
@@ -120,14 +126,13 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier2",
+            "Style": "Hexstaff_Basic_Copper",
             "HexStats": {
-              "InitialVolatility": 25,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 9
               }
-            },
-            "Style": "Hexstaff_Basic_Copper"
+            }
           }
         }
       ]
@@ -142,14 +147,13 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier3",
+            "Style": "Hexstaff_Basic_Copper",
             "HexStats": {
-              "InitialVolatility": 29,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 11
               }
-            },
-            "Style": "Hexstaff_Basic_Copper"
+            }
           }
         }
       ]
@@ -164,14 +168,13 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier4",
+            "Style": "Hexstaff_Basic_Copper",
             "HexStats": {
-              "InitialVolatility": 32,
-              "VolatilityMultiplier": 1.0,
               "InitialResources": {
                 "Arcane": 13
               }
-            },
-            "Style": "Hexstaff_Basic_Copper"
+            }
           }
         }
       ]

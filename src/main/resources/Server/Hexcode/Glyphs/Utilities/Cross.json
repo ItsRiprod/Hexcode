@@ -10,17 +10,19 @@
     { "Parent": "Slash", "RelativeSize": 0.8, "StatContribution": 0 }
   ],
   "Slots": {
-    "v": {
+    "V": {
       "Type": "Input",
       "Parent": "Input",
-      "Label": "hexcode.glyphs.Cross.v.name",
-      "Description": "hexcode.glyphs.Cross.v.description"
+      "Label": "hexcode.glyphs.Cross.V.name",
+      "Description": "hexcode.glyphs.Cross.V.description",
+      "DefaultValue": 0
     },
-    "w": {
+    "W": {
       "Type": "Input",
       "Parent": "Input",
-      "Label": "hexcode.glyphs.Cross.w.name",
-      "Description": "hexcode.glyphs.Cross.w.description"
+      "Label": "hexcode.glyphs.Cross.W.name",
+      "Description": "hexcode.glyphs.Cross.W.description",
+      "DefaultValue": 0
     },
     "Next": {
       "Type": "Next",

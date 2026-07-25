@@ -1,7 +1,8 @@
 {
   "Type": "HexDrawMode",
   "Forks": {
-    "Primary": "Draw"
+    "Primary": "Draw",
+    "Ability2": "Hexstaff_Ability2"
   },
   "CancelOnItemChange": true,
   "AllowIndefiniteHold": true,

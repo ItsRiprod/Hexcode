@@ -59,6 +59,13 @@
           "CalculationType": "Additive",
           "Amount": 15
         }
+      ],
+      "Volatility": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 65
+        }
       ]
     },
     "EntityStatsToClear": [
@@ -112,14 +119,14 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier1",
+            "Style": "Hexstaff_Special_Arcane",
             "HexStats": {
-              "InitialVolatility": 60,
               "VolatilityMultiplier": 0.75,
               "InitialResources": {
                 "Arcane": 30
               }
-            },
-            "Style": "Hexstaff_Special_Arcane"
+            }
           }
         }
       ]
@@ -134,14 +141,14 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier2",
+            "Style": "Hexstaff_Special_Arcane",
             "HexStats": {
-              "InitialVolatility": 70,
               "VolatilityMultiplier": 0.75,
               "InitialResources": {
                 "Arcane": 40
               }
-            },
-            "Style": "Hexstaff_Special_Arcane"
+            }
           }
         }
       ]
@@ -156,14 +163,14 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier3",
+            "Style": "Hexstaff_Special_Arcane",
             "HexStats": {
-              "InitialVolatility": 80,
               "VolatilityMultiplier": 0.75,
               "InitialResources": {
                 "Arcane": 50
               }
-            },
-            "Style": "Hexstaff_Special_Arcane"
+            }
           }
         }
       ]
@@ -178,14 +185,14 @@
           },
           "Config": {
             "HexStorageType": "ExecutionConfig",
+            "Parent": "CastConfig_Tier4",
+            "Style": "Hexstaff_Special_Arcane",
             "HexStats": {
-              "InitialVolatility": 90,
               "VolatilityMultiplier": 0.75,
               "InitialResources": {
                 "Arcane": 60
               }
-            },
-            "Style": "Hexstaff_Special_Arcane"
+            }
           }
         }
       ]

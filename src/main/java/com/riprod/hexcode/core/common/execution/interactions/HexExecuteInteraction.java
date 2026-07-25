@@ -104,6 +104,7 @@ public class HexExecuteInteraction extends SimpleInteraction {
             context.setConsumeMana(config.isConsumeMana());
             context.setApplyVolatilityDecay(config.isApplyVolatilityDecay());
             context.setBypassVolatilityDepletion(config.isBypassVolatilityDepletion());
+            context.setTierScale(config.getTierScale());
 
             HexExecuter.cast(context, buffer);
             ctx.getState().state = InteractionState.Finished;

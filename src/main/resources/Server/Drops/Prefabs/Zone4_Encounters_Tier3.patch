@@ -1,0 +1,12 @@
+{
+  "$Requires": "Riprod:Hextreme",
+  "Container": {
+    "Containers+": [
+      {
+        "Type": "Droplist",
+        "Weight": 30,
+        "DroplistId": "Drop_Page_Rare"
+      }
+    ]
+  }
+}

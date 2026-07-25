@@ -1,0 +1,61 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Ward",
+  "Title": "hexcode.glyphs.Ward.name",
+  "Description": "hexcode.glyphs.Ward.description",
+  "BasePower": 0,
+  "ManaConsumption": 2,
+  "ShapeStructure": [
+    "Triangle",
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.55
+    },
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.35
+    }
+  ],
+  "Slots": {
+    "Target": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Ward.Target.name",
+      "Description": "hexcode.glyphs.Ward.Target.description",
+      "Unique": true
+    },
+    "Deferral": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Ward.Deferral.name",
+      "Description": "hexcode.glyphs.Ward.Deferral.description",
+      "Unique": true
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Ward.Next.name",
+      "Description": "hexcode.glyphs.Ward.Next.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 1.0,
+    "DrainPerSecond": 0.0
+  },
+  "Style": {
+    "PrimaryColor": "#00E5FF",
+    "SecondaryColor": "#B2EBF2",
+    "PrimaryParticle": {
+      "SystemId": "Link_Flow"
+    },
+    "PrimarySound": "SFX_Portal_Neutral_Open",
+    "TertiarySound": "SFX_Concentrate_Fail"
+  },
+  "Config": {
+    "Type": "Ward",
+    "SustainImpact": {
+      "Type": "Constant",
+      "Value": -4.0
+    }
+  }
+}

@@ -30,6 +30,7 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
 
     protected HexStats hexStats = new HexStats();
     protected String styleId;
+    protected float tierScale = 1.0f;
     protected boolean requireMagicCharges = true;
     protected boolean consumeMana = true;
     protected boolean applyVolatilityDecay = true;
@@ -44,6 +45,10 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
     public HexStyleAsset getStyle() {
         if (this.styleId == null) return null;
         return HexStyleAsset.getAssetMap().getAsset(this.styleId);
+    }
+
+    public float getTierScale() {
+        return this.tierScale;
     }
 
     public boolean isRequireMagicCharges() {
@@ -96,6 +101,11 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
                         c -> c.styleId,
                         (c, p) -> c.styleId = p.styleId)
                 .addValidatorLate(() -> HexStyleAsset.VALIDATOR_CACHE.getValidator().late())
+                .add()
+                .<Float>appendInherited(new KeyedCodec<>("TierScale", Codec.FLOAT),
+                        (c, v) -> c.tierScale = v,
+                        c -> c.tierScale,
+                        (c, p) -> c.tierScale = p.tierScale)
                 .add()
                 .<Boolean>appendInherited(new KeyedCodec<>("RequireMagicCharges", Codec.BOOLEAN),
                         (c, v) -> c.requireMagicCharges = v,

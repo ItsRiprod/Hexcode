@@ -13,18 +13,24 @@
   "BasePower": 1.0,
   "ManaConsumption": 15,
   "ShapeStructure": [
-    "Square",
     {
-      "Parent": "Antisquare",
-      "RelativeSize": 0.8
+      "Parent": "Square",
+      "StatContribution": 2.0
     },
     {
       "Parent": "Antisquare",
-      "RelativeSize": 0.6
+      "RelativeSize": 0.8,
+      "StatContribution": 2.0
     },
     {
       "Parent": "Antisquare",
-      "RelativeSize": 0.4
+      "RelativeSize": 0.6,
+      "StatContribution": 2.0
+    },
+    {
+      "Parent": "Antisquare",
+      "RelativeSize": 0.4,
+      "StatContribution": 2.0
     }
   ],
   "Slots": {

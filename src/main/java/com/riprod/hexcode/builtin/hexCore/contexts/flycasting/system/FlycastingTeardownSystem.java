@@ -9,11 +9,13 @@ import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.RefSystem;
+import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.component.FlycastingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils.FlycastingScene;
 
 public class FlycastingTeardownSystem extends RefSystem<EntityStore> {
+    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     @Nonnull
     @Override
@@ -29,9 +31,13 @@ public class FlycastingTeardownSystem extends RefSystem<EntityStore> {
     @Override
     public void onEntityRemove(@Nonnull Ref<EntityStore> ref, @Nonnull RemoveReason reason,
             @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer) {
-        FlycastingState state = store.getComponent(ref, FlycastingState.getComponentType());
-        if (state != null) {
-            FlycastingScene.teardown(buffer, state);
+        try {
+            FlycastingState state = store.getComponent(ref, FlycastingState.getComponentType());
+            if (state != null) {
+                FlycastingScene.teardown(buffer, state);
+            }
+        } catch (Exception e) {
+            LOGGER.atSevere().withCause(e).log("[hexcode] flycasting teardown failed");
         }
     }
 }

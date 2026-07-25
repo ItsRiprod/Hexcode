@@ -13,6 +13,7 @@ public class ArcState implements ConstructState {
 
     private Glyph arcGlyph;
     private List<String> outputLinks;
+    private Set<UUID> exclusions;
     private Set<UUID> visited;
     private float range;
     private float interval;
@@ -22,14 +23,16 @@ public class ArcState implements ConstructState {
 
     public ArcState() {
         this.outputLinks = new ArrayList<>();
+        this.exclusions = new HashSet<>();
         this.visited = new HashSet<>();
     }
 
-    public ArcState(Glyph arcGlyph, List<String> outputLinks, Set<UUID> visited,
+    public ArcState(Glyph arcGlyph, List<String> outputLinks, Set<UUID> exclusions,
             float range, float interval, int remainingIterations, boolean spawnedHost) {
         this.arcGlyph = arcGlyph;
         this.outputLinks = outputLinks;
-        this.visited = visited;
+        this.exclusions = new HashSet<>(exclusions);
+        this.visited = new HashSet<>(exclusions);
         this.range = range;
         this.interval = interval;
         this.remainingIterations = remainingIterations;
@@ -47,6 +50,14 @@ public class ArcState implements ConstructState {
 
     public Set<UUID> getVisited() {
         return visited;
+    }
+
+    public boolean hasHitThisCycle() {
+        return visited.size() > exclusions.size();
+    }
+
+    public void resetCycle() {
+        visited = new HashSet<>(exclusions);
     }
 
     public float getRange() {
@@ -84,7 +95,8 @@ public class ArcState implements ConstructState {
     @Override
     public ArcState copy() {
         ArcState c = new ArcState(arcGlyph, new ArrayList<>(outputLinks),
-                new HashSet<>(visited), range, interval, remainingIterations, spawnedHost);
+                exclusions, range, interval, remainingIterations, spawnedHost);
+        c.visited = new HashSet<>(this.visited);
         c.elapsedSeconds = this.elapsedSeconds;
         return c;
     }

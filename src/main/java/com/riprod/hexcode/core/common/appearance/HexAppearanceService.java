@@ -10,12 +10,15 @@ import javax.annotation.Nullable;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.protocol.PlayerSkin;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
+import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -152,10 +155,31 @@ public final class HexAppearanceService {
 
         buffer.putComponent(ref, ModelComponent.getComponentType(), new ModelComponent(model));
         buffer.putComponent(ref, EntityScaleComponent.getComponentType(), new EntityScaleComponent(scale));
+        applyBoundingBox(buffer, ref, model);
 
         applySkin(buffer, ref, overridden, disguiseSkin, appearance.getOriginalSkin());
         applyNameplate(buffer, ref, nameplate, appearance.getOriginalNameplate());
         return true;
+    }
+
+    private static void applyBoundingBox(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref,
+            @Nonnull Model model) {
+        Box modelBoundingBox = model.getBoundingBox();
+        if (modelBoundingBox == null) {
+            LOGGER.atWarning().log("[hexcode] appearance: model bounding box is null: %s", model.getModel());
+            return;
+        }
+
+        BoundingBox boundingBox = buffer.ensureAndGetComponent(ref, BoundingBox.getComponentType());
+        boundingBox.setBoundingBox(modelBoundingBox);
+        boundingBox.setBaseModelBox(modelBoundingBox);
+        boundingBox.setDetailBoxes(model.getDetailBoxes());
+
+        TransformComponent transform = buffer.getComponent(ref, TransformComponent.getComponentType());
+        if (transform != null) {
+            var rotation = transform.getRotation();
+            boundingBox.applyRotation(rotation.pitch(), rotation.yaw(), rotation.roll());
+        }
     }
 
     private static void applyNameplate(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref,
