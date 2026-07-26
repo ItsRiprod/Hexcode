@@ -34,7 +34,9 @@ public class HexVarUtil {
         if (var == null)
             return null;
         PositionVar pv = var.toPosition(accessor);
-        return pv == null ? null : pv.getValue();
+        if (pv == null || pv.getValue() == null)
+            return null;
+        return new Vector3d(pv.getValue());
     }
 
     @Nullable
@@ -61,6 +63,14 @@ public class HexVarUtil {
             case 2 -> v.z;
             default -> 0.0;
         };
+    }
+
+    public static boolean isAbsolutePosition(@Nullable HexVar var,
+            @Nonnull ComponentAccessor<EntityStore> accessor) {
+        if (var == null || var instanceof NumberVar)
+            return false;
+        PositionVar pv = var.toPosition(accessor);
+        return pv != null && pv.isAbsolute();
     }
 
     public static double rotationAxis(@Nullable HexVar var, int axis,

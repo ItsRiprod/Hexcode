@@ -13,8 +13,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
-import com.riprod.hexcode.core.common.construct.component.HexStatus;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -75,18 +74,12 @@ public abstract class AbstractTriggerGlyph implements GlyphHandler {
         if (nextLinks.isEmpty()) return;
 
         UUID subscriptionId = UUID.randomUUID();
-        UUID effectId = UUID.randomUUID();
         TriggerState state = new TriggerState(triggerKey(), subscriptionId, nextLinks);
 
-        HexStatus<TriggerState> construct = new HexStatus<>(
-                TriggerConstructHandler.HANDLER_ID, hexContext, effectId, glyph, state);
-        HexEffectsComponent existing = accessor.getComponent(caster, HexEffectsComponent.getComponentType());
-        if (existing != null) {
-            existing.addEffect(effectId, construct);
-        } else {
-            HexEffectsComponent fresh = new HexEffectsComponent();
-            fresh.addEffect(effectId, construct);
-            accessor.putComponent(caster, HexEffectsComponent.getComponentType(), fresh);
+        UUID effectId = HexConstructSpawner.applyWithState(
+                accessor, caster, hexContext, glyph, TriggerConstructHandler.HANDLER_ID, state);
+        if (effectId == null) {
+            return;
         }
 
         TriggerListenerRegistry registry = accessor.getResource(TriggerListenerRegistry.getResourceType());

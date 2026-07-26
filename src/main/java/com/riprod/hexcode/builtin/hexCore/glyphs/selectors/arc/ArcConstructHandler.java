@@ -1,4 +1,4 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc;
+package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc;
 
 import java.util.List;
 
@@ -15,8 +15,8 @@ import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.style.ArcStyle;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.utils.ArcUtils;
+import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc.style.ArcStyle;
+import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc.utils.ArcUtils;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -27,7 +27,6 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 public class ArcConstructHandler implements ConstructHandler<ArcState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final float MIN_INTERVAL = 0.05f;
 
     @Override
     public void onFirstTick(HexStatus<ArcState> status, ConstructTickContext ctx) {
@@ -124,7 +123,7 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         ArcConfig config = asset.getConfig() instanceof ArcConfig arcConfig ? arcConfig : ArcConfig.DEFAULTS;
         Impact impact = asset.getConfig() == null ? null : asset.getConfig().getVolatilityImpact();
         float intervalFactor = (float) (config.getReferenceInterval()
-                / Math.max(MIN_INTERVAL, state.getInterval()));
+                / Math.max(0.01f, state.getInterval()));
         float cost = arcGlyph.computeBaseCost(asset) * Impact.scale(impact, distance) * intervalFactor;
 
         return tracker.consumeVolatility(cost) > 0f;

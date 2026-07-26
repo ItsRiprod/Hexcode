@@ -10,6 +10,7 @@ import com.riprod.hexcode.builtin.imbued.ImbuedPlugin;
 import com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin;
 import com.riprod.hexcode.command.HexcodeCommand;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
+import com.riprod.hexcode.core.common.construct.system.HexConstructTeardownSystem;
 import com.riprod.hexcode.core.common.construct.system.MountOrphanReaperSystem;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
@@ -44,6 +45,7 @@ import com.riprod.hexcode.core.common.execution.events.HexCastEventSystem;
 import com.riprod.hexcode.core.common.execution.queue.HexQueueDrainEventSystem;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionTickSystem;
+import com.riprod.hexcode.core.common.execution.system.CasterSpellTeardownSystem;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconStore;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -126,30 +128,11 @@ public class Hexcode extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private final PatchManager patchManager;
 
-    // Deprecated, waiting on a fix from hytale for proper implementation
-    // private HexCorePlugin hexCore;
-    // private CounterspellPlugin counterspell;
-    // private HexabilityPlugin hexability;
-    // private HexomationPlugin hexomation;
-    // private HextrasPlugin hextras;
-    // private HextremePlugin hextreme;
-    // private ImbuedPlugin imbued;
-    // private RitualisticPlugin ritualistic;
-
     public Hexcode(JavaPluginInit init) {
         super(init);
-        patchManager = new PatchManager(this); // setup patchly
+        patchManager = new PatchManager(this);
         LOGGER.atInfo().log("Hexcode spell-crafting mod v%s initializing...",
                 this.getManifest().getVersion().toString());
-
-        // hexCore = new HexCorePlugin(init);
-        // counterspell = new CounterspellPlugin(init);
-        // hexability = new HexabilityPlugin(init);
-        // hexomation = new HexomationPlugin(init);
-        // hextras = new HextrasPlugin(init);
-        // hextreme = new HextremePlugin(init);
-        // imbued = new ImbuedPlugin(init);
-        // ritualistic = new RitualisticPlugin(init);
     }
 
     @Override
@@ -159,7 +142,7 @@ public class Hexcode extends JavaPlugin {
 
     @Override
     protected void setup() {
-        patchManager.install(); // init patchly
+        patchManager.install();
         this.registerAssets();
 
         this.registerEntityComponents();
@@ -171,16 +154,6 @@ public class Hexcode extends JavaPlugin {
         this.registerCommands();
 
         LOGGER.atInfo().log("Hexcode %s setup complete!", this.getManifest().getVersion().toString());
-
-        // deprecated until hytale fixed implementation
-        // hexCore.setup();
-        // counterspell.setup();
-        // hexability.setup();
-        // hexomation.setup();
-        // hextras.setup();
-        // hextreme.setup();
-        // imbued.setup();
-        // ritualistic.setup();
     }
 
     @SuppressWarnings("null")
@@ -477,6 +450,8 @@ public class Hexcode extends JavaPlugin {
     protected void start() {
         EntityStore.REGISTRY.registerSystem(new MountOrphanReaperSystem());
         EntityStore.REGISTRY.registerSystem(new HexConstructSystem());
+        EntityStore.REGISTRY.registerSystem(new HexConstructTeardownSystem());
+        EntityStore.REGISTRY.registerSystem(new CasterSpellTeardownSystem());
         RegisterAssetEditorDataSets();
     }
 

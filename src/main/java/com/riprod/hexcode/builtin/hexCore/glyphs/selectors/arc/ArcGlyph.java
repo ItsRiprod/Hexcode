@@ -1,4 +1,4 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc;
+package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc;
 
 import java.util.HashSet;
 import java.util.List;
@@ -80,9 +80,7 @@ public class ArcGlyph implements GlyphHandler {
         }
 
         Set<UUID> exclusions = new HashSet<>();
-        UUIDComponent casterUuid = accessor.getComponent(
-                hexContext.getCasterRef(accessor), UUIDComponent.getComponentType());
-        if (casterUuid != null) exclusions.add(casterUuid.getUuid());
+
 
         if (targetVar instanceof EntityVar entityVar) {
             Ref<EntityStore> hostRef = entityVar.getRef(accessor);

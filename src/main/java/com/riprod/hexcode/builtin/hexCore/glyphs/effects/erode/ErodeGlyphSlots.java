@@ -5,7 +5,7 @@ public final class ErodeGlyphSlots {
     }
 
     public static final String TARGET = "Target";
-    public static final String AMOUNT = "amount";
+    public static final String AMOUNT = "Amount";
     public static final String DURATION = "Duration";
     public static final String IMMEDIATE = "Immediate";
 }

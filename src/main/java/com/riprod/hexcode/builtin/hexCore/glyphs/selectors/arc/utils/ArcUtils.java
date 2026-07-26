@@ -1,4 +1,4 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.utils;
+package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc.utils;
 
 import java.util.ArrayList;
 import java.util.List;

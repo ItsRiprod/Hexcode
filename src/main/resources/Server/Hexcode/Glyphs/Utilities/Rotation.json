@@ -45,5 +45,10 @@
   "ManaConsumption": 0,
   "Volatility": {
     "InstantCost": 0.1,
-    "DrainPerSecond": 0.0}
+    "DrainPerSecond": 0.0
+  },
+  "Config": {
+    "Type": "Rotation",
+    "RollHoldSeconds": 10.0
+  }
 }

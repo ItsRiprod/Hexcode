@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration;
 
+import javax.annotation.Nullable;
+
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -27,6 +29,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.Con
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -66,8 +69,6 @@ public class ConcentrationGlyph implements GlyphHandler {
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        // findState catches an already-applied HexEffectsComponent; hasPendingApply catches
-        // a same-tick second cast still queued in HexConstructSpawner's pending-apply cache
         ConcentrationState existing = ConstructStateUtil.findState(
                 accessor, casterRef, ConcentrationGlyph.ID, ConcentrationState.class);
         boolean pending = HexConstructSpawner.hasPendingApply(casterRef, ConcentrationGlyph.ID);
@@ -95,17 +96,33 @@ public class ConcentrationGlyph implements GlyphHandler {
             ConcentrationStyle.renderSpawn(casterTransform.getPosition(), hexContext, accessor);
         }
 
-        int resource = (int) HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(ConcentrationGlyphSlots.RESOURCE, hexContext),
-                asset != null ? asset.getSlot(ConcentrationGlyphSlots.RESOURCE) : null).doubleValue();
+        float manaRate = readRate(glyph, asset, hexContext, ConcentrationGlyphSlots.MANA_PER_SECOND);
+        float staminaRate = readRate(glyph, asset, hexContext, ConcentrationGlyphSlots.STAMINA_PER_SECOND);
+        float healthRate = readRate(glyph, asset, hexContext, ConcentrationGlyphSlots.HEALTH_PER_SECOND);
 
         ConcentrationState state = new ConcentrationState(visualRef);
-        state.setUpkeepActive(true);
-        state.setResource(resource);
+        state.setManaRate(manaRate);
+        state.setStaminaRate(staminaRate);
+        state.setHealthRate(healthRate);
+        state.setBonusVolatilityPerSecond(
+                convert(manaRate, config.getManaImpact())
+                        + convert(staminaRate, config.getStaminaImpact())
+                        + convert(healthRate, config.getHealthImpact()));
         HexConstructSpawner.applyWithState(
                 accessor, casterRef, hexContext, glyph, ConcentrationGlyph.ID, state);
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+    }
+
+    private static float readRate(Glyph glyph, GlyphAsset asset, HexContext hexContext, String slotKey) {
+        double rate = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(slotKey, hexContext),
+                asset != null ? asset.getSlot(slotKey) : null).doubleValue();
+        return (float) Math.max(0.0, rate);
+    }
+
+    private static float convert(float rate, @Nullable Impact impact) {
+        return rate <= 0f ? 0f : rate * Impact.scale(impact, rate);
     }
 
     private Ref<EntityStore> spawnVisual(CommandBuffer<EntityStore> accessor,

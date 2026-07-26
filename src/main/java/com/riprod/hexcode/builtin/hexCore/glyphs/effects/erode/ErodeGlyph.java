@@ -58,7 +58,8 @@ public class ErodeGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         ErodeConfig config = getConfig(ErodeConfig.class, asset);
-        if (config == null) config = ErodeConfig.DEFAULTS;
+        if (config == null)
+            config = ErodeConfig.DEFAULTS;
 
         double duration = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(ErodeGlyphSlots.DURATION, hexContext),
@@ -69,7 +70,7 @@ public class ErodeGlyph implements GlyphHandler {
         EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
         if (entityVar != null) {
             // sustained entity vulnerability defers continuation to the construct's onEnd
-            if (applyToEntities(glyph, entityVar, (float) duration, config, hexContext, accessor)) {
+            if (config.canImpactEntities() && applyToEntities(glyph, entityVar, (float) duration, config, hexContext, accessor)) {
                 Slot immediate = glyph.getSlot(ErodeGlyphSlots.IMMEDIATE);
                 if (immediate != null && immediate.getLinks().length > 0) {
                     HexContext immediateCtx = hexContext.branch();
@@ -81,10 +82,9 @@ public class ErodeGlyph implements GlyphHandler {
         } else {
             BlockVar blockVar = HexVarUtil.resolveBlockVar(targets, hexContext);
             if (blockVar != null) {
-                double amount = Math.max(config.getMinAmount(), Math.min(config.getMaxAmount(),
-                        HexVarUtil.numberOrSlotDefault(
-                                glyph.readSlot(ErodeGlyphSlots.AMOUNT, hexContext),
-                                asset.getSlot(ErodeGlyphSlots.AMOUNT))));
+                double amount = HexVarUtil.numberOrSlotDefault(
+                        glyph.readSlot(ErodeGlyphSlots.AMOUNT, hexContext),
+                        asset.getSlot(ErodeGlyphSlots.AMOUNT));
                 applyToBlocks(blockVar, amount, config, hexContext, accessor);
             }
         }

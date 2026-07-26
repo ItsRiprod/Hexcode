@@ -13,14 +13,29 @@
     }
   ],
   "Slots": {
-    "Resource": {
-      "Parent": "Boolean",
+    "ManaPerSecond": {
+      "Type": "Input",
+      "Parent": "Input",
       "DefaultValue": 0,
-      "Label": "hexcode.glyphs.Concentration.Resource.name",
-      "Description": "hexcode.glyphs.Concentration.Resource.description",
-      "PositiveLabel": "hexcode.glyphs.Concentration.Resource.positive",
-      "NeutralLabel": "hexcode.glyphs.Concentration.Resource.neutral",
-      "NegativeLabel": "hexcode.glyphs.Concentration.Resource.negative"
+      "Unique": true,
+      "Label": "hexcode.glyphs.Concentration.ManaPerSecond.name",
+      "Description": "hexcode.glyphs.Concentration.ManaPerSecond.description"
+    },
+    "StaminaPerSecond": {
+      "Type": "Input",
+      "Parent": "Input",
+      "DefaultValue": 0,
+      "Unique": true,
+      "Label": "hexcode.glyphs.Concentration.StaminaPerSecond.name",
+      "Description": "hexcode.glyphs.Concentration.StaminaPerSecond.description"
+    },
+    "HealthPerSecond": {
+      "Type": "Input",
+      "Parent": "Input",
+      "DefaultValue": 0,
+      "Unique": true,
+      "Label": "hexcode.glyphs.Concentration.HealthPerSecond.name",
+      "Description": "hexcode.glyphs.Concentration.HealthPerSecond.description"
     },
     "Next": {
       "Type": "Next",
@@ -59,8 +74,28 @@
       "Type": "Constant",
       "Value": 3.0
     },
+    "ManaImpact": {
+      "Type": "Linear",
+      "Offset": 1.25,
+      "Slope": -0.05,
+      "OutputMin": 0.0,
+      "OutputMax": 1.0
+    },
+    "StaminaImpact": {
+      "Type": "Linear",
+      "Offset": 1.25,
+      "Slope": -0.05,
+      "OutputMin": 0.0,
+      "OutputMax": 1.0
+    },
+    "HealthImpact": {
+      "Type": "Linear",
+      "Offset": 1.25,
+      "Slope": -0.05,
+      "OutputMin": 0.0,
+      "OutputMax": 1.0
+    },
     "SecondaryIntervalSeconds": 1.0,
-    "ManaPerSecond": 1.0,
-    "ResourceDrainPerSecond": 6.0
+    "HealthDamageCause": "Arcane"
   }
 }

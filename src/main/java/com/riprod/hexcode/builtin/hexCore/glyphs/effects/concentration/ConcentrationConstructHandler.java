@@ -5,6 +5,9 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
+import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
+import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
@@ -27,6 +30,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 public class ConcentrationConstructHandler implements ConstructHandler<ConcentrationState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+
 
     private ConcentrationConfig resolveConfig(HexStatus<ConcentrationState> status) {
         Glyph trigger = status.getTriggeringGlyph();
@@ -55,8 +59,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             return true;
         }
 
-        if (chargeUpkeep(dt, status, buffer, casterRef)) {
-            // starved of mana/resource: the channel ends here, same as a manual release
+        if (!payUpkeep(dt, status, statMap, buffer, casterRef)) {
             fireReleaseAndKillHeld(status, buffer, casterRef);
             return true;
         }
@@ -77,61 +80,64 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         state.setElapsedSeconds(elapsed);
 
         Impact impact = resolveConfig(status).getSustainImpact();
-        float perSecond = impact != null ? impact.compute(elapsed) : ConcentrationConfig.DEFAULT_SUSTAIN_PER_SECOND;
-        tracker.addVolatility(perSecond * dt);
+        float basePerSecond = impact != null ? impact.compute(elapsed) : ConcentrationConfig.DEFAULT_SUSTAIN_PER_SECOND;
+        tracker.addVolatility((basePerSecond + state.getBonusVolatilityPerSecond()) * dt);
     }
 
-    // returns true when starvation should end the channel; false when upkeep was paid (or is inactive)
-    private boolean chargeUpkeep(float dt, HexStatus<ConcentrationState> status,
+    private boolean payUpkeep(float dt, HexStatus<ConcentrationState> status, EntityStatMap statMap,
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
         ConcentrationState state = status.getState();
-        if (state == null || !state.isUpkeepActive())
-            return false;
         HexContext ctx = status.getHexContext();
-        if (ctx == null || !ctx.isConsumeMana())
-            return false;
+        if (state == null || ctx == null || !ctx.isConsumeMana())
+            return true;
 
-        ConcentrationConfig config = resolveConfig(status);
-        double manaPerSecond = config.getManaPerSecond();
-        double resourcePerSecond = config.getResourceDrainPerSecond();
-        int resource = state.getResource();
         HexRoot root = ctx.getHexRoot();
         if (root == null)
+            return true;
+
+        float mana = state.getManaRate() * dt;
+        float stamina = state.getStaminaRate() * dt;
+
+        // every stat is checked before any is spent so a starved tick never charges for
+        // volatility it will not grant
+        if (mana > root.getCurrentMana(buffer) || !canAfford(statMap, DefaultEntityStatTypes.getStamina(), stamina))
             return false;
 
-        float accum = state.getManaAccum() + dt;
-        while (accum >= 1.0f) {
-            accum -= 1.0f;
-            if (manaPerSecond > 0 && !root.tryConsumeMana((float) manaPerSecond, buffer)) {
-                state.setManaAccum(0f);
-                return true;
-            }
-            if (resource != 0) {
-                boolean paid = resource < 0
-                        ? root.tryConsumeMana((float) resourcePerSecond, buffer)
-                        : tryConsumeStat(buffer, casterRef, DefaultEntityStatTypes.getStamina(), (float) resourcePerSecond);
-                if (!paid) {
-                    state.setManaAccum(0f);
-                    return true;
-                }
-            }
-        }
-        state.setManaAccum(accum);
-        return false;
+        if (mana > 0 && !root.tryConsumeMana(mana, buffer))
+            return false;
+        if (stamina > 0)
+            statMap.subtractStatValue(DefaultEntityStatTypes.getStamina(), stamina);
+
+        payHealthUpkeep(dt, state, resolveConfig(status), buffer, casterRef);
+        return true;
     }
 
-    private boolean tryConsumeStat(CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef,
-            int statIndex, float cost) {
-        if (casterRef == null || !casterRef.isValid() || cost <= 0)
-            return cost <= 0;
-        EntityStatMap statMap = buffer.getComponent(casterRef, EntityStatMap.getComponentType());
-        if (statMap == null)
-            return false;
+    private static boolean canAfford(EntityStatMap statMap, int statIndex, float cost) {
+        if (cost <= 0)
+            return true;
         EntityStatValue stat = statMap.get(statIndex);
-        if (stat == null || stat.get() < cost)
-            return false;
-        statMap.subtractStatValue(statIndex, cost);
-        return true;
+        return stat != null && stat.get() >= cost;
+    }
+
+    // health is spent through the damage pipeline rather than the stat map, because only
+    // damage marks the caster dead when it empties the bar
+    private void payHealthUpkeep(float dt, ConcentrationState state, ConcentrationConfig config,
+            CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
+        if (state.getHealthRate() <= 0f)
+            return;
+
+        float accum = state.getHealthDamageAccum() + state.getHealthRate() * dt;
+        int points = (int) accum;
+        state.setHealthDamageAccum(accum - points);
+        if (points <= 0)
+            return;
+
+        DamageCause cause = DamageCause.getAssetMap().getAsset(config.getHealthDamageCauseId());
+        if (cause == null)
+            return;
+
+        DamageSystems.executeDamage(casterRef, buffer,
+                new Damage(new Damage.EntitySource(casterRef), cause, points));
     }
 
     private void fireReleaseAndKillHeld(HexStatus<ConcentrationState> status,

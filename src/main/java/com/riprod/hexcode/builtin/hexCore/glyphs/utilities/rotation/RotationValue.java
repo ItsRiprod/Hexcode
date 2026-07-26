@@ -14,16 +14,22 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation.components.RotationState;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation.utils.RotationUtils;
+import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
+import com.riprod.hexcode.core.common.construct.component.HexStatus;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.protection.BlockAction;
 import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
@@ -42,6 +48,11 @@ public class RotationValue implements GlyphHandler {
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(RotationConfig.class, RotationConfig.CODEC);
     }
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
@@ -79,7 +90,7 @@ public class RotationValue implements GlyphHandler {
             HexVar target = glyph.readSlot(RotationValueSlots.TARGET, hexContext);
             EntityVar entityVar = HexVarUtil.resolveEntityVar(target, hexContext);
             if (entityVar != null) {
-                applyToEntity(entityVar, rotVar.getValue(), hexContext);
+                applyToEntity(entityVar, rotVar.getValue(), glyph, hexContext);
             } else {
                 BlockVar blockVar = HexVarUtil.resolveBlockVar(target, hexContext);
                 if (blockVar != null && blockVar.getValue() != null) {
@@ -91,37 +102,71 @@ public class RotationValue implements GlyphHandler {
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 
-    private void applyToEntity(EntityVar entityVar, Rotation3f rotation, HexContext hexContext) {
-        Ref<EntityStore> ref = entityVar.getRef(hexContext.getAccessor());
+    private void applyToEntity(EntityVar entityVar, Rotation3f rotation, Glyph glyph,
+            HexContext hexContext) {
+        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        Ref<EntityStore> ref = entityVar.getRef(accessor);
         if (ref == null || !ref.isValid())
             return;
 
-        if (VelocityUtil.isProjectile(ref, hexContext.getAccessor())) {
+        if (VelocityUtil.isProjectile(ref, accessor)) {
             applyToProjectile(ref, rotation, hexContext);
             return;
         }
 
         try {
-            TransformComponent tc = hexContext.getAccessor().getComponent(ref,
-                    TransformComponent.getComponentType());
-            if (tc == null)
+            HeadRotation hr = accessor.getComponent(ref, HeadRotation.getComponentType());
+            float priorRoll = hr != null ? hr.getRotation().roll() : 0.0f;
+
+            if (!RotationUtils.applyExact(ref, rotation, accessor))
                 return;
 
-            HeadRotation hr = hexContext.getAccessor().getComponent(ref,
-                    HeadRotation.getComponentType());
-            if (hr == null) {
-                tc.setRotation(rotation);
-                return;
-            }
-
-            Vector3d position = tc.getPosition();
-            Rotation3f headRotation = new Rotation3f(rotation);
-            Rotation3f bodyRotation = new Rotation3f(0.0f, headRotation.y, 0.0f);
-            Teleport teleport = Teleport.createExact(position, bodyRotation, headRotation);
-            hexContext.getAccessor().addComponent(ref, Teleport.getComponentType(), teleport);
+            trackRollRestore(ref, rotation, priorRoll, glyph, hexContext);
         } catch (Exception e) {
             LOGGER.atWarning().log("rotation glyph: could not rotate entity: %s", e.getMessage());
         }
+    }
+
+    private void trackRollRestore(Ref<EntityStore> ref, Rotation3f applied, float priorRoll,
+            Glyph glyph, HexContext hexContext) {
+        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        if (accessor.getComponent(ref, PlayerRef.getComponentType()) == null)
+            return;
+        if (Math.abs(applied.roll()) <= RotationUtils.EPSILON_RADIANS)
+            return;
+
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        RotationConfig config = getConfig(RotationConfig.class, asset);
+        if (config == null)
+            config = RotationConfig.DEFAULTS;
+
+        RotationState existing = findRollRestore(ref, accessor);
+        if (existing != null) {
+            existing.setRemainingSeconds(config.getRollHoldSeconds());
+            return;
+        }
+
+        if (HexConstructSpawner.hasPendingApply(ref, ID))
+            return;
+
+        HexConstructSpawner.applyWithState(accessor, ref, hexContext, glyph, ID,
+                new RotationState(priorRoll, config.getRollHoldSeconds()));
+    }
+
+    private static RotationState findRollRestore(Ref<EntityStore> ref,
+            CommandBuffer<EntityStore> accessor) {
+        HexEffectsComponent effects = accessor.getComponent(ref,
+                HexEffectsComponent.getComponentType());
+        if (effects == null)
+            return null;
+
+        for (HexStatus<?> status : effects.getEffects().values()) {
+            if (status != null && ID.equals(status.getHandlerId())
+                    && status.getState() instanceof RotationState rotationState) {
+                return rotationState;
+            }
+        }
+        return null;
     }
 
     private void applyToProjectile(Ref<EntityStore> ref, Rotation3f rotation, HexContext hexContext) {

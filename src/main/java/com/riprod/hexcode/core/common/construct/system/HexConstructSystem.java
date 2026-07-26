@@ -128,7 +128,7 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void abort(ConstructHandler<?> handler, HexStatus<?> status, ConstructTickContext ctx) {
+    static void abort(ConstructHandler<?> handler, HexStatus<?> status, ConstructTickContext ctx) {
         if (handler == null) return;
         try {
             ConstructHandler raw = handler;
