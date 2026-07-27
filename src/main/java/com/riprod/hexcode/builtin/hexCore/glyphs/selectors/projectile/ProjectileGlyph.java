@@ -14,14 +14,11 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.DespawnComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
-import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.Interactions;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
@@ -43,7 +40,6 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 import com.riprod.hexcode.utils.HexVarUtil;
-import com.riprod.hexcode.utils.VfxUtil;
 
 public class ProjectileGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -142,14 +138,6 @@ public class ProjectileGlyph implements GlyphHandler {
         if (bounces < 0)
             bounces = 0;
 
-        String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
-        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
-        if (modelAsset == null) {
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "model asset not found: " + modelId);
-            return;
-        }
-
         Holder<EntityStore> holder = HexConstructSpawner.create(hexContext.getAccessor(), hexContext, glyph,
                 ProjectileGlyph.ID, spawnPos);
 
@@ -159,10 +147,14 @@ public class ProjectileGlyph implements GlyphHandler {
                 new TransformComponent(new Vector3d(spawnPos), rotation));
         holder.addComponent(HeadRotation.getComponentType(), new HeadRotation(rotation));
 
-        Model model = Model.createScaledModel(modelAsset, config.getProjectileScale());
+        Model model = HexConstructSpawner.attachModel(holder, hexContext,
+                GlyphAsset.getAssetMap().getAsset(ID), config.getProjectileScale());
+        if (model == null) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "model asset not found");
+            return;
+        }
 
-        holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
-        holder.addComponent(PersistentModel.getComponentType(), new PersistentModel(model.toReference()));
         holder.addComponent(BoundingBox.getComponentType(), new BoundingBox(model.getBoundingBox()));
 
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());

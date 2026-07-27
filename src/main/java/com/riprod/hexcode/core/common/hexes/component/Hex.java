@@ -77,20 +77,6 @@ public class Hex {
         return glyphs;
     }
 
-    public List<Glyph> getNextGlyphs(String id) {
-        Glyph glyph = hexGraph.get(id);
-        if (glyph == null) return new ArrayList<>();
-        Slot nextSlot = glyph.getSlot(Glyph.NEXT_SLOT);
-        if (nextSlot == null) return new ArrayList<>();
-        String[] links = nextSlot.getLinks();
-        List<Glyph> result = new ArrayList<>(links.length);
-        for (String linkId : links) {
-            Glyph linked = hexGraph.get(linkId);
-            if (linked != null) result.add(linked);
-        }
-        return result;
-    }
-
     public void put(String id, Glyph glyph) {
         hexGraph.put(id, glyph);
     }

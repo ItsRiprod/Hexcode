@@ -1,0 +1,35 @@
+{
+  "PedestalType": "Weapon",
+  "CategoryId": "Items.Tools",
+  "Slots": {
+    "Primary": {
+      "Label": "Primary",
+      "Description": "Execute when hitting Primary"
+    },
+    "Secondary": {
+      "Label": "Secondary",
+      "Description": "Execute when hitting Secondary"
+    },
+    "Use": {
+      "Label": "Use",
+      "Description": "Execute when using the item"
+    },
+    "Ability1": {
+      "Label": "Ability 1",
+      "Description": "Execute on the Ability 1 keybind (Q)"
+    },
+    "Ability2": {
+      "Label": "Ability 2",
+      "Description": "Execute on the Ability 2 keybind (E)"
+    },
+    "Ability3": {
+      "Label": "Ability 3",
+      "Description": "Execute on the Ability 3 keybind (R)"
+    }
+  },
+  "Defaults": {
+    "HexStats": {
+      "InitialVolatility": 30
+    }
+  }
+}

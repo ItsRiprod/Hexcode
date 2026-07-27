@@ -13,7 +13,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
 
 public class CastChargesSystem extends WorldEventSystem<EntityStore, HexCastEvent.Pre> {
@@ -32,7 +32,7 @@ public class CastChargesSystem extends WorldEventSystem<EntityStore, HexCastEven
         if (!(context.getHexRoot() instanceof PlayerHexRoot playerRoot)) return;
         Ref<EntityStore> casterRef = playerRoot.getSourceRef(buffer);
         if (casterRef == null || !casterRef.isValid()) return;
-        HexStats tracker = context.getHexStats();
+        HexCast tracker = context.cast();
         if (tracker == null) return;
 
         CasterStateComponent casterState = buffer.getComponent(casterRef,

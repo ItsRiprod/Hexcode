@@ -13,6 +13,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.protocol.Color;
 import com.hypixel.hytale.protocol.ColorLight;
+import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
@@ -34,10 +35,11 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
     protected Color primaryColor;
     protected Color secondaryColor;
     protected Float alpha;
-    protected Float scale;
     protected Float volume;
     protected ModelParticle styleParticle;
     protected String primaryModel;
+
+    protected transient Model resolvedModel;
 
     // locked (essence of the consumer)
     protected ModelParticle primaryParticle;
@@ -92,14 +94,6 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         return this.alpha != null ? this.alpha : 1.0f;
     }
 
-    public Float getScale() {
-        return this.scale;
-    }
-
-    public float getScaleOrDefault() {
-        return this.scale != null ? this.scale : 1.0f;
-    }
-
     public Float getVolume() {
         return this.volume;
     }
@@ -141,6 +135,10 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         return this.primaryModel;
     }
 
+    public Model getResolvedModel() {
+        return this.resolvedModel;
+    }
+
     public void setPrimaryColor(Color color) {
         this.primaryColor = color;
     }
@@ -151,10 +149,6 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
 
     public void setAlpha(Float alpha) {
         this.alpha = alpha;
-    }
-
-    public void setScale(Float scale) {
-        this.scale = scale;
     }
 
     public void setVolume(Float volume) {
@@ -169,12 +163,15 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         this.primaryModel = primaryModel;
     }
 
+    public void setResolvedModel(Model resolvedModel) {
+        this.resolvedModel = resolvedModel;
+    }
+
     public HexStyleAsset clone() {
         HexStyleAsset copy = new HexStyleAsset();
         copy.primaryColor = this.primaryColor != null ? this.primaryColor.clone() : null;
         copy.secondaryColor = this.secondaryColor != null ? this.secondaryColor.clone() : null;
         copy.alpha = this.alpha;
-        copy.scale = this.scale;
         copy.volume = this.volume;
         copy.styleParticle = this.styleParticle;
         copy.primaryParticle = this.primaryParticle;
@@ -184,6 +181,7 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         copy.secondarySound = this.secondarySound;
         copy.tertiarySound = this.tertiarySound;
         copy.primaryModel = this.primaryModel;
+        copy.resolvedModel = this.resolvedModel;
         return copy;
     }
 
@@ -193,7 +191,6 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         if (other.primaryColor != null) this.primaryColor = other.primaryColor.clone();
         if (other.secondaryColor != null) this.secondaryColor = other.secondaryColor.clone();
         if (other.alpha != null) this.alpha = other.alpha;
-        if (other.scale != null) this.scale = other.scale;
         if (other.volume != null) this.volume = other.volume;
         if (other.styleParticle != null) this.styleParticle = other.styleParticle;
         if (other.primaryParticle != null) this.primaryParticle = other.primaryParticle;
@@ -203,6 +200,7 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         if (other.secondarySound != null) this.secondarySound = other.secondarySound;
         if (other.tertiarySound != null) this.tertiarySound = other.tertiarySound;
         if (other.primaryModel != null) this.primaryModel = other.primaryModel;
+        if (other.resolvedModel != null) this.resolvedModel = other.resolvedModel;
         return this;
     }
 
@@ -212,10 +210,10 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
         if (other.primaryColor != null) this.primaryColor = other.primaryColor.clone();
         if (other.secondaryColor != null) this.secondaryColor = other.secondaryColor.clone();
         if (other.alpha != null) this.alpha = other.alpha;
-        if (other.scale != null) this.scale = other.scale;
         if (other.volume != null) this.volume = other.volume;
         if (other.styleParticle != null) this.styleParticle = other.styleParticle;
         if (other.primaryModel != null) this.primaryModel = other.primaryModel;
+        if (other.resolvedModel != null) this.resolvedModel = other.resolvedModel;
         return this;
     }
 
@@ -244,11 +242,6 @@ public class HexStyleAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
                         (a, v) -> a.alpha = v,
                         a -> a.alpha,
                         (a, p) -> a.alpha = p.alpha)
-                .add()
-                .<Float>appendInherited(new KeyedCodec<>("Scale", Codec.FLOAT),
-                        (a, v) -> a.scale = v,
-                        a -> a.scale,
-                        (a, p) -> a.scale = p.scale)
                 .add()
                 .<Float>appendInherited(new KeyedCodec<>("Volume", Codec.FLOAT),
                         (a, v) -> a.volume = v,

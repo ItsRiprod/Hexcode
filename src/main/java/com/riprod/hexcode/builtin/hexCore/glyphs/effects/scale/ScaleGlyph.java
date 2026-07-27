@@ -13,12 +13,8 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.MountController;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
-import com.hypixel.hytale.server.core.asset.type.model.config.Model;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -233,14 +229,8 @@ public class ScaleGlyph implements GlyphHandler {
                         new Rotation3f(0f, config.getMountOffsetY(), 0f),
                         MountController.Minecart));
 
-        String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
-        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
-        if (modelAsset != null) {
-            Model model = Model.createUnitScaleModel(modelAsset);
-            holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
-            holder.addComponent(PersistentModel.getComponentType(),
-                    new PersistentModel(model.toReference()));
-        }
+        HexConstructSpawner.attachModel(holder, hexContext,
+                GlyphAsset.getAssetMap().getAsset(ID), 1.0f);
 
         return accessor.addEntity(holder, AddReason.SPAWN);
     }

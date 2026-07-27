@@ -70,7 +70,7 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
 
                 boolean killRequested = status.isKillRequested();
                 boolean budgetDepleted = status.getHexContext() != null
-                        && status.getHexContext().getHexStats().getCurrentVolatility() <= 0;
+                        && status.getHexContext().volatility().getCurrent() <= 0;
                 if (killRequested || budgetDepleted) {
                     LOGGER.atInfo().log("construct '%s' terminated (%s)",
                             status.getHandlerId(),

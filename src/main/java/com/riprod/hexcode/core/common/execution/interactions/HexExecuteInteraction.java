@@ -14,10 +14,10 @@ import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInteraction;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
@@ -85,26 +85,11 @@ public class HexExecuteInteraction extends SimpleInteraction {
             Hex hexClone = hex.clone();
             HexUtils.validate(hexClone);
 
-            HexStats cfgStats = config.getHexStats();
-            float volatility = cfgStats.getInitialVolatility();
-            float volMult = cfgStats.getVolatilityMultiplier();
-            if (volMult <= 0f) volMult = 1.0f;
-
             float baseMana = SpellMana.computeTotalMana(hexClone);
 
-            HexStyleAsset style = HexStyleAsset.empty();
-            if (config.getStyle() != null) style.compose(config.getStyle());
-
-            HexStats tracker = new HexStats(volatility, volMult, 1.0f);
-            if (cfgStats.getInitialResources() != null) {
-                cfgStats.getInitialResources().forEach(tracker::addResource);
-            }
-            HexContext context = new HexContext(hexClone, baseMana, hexRoot, style, tracker);
-            context.setRequireMagicCharges(config.isRequireMagicCharges());
-            context.setConsumeMana(config.isConsumeMana());
-            context.setApplyVolatilityDecay(config.isApplyVolatilityDecay());
-            context.setBypassVolatilityDepletion(config.isBypassVolatilityDepletion());
-            context.setTierScale(config.getTierScale());
+            HexContext context = new HexContext(hexClone, baseMana, hexRoot,
+                    HexStyleAsset.empty(), new HexCast());
+            config.applyTo(context);
 
             HexExecuter.cast(context, buffer);
             ctx.getState().state = InteractionState.Finished;

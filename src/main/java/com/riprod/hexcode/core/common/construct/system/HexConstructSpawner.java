@@ -12,11 +12,19 @@ import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3d;
 import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.server.core.asset.type.model.config.Model;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.utils.GlyphModelUtil;
+import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
+import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
@@ -67,6 +75,57 @@ public class HexConstructSpawner {
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
 
         return holder;
+    }
+
+    @Nullable
+    public static Model resolveModel(
+            @Nonnull HexContext hexContext,
+            @Nullable GlyphAsset glyphAsset,
+            float defaultScale) {
+
+        String modelId = VfxUtil.resolveModelId(hexContext, glyphAsset);
+        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
+
+        Model shaped = shapedModel(hexContext);
+        if (shaped != null) {
+            return GlyphModelUtil.withDefaultBox(shaped, modelAsset);
+        }
+
+        return modelAsset != null ? Model.createScaledModel(modelAsset, defaultScale) : null;
+    }
+
+    public static void applyModel(
+            @Nonnull Holder<EntityStore> holder,
+            @Nonnull HexContext hexContext,
+            @Nonnull Model model) {
+
+        holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
+
+        // ModelReference cannot carry derived attachments, so persisting a shaped model would
+        // let ModelSystems.ModelChange strip the shape on any later model swap
+        if (shapedModel(hexContext) == null) {
+            holder.addComponent(PersistentModel.getComponentType(), new PersistentModel(model.toReference()));
+        }
+    }
+
+    @Nullable
+    public static Model attachModel(
+            @Nonnull Holder<EntityStore> holder,
+            @Nonnull HexContext hexContext,
+            @Nullable GlyphAsset glyphAsset,
+            float defaultScale) {
+
+        Model model = resolveModel(hexContext, glyphAsset, defaultScale);
+        if (model != null) {
+            applyModel(holder, hexContext, model);
+        }
+        return model;
+    }
+
+    @Nullable
+    private static Model shapedModel(@Nonnull HexContext hexContext) {
+        HexStyleAsset style = hexContext.getStyle();
+        return style != null ? style.getResolvedModel() : null;
     }
 
     @Nullable

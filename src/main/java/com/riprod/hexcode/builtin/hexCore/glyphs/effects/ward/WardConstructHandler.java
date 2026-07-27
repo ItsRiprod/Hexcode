@@ -16,7 +16,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ward.style.WardStyle;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -48,7 +48,7 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
                 ? statMap.get(HexcodeEntityStatTypes.getIsHolding()) : null;
         if (holdStat == null || holdStat.get() < 1f) return true;
 
-        HexStats tracker = status.getHexContext().getHexStats();
+        VolatilityComponent tracker = status.getHexContext().volatility();
         if (tracker == null) return true;
 
         float elapsed = state.getElapsedSeconds() + dt;
@@ -56,11 +56,11 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
 
         Impact impact = resolveConfig(status).getSustainImpact();
         float perSecond = impact != null ? impact.compute(elapsed) : WardConfig.DEFAULT_SUSTAIN_PER_SECOND;
-        tracker.addVolatility(perSecond * dt);
+        tracker.add(perSecond * dt);
 
         renderWardLine(state, buffer, status);
 
-        return tracker.getCurrentVolatility() <= 0f;
+        return tracker.getCurrent() <= 0f;
     }
 
     private void renderWardLine(WardState state, CommandBuffer<EntityStore> buffer,

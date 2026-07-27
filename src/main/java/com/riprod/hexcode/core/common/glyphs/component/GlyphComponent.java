@@ -71,8 +71,8 @@ public class GlyphComponent implements Component<EntityStore> {
         return this.glyph.getId();
     }
 
-    public List<String> getNext() {
-        return this.glyph.getNextLinks();
+    public List<String> getFlowLinks() {
+        return this.glyph.getFlowLinks();
     }
 
     @Nonnull

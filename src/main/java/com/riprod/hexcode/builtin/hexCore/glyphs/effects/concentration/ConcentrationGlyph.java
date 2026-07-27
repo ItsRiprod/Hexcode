@@ -13,10 +13,7 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.MountController;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -36,7 +33,6 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.utils.HexVarUtil;
-import com.riprod.hexcode.utils.VfxUtil;
 
 public class ConcentrationGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -138,15 +134,10 @@ public class ConcentrationGlyph implements GlyphHandler {
         holder.addComponent(MountedComponent.getComponentType(),
                 new MountedComponent(casterRef, new Rotation3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z), MountController.Minecart));
 
-        String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
-        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
-        if (modelAsset != null) {
-            Model model = Model.createUnitScaleModel(modelAsset);
-            holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
-            holder.addComponent(PersistentModel.getComponentType(),
-                    new PersistentModel(model.toReference()));
-        } else {
-            LOGGER.atWarning().log("concentration: primary model '%s' not found", modelId);
+        Model model = HexConstructSpawner.attachModel(holder, hexContext,
+                GlyphAsset.getAssetMap().getAsset(ID), 1.0f);
+        if (model == null) {
+            LOGGER.atWarning().log("concentration: primary model not found");
         }
 
         return accessor.addEntity(holder, AddReason.SPAWN);

@@ -5,6 +5,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Vector3dUtil;
 
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -69,7 +70,7 @@ public class RotationValue implements GlyphHandler {
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
-        HexVar self = hexContext.getVariable(glyph.getId());
+        HexVar self = hexContext.getOwnVariable(glyph.getId());
 
         if (self != null) {
             return self;
@@ -182,13 +183,9 @@ public class RotationValue implements GlyphHandler {
         if (speed <= 0.0001)
             speed = 1.0;
 
-        double yaw = rotation.y;
-        double pitch = rotation.x;
-        double cosPitch = Math.cos(pitch);
-        Vector3d newVel = new Vector3d(
-                -Math.sin(yaw) * cosPitch * speed,
-                -Math.sin(pitch) * speed,
-                Math.cos(yaw) * cosPitch * speed);
+        Vector3d newVel = Vector3dUtil
+                .setYawPitch(rotation.yaw(), rotation.pitch(), new Vector3d())
+                .mul(speed);
 
         try {
             VelocityUtil.applyVelocity(ref, newVel, ChangeVelocityType.Set,
@@ -213,8 +210,10 @@ public class RotationValue implements GlyphHandler {
             BlockType blockType = BlockType.getAssetMap().getAsset(blockId);
             if (blockType == null)
                 return;
-            Rotation yaw = quarter(rotation.y);
-            int rotationIndex = RotationTuple.index(yaw, Rotation.None, Rotation.None);
+            int rotationIndex = RotationTuple.index(
+                    quarter(rotation.yaw()),
+                    quarter(rotation.pitch()),
+                    quarter(rotation.roll()));
             int settings = 0x02 | 0x04 | 0x10;
             world.getChunk(ChunkUtil.indexChunkFromBlock(pos.x, pos.z))
                     .setBlock(pos.x, pos.y, pos.z, blockId, blockType, rotationIndex, 0, settings);
@@ -224,7 +223,6 @@ public class RotationValue implements GlyphHandler {
     }
 
     private static Rotation quarter(float radians) {
-        int steps = ((Math.round(radians / (float) (Math.PI / 2)) % 4) + 4) % 4;
-        return Rotation.VALUES[steps];
+        return Rotation.closestOfDegrees((float) Math.toDegrees(radians));
     }
 }

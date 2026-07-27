@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration;
 
+import java.util.concurrent.TimeUnit;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
@@ -20,7 +22,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.Con
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -72,7 +74,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
 
     private void accrueVolatility(float dt, HexStatus<ConcentrationState> status) {
         ConcentrationState state = status.getState();
-        HexStats tracker = status.getHexContext().getHexStats();
+        VolatilityComponent tracker = status.getHexContext().volatility();
         if (state == null || tracker == null)
             return;
 
@@ -81,7 +83,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
 
         Impact impact = resolveConfig(status).getSustainImpact();
         float basePerSecond = impact != null ? impact.compute(elapsed) : ConcentrationConfig.DEFAULT_SUSTAIN_PER_SECOND;
-        tracker.addVolatility((basePerSecond + state.getBonusVolatilityPerSecond()) * dt);
+        tracker.add((basePerSecond + state.getBonusVolatilityPerSecond()) * dt);
     }
 
     private boolean payUpkeep(float dt, HexStatus<ConcentrationState> status, EntityStatMap statMap,
@@ -92,15 +94,14 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             return true;
 
         HexRoot root = ctx.getHexRoot();
-        if (root == null)
-            return true;
-
         float mana = state.getManaRate() * dt;
         float stamina = state.getStaminaRate() * dt;
 
-        // every stat is checked before any is spent so a starved tick never charges for
-        // volatility it will not grant
-        if (mana > root.getCurrentMana(buffer) || !canAfford(statMap, DefaultEntityStatTypes.getStamina(), stamina))
+        if (mana > 0 && root == null)
+            return false;
+        if (mana > 0 && mana > root.getCurrentMana(buffer))
+            return false;
+        if (!canAfford(statMap, DefaultEntityStatTypes.getStamina(), stamina))
             return false;
 
         if (mana > 0 && !root.tryConsumeMana(mana, buffer))
@@ -119,8 +120,6 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         return stat != null && stat.get() >= cost;
     }
 
-    // health is spent through the damage pipeline rather than the stat map, because only
-    // damage marks the caster dead when it empties the bar
     private void payHealthUpkeep(float dt, ConcentrationState state, ConcentrationConfig config,
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
         if (state.getHealthRate() <= 0f)
@@ -133,11 +132,20 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             return;
 
         DamageCause cause = DamageCause.getAssetMap().getAsset(config.getHealthDamageCauseId());
-        if (cause == null)
+        if (cause == null) {
+            LOGGER.atWarning().atMostEvery(5, TimeUnit.SECONDS)
+                    .log("concentration: damage cause '%s' not found, health upkeep skipped",
+                            config.getHealthDamageCauseId());
             return;
+        }
 
-        DamageSystems.executeDamage(casterRef, buffer,
-                new Damage(new Damage.EntitySource(casterRef), cause, points));
+        Damage damage = new Damage(new Damage.EntitySource(casterRef), cause, points);
+        DamageSystems.executeDamage(casterRef, buffer, damage);
+
+        if (damage.isCancelled()) {
+            LOGGER.atFine().atMostEvery(5, TimeUnit.SECONDS)
+                    .log("concentration: health upkeep of %d cancelled by the damage pipeline", points);
+        }
     }
 
     private void fireReleaseAndKillHeld(HexStatus<ConcentrationState> status,
@@ -147,8 +155,8 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         if (trigger == null || heldCtx == null)
             return;
 
-        HexStats heldTracker = heldCtx.getHexStats();
-        if (heldTracker != null && heldTracker.getCurrentVolatility() <= 0f)
+        VolatilityComponent heldTracker = heldCtx.volatility();
+        if (heldTracker != null && heldTracker.getCurrent() <= 0f)
             return;
 
         HexContext releaseCtx = HexContext.cloneState(heldCtx);
@@ -158,11 +166,11 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         CasterStateComponent idle = buffer.getComponent(
                 casterRef, CasterStateComponent.getComponentType());
         if (idle != null) {
-            idle.registerActiveTracker(releaseCtx.getHexStats());
+            idle.registerActiveTracker(releaseCtx.cast());
         }
 
         if (heldTracker != null)
-            heldTracker.setVolatility(0f);
+            heldTracker.setCurrent(0f);
 
         try {
             HexExecuter.continueFromSlot(trigger, ConcentrationGlyphSlots.RELEASE, releaseCtx);

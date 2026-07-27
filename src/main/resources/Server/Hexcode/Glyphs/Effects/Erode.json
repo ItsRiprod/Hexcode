@@ -75,14 +75,12 @@
   },
   "Config": {
     "Type": "Erode",
-    "MinAmount": 1.0,
-    "MaxAmount": 20.0,
     "MinTier": 1,
-    "MaxTier": 6,
-    "VulnerabilityScale": 0.05,
+    "MaxTier": 20,
     "BlockDamageScale": 0.05,
     "TierBucketWidth": 4,
     "Effect": "Hexcode_Erode",
-    "ToolAssetPrefix": "Hexcode_Erode_Tool_T"
+    "ToolAssetPrefix": "Hexcode_Erode_Tool_T",
+    "ImpactEntities": true
   }
 }

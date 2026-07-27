@@ -12,7 +12,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
 import com.riprod.hexcode.core.common.execution.component.HexColors;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 import javax.annotation.Nullable;
@@ -30,7 +30,7 @@ public class HexBookAsset implements JsonAssetWithMap<String, DefaultAssetMap<St
     protected ModelParticle[] craftingAuraParticles;
     protected String styleId;
     @Nullable
-    protected HexContext defaults;
+    protected String defaultsId;
 
     public static AssetStore<String, HexBookAsset, DefaultAssetMap<String, HexBookAsset>> getAssetStore() {
         if (ASSET_STORE == null) {
@@ -78,8 +78,9 @@ public class HexBookAsset implements JsonAssetWithMap<String, DefaultAssetMap<St
     }
 
     @Nullable
-    public HexContext getDefaults() {
-        return this.defaults;
+    public HexConfigAsset getDefaults() {
+        if (this.defaultsId == null) return null;
+        return HexConfigAsset.getAssetMap().getAsset(this.defaultsId);
     }
 
     public HexColors getColors() {
@@ -121,10 +122,11 @@ public class HexBookAsset implements JsonAssetWithMap<String, DefaultAssetMap<St
                         (a, p) -> a.styleId = p.styleId)
                 .addValidatorLate(() -> HexStyleAsset.VALIDATOR_CACHE.getValidator().late())
                 .add()
-                .appendInherited(new KeyedCodec<>("Defaults", HexContext.CODEC),
-                        (a, v) -> a.defaults = v,
-                        a -> a.defaults,
-                        (a, p) -> a.defaults = p.defaults)
+                .appendInherited(new KeyedCodec<>("Defaults", HexConfigAsset.CHILD_ASSET_CODEC),
+                        (a, v) -> a.defaultsId = v,
+                        a -> a.defaultsId,
+                        (a, p) -> a.defaultsId = p.defaultsId)
+                .addValidatorLate(() -> HexConfigAsset.VALIDATOR_CACHE.getValidator().late())
                 .documentation("Optional cast overrides applied when this book is wielded. Same shape as ImbuementProfileAsset.Defaults.")
                 .add()
                 .build();

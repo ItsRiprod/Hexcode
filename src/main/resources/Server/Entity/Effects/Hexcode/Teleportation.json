@@ -2,7 +2,7 @@
   "Duration": 0.5,
   "Debuff": false,
   "OverlapBehavior": "Overwrite",
-  "Invulnerable": true,
+  "Invulnerable": false,
   "ApplicationEffects": {
     "ModelVFXId": "Teleportation"
   },

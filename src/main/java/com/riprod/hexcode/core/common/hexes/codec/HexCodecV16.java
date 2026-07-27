@@ -1,12 +1,8 @@
 package com.riprod.hexcode.core.common.hexes.codec;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 import org.joml.Vector3f;
 
@@ -16,6 +12,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 
+@Deprecated
 public class HexCodecV16 {
 
     public static final int FORMAT_VERSION = 16;
@@ -23,7 +20,6 @@ public class HexCodecV16 {
 
     private static final byte[] MAGIC = { 'H', 'X' };
     private static final int FLAG_ZLIB = 0x01;
-    private static final int FLAG_FINGERPRINT = 0x02;
 
     private static final int SECTION_HEADER = 0x01;
     private static final int SECTION_ASSET_PALETTE = 0x02;
@@ -32,19 +28,6 @@ public class HexCodecV16 {
 
     private HexCodecV16() {}
 
-    public static String serialize(Hex hex) {
-        return serialize(hex, true);
-    }
-
-    public static String serialize(Hex hex, boolean includeFingerprint) {
-        Hex clone = hex.clone();
-        HexUtils.validate(clone);
-        HexUtils.compress(clone);
-        byte[] body = encode(clone, includeFingerprint);
-        return HexCodecV15.frame(body, includeFingerprint, MAGIC, FLAG_ZLIB, FLAG_FINGERPRINT,
-                FRAME_PREFIX);
-    }
-
     public static DecodeResult deserialize(String data) {
         if (data == null || !data.startsWith(FRAME_PREFIX)) {
             return DecodeResult.error("not a v16 frame");
@@ -52,107 +35,6 @@ public class HexCodecV16 {
         byte[] body = HexCodecV15.unframe(data, FRAME_PREFIX, MAGIC, FLAG_ZLIB);
         if (body == null) return DecodeResult.error("frame parse failed");
         return decode(body);
-    }
-
-    private static byte[] encode(Hex hex, boolean includeFingerprint) {
-        List<Glyph> glyphs = HexCodecV15.canonicalOrder(hex);
-        if (glyphs.isEmpty()) {
-            throw new HexCodecException("cannot encode empty hex");
-        }
-        int ne = glyphs.size();
-        int refBits = Math.max(1, CodecUtil.nbits(ne - 1));
-
-        Map<String, Integer> idToIdx = new HashMap<>(ne * 2);
-        for (int i = 0; i < ne; i++) idToIdx.put(glyphs.get(i).getId(), i);
-
-        List<String> assetPalette = HexCodecV15.buildAssetPalette(glyphs);
-        Map<String, Integer> palMap = HexCodecV15.indexMap(assetPalette);
-        int palBits = Math.max(1, CodecUtil.nbits(assetPalette.size() - 1));
-
-        List<String> slotPalette = HexCodecV15.buildSlotPalette(glyphs);
-        Map<String, Integer> slotIdxMap = HexCodecV15.indexMap(slotPalette);
-        int spBits = Math.max(1, CodecUtil.nbits(slotPalette.size() - 1));
-
-        int[] accVals = new int[ne];
-        int accMin = Integer.MAX_VALUE, accMax = Integer.MIN_VALUE;
-        for (int i = 0; i < ne; i++) {
-            int q = Math.round(HexCodecV15.clamp01(glyphs.get(i).getVolatility()) * 100f);
-            accVals[i] = q;
-            if (q < accMin) accMin = q;
-            if (q > accMax) accMax = q;
-        }
-        int accBits = CodecUtil.nbits(accMax - accMin);
-
-        int[] speedVals = new int[ne];
-        Map<Integer, Integer> speedCounts = new HashMap<>();
-        for (int i = 0; i < ne; i++) {
-            int q = Math.round(HexCodecV15.clamp01(glyphs.get(i).getEfficiency()) * 100f);
-            speedVals[i] = q;
-            speedCounts.merge(q, 1, Integer::sum);
-        }
-        int defaultSpeed = 0, bestCount = -1;
-        for (Map.Entry<Integer, Integer> e : speedCounts.entrySet()) {
-            if (e.getValue() > bestCount) { bestCount = e.getValue(); defaultSpeed = e.getKey(); }
-        }
-
-        byte[] header = encodeHeader(includeFingerprint, ne, accMin, accBits, defaultSpeed);
-        byte[] assetPaletteBytes = HexCodecV15.encodeAssetPalette(assetPalette);
-        byte[] slotPaletteBytes = HexCodecV15.encodeSlotPalette(slotPalette);
-        byte[] glyphStreamBytes = encodeGlyphStream(glyphs, palMap, palBits, accVals, accMin,
-                accBits, speedVals, defaultSpeed, slotIdxMap, spBits, idToIdx, refBits);
-
-        byte[] slotStateBytes = HexCodecV15.encodeSlotStates(glyphs);
-        byte[] metaBytes = HexCodecV15.encodeMeta(hex);
-
-        ByteArrayOutputStream body = new ByteArrayOutputStream();
-        CodecUtil.writeByteVarInt(body,
-                4 + (slotStateBytes != null ? 1 : 0) + (metaBytes != null ? 1 : 0));
-        HexCodecV15.appendSection(body, SECTION_HEADER, header);
-        HexCodecV15.appendSection(body, SECTION_ASSET_PALETTE, assetPaletteBytes);
-        HexCodecV15.appendSection(body, SECTION_SLOT_PALETTE, slotPaletteBytes);
-        HexCodecV15.appendSection(body, SECTION_GLYPH_STREAM, glyphStreamBytes);
-        if (slotStateBytes != null) {
-            HexCodecV15.appendSection(body, HexCodecV15.SECTION_SLOT_STATE, slotStateBytes);
-        }
-        if (metaBytes != null) {
-            HexCodecV15.appendSection(body, HexCodecV15.SECTION_META, metaBytes);
-        }
-        return body.toByteArray();
-    }
-
-    private static byte[] encodeHeader(boolean fp, int ne, int accMin, int accBits, int defaultSpeed) {
-        BitWriter bw = new BitWriter();
-        bw.write(fp ? 1 : 0, 1);
-        if (fp) {
-            int fingerprint = CodecUtil.registryFingerprint(HexCodecV15.buildBareGlyphDict());
-            for (int i = 31; i >= 0; i--) bw.write((fingerprint >> i) & 1, 1);
-        }
-        bw.writeVarInt(ne);
-        bw.write(accMin, 7);
-        bw.write(accBits, 4);
-        bw.write(defaultSpeed, 7);
-        return bw.flush();
-    }
-
-    private static byte[] encodeGlyphStream(List<Glyph> glyphs, Map<String, Integer> palMap, int palBits,
-            int[] accVals, int accMin, int accBits, int[] speedVals, int defaultSpeed,
-            Map<String, Integer> slotIdxMap, int spBits,
-            Map<String, Integer> idToIdx, int refBits) {
-        BitWriter bw = new BitWriter();
-        bw.writeVarInt(glyphs.size());
-        for (int i = 0; i < glyphs.size(); i++) {
-            Glyph g = glyphs.get(i);
-            bw.write(palMap.get(g.getGlyphId()), palBits);
-            bw.write(accVals[i] - accMin, accBits);
-            if (speedVals[i] == defaultSpeed) {
-                bw.write(1, 1);
-            } else {
-                bw.write(0, 1);
-                bw.write(speedVals[i], 7);
-            }
-            HexCodecV15.writeSlots(bw, g, slotIdxMap, spBits, idToIdx, refBits);
-        }
-        return bw.flush();
     }
 
     private static DecodeResult decode(byte[] body) {

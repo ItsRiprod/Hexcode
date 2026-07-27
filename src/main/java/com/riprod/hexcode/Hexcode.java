@@ -30,6 +30,9 @@ import com.riprod.hexcode.core.common.effect.GlyphEffectSystem;
 import com.riprod.hexcode.core.common.execution.component.BlockHexRoot;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.cast.ResourcePoolComponent;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 import com.riprod.hexcode.core.common.execution.precast.CasterStateProvisionSystem;
@@ -119,6 +122,7 @@ import com.hypixel.hytale.server.core.modules.entity.condition.Condition;
 import com.hypixel.hytale.builtin.adventure.memories.MemoriesPlugin;
 import com.hypixel.hytale.builtin.adventure.memories.memories.Memory;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -143,6 +147,7 @@ public class Hexcode extends JavaPlugin {
     @Override
     protected void setup() {
         patchManager.install();
+        this.registerCastComponents();
         this.registerAssets();
 
         this.registerEntityComponents();
@@ -154,6 +159,13 @@ public class Hexcode extends JavaPlugin {
         this.registerCommands();
 
         LOGGER.atInfo().log("Hexcode %s setup complete!", this.getManifest().getVersion().toString());
+    }
+
+    private void registerCastComponents() {
+        VolatilityComponent.setComponentType(
+                HexCast.REGISTRY.registerComponent(VolatilityComponent.class, VolatilityComponent::new));
+        ResourcePoolComponent.setComponentType(
+                HexCast.REGISTRY.registerComponent(ResourcePoolComponent.class, ResourcePoolComponent::new));
     }
 
     @SuppressWarnings("null")
@@ -185,6 +197,7 @@ public class Hexcode extends JavaPlugin {
                         .setCodec(HexConfigAsset.CODEC)
                         .setKeyFunction(HexConfigAsset::getId)
                         .loadsAfter(HexStyleAsset.class)
+                        .loadsBefore(Item.class, Interaction.class, RootInteraction.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore

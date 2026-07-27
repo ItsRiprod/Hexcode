@@ -28,22 +28,6 @@ public class GlyphMath {
         return sphericalToCartesian(origin, pos.y, pos.x, pos.z());
     }
 
-    public static Vector3d cartesianToSpherical(Vector3d origin, Rotation3f point) {
-        double dx = point.x - origin.x;
-        double dy = point.y - origin.y;
-        double dz = point.z - origin.z;
-
-        float distance = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
-        if (distance < 0.0001) {
-            return new Vector3d(0, 0, 0);
-        }
-
-        float yaw = (float) Math.atan2(dx, dz);
-        float pitch = (float) Math.asin(dy / distance);
-
-        return new Vector3d(pitch, yaw, distance);
-    }
-
     public static boolean isPointInGlyphArea(Vector3f glyphPos, Vector3f lookPos, float scale) {
         float angularDistance = calculateAngularDistance(glyphPos, lookPos);
         float selectionRadius = getSelectionRadius(scale);

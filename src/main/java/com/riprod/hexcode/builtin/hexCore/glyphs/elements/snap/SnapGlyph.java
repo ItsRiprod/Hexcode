@@ -46,7 +46,7 @@ public class SnapGlyph implements GlyphHandler {
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
-        float amount = ElementSupport.consumeResource(hexContext, config.getResource(), limit) * config.getEfficiency() * affinity;
+        float amount = ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit) * config.getEfficiency() * affinity;
 
         DamageCause cause = DamageCause.getAssetMap().getAsset(config.getDamageCause());
         if (cause != null) {

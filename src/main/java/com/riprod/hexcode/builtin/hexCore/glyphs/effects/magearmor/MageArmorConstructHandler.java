@@ -11,7 +11,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor.component.MagicHealthComponent;
 
@@ -30,8 +30,8 @@ public class MageArmorConstructHandler implements ConstructHandler<MageArmorStat
     }
 
     private boolean isPoolDepleted(HexStatus<MageArmorState> status) {
-        HexStats stats = status.getHexContext().getHexStats();
-        return stats == null || stats.getCurrentVolatility() <= 0f;
+        VolatilityComponent stats = status.getHexContext().volatility();
+        return stats == null || stats.getCurrent() <= 0f;
     }
 
     @Override

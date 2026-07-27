@@ -54,7 +54,7 @@ public class CasterSpellTeardownSystem extends RefSystem<EntityStore> {
                 return;
             }
 
-            // trackers are the same HexStats instances the caster's remote constructs hold, so
+            // trackers are the same VolatilityComponent instances the caster's remote constructs hold, so
             // zeroing here makes each one abort through its own handler on its next tick
             casterState.cancelAll(ref);
 

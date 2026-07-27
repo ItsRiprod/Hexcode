@@ -10,19 +10,16 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.hypixel.hytale.codec.Codec;
-import com.hypixel.hytale.codec.KeyedCodec;
-import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.hypixel.hytale.codec.codecs.map.MapCodec;
-import com.hypixel.hytale.codec.schema.metadata.ui.UIDisplayMode;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.cast.ResourcePoolComponent;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.core.common.hexes.codec.HexFieldCodec;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
@@ -30,19 +27,18 @@ public class HexContext {
     // === serialized fields ===
     @Nullable private Hex hex;
     @Nullable private HexRoot root;
-    @Nullable private HexStats hexStats;
+    @Nullable private HexCast cast;
     private float manaCost = -1f;
     private float manaMultiplier = 1.0f;
     @Nullable private HexStyleAsset style;
     @Nullable private HexVar defaultVariable;
     @Nullable private String castSlotKey;
     private Map<String, HexVar> variables = new HashMap<>();
-    @Nullable
-    private UUID executionId;
 
     // === transient fields ===
     private transient CommandBuffer<EntityStore> accessor;
-    private transient Deque<String> resolutionStack = new ArrayDeque<>();
+    @Nullable private transient Map<String, HexVar> localVariables;
+    @Nullable private transient Deque<String> resolutionStack;
     private transient boolean requireMagicCharges = true;
     private transient boolean consumeMana = true;
     private transient boolean applyVolatilityDecay = true;
@@ -54,26 +50,13 @@ public class HexContext {
     }
 
     public HexContext(Hex hex, float manaCost, HexRoot hexRoot, @Nullable HexStyleAsset style,
-            HexStats hexStats) {
+            HexCast cast) {
         this.hex = hex;
         this.manaCost = manaCost;
         this.root = hexRoot;
         this.style = style;
-        this.executionId = UUID.randomUUID();
-        setHexStats(hexStats);
-        this.branchId = hexStats != null ? hexStats.openBranch() : -1L;
-    }
-
-    public HexContext applyNonDefaultsFrom(@Nullable HexContext other) {
-        if (other == null) return this;
-        if (other.hex != null) this.hex = other.hex;
-        if (other.manaCost >= 0f) this.manaCost = other.manaCost;
-        if (other.manaMultiplier != 1.0f) this.manaMultiplier *= other.manaMultiplier;
-        if (other.style != null) this.style = other.style;
-        if (other.hexStats != null && this.hexStats != null) {
-            this.hexStats.applyOverridesFrom(other.hexStats);
-        }
-        return this;
+        this.cast = cast;
+        this.branchId = cast != null ? cast.openBranch() : -1L;
     }
 
     public static HexContext cloneState(HexContext src) {
@@ -81,14 +64,14 @@ public class HexContext {
         HexContext copy = new HexContext();
         copy.hex = src.hex != null ? src.hex.clone() : null;
         copy.root = src.root != null ? src.root.copy() : null;
-        copy.hexStats = src.hexStats != null ? src.hexStats.copy() : null;
+        copy.cast = src.cast != null ? src.cast.copy() : null;
         copy.manaCost = src.manaCost;
         copy.manaMultiplier = src.manaMultiplier;
         copy.style = src.style != null ? src.style.clone() : null;
         copy.defaultVariable = src.defaultVariable;
         copy.castSlotKey = src.castSlotKey;
         copy.variables = new HashMap<>(src.variables);
-        copy.executionId = src.executionId;
+        copy.localVariables = src.localVariables == null ? null : new HashMap<>(src.localVariables);
         copy.requireMagicCharges = src.requireMagicCharges;
         copy.consumeMana = src.consumeMana;
         copy.applyVolatilityDecay = src.applyVolatilityDecay;
@@ -102,9 +85,9 @@ public class HexContext {
         branch.root = this.root;
         branch.accessor = this.accessor;
         branch.hex = this.hex;
-        branch.hexStats = this.hexStats;
-        branch.executionId = this.executionId;
+        branch.cast = this.cast;
         branch.variables = this.variables;
+        branch.localVariables = this.localVariables;
         branch.style = this.style;
         branch.manaCost = this.manaCost;
         branch.manaMultiplier = this.manaMultiplier;
@@ -115,7 +98,7 @@ public class HexContext {
         branch.applyVolatilityDecay = this.applyVolatilityDecay;
         branch.bypassVolatilityDepletion = this.bypassVolatilityDepletion;
         branch.tierScale = this.tierScale;
-        branch.branchId = this.hexStats != null ? this.hexStats.openBranch() : -1L;
+        branch.branchId = this.cast != null ? this.cast.openBranch() : -1L;
         return branch;
     }
 
@@ -124,14 +107,14 @@ public class HexContext {
     }
 
     public void beginRootBranch() {
-        if (hexStats != null && branchId < 0L) {
-            this.branchId = hexStats.openBranch();
+        if (cast != null && branchId < 0L) {
+            this.branchId = cast.openBranch();
         }
     }
 
     public void endBranch() {
-        if (hexStats != null) {
-            hexStats.closeBranch(branchId);
+        if (cast != null) {
+            cast.closeBranch(branchId);
         }
     }
 
@@ -144,19 +127,20 @@ public class HexContext {
     }
 
     public boolean isResolving(String glyphId) {
-        return resolutionStack.contains(glyphId);
+        return resolutionStack != null && resolutionStack.contains(glyphId);
     }
 
     public void pushResolving(String glyphId) {
+        if (resolutionStack == null) resolutionStack = new ArrayDeque<>(4);
         resolutionStack.push(glyphId);
     }
 
     public void popResolving() {
-        resolutionStack.pop();
+        if (resolutionStack != null) resolutionStack.pop();
     }
 
     public int resolutionDepth() {
-        return resolutionStack.size();
+        return resolutionStack == null ? 0 : resolutionStack.size();
     }
 
     public void updateRuntimeAccessors(CommandBuffer<EntityStore> buffer) {
@@ -247,62 +231,63 @@ public class HexContext {
         this.variables.put(slot, value == null ? null : value.copy());
     }
 
-    @Nullable
-    public HexStats getHexStats() {
-        return hexStats;
+    public void enterLocalScope() {
+        this.localVariables = this.localVariables == null
+                ? new HashMap<>(4)
+                : new HashMap<>(this.localVariables);
     }
 
-    public void setHexStats(HexStats hexStats) {
-        this.hexStats = hexStats;
-        if (hexStats != null) {
-            hexStats.setExecutionId(this.executionId);
+    @Nullable
+    public HexVar getOwnVariable(String glyphId) {
+        if (this.localVariables != null) {
+            HexVar local = this.localVariables.get(glyphId);
+            if (local != null) return local;
         }
+        return this.variables.get(glyphId);
+    }
+
+    public void setOwnVariable(String glyphId, HexVar value) {
+        HexVar stored = value == null ? null : value.copy();
+        if (this.localVariables != null) this.localVariables.put(glyphId, stored);
+        this.variables.put(glyphId, stored);
+    }
+
+    @Nullable
+    public HexCast cast() {
+        return cast;
+    }
+
+    public void setCast(@Nullable HexCast cast) {
+        this.cast = cast;
+    }
+
+    @Nullable
+    public VolatilityComponent volatility() {
+        return cast != null ? cast.volatility() : null;
+    }
+
+    @Nullable
+    public ResourcePoolComponent resources() {
+        return cast != null ? cast.resources() : null;
     }
 
     public float getResource(String id) {
-        return hexStats != null ? hexStats.getResource(id) : 0f;
+        ResourcePoolComponent pools = resources();
+        return pools != null ? pools.getResource(id) : 0f;
     }
 
-    public void addResource(String id, float amount) {
-        if (hexStats != null) hexStats.addResource(id, amount);
+    public void addResource(String id, String source, float amount) {
+        if (cast != null) cast.mutableResources().addResource(id, source, amount);
     }
 
-    public float consumeResource(String id, float cap) {
-        return hexStats != null ? hexStats.consumeResource(id, cap) : 0f;
+    public float consumeResource(String id, String spender, float cap) {
+        ResourcePoolComponent pools = resources();
+        return pools != null ? pools.consumeResource(id, spender, cap) : 0f;
     }
 
     public Map<String, Float> getResources() {
-        return hexStats != null ? hexStats.getResources() : Map.of();
-    }
-
-    public float getVolatilityOverride() {
-        return this.hexStats != null ? this.hexStats.getInitialVolatility() : 0f;
-    }
-
-    public void setVolatilityOverride(float volatilityOverride) {
-        if (this.hexStats == null) return;
-        this.hexStats.setVolatility(volatilityOverride);
-        this.hexStats.setInitialVolatility(volatilityOverride);
-    }
-
-    public float getVolatilityMultiplier() {
-        return this.hexStats != null ? this.hexStats.getVolatilityMultiplier() : 1.0f;
-    }
-
-    public void setVolatilityMultiplier(float v) {
-        if (this.hexStats != null) this.hexStats.setVolatilityMultiplier(v);
-    }
-
-    public float getPowerMultiplier() {
-        return this.hexStats != null ? this.hexStats.getComplexityMultiplier() : 1.0f;
-    }
-
-    public void setPowerMultiplier(float v) {
-        if (this.hexStats != null) this.hexStats.setComplexityMultiplier(v);
-    }
-
-    public float getMagicPowerMultiplier() {
-        return getPowerMultiplier();
+        ResourcePoolComponent pools = resources();
+        return pools != null ? pools.getResources() : Map.of();
     }
 
     public float getManaMultiplier() {
@@ -375,8 +360,9 @@ public class HexContext {
         this.castSlotKey = castSlotKey;
     }
 
+    @Nullable
     public UUID getExecutionId() {
-        return executionId;
+        return cast != null ? cast.getExecutionId() : null;
     }
 
     public void toStringWalk(String id, StringBuilder sb, String prefix, boolean last, Set<String> visited) {
@@ -402,57 +388,12 @@ public class HexContext {
 
         sb.append("\n");
         String childPrefix = prefix + (last ? "    " : "│   ");
-        List<String> nextLinks = node.getNextLinks();
-        for (int i = 0; i < nextLinks.size(); i++) {
-            toStringWalk(nextLinks.get(i), sb, childPrefix, i == nextLinks.size() - 1, visited);
+        List<String> flowLinks = node.getFlowLinks();
+        for (int i = 0; i < flowLinks.size(); i++) {
+            toStringWalk(flowLinks.get(i), sb, childPrefix, i == flowLinks.size() - 1, visited);
         }
 
         visited.remove(id);
     }
 
-    public static final BuilderCodec<HexContext> CODEC = BuilderCodec
-            .builder(HexContext.class, HexContext::new)
-            .append(new KeyedCodec<>("Hex", HexFieldCodec.IMBUE),
-                    (c, v) -> c.hex = v,
-                    c -> c.hex)
-            .add()
-            .append(new KeyedCodec<>("Root", HexRoot.CODEC),
-                    (c, v) -> c.root = v,
-                    c -> c.root)
-            .add()
-            .append(new KeyedCodec<>("ManaCost", Codec.FLOAT),
-                    (c, v) -> c.manaCost = v,
-                    c -> c.manaCost)
-            .add()
-            .append(new KeyedCodec<>("ManaMultiplier", Codec.FLOAT),
-                    (c, v) -> c.manaMultiplier = v,
-                    c -> c.manaMultiplier)
-            .add()
-            .append(new KeyedCodec<>("HexStats", HexStats.CODEC),
-                    (c, v) -> c.hexStats = v,
-                    c -> c.hexStats)
-            .add()
-            .append(new KeyedCodec<>("Style", HexStyleAsset.CODEC),
-                    (c, v) -> c.style = v,
-                    c -> c.style)
-            .add()
-            .append(new KeyedCodec<>("DefaultVariable", HexVar.CODEC),
-                    (c, v) -> c.defaultVariable = v,
-                    c -> c.defaultVariable)
-            .add()
-            .append(new KeyedCodec<>("CastSlotKey", Codec.STRING),
-                    (c, v) -> c.castSlotKey = v,
-                    c -> c.castSlotKey)
-            .add()
-            .append(new KeyedCodec<>("Variables", new MapCodec<>(HexVar.CODEC, HashMap::new)),
-                    (c, v) -> c.variables = v,
-                    c -> c.variables)
-            .metadata(UIDisplayMode.HIDDEN)
-            .add()
-            .append(new KeyedCodec<>("ExecutionId", Codec.UUID_STRING),
-                    (c, v) -> c.executionId = v,
-                    c -> c.executionId)
-            .metadata(UIDisplayMode.HIDDEN)
-            .add()
-            .build();
 }

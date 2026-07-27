@@ -1,0 +1,43 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Query",
+  "Title": "hexcode.glyphs.Query.name",
+  "Description": "hexcode.glyphs.Query.description",
+  "ShapeStructure": [
+    { "Parent": "Up", "RelativeSize": 1.0, "StatContribution": 0 },
+    { "Parent": "Antiline", "RelativeSize": 1.0, "StatContribution": 0 },
+    { "Parent": "Down", "RelativeSize": 1.0, "StatContribution": 0 }
+  ],
+  "Slots": {
+    "Trilean": {
+      "Type": "Boolean",
+      "Parent": "Boolean",
+      "Label": "hexcode.glyphs.Query.trilean.name",
+      "Description": "hexcode.glyphs.Query.trilean.description",
+      "DefaultValue": 0,
+      "NegativeLabel": "hexcode.glyphs.Query.trilean.negative",
+      "NegativeDescription": "hexcode.glyphs.Query.trilean.negative.description",
+      "NeutralLabel": "hexcode.glyphs.Query.trilean.neutral",
+      "NeutralDescription": "hexcode.glyphs.Query.trilean.neutral.description",
+      "PositiveLabel": "hexcode.glyphs.Query.trilean.positive",
+      "PositiveDescription": "hexcode.glyphs.Query.trilean.positive.description"
+    },
+    "Reference": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Query.reference.name",
+      "Description": "hexcode.glyphs.Query.reference.description"
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Query.Next.name",
+      "Description": "hexcode.glyphs.Query.Next.description"
+    }
+  },
+  "ManaConsumption": 0,
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.0
+  }
+}

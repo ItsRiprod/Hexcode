@@ -10,7 +10,6 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blockhitbox.BlockBoundingBoxes;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
@@ -26,6 +25,9 @@ import com.riprod.hexcode.core.common.protection.BlockAction;
 import com.riprod.hexcode.core.common.protection.HexProtection;
 
 public class BlockUtils {
+
+    private static final Rotation3f PRESERVE_ROTATION =
+            new Rotation3f(Float.NaN, Float.NaN, Float.NaN);
 
     public static Box resolveBlockDisplayBox(World world, Vector3i blockPos) {
         int rotation = world.getBlockRotationIndex(blockPos.x(), blockPos.y(), blockPos.z());
@@ -111,16 +113,10 @@ public class BlockUtils {
                 return;
             }
 
-            TransformComponent tc = accessor.getComponent(entityRef,
-                    TransformComponent.getComponentType());
-            if (tc == null) return;
+            if (accessor.getComponent(entityRef, TransformComponent.getComponentType()) == null) return;
 
-            Rotation3f rotation = tc.getRotation();
-            Player player = accessor.getComponent(entityRef, Player.getComponentType());
-            Teleport teleport = player != null
-                    ? Teleport.createForPlayer(dest, rotation)
-                    : new Teleport(dest, rotation);
-            accessor.addComponent(entityRef, Teleport.getComponentType(), teleport);
+            accessor.putComponent(entityRef, Teleport.getComponentType(),
+                    new Teleport(dest, PRESERVE_ROTATION));
         } else if (var instanceof BlockVar blockVar && blockVar.getValue() != null) {
             moveBlockGated(blockVar.getValue(), dest, world, accessor, caster, glyphName);
         } else if (var instanceof PositionVar posVar && posVar.getValue() != null) {

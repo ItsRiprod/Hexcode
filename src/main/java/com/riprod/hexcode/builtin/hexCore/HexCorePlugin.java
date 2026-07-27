@@ -47,6 +47,7 @@ import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphDrawnDisabledNotif
 import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphMemoryListener;
 import com.riprod.hexcode.builtin.hexCore.execution.config.EncodedConfig;
 import com.riprod.hexcode.builtin.hexCore.execution.config.ExecutionConfig;
+import com.riprod.hexcode.builtin.hexCore.execution.config.OverlayConfig;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.asset.profiles.ArmorProfile;
 import com.riprod.hexcode.core.common.imbuement.asset.profiles.BlockProfile;
@@ -179,6 +180,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.output.OutputGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.pi.PiValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.position.PositionValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.power.PowerGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.query.QueryGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.root.RootGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation.RotationValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation.handler.RotationConstructHandler;
@@ -285,6 +287,7 @@ public class HexCorePlugin extends JavaPlugin {
         GlyphRegistry.register(new SoundGlyph());
         GlyphRegistry.register(new PositionValue());
         GlyphRegistry.register(new RotationValue());
+        GlyphRegistry.register(new QueryGlyph());
         GlyphRegistry.register(new DotGlyph());
         GlyphRegistry.register(new CrossGlyph());
         GlyphRegistry.register(new NumberValue());
@@ -420,6 +423,7 @@ public class HexCorePlugin extends JavaPlugin {
     }
 
     private void RegisterHexConfigs() {
+        HexConfigAsset.CODEC.register(Priority.DEFAULT, "Overlay", OverlayConfig.class, OverlayConfig.CODEC);
         HexConfigAsset.CODEC.register("ExecutionConfig", ExecutionConfig.class, ExecutionConfig.CODEC);
         HexConfigAsset.CODEC.register("EncodedConfig", EncodedConfig.class, EncodedConfig.CODEC);
     }

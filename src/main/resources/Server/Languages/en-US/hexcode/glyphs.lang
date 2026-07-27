@@ -336,6 +336,21 @@ Power.b.description=Exponent
 Power.Next.name=Next
 Power.Next.description=The next glyph in the execution chain
 
+Query.name=Query
+Query.description=Reads the value of the Reference
+Query.trilean.name=Trilean
+Query.trilean.description=Selects which channel to read
+Query.trilean.negative=Low
+Query.trilean.negative.description=Stamina, X, Pitch, Red, or max volatility
+Query.trilean.neutral=Mid
+Query.trilean.neutral.description=Mana, Y, Yaw, Green, or remaining volatility
+Query.trilean.positive=High
+Query.trilean.positive.description=Health, Z, Roll, Blue, or accrued resources
+Query.reference.name=Reference
+Query.reference.description=The value to read from
+Query.Next.name=Next
+Query.Next.description=The next glyph in the execution chain
+
 Root.name=Root
 Root.description=The B-th root of A
 Root.a.name=A
@@ -393,7 +408,9 @@ Color.Next.description=The next glyph in the execution chain
 Shape.name=Shape
 Shape.description=Adopt the appearance of another glyph for the rest of the hex
 Shape.Shape.name=Shape
-Shape.Shape.description=Linked glyph whose style is applied as an override
+Shape.Shape.description=Linked glyph whose appearance is adopted
+Shape.Scale.name=Scale
+Shape.Scale.description=Visual size of the adopted appearance, from 0.1 to 4
 Shape.Next.name=Next
 Shape.Next.description=The next glyph in the execution chain
 
