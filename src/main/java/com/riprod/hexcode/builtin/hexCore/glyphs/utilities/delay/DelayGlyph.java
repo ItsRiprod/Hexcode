@@ -15,11 +15,8 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
-import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.modules.projectile.ProjectileModule;
@@ -40,7 +37,6 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.utils.HexVarUtil;
-import com.riprod.hexcode.utils.VfxUtil;
 
 public class DelayGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -158,18 +154,10 @@ public class DelayGlyph implements GlyphHandler {
                     new TransformComponent(spawnPos, rot));
         }
 
-        String modelId = VfxUtil.resolveModelId(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
-        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
-        Box box = FALLBACK_BOX;
-        if (modelAsset != null) {
-            Model model = Model.createScaledModel(modelAsset, 1.0f);
-            box = model.getBoundingBox();
-
-            holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
-            holder.addComponent(PersistentModel.getComponentType(),
-                    new PersistentModel(model.toReference()));
-        } else {
-            LOGGER.atWarning().log("delay: model asset '%s' not found", modelId);
+        Model model = HexConstructSpawner.attachModel(holder, hexContext, asset, 1.0f);
+        Box box = model != null ? model.getBoundingBox() : FALLBACK_BOX;
+        if (model == null) {
+            LOGGER.atWarning().log("delay: no model resolved for construct");
         }
 
         DelayConfig config = getConfig(DelayConfig.class, asset);

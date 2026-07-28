@@ -7,6 +7,6 @@
     "EntityTopTint": "#6699CC",
     "WorldSoundEventId": "SFX_Avatar_Powers_Enable"
   },
-  "StatusEffectIcon": "UI/StatusEffects/Hexcode/Fortify.png",
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/Fortify.png",
   "Name": "hexcode.effects.fortify"
 }

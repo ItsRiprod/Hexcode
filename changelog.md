@@ -100,4 +100,24 @@
 - Increased Resource to 8 per shape (was 2) 
 - Decreased Base Resource on staffs
 
+- State is now properly cleaned on disconnect (no more "still holding" concentration after reconnect)
+- `Hexcode Reset` got updated to clean up a few more odd resources
+- Rotation now queues the teleport and doesn't overflow the `byte` pending teleport id (currently hytale casts an incremented `int` to a `byte` without range-checking - so the client overflows `-128` and sends an invalid teleportation id. Low and behold: crash)
+- Rotation now resets Roll after 30s (i may mess with this timing a bit)
+- Concentration now has `manaPerSecond` `hpPerSecond` and `staminaPerSecond` fields
+- Concentration now properly gives 3 volatility/s by default and does not stack
+- Concentration fields are lossy after 5/s
+- Staff interactions take less stamina on-use (now up to 25% of your stamina rather than 50%)
+- Arc properly works now
+- Trigger Glyphs properly remove their component ( @airun2518 the OnUse bug you found - it wasn't concentrate, concentrate just showed it better)
+- Fixed icon pathing for some status effects
+- A few other small bugfixes
+
+- Rotation is now properly applied to blocks
+- Rotation is properly read from blocks
+- Query Glyph was added and allows a way to read stats from entities, the player, the glyph, blocks, etc
+- HexStats were moved to a Component
+- HexContext is now psudo-ECS by passing a stable ID instead of object reference
+- AOE threads are isolated with a thread-local impl that enables reliably reading from other variables in the thread
+
 - Probably much more. I tried keeping a running note this time

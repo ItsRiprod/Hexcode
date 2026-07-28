@@ -83,6 +83,126 @@
             }
           }
         }
+      },
+      {
+        "Type": "Single",
+        "Weight": 100,
+        "Item": {
+          "ItemId": "Hex_Page_Common",
+          "QuantityMin": 1,
+          "QuantityMax": 1,
+          "Metadata": {
+            "PageHex": "Hex_Null_Zone",
+            "ItemDisplay": {
+              "Name": {
+                "MessageId": "hexcode.pages.null_zone.name"
+              },
+              "Description": {
+                "MessageId": "hexcode.pages.null_zone.description"
+              }
+            }
+          }
+        }
+      },
+      {
+        "Type": "Single",
+        "Weight": 100,
+        "Item": {
+          "ItemId": "Hex_Page_Common",
+          "QuantityMin": 1,
+          "QuantityMax": 1,
+          "Metadata": {
+            "PageHex": "Hex_Discharge",
+            "ItemDisplay": {
+              "Name": {
+                "MessageId": "hexcode.pages.discharge.name"
+              },
+              "Description": {
+                "MessageId": "hexcode.pages.discharge.description"
+              }
+            }
+          }
+        }
+      },
+      {
+        "Type": "Single",
+        "Weight": 100,
+        "Item": {
+          "ItemId": "Hex_Page_Common",
+          "QuantityMin": 1,
+          "QuantityMax": 1,
+          "Metadata": {
+            "PageHex": "Hex_Blinks_Edge",
+            "ItemDisplay": {
+              "Name": {
+                "MessageId": "hexcode.pages.blinks_edge.name"
+              },
+              "Description": {
+                "MessageId": "hexcode.pages.blinks_edge.description"
+              }
+            }
+          }
+        }
+      },
+      {
+        "Type": "Single",
+        "Weight": 100,
+        "Item": {
+          "ItemId": "Hex_Page_Common",
+          "QuantityMin": 1,
+          "QuantityMax": 1,
+          "Metadata": {
+            "PageHex": "Hex_Bridge",
+            "ItemDisplay": {
+              "Name": {
+                "MessageId": "hexcode.pages.bridge.name"
+              },
+              "Description": {
+                "MessageId": "hexcode.pages.bridge.description"
+              }
+            }
+          }
+        }
+      },
+      {
+        "Type": "Single",
+        "Weight": 100,
+        "Item": {
+          "ItemId": "Hex_Page_Common",
+          "QuantityMin": 1,
+          "QuantityMax": 1,
+          "Metadata": {
+            "PageHex": "Hex_Fear",
+            "ItemDisplay": {
+              "Name": {
+                "MessageId": "hexcode.pages.fear.name"
+              },
+              "Description": {
+                "MessageId": "hexcode.pages.fear.description"
+              }
+            }
+          }
+        }
+      },
+      {
+        "Type": "Single",
+        "Weight": 100,
+        "Item": {
+          "ItemId": "Hex_Page_Common",
+          "QuantityMin": 1,
+          "QuantityMax": 1,
+          "Metadata": {
+            "PageHex": "Hex_Misty_Step",
+            "ItemDisplay": {
+              "Name": {
+                "MessageId": "hexcode.pages.misty_step.name"
+              },
+              "Description": {
+                "MessageId": "hexcode.pages.misty_step.description"
+              }
+            }
+          }
+        }
       }
     ]
   }

@@ -1,4 +1,4 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc;
+package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc;
 
 public final class ArcGlyphSlots {
     private ArcGlyphSlots() {

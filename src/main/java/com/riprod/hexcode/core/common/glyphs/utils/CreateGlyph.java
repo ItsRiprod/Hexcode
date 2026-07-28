@@ -112,22 +112,17 @@ public class CreateGlyph {
   }
 
   private static Model withAttachments(Model scaled, GlyphAsset asset) {
-    if (scaled.getAttachments() != null && scaled.getAttachments().length > 0) {
+    ModelAttachment[] existing = scaled.getAttachments();
+    if (existing != null && existing.length > 0) {
       return scaled;
     }
 
-    ModelAttachment[] derived = GlyphAttachments.derive(asset);
+    ModelAttachment[] derived = GlyphModelUtil.resolveAttachments(asset, existing);
     if (derived.length == 0) {
       return scaled;
     }
 
-    return new Model(scaled.getModelAssetId(), scaled.getScale(), scaled.getRandomAttachmentIds(),
-        derived, scaled.getBoundingBox(), scaled.getModel(), scaled.getTexture(),
-        scaled.getGradientSet(), scaled.getGradientId(), scaled.getEyeHeight(),
-        scaled.getCrouchOffset(), scaled.getSittingOffset(), scaled.getSleepingOffset(),
-        scaled.getAnimationSetMap(), scaled.getCamera(), scaled.getLight(), scaled.getParticles(),
-        scaled.getTrails(), scaled.getPhysicsValues(), scaled.getDetailBoxes(), scaled.getPhobia(),
-        scaled.getPhobiaModelAssetId());
+    return GlyphModelUtil.rebuild(scaled, derived, scaled.getBoundingBox());
   }
 
   public static Ref<EntityStore> createGlyph(CommandBuffer<EntityStore> accessor, GlyphComponent glyph,

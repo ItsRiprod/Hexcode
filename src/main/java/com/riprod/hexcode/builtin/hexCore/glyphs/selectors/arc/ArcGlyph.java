@@ -1,4 +1,4 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc;
+package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc;
 
 import java.util.HashSet;
 import java.util.List;
@@ -52,7 +52,8 @@ public class ArcGlyph implements GlyphHandler {
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         ArcConfig config = getConfig(ArcConfig.class, asset);
-        if (config == null) config = ArcConfig.DEFAULTS;
+        if (config == null)
+            config = ArcConfig.DEFAULTS;
 
         List<String> outputLinks = glyph.getNextLinks();
         if (outputLinks.isEmpty()) {
@@ -80,9 +81,6 @@ public class ArcGlyph implements GlyphHandler {
         }
 
         Set<UUID> exclusions = new HashSet<>();
-        UUIDComponent casterUuid = accessor.getComponent(
-                hexContext.getCasterRef(accessor), UUIDComponent.getComponentType());
-        if (casterUuid != null) exclusions.add(casterUuid.getUuid());
 
         if (targetVar instanceof EntityVar entityVar) {
             Ref<EntityStore> hostRef = entityVar.getRef(accessor);
@@ -92,7 +90,8 @@ public class ArcGlyph implements GlyphHandler {
                 return;
             }
             UUIDComponent hostUuid = accessor.getComponent(hostRef, UUIDComponent.getComponentType());
-            if (hostUuid != null) exclusions.add(hostUuid.getUuid());
+            if (hostUuid != null)
+                exclusions.add(hostUuid.getUuid());
 
             ArcState state = new ArcState(glyph, outputLinks, exclusions, range, interval, iterations, false);
             HexConstructSpawner.applyWithState(accessor, hostRef, hexContext, glyph, ArcGlyph.ID, state);
@@ -109,13 +108,17 @@ public class ArcGlyph implements GlyphHandler {
         ArcState state = new ArcState(glyph, outputLinks, exclusions, range, interval, iterations, true);
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                 accessor, hexContext, glyph, ArcGlyph.ID, new Vector3d(origin), state);
+        UUIDComponent uuidComponent = new UUIDComponent(UUID.randomUUID());
+        holder.addComponent(UUIDComponent.getComponentType(), uuidComponent);
+        exclusions.add(uuidComponent.getUuid());
         applyMarkerModel(holder, config.getModel());
         accessor.addEntity(holder, AddReason.SPAWN);
     }
 
     private static void applyMarkerModel(Holder<EntityStore> holder, String modelId) {
         ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(modelId);
-        if (modelAsset == null) return;
+        if (modelAsset == null)
+            return;
 
         Model model = Model.createUnitScaleModel(modelAsset);
         holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));

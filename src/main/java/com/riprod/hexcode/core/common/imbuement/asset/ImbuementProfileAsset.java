@@ -22,7 +22,7 @@ import com.hypixel.hytale.server.core.asset.type.item.config.ItemCategory;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
@@ -48,7 +48,7 @@ public abstract class ImbuementProfileAsset
     protected ItemArmorSlot armorSlot;
     protected String[] excludedCategories = new String[0];
     @Nullable
-    protected HexContext defaults;
+    protected String defaultsId;
     @Nullable
     protected String displayModelOverride;
     protected Map<PedestalState, String> stateAnimations = new EnumMap<>(PedestalState.class);
@@ -83,8 +83,9 @@ public abstract class ImbuementProfileAsset
     }
 
     @Nullable
-    public HexContext getDefaults() {
-        return defaults;
+    public HexConfigAsset getDefaults() {
+        if (this.defaultsId == null) return null;
+        return HexConfigAsset.getAssetMap().getAsset(this.defaultsId);
     }
 
     @Nullable
@@ -173,10 +174,11 @@ public abstract class ImbuementProfileAsset
                 .addValidatorLate(() -> new ArrayValidator<>(ItemCategory.VALIDATOR_CACHE.getValidator().late()).late())
                 .documentation("Optional. If any of an item's Categories matches an entry in this list, the profile rejects the item.")
                 .add()
-                .appendInherited(new KeyedCodec<>("Defaults", HexContext.CODEC),
-                        (a, v) -> a.defaults = v,
-                        a -> a.defaults,
-                        (a, p) -> a.defaults = p.defaults)
+                .appendInherited(new KeyedCodec<>("Defaults", HexConfigAsset.CHILD_ASSET_CODEC),
+                        (a, v) -> a.defaultsId = v,
+                        a -> a.defaultsId,
+                        (a, p) -> a.defaultsId = p.defaultsId)
+                .addValidatorLate(() -> HexConfigAsset.VALIDATOR_CACHE.getValidator().late())
                 .documentation("Optional per-profile cast value defaults. Applied after player resolution and before per-imbuement Overrides.")
                 .add()
                 .appendInherited(new KeyedCodec<>("DisplayModelOverride", Codec.STRING),

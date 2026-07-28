@@ -15,11 +15,15 @@ public class ConcentrationState implements ConstructState {
 
     private float elapsedSeconds;
 
-    private int resource;
+    private float manaRate;
 
-    private boolean upkeepActive;
+    private float staminaRate;
 
-    private float manaAccum;
+    private float healthRate;
+
+    private float healthDamageAccum;
+
+    private float bonusVolatilityPerSecond;
 
     public ConcentrationState() {
     }
@@ -49,28 +53,44 @@ public class ConcentrationState implements ConstructState {
         this.elapsedSeconds = elapsedSeconds;
     }
 
-    public int getResource() {
-        return resource;
+    public float getManaRate() {
+        return manaRate;
     }
 
-    public void setResource(int resource) {
-        this.resource = resource;
+    public void setManaRate(float manaRate) {
+        this.manaRate = manaRate;
     }
 
-    public boolean isUpkeepActive() {
-        return upkeepActive;
+    public float getStaminaRate() {
+        return staminaRate;
     }
 
-    public void setUpkeepActive(boolean upkeepActive) {
-        this.upkeepActive = upkeepActive;
+    public void setStaminaRate(float staminaRate) {
+        this.staminaRate = staminaRate;
     }
 
-    public float getManaAccum() {
-        return manaAccum;
+    public float getHealthRate() {
+        return healthRate;
     }
 
-    public void setManaAccum(float manaAccum) {
-        this.manaAccum = manaAccum;
+    public void setHealthRate(float healthRate) {
+        this.healthRate = healthRate;
+    }
+
+    public float getHealthDamageAccum() {
+        return healthDamageAccum;
+    }
+
+    public void setHealthDamageAccum(float healthDamageAccum) {
+        this.healthDamageAccum = healthDamageAccum;
+    }
+
+    public float getBonusVolatilityPerSecond() {
+        return bonusVolatilityPerSecond;
+    }
+
+    public void setBonusVolatilityPerSecond(float bonusVolatilityPerSecond) {
+        this.bonusVolatilityPerSecond = bonusVolatilityPerSecond;
     }
 
     @Override
@@ -78,9 +98,11 @@ public class ConcentrationState implements ConstructState {
         ConcentrationState c = new ConcentrationState(visualRef);
         c.tickAccum = this.tickAccum;
         c.elapsedSeconds = this.elapsedSeconds;
-        c.resource = this.resource;
-        c.upkeepActive = this.upkeepActive;
-        c.manaAccum = this.manaAccum;
+        c.manaRate = this.manaRate;
+        c.staminaRate = this.staminaRate;
+        c.healthRate = this.healthRate;
+        c.healthDamageAccum = this.healthDamageAccum;
+        c.bonusVolatilityPerSecond = this.bonusVolatilityPerSecond;
         return c;
     }
 }

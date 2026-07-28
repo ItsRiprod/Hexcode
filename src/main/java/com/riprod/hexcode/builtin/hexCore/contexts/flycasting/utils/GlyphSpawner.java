@@ -32,7 +32,7 @@ public class GlyphSpawner {
         glyph.setSelfRef(glyphRef);
         hex.addChildGlyphRef(glyph.getId(), glyphRef);
 
-        List<Glyph> children = hex.getGlyphs(glyph.getNext());
+        List<Glyph> children = hex.getGlyphs(glyph.getFlowLinks());
 
         List<Rotation3f> childRotations = GlyphMath.getChildRotations(children.size(), glyph.getScale(), glyph.getRotation().z());
 

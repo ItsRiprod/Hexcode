@@ -6,7 +6,7 @@
   "Description": "hexcode.glyphs.Snap.description",
   "ModelPath": "Snap",
   "BasePower": 1.0,
-  "ManaConsumption": 15,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     {
       "Parent": "Circle",

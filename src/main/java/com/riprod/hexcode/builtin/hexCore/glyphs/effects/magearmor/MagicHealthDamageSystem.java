@@ -18,7 +18,7 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageModule;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor.component.MagicHealthComponent;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 
 public class MagicHealthDamageSystem extends DamageEventSystem {
 
@@ -45,15 +45,15 @@ public class MagicHealthDamageSystem extends DamageEventSystem {
             if (incoming <= 0f) return;
 
             Ref<EntityStore> ref = chunk.getReferenceTo(index);
-            HexStats stats = findMageArmorVolatility(buffer, ref);
+            VolatilityComponent stats = findMageArmorVolatility(buffer, ref);
             if (stats == null) return;
 
-            float available = stats.getCurrentVolatility();
+            float available = stats.getCurrent();
             if (available <= 0f) return;
 
             float absorbed = Math.min(incoming, available);
             float multiplier = stats.getVolatilityMultiplier();
-            stats.consumeVolatility(multiplier > 0f ? absorbed / multiplier : absorbed);
+            stats.consume(multiplier > 0f ? absorbed / multiplier : absorbed);
             damage.setAmount(incoming - absorbed);
         } catch (Exception e) {
             LOGGER.atSevere().log("MagicHealthDamageSystem failed: %s", e.getMessage());
@@ -61,10 +61,10 @@ public class MagicHealthDamageSystem extends DamageEventSystem {
     }
 
     @Nullable
-    private HexStats findMageArmorVolatility(CommandBuffer<EntityStore> buffer, Ref<EntityStore> ref) {
-        AtomicReference<HexStats> found = new AtomicReference<>();
+    private VolatilityComponent findMageArmorVolatility(CommandBuffer<EntityStore> buffer, Ref<EntityStore> ref) {
+        AtomicReference<VolatilityComponent> found = new AtomicReference<>();
         ConstructStateUtil.forEachStatus(buffer, ref, MageArmorGlyph.ID, (id, status) -> {
-            if (found.get() == null) found.set(status.getHexContext().getHexStats());
+            if (found.get() == null) found.set(status.getHexContext().volatility());
         });
         return found.get();
     }

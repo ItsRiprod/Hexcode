@@ -38,13 +38,23 @@ public final class HexProtection {
     private HexProtection() {
     }
 
+    /**
+     * Event-free half of {@link #canModifyBlock}: the world-config gate only, with no
+     * Break/PlaceBlockEvent probe. For hot paths that already route through an engine pipeline
+     * which fires its own cancellable event (e.g. BlockHarvestUtils), so the block action is not
+     * announced twice.
+     */
+    public static boolean isBlockActionAllowed(World world, BlockAction action) {
+        var worldConfig = world.getGameplayConfig().getWorldConfig();
+        return switch (action) {
+            case BREAK -> worldConfig.isBlockBreakingAllowed();
+            case PLACE -> worldConfig.isBlockPlacementAllowed();
+        };
+    }
+
     public static boolean canModifyBlock(World world, Ref<EntityStore> casterRef,
             CommandBuffer<EntityStore> accessor, Vector3i pos, BlockAction action) {
-        var worldConfig = world.getGameplayConfig().getWorldConfig();
-        if (action == BlockAction.BREAK && !worldConfig.isBlockBreakingAllowed()) {
-            return false;
-        }
-        if (action == BlockAction.PLACE && !worldConfig.isBlockPlacementAllowed()) {
+        if (!isBlockActionAllowed(world, action)) {
             return false;
         }
 

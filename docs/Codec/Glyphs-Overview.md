@@ -535,6 +535,26 @@ Constructs a rotation from pitch, yaw, roll components. Wire number glyphs into 
 
 ---
 
+### \[Λ|V\] Query
+
+The inverse of Position and Rotation. Where those build a value out of three components, Query pulls one component back out of whatever is wired to Reference. The Trilean toggle picks which one, and what it means depends on what you wired in.
+
+| Reference | \-1 | 0 | \+1 |
+| --- | --- | --- | --- |
+| Entity | Stamina | Mana | Health |
+| Position or Block | X | Y | Z |
+| Rotation | Pitch | Yaw | Roll |
+| Color | Red | Green | Blue |
+| Number | the number | the number | the number |
+
+A Number has only one channel, so all three states hand it straight back.
+
+Leave Reference empty and Query reads the spell itself instead: \-1 gives the volatility you started with, 0 gives what is left, and \+1 gives the total resources the cast has accrued so far.
+
+Wiring a single-shape glyph into the Trilean slot reads that shape's Resource instead of using its value \- Force reads Lightning, Delay reads Water, Chaos reads Fire, Drain reads Ice, Halt reads Void, and Identify reads Life. The glyph is only being pointed at, never run, so no force is applied and no delay happens. This only works with Reference empty; wire something into Reference and the Trilean slot goes back to reading values normally.
+
+---
+
 ### \[/\<□\>\] Style (Deprecated - use Color)
 
 Sets the color of the execution at this point. Returns a 4 param vector (R, G, B, A) if value extracted

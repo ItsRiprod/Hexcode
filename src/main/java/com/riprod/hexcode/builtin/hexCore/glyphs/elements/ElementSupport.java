@@ -34,12 +34,17 @@ public final class ElementSupport {
                 asset.getSlot(RESOURCE_LIMIT_SLOT)).floatValue();
     }
 
-    public static float consumeResource(HexContext hexContext, @Nullable String resource, float cap) {
-        float fromArcane = hexContext.consumeResource(ARCANE_RESOURCE, cap);
-        if (resource == null || resource.equals(ARCANE_RESOURCE)) return fromArcane;
-        float remaining = cap < 0f ? -1f : Math.max(0f, cap - fromArcane);
-        if (cap >= 0f && remaining <= 0f) return fromArcane;
-        return fromArcane + hexContext.consumeResource(resource, remaining);
+    public static float consumeResource(HexContext hexContext, Glyph glyph, @Nullable String resource,
+            float cap) {
+        String spender = glyph != null ? glyph.getGlyphId() : null;
+        if (resource == null || resource.equals(ARCANE_RESOURCE)) {
+            return hexContext.consumeResource(ARCANE_RESOURCE, spender, cap);
+        }
+        // arcane is the generic fallback, so the element pool drains first
+        float fromElement = hexContext.consumeResource(resource, spender, cap);
+        float remaining = cap < 0f ? -1f : Math.max(0f, cap - fromElement);
+        if (cap >= 0f && remaining <= 1e-4f) return fromElement;
+        return fromElement + hexContext.consumeResource(ARCANE_RESOURCE, spender, remaining);
     }
 
     @Nullable

@@ -8,7 +8,8 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.cast.ResourcePoolComponent;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -24,7 +25,7 @@ public interface GlyphHandler {
     String getId();
 
     default HexVar readValue(Glyph glyph, HexContext hexContext) {
-        return hexContext.getVariable(glyph.getId());
+        return hexContext.getOwnVariable(glyph.getId());
     }
 
     default float collectMana(Glyph glyph, GlyphAsset asset) {
@@ -35,29 +36,31 @@ public interface GlyphHandler {
     }
 
     default void execute0(Glyph glyph, HexContext hexContext) {
-        HexStats tracker = hexContext.getHexStats();
-        if (tracker == null) {
+        HexCast cast = hexContext.cast();
+        if (cast == null) {
             execute(glyph, hexContext);
             return;
         }
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
 
         float volatilityCost = getVolatilityCost(glyph, hexContext, asset);
-        float currentVolatility = tracker.consumeVolatility(volatilityCost);
+        float currentVolatility = cast.volatility().consume(volatilityCost);
         if (!hexContext.isBypassVolatilityDepletion() && currentVolatility <= 0f) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.VOLATILITY_DEPLETED);
             return;
         }
 
         if (asset != null) {
+            String source = glyph.getGlyphId();
             for (ShapeAsset shape : asset.getShapes()) {
                 String resource = shape.getStatResource();
                 if (resource == null) continue;
                 float raw = Impact.scale(shape.getStatResourceImpact(), shape.getStatContribution());
                 if (raw <= 0f) continue;
-                float effectiveness = GlyphCostUtil.contributionEffectiveness(tracker.getContributed(resource));
-                tracker.addResource(resource, raw * effectiveness);
-                tracker.addContributed(resource, raw);
+                ResourcePoolComponent pools = cast.mutableResources();
+                float effectiveness = GlyphCostUtil.contributionEffectiveness(
+                        pools.getBasis(resource, source));
+                pools.addResource(resource, source, raw * effectiveness);
             }
         }
 

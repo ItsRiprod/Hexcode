@@ -60,11 +60,11 @@ public final class FlycastingScene {
                 if (hexComp != null) {
                     CleanupUtils.safeRemoveEntities(buffer, hexComp.getChildGlyphRefsList());
                 }
-                CleanupUtils.safeRemoveEntity(buffer, hexRef);
+                CleanupUtils.safeRemoveMountParent(buffer, hexRef);
             }
             activeHexes.clear();
 
-            CleanupUtils.safeRemoveEntity(buffer, state.getCastingRootRef());
+            CleanupUtils.safeRemoveMountParent(buffer, state.getCastingRootRef());
             state.setCastingRootRef(null);
             state.setHoveredHex(null);
             state.setHoveredGlyph(null);

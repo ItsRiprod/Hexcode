@@ -6,10 +6,12 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.component.BlockHexRoot;
+import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
@@ -76,13 +78,16 @@ public final class ImbuedBlockActivator {
 
         ImbuementData baseSnapshot = base.copy();
         BlockHexRoot hexRoot = new BlockHexRoot(blockPos, capacity);
-        HexStats tracker = new HexStats(hexRoot.resolveVolatility(), 1.0f, 1.0f);
+        HexCast tracker = new HexCast();
+        tracker.volatility().init(hexRoot.resolveVolatility(), 1.0f, 1.0f);
         HexContext context = new HexContext(hex, 0f, hexRoot, null, tracker);
 
         ImbuementProfileAsset profile = resolveProfile(blockType);
-        if (profile != null) context.applyNonDefaultsFrom(profile.getDefaults());
+        HexConfigAsset profileDefaults = profile != null ? profile.getDefaults() : null;
+        if (profileDefaults != null) profileDefaults.applyTo(context);
         if (essence != null) applyEssence(context, essence);
-        context.applyNonDefaultsFrom(base.getOverrides());
+        HexConfigAsset overrides = base.getOverrides();
+        if (overrides != null) overrides.applyTo(context);
         if (context.getStyle() == null) context.setStyle(HexStyleAsset.empty());
         context.setDefaultVariable(new BlockVar(blockPos));
 
@@ -122,7 +127,7 @@ public final class ImbuedBlockActivator {
 
     private static void applyEssence(@Nonnull HexContext ctx, @Nonnull EssenceAsset essence) {
         float vm = essence.getVolatilityMultiplier();
-        HexStats tracker = ctx.getHexStats();
+        VolatilityComponent tracker = ctx.volatility();
         if (vm != 1.0f && tracker != null) {
             tracker.setVolatilityMultiplier(tracker.getVolatilityMultiplier() * vm);
         }

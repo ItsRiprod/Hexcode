@@ -45,7 +45,7 @@ public class HealthSurgeGlyph implements GlyphHandler {
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
-        float heal = ElementSupport.consumeResource(hexContext, config.getResource(), limit) * config.getEfficiency() * affinity;
+        float heal = ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit) * config.getEfficiency() * affinity;
 
         EntityStatMap statMap = hexContext.getAccessor().getComponent(
                 target, EntityStatMap.getComponentType());

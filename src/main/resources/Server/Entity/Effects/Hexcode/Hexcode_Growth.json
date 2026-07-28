@@ -11,5 +11,5 @@
     "EntityTopTint": "#66AA66"
   },
   "Name": "hexcode.effects.growth",
-  "StatusEffectIcon": "UI/StatusEffects/Hexcode/Growth.png"
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/Growth.png"
 }

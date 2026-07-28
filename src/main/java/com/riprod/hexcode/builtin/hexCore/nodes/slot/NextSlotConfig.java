@@ -26,4 +26,9 @@ public final class NextSlotConfig extends SlotConfig {
     public boolean defaultUnique() {
         return false;
     }
+
+    @Override
+    public boolean isFlow() {
+        return true;
+    }
 }

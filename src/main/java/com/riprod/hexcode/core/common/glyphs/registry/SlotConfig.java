@@ -42,6 +42,10 @@ public abstract class SlotConfig extends NodeConfig {
 
     public abstract boolean defaultUnique();
 
+    public boolean isFlow() {
+        return false;
+    }
+
     @Nullable
     public Double getDefaultValue() {
         return null;

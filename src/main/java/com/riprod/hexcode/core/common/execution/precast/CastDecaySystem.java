@@ -15,7 +15,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
 
 public class CastDecaySystem extends WorldEventSystem<EntityStore, HexCastEvent.Pre> {
@@ -42,7 +42,7 @@ public class CastDecaySystem extends WorldEventSystem<EntityStore, HexCastEvent.
         if (!(context.getHexRoot() instanceof PlayerHexRoot playerRoot)) return;
         Ref<EntityStore> casterRef = playerRoot.getSourceRef(buffer);
         if (casterRef == null || !casterRef.isValid()) return;
-        HexStats tracker = context.getHexStats();
+        VolatilityComponent tracker = context.volatility();
         if (tracker == null) return;
 
         ExecutionComponent exec = buffer.ensureAndGetComponent(casterRef,
@@ -50,10 +50,10 @@ public class CastDecaySystem extends WorldEventSystem<EntityStore, HexCastEvent.
 
         float stability = Math.max(0f, Math.min(100f, playerRoot.resolveStability(buffer)));
         float retention = (float) Math.pow(stability / 100f, exec.getCastCount());
-        float volMax = (tracker.getInitialVolatility() + playerRoot.resolveVolatility(buffer)) * context.getTierScale();
+        float volMax = (tracker.getInitial() + playerRoot.resolveVolatility(buffer)) * context.getTierScale();
         float startingBudget = Math.max(0f, volMax * retention);
-        tracker.setVolatility(startingBudget);
-        tracker.setInitialVolatility(startingBudget);
+        tracker.setCurrent(startingBudget);
+        tracker.setInitial(startingBudget);
         exec.advanceCast();
     }
 }

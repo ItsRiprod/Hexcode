@@ -8,6 +8,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.system.WorldEventSystem;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexCastEvent;
+import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
 import com.riprod.hexcode.core.common.hexbook.component.HexBookAsset;
@@ -38,6 +39,7 @@ public class CastBookStyleSystem extends WorldEventSystem<EntityStore, HexCastEv
                 && bookAsset.getStyle().getSecondaryColor() != null) {
             context.mutableStyle().setSecondaryColor(bookAsset.getStyle().getSecondaryColor().clone());
         }
-        context.applyNonDefaultsFrom(bookAsset.getDefaults());
+        HexConfigAsset defaults = bookAsset.getDefaults();
+        if (defaults != null) defaults.applyTo(context);
     }
 }

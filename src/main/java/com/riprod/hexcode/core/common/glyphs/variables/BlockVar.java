@@ -3,12 +3,14 @@ package com.riprod.hexcode.core.common.glyphs.variables;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Vector3iUtil;
 
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -57,11 +59,18 @@ public final class BlockVar extends HexVar {
             if (blockId == BlockType.EMPTY_ID) return new RotationVar(new Rotation3f());
             int idx = world.getBlockRotationIndex(position.x, position.y, position.z);
             RotationTuple tuple = RotationTuple.get(idx);
-            float yaw = (float) tuple.yaw().getRadians();
-            return new RotationVar(new Rotation3f(0f, yaw, 0f));
+            return new RotationVar(new Rotation3f(
+                    radians(tuple.pitch()),
+                    radians(tuple.yaw()),
+                    radians(tuple.roll())));
         } catch (Exception e) {
             return new RotationVar(new Rotation3f());
         }
+    }
+
+    // wrapped so block rotations compare against entity rotations, which are always (-PI, PI]
+    private static float radians(Rotation rotation) {
+        return MathUtil.wrapAngle((float) rotation.getRadians());
     }
 
     @Override

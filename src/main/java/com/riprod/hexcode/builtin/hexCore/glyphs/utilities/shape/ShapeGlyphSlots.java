@@ -5,4 +5,5 @@ public final class ShapeGlyphSlots {
     }
 
     public static final String SHAPE = "Shape";
+    public static final String SCALE = "Scale";
 }

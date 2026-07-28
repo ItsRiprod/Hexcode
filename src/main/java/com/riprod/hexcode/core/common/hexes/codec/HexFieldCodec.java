@@ -21,7 +21,6 @@ import com.riprod.hexcode.core.common.hexes.component.Hex;
 public final class HexFieldCodec implements Codec<Hex> {
 
     public static final HexFieldCodec PLAYER = new HexFieldCodec(HexCodec::serialize);
-    public static final HexFieldCodec IMBUE = new HexFieldCodec(HexCodec::serializeImbue);
 
     private final Function<Hex, String> encoder;
 

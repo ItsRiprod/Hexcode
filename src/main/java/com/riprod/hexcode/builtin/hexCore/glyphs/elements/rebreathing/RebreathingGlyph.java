@@ -49,7 +49,7 @@ public class RebreathingGlyph implements GlyphHandler {
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
-        float seconds = ElementSupport.scaledDuration(ElementSupport.consumeResource(hexContext, config.getResource(), limit),
+        float seconds = ElementSupport.scaledDuration(ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit),
                 config.getEfficiency(), config.getDurationPerComplexity(),
                 affinity);
 

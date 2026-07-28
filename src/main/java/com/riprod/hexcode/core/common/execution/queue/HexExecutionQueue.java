@@ -2,6 +2,7 @@ package com.riprod.hexcode.core.common.execution.queue;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
@@ -40,6 +41,12 @@ public final class HexExecutionQueue implements Resource<EntityStore> {
 
     public void clear() {
         pending.clear();
+    }
+
+    public int removeIf(Predicate<PendingGlyph> filter) {
+        int before = pending.size();
+        pending.removeIf(filter);
+        return before - pending.size();
     }
 
     @Nullable

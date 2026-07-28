@@ -118,9 +118,9 @@ public class GlyphStyler {
     private static void UpdateGlyphTree(CommandBuffer<EntityStore> accessor, HexComponent hexComponent,
             GlyphComponent parentGlyph, Set<String> styledGlyphs) {
 
-        List<String> nextGlyphIds = parentGlyph.getNext();
+        List<String> flowGlyphIds = parentGlyph.getFlowLinks();
 
-        List<Ref<EntityStore>> children = hexComponent.getChildGlyphRefs(nextGlyphIds);
+        List<Ref<EntityStore>> children = hexComponent.getChildGlyphRefs(flowGlyphIds);
 
         if (children != null && !children.isEmpty()) {
 
@@ -136,6 +136,10 @@ public class GlyphStyler {
                 Ref<EntityStore> childRef = children.get(i);
                 GlyphComponent child = accessor.getComponent(childRef, GlyphComponent.getComponentType());
                 Rotation3f childRotation = childRotations.get(i);
+
+                if (child == null) {
+                    continue;
+                }
 
                 if (styledGlyphs.contains(child.getId())) {
                     continue;

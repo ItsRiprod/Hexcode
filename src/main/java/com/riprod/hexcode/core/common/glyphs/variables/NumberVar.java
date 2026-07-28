@@ -43,14 +43,22 @@ public final class NumberVar extends HexVar {
     @Override
     public PositionVar toPosition(ComponentAccessor<EntityStore> accessor) {
         double n = number == null ? 0.0 : number;
-        double c = Math.round((n / Math.sqrt(3.0)) * 100.0) / 100.0;
-        return new PositionVar(new Vector3d(c, c, c), false);
+        return new PositionVar(new Vector3d(n, n, n), false);
     }
 
     @Override
     public RotationVar toRotation(ComponentAccessor<EntityStore> accessor) {
         float n = number == null ? 0f : number.floatValue();
         return new RotationVar(new Vector3f(n, n, n));
+    }
+
+    @Override
+    public HexVar resolveSelf(HexVar partner, ComponentAccessor<EntityStore> accessor) {
+        if (number != null && number != 0.0)
+            return this;
+        if (partner instanceof PositionVar || partner instanceof RotationVar)
+            return convertTo(partner.getClass(), accessor);
+        return this;
     }
 
     @Override

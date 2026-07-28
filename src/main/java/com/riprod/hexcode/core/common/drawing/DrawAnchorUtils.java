@@ -48,7 +48,7 @@ public final class DrawAnchorUtils {
         Ref<EntityStore> anchor = capture.getHeadAnchorRef();
         if (anchor != null && anchor.isValid()) {
             buffer.tryRemoveComponent(anchor, MountedComponent.getComponentType());
-            CleanupUtils.safeRemoveEntity(buffer, anchor);
+            CleanupUtils.safeRemoveMountParent(buffer, anchor);
         }
         capture.setHeadAnchorRef(null);
     }

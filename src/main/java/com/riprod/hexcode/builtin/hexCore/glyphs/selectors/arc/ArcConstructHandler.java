@@ -1,4 +1,4 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc;
+package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc;
 
 import java.util.List;
 
@@ -15,10 +15,10 @@ import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.style.ArcStyle;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.utils.ArcUtils;
+import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc.style.ArcStyle;
+import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc.utils.ArcUtils;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -27,7 +27,6 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 public class ArcConstructHandler implements ConstructHandler<ArcState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final float MIN_INTERVAL = 0.05f;
 
     @Override
     public void onFirstTick(HexStatus<ArcState> status, ConstructTickContext ctx) {
@@ -117,17 +116,17 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(arcGlyph.getGlyphId());
         if (asset == null) return true;
 
-        HexStats tracker = hexContext.getHexStats();
+        VolatilityComponent tracker = hexContext.volatility();
         if (tracker == null) return false;
         if (hexContext.getHexRoot() == null) return true;
 
         ArcConfig config = asset.getConfig() instanceof ArcConfig arcConfig ? arcConfig : ArcConfig.DEFAULTS;
         Impact impact = asset.getConfig() == null ? null : asset.getConfig().getVolatilityImpact();
         float intervalFactor = (float) (config.getReferenceInterval()
-                / Math.max(MIN_INTERVAL, state.getInterval()));
+                / Math.max(0.01f, state.getInterval()));
         float cost = arcGlyph.computeBaseCost(asset) * Impact.scale(impact, distance) * intervalFactor;
 
-        return tracker.consumeVolatility(cost) > 0f;
+        return tracker.consume(cost) > 0f;
     }
 
     private Vector3d originPosition(ConstructTickContext ctx) {

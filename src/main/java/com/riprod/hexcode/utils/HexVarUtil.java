@@ -5,7 +5,6 @@ import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.math.util.TrigMathUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
@@ -34,7 +33,9 @@ public class HexVarUtil {
         if (var == null)
             return null;
         PositionVar pv = var.toPosition(accessor);
-        return pv == null ? null : pv.getValue();
+        if (pv == null || pv.getValue() == null)
+            return null;
+        return new Vector3d(pv.getValue());
     }
 
     @Nullable
@@ -61,6 +62,14 @@ public class HexVarUtil {
             case 2 -> v.z;
             default -> 0.0;
         };
+    }
+
+    public static boolean isAbsolutePosition(@Nullable HexVar var,
+            @Nonnull ComponentAccessor<EntityStore> accessor) {
+        if (var == null || var instanceof NumberVar)
+            return false;
+        PositionVar pv = var.toPosition(accessor);
+        return pv != null && pv.isAbsolute();
     }
 
     public static double rotationAxis(@Nullable HexVar var, int axis,
@@ -192,12 +201,6 @@ public class HexVarUtil {
         Vector3d dir = resolveDirection(var, null, accessor);
         if (dir == null)
             return null;
-        double dlen = dir.length();
-        double nx = dlen > 1e-9 ? dir.x / dlen : 0;
-        double ny = dlen > 1e-9 ? dir.y / dlen : 0;
-        double nz = dlen > 1e-9 ? dir.z / dlen : 0;
-        float yaw = TrigMathUtil.atan2((float) -nx, (float) -nz);
-        float pitch = (float) Math.asin(Math.max(-1.0, Math.min(1.0, ny)));
-        return new Rotation3f(pitch, yaw, 0f);
+        return Rotation3f.lookAt(dir, new Rotation3f());
     }
 }

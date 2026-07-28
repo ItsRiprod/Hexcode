@@ -1,4 +1,4 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.effects.arc.style;
+package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc.style;
 
 import com.hypixel.hytale.component.ComponentAccessor;
 import org.joml.Vector3d;
