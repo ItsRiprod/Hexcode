@@ -10,6 +10,7 @@ import com.riprod.hexcode.builtin.imbued.ImbuedPlugin;
 import com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin;
 import com.riprod.hexcode.command.HexcodeCommand;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
+import com.riprod.hexcode.core.common.construct.system.HexConstructTeardownSystem;
 import com.riprod.hexcode.core.common.construct.system.MountOrphanReaperSystem;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
@@ -29,6 +30,9 @@ import com.riprod.hexcode.core.common.effect.GlyphEffectSystem;
 import com.riprod.hexcode.core.common.execution.component.BlockHexRoot;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.cast.ResourcePoolComponent;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 import com.riprod.hexcode.core.common.execution.precast.CasterStateProvisionSystem;
@@ -44,6 +48,7 @@ import com.riprod.hexcode.core.common.execution.events.HexCastEventSystem;
 import com.riprod.hexcode.core.common.execution.queue.HexQueueDrainEventSystem;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionTickSystem;
+import com.riprod.hexcode.core.common.execution.system.CasterSpellTeardownSystem;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconStore;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -117,6 +122,7 @@ import com.hypixel.hytale.server.core.modules.entity.condition.Condition;
 import com.hypixel.hytale.builtin.adventure.memories.MemoriesPlugin;
 import com.hypixel.hytale.builtin.adventure.memories.memories.Memory;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -126,30 +132,11 @@ public class Hexcode extends JavaPlugin {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private final PatchManager patchManager;
 
-    // Deprecated, waiting on a fix from hytale for proper implementation
-    // private HexCorePlugin hexCore;
-    // private CounterspellPlugin counterspell;
-    // private HexabilityPlugin hexability;
-    // private HexomationPlugin hexomation;
-    // private HextrasPlugin hextras;
-    // private HextremePlugin hextreme;
-    // private ImbuedPlugin imbued;
-    // private RitualisticPlugin ritualistic;
-
     public Hexcode(JavaPluginInit init) {
         super(init);
-        patchManager = new PatchManager(this); // setup patchly
+        patchManager = new PatchManager(this);
         LOGGER.atInfo().log("Hexcode spell-crafting mod v%s initializing...",
                 this.getManifest().getVersion().toString());
-
-        // hexCore = new HexCorePlugin(init);
-        // counterspell = new CounterspellPlugin(init);
-        // hexability = new HexabilityPlugin(init);
-        // hexomation = new HexomationPlugin(init);
-        // hextras = new HextrasPlugin(init);
-        // hextreme = new HextremePlugin(init);
-        // imbued = new ImbuedPlugin(init);
-        // ritualistic = new RitualisticPlugin(init);
     }
 
     @Override
@@ -159,7 +146,8 @@ public class Hexcode extends JavaPlugin {
 
     @Override
     protected void setup() {
-        patchManager.install(); // init patchly
+        patchManager.install();
+        this.registerCastComponents();
         this.registerAssets();
 
         this.registerEntityComponents();
@@ -171,16 +159,13 @@ public class Hexcode extends JavaPlugin {
         this.registerCommands();
 
         LOGGER.atInfo().log("Hexcode %s setup complete!", this.getManifest().getVersion().toString());
+    }
 
-        // deprecated until hytale fixed implementation
-        // hexCore.setup();
-        // counterspell.setup();
-        // hexability.setup();
-        // hexomation.setup();
-        // hextras.setup();
-        // hextreme.setup();
-        // imbued.setup();
-        // ritualistic.setup();
+    private void registerCastComponents() {
+        VolatilityComponent.setComponentType(
+                HexCast.REGISTRY.registerComponent(VolatilityComponent.class, VolatilityComponent::new));
+        ResourcePoolComponent.setComponentType(
+                HexCast.REGISTRY.registerComponent(ResourcePoolComponent.class, ResourcePoolComponent::new));
     }
 
     @SuppressWarnings("null")
@@ -212,6 +197,7 @@ public class Hexcode extends JavaPlugin {
                         .setCodec(HexConfigAsset.CODEC)
                         .setKeyFunction(HexConfigAsset::getId)
                         .loadsAfter(HexStyleAsset.class)
+                        .loadsBefore(Item.class, Interaction.class, RootInteraction.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
@@ -224,6 +210,7 @@ public class Hexcode extends JavaPlugin {
                         .loadsAfter(ParticleSystem.class)
                         .loadsAfter(SoundEvent.class)
                         .loadsAfter(ModelAsset.class)
+                        .loadsAfter(ShapeAsset.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
@@ -477,6 +464,8 @@ public class Hexcode extends JavaPlugin {
     protected void start() {
         EntityStore.REGISTRY.registerSystem(new MountOrphanReaperSystem());
         EntityStore.REGISTRY.registerSystem(new HexConstructSystem());
+        EntityStore.REGISTRY.registerSystem(new HexConstructTeardownSystem());
+        EntityStore.REGISTRY.registerSystem(new CasterSpellTeardownSystem());
         RegisterAssetEditorDataSets();
     }
 

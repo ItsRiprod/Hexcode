@@ -7,17 +7,24 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.server.core.asset.type.model.config.Model;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.Invulnerable;
+import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.utils.GlyphModelUtil;
+import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
+import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
@@ -28,12 +35,6 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 
 public class HexConstructSpawner {
 
-    // tick-local cache of pending HexEffectsComponent adds per target entity.
-    // solves the check-then-add race: a second apply() in the same tick sees
-    // the instance the first apply() queued. keyed on entity UUID rather than Ref -
-    // Ref overrides neither equals nor hashCode, so two Ref instances for the same
-    // entity (common when re-resolved from different call sites) would otherwise
-    // never collide and the race guard would silently miss.
     private static final WeakHashMap<UUID, HexEffectsComponent> PENDING_APPLIES = new WeakHashMap<>();
 
     private HexConstructSpawner() {
@@ -76,16 +77,69 @@ public class HexConstructSpawner {
         return holder;
     }
 
-    public static void apply(
+    @Nullable
+    public static Model resolveModel(
+            @Nonnull HexContext hexContext,
+            @Nullable GlyphAsset glyphAsset,
+            float defaultScale) {
+
+        String modelId = VfxUtil.resolveModelId(hexContext, glyphAsset);
+        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
+
+        Model shaped = shapedModel(hexContext);
+        if (shaped != null) {
+            return GlyphModelUtil.withDefaultBox(shaped, modelAsset);
+        }
+
+        return modelAsset != null ? Model.createScaledModel(modelAsset, defaultScale) : null;
+    }
+
+    public static void applyModel(
+            @Nonnull Holder<EntityStore> holder,
+            @Nonnull HexContext hexContext,
+            @Nonnull Model model) {
+
+        holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
+
+        // ModelReference cannot carry derived attachments, so persisting a shaped model would
+        // let ModelSystems.ModelChange strip the shape on any later model swap
+        if (shapedModel(hexContext) == null) {
+            holder.addComponent(PersistentModel.getComponentType(), new PersistentModel(model.toReference()));
+        }
+    }
+
+    @Nullable
+    public static Model attachModel(
+            @Nonnull Holder<EntityStore> holder,
+            @Nonnull HexContext hexContext,
+            @Nullable GlyphAsset glyphAsset,
+            float defaultScale) {
+
+        Model model = resolveModel(hexContext, glyphAsset, defaultScale);
+        if (model != null) {
+            applyModel(holder, hexContext, model);
+        }
+        return model;
+    }
+
+    @Nullable
+    private static Model shapedModel(@Nonnull HexContext hexContext) {
+        HexStyleAsset style = hexContext.getStyle();
+        return style != null ? style.getResolvedModel() : null;
+    }
+
+    @Nullable
+    public static UUID apply(
             @Nonnull CommandBuffer<EntityStore> buffer,
             @Nullable Ref<EntityStore> targetRef,
             @Nonnull HexContext hexContext,
             @Nullable Glyph triggeringGlyph,
             @Nullable String handlerId) {
-        applyWithState(buffer, targetRef, hexContext, triggeringGlyph, handlerId, null);
+        return applyWithState(buffer, targetRef, hexContext, triggeringGlyph, handlerId, null);
     }
 
-    public static <S extends ConstructState> void applyWithState(
+    @Nullable
+    public static <S extends ConstructState> UUID applyWithState(
             @Nonnull CommandBuffer<EntityStore> buffer,
             @Nullable Ref<EntityStore> targetRef,
             @Nonnull HexContext hexContext,
@@ -97,7 +151,7 @@ public class HexConstructSpawner {
             HexExecuter.fail(triggeringGlyph, hexContext,
                     GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "construct target ref null/invalid");
-            return;
+            return null;
         }
 
         UUID constructId = UUID.randomUUID();
@@ -107,7 +161,7 @@ public class HexConstructSpawner {
         HexEffectsComponent existing = buffer.getComponent(targetRef, HexEffectsComponent.getComponentType());
         if (existing != null) {
             existing.addEffect(constructId, construct);
-            return;
+            return constructId;
         }
 
         UUIDComponent uuidComponent = buffer.getComponent(targetRef, UUIDComponent.getComponentType());
@@ -116,7 +170,7 @@ public class HexConstructSpawner {
             HexEffectsComponent fresh = new HexEffectsComponent();
             fresh.addEffect(constructId, construct);
             buffer.addComponent(targetRef, HexEffectsComponent.getComponentType(), fresh);
-            return;
+            return constructId;
         }
 
         HexEffectsComponent pending;
@@ -127,14 +181,22 @@ public class HexConstructSpawner {
                 pending.addEffect(constructId, construct);
                 PENDING_APPLIES.put(targetUuid, pending);
                 buffer.addComponent(targetRef, HexEffectsComponent.getComponentType(), pending);
-                return;
+                return constructId;
             }
         }
         pending.addEffect(constructId, construct);
+        return constructId;
     }
 
-    // read-only: lets a caller close the same-tick window where a component add is queued in
-    // the buffer but not yet visible to buffer.getComponent lookups elsewhere
+    public static void clearPendingApply(@Nonnull ComponentAccessor<EntityStore> accessor,
+            @Nonnull Ref<EntityStore> ref) {
+        UUIDComponent uuidComponent = accessor.getComponent(ref, UUIDComponent.getComponentType());
+        if (uuidComponent == null) return;
+        synchronized (PENDING_APPLIES) {
+            PENDING_APPLIES.remove(uuidComponent.getUuid());
+        }
+    }
+
     public static boolean hasPendingApply(@Nonnull Ref<EntityStore> ref, @Nonnull String handlerId) {
         if (!ref.isValid()) return false;
 

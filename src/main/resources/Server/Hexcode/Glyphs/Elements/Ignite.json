@@ -11,7 +11,7 @@
   "Title": "hexcode.glyphs.Ignite.name",
   "Description": "hexcode.glyphs.Ignite.description",
   "BasePower": 1.0,
-  "ManaConsumption": 15,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     {
       "Parent": "Square",

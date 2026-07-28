@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.utils.GlyphAttachments;
+import com.riprod.hexcode.core.common.glyphs.utils.GlyphModelUtil;
 
 public final class GlyphIconRenderer {
 
@@ -25,10 +25,8 @@ public final class GlyphIconRenderer {
                 ? ModelAsset.getAssetMap().getAsset(modelId)
                 : null;
 
-        ModelAttachment[] attachments = model != null ? model.getDefaultAttachments() : null;
-        if (attachments == null || attachments.length == 0) {
-            attachments = GlyphAttachments.derive(glyph);
-        }
+        ModelAttachment[] attachments = GlyphModelUtil.resolveAttachments(glyph,
+                model != null ? model.getDefaultAttachments() : null);
 
         if (attachments.length == 0) {
             return null;

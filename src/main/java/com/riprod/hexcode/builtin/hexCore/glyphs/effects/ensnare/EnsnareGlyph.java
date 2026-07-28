@@ -14,11 +14,8 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
-import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.PropComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
@@ -35,7 +32,6 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
-import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -97,14 +93,12 @@ public static final String ID = "Ensnare";
         int centerBlockY = (int) Math.floor(center.y);
         int centerBlockZ = (int) Math.floor(center.z);
 
-        String modelId = VfxUtil.resolveModelId(hexContext, asset);
-        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
-        if (modelAsset == null) {
+        Model spikeModel = HexConstructSpawner.resolveModel(hexContext, asset, config.getSpikeScale());
+        if (spikeModel == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Missing asset " + modelId);
+                    "Missing model asset");
             return;
         }
-        Model spikeModel = Model.createScaledModel(modelAsset, config.getSpikeScale());
 
         List<SpikeEntry> spikes = new ArrayList<>();
         int intRadius = (int) Math.ceil(radius);
@@ -134,7 +128,7 @@ public static final String ID = "Ensnare";
                 Vector3f rotation = new Vector3f(0, yaw, 0);
 
                 Ref<EntityStore> spikeRef = spawnSpikeEntity(
-                        spikePos, rotation, spikeModel, accessor);
+                        spikePos, rotation, spikeModel, hexContext, accessor);
                 if (spikeRef != null) {
                     spikes.add(new SpikeEntry(spikePos, spikeRef));
                 }
@@ -167,15 +161,13 @@ public static final String ID = "Ensnare";
     }
 
     private Ref<EntityStore> spawnSpikeEntity(Vector3d position, Vector3f rotation,
-            Model model, CommandBuffer<EntityStore> accessor) {
+            Model model, HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
         holder.addComponent(HexcodeComponent.getComponentType(), new HexcodeComponent());
         holder.addComponent(TransformComponent.getComponentType(),
                 new TransformComponent(new Vector3d(position), new Rotation3f(rotation.x, rotation.y, rotation.z)));
         holder.ensureComponent(UUIDComponent.getComponentType());
-        holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
-        holder.addComponent(PersistentModel.getComponentType(),
-                new PersistentModel(model.toReference()));
+        HexConstructSpawner.applyModel(holder, hexContext, model);
         holder.addComponent(BoundingBox.getComponentType(),
                 new BoundingBox(model.getBoundingBox()));
         holder.addComponent(NetworkId.getComponentType(),

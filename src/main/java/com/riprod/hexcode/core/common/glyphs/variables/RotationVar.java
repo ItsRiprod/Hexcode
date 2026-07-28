@@ -6,6 +6,7 @@ import com.hypixel.hytale.component.ComponentAccessor;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Vector3dUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public final class RotationVar extends HexVar {
@@ -47,14 +48,8 @@ public final class RotationVar extends HexVar {
     }
 
     public Vector3d forward() {
-        if (rotation == null) return new Vector3d(0, 0, 1);
-        double yaw = rotation.y;
-        double pitch = rotation.x;
-        double cosPitch = Math.cos(pitch);
-        return new Vector3d(
-                -Math.sin(yaw) * cosPitch,
-                Math.sin(pitch),
-                -Math.cos(yaw) * cosPitch);
+        if (rotation == null) return new Vector3d(Vector3dUtil.FORWARD);
+        return Vector3dUtil.setYawPitch(rotation.yaw(), rotation.pitch(), new Vector3d());
     }
 
     @Override

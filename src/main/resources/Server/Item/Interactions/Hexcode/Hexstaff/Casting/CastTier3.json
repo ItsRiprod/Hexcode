@@ -9,7 +9,7 @@
       {
         "Type": "ChangeStat",
         "StatModifiers": {
-          "Stamina": -3,
+          "Stamina": -1.5,
           "StaminaRegenDelay": -1.5
         }
       },

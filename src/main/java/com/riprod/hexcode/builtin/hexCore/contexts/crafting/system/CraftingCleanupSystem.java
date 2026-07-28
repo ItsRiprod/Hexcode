@@ -33,7 +33,7 @@ public class CraftingCleanupSystem extends RefSystem<EntityStore> {
         HexcasterCraftingComponent craftingComp = store.getComponent(ref,
                 HexcasterCraftingComponent.getComponentType());
         if (craftingComp != null) {
-            CleanupUtils.safeRemoveEntity(buffer, craftingComp.getHeadAnchorRef());
+            CleanupUtils.safeRemoveMountParent(buffer, craftingComp.getHeadAnchorRef());
             craftingComp.setHeadAnchorRef(null);
         }
     }

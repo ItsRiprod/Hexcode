@@ -25,7 +25,7 @@ public class TanGlyph implements GlyphHandler {
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
-        HexVar self = hexContext.getVariable(glyph.getId());
+        HexVar self = hexContext.getOwnVariable(glyph.getId());
 
         if (self != null) {
             return self;

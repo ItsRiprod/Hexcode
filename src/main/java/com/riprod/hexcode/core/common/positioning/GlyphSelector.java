@@ -35,9 +35,9 @@ public final class GlyphSelector {
         Hex hexData = hex.getHex();
         Glyph glyph = hexData.get(targetGlyph.getId());
         if (glyph == null) return null;
-        List<String> nextLinks = glyph.getNextLinks();
-        if (nextLinks.isEmpty()) return null;
-        return findOutputDepthFirst(accessor, hex, hexData, nextLinks, new HashSet<>());
+        List<String> flowLinks = glyph.getFlowLinks();
+        if (flowLinks.isEmpty()) return null;
+        return findOutputDepthFirst(accessor, hex, hexData, flowLinks, new HashSet<>());
     }
 
     private static GlyphComponent findOutputDepthFirst(CommandBuffer<EntityStore> accessor, HexComponent hex,
@@ -51,7 +51,7 @@ public final class GlyphSelector {
             if ("Glyph_Output".equals(comp.getGlyphId())) return comp;
             Glyph g = hexData.get(id);
             if (g == null) continue;
-            List<String> next = g.getNextLinks();
+            List<String> next = g.getFlowLinks();
             if (!next.isEmpty()) {
                 GlyphComponent found = findOutputDepthFirst(accessor, hex, hexData, next, visited);
                 if (found != null) return found;
@@ -85,9 +85,10 @@ public final class GlyphSelector {
             float selectionRadius = GlyphMath.getSelectionRadius(childGlyph.getScale());
 
             if (angularDist <= selectionRadius) {
-                if (childGlyph.getNext() != null && !childGlyph.getNext().isEmpty()) {
+                List<String> childFlowLinks = childGlyph.getFlowLinks();
+                if (!childFlowLinks.isEmpty()) {
                     GlyphComponent hoveredChild = findHoveredGlyph(accessor, playerPitch, playerYaw, hex,
-                            childGlyph.getNext(), absolutePitch, absoluteYaw, visitedGlyphs);
+                            childFlowLinks, absolutePitch, absoluteYaw, visitedGlyphs);
                     if (hoveredChild != null) {
                         return hoveredChild;
                     }

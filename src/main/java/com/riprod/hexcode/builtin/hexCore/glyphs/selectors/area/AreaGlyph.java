@@ -90,6 +90,7 @@ public class AreaGlyph implements GlyphHandler {
                 AreaStyle.renderHit(new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5),
                         hexContext, accessor, particleRecipients);
                 HexContext copy = hexContext.branch();
+                copy.enterLocalScope();
                 glyph.writeOutput(new BlockVar(pos), copy);
                 HexExecuter.continueFromSlot(glyph, AreaGlyphSlots.BLOCKS, copy);
             }
@@ -106,6 +107,7 @@ public class AreaGlyph implements GlyphHandler {
                     }
                 }
                 HexContext copy = hexContext.branch();
+                copy.enterLocalScope();
                 glyph.writeOutput(new EntityVar(ref), copy);
                 HexExecuter.continueFromSlot(glyph, AreaGlyphSlots.ENTITIES, copy);
             }

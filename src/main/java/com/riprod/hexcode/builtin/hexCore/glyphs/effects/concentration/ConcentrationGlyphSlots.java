@@ -6,5 +6,9 @@ public final class ConcentrationGlyphSlots {
 
     public static final String RELEASE = "release";
 
-    public static final String RESOURCE = "Resource";
+    public static final String MANA_PER_SECOND = "ManaPerSecond";
+
+    public static final String STAMINA_PER_SECOND = "StaminaPerSecond";
+
+    public static final String HEALTH_PER_SECOND = "HealthPerSecond";
 }

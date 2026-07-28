@@ -9,7 +9,7 @@ import com.hypixel.hytale.component.system.WorldEventSystem;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
 
 public class CastSpellPowerSystem extends WorldEventSystem<EntityStore, HexCastEvent.Pre> {
@@ -24,7 +24,7 @@ public class CastSpellPowerSystem extends WorldEventSystem<EntityStore, HexCastE
         if (event.isCancelled()) return;
         HexContext context = event.getContext();
         if (!(context.getHexRoot() instanceof PlayerHexRoot playerRoot)) return;
-        HexStats tracker = context.getHexStats();
+        VolatilityComponent tracker = context.volatility();
         if (tracker == null) return;
         tracker.setComplexityMultiplier(playerRoot.resolveSpellPower(buffer));
     }

@@ -35,7 +35,7 @@ public class IdentifyGlyph implements GlyphHandler {
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
-        HexVar cached = hexContext.getVariable(glyph.getId());
+        HexVar cached = hexContext.getOwnVariable(glyph.getId());
         if (cached != null) return cached;
         HexVar a = glyph.readSlot(IdentifyGlyphSlots.A, hexContext);
         HexVar b = glyph.readSlot(IdentifyGlyphSlots.B, hexContext);

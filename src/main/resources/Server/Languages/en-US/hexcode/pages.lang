@@ -17,19 +17,40 @@ write.no_hex=There is nothing drawn to write
 write.success=The spell flows onto the page
 
 fireball.name=Spell Page: Fireball
-fireball.description=A page inscribed with Fireball.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.
+fireball.description=A page inscribed with Fireball.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Sllayer
 
 energy_bolt.name=Spell Page: Energy Bolt
-energy_bolt.description=A page inscribed with Energy Bolt.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.
+energy_bolt.description=A page inscribed with Energy Bolt.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Riprod
 
 ice_bolt.name=Spell Page: Ice Bolt
-ice_bolt.description=A page inscribed with Ice Bolt.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.
+ice_bolt.description=A page inscribed with Ice Bolt.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Riprod
 
 launch.name=Spell Page: Launch
-launch.description=A page inscribed with Launch.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.
+launch.description=A page inscribed with Launch.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Riprod
 
 warp.name=Spell Page: Warp
-warp.description=A page inscribed with Warp.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.
+warp.description=A page inscribed with Warp.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Riprod
 
 levitate.name=Spell Page: Levitate
-levitate.description=A page inscribed with Levitate.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.
+levitate.description=A page inscribed with Levitate.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Riprod
+
+null_zone.name=Spell Page: Null Zone
+null_zone.description=A page inscribed with Null Zone.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Wayfarer
+
+discharge.name=Spell Page: Discharge
+discharge.description=A page inscribed with Discharge.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Riprod
+
+blinks_edge.name=Spell Page: Blinks Edge
+blinks_edge.description=A page inscribed with Blinks Edge.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Sllayer
+
+bridge.name=Spell Page: Bridge
+bridge.description=A page inscribed with Bridge.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Sllayer
+
+fear.name=Spell Page: Fear
+fear.description=A page inscribed with Fear.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Nezzy484
+
+misty_step.name=Spell Page: Misty Step
+misty_step.description=A page inscribed with Misty Step.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Nezzy484
+
+lightning.name=Spell Page: Lightning
+lightning.description=A page inscribed with Lightning.\n\nPress and Hold Secondary to cast.\nWhen its charges run out the page is left spent.\n\nSpell by Sllayer

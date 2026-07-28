@@ -10,8 +10,7 @@ public final class ErodeConfig extends GlyphConfig {
 
     public static final ErodeConfig DEFAULTS = new ErodeConfig();
 
-    private double minAmount = 1.0;
-    private double maxAmount = 20.0;
+    private boolean impactEntities = true;
     private int minTier = 1;
     private int maxTier = 6;
     private float blockDamageScale = 0.05f;
@@ -19,12 +18,8 @@ public final class ErodeConfig extends GlyphConfig {
     private String effectId = "Hexcode_Erode";
     private String toolAssetPrefix = "Hexcode_Erode_Tool_T";
 
-    public double getMinAmount() {
-        return minAmount;
-    }
-
-    public double getMaxAmount() {
-        return maxAmount;
+    public boolean canImpactEntities() {
+        return impactEntities;
     }
 
     public int getMinTier() {
@@ -53,11 +48,8 @@ public final class ErodeConfig extends GlyphConfig {
 
     public static final BuilderCodec<ErodeConfig> CODEC = BuilderCodec
             .builder(ErodeConfig.class, ErodeConfig::new, GlyphConfig.BASE_CODEC)
-            .append(new KeyedCodec<>("MinAmount", Codec.DOUBLE, true),
-                    (c, v) -> c.minAmount = v, c -> c.minAmount)
-            .add()
-            .append(new KeyedCodec<>("MaxAmount", Codec.DOUBLE, true),
-                    (c, v) -> c.maxAmount = v, c -> c.maxAmount)
+            .append(new KeyedCodec<>("ImpactEntities", Codec.BOOLEAN, true),
+                    (c, v) -> c.impactEntities = v, c -> c.impactEntities)
             .add()
             .append(new KeyedCodec<>("MinTier", Codec.INTEGER, true),
                     (c, v) -> c.minTier = v, c -> c.minTier)

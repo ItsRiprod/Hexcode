@@ -131,7 +131,10 @@ public class HexComponent implements Component<EntityStore> {
     public List<Ref<EntityStore>> getChildGlyphRefs(List<String> glyphIds) {
         List<Ref<EntityStore>> refs = new ArrayList<>();
         for (String glyphId : glyphIds) {
-            refs.add(childGlyphRefs.get(glyphId));
+            Ref<EntityStore> ref = childGlyphRefs.get(glyphId);
+            if (ref != null) {
+                refs.add(ref);
+            }
         }
         return refs;
     }

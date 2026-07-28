@@ -18,6 +18,14 @@
       "Label": "hexcode.glyphs.Shape.Shape.name",
       "Description": "hexcode.glyphs.Shape.Shape.description"
     },
+    "Scale": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Shape.Scale.name",
+      "Description": "hexcode.glyphs.Shape.Scale.description",
+      "Unique": true,
+      "DefaultValue": 1
+    },
     "Next": {
       "Type": "Next",
       "Parent": "Next",

@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.hexes.codec.HexCodec;
 import com.riprod.hexcode.core.common.hexes.codec.HexCodecException;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
@@ -20,7 +20,7 @@ public class ImbuementData {
     @Nullable
     private String hexAssetId;
     @Nullable
-    private HexContext overrides;
+    private String overridesId;
 
     public ImbuementData() {
     }
@@ -30,7 +30,7 @@ public class ImbuementData {
         copy.hexCompressedId = this.hexCompressedId;
         copy.hex = this.hex;
         copy.hexAssetId = this.hexAssetId;
-        copy.overrides = HexContext.cloneState(this.overrides);
+        copy.overridesId = this.overridesId;
         return copy;
     }
 
@@ -78,12 +78,9 @@ public class ImbuementData {
     }
 
     @Nullable
-    public HexContext getOverrides() {
-        return overrides;
-    }
-
-    public void setOverrides(@Nullable HexContext overrides) {
-        this.overrides = overrides;
+    public HexConfigAsset getOverrides() {
+        if (this.overridesId == null) return null;
+        return HexConfigAsset.getAssetMap().getAsset(this.overridesId);
     }
 
     public static final BuilderCodec<ImbuementData> CODEC = BuilderCodec
@@ -103,9 +100,10 @@ public class ImbuementData {
                     c -> c.hexAssetId)
             .addValidatorLate(() -> SavedHexAsset.VALIDATOR_CACHE.getValidator().late())
             .add()
-            .append(new KeyedCodec<>("Overrides", HexContext.CODEC),
-                    (c, v) -> c.overrides = v,
-                    c -> c.overrides)
+            .append(new KeyedCodec<>("Overrides", HexConfigAsset.CHILD_ASSET_CODEC),
+                    (c, v) -> c.overridesId = v,
+                    c -> c.overridesId)
+            .addValidatorLate(() -> HexConfigAsset.VALIDATOR_CACHE.getValidator().late())
             .documentation("Optional cast overrides applied at fire time. Snapshot of cast-affecting values written at imbue time from the source item's stat modifiers.")
             .add()
             .build();

@@ -9,7 +9,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -49,7 +49,7 @@ public class DebugGlyph implements GlyphHandler {
         if (pr == null)
             return;
 
-        String volatility = volatilityText(hexContext.getHexStats());
+        String volatility = volatilityText(hexContext.volatility());
         String complexity = complexityText(hexContext);
 
         Slot slot = glyph.getSlot(DebugGlyphSlots.SLOT);
@@ -139,10 +139,10 @@ public class DebugGlyph implements GlyphHandler {
         return message;
     }
 
-    private static String volatilityText(HexStats tracker) {
+    private static String volatilityText(VolatilityComponent tracker) {
         if (tracker == null)
             return "-";
-        return String.format("%.1f / %.1f", tracker.getCurrentVolatility(), tracker.getInitialVolatility());
+        return String.format("%.1f / %.1f", tracker.getCurrent(), tracker.getInitial());
     }
 
     private static String complexityText(HexContext hexContext) {

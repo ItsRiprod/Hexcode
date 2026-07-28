@@ -8,11 +8,12 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.imbued.triggers.InteractionPayload;
+import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
@@ -47,13 +48,16 @@ public final class ItemHeldCastDispatcher implements CastRootDispatcher {
         float volatilityMax = ItemStatExtractor.extractVolatility(heldItem);
         float baseMana = SpellMana.computeTotalMana(hex);
         float resolvedPower = 1.0f + ItemStatExtractor.extractPower(heldItem);
-        HexStats tracker = new HexStats(volatilityMax, 1.0f, resolvedPower);
+        HexCast tracker = new HexCast();
+        tracker.volatility().init(volatilityMax, 1.0f, resolvedPower);
 
         HexContext context = new HexContext(hex, baseMana, hexRoot, null, tracker);
 
         ImbuementProfileAsset profile = ImbuementProfileRegistry.first(heldItem);
-        if (profile != null) context.applyNonDefaultsFrom(profile.getDefaults());
-        context.applyNonDefaultsFrom(data.getOverrides());
+        HexConfigAsset profileDefaults = profile != null ? profile.getDefaults() : null;
+        if (profileDefaults != null) profileDefaults.applyTo(context);
+        HexConfigAsset overrides = data.getOverrides();
+        if (overrides != null) overrides.applyTo(context);
 
         HexVar defaultVar = trigger.resolveDefaultVariable(event);
         if (defaultVar != null) context.setDefaultVariable(defaultVar);

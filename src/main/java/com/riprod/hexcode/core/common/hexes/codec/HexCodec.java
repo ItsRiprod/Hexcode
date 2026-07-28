@@ -11,10 +11,7 @@ public class HexCodec {
         return HexCodecV15.serialize(hex);
     }
 
-    public static String serializeImbue(Hex hex) {
-        return HexCodecV16.serialize(hex);
-    }
-
+    @SuppressWarnings("deprecation")
     public static DecodeResult deserialize(String data) {
         if (data == null) return DecodeResult.error("null input");
 

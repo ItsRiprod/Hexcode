@@ -3,6 +3,7 @@ package com.riprod.hexcode.core.common.glyphs.component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -204,12 +205,12 @@ public class Glyph {
 
     public void writeOutput(HexVar value, HexContext hexContext) {
         hexContext.setDefaultVariable(value);
-        hexContext.setVariable(this.id, value);
+        hexContext.setOwnVariable(this.id, value);
     }
 
     public void writeOutput(HexVar defaultSlotValue, HexVar selfValue, HexContext hexContext) {
         hexContext.setDefaultVariable(defaultSlotValue);
-        hexContext.setVariable(this.id, selfValue);
+        hexContext.setOwnVariable(this.id, selfValue);
     }
 
     public void writeDefaultOutput(HexVar value, HexContext hexContext) {
@@ -217,7 +218,7 @@ public class Glyph {
     }
 
     public void writeSelfOutput(HexVar value, HexContext hexContext) {
-        hexContext.setVariable(this.id, value);
+        hexContext.setOwnVariable(this.id, value);
     }
 
     @Nullable
@@ -249,6 +250,24 @@ public class Glyph {
         if (links.length == 0)
             return List.of();
         return Arrays.asList(links);
+    }
+
+    public List<String> getFlowLinks() {
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
+        if (asset == null)
+            return getNextLinks();
+
+        LinkedHashSet<String> flowLinks = new LinkedHashSet<>();
+        for (String key : asset.getSlotKeys()) {
+            SlotConfig config = asset.getSlot(key);
+            if (config == null || !config.isFlow())
+                continue;
+            Slot slot = slots.get(key);
+            if (slot == null)
+                continue;
+            flowLinks.addAll(Arrays.asList(slot.getLinks()));
+        }
+        return flowLinks.isEmpty() ? List.of() : new ArrayList<>(flowLinks);
     }
 
     public List<HexVar> readSlotAll(String key, HexContext hexContext) {

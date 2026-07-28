@@ -3,7 +3,6 @@ package com.riprod.hexcode.builtin.hexCore.scene;
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.RemoveReason;
 import org.joml.Vector3f;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.MountController;
@@ -13,6 +12,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.utils.CreateGlyph;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
+import com.riprod.hexcode.utils.CleanupUtils;
 
 public class CraftingDragHandler {
 
@@ -26,8 +26,7 @@ public class CraftingDragHandler {
 
         Ref<EntityStore> headAnchorRef = CreateGlyph.createHeadAnchor(accessor, playerRef, eyeHeight);
 
-        accessor.tryRemoveComponent(entityRef, MountedComponent.getComponentType());
-        accessor.addComponent(entityRef, MountedComponent.getComponentType(),
+        accessor.putComponent(entityRef, MountedComponent.getComponentType(),
                 new MountedComponent(headAnchorRef, new Rotation3f(0, 0, -2f), MountController.Minecart));
 
         return headAnchorRef;
@@ -55,7 +54,7 @@ public class CraftingDragHandler {
         if (headAnchorRef != null) {
             if (headAnchorRef.isValid()) {
                 accessor.tryRemoveComponent(headAnchorRef, MountedComponent.getComponentType());
-                accessor.tryRemoveEntity(headAnchorRef, RemoveReason.REMOVE);
+                CleanupUtils.safeRemoveMountParent(accessor, headAnchorRef);
             } else if (craftingComp != null) {
                 craftingComp.addPendingDespawn(headAnchorRef);
             }

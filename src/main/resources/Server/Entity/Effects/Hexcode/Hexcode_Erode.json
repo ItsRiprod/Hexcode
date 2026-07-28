@@ -22,5 +22,5 @@
     "WorldSoundEventId": "SFX_Avatar_Powers_Disable"
   },
   "Name": "hexcode.effects.erode",
-  "StatusEffectIcon": "UI/StatusEffects/Hexcode/Erode.png"
+  "StatusEffectIcon": "UI/Custom/Pages/Memories/glyphs/Erode.png"
 }

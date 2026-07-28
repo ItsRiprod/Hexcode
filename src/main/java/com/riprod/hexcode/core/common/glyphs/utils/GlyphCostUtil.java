@@ -12,20 +12,14 @@ import com.riprod.hexcode.utils.HexVarUtil;
 
 public final class GlyphCostUtil {
 
-    private static final float CONTRIBUTION_FLOOR = 0f;
-    private static final float CONTRIBUTION_RANGE = 1f;
-    private static final float CONTRIBUTION_SCALE = 20.0f;
+    private static final float SOURCE_SCALE = 25.0f;
 
     private GlyphCostUtil() {
     }
 
-    // effectiveness = floor + range * 10^(-contributed/scale); the inverse of -10*log((y-floor)/range),
-    // so the first contribution to a resource converts at 1.0 and repeats decay toward the floor
-    public static float contributionEffectiveness(float contributedSoFar) {
-        if (contributedSoFar <= 0f) return CONTRIBUTION_FLOOR + CONTRIBUTION_RANGE;
-        return CONTRIBUTION_FLOOR + CONTRIBUTION_RANGE
-                * (float) Math.pow(10.0, -contributedSoFar / CONTRIBUTION_SCALE);
-        // return 1f; // hardcode to always be effective for now for "balance reasons"
+    public static float contributionEffectiveness(float basis) {
+        if (basis <= 0f) return 1.0f;
+        return (float) Math.pow(10.0, -basis / SOURCE_SCALE);
     }
 
     public static float slotScale(Glyph glyph, HexContext hexContext, String slotKey, SlotConfig slotAsset) {

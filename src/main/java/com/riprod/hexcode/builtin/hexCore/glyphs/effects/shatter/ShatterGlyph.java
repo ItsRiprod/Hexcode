@@ -14,12 +14,9 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.modules.entity.DespawnComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
-import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.modules.interaction.Interactions;
@@ -31,6 +28,7 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style.ShatterStyle;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -41,7 +39,6 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 
 import com.riprod.hexcode.utils.HexVarUtil;
-import com.riprod.hexcode.utils.VfxUtil;
 
 public class ShatterGlyph implements GlyphHandler {
 
@@ -142,14 +139,12 @@ public class ShatterGlyph implements GlyphHandler {
 
         List<Vector3d> shardDirections = computeConeDirections(centralDir, count, spread);
 
-        String modelId = VfxUtil.resolveModelId(hexContext, asset);
-        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
-        if (modelAsset == null) {
+        Model model = HexConstructSpawner.resolveModel(hexContext, asset, 1.0f);
+        if (model == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "model asset not found: " + modelId);
+                    "model asset not found");
             return;
         }
-        Model model = Model.createScaledModel(modelAsset, 1.0f);
 
         for (Vector3d dir : shardDirections) {
             Vector3d shardSpawn = new Vector3d(spawnPos).add(new Vector3d(dir).mul(1.0));
@@ -177,8 +172,7 @@ public class ShatterGlyph implements GlyphHandler {
                 new TransformComponent(new Vector3d(position), rotation));
         holder.addComponent(HeadRotation.getComponentType(), new HeadRotation(rotation));
 
-        holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
-        holder.addComponent(PersistentModel.getComponentType(), new PersistentModel(model.toReference()));
+        HexConstructSpawner.applyModel(holder, branched, model);
         holder.addComponent(BoundingBox.getComponentType(), new BoundingBox(model.getBoundingBox()));
 
         holder.addComponent(NetworkId.getComponentType(),

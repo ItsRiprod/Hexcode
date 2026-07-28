@@ -88,7 +88,7 @@ public class FortifyGlyph implements GlyphHandler {
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
-        float spent = ElementSupport.consumeResource(hexContext, config.getResource(), limit);
+        float spent = ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit);
         float durationSeconds = spent * config.getEfficiency() * affinity * config.getDurationPerResource();
 
         VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId, durationSeconds,

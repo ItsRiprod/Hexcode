@@ -13,6 +13,7 @@ import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
 
 public class CasterStateComponent implements Component<EntityStore> {
 
@@ -27,12 +28,12 @@ public class CasterStateComponent implements Component<EntityStore> {
     }
 
     private Map<UUID, List<Ref<EntityStore>>> dependencies = new HashMap<>();
-    private List<HexStats> activeTrackers = new ArrayList<>();
+    private List<HexCast> activeTrackers = new ArrayList<>();
 
     public CasterStateComponent() {
     }
 
-    public void registerActiveTracker(HexStats tracker) {
+    public void registerActiveTracker(HexCast tracker) {
         if (activeTrackers == null)
             activeTrackers = new ArrayList<>();
         if (tracker == null)
@@ -44,7 +45,7 @@ public class CasterStateComponent implements Component<EntityStore> {
     public void pruneCompletedTrackers() {
         if (activeTrackers == null || activeTrackers.isEmpty())
             return;
-        activeTrackers.removeIf(t -> t == null || t.getCurrentVolatility() <= 0f
+        activeTrackers.removeIf(t -> t == null || t.volatility().getCurrent() <= 0f
                 || t.getActiveBranchCount() <= 0);
     }
 
@@ -52,7 +53,7 @@ public class CasterStateComponent implements Component<EntityStore> {
         pruneCompletedTrackers();
         if (activeTrackers == null) return 0;
         int n = 0;
-        for (HexStats t : activeTrackers) {
+        for (HexCast t : activeTrackers) {
             if (t != null && t.getSlotKey() == null) n++;
         }
         return n;
@@ -62,10 +63,10 @@ public class CasterStateComponent implements Component<EntityStore> {
         if (activeTrackers == null || activeTrackers.isEmpty())
             return;
         for (int i = 0; i < activeTrackers.size(); i++) {
-            HexStats t = activeTrackers.get(i);
+            HexCast t = activeTrackers.get(i);
             if (t != null && t.getSlotKey() == null) {
                 activeTrackers.remove(i);
-                t.setVolatility(0f);
+                t.volatility().setCurrent(0f);
                 UUID execId = t.getExecutionId();
                 if (execId != null) dependencies.remove(execId);
                 return;
@@ -76,17 +77,17 @@ public class CasterStateComponent implements Component<EntityStore> {
     public void fizzleSlot(@Nonnull String slotKey) {
         if (activeTrackers == null || activeTrackers.isEmpty()) return;
         pruneCompletedTrackers();
-        for (HexStats t : activeTrackers) {
+        for (HexCast t : activeTrackers) {
             if (t == null) continue;
-            if (slotKey.equals(t.getSlotKey()) && t.getCurrentVolatility() > 0f) {
-                t.setVolatility(0f);
+            if (slotKey.equals(t.getSlotKey()) && t.volatility().getCurrent() > 0f) {
+                t.volatility().setCurrent(0f);
                 UUID execId = t.getExecutionId();
                 if (execId != null) dependencies.remove(execId);
             }
         }
     }
 
-    public List<HexStats> getActiveTrackers() {
+    public List<HexCast> getActiveTrackers() {
         if (activeTrackers == null)
             activeTrackers = new ArrayList<>();
         return activeTrackers;
@@ -95,12 +96,12 @@ public class CasterStateComponent implements Component<EntityStore> {
     public void cancelAll(Ref<EntityStore> casterRef) {
         if (activeTrackers == null || activeTrackers.isEmpty())
             return;
-        for (HexStats tracker : new ArrayList<>(activeTrackers)) {
+        for (HexCast tracker : new ArrayList<>(activeTrackers)) {
             if (tracker == null)
                 continue;
-            if (tracker.getCurrentVolatility() <= 0f)
+            if (tracker.volatility().getCurrent() <= 0f)
                 continue;
-            tracker.setVolatility(0f);
+            tracker.volatility().setCurrent(0f);
         }
     }
 

@@ -13,10 +13,10 @@ import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProv
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
-import com.riprod.hexcode.core.common.execution.component.HexStats;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
 
@@ -46,7 +46,7 @@ public class HexCastCommand extends AbstractPlayerCommand {
         Hex hex = asset.getHex().clone();
         String name = asset.getDisplayName() != null ? asset.getDisplayName() : hexId;
 
-        var hexStats = new HexStats();
+        var hexStats = new HexCast();
 
         var playerHexRoot = new PlayerHexRoot(playerEntityRef, store);
 

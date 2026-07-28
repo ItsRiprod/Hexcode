@@ -65,7 +65,7 @@ public class HexcasterCraftingComponent implements Component<EntityStore> {
     public void setHeadAnchorRef(CommandBuffer<EntityStore> accessor, @Nullable Ref<EntityStore> headAnchorRef) {
         if (this.headAnchorRef != null) {
             if (this.headAnchorRef.isValid()) {
-                CleanupUtils.safeRemoveEntity(accessor, this.headAnchorRef);
+                CleanupUtils.safeRemoveMountParent(accessor, this.headAnchorRef);
             } else {
                 pendingDespawn.add(this.headAnchorRef);
             }
@@ -123,7 +123,7 @@ public class HexcasterCraftingComponent implements Component<EntityStore> {
     }
 
     public void clear(CommandBuffer<EntityStore> buffer) {
-        CleanupUtils.safeRemoveEntity(buffer, this.headAnchorRef);
+        CleanupUtils.safeRemoveMountParent(buffer, this.headAnchorRef);
         this.headAnchorRef = null;
         this.draggingRef = null;
         this.hoveredRef = null;
