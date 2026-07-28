@@ -6,6 +6,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractWorldCommand;
+import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProvider;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.gate.GateStateResource;
@@ -15,6 +16,7 @@ public class HexStopCommand extends AbstractWorldCommand {
 
     public HexStopCommand() {
         super("stop", "server.hexcode.commands.stop.desc");
+        this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADMIN);
     }
 
     @Override

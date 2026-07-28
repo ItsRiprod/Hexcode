@@ -35,7 +35,7 @@ public class HexTestVisualCommand extends AbstractPlayerCommand {
 
     public HexTestVisualCommand() {
         super("testvisual", "Send a trigger-volume sphere at your position for visual testing");
-        this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADVENTURER);
+        this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADMIN);
         addAliases("tv");
 
         this.radiusArg = this.withOptionalArg("radius", "Sphere radius in blocks (default 3.0)", ArgTypes.FLOAT);

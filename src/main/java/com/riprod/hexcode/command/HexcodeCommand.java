@@ -10,6 +10,9 @@ import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProv
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.command.admin.HexResumeCommand;
+import com.riprod.hexcode.command.admin.HexStopCommand;
+import com.riprod.hexcode.command.admin.HexTimeoutCommand;
 import com.riprod.hexcode.command.draw.DrawTrainCommand;
 import com.riprod.hexcode.command.glyph.GlyphsForgetCommand;
 import com.riprod.hexcode.command.glyph.GlyphsLearnCommand;
@@ -44,6 +47,9 @@ public class HexcodeCommand extends AbstractPlayerCommand {
         addSubCommand(new HexResetCommand());
         addSubCommand(new HexPageCommand());
         addSubCommand(new HexTestVisualCommand());
+        addSubCommand(new HexStopCommand());
+        addSubCommand(new HexResumeCommand());
+        addSubCommand(new HexTimeoutCommand());
     }
 
     @Override
