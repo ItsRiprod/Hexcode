@@ -3,7 +3,6 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Vector3dUtil;
 
@@ -11,9 +10,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig;
@@ -26,12 +23,12 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation.utils.Rotati
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
-import com.riprod.hexcode.core.common.protection.BlockAction;
 import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -39,6 +36,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 
+import com.riprod.hexcode.utils.BlockUtils;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VelocityUtil;
 
@@ -110,6 +108,13 @@ public class RotationValue implements GlyphHandler {
         if (ref == null || !ref.isValid())
             return;
 
+        World world = accessor.getExternalData().getWorld();
+        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        if (!HexProtection.canAffectEntity(world, caster, accessor, ref)) {
+            HexProtection.notifyBlocked(caster, accessor, getId());
+            return;
+        }
+
         if (VelocityUtil.isProjectile(ref, accessor)) {
             applyToProjectile(ref, rotation, hexContext);
             return;
@@ -122,10 +127,27 @@ public class RotationValue implements GlyphHandler {
             if (!RotationUtils.applyExact(ref, rotation, accessor))
                 return;
 
+            chargePlayerCost(ref, glyph, hexContext);
             trackRollRestore(ref, rotation, priorRoll, glyph, hexContext);
         } catch (Exception e) {
             LOGGER.atWarning().log("rotation glyph: could not rotate entity: %s", e.getMessage());
         }
+    }
+
+    private void chargePlayerCost(Ref<EntityStore> ref, Glyph glyph, HexContext hexContext) {
+        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        if (accessor.getComponent(ref, Player.getComponentType()) == null)
+            return;
+        VolatilityComponent volatility = hexContext.volatility();
+        if (volatility == null)
+            return;
+        volatility.consume(resolveConfig(glyph).getPlayerVolatilityCost());
+    }
+
+    private RotationConfig resolveConfig(Glyph glyph) {
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        RotationConfig config = getConfig(RotationConfig.class, asset);
+        return config == null ? RotationConfig.DEFAULTS : config;
     }
 
     private void trackRollRestore(Ref<EntityStore> ref, Rotation3f applied, float priorRoll,
@@ -136,10 +158,7 @@ public class RotationValue implements GlyphHandler {
         if (Math.abs(applied.roll()) <= RotationUtils.EPSILON_RADIANS)
             return;
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        RotationConfig config = getConfig(RotationConfig.class, asset);
-        if (config == null)
-            config = RotationConfig.DEFAULTS;
+        RotationConfig config = resolveConfig(glyph);
 
         RotationState existing = findRollRestore(ref, accessor);
         if (existing != null) {
@@ -200,29 +219,9 @@ public class RotationValue implements GlyphHandler {
             CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
             World world = accessor.getExternalData().getWorld();
             Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
-            if (!HexProtection.canModifyBlock(world, caster, accessor, new Vector3i(pos), BlockAction.PLACE)) {
-                HexProtection.notifyBlocked(caster, accessor, getId());
-                return;
-            }
-            int blockId = world.getBlock(pos.x, pos.y, pos.z);
-            if (blockId == BlockType.EMPTY_ID)
-                return;
-            BlockType blockType = BlockType.getAssetMap().getAsset(blockId);
-            if (blockType == null)
-                return;
-            int rotationIndex = RotationTuple.index(
-                    quarter(rotation.yaw()),
-                    quarter(rotation.pitch()),
-                    quarter(rotation.roll()));
-            int settings = 0x02 | 0x04 | 0x10;
-            world.getChunk(ChunkUtil.indexChunkFromBlock(pos.x, pos.z))
-                    .setBlock(pos.x, pos.y, pos.z, blockId, blockType, rotationIndex, 0, settings);
+            BlockUtils.rotateBlock(new Vector3i(pos), rotation, world, accessor, caster, getId());
         } catch (Exception e) {
             LOGGER.atWarning().log("rotation glyph: could not rotate block: %s", e.getMessage());
         }
-    }
-
-    private static Rotation quarter(float radians) {
-        return Rotation.closestOfDegrees((float) Math.toDegrees(radians));
     }
 }

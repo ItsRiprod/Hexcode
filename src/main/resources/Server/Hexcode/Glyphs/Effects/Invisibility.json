@@ -16,7 +16,7 @@
   "Title": "hexcode.glyphs.Invisibility.name",
   "Description": "hexcode.glyphs.Invisibility.description",
   "BasePower": 1.0,
-  "ManaConsumption": 15,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     "Antitriangle",
     {

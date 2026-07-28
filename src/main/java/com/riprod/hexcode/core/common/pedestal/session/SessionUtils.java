@@ -159,13 +159,13 @@ public class SessionUtils {
                             glyphComp.getSlotEntityRefs().clear();
                         }
                         buffer.tryRemoveComponent(glyphRef, MountedComponent.getComponentType());
-                        CleanupUtils.safeRemoveEntity(buffer, glyphRef);
+                        CleanupUtils.safeRemoveMountParent(buffer, glyphRef);
                     }
                 }
             }
 
             buffer.tryRemoveComponent(hexRef, MountedComponent.getComponentType());
-            CleanupUtils.safeRemoveEntity(buffer, hexRef);
+            CleanupUtils.safeRemoveMountParent(buffer, hexRef);
         }
         session.clearHexPreviewRefs();
 

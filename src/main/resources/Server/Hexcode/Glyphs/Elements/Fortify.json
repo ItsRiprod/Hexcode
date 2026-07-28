@@ -16,7 +16,7 @@
   "Title": "hexcode.glyphs.Fortify.name",
   "Description": "hexcode.glyphs.Fortify.description",
   "BasePower": 1.0,
-  "ManaConsumption": 15,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     {
       "Parent": "Square",

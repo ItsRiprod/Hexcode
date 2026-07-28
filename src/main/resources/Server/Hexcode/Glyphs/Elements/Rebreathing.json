@@ -5,7 +5,7 @@
   "Title": "hexcode.glyphs.Rebreathing.name",
   "Description": "hexcode.glyphs.Rebreathing.description",
   "BasePower": 1.0,
-  "ManaConsumption": 15,
+  "ManaConsumption": 10,
   "ShapeStructure": [
     {
       "Parent": "Square",

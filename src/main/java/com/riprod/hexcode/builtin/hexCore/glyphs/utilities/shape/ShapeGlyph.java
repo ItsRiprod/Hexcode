@@ -34,7 +34,7 @@ public class ShapeGlyph implements GlyphHandler {
             HexStyleAsset linkedStyle = linked.getStyle();
             if (linkedStyle != null) hexContext.mutableStyle().applyOverride(linkedStyle);
 
-            Model assembled = GlyphModelUtil.assemble(linked, resolveScale(glyph, hexContext));
+            Model assembled = GlyphModelUtil.assemble(linked, linkedStyle, resolveScale(glyph, hexContext));
             if (assembled != null) {
                 hexContext.mutableStyle().setResolvedModel(assembled);
             } else {

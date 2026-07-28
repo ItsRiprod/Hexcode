@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.BlockHarvestUtils;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
@@ -24,6 +25,8 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.core.common.protection.BlockAction;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -97,6 +100,13 @@ public class ErodeGlyph implements GlyphHandler {
         if (ref == null || !ref.isValid())
             return false;
 
+        World world = accessor.getExternalData().getWorld();
+        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        if (!HexProtection.canAffectEntity(world, caster, accessor, ref)) {
+            HexProtection.notifyBlocked(caster, accessor, getId());
+            return false;
+        }
+
         String effectId = config.getEffectId();
         EntityEffect erodeEffect = EntityEffect.getAssetMap().getAsset(effectId);
         if (erodeEffect == null) {
@@ -133,7 +143,13 @@ public class ErodeGlyph implements GlyphHandler {
         if (pos == null)
             return;
 
-        ChunkStore chunkStore = accessor.getExternalData().getWorld().getChunkStore();
+        World world = accessor.getExternalData().getWorld();
+        if (!HexProtection.isBlockActionAllowed(world, BlockAction.BREAK)) {
+            HexProtection.notifyBlocked(hexContext.getCasterRef(accessor), accessor, getId());
+            return;
+        }
+
+        ChunkStore chunkStore = world.getChunkStore();
         long chunkIndex = ChunkUtil.indexChunkFromBlock(pos.x, pos.z);
         Ref<ChunkStore> chunkRef = chunkStore.getChunkReference(chunkIndex);
         if (chunkRef == null || !chunkRef.isValid())

@@ -14,6 +14,7 @@ import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 public final class GlyphModelUtil {
 
@@ -34,7 +35,13 @@ public final class GlyphModelUtil {
     }
 
     @Nullable
-    public static Model assemble(@Nonnull GlyphAsset shapeSource, float scale) {
+    public static Model assemble(@Nonnull GlyphAsset shapeSource, @Nullable HexStyleAsset shapeStyle,
+            float scale) {
+        ModelAsset override = overrideModel(shapeStyle);
+        if (override != null) {
+            return Model.createScaledModel(override, scale);
+        }
+
         String basePath = shapeSource.getModelPath();
         ModelAsset base = basePath != null ? ModelAsset.getAssetMap().getAsset(basePath) : null;
         if (base == null) {
@@ -48,6 +55,12 @@ public final class GlyphModelUtil {
 
         Model scaled = Model.createScaledModel(base, scale);
         return rebuild(scaled, attachments, scaled.getBoundingBox());
+    }
+
+    @Nullable
+    private static ModelAsset overrideModel(@Nullable HexStyleAsset style) {
+        String id = style != null ? style.getPrimaryModel() : null;
+        return id != null ? ModelAsset.getAssetMap().getAsset(id) : null;
     }
 
     @Nonnull

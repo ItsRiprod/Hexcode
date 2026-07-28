@@ -8,7 +8,7 @@ import com.hypixel.hytale.builtin.mounts.MountedComponent;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.RemoveReason;
+import com.riprod.hexcode.utils.CleanupUtils;
 import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -161,7 +161,7 @@ public class HexSpawner {
                 MountController.Minecart);
         accessor.putComponent(firstGlyphRef, MountedComponent.getComponentType(), mounted);
 
-        accessor.tryRemoveEntity(draggedHex.getSelfRef(), RemoveReason.REMOVE);
+        CleanupUtils.safeRemoveMountParent(accessor, draggedHex.getSelfRef());
 
         Ref<EntityStore> rootGlyph = droppedOnHex.getChildGlyphRef(hex1.getFirstGlyphId());
         GlyphComponent rootGlyphComponent = accessor.getComponent(rootGlyph, GlyphComponent.getComponentType());

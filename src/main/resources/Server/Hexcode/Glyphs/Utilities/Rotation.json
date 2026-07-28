@@ -49,6 +49,7 @@
   },
   "Config": {
     "Type": "Rotation",
-    "RollHoldSeconds": 10.0
+    "RollHoldSeconds": 10.0,
+    "PlayerVolatilityCost": 5
   }
 }

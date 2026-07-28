@@ -33,8 +33,7 @@ public final class FlycastingDragHandler {
 
         Ref<EntityStore> glyphRef = hex.getSelfRef();
         if (glyphRef != null && glyphRef.isValid()) {
-            buffer.tryRemoveComponent(glyphRef, MountedComponent.getComponentType());
-            buffer.addComponent(glyphRef, MountedComponent.getComponentType(),
+            buffer.putComponent(glyphRef, MountedComponent.getComponentType(),
                     new MountedComponent(headAnchorRef, new Rotation3f(0, 0, -hex.getDistance()),
                             MountController.Minecart));
         }
@@ -73,10 +72,6 @@ public final class FlycastingDragHandler {
         if (hoveredGlyph != null) {
             try {
                 float eyeHeight = FlycastingScene.resolveEyeHeight(buffer, player);
-                Ref<EntityStore> mergedRef = draggedHex.getSelfRef();
-                if (mergedRef != null && mergedRef.isValid()) {
-                    buffer.tryRemoveComponent(mergedRef, MountedComponent.getComponentType());
-                }
                 HexSpawner.MergeGlyphs(buffer, hoveredGlyph, draggedHex, eyeHeight);
                 state.getActiveHexes().remove(draggedHex.getSelfRef());
                 state.setDraggingHex(null);

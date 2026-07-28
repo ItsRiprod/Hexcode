@@ -43,6 +43,26 @@
             }
           }
         }
+      },
+      {
+        "Type": "Single",
+        "Weight": 100,
+        "Item": {
+          "ItemId": "Hex_Page_Rare",
+          "QuantityMin": 1,
+          "QuantityMax": 1,
+          "Metadata": {
+            "PageHex": "Hex_Lightning",
+            "ItemDisplay": {
+              "Name": {
+                "MessageId": "hexcode.pages.lightning.name"
+              },
+              "Description": {
+                "MessageId": "hexcode.pages.lightning.description"
+              }
+            }
+          }
+        }
       }
     ]
   }

@@ -210,6 +210,7 @@ public class Hexcode extends JavaPlugin {
                         .loadsAfter(ParticleSystem.class)
                         .loadsAfter(SoundEvent.class)
                         .loadsAfter(ModelAsset.class)
+                        .loadsAfter(ShapeAsset.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
