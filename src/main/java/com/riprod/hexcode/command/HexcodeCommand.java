@@ -44,6 +44,10 @@ public class HexcodeCommand extends AbstractPlayerCommand {
         addSubCommand(new HexResetCommand());
         addSubCommand(new HexPageCommand());
         addSubCommand(new HexTestVisualCommand());
+        addSubCommand(new HexChatProbeCommand());
+        // addSubCommand(new HexStopCommand());
+        // addSubCommand(new HexResumeCommand());
+        // addSubCommand(new HexTimeoutCommand());
     }
 
     @Override

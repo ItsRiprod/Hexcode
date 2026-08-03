@@ -26,7 +26,7 @@ public class CounterspellPlugin extends JavaPlugin {
 
     public CounterspellPlugin(JavaPluginInit init) {
         super(init);
-        LOGGER.atInfo().log("Hexcode %s sub-plugin v%s initializing...",
+        LOGGER.atFine().log("Hexcode %s sub-plugin v%s initializing...",
                 this.getManifest().getName().toString(), this.getManifest().getVersion().toString());
     }
 

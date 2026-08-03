@@ -28,6 +28,6 @@ public class DrawModeExitDiagnosticListener extends EntityEventSystem<EntityStor
     public void handle(int index, @Nonnull ArchetypeChunk<EntityStore> chunk,
             @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull DrawModeExitEvent event) {
-        LOGGER.atInfo().log("[event] DrawModeExit player=%s", event.getPlayer());
+        LOGGER.atFine().log("[event] DrawModeExit player=%s", event.getPlayer());
     }
 }

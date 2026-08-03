@@ -30,7 +30,7 @@ public class ShapeDrawnDiagnosticListener extends EntityEventSystem<EntityStore,
             @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull ShapeDrawnEvent event) {
         ShapeStructure structure = event.getStructure();
-        LOGGER.atInfo().log("[event] ShapeDrawn player=%s shapes=%d volatility=%.3f efficiency=%.3f cancelled=%s",
+        LOGGER.atFine().log("[event] ShapeDrawn player=%s shapes=%d volatility=%.3f efficiency=%.3f cancelled=%s",
                 event.getPlayer(), structure.getShapes().size(), structure.getVolatility(),
                 structure.getEfficiency(), event.isCancelled());
     }

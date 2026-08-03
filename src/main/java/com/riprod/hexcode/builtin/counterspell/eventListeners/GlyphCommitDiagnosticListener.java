@@ -28,7 +28,7 @@ public class GlyphCommitDiagnosticListener extends EntityEventSystem<EntityStore
     public void handle(int index, @Nonnull ArchetypeChunk<EntityStore> chunk,
             @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull GlyphCommitEvent event) {
-        LOGGER.atInfo().log("[event] GlyphCommit player=%s glyph=%s context=%s cancelled=%s",
+        LOGGER.atFine().log("[event] GlyphCommit player=%s glyph=%s context=%s cancelled=%s",
                 event.getPlayer(), event.getGlyph() != null ? event.getGlyph().getGlyphId() : null,
                 event.getContextId(), event.isCancelled());
     }

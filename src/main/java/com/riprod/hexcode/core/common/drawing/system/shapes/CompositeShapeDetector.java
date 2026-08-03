@@ -55,7 +55,7 @@ public class CompositeShapeDetector implements ShapeDetector {
             sb.append(String.format(" %s: %.2fms", r.name, r.elapsedNanos / 1_000_000.0));
             if (r != results.getLast()) sb.append(" |");
         }
-        LOGGER.atInfo().log(sb.toString());
+        LOGGER.atFine().log(sb.toString());
 
         StringBuilder resultSb = new StringBuilder("[Composite] results:");
         for (TimedResult r : results) {
@@ -64,7 +64,7 @@ public class CompositeShapeDetector implements ShapeDetector {
             resultSb.append(String.format(" %s→%s (%.4f)", r.name, shape, score));
             if (r != results.getLast()) resultSb.append(" |");
         }
-        LOGGER.atInfo().log(resultSb.toString());
+        LOGGER.atFine().log(resultSb.toString());
 
         if (results.isEmpty() || results.getFirst().result == null) {
             return null;

@@ -111,7 +111,7 @@ public class FortifyGlyph implements GlyphHandler {
             FortifyStyle.renderEntityHit(tc.getPosition(), hexContext, accessor);
         }
 
-        LOGGER.atInfo().log("fortify: applied resistance effect for %.1fs to entity", durationSeconds);
+        LOGGER.atFine().log("fortify: applied resistance effect for %.1fs to entity", durationSeconds);
         return true;
     }
 }

@@ -106,13 +106,13 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("levitate: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("levitate: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<LevitateState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("levitate: terminated early; chain suppressed");
+        LOGGER.atFine().log("levitate: terminated early; chain suppressed");
     }
 
     @Override

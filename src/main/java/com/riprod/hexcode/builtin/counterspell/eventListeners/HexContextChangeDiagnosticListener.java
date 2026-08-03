@@ -19,7 +19,7 @@ public class HexContextChangeDiagnosticListener extends WorldEventSystem<EntityS
     @Override
     public void handle(@Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull HexContextChangeEvent event) {
-        LOGGER.atInfo().log("[event] HexContextChange player=%s newContext=%s",
+        LOGGER.atFine().log("[event] HexContextChange player=%s newContext=%s",
                 event.getPlayer(), event.getNewContextId());
     }
 }

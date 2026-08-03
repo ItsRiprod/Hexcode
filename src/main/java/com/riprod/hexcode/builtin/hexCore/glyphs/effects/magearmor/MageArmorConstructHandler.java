@@ -41,13 +41,13 @@ public class MageArmorConstructHandler implements ConstructHandler<MageArmorStat
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("magearmor: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("magearmor: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<MageArmorState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("magearmor: terminated early; chain suppressed");
+        LOGGER.atFine().log("magearmor: terminated early; chain suppressed");
     }
 
     @Override

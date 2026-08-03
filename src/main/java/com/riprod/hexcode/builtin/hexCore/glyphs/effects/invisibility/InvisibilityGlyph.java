@@ -123,7 +123,7 @@ public class InvisibilityGlyph implements GlyphHandler {
             InvisibilityStyle.renderEntityHit(tc.getPosition(), hexContext, accessor);
         }
 
-        LOGGER.atInfo().log("invisibility: applied effect for %.1fs to entity", durationSeconds);
+        LOGGER.atFine().log("invisibility: applied effect for %.1fs to entity", durationSeconds);
         return true;
     }
 }

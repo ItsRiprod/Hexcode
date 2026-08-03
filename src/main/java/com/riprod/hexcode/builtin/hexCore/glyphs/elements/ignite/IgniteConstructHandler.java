@@ -33,14 +33,14 @@ public class IgniteConstructHandler implements ConstructHandler<IgniteState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("ignite: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("ignite: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<IgniteState> status, ConstructTickContext ctx) {
         IgniteState state = status.getState();
         cleanup(ctx, state != null ? state.getEffectId() : null);
-        LOGGER.atInfo().log("ignite: terminated early; chain suppressed");
+        LOGGER.atFine().log("ignite: terminated early; chain suppressed");
     }
 
     @Override

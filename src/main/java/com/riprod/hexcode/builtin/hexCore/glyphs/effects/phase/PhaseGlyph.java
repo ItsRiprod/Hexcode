@@ -150,7 +150,7 @@ public class PhaseGlyph implements GlyphHandler {
 
         hexContext.getHexRoot().addDependency(hexContext, phaseRef);
 
-        LOGGER.atInfo().log("phase: phased block for %.1f seconds", duration);
+        LOGGER.atFine().log("phase: phased block for %.1f seconds", duration);
     }
 
     private Vector3i resolveBlockPosition(HexVar targets, HexContext hexContext) {

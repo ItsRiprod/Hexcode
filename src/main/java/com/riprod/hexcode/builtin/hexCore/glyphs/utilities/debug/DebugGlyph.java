@@ -16,6 +16,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.core.common.utilities.resource.DebugMessageQueue;
 
 public class DebugGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -65,8 +66,8 @@ public class DebugGlyph implements GlyphHandler {
                         .param("complexity", complexity)
                         .param("gis", buildGisLines(hexContext)));
 
-        pr.sendMessage(msg);
-        LOGGER.atInfo().log(msg.getAnsiMessage());
+        hexContext.getAccessor().getResource(DebugMessageQueue.getResourceType()).append(casterRef, msg);
+        LOGGER.atFine().log(msg.getAnsiMessage());
     }
 
     private Message buildSlotLines(Slot slot, HexContext hexContext) {

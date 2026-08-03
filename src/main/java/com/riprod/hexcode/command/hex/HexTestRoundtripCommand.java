@@ -178,6 +178,6 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
 
     private static void send(PlayerRef playerRef, String message) {
         playerRef.sendMessage(Message.raw(message));
-        LOGGER.atInfo().log(message);
+        LOGGER.atFine().log(message);
     }
 }

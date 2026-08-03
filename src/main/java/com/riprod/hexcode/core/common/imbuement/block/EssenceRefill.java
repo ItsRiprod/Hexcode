@@ -38,7 +38,7 @@ public final class EssenceRefill {
         idx.getSpatialStructure().ordered3DAxis(center,
                 HORIZONTAL_RADIUS, VERTICAL_RADIUS, HORIZONTAL_RADIUS, results);
 
-        LOGGER.atInfo().log("essence-refill: spatial scan around %s returned %d container(s)",
+        LOGGER.atFine().log("essence-refill: spatial scan around %s returned %d container(s)",
                 blockPos, results.size());
 
         if (results.isEmpty()) return null;
@@ -57,12 +57,12 @@ public final class EssenceRefill {
 
                 String itemId = stack.getItemId();
                 EssenceAsset essence = EssenceAsset.getAssetMap().getAsset(itemId);
-                LOGGER.atInfo().log("essence-refill: slot %d itemId=%s essenceMatch=%s",
+                LOGGER.atFine().log("essence-refill: slot %d itemId=%s essenceMatch=%s",
                         slot, itemId, essence != null ? essence.getId() : "null");
                 if (essence == null) continue;
 
                 inv.removeItemStackFromSlot(slot, 1);
-                LOGGER.atInfo().log("essence-refill: consumed %s from container", essence.getId());
+                LOGGER.atFine().log("essence-refill: consumed %s from container", essence.getId());
                 return essence;
             }
         }

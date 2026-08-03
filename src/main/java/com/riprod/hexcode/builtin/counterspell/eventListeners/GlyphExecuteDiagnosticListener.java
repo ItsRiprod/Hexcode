@@ -20,7 +20,7 @@ public class GlyphExecuteDiagnosticListener implements Consumer<GlyphExecuteEven
         HexContext ctx = event.getCtx();
         VolatilityComponent stats = ctx != null ? ctx.volatility() : null;
         Slot next = glyph != null ? glyph.getSlot(Glyph.NEXT_SLOT) : null;
-        LOGGER.atInfo().log("[exec] %s(%s) next=%s vol=%s",
+        LOGGER.atFine().log("[exec] %s(%s) next=%s vol=%s",
                 event.getNodeId(),
                 glyph != null ? glyph.getGlyphId() : "<null>",
                 next != null ? Arrays.toString(next.getLinks()) : "[]",

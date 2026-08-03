@@ -35,7 +35,7 @@ public class HexAppearanceRevertSystem extends RefSystem<EntityStore> {
                 return;
             }
 
-            LOGGER.atInfo().log("[hexcode] appearance: reverting orphaned model on load");
+            LOGGER.atFine().log("[hexcode] appearance: reverting orphaned model on load");
             HexAppearanceService.restoreOriginal(buffer, ref);
         } catch (Exception e) {
             LOGGER.atSevere().log("[hexcode] HexAppearanceRevertSystem.onEntityAdded failed: %s", e.getMessage());

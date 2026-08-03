@@ -19,7 +19,7 @@ public class DrawModeEnterDiagnosticListener extends WorldEventSystem<EntityStor
     @Override
     public void handle(@Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull DrawModeEnterEvent event) {
-        LOGGER.atInfo().log("[event] DrawModeEnter player=%s palette=%d",
+        LOGGER.atFine().log("[event] DrawModeEnter player=%s palette=%d",
                 event.getPlayer(), event.getPalette() != null ? event.getPalette().size() : 0);
     }
 }

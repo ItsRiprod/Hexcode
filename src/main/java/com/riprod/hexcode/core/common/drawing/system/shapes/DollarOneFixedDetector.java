@@ -360,7 +360,7 @@ public class DollarOneFixedDetector implements ShapeDetector {
             sb.append(String.format(" #%d: %s (%.4f)", j + 1, names.get(idx), scores.get(idx)));
             if (j < 2 && j < indices.size() - 1) sb.append(" |");
         }
-        LOGGER.atInfo().log(sb.toString());
+        LOGGER.atFine().log(sb.toString());
     }
 
     @Override
@@ -385,7 +385,7 @@ public class DollarOneFixedDetector implements ShapeDetector {
             }
         });
 
-        LOGGER.atInfo().log("DollarOneFixedDetector initialized with " + templateCache.size()
+        LOGGER.atFine().log("DollarOneFixedDetector initialized with " + templateCache.size()
                 + " templates (" + counts[0] + " from TemplateAsset, " + counts[1] + " from PNG).");
     }
 

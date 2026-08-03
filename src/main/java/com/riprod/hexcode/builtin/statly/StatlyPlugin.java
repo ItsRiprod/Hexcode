@@ -23,7 +23,7 @@ public class StatlyPlugin extends JavaPlugin {
 
     public StatlyPlugin(JavaPluginInit init) {
         super(init);
-        LOGGER.atInfo().log("Unified Magic System sub-plugin initializing...");
+        LOGGER.atFine().log("Unified Magic System sub-plugin initializing...");
     }
 
     @Override

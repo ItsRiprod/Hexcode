@@ -60,7 +60,7 @@ public class SessionUtils {
             craftingComp.setSessionRef(ownerRef);
         }
 
-        logger.atInfo().log("session created at %s, open=%s", pedestalLocation, isOpen);
+        logger.atFine().log("session created at %s, open=%s", pedestalLocation, isOpen);
         return session;
     }
 
@@ -79,7 +79,7 @@ public class SessionUtils {
             craftingComp.setSessionRef(ownerRef);
         }
 
-        logger.atInfo().log("player joined session at %s", session.getPedestalLocation());
+        logger.atFine().log("player joined session at %s", session.getPedestalLocation());
     }
 
     public static void leaveSession(CommandBuffer<EntityStore> buffer, Ref<EntityStore> participantRef,
@@ -190,7 +190,7 @@ public class SessionUtils {
         }
         session.setActiveContainerRef(null);
 
-        logger.atInfo().log("ending session at %s", session.getPedestalLocation());
+        logger.atFine().log("ending session at %s", session.getPedestalLocation());
 
         Set<Ref<EntityStore>> participants = session.getParticipantRefs();
         for (Ref<EntityStore> pRef : new ArrayList<>(participants)) {

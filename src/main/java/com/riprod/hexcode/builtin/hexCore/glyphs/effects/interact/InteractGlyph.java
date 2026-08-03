@@ -111,7 +111,7 @@ public class InteractGlyph implements GlyphHandler {
 
         glyph.writeOutput(new BlockVar(blockPos), hexContext);
 
-        LOGGER.atInfo().log("interact: hit block at %d %d %d (activation=%s)",
+        LOGGER.atFine().log("interact: hit block at %d %d %d (activation=%s)",
                 blockPos.x, blockPos.y, blockPos.z, outcome.getStatus());
     }
 
@@ -121,7 +121,7 @@ public class InteractGlyph implements GlyphHandler {
         InteractionManager manager = accessor.getComponent(casterRef,
                 InteractionModule.get().getInteractionManagerComponent());
         if (manager == null) {
-            LOGGER.atInfo().log("interact: no interaction manager on caster, skipping block interaction");
+            LOGGER.atFine().log("interact: no interaction manager on caster, skipping block interaction");
             return;
         }
 

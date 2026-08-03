@@ -33,14 +33,14 @@ public class GrowthConstructHandler implements ConstructHandler<GrowthState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("growth: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("growth: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<GrowthState> status, ConstructTickContext ctx) {
         GrowthState state = status.getState();
         cleanup(ctx, state != null ? state.getEffectId() : null);
-        LOGGER.atInfo().log("growth: terminated early; chain suppressed");
+        LOGGER.atFine().log("growth: terminated early; chain suppressed");
     }
 
     @Override

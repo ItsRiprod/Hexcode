@@ -56,7 +56,7 @@ public class HexTestVisualCommand extends AbstractPlayerCommand {
 
         playerRef.sendMessage(Message.raw(String.format(
                 "(debug) sphere volume r=%.1f at %.1f, %.1f, %.1f", radius, eye.x, eye.y, eye.z)));
-        LOGGER.atInfo().log("testvisual sphere r=%s at %s", radius, eye);
+        LOGGER.atFine().log("testvisual sphere r=%s at %s", radius, eye);
     }
 
     static TriggerVolumeDisplayEntry buildSphereEntry(@Nonnull Vector3f center, float radius) {

@@ -33,13 +33,13 @@ public class FreezeConstructHandler implements ConstructHandler<FreezeState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("freeze: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("freeze: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<FreezeState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("freeze: terminated early; chain suppressed");
+        LOGGER.atFine().log("freeze: terminated early; chain suppressed");
     }
 
     @Override

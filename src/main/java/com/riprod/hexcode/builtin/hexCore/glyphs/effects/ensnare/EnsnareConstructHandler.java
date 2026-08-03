@@ -64,7 +64,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
                 ctx.getIndex(), EnsnareComponent.getComponentType());
         if (ensnare != null) {
             removeSpikes(ensnare, status, ctx.getBuffer());
-            LOGGER.atInfo().log("ensnare: expired after %.1fs, removed %d spikes",
+            LOGGER.atFine().log("ensnare: expired after %.1fs, removed %d spikes",
                     ensnare.getDurationSeconds(), ensnare.getSpikes().size());
         }
 

@@ -58,7 +58,7 @@ public class SelectingTickSystem extends EntityTickingSystem<EntityStore> {
                 return;
             }
 
-            PedestalSceneHover.tick(buffer, dt, player, pedestal);
+            PedestalSceneHover.tick(buffer, dt, player, pedestal, session);
 
             if (outsideRadius(buffer, player, pedestal)) {
                 ContextTransitionService.exit(buffer, player, SelectingState.CONTEXT_ID);

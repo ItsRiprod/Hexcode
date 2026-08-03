@@ -83,6 +83,8 @@ import com.riprod.hexcode.core.common.pedestal.events.PedestalBlockEvent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalPlaceEvent;
 import com.riprod.hexcode.core.common.pedestal.system.SessionRecoverySystem;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
+import com.riprod.hexcode.core.common.utilities.resource.DebugMessageQueue;
+import com.riprod.hexcode.core.common.utilities.system.DebugMessageFlushSystem;
 import com.riprod.hexcode.core.common.utilities.system.DebugTickSystem;
 import com.riprod.hexcode.core.common.casting.registry.CastingStyleRegistry;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
@@ -135,7 +137,7 @@ public class Hexcode extends JavaPlugin {
     public Hexcode(JavaPluginInit init) {
         super(init);
         patchManager = new PatchManager(this);
-        LOGGER.atInfo().log("Hexcode spell-crafting mod v%s initializing...",
+        LOGGER.atFine().log("Hexcode spell-crafting mod v%s initializing...",
                 this.getManifest().getVersion().toString());
     }
 
@@ -158,7 +160,7 @@ public class Hexcode extends JavaPlugin {
         this.registerEvents();
         this.registerCommands();
 
-        LOGGER.atInfo().log("Hexcode %s setup complete!", this.getManifest().getVersion().toString());
+        LOGGER.atFine().log("Hexcode %s setup complete!", this.getManifest().getVersion().toString());
     }
 
     private void registerCastComponents() {
@@ -388,6 +390,11 @@ public class Hexcode extends JavaPlugin {
         HexExecutionQueue.setResourceType(hexExecutionQueueType);
         entityStoreRegistry.registerSystem(new HexExecutionTickSystem());
         entityStoreRegistry.registerSystem(new HexQueueDrainEventSystem());
+
+        ResourceType<EntityStore, DebugMessageQueue> debugMessageQueueType = entityStoreRegistry
+                .registerResource(DebugMessageQueue.class, DebugMessageQueue::new);
+        DebugMessageQueue.setResourceType(debugMessageQueueType);
+        entityStoreRegistry.registerSystem(new DebugMessageFlushSystem());
 
     }
 

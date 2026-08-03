@@ -37,7 +37,7 @@ public class SessionRecoverySystem extends RefSystem<EntityStore> {
                 return;
             }
 
-            LOGGER.atInfo().log("[hexcode] recovering orphaned session for reconnecting player");
+            LOGGER.atFine().log("[hexcode] recovering orphaned session for reconnecting player");
             ItemStack item = session.getStoredItem();
             if (item != null && !item.isEmpty()) {
                 HexSlot slot = session.getSourceSlot();

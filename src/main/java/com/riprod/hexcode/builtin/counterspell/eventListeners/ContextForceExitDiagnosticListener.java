@@ -28,6 +28,6 @@ public class ContextForceExitDiagnosticListener extends EntityEventSystem<Entity
     public void handle(int index, @Nonnull ArchetypeChunk<EntityStore> chunk,
             @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull ContextForceExitEvent event) {
-        LOGGER.atInfo().log("[event] ContextForceExit player=%s", event.getPlayer());
+        LOGGER.atFine().log("[event] ContextForceExit player=%s", event.getPlayer());
     }
 }

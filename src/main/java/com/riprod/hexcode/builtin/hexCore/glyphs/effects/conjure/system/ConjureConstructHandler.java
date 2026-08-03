@@ -92,7 +92,8 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
             }
         }
 
-        if (triggering.getNextLinks() == null || triggering.getNextLinks().size() == 0) {
+        List<String> nextLinks = triggering.getNextLinks();
+        if (nextLinks == null || nextLinks.isEmpty()) {
             return false;
         }
 

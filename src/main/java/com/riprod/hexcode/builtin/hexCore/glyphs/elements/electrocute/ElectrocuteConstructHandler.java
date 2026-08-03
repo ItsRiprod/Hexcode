@@ -33,13 +33,13 @@ public class ElectrocuteConstructHandler implements ConstructHandler<Electrocute
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("electrocute: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("electrocute: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<ElectrocuteState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("electrocute: terminated early; chain suppressed");
+        LOGGER.atFine().log("electrocute: terminated early; chain suppressed");
     }
 
     @Override

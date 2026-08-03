@@ -91,7 +91,7 @@ public class ShapeTemplateStore {
                 GSON.toJson(data, writer);
             }
 
-            LOGGER.atInfo().log("saved training template for '" + shapeId + "' (" + processed.length
+            LOGGER.atFine().log("saved training template for '" + shapeId + "' (" + processed.length
                     + " points) to " + file + " in pack '" + pack.getName() + "'");
             return Result.ok(file, pack.getName());
         } catch (IOException e) {
@@ -125,7 +125,7 @@ public class ShapeTemplateStore {
                 return owner;
             }
             if (owner != null) {
-                LOGGER.atInfo().log("owner pack '" + ownerName + "' is immutable; falling back");
+                LOGGER.atFine().log("owner pack '" + ownerName + "' is immutable; falling back");
             }
         }
 

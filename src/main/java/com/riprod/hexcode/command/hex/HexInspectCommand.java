@@ -239,6 +239,6 @@ public class HexInspectCommand extends AbstractPlayerCommand {
 
     private void send(PlayerRef playerRef, String message) {
         playerRef.sendMessage(Message.raw(message));
-        LOGGER.atInfo().log(message);
+        LOGGER.atFine().log(message);
     }
 }

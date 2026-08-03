@@ -64,7 +64,7 @@ public class CraftingShapeDrawnSystem extends EntityEventSystem<EntityStore, Sha
         ShapeStructure structure = event.getStructure();
         GlyphAsset matched = GlyphResolver.resolve(structure);
         if (matched == null) {
-            LOGGER.atInfo().log("no matching glyph found for drawn shape");
+            LOGGER.atFine().log("no matching glyph found for drawn shape");
             return;
         }
 
@@ -82,7 +82,7 @@ public class CraftingShapeDrawnSystem extends EntityEventSystem<EntityStore, Sha
         HeadRotation headRotation = chunk.getComponent(index, HeadRotation.getComponentType());
         Vector3d spawnPos = CraftingGlyphSpawner.calculateDrawCenter(structure.getShapes());
         if (spawnPos == null || headRotation == null) {
-            LOGGER.atInfo().log("cannot spawn drawn hex: missing draw position");
+            LOGGER.atFine().log("cannot spawn drawn hex: missing draw position");
             return;
         }
 

@@ -82,7 +82,7 @@ public class CasterSpellTeardownSystem extends RefSystem<EntityStore> {
             return root != null && root.getSourceRef(store) == ref;
         });
         if (purged > 0) {
-            LOGGER.atInfo().log("[hexcode] dropped %d queued glyph(s) for a departing caster", purged);
+            LOGGER.atFine().log("[hexcode] dropped %d queued glyph(s) for a departing caster", purged);
         }
     }
 }

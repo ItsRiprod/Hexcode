@@ -133,7 +133,7 @@ public final class DrawCaptureService {
                 capture.getStrokePoints(), training.packOverride());
         if (result.success) {
             shapeDetector.clearCache();
-            LOGGER.atInfo().log("recorded training template for '%s' (%d points) into pack '%s'",
+            LOGGER.atFine().log("recorded training template for '%s' (%d points) into pack '%s'",
                     training.shapeId(), capture.getStrokePoints().size() / 2, result.packName);
         } else {
             LOGGER.atWarning().log("training template for '%s' failed: %s", training.shapeId(), result.error);

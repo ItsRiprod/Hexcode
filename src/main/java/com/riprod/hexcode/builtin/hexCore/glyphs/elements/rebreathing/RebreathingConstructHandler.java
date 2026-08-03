@@ -33,13 +33,13 @@ public class RebreathingConstructHandler implements ConstructHandler<Rebreathing
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("rebreathing: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("rebreathing: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<RebreathingState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("rebreathing: terminated early; chain suppressed");
+        LOGGER.atFine().log("rebreathing: terminated early; chain suppressed");
     }
 
     @Override

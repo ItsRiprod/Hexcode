@@ -55,6 +55,7 @@ public class HoverableUtils {
         double bestVolume = Double.MAX_VALUE;
 
         Ref<EntityStore> best = null;
+        Vector2d minMax = new Vector2d();
 
         for (int i = 0; i < targetRefs.size(); i++) {
             Ref<EntityStore> targetRef = targetRefs.get(i);
@@ -67,15 +68,15 @@ public class HoverableUtils {
                     continue;
             }
 
-            Vector2d minMax = rayIntersect(accessor, targetRef, rayStart, rayDir);
+            Box box = rayIntersect(accessor, targetRef, rayStart, rayDir, minMax);
 
-            if (minMax == null)
+            if (box == null)
                 continue;
 
             if (minMax.x < 0)
                 continue;
 
-            if (minMax.x < firstTMin) { 
+            if (minMax.x < firstTMin) {
                 firstTMin = minMax.x;
                 firstTMax = minMax.y;
             }
@@ -84,7 +85,7 @@ public class HoverableUtils {
                 continue;
             }
 
-            double boxVolume = boundingVolume(accessor, targetRef);
+            double boxVolume = boundingVolume(box);
             if (boxVolume < bestVolume) {
                 bestVolume = boxVolume;
                 best = targetRef;
@@ -94,8 +95,8 @@ public class HoverableUtils {
         return best;
     }
 
-    private static Vector2d rayIntersect(CommandBuffer<EntityStore> accessor, Ref<EntityStore> targetRef,
-            Vector3d rayStart, Vector3d rayDir) {
+    private static Box rayIntersect(CommandBuffer<EntityStore> accessor, Ref<EntityStore> targetRef,
+            Vector3d rayStart, Vector3d rayDir, Vector2d outMinMax) {
 
         TransformComponent transform = accessor.getComponent(targetRef, TransformComponent.getComponentType());
 
@@ -105,21 +106,13 @@ public class HoverableUtils {
             return null;
 
         Vector3d pos = transform.getPosition();
-        Vector2d minMax = new Vector2d();
-        boolean hit = CollisionMath.intersectRayAABB(rayStart, rayDir, pos.x, pos.y, pos.z, box.getBoundingBox(),
-                minMax);
+        Box shape = box.getBoundingBox();
+        boolean hit = CollisionMath.intersectRayAABB(rayStart, rayDir, pos.x, pos.y, pos.z, shape, outMinMax);
 
-        return hit ? minMax : null;
+        return hit ? shape : null;
     }
 
-    private static double boundingVolume(CommandBuffer<EntityStore> accessor, Ref<EntityStore> ref) {
-        BoundingBox bbox = accessor.getComponent(ref, BoundingBox.getComponentType());
-
-        if (bbox == null) {
-            return Double.MAX_VALUE;
-        }
-
-        Box box = bbox.getBoundingBox();
+    private static double boundingVolume(Box box) {
         Vector3d min = box.getMin();
         Vector3d max = box.getMax();
         return (max.x - min.x) * (max.y - min.y) * (max.z - min.z);

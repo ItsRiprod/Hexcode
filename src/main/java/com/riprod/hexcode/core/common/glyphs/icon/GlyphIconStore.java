@@ -77,7 +77,7 @@ public final class GlyphIconStore {
             try {
                 AssetModule.get().registerPack(target.packName, target.root, manifest,
                         AssetPack.PackSource.RUNTIME);
-                LOGGER.atInfo().log("glyph icons: registered synthetic pack '" + target.packName
+                LOGGER.atFine().log("glyph icons: registered synthetic pack '" + target.packName
                         + "' at " + target.root);
             } catch (Exception e) {
                 LOGGER.atWarning().withCause(e).log("glyph icons: failed to register synthetic pack '"
@@ -85,7 +85,7 @@ public final class GlyphIconStore {
             }
         }
 
-        LOGGER.atInfo().log("glyph icons: generated=" + counts[0] + " skipped(existing)=" + counts[1]
+        LOGGER.atFine().log("glyph icons: generated=" + counts[0] + " skipped(existing)=" + counts[1]
                 + " failed=" + counts[2] + " pack='" + target.packName + "'");
 
         return new Result(counts[0], counts[1], counts[2], target.packName);

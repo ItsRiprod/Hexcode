@@ -64,7 +64,7 @@ public final class ConstructSplicer {
             raw.setPendingNextGlyphIds(rawStatus, newChain);
         }
 
-        LOGGER.atInfo().log(
+        LOGGER.atFine().log(
                 "splice: mode=%s policy=%s glyphs=%d outputs=%d originalNext=%d casterChildren=%d",
                 chainMode, varPolicy, glyphsCopied, outputsRewired,
                 originalNext.size(), casterChildren.size());
