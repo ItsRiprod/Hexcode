@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalAr
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractAsyncCommand;
 import com.hypixel.hytale.server.core.modules.time.TimeResource;
+import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProvider;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -34,6 +35,7 @@ public class HexTimeoutCommand extends AbstractAsyncCommand {
 
     public HexTimeoutCommand() {
         super("timeout", "server.hexcode.commands.timeout.desc");
+        this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADMIN);
     }
 
     @Nonnull
