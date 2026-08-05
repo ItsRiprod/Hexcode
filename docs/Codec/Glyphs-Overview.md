@@ -756,15 +756,3 @@ The following are planned but not yet implemented:
 ### \[|▽\] OnSleep\*
 
 \*Glyphs are not fully implemented or are a bit buggy in the current version of Hexcode.
-
-
-# Testing Neils Vibe Coded Website
-
-H
-<img alt="◯△" src="../../src/main/resources/Common/UI/Custom/Pages/Memories/glyphs/Projectile.png" style="width:92px;height:92px">
-
-E
-![◯△](../../src/main/resources/Common/UI/Custom/Pages/Memories/glyphs/Projectile.png)
-
-X
-<img alt="◯△" src="../../src/main/resources/Common/UI/Custom/Pages/Memories/glyphs/Projectile.png">
