@@ -31,9 +31,10 @@ import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class CraftingShapeDrawnSystem extends EntityEventSystem<EntityStore, ShapeDrawnEvent> {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CRAFT);
 
     public CraftingShapeDrawnSystem() {
         super(ShapeDrawnEvent.class);
@@ -64,7 +65,7 @@ public class CraftingShapeDrawnSystem extends EntityEventSystem<EntityStore, Sha
         ShapeStructure structure = event.getStructure();
         GlyphAsset matched = GlyphResolver.resolve(structure);
         if (matched == null) {
-            LOGGER.atInfo().log("no matching glyph found for drawn shape");
+            LOGGER.atFine().log("no matching glyph found for drawn shape");
             return;
         }
 
@@ -82,7 +83,7 @@ public class CraftingShapeDrawnSystem extends EntityEventSystem<EntityStore, Sha
         HeadRotation headRotation = chunk.getComponent(index, HeadRotation.getComponentType());
         Vector3d spawnPos = CraftingGlyphSpawner.calculateDrawCenter(structure.getShapes());
         if (spawnPos == null || headRotation == null) {
-            LOGGER.atInfo().log("cannot spawn drawn hex: missing draw position");
+            LOGGER.atFine().log("cannot spawn drawn hex: missing draw position");
             return;
         }
 

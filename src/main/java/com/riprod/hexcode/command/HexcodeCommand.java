@@ -2,7 +2,6 @@ package com.riprod.hexcode.command;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
@@ -12,6 +11,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.command.admin.HexResumeCommand;
 import com.riprod.hexcode.command.admin.HexStopCommand;
+import com.riprod.hexcode.command.admin.HexLogCommand;
 import com.riprod.hexcode.command.admin.HexTimeoutCommand;
 import com.riprod.hexcode.command.draw.DrawTrainCommand;
 import com.riprod.hexcode.command.glyph.GlyphsForgetCommand;
@@ -25,11 +25,12 @@ import com.riprod.hexcode.command.hex.HexTestRoundtripCommand;
 import com.riprod.hexcode.builtin.hextreme.command.HexPageCommand;
 
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.riprod.hexcode.utils.LogScopes;
 
 import javax.annotation.Nonnull;
 
 public class HexcodeCommand extends AbstractPlayerCommand {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CMD);
     public HexcodeCommand() {
         super("hexcode", "Hexcode spell-crafting mod commands");
         this.setPermissionGroups(HytalePermissionsProvider.GROUP_ADVENTURER);
@@ -47,9 +48,11 @@ public class HexcodeCommand extends AbstractPlayerCommand {
         addSubCommand(new HexResetCommand());
         addSubCommand(new HexPageCommand());
         addSubCommand(new HexTestVisualCommand());
+        addSubCommand(new HexChatProbeCommand());
         addSubCommand(new HexStopCommand());
         addSubCommand(new HexResumeCommand());
         addSubCommand(new HexTimeoutCommand());
+        addSubCommand(new HexLogCommand());
     }
 
     @Override
@@ -58,7 +61,7 @@ public class HexcodeCommand extends AbstractPlayerCommand {
         try {
             showHelp(ctx);
         } catch (Exception e) {
-            LOGGER.atSevere().log("[hexcode] HexcodeCommand failed: %s", e.getMessage());
+            LOGGER.atSevere().log("HexcodeCommand failed: %s", e.getMessage());
         }
     }
 
@@ -76,5 +79,6 @@ public class HexcodeCommand extends AbstractPlayerCommand {
         ctx.sendMessage(Message.raw("/hexcode train - Start a draw training session"));
         ctx.sendMessage(Message.raw("/hexcode reset - Force reset hexcode state to IDLE"));
         ctx.sendMessage(Message.raw("/hexcode testvisual --radius=<r> - Send a trigger-volume sphere at your position"));
+        ctx.sendMessage(Message.raw("/hexcode log <scope|all|list> --level=<level> - Read or set hexcode log scope levels"));
     }
 }

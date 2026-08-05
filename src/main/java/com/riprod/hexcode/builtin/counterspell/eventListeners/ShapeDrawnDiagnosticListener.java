@@ -12,9 +12,10 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.dispatch.ShapeDrawnEvent;
 import com.riprod.hexcode.api.dispatch.ShapeStructure;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class ShapeDrawnDiagnosticListener extends EntityEventSystem<EntityStore, ShapeDrawnEvent> {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DIAG);
 
     public ShapeDrawnDiagnosticListener() {
         super(ShapeDrawnEvent.class);
@@ -30,7 +31,7 @@ public class ShapeDrawnDiagnosticListener extends EntityEventSystem<EntityStore,
             @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull ShapeDrawnEvent event) {
         ShapeStructure structure = event.getStructure();
-        LOGGER.atInfo().log("[event] ShapeDrawn player=%s shapes=%d volatility=%.3f efficiency=%.3f cancelled=%s",
+        LOGGER.atFine().log("[event] ShapeDrawn player=%s shapes=%d volatility=%.3f efficiency=%.3f cancelled=%s",
                 event.getPlayer(), structure.getShapes().size(), structure.getVolatility(),
                 structure.getEfficiency(), event.isCancelled());
     }

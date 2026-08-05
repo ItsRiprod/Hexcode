@@ -24,6 +24,7 @@ import com.riprod.hexcode.builtin.hexCore.pedestals.PedestalSceneHover;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
+import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 
 public class CraftingTickSystem extends EntityTickingSystem<EntityStore> {
@@ -57,7 +58,8 @@ public class CraftingTickSystem extends EntityTickingSystem<EntityStore> {
                 return;
             }
 
-            PedestalSceneHover.tick(buffer, dt, player, pedestal);
+            PedestalSceneHover.tick(buffer, dt, player, pedestal,
+                    SessionUtils.resolveSession(pedestal, buffer));
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("[hexcode] crafting tick failed");
         }

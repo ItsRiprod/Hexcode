@@ -20,10 +20,11 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CAST);
 
     @Override
     public Query<EntityStore> getQuery() {
@@ -44,13 +45,13 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
 
             // snapshot ids; onEnd/onAbort may chain glyphs that addEffect to this same map
             List<UUID> ids = new ArrayList<>(construct.getEffects().keySet());
-            List<Runnable> deferred = new ArrayList<>();
+            ConstructTickContext ctx = new ConstructTickContext(chunk, index, buffer, entityRef);
+            List<Runnable> deferred = null;
 
             for (UUID effectId : ids) {
                 HexStatus<?> status = construct.getEffects().get(effectId);
                 if (status == null) continue;
                 ConstructHandler<?> handler = ConstructRegistry.get(status.getHandlerId());
-                ConstructTickContext ctx = new ConstructTickContext(chunk, index, buffer, entityRef);
 
                 if (handler == null) {
                     LOGGER.atSevere().log("no construct handler for: %s", status.getHandlerId());
@@ -64,6 +65,7 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
                     construct.removeEffect(effectId);
                     final ConstructHandler<?> h = handler;
                     final HexStatus<?> s = status;
+                    if (deferred == null) deferred = new ArrayList<>(2);
                     deferred.add(() -> end(h, s, ctx));
                     continue;
                 }
@@ -72,17 +74,20 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
                 boolean budgetDepleted = status.getHexContext() != null
                         && status.getHexContext().volatility().getCurrent() <= 0;
                 if (killRequested || budgetDepleted) {
-                    LOGGER.atInfo().log("construct '%s' terminated (%s)",
+                    LOGGER.atFine().log("construct '%s' terminated (%s)",
                             status.getHandlerId(),
                             killRequested ? "kill requested" : "volatility depleted");
                     construct.removeEffect(effectId);
                     final ConstructHandler<?> h = handler;
                     final HexStatus<?> s = status;
+                    if (deferred == null) deferred = new ArrayList<>(2);
                     deferred.add(() -> abort(h, s, ctx));
                 }
             }
 
-            for (Runnable r : deferred) r.run();
+            if (deferred != null) {
+                for (Runnable r : deferred) r.run();
+            }
 
             if (construct.getEffects().isEmpty()) {
                 buffer.tryRemoveComponent(entityRef, HexEffectsComponent.getComponentType());

@@ -8,9 +8,10 @@ import com.hypixel.hytale.component.system.WorldEventSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.context.DrawModeEnterEvent;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class DrawModeEnterDiagnosticListener extends WorldEventSystem<EntityStore, DrawModeEnterEvent> {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DIAG);
 
     public DrawModeEnterDiagnosticListener() {
         super(DrawModeEnterEvent.class);
@@ -19,7 +20,7 @@ public class DrawModeEnterDiagnosticListener extends WorldEventSystem<EntityStor
     @Override
     public void handle(@Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull DrawModeEnterEvent event) {
-        LOGGER.atInfo().log("[event] DrawModeEnter player=%s palette=%d",
+        LOGGER.atFine().log("[event] DrawModeEnter player=%s palette=%d",
                 event.getPlayer(), event.getPalette() != null ? event.getPalette().size() : 0);
     }
 }

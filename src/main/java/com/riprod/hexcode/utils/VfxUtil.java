@@ -22,6 +22,7 @@ import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBeha
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
+import com.riprod.hexcode.core.common.utilities.DebugEmitter;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
@@ -331,25 +332,25 @@ public class VfxUtil {
     }
   }
 
-  public static void line(ComponentAccessor<EntityStore> accessor, World world, Vector3d start, Vector3d end,
+  public static void line(ComponentAccessor<EntityStore> accessor, Vector3d start, Vector3d end,
       Vector3f color,
       double thickness, float time, int flags) {
-    line(accessor, world, start, end, color, thickness, time, flags, DEFAULT_LINE_OPACITY, null);
+    line(accessor, start, end, color, thickness, time, flags, DEFAULT_LINE_OPACITY, null);
   }
 
-  public static void line(ComponentAccessor<EntityStore> accessor, World world, Vector3d start, Vector3d end,
+  public static void line(ComponentAccessor<EntityStore> accessor, Vector3d start, Vector3d end,
       Vector3f color,
       double thickness, float time, int flags, @Nullable Ref<EntityStore> ref) {
-    line(accessor, world, start, end, color, thickness, time, flags, DEFAULT_LINE_OPACITY, ref);
+    line(accessor, start, end, color, thickness, time, flags, DEFAULT_LINE_OPACITY, ref);
   }
 
-  public static void line(ComponentAccessor<EntityStore> accessor, World world, Vector3d start, Vector3d end,
+  public static void line(ComponentAccessor<EntityStore> accessor, Vector3d start, Vector3d end,
       Vector3f color,
       double thickness, float time, int flags, float opacity) {
-    line(accessor, world, start, end, color, thickness, time, flags, opacity, null);
+    line(accessor, start, end, color, thickness, time, flags, opacity, null);
   }
 
-  public static void line(ComponentAccessor<EntityStore> accessor, World world, Vector3d start, Vector3d end,
+  public static void line(ComponentAccessor<EntityStore> accessor, Vector3d start, Vector3d end,
       Vector3f color,
       double thickness, float time, int flags, float opacity, @Nullable Ref<EntityStore> ref) {
     if (opacity <= 0f)
@@ -372,20 +373,14 @@ public class VfxUtil {
     int allFlags = flags | DebugUtils.FLAG_NO_WIREFRAME;
 
     if (ref == null || !ref.isValid()) {
-      DebugUtils.add(world, DebugShape.Cube, matrix, color, opacity, time, allFlags);
+      DebugEmitter.add(accessor, DebugShape.Cube, matrix, color, opacity, time, allFlags);
       return;
     }
 
     PlayerRef playerRef = accessor.getComponent(ref, PlayerRef.getComponentType());
     if (playerRef != null) {
-      float[] arr = new float[16];
-      matrix.get(arr);
-      DisplayDebug packet = new DisplayDebug(
-          DebugShape.Cube, arr,
-          new Vector3f(
-              color.x, color.y, color.z),
-          time, (byte) allFlags, null, opacity);
-      playerRef.getPacketHandler().write(packet);
+      playerRef.getPacketHandler().write(
+          DebugEmitter.packet(DebugShape.Cube, matrix, color, opacity, time, allFlags));
     }
   }
 

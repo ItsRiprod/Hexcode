@@ -21,11 +21,12 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.LevitateStyle;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VelocityUtil;
 
 public class LevitateConstructHandler implements ConstructHandler<LevitateState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
     private static final float TERMINAL_VELOCITY = 130.0f;
 
     @Override
@@ -106,13 +107,13 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("levitate: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("levitate: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<LevitateState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("levitate: terminated early; chain suppressed");
+        LOGGER.atFine().log("levitate: terminated early; chain suppressed");
     }
 
     @Override

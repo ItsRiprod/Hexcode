@@ -14,10 +14,11 @@ import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor.component.MagicHealthComponent;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class MageArmorConstructHandler implements ConstructHandler<MageArmorState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
     public boolean onTick(float dt, HexStatus<MageArmorState> status, ConstructTickContext ctx) {
@@ -41,13 +42,13 @@ public class MageArmorConstructHandler implements ConstructHandler<MageArmorStat
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("magearmor: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("magearmor: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<MageArmorState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("magearmor: terminated early; chain suppressed");
+        LOGGER.atFine().log("magearmor: terminated early; chain suppressed");
     }
 
     @Override

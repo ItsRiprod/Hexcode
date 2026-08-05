@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
@@ -53,7 +54,7 @@ public final class CraftingGlyphSpawner {
         return new Vector3d(x / count, y / count, z / count);
     }
 
-    public static void spawnDrawnGlyph(CommandBuffer<EntityStore> buffer, Glyph glyph,
+    public static void spawnDrawnGlyph(ComponentAccessor<EntityStore> buffer, Glyph glyph,
             HexcodeSessionComponent session, Vector3d worldPos, Rotation3f rotation,
             Ref<EntityStore> playerRef) {
 

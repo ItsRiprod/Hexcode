@@ -26,10 +26,11 @@ import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.utils.BlockUtils;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
     private static final float DEFAULT_CRUSH_DAMAGE = 4.0f;
 
     @Override
@@ -53,13 +54,13 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("phase: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("phase: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<PhaseState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("phase: terminated early; chain suppressed");
+        LOGGER.atFine().log("phase: terminated early; chain suppressed");
     }
 
     @Override
@@ -95,7 +96,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
                 PhaseStyle.renderPhaseIn(blockCenter, status.getHexContext(), ctx.getBuffer());
             }
 
-            LOGGER.atInfo().log("phase: restored %d blocks", phase.getPhasedBlocks().size());
+            LOGGER.atFine().log("phase: restored %d blocks", phase.getPhasedBlocks().size());
         }
 
         ctx.getBuffer().tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);

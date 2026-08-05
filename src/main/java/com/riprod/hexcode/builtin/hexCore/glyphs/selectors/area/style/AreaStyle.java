@@ -7,7 +7,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.DebugShape;
 import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
-import com.hypixel.hytale.server.core.universe.world.World;
+import com.riprod.hexcode.core.common.utilities.DebugEmitter;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -34,8 +34,6 @@ public class AreaStyle {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset());
 
-        World world = accessor.getExternalData().getWorld();
-
         Matrix4d matrix = new Matrix4d();
         matrix.identity();
         matrix.translate(center.x, center.y, center.z);
@@ -44,7 +42,7 @@ public class AreaStyle {
         float opacity = VfxUtil.resolveAlpha(ctx, asset());
         if (opacity > 0f) {
             int flags = DebugUtils.FLAG_FADE | DebugUtils.FLAG_NO_WIREFRAME;
-            DebugUtils.add(world, DebugShape.Sphere, matrix, color, opacity, SPHERE_DURATION, flags);
+            DebugEmitter.add(accessor, DebugShape.Sphere, matrix, color, opacity, SPHERE_DURATION, flags);
         }
 
         VfxUtil.spawnPrimary(overrides, asset(), center, accessor);

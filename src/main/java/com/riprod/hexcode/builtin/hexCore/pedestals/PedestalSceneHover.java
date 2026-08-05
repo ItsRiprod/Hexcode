@@ -17,10 +17,8 @@ import com.riprod.hexcode.api.event.HoverChangeEvent;
 import com.riprod.hexcode.core.common.hover.utils.HoverableUtils;
 import com.riprod.hexcode.core.common.obelisk.system.ObeliskDispatcher;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
-import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
-import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 import com.riprod.hexcode.builtin.hexCore.scene.LinkRenderer;
 
 public final class PedestalSceneHover {
@@ -31,7 +29,7 @@ public final class PedestalSceneHover {
     }
 
     public static void tick(CommandBuffer<EntityStore> buffer, float dt, Ref<EntityStore> player,
-            PedestalBlockComponent pedestal) {
+            PedestalBlockComponent pedestal, HexcodeSessionComponent session) {
         HexcasterCraftingComponent craftingComp = buffer.getComponent(player,
                 HexcasterCraftingComponent.getComponentType());
         if (craftingComp == null)
@@ -66,18 +64,13 @@ public final class PedestalSceneHover {
             HytaleServer.get().getEventBus().dispatchFor(HoverChangeEvent.class)
                     .dispatch(new HoverChangeEvent(player, targetRef, previousHovered));
 
-            PedestalBlockComponent ped = PedestalBlockUtil.resolvePedestal(player, buffer);
-            if (ped != null) {
-                if (previousHovered != null)
-                    ObeliskDispatcher.dispatchUnhover(buffer, ped, player, previousHovered);
-                if (targetRef != null)
-                    ObeliskDispatcher.dispatchHover(buffer, ped, player, targetRef);
-            }
+            if (previousHovered != null)
+                ObeliskDispatcher.dispatchUnhover(buffer, pedestal, player, previousHovered);
+            if (targetRef != null)
+                ObeliskDispatcher.dispatchHover(buffer, pedestal, player, targetRef);
         }
 
         hoverParticles(buffer, craftingComp.getHoveredRef(), dt, pedestal);
-
-        HexcodeSessionComponent session = SessionUtils.resolveSession(pedestal, buffer);
 
         if (session != null) {
             LinkRenderer.renderLinks(buffer, session, pedestal, dt);

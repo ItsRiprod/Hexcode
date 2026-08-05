@@ -11,9 +11,10 @@ import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexStateChangeEvent;
 import com.riprod.hexcode.core.common.hexcaster.component.HexcasterComponent;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class HexTick extends EntityTickingSystem<EntityStore> {
-  private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+  private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.STATE);
 
   @Override
   public Query<EntityStore> getQuery() {
@@ -32,7 +33,7 @@ public class HexTick extends EntityTickingSystem<EntityStore> {
       HexState pending = comp.consumePendingState();
       if (pending != null) {
         HexState current = comp.getState();
-        LOGGER.atInfo().log("%s -> %s", current, pending);
+        LOGGER.atFine().log("%s -> %s", current, pending);
         HexcodeManager old = StateRouter.route(current);
         if (old != null) {
           old.lastTick(ref, comp, store, buffer, pending);
@@ -55,7 +56,7 @@ public class HexTick extends EntityTickingSystem<EntityStore> {
         manager.tick(ref, comp, dt, store, buffer);
       }
     } catch (Exception e) {
-      LOGGER.atSevere().withCause(e).log("[hexcode] HexTick failed: %s", e.getMessage());
+      LOGGER.atSevere().withCause(e).log("HexTick failed: %s", e.getMessage());
     }
   }
 }

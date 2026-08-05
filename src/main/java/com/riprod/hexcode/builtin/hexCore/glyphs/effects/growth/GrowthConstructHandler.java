@@ -12,10 +12,11 @@ import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class GrowthConstructHandler implements ConstructHandler<GrowthState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
     public boolean onTick(float dt, HexStatus<GrowthState> status, ConstructTickContext ctx) {
@@ -33,14 +34,14 @@ public class GrowthConstructHandler implements ConstructHandler<GrowthState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("growth: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("growth: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<GrowthState> status, ConstructTickContext ctx) {
         GrowthState state = status.getState();
         cleanup(ctx, state != null ? state.getEffectId() : null);
-        LOGGER.atInfo().log("growth: terminated early; chain suppressed");
+        LOGGER.atFine().log("growth: terminated early; chain suppressed");
     }
 
     @Override

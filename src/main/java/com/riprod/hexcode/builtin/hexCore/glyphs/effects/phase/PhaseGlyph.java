@@ -34,10 +34,11 @@ import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class PhaseGlyph implements GlyphHandler {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
     public String getId() {
@@ -150,7 +151,7 @@ public class PhaseGlyph implements GlyphHandler {
 
         hexContext.getHexRoot().addDependency(hexContext, phaseRef);
 
-        LOGGER.atInfo().log("phase: phased block for %.1f seconds", duration);
+        LOGGER.atFine().log("phase: phased block for %.1f seconds", duration);
     }
 
     private Vector3i resolveBlockPosition(HexVar targets, HexContext hexContext) {

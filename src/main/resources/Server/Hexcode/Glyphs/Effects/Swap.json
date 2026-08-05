@@ -1,6 +1,5 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Swap",
   "Style": {
     "PrimaryColor": "#B366FF",
     "SecondaryColor": "#DCB3FF",
@@ -58,5 +57,6 @@
       "DefaultMagnitude": 5.0,
       "Exponent": 1.0
     }
-  }
+  },
+  "Handler": "Swap"
 }

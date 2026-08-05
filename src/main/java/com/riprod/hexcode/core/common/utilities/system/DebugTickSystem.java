@@ -11,13 +11,10 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
-import com.hypixel.hytale.protocol.packets.player.DisplayDebug;
-import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.utilities.DebugEmitter;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
@@ -85,26 +82,18 @@ public class DebugTickSystem extends EntityTickingSystem<EntityStore> {
             if (targetRef != null && targetRef.isValid()) {
                 PlayerRef playerRef = store.getComponent(targetRef, PlayerRef.getComponentType());
                 if (playerRef != null) {
-                    DisplayDebug packet = new DisplayDebug(
-                            debug.getShape(), matrixToFloatArray(matrix),
-                            new Vector3f(
-                                    debug.getColor().x, debug.getColor().y, debug.getColor().z),
-                            debug.getFadeTime(), (byte) debug.getFlags(), null, debug.getOpacity());
-                    playerRef.getPacketHandler().write(packet);
+                    playerRef.getPacketHandler().write(DebugEmitter.packet(
+                            debug.getShape(), matrix, debug.getColor(),
+                            debug.getOpacity(), debug.getFadeTime(), debug.getFlags()));
                 }
-            } else {
-                World world = buffer.getExternalData().getWorld();
-                DebugUtils.add(world, debug.getShape(), matrix, debug.getColor(), debug.getOpacity(),
-                        debug.getFadeTime(), debug.getFlags());
+                return;
             }
+
+            DebugEmitter.send(store, pos, DebugEmitter.packet(
+                    debug.getShape(), matrix, debug.getColor(),
+                    debug.getOpacity(), debug.getFadeTime(), debug.getFlags()));
         } catch (Exception e) {
             LOGGER.atSevere().log("[hexcode] DebugTickSystem failed: %s", e.getMessage());
         }
-    }
-
-    private static float[] matrixToFloatArray(Matrix4d m) {
-        float[] arr = new float[16];
-        m.get(arr);
-        return arr;
     }
 }

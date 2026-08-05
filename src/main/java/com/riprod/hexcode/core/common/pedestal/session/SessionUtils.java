@@ -34,10 +34,11 @@ import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalItemUtil;
 import com.riprod.hexcode.state.HexState;
 import com.riprod.hexcode.utils.CleanupUtils;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class SessionUtils {
 
-    private static final HytaleLogger logger = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger logger = HytaleLogger.get(LogScopes.CRAFT);
 
     public static HexcodeSessionComponent createSession(CommandBuffer<EntityStore> buffer,
             PedestalBlockComponent pedestal, Vector3i pedestalLocation,
@@ -60,7 +61,7 @@ public class SessionUtils {
             craftingComp.setSessionRef(ownerRef);
         }
 
-        logger.atInfo().log("session created at %s, open=%s", pedestalLocation, isOpen);
+        logger.atFine().log("session created at %s, open=%s", pedestalLocation, isOpen);
         return session;
     }
 
@@ -79,7 +80,7 @@ public class SessionUtils {
             craftingComp.setSessionRef(ownerRef);
         }
 
-        logger.atInfo().log("player joined session at %s", session.getPedestalLocation());
+        logger.atFine().log("player joined session at %s", session.getPedestalLocation());
     }
 
     public static void leaveSession(CommandBuffer<EntityStore> buffer, Ref<EntityStore> participantRef,
@@ -190,7 +191,7 @@ public class SessionUtils {
         }
         session.setActiveContainerRef(null);
 
-        logger.atInfo().log("ending session at %s", session.getPedestalLocation());
+        logger.atFine().log("ending session at %s", session.getPedestalLocation());
 
         Set<Ref<EntityStore>> participants = session.getParticipantRefs();
         for (Ref<EntityStore> pRef : new ArrayList<>(participants)) {

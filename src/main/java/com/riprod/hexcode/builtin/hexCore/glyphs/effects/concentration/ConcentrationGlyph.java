@@ -67,7 +67,7 @@ public class ConcentrationGlyph implements GlyphHandler {
 
         ConcentrationState existing = ConstructStateUtil.findState(
                 accessor, casterRef, ConcentrationGlyph.ID, ConcentrationState.class);
-        boolean pending = HexConstructSpawner.hasPendingApply(casterRef, ConcentrationGlyph.ID);
+        boolean pending = HexConstructSpawner.hasPendingApply(accessor, casterRef, ConcentrationGlyph.ID);
         if (existing != null || pending) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Already concentrating");

@@ -31,11 +31,12 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
+import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VfxUtil;
 
 public class EnsnareConstructHandler implements ConstructHandler<NoState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
     private static int damageCauseIndex = -1;
 
     @Override
@@ -64,7 +65,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
                 ctx.getIndex(), EnsnareComponent.getComponentType());
         if (ensnare != null) {
             removeSpikes(ensnare, status, ctx.getBuffer());
-            LOGGER.atInfo().log("ensnare: expired after %.1fs, removed %d spikes",
+            LOGGER.atFine().log("ensnare: expired after %.1fs, removed %d spikes",
                     ensnare.getDurationSeconds(), ensnare.getSpikes().size());
         }
 

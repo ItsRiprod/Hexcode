@@ -1,7 +1,6 @@
 package com.riprod.hexcode.builtin.counterspell;
 
 import com.hypixel.hytale.component.ComponentRegistryProxy;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -22,11 +21,10 @@ import com.riprod.hexcode.builtin.counterspell.eventListeners.HexStateDiagnostic
 import com.riprod.hexcode.builtin.counterspell.eventListeners.ShapeDrawnDiagnosticListener;
 
 public class CounterspellPlugin extends JavaPlugin {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     public CounterspellPlugin(JavaPluginInit init) {
         super(init);
-        LOGGER.atInfo().log("Hexcode %s sub-plugin v%s initializing...",
+        getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
                 this.getManifest().getName().toString(), this.getManifest().getVersion().toString());
     }
 

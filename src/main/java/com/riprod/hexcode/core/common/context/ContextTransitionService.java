@@ -8,9 +8,10 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.context.HexContextChangeEvent;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
+import com.riprod.hexcode.utils.LogScopes;
 
 public final class ContextTransitionService {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.STATE);
 
     private ContextTransitionService() {
     }
@@ -35,7 +36,7 @@ public final class ContextTransitionService {
             return true;
         }
         if (current != null && priority <= caster.getCurrentPriority()) {
-            LOGGER.atInfo().log("[hexcode] context enter rejected: %s(%d) vs active %s(%d)",
+            LOGGER.atFine().log("context enter rejected: %s(%d) vs active %s(%d)",
                     contextId, priority, current, caster.getCurrentPriority());
             return false;
         }
@@ -125,7 +126,7 @@ public final class ContextTransitionService {
     }
 
     private static void announce(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player, String newId) {
-        LOGGER.atInfo().log("[hexcode] context -> %s", newId);
+        LOGGER.atFine().log("context -> %s", newId);
         buffer.invoke(new HexContextChangeEvent(player, newId));
     }
 }

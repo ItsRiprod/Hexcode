@@ -95,7 +95,7 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         if (targetUuid != null) state.getVisited().add(targetUuid.getUuid());
 
         World world = buffer.getExternalData().getWorld();
-        ArcStyle.renderArc(buffer, world, origin, targetPos, hexContext);
+        ArcStyle.renderArc(buffer, origin, targetPos, hexContext);
         ArcStyle.renderHit(buffer, targetPos, hexContext);
 
         Glyph triggeringGlyph = status.getTriggeringGlyph();

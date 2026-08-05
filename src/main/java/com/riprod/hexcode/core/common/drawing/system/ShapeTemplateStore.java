@@ -17,12 +17,13 @@ import com.hypixel.hytale.server.core.asset.AssetModule;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.drawing.registry.TemplateAsset;
 import com.riprod.hexcode.core.common.drawing.system.shapes.DollarOneFixedDetector;
+import com.riprod.hexcode.utils.LogScopes;
 
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 
 public class ShapeTemplateStore {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.ASSETS);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String TEMPLATES_SUBPATH = "Server/Hexcode/Templates";
 
@@ -91,7 +92,7 @@ public class ShapeTemplateStore {
                 GSON.toJson(data, writer);
             }
 
-            LOGGER.atInfo().log("saved training template for '" + shapeId + "' (" + processed.length
+            LOGGER.atFine().log("saved training template for '" + shapeId + "' (" + processed.length
                     + " points) to " + file + " in pack '" + pack.getName() + "'");
             return Result.ok(file, pack.getName());
         } catch (IOException e) {
@@ -125,7 +126,7 @@ public class ShapeTemplateStore {
                 return owner;
             }
             if (owner != null) {
-                LOGGER.atInfo().log("owner pack '" + ownerName + "' is immutable; falling back");
+                LOGGER.atFine().log("owner pack '" + ownerName + "' is immutable; falling back");
             }
         }
 

@@ -21,7 +21,11 @@ import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIButton;
 import com.hypixel.hytale.codec.schema.metadata.ui.UICreateButtons;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIDefaultCollapsedState;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIEditor;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIEditorPreview;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIEditorSectionStart;
+import com.hypixel.hytale.codec.schema.metadata.ui.UISidebarButtons;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import javax.annotation.Nullable;
@@ -29,6 +33,9 @@ import javax.annotation.Nullable;
 import com.riprod.hexcode.core.common.node.NodeConfig;
 
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.utils.CraftingGlyphEditorSpawn;
+import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconEditorButton;
+import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconStore;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -41,6 +48,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     protected AssetExtraInfo.Data data;
     protected String id;
     protected String modelPath;
+    protected String icon;
     protected String title;
     protected String description;
     protected String verboseDescription;
@@ -94,6 +102,13 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
         return this.modelPath;
     }
 
+    public String getIcon() {
+        if (this.icon != null && !this.icon.isEmpty()) {
+            return this.icon;
+        }
+        return GlyphIconStore.derivedIconPath(this.id);
+    }
+
     public float getBasePower() {
         return this.basePower;
     }
@@ -122,7 +137,8 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
         List<ShapeAsset> resolved = new ArrayList<>(this.shapes.size());
         for (String shapeId : this.shapes) {
             ShapeAsset shape = ShapeAsset.getAssetMap().getAsset(shapeId);
-            if (shape != null) resolved.add(shape);
+            if (shape != null)
+                resolved.add(shape);
         }
         return Collections.unmodifiableList(resolved);
     }
@@ -131,7 +147,8 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
         LinkedHashMap<String, SlotConfig> resolved = new LinkedHashMap<>(this.slots.size());
         for (Map.Entry<String, String> entry : this.slots.entrySet()) {
             NodeConfig config = NodeConfig.getAssetMap().getAsset(entry.getValue());
-            if (config instanceof SlotConfig slotConfig) resolved.put(entry.getKey(), slotConfig);
+            if (config instanceof SlotConfig slotConfig)
+                resolved.put(entry.getKey(), slotConfig);
         }
         return resolved;
     }
@@ -213,20 +230,19 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                 }, (asset) -> {
                     return asset.data;
                 })
-                .appendInherited(new KeyedCodec<>("IsEnabled", Codec.BOOLEAN),
-                        (a, v) -> a.isEnabled = v, a -> a.isEnabled,
-                        (a, p) -> a.isEnabled = p.isEnabled)
-                .documentation("Whether or not the glyph is enabled")
-                .add()
-                .<String>appendInherited(new KeyedCodec<>("Handler", Codec.STRING),
-                        (a, v) -> a.handlerId = v,
-                        a -> a.handlerId,
-                        (a, p) -> a.handlerId = p.handlerId)
-                .metadata(new UIEditor(new UIEditor.Dropdown("HexcodeGlyphHandlers")))
-                .addValidatorLate(() -> GlyphHandlerKeyValidator.INSTANCE.late())
-                .documentation(
-                        "The registered glyph handler that executes this glyph - multiple glyph assets can reference one handler")
-                .add()
+                .metadata(new UIEditorPreview(UIEditorPreview.PreviewType.MODEL))
+                .metadata(new UISidebarButtons(
+                        new UIButton(GlyphIconEditorButton.BUTTON_TEXT_ID,
+                                GlyphIconEditorButton.BUTTON_ID),
+                        new UIButton(CraftingGlyphEditorSpawn.BUTTON_TEXT_ID,
+                                CraftingGlyphEditorSpawn.BUTTON_ID)))
+                .metadata(new UICreateButtons(
+                        new UIButton(GlyphIconEditorButton.BUTTON_TEXT_ID,
+                                GlyphIconEditorButton.BUTTON_ID),
+                        new UIButton(CraftingGlyphEditorSpawn.BUTTON_TEXT_ID,
+                                CraftingGlyphEditorSpawn.BUTTON_ID)))
+
+                // documentation
                 .<String>appendInherited(new KeyedCodec<>("Title", Codec.STRING),
                         (a, v) -> a.title = v, a -> a.title,
                         (a, p) -> a.title = p.title)
@@ -242,11 +258,40 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, p) -> a.verboseDescription = p.verboseDescription)
                 .documentation("Optional verbose description translation key for the glyph's memory entry")
                 .add()
-                .<String>appendInherited(new KeyedCodec<>("ModelPath", Codec.STRING),
-                        (a, v) -> a.modelPath = v, a -> a.modelPath,
-                        (a, p) -> a.modelPath = p.modelPath)
-                .addValidatorLate(() -> ModelAsset.VALIDATOR_CACHE.getValidator().late())
-                .documentation("The location of the glyph model")
+                .appendInherited(new KeyedCodec<>("Icon", Codec.STRING),
+                        (a, v) -> a.icon = v, a -> a.icon,
+                        (a, p) -> a.icon = p.icon)
+                .addValidator(GlyphIconStore.ICON_VALIDATOR)
+                .metadata(new UIEditor(new UIEditor.Icon(GlyphIconStore.ICON_PATH_TEMPLATE, 64, 64)))
+                .documentation("Custom Icon Override")
+                .add()
+
+                // config
+                .appendInherited(new KeyedCodec<>("Config", GlyphConfig.CODEC),
+                        (a, v) -> a.config = v, a -> a.config,
+                        (a, p) -> a.config = p.config)
+                .documentation("Asset-defined tuning config for the glyph")
+                .metadata(new UIEditorSectionStart("Configuration"))
+                .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
+                .add()
+                .appendInherited(new KeyedCodec<>("IsEnabled", Codec.BOOLEAN),
+                        (a, v) -> a.isEnabled = v, a -> a.isEnabled,
+                        (a, p) -> a.isEnabled = p.isEnabled)
+                .documentation("Whether or not the glyph is enabled")
+                .add()
+                .appendInherited(new KeyedCodec<>("IsDeprecated", Codec.BOOLEAN),
+                        (a, v) -> a.isDeprecated = v, a -> a.isDeprecated,
+                        (a, p) -> a.isDeprecated = p.isDeprecated)
+                .documentation("Whether or not the glyph is deprecated")
+                .add()
+                .<String>appendInherited(new KeyedCodec<>("Handler", Codec.STRING),
+                        (a, v) -> a.handlerId = v,
+                        a -> a.handlerId,
+                        (a, p) -> a.handlerId = p.handlerId)
+                .metadata(new UIEditor(new UIEditor.Dropdown("HexcodeGlyphHandlers")))
+                .addValidatorLate(() -> GlyphHandlerKeyValidator.INSTANCE.late())
+                .documentation(
+                        "The registered glyph handler that executes this glyph - multiple glyph assets can reference one handler")
                 .add()
                 .<Float>appendInherited(new KeyedCodec<>("BasePower", Codec.FLOAT),
                         (a, v) -> a.basePower = v, a -> a.basePower,
@@ -262,6 +307,25 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, p) -> a.volatility = p.volatility)
                 .documentation("The volatility config for the glyph")
                 .add()
+
+                // slots
+                .appendInherited(
+                        new KeyedCodec<>("Slots", slotMapCodec),
+                        (a, v) -> {
+                            a.slots = v != null ? new LinkedHashMap<>(v) : new LinkedHashMap<>();
+                            a.slotIndexCache = null;
+                        },
+                        a -> a.slots,
+                        (a, p) -> {
+                            a.slots = new LinkedHashMap<>(p.slots);
+                            a.slotIndexCache = null;
+                        })
+                .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
+                .metadata(new UIEditorSectionStart("Slots"))
+                .documentation("The slots available on the glyph - determines what can be connected to it")
+                .add()
+
+                // Drawing
                 .appendInherited(
                         new KeyedCodec<>("ShapeStructure",
                                 new ArrayCodec<>(ShapeAsset.CHILD_ASSET_CODEC, String[]::new)),
@@ -275,40 +339,30 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         c -> c.shapes.toArray(String[]::new),
                         (a, p) -> a.shapes = new ArrayList<>(p.shapes))
                 .documentation("The shape of the glyph - determines what it takes to draw")
+                .metadata(new UIEditorSectionStart("Drawing"))
+                .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
                 .add()
                 .appendInherited(new KeyedCodec<>("IsReversable", Codec.BOOLEAN),
                         (a, v) -> a.isReversable = v, a -> a.isReversable,
                         (a, p) -> a.isReversable = p.isReversable)
                 .documentation("Whether or not the shape is reversable (drawn in any order)")
                 .add()
-                .appendInherited(new KeyedCodec<>("IsDeprecated", Codec.BOOLEAN),
-                        (a, v) -> a.isDeprecated = v, a -> a.isDeprecated,
-                        (a, p) -> a.isDeprecated = p.isDeprecated)
-                .documentation("Whether or not the glyph is deprecated")
+                .<String>appendInherited(new KeyedCodec<>("ModelPath", Codec.STRING),
+                        (a, v) -> a.modelPath = v, a -> a.modelPath,
+                        (a, p) -> a.modelPath = p.modelPath)
+                .addValidatorLate(() -> ModelAsset.VALIDATOR_CACHE.getValidator().late())
+                .documentation("Glyph Model Override")
                 .add()
-                .appendInherited(new KeyedCodec<>("Config", GlyphConfig.CODEC),
-                        (a, v) -> a.config = v, a -> a.config,
-                        (a, p) -> a.config = p.config)
-                .documentation("Asset-defined tuning config for the glyph")
-                .add()
-                .appendInherited(
-                        new KeyedCodec<>("Slots", slotMapCodec),
-                        (a, v) -> {
-                            a.slots = v != null ? new LinkedHashMap<>(v) : new LinkedHashMap<>();
-                            a.slotIndexCache = null;
-                        },
-                        a -> a.slots,
-                        (a, p) -> {
-                            a.slots = new LinkedHashMap<>(p.slots);
-                            a.slotIndexCache = null;
-                        })
-                .add()
+
+                // Cosmetics
                 .appendInherited(new KeyedCodec<>("Style", HexStyleAsset.CHILD_ASSET_CODEC),
                         (a, v) -> a.styleId = v,
                         a -> a.styleId,
                         (a, p) -> a.styleId = p.styleId)
                 .addValidatorLate(() -> HexStyleAsset.VALIDATOR_CACHE.getValidator().late())
                 .documentation("The visual style of the glyph - particles, sounds, default colors, model")
+                .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
+                .metadata(new UIEditorSectionStart("Style"))
                 .add()
                 .build();
     }

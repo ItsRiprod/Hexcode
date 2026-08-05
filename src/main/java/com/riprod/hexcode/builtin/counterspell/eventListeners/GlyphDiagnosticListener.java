@@ -1,7 +1,9 @@
 package com.riprod.hexcode.builtin.counterspell.eventListeners;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import com.google.common.flogger.LogContext;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -27,15 +29,20 @@ public class GlyphDiagnosticListener implements Consumer<GlyphFizzleEvent> {
         Throwable cause = event.getCause();
 
         if (cause != null) {
-            LOGGER.atSevere().withCause(cause).log(
-                    "[fizzle] glyph=%s reason=%s caster=%s detail=%s",
-                    glyphId, event.getReason(), casterStr,
-                    detail != null ? detail : "<none>");
+            LOGGER.atSevere()
+                    .with(LogContext.Key.LOG_SITE_GROUPING_KEY, event.getReason())
+                    .atMostEvery(1, TimeUnit.SECONDS)
+                    .withCause(cause)
+                    .log("[fizzle] glyph=%s reason=%s caster=%s detail=%s",
+                            glyphId, event.getReason(), casterStr,
+                            detail != null ? detail : "<none>");
         } else {
-            LOGGER.atWarning().log(
-                    "[fizzle] glyph=%s reason=%s caster=%s detail=%s",
-                    glyphId, event.getReason(), casterStr,
-                    detail != null ? detail : "<none>");
+            LOGGER.atWarning()
+                    .with(LogContext.Key.LOG_SITE_GROUPING_KEY, event.getReason())
+                    .atMostEvery(1, TimeUnit.SECONDS)
+                    .log("[fizzle] glyph=%s reason=%s caster=%s detail=%s",
+                            glyphId, event.getReason(), casterStr,
+                            detail != null ? detail : "<none>");
         }
     }
 }

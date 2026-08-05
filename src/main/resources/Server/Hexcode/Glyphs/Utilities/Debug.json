@@ -22,6 +22,19 @@
       "Parent": "Next",
       "Label": "hexcode.glyphs.Debug.Next.name",
       "Description": "hexcode.glyphs.Debug.Next.description"
+    },
+    "Mode": {
+      "Type": "Boolean",
+      "Parent": "Boolean",
+      "Label": "hexcode.glyphs.Debug.mode.name",
+      "Description": "hexcode.glyphs.Debug.mode.description",
+      "DefaultValue": 1,
+      "NegativeLabel": "hexcode.glyphs.Debug.mode.negative",
+      "NegativeDescription": "hexcode.glyphs.Debug.mode.negative.description",
+      "NeutralLabel": "hexcode.glyphs.Debug.mode.neutral",
+      "NeutralDescription": "hexcode.glyphs.Debug.mode.neutral.description",
+      "PositiveLabel": "hexcode.glyphs.Debug.mode.positive",
+      "PositiveDescription": "hexcode.glyphs.Debug.mode.positive.description"
     }
   },
   "Volatility": {

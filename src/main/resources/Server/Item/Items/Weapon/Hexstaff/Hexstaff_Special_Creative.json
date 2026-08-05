@@ -1,0 +1,63 @@
+{
+  "TranslationProperties": {
+    "Name": "hexcode.items.hexstaff.special.etherial.name",
+    "Description": "hexcode.items.hexstaff.special.etherial.description"
+  },
+  "Set": "Tool_Thorium",
+  "Icon": "Icons/ItemsGenerated/Prototype_Tool_Staff_Mana.png",
+  "Model": "Items/Tools/Prototype/Prototype_Mana_Staff.blockymodel",
+  "Texture": "Items/Tools/Prototype/Prototype_Mana_Staff_Texture.png",
+  "Quality": "Legendary",
+  "ItemLevel": 999,
+  "IconProperties": {
+    "Scale": 0.35,
+    "Rotation": [
+      317.0,
+      111.0,
+      354.0
+    ],
+    "Translation": [
+      19.0,
+      -22.0
+    ]
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "Parent": "Template_HexStaff",
+  "Weapon": {
+    "StatModifiers": {
+      "Flag_IsHolding": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 1
+        }
+      ],
+      "MagicCharges": [
+        {
+          "CalculationType": "Additive",
+          "Amount": 24
+        }
+      ],
+      "Stability": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 25
+        }
+      ],
+      "Volatility": [
+        {
+          "Target": "Max",
+          "CalculationType": "Additive",
+          "Amount": 9999
+        }
+      ]
+    },
+    "EntityStatsToClear": [
+      "Flag_IsHolding",
+      "MagicCharges",
+      "Volatility"
+    ]
+  },
+  "MaxStack": 1
+}

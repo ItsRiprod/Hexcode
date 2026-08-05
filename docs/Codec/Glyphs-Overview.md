@@ -106,7 +106,7 @@ Raycasts from an entity in a direction and stores the first thing it hits. Your 
 
 ### \[◯□\] Area
 
-Collects all targets within a radius around a center point. Your area-of-effect selector. For every entity in the area, it triggers downstream glyphs. This can get pricey very quickly and typically eats up all your volatility immediately. If you hit a block, it selects all blocks. If you hit an entity, it selects all entities.  
+Collects all targets within a radius around a center point. Has a slot to continue on every entity hit, every block hit, or both. Does not ignore the caster.
 
 ---
 
@@ -756,3 +756,15 @@ The following are planned but not yet implemented:
 ### \[|▽\] OnSleep\*
 
 \*Glyphs are not fully implemented or are a bit buggy in the current version of Hexcode.
+
+
+# Testing Neils Vibe Coded Website
+
+H
+<img alt="◯△" src="../../src/main/resources/Common/UI/Custom/Pages/Memories/glyphs/Projectile.png" style="width:92px;height:92px">
+
+E
+![◯△](../../src/main/resources/Common/UI/Custom/Pages/Memories/glyphs/Projectile.png)
+
+X
+<img alt="◯△" src="../../src/main/resources/Common/UI/Custom/Pages/Memories/glyphs/Projectile.png">

@@ -3,9 +3,10 @@ package com.riprod.hexcode.core.common.utilities;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.protocol.DebugShape;
 import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
-import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public final class OrientedDebugUtil {
 
@@ -14,17 +15,18 @@ public final class OrientedDebugUtil {
     private OrientedDebugUtil() {
     }
 
-    public static void addCone(World world, Vector3d from, Vector3d to,
+    public static void addCone(ComponentAccessor<EntityStore> accessor, Vector3d from, Vector3d to,
             Vector3f color, double diameter, float time) {
         Vector3d direction = new Vector3d(to.x - from.x, to.y - from.y, to.z - from.z);
         double length = direction.length();
         if (length < EPSILON) return;
 
         Matrix4d matrix = buildOrientedMatrix(from, direction, length, diameter);
-        DebugUtils.add(world, DebugShape.Cone, matrix, color, time, DebugUtils.FLAG_NO_WIREFRAME);
+        DebugEmitter.add(accessor, DebugShape.Cone, matrix, color, DebugUtils.DEFAULT_OPACITY, time,
+                DebugUtils.FLAG_NO_WIREFRAME);
     }
 
-    public static void addCylinder(World world, Vector3d from, Vector3d to,
+    public static void addCylinder(ComponentAccessor<EntityStore> accessor, Vector3d from, Vector3d to,
             Vector3f color, double diameter, float time, int flags, float opacity) {
         if (opacity <= 0f) return;
         Vector3d direction = new Vector3d(to.x - from.x, to.y - from.y, to.z - from.z);
@@ -32,7 +34,7 @@ public final class OrientedDebugUtil {
         if (length < EPSILON) return;
 
         Matrix4d matrix = buildOrientedMatrix(from, direction, length, diameter);
-        DebugUtils.add(world, DebugShape.Cylinder, matrix, color, opacity, time,
+        DebugEmitter.add(accessor, DebugShape.Cylinder, matrix, color, opacity, time,
                 flags | DebugUtils.FLAG_NO_WIREFRAME);
     }
 

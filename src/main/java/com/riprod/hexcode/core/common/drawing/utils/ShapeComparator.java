@@ -7,9 +7,10 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.drawing.system.shapes.ShapeCacheManager;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class ShapeComparator {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DRAW);
 
     private static final int GRID = 32;
     private static final int RADIUS = 3;
@@ -34,11 +35,11 @@ public class ShapeComparator {
                 bestMatch = asset;
             }
             if (accuracy > 0f) {
-                LOGGER.atInfo().log("Compared against shape " + asset.getId() + " with accuracy " + accuracy);
+                LOGGER.atFine().log("Compared against shape " + asset.getId() + " with accuracy " + accuracy);
             }
         }
 
-        LOGGER.atInfo().log("Best shape match: " + (bestMatch != null ? bestMatch.getId() : "none") + " with accuracy "
+        LOGGER.atFine().log("Best shape match: " + (bestMatch != null ? bestMatch.getId() : "none") + " with accuracy "
                 + bestAccuracy);
 
         return bestMatch != null ? new DrawnShapeComponent(bestMatch.getId(), bestAccuracy, bestMatch) : null;

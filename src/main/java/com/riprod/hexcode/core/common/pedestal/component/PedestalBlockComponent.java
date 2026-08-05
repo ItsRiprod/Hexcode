@@ -16,6 +16,8 @@ import com.hypixel.hytale.math.vector.Vector3fUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,7 +91,7 @@ public class PedestalBlockComponent implements Component<ChunkStore> {
     private Map<String, AnimationSet> animationSetMap = Collections.emptyMap();
     protected Vector3f displayOffset = new Vector3f(0f, 0.3f, 0f);
     // transient runtime
-    private Map<String, Float> lastTickMap = new HashMap<>();
+    private Object2FloatOpenHashMap<String> lastTickMap = newTickMap();
     private List<Vector3i> obeliskLocations = new ArrayList<>();
     private Vector3i location;
     private Ref<EntityStore> sessionRef;
@@ -179,8 +181,14 @@ public class PedestalBlockComponent implements Component<ChunkStore> {
         return animationSetMap;
     }
 
+    private static Object2FloatOpenHashMap<String> newTickMap() {
+        Object2FloatOpenHashMap<String> map = new Object2FloatOpenHashMap<>();
+        map.defaultReturnValue(0f);
+        return map;
+    }
+
     public float getTickLength(String keyId) {
-        return this.lastTickMap.getOrDefault(keyId, 0f);
+        return this.lastTickMap.getFloat(keyId);
     }
 
     public void setTickLength(String keyId, float value) {
@@ -188,7 +196,7 @@ public class PedestalBlockComponent implements Component<ChunkStore> {
     }
 
     public void incrementTickLength(String keyId, float dt) {
-        this.lastTickMap.merge(keyId, dt, Float::sum);
+        this.lastTickMap.addTo(keyId, dt);
     }
 
     public boolean isPerPlayer() {
@@ -206,7 +214,8 @@ public class PedestalBlockComponent implements Component<ChunkStore> {
         copy.referenceHolder = this.referenceHolder;
         copy.displayOffset = this.displayOffset;
         copy.animationSetMap = this.animationSetMap;
-        copy.lastTickMap = new HashMap<>(this.lastTickMap);
+        copy.lastTickMap = newTickMap();
+        copy.lastTickMap.putAll(this.lastTickMap);
         copy.obeliskLocations = new ArrayList<>(this.obeliskLocations);
         copy.location = this.location;
         copy.sessionRef = this.sessionRef;

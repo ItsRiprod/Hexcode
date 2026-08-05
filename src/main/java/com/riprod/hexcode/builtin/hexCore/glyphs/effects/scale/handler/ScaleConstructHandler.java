@@ -17,10 +17,11 @@ import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.components.ScaleState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.style.ScaleStyle;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
     public boolean onTick(float dt, HexStatus<ScaleState> status, ConstructTickContext ctx) {
@@ -39,13 +40,13 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("scale: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("scale: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<ScaleState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("scale: terminated early; chain suppressed");
+        LOGGER.atFine().log("scale: terminated early; chain suppressed");
     }
 
     @Override
@@ -84,7 +85,7 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
                 buffer.tryRemoveEntity(visualRef, RemoveReason.REMOVE);
             }
         } catch (Exception e) {
-            LOGGER.atSevere().log("[hexcode] ScaleConstructHandler cleanup failed: %s", e.getMessage());
+            LOGGER.atSevere().log("ScaleConstructHandler cleanup failed: %s", e.getMessage());
         }
     }
 

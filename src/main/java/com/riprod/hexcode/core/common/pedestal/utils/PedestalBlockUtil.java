@@ -1,6 +1,7 @@
 package com.riprod.hexcode.core.common.pedestal.utils;
 
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import org.joml.Vector3i;
@@ -38,7 +39,7 @@ public class PedestalBlockUtil {
     }
 
     public static PedestalBlockComponent resolvePedestal(Ref<EntityStore> playerRef,
-            CommandBuffer<EntityStore> buffer) {
+            ComponentAccessor<EntityStore> buffer) {
 
         HexcodeSessionComponent session = buffer.getComponent(playerRef,
                 HexcodeSessionComponent.getComponentType());

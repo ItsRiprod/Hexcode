@@ -9,12 +9,13 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.drawing.registry.TemplateAsset;
+import com.riprod.hexcode.utils.LogScopes;
 
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 
 public class DollarOneDetector implements ShapeDetector {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DRAW);
 
     private static final int N = 64;
     private static final float SQUARE_SIZE = 250f;
@@ -305,6 +306,8 @@ public class DollarOneDetector implements ShapeDetector {
     }
 
     private void logTopCandidates(List<String> names, List<Float> scores) {
+        if (!LOGGER.atFine().isEnabled()) return;
+
         List<int[]> indices = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) indices.add(new int[] { i });
         indices.sort((a, b) -> Float.compare(scores.get(b[0]), scores.get(a[0])));
@@ -315,7 +318,7 @@ public class DollarOneDetector implements ShapeDetector {
             sb.append(String.format(" #%d: %s (%.4f)", j + 1, names.get(idx), scores.get(idx)));
             if (j < 2 && j < indices.size() - 1) sb.append(" |");
         }
-        LOGGER.atInfo().log(sb.toString());
+        LOGGER.atFine().log(sb.toString());
     }
 
     @Override
@@ -357,7 +360,7 @@ public class DollarOneDetector implements ShapeDetector {
             counts[1]++;
         });
 
-        LOGGER.atInfo().log("DollarOneDetector initialized with " + templateCache.size()
+        LOGGER.atFine().log("DollarOneDetector initialized with " + templateCache.size()
                 + " templates (" + counts[0] + " from TemplateAsset, " + counts[1] + " from PNG).");
     }
 

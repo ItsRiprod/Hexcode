@@ -11,9 +11,10 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.common.ContextForceExitEvent;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class ContextForceExitDiagnosticListener extends EntityEventSystem<EntityStore, ContextForceExitEvent> {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DIAG);
 
     public ContextForceExitDiagnosticListener() {
         super(ContextForceExitEvent.class);
@@ -28,6 +29,6 @@ public class ContextForceExitDiagnosticListener extends EntityEventSystem<Entity
     public void handle(int index, @Nonnull ArchetypeChunk<EntityStore> chunk,
             @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull ContextForceExitEvent event) {
-        LOGGER.atInfo().log("[event] ContextForceExit player=%s", event.getPlayer());
+        LOGGER.atFine().log("[event] ContextForceExit player=%s", event.getPlayer());
     }
 }

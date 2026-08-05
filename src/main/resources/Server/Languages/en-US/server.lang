@@ -20,6 +20,22 @@ hexcode.notifications.glyphDisabled={glyphName} won't work on this server! (disa
 hexcode.notifications.glyphDeprecated={glyphName} is deprecated.
 hexcode.notifications.glyphBlocked={glyphName} Blocked
 
+hexcode.assetEditor.buttons.regenerateGlyphIcon=Regenerate Icon
+hexcode.assetEditor.messages.glyphIcon.regenerated=Regenerated the icon for {id}
+hexcode.assetEditor.messages.glyphIcon.unknownGlyph=No glyph asset named {id} is loaded
+hexcode.assetEditor.messages.glyphIcon.notRenderable={id} has no renderable model, so its icon was left alone
+hexcode.assetEditor.messages.glyphIcon.noWritablePack=No writable asset pack is available to hold glyph icons
+hexcode.assetEditor.messages.glyphIcon.writeFailed=Failed to write the icon for {id} - check the server log
+hexcode.assetEditor.buttons.spawnGlyph=Spawn Glyph
+hexcode.assetEditor.messages.spawnGlyph.spawned=Spawned {id} in front of you
+hexcode.assetEditor.messages.spawnGlyph.noGameClient=Join the world with a game client to spawn a glyph
+hexcode.assetEditor.messages.spawnGlyph.notCrafting=Stand at a pedestal in crafting mode to spawn {id}
+hexcode.assetEditor.messages.spawnGlyph.noSession=No active pedestal session to attach {id} to
+hexcode.assetEditor.messages.spawnGlyph.outOfRange=Look closer to the pedestal - {id} would land outside its range
+hexcode.assetEditor.messages.spawnGlyph.cancelled=Something blocked {id} from being placed
+
+hexcode.assetEditor.messages.glyphIcon.overridden=Regenerated the icon for {id}, but this glyph uses a custom icon override so the generated one is not shown
+
 hexcode.commands.stop.desc=Halt all spellcasting in a world until resumed
 hexcode.commands.timeout.desc=Time out spellcasting for a player or the whole world
 hexcode.commands.timeout.duration.desc=Timeout length in seconds

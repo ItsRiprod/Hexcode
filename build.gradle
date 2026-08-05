@@ -33,8 +33,10 @@ configurations {
 dependencies {
     compileOnly libs.jetbrains.annotations
     compileOnly libs.jspecify
-    // shadowBundle(files('lib/Patchly-3.4.3.jar'))
-    shadowBundle('curse.maven:patchly-1550889:8498417')
+    shadowBundle(files('lib/Patchly-3.4.4.jar'))
+    // shadowBundle('curse.maven:patchly-1550889:8498417')
+
+    shadowBundle(files('lib/Configly-1.0.0.jar'))
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.3'
 }
@@ -113,6 +115,7 @@ shadowJar {
     mergeServiceFiles()
     configurations = [project.configurations.shadowBundle]
     relocate('com.riprod.patchly', 'com.riprod.hexcode.shaded.patchly')
+    relocate('com.riprod.configly', 'com.riprod.hexcode.shaded.configly')
 }
 
 tasks.build {

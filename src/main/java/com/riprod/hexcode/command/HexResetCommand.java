@@ -33,11 +33,12 @@ import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingCompon
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 import com.riprod.hexcode.utils.HexSlot;
+import com.riprod.hexcode.utils.LogScopes;
 
 import org.bson.BsonDocument;
 
 public class HexResetCommand extends AbstractPlayerCommand {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CMD);
 
     private static final String LEGACY_HEXSTAFF_META_KEY = "HexStaff";
 
@@ -181,6 +182,6 @@ public class HexResetCommand extends AbstractPlayerCommand {
     private void send(PlayerRef playerRef, String message, Object... args) {
         String formatted = args.length > 0 ? String.format(message, args) : message;
         playerRef.sendMessage(Message.raw(formatted));
-        LOGGER.atInfo().log(formatted);
+        LOGGER.atFine().log(formatted);
     }
 }

@@ -1,6 +1,7 @@
 package com.riprod.hexcode.core.common.obelisk.interfaces;
 
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -13,7 +14,7 @@ public interface ObeliskInterface {
     default void onStateChange(CommandBuffer<EntityStore> buffer, ObeliskBlockComponent obelisk,
             Vector3i obeliskPos, PedestalState previousState, PedestalState newState) {}
 
-    default void onGlyphDrawn(CommandBuffer<EntityStore> buffer, Ref<EntityStore> playerRef,
+    default void onGlyphDrawn(ComponentAccessor<EntityStore> buffer, Ref<EntityStore> playerRef,
             Glyph glyph, ObeliskBlockComponent obelisk) {}
 
     default void onEnterCrafting(CommandBuffer<EntityStore> buffer, Ref<EntityStore> playerRef,

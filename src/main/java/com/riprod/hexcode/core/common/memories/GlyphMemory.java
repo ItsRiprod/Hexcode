@@ -86,7 +86,8 @@ public class GlyphMemory extends NPCMemory {
     @Nullable
     @Override
     public String getIconPath() {
-        return "UI/Custom/Pages/Memories/glyphs/" + this.glyphId + ".png";
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(this.glyphId);
+        return asset != null ? asset.getIcon() : null;
     }
 
     @Override

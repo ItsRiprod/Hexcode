@@ -18,12 +18,13 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
+import com.riprod.hexcode.utils.LogScopes;
 
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 public class HexTestVisualCommand extends AbstractPlayerCommand {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CMD);
 
     static final String VOLUME_ID = "hexcode_testvisual";
     static final float DEFAULT_RADIUS = 3.0f;
@@ -56,7 +57,7 @@ public class HexTestVisualCommand extends AbstractPlayerCommand {
 
         playerRef.sendMessage(Message.raw(String.format(
                 "(debug) sphere volume r=%.1f at %.1f, %.1f, %.1f", radius, eye.x, eye.y, eye.z)));
-        LOGGER.atInfo().log("testvisual sphere r=%s at %s", radius, eye);
+        LOGGER.atFine().log("testvisual sphere r=%s at %s", radius, eye);
     }
 
     static TriggerVolumeDisplayEntry buildSphereEntry(@Nonnull Vector3f center, float radius) {

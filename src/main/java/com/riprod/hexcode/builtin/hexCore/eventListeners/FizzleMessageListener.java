@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -18,6 +19,9 @@ public class FizzleMessageListener implements Consumer<GlyphFizzleEvent> {
     public void accept(GlyphFizzleEvent event) {
         HexContext ctx = event.getCtx();
         if (ctx == null || ctx.getAccessor() == null)
+            return;
+        HexCast cast = ctx.cast();
+        if (cast != null && !cast.claimFizzleNotice())
             return;
         var root = ctx.getHexRoot();
         Ref<EntityStore> caster = root.getSourceRef(event.getCtx().getAccessor());

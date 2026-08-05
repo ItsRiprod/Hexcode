@@ -13,13 +13,14 @@ import com.hypixel.hytale.server.core.modules.block.components.ItemContainerBloc
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.riprod.hexcode.core.common.imbuement.asset.EssenceAsset;
+import com.riprod.hexcode.utils.LogScopes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 public final class EssenceRefill {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.IMBUE);
 
     private static final double HORIZONTAL_RADIUS = 2.0;
     private static final double VERTICAL_RADIUS = 2.0;
@@ -38,7 +39,7 @@ public final class EssenceRefill {
         idx.getSpatialStructure().ordered3DAxis(center,
                 HORIZONTAL_RADIUS, VERTICAL_RADIUS, HORIZONTAL_RADIUS, results);
 
-        LOGGER.atInfo().log("essence-refill: spatial scan around %s returned %d container(s)",
+        LOGGER.atFine().log("essence-refill: spatial scan around %s returned %d container(s)",
                 blockPos, results.size());
 
         if (results.isEmpty()) return null;
@@ -57,12 +58,12 @@ public final class EssenceRefill {
 
                 String itemId = stack.getItemId();
                 EssenceAsset essence = EssenceAsset.getAssetMap().getAsset(itemId);
-                LOGGER.atInfo().log("essence-refill: slot %d itemId=%s essenceMatch=%s",
+                LOGGER.atFine().log("essence-refill: slot %d itemId=%s essenceMatch=%s",
                         slot, itemId, essence != null ? essence.getId() : "null");
                 if (essence == null) continue;
 
                 inv.removeItemStackFromSlot(slot, 1);
-                LOGGER.atInfo().log("essence-refill: consumed %s from container", essence.getId());
+                LOGGER.atFine().log("essence-refill: consumed %s from container", essence.getId());
                 return essence;
             }
         }

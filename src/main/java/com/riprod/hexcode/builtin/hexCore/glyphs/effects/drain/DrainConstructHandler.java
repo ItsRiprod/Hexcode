@@ -17,10 +17,11 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.drain.style.DrainStyle;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class DrainConstructHandler implements ConstructHandler<DrainState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
     public boolean onTick(float dt, HexStatus<DrainState> status, ConstructTickContext ctx) {
@@ -106,14 +107,14 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
 
-        LOGGER.atInfo().log("drain: completed (%.2f drained)", state.getDrainedSoFar());
+        LOGGER.atFine().log("drain: completed (%.2f drained)", state.getDrainedSoFar());
     }
 
     @Override
     public void onAbort(HexStatus<DrainState> status, ConstructTickContext ctx) {
         DrainState state = status.getState();
         cleanup(ctx, state != null ? state.getEffectId() : null);
-        LOGGER.atInfo().log("drain: terminated early (%.2f drained); chain suppressed",
+        LOGGER.atFine().log("drain: terminated early (%.2f drained); chain suppressed",
                 state != null ? state.getDrainedSoFar() : 0f);
     }
 

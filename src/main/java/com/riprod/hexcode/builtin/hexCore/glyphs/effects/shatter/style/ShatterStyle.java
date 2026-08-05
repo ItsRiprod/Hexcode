@@ -3,7 +3,6 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style;
 import com.hypixel.hytale.component.ComponentAccessor;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -38,9 +37,8 @@ public class ShatterStyle {
         VfxUtil.spawnSecondary(overrides, asset(), hitPos, accessor);
 
         Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset());
-        World world = accessor.getExternalData().getWorld();
         Vector3d lineEnd = new Vector3d(hitPos).add(0, 0.5, 0);
-        VfxUtil.line(accessor, world, hitPos, lineEnd, color, HIT_LINE_THICKNESS, HIT_LINE_DURATION, 0,
+        VfxUtil.line(accessor, hitPos, lineEnd, color, HIT_LINE_THICKNESS, HIT_LINE_DURATION, 0,
                 VfxUtil.resolveAlpha(ctx, asset()));
     }
 

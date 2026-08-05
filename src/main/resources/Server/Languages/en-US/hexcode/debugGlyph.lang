@@ -1,4 +1,7 @@
+dropped=<i><color is="#cfcfcf">{dropped} earlier debugs dropped</color></i>
 slots.line=<color is="#cfcfcf">[{index}]:</color> <color is="#95eefa">{glyph}</color>=<b><color is="#e5c07b">{value}</color></b> - <i><color is="#c678dd">Acc: {accuracy} - Speed: {speed}</color> - <color is="#cfcfcf">{metadata}</color></i>
 slots.gis=<color is="#cfcfcf">[{index}]:</color> <color is="#95eefa">{glyph}</color> <b><color is="#e5c07b">{value}</color></b> - <i><color is="#cfcfcf">{metadata}</color></i>
 gis=Volatility: <color is="#f54150">{volatility}</color>\nComplexity:  <color is="#95eefa">{complexity}</color>\n{gis}
 slots=Volatility: <color is="#f54150">{volatility}</color>\nComplexity:  <color is="#95eefa">{complexity}</color>\n{slots}
+stats=Volatility: <color is="#f54150">{volatility}</color>\nComplexity:  <color is="#95eefa">{complexity}</color>
+values={values}

@@ -16,10 +16,11 @@ import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class HaltConstructHandler implements ConstructHandler<HaltState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
     public boolean onTick(float dt, HexStatus<HaltState> status, ConstructTickContext ctx) {
@@ -47,13 +48,13 @@ public class HaltConstructHandler implements ConstructHandler<HaltState> {
         if (state == null) return;
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
-        LOGGER.atInfo().log("halt: ended, firing %d next glyphs", state.getNextGlyphIds().size());
+        LOGGER.atFine().log("halt: ended, firing %d next glyphs", state.getNextGlyphIds().size());
     }
 
     @Override
     public void onAbort(HexStatus<HaltState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
-        LOGGER.atInfo().log("halt: terminated early; chain suppressed");
+        LOGGER.atFine().log("halt: terminated early; chain suppressed");
     }
 
     @Override

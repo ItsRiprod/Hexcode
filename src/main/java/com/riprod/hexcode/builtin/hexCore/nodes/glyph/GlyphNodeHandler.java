@@ -39,9 +39,10 @@ import com.riprod.hexcode.core.common.node.NodeInterface;
 import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class GlyphNodeHandler extends BaseGlyphHandler {
-  private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+  private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CRAFT);
   public static final GlyphNodeHandler INSTANCE = new GlyphNodeHandler();
 
   @Override
@@ -220,7 +221,7 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
 
     clearExpandedIfMatches(accessor, playerRef, nodeRef);
     accessor.tryRemoveEntity(nodeRef, RemoveReason.REMOVE);
-    LOGGER.atInfo().log("glyph node: deleted glyph %s", glyphId);
+    LOGGER.atFine().log("glyph node: deleted glyph %s", glyphId);
     return InteractionState.Finished;
   }
 
@@ -239,7 +240,7 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
     }
   }
 
-  public Ref<EntityStore> spawnNode(CommandBuffer<EntityStore> accessor, Ref<EntityStore> parentRef,
+  public Ref<EntityStore> spawnNode(ComponentAccessor<EntityStore> accessor, Ref<EntityStore> parentRef,
       Vector3d position, Ref<EntityStore> playerRef, GlyphComponent glyphComp,
       Ref<EntityStore> hexEntityRef) {
     Glyph glyph = glyphComp.getGlyph();

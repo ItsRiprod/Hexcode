@@ -2,12 +2,15 @@ package com.riprod.hexcode.builtin.hexCore.common;
 
 import javax.annotation.Nonnull;
 
+import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.RefChangeSystem;
+import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
@@ -55,6 +58,37 @@ public final class ContextForceExitSystem {
         @Override
         public void onComponentRemoved(@Nonnull Ref<EntityStore> ref, @Nonnull DeathComponent component,
                 @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer) {
+        }
+    }
+
+    public static class OnUnload extends RefSystem<EntityStore> {
+
+        @Nonnull
+        @Override
+        public Query<EntityStore> getQuery() {
+            return CasterComponent.getComponentType();
+        }
+
+        @Override
+        public void onEntityAdded(@Nonnull Ref<EntityStore> ref, @Nonnull AddReason reason,
+                @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer) {
+        }
+
+        @Override
+        public void onEntityRemove(@Nonnull Ref<EntityStore> ref, @Nonnull RemoveReason reason,
+                @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer) {
+            if (reason != RemoveReason.UNLOAD) {
+                return;
+            }
+            try {
+                CasterComponent caster = store.getComponent(ref, CasterComponent.getComponentType());
+                if (caster == null || caster.getCurrentContext() == null) {
+                    return;
+                }
+                store.invoke(ref, new ContextForceExitEvent(ref));
+            } catch (Exception e) {
+                LOGGER.atSevere().log("[hexcode] force-exit on unload failed: %s", e.getMessage());
+            }
         }
     }
 

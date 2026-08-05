@@ -11,6 +11,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.Intangible;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -129,6 +130,9 @@ public class AreaGlyph implements GlyphHandler {
 
             UUIDComponent uuid = accessor.getComponent(ref, UUIDComponent.getComponentType());
             if (uuid == null) continue;
+            var intangible = accessor.getComponent(ref, Intangible.getComponentType());
+
+            if (intangible != null) continue;
 
             gathered.add(EntityVar.createRef(uuid.getUuid(), ref));
         }

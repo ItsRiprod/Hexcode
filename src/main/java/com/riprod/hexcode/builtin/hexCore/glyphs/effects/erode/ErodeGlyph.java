@@ -30,13 +30,14 @@ import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 import java.util.Arrays;
 
 public class ErodeGlyph implements GlyphHandler {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
     public String getId() {
@@ -133,7 +134,7 @@ public class ErodeGlyph implements GlyphHandler {
             ErodeStyle.renderEntityHit(tc.getPosition(), hexContext, accessor);
         }
 
-        LOGGER.atInfo().log("erode: applied vulnerability effect for %.1fs to entity", durationSeconds);
+        LOGGER.atFine().log("erode: applied vulnerability effect for %.1fs to entity", durationSeconds);
         return true;
     }
 
@@ -180,7 +181,7 @@ public class ErodeGlyph implements GlyphHandler {
                 accessor,
                 chunkStore.getStore());
 
-        LOGGER.atInfo().log("erode: routed block hit at %s through harvest pipeline (tier=%d, scale=%.2f)",
+        LOGGER.atFine().log("erode: routed block hit at %s through harvest pipeline (tier=%d, scale=%.2f)",
                 pos, tier, damageScale);
     }
 

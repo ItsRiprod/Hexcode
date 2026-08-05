@@ -2,6 +2,8 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.debug;
 
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.Message;
@@ -16,9 +18,12 @@ import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.core.common.utilities.resource.DebugMessageQueue;
+import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class DebugGlyph implements GlyphHandler {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
     public static final String ID = "Debug";
 
     @Override
@@ -49,26 +54,51 @@ public class DebugGlyph implements GlyphHandler {
         if (pr == null)
             return;
 
+        int mode = readMode(glyph, hexContext);
+
         String volatility = volatilityText(hexContext.volatility());
         String complexity = complexityText(hexContext);
 
         Slot slot = glyph.getSlot(DebugGlyphSlots.SLOT);
         boolean wired = slot != null && slot.getFirstLink() != null;
 
-        Message msg = wired
-                ? markup(Message.translation("hexcode.debugGlyph.slots")
-                        .param("volatility", volatility)
-                        .param("complexity", complexity)
-                        .param("slots", buildSlotLines(slot, hexContext)))
-                : markup(Message.translation("hexcode.debugGlyph.gis")
-                        .param("volatility", volatility)
-                        .param("complexity", complexity)
-                        .param("gis", buildGisLines(hexContext)));
+        Message values = mode < 0 ? null
+                : wired ? buildSlotLines(slot, hexContext) : buildGisLines(hexContext);
 
-        pr.sendMessage(msg);
-        LOGGER.atInfo().log(msg.getAnsiMessage());
+        Message msg;
+        if (mode < 0) {
+            msg = markup(Message.translation("hexcode.debugGlyph.stats")
+                    .param("volatility", volatility)
+                    .param("complexity", complexity));
+        } else if (mode == 0) {
+            if (values == null)
+                return;
+            msg = markup(Message.translation("hexcode.debugGlyph.values")
+                    .param("values", values));
+        } else {
+            Message lines = values != null ? values : Message.raw("");
+            msg = wired
+                    ? markup(Message.translation("hexcode.debugGlyph.slots")
+                            .param("volatility", volatility)
+                            .param("complexity", complexity)
+                            .param("slots", lines))
+                    : markup(Message.translation("hexcode.debugGlyph.gis")
+                            .param("volatility", volatility)
+                            .param("complexity", complexity)
+                            .param("gis", lines));
+        }
+
+        hexContext.getAccessor().getResource(DebugMessageQueue.getResourceType()).append(casterRef, msg);
+        LOGGER.atFine().log(msg.getAnsiMessage());
     }
 
+    private static int readMode(Glyph glyph, HexContext hexContext) {
+        HexVar value = glyph.readSlot(DebugGlyphSlots.MODE, hexContext);
+        long rounded = Math.round(HexVarUtil.numberOrDefault(value, 1.0));
+        return (int) Math.max(-1L, Math.min(1L, rounded));
+    }
+
+    @Nullable
     private Message buildSlotLines(Slot slot, HexContext hexContext) {
         Message composite = Message.raw("");
         int index = 0;
@@ -92,9 +122,10 @@ public class DebugGlyph implements GlyphHandler {
             composite.insert(line);
             index++;
         }
-        return composite;
+        return index == 0 ? null : composite;
     }
 
+    @Nullable
     private Message buildGisLines(HexContext hexContext) {
         Message composite = Message.raw("");
         HexVar defaultVar = hexContext.getDefaultVariable();
@@ -118,7 +149,7 @@ public class DebugGlyph implements GlyphHandler {
             composite.insert(line);
             index++;
         }
-        return composite;
+        return index == 0 ? null : composite;
     }
 
     private static HexVar resolveLink(Glyph linked, HexContext hexContext) {

@@ -68,7 +68,7 @@ public class AnchorNodeHandler extends BaseNodeHandler {
                 look.getPosition().z + look.getDirection().z * 5);
 
         if (nodeTransform != null) {
-            LinkRenderer.renderActiveLink(accessor, accessor.getExternalData().getWorld(),
+            LinkRenderer.renderActiveLink(accessor,
                     nodeTransform.getPosition(), targetPoint,
                     CraftingColors.ANCHOR);
         }

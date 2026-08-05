@@ -1,5 +1,7 @@
 package com.riprod.hexcode.core.common.execution.component;
 
+import javax.annotation.Nullable;
+
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
@@ -12,27 +14,21 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
+import com.riprod.hexcode.utils.HexRefs;
 
 public class PlayerHexRoot implements HexRoot {
-    // canonical storage — codec'd. caches ref+uuid; setEntity(ref, accessor) populates
-    // both, so subsequent getEntity(...) calls return the cached ref without re-lookup.
     private PersistentRef entity;
-    // hot-path cache for getSourceRef() no-arg. set at runtime construction.
-    // null after codec decode; callers needing live ref post-decode use getEntity().
-    private transient Ref<EntityStore> playerRef;
 
     public PlayerHexRoot() {
     }
 
     public PlayerHexRoot(Ref<EntityStore> playerRef, ComponentAccessor<EntityStore> accessor) {
-        this.playerRef = playerRef;
         this.entity = new PersistentRef();
         this.entity.setEntity(playerRef, accessor);
     }
 
-    private PlayerHexRoot(PersistentRef entity, Ref<EntityStore> playerRef) {
+    private PlayerHexRoot(PersistentRef entity) {
         this.entity = entity;
-        this.playerRef = playerRef;
     }
 
     public PersistentRef getEntity() {
@@ -41,22 +37,25 @@ public class PlayerHexRoot implements HexRoot {
 
     @Override
     public boolean isAlive() {
-        return playerRef != null && playerRef.isValid();
+        return entity != null && entity.isValid();
     }
 
     @Override
     public Ref<EntityStore> getSourceRef(ComponentAccessor<EntityStore> accessor) {
-        if (playerRef != null && playerRef.isValid()) {
-            return playerRef;
-        }
-        return entity != null ? entity.getEntity(accessor) : playerRef;
+        return HexRefs.resolve(entity, accessor);
+    }
+
+    @Nullable
+    private EntityStatMap statMap(ComponentAccessor<EntityStore> accessor) {
+        Ref<EntityStore> ref = getSourceRef(accessor);
+        return ref != null ? accessor.getComponent(ref, EntityStatMap.getComponentType()) : null;
     }
 
     @Override
     public boolean tryConsumeMana(float cost, ComponentAccessor<EntityStore> accessor) {
         if (cost <= 0)
             return true;
-        EntityStatMap statMap = accessor.getComponent(playerRef, EntityStatMap.getComponentType());
+        EntityStatMap statMap = statMap(accessor);
         if (statMap == null)
             return false;
         int manaIndex = DefaultEntityStatTypes.getMana();
@@ -68,7 +67,7 @@ public class PlayerHexRoot implements HexRoot {
 
     @Override
     public float getCurrentMana(ComponentAccessor<EntityStore> accessor) {
-        EntityStatMap statMap = accessor.getComponent(playerRef, EntityStatMap.getComponentType());
+        EntityStatMap statMap = statMap(accessor);
         if (statMap == null)
             return 0f;
         return statMap.get(DefaultEntityStatTypes.getMana()).get();
@@ -78,7 +77,7 @@ public class PlayerHexRoot implements HexRoot {
     public boolean addMana(float amount, ComponentAccessor<EntityStore> accessor) {
         if (amount <= 0)
             return false;
-        EntityStatMap statMap = accessor.getComponent(playerRef, EntityStatMap.getComponentType());
+        EntityStatMap statMap = statMap(accessor);
         if (statMap == null)
             return false;
         int manaIndex = DefaultEntityStatTypes.getMana();
@@ -91,17 +90,21 @@ public class PlayerHexRoot implements HexRoot {
 
     @Override
     public void addDependency(HexContext ctx, Ref<EntityStore> ref) {
+        Ref<EntityStore> casterRef = getSourceRef(ctx.getAccessor());
+        if (casterRef == null) {
+            return;
+        }
         CasterStateComponent casterState = ctx.getAccessor().getComponent(
-                playerRef, CasterStateComponent.getComponentType());
+                casterRef, CasterStateComponent.getComponentType());
         if (casterState != null) {
             casterState.addDependency(ctx.getExecutionId(), ref);
         } else {
-            ctx.getAccessor().ensureComponent(playerRef, CasterStateComponent.getComponentType());
+            ctx.getAccessor().ensureComponent(casterRef, CasterStateComponent.getComponentType());
         }
     }
 
     public float resolveSpellPower(ComponentAccessor<EntityStore> accessor) {
-        EntityStatMap statMap = accessor.getComponent(playerRef, EntityStatMap.getComponentType());
+        EntityStatMap statMap = statMap(accessor);
         if (statMap == null)
             return 1.0f;
         int idx = HexcodeEntityStatTypes.getMagicPower();
@@ -113,7 +116,7 @@ public class PlayerHexRoot implements HexRoot {
     }
 
     public float resolveVolatility(ComponentAccessor<EntityStore> accessor) {
-        EntityStatMap statMap = accessor.getComponent(playerRef, EntityStatMap.getComponentType());
+        EntityStatMap statMap = statMap(accessor);
         if (statMap != null) {
             int volIndex = HexcodeEntityStatTypes.getVolatility();
             if (volIndex != Integer.MIN_VALUE) {
@@ -128,7 +131,7 @@ public class PlayerHexRoot implements HexRoot {
     private static final float DEFAULT_STABILITY = 100f;
 
     public float resolveStability(ComponentAccessor<EntityStore> accessor) {
-        EntityStatMap statMap = accessor.getComponent(playerRef, EntityStatMap.getComponentType());
+        EntityStatMap statMap = statMap(accessor);
         if (statMap != null) {
             int idx = HexcodeEntityStatTypes.getStability();
             if (idx != Integer.MIN_VALUE) {
@@ -143,7 +146,7 @@ public class PlayerHexRoot implements HexRoot {
     public float resolveMaxMagicCharges(ComponentAccessor<EntityStore> accessor) {
         int chargesIndex = HexcodeEntityStatTypes.getMagicCharges();
         if (chargesIndex != Integer.MIN_VALUE) {
-            EntityStatMap statMap = accessor.getComponent(playerRef, EntityStatMap.getComponentType());
+            EntityStatMap statMap = statMap(accessor);
             if (statMap != null) {
                 EntityStatValue chargesStat = statMap.get(chargesIndex);
                 if (chargesStat != null) {
@@ -162,7 +165,7 @@ public class PlayerHexRoot implements HexRoot {
 
     @Override
     public HexRoot copy() {
-        return new PlayerHexRoot(entity, playerRef);
+        return new PlayerHexRoot(entity);
     }
 
     public static final BuilderCodec<PlayerHexRoot> CODEC = BuilderCodec

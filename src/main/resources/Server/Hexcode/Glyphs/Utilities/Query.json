@@ -4,9 +4,21 @@
   "Title": "hexcode.glyphs.Query.name",
   "Description": "hexcode.glyphs.Query.description",
   "ShapeStructure": [
-    { "Parent": "Up", "RelativeSize": 1.0, "StatContribution": 0 },
-    { "Parent": "Antiline", "RelativeSize": 1.0, "StatContribution": 0 },
-    { "Parent": "Down", "RelativeSize": 1.0, "StatContribution": 0 }
+    {
+      "Parent": "Up",
+      "RelativeSize": 1.0,
+      "StatContribution": 0
+    },
+    {
+      "Parent": "Antiline",
+      "RelativeSize": 1.0,
+      "StatContribution": 0
+    },
+    {
+      "Parent": "Down",
+      "RelativeSize": 1.0,
+      "StatContribution": 0
+    }
   ],
   "Slots": {
     "Trilean": {

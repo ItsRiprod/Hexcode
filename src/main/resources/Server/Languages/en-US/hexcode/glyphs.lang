@@ -61,6 +61,14 @@ Debug.slot.name=Inspect
 Debug.slot.description=Connect to several variables to inspect their values.
 Debug.Next.name=Next
 Debug.Next.description=The next glyph in the execution chain
+Debug.mode.name=Mode
+Debug.mode.description=Selects what the readout prints
+Debug.mode.negative=Spell
+Debug.mode.negative.description=Volatility and complexity only
+Debug.mode.neutral=Values
+Debug.mode.neutral.description=Inspected glyph values only, or every variable when unwired
+Debug.mode.positive=All
+Debug.mode.positive.description=Spell stats and glyph values together
 
 Delay.name=Delay
 Delay.description=Delays execution of child glyphs by a duration in seconds
@@ -472,7 +480,7 @@ Area.radius.description=Radius of the gathering area
 Area.Blocks.name=Blocks
 Area.Blocks.description=Executes once per non-empty block in the area
 Area.Next.name=Entities
-Area.Next.description=Executes once per entity in the area (excluding the caster)
+Area.Next.description=Executes once per entity in the area
 
 Beam.name=Beam
 Beam.description=Raycasts from an entity in a direction, storing the first hit

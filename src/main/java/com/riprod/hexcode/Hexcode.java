@@ -1,5 +1,6 @@
 package com.riprod.hexcode;
 
+import com.riprod.configly.Configly;
 import com.riprod.hexcode.builtin.counterspell.CounterspellPlugin;
 import com.riprod.hexcode.builtin.hexCore.HexCorePlugin;
 import com.riprod.hexcode.builtin.hexability.HexabilityPlugin;
@@ -8,6 +9,7 @@ import com.riprod.hexcode.builtin.hextras.HextrasPlugin;
 import com.riprod.hexcode.builtin.hextreme.HextremePlugin;
 import com.riprod.hexcode.builtin.imbued.ImbuedPlugin;
 import com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.utils.CraftingGlyphEditorSpawn;
 import com.riprod.hexcode.command.HexcodeCommand;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.construct.system.HexConstructTeardownSystem;
@@ -30,6 +32,7 @@ import com.riprod.hexcode.core.common.effect.GlyphEffectSystem;
 import com.riprod.hexcode.core.common.execution.component.BlockHexRoot;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
+import com.riprod.hexcode.core.common.execution.cast.GlyphBudgetComponent;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.core.common.execution.cast.ResourcePoolComponent;
 import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
@@ -50,6 +53,8 @@ import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionTickSystem;
 import com.riprod.hexcode.core.common.execution.system.CasterSpellTeardownSystem;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
+import com.riprod.hexcode.core.common.glyphs.icon.GlyphEditorPreview;
+import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconEditorButton;
 import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconStore;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
@@ -83,6 +88,8 @@ import com.riprod.hexcode.core.common.pedestal.events.PedestalBlockEvent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalPlaceEvent;
 import com.riprod.hexcode.core.common.pedestal.system.SessionRecoverySystem;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
+import com.riprod.hexcode.core.common.utilities.resource.DebugMessageQueue;
+import com.riprod.hexcode.core.common.utilities.system.DebugMessageFlushSystem;
 import com.riprod.hexcode.core.common.utilities.system.DebugTickSystem;
 import com.riprod.hexcode.core.common.casting.registry.CastingStyleRegistry;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
@@ -94,6 +101,7 @@ import com.riprod.hexcode.core.common.memories.GlyphMemory;
 import com.riprod.hexcode.core.common.memories.GlyphMemoryProvider;
 import com.riprod.hexcode.core.common.execution.interactions.HexExecuteInteraction;
 import com.riprod.hexcode.interaction.PedestalInteraction;
+import com.riprod.hexcode.config.HexcodeConfig;
 import com.riprod.patchly.PatchManager;
 
 import java.util.concurrent.CompletableFuture;
@@ -102,7 +110,9 @@ import java.util.function.Consumer;
 import com.hypixel.hytale.assetstore.AssetRegistry;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.builtin.asseteditor.AssetEditorPlugin;
+import com.hypixel.hytale.builtin.asseteditor.event.AssetEditorActivateButtonEvent;
 import com.hypixel.hytale.builtin.asseteditor.event.AssetEditorRequestDataSetEvent;
+import com.hypixel.hytale.builtin.asseteditor.event.AssetEditorSelectAssetEvent;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem;
@@ -115,7 +125,6 @@ import com.hypixel.hytale.component.spatial.KDTree;
 import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.event.EventPriority;
 import com.hypixel.hytale.event.EventRegistry;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore;
 import com.hypixel.hytale.server.core.asset.LoadAssetEvent;
 import com.hypixel.hytale.server.core.modules.entity.condition.Condition;
@@ -129,13 +138,12 @@ import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public class Hexcode extends JavaPlugin {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private final PatchManager patchManager;
 
     public Hexcode(JavaPluginInit init) {
         super(init);
         patchManager = new PatchManager(this);
-        LOGGER.atInfo().log("Hexcode spell-crafting mod v%s initializing...",
+        getLogger().atFine().log("Hexcode spell-crafting mod v%s initializing...",
                 this.getManifest().getVersion().toString());
     }
 
@@ -147,6 +155,7 @@ public class Hexcode extends JavaPlugin {
     @Override
     protected void setup() {
         patchManager.install();
+        Configly.register(HexcodeConfig.TYPE, HexcodeConfig.class, HexcodeConfig.CODEC);
         this.registerCastComponents();
         this.registerAssets();
 
@@ -158,7 +167,7 @@ public class Hexcode extends JavaPlugin {
         this.registerEvents();
         this.registerCommands();
 
-        LOGGER.atInfo().log("Hexcode %s setup complete!", this.getManifest().getVersion().toString());
+        getLogger().atFine().log("Hexcode %s setup complete!", this.getManifest().getVersion().toString());
     }
 
     private void registerCastComponents() {
@@ -166,6 +175,8 @@ public class Hexcode extends JavaPlugin {
                 HexCast.REGISTRY.registerComponent(VolatilityComponent.class, VolatilityComponent::new));
         ResourcePoolComponent.setComponentType(
                 HexCast.REGISTRY.registerComponent(ResourcePoolComponent.class, ResourcePoolComponent::new));
+        GlyphBudgetComponent.setComponentType(
+                HexCast.REGISTRY.registerComponent(GlyphBudgetComponent.class, GlyphBudgetComponent::new));
     }
 
     @SuppressWarnings("null")
@@ -389,6 +400,11 @@ public class Hexcode extends JavaPlugin {
         entityStoreRegistry.registerSystem(new HexExecutionTickSystem());
         entityStoreRegistry.registerSystem(new HexQueueDrainEventSystem());
 
+        ResourceType<EntityStore, DebugMessageQueue> debugMessageQueueType = entityStoreRegistry
+                .registerResource(DebugMessageQueue.class, DebugMessageQueue::new);
+        DebugMessageQueue.setResourceType(debugMessageQueueType);
+        entityStoreRegistry.registerSystem(new DebugMessageFlushSystem());
+
     }
 
     private void registerBlockComponents() {
@@ -433,7 +449,7 @@ public class Hexcode extends JavaPlugin {
             Memory.CODEC.register(GlyphMemory.ID, GlyphMemory.class, GlyphMemory.CODEC);
             MemoriesPlugin.get().registerMemoryProvider(new GlyphMemoryProvider());
         } else {
-            LOGGER.atWarning().log("[hexcode] MemoriesPlugin unavailable; glyph memories disabled");
+            getLogger().atWarning().log("MemoriesPlugin unavailable; glyph memories disabled");
         }
 
     }
@@ -466,7 +482,7 @@ public class Hexcode extends JavaPlugin {
         EntityStore.REGISTRY.registerSystem(new HexConstructSystem());
         EntityStore.REGISTRY.registerSystem(new HexConstructTeardownSystem());
         EntityStore.REGISTRY.registerSystem(new CasterSpellTeardownSystem());
-        RegisterAssetEditorDataSets();
+        RegisterAssetEditorIntegrations();
     }
 
     @Override
@@ -474,12 +490,19 @@ public class Hexcode extends JavaPlugin {
         patchManager.shutdown();
     }
 
-    private void RegisterAssetEditorDataSets() {
+    private void RegisterAssetEditorIntegrations() {
         AssetEditorPlugin assetEditor = AssetEditorPlugin.get();
         if (assetEditor == null) {
             return;
         }
         EventRegistry events = assetEditor.getEventRegistry();
+        events.register(AssetEditorActivateButtonEvent.class, GlyphIconEditorButton.BUTTON_ID,
+                (Consumer<AssetEditorActivateButtonEvent>) event -> GlyphIconEditorButton.activate(event,
+                        this.getManifest()));
+        events.register(AssetEditorActivateButtonEvent.class, CraftingGlyphEditorSpawn.BUTTON_ID,
+                (Consumer<AssetEditorActivateButtonEvent>) CraftingGlyphEditorSpawn::activate);
+        events.registerGlobal(AssetEditorSelectAssetEvent.class,
+                (Consumer<AssetEditorSelectAssetEvent>) GlyphEditorPreview::onSelectAsset);
         events.register(AssetEditorRequestDataSetEvent.class, "HexcodeObeliskHandlers",
                 (Consumer<AssetEditorRequestDataSetEvent>) e -> e
                         .setResults(ObeliskHandlerRegistry.getAll().keySet()

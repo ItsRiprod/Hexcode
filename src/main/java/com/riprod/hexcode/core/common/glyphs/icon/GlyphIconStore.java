@@ -1,5 +1,6 @@
 package com.riprod.hexcode.core.common.glyphs.icon;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -9,18 +10,41 @@ import com.hypixel.hytale.assetstore.AssetPack;
 import com.hypixel.hytale.common.plugin.PluginManifest;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.AssetModule;
+import com.hypixel.hytale.server.core.asset.common.CommonAssetModule;
+import com.hypixel.hytale.server.core.asset.common.CommonAssetValidator;
+import com.hypixel.hytale.server.core.asset.common.asset.FileCommonAsset;
 import com.hypixel.hytale.server.core.plugin.PluginManager;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.patchly.PatchManager;
 
 public final class GlyphIconStore {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.ASSETS);
 
-    private static final String ICONS_SUBPATH = "Common/UI/Custom/Pages/Memories/glyphs";
+    public static final String ICON_COMMON_SUBPATH = "UI/Custom/Pages/Memories/glyphs";
+    public static final String ICON_PATH_TEMPLATE = ICON_COMMON_SUBPATH + "/{assetId}.png";
+
+    public static final CommonAssetValidator ICON_VALIDATOR =
+            new CommonAssetValidator("png", true, ICON_COMMON_SUBPATH, "Icons");
+
+    private static final String ICONS_SUBPATH = "Common/" + ICON_COMMON_SUBPATH;
     private static final String SYNTHETIC_SUFFIX = "_GlyphIcons";
 
     private GlyphIconStore() {
+    }
+
+    @Nonnull
+    public static String derivedIconPath(@Nonnull String glyphId) {
+        return ICON_COMMON_SUBPATH + "/" + glyphId + ".png";
+    }
+
+    public enum RegenerateStatus {
+        OK,
+        UNKNOWN_GLYPH,
+        NOT_RENDERABLE,
+        NO_TARGET,
+        WRITE_FAILED
     }
 
     public static final class Result {
@@ -63,9 +87,7 @@ public final class GlyphIconStore {
             }
 
             try {
-                Path file = target.root.resolve(rel);
-                Files.createDirectories(file.getParent());
-                Files.write(file, png);
+                writeIcon(target.root.resolve(rel), png);
                 counts[0]++;
             } catch (Exception e) {
                 counts[2]++;
@@ -77,7 +99,7 @@ public final class GlyphIconStore {
             try {
                 AssetModule.get().registerPack(target.packName, target.root, manifest,
                         AssetPack.PackSource.RUNTIME);
-                LOGGER.atInfo().log("glyph icons: registered synthetic pack '" + target.packName
+                LOGGER.atFine().log("glyph icons: registered synthetic pack '" + target.packName
                         + "' at " + target.root);
             } catch (Exception e) {
                 LOGGER.atWarning().withCause(e).log("glyph icons: failed to register synthetic pack '"
@@ -85,10 +107,62 @@ public final class GlyphIconStore {
             }
         }
 
-        LOGGER.atInfo().log("glyph icons: generated=" + counts[0] + " skipped(existing)=" + counts[1]
+        LOGGER.atFine().log("glyph icons: generated=" + counts[0] + " skipped(existing)=" + counts[1]
                 + " failed=" + counts[2] + " pack='" + target.packName + "'");
 
         return new Result(counts[0], counts[1], counts[2], target.packName);
+    }
+
+    @Nonnull
+    public static RegenerateStatus regenerate(@Nonnull String glyphId, @Nonnull PluginManifest manifest) {
+        if (GlyphAsset.getAssetMap().getAsset(glyphId) == null) {
+            return RegenerateStatus.UNKNOWN_GLYPH;
+        }
+
+        byte[] png = GlyphIconRenderer.render(glyphId);
+        if (png == null) {
+            return RegenerateStatus.NOT_RENDERABLE;
+        }
+
+        String rel = ICONS_SUBPATH + "/" + glyphId + ".png";
+        Target target = resolveRegenerateTarget(rel, manifest);
+        if (target == null) {
+            logAvailablePacks();
+            LOGGER.atWarning().log("glyph icons: no writable pack to regenerate '" + glyphId + "' into");
+            return RegenerateStatus.NO_TARGET;
+        }
+
+        Path file = target.root.resolve(rel);
+        try {
+            writeIcon(file, png);
+        } catch (Exception e) {
+            LOGGER.atWarning().withCause(e).log("glyph icon: failed to regenerate '" + glyphId + "'");
+            return RegenerateStatus.WRITE_FAILED;
+        }
+
+        CommonAssetModule.get().addCommonAsset(target.packName,
+                new FileCommonAsset(file, derivedIconPath(glyphId), png));
+
+        LOGGER.atFine().log("glyph icon: regenerated '" + glyphId + "' into pack '" + target.packName + "'");
+        return RegenerateStatus.OK;
+    }
+
+    private static void writeIcon(Path file, byte[] png) throws IOException {
+        Files.createDirectories(file.getParent());
+        Files.write(file, png);
+    }
+
+    @Nullable
+    private static Target resolveRegenerateTarget(String rel, PluginManifest manifest) {
+        for (AssetPack pack : AssetModule.get().getAssetPacks()) {
+            if (pack.isImmutable() || PatchManager.isSyntheticOverridePack(pack.getName())) {
+                continue;
+            }
+            if (Files.exists(pack.getRoot().resolve(rel))) {
+                return new Target(pack.getRoot(), pack.getName(), false);
+            }
+        }
+        return resolveTarget(manifest);
     }
 
     private static boolean existsInAnyPack(String rel) {

@@ -24,9 +24,10 @@ import com.riprod.hexcode.core.common.drawing.system.shapes.ShapeDetector;
 import com.riprod.hexcode.core.common.drawing.utils.ShapeComparator;
 import com.riprod.hexcode.core.common.drawing.utils.StrokeCapture;
 import com.riprod.hexcode.utils.LatencyUtil;
+import com.riprod.hexcode.utils.LogScopes;
 
 public final class DrawCaptureService {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.ASSETS);
 
     private static final float FINALIZE_BASE_SECONDS = 0.65f;
     private static final float FINALIZE_PING_FACTOR = 2.0f;
@@ -133,7 +134,7 @@ public final class DrawCaptureService {
                 capture.getStrokePoints(), training.packOverride());
         if (result.success) {
             shapeDetector.clearCache();
-            LOGGER.atInfo().log("recorded training template for '%s' (%d points) into pack '%s'",
+            LOGGER.atFine().log("recorded training template for '%s' (%d points) into pack '%s'",
                     training.shapeId(), capture.getStrokePoints().size() / 2, result.packName);
         } else {
             LOGGER.atWarning().log("training template for '%s' failed: %s", training.shapeId(), result.error);
