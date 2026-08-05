@@ -149,7 +149,7 @@ Specifies an output location. Notably useful in Interfere to determine the "cont
 
 ### \[△◯\] Concentrate
 
-Sustains downstream glyphs while the caster holds the primary interaction. Releasing early cancels the hex. While sustained it feeds **\+3 volatility budget per second** back into the hex, which is what lets a long channel keep paying for its glyphs. Upkeep is 1 mana per second. The boolean Resource slot adds a second drain of 6 per second on top of that: \+1 spends **Stamina**, \-1 spends **Mana**, 0 spends nothing. Running dry on either drain ends the channel exactly as if you had released.
+Sustains downstream glyphs while the caster holds the primary interaction. Releasing early cancels the hex. While sustained it feeds **\+3 volatility budget per second** back into the hex. You can additionally consume **mana** **stamina** or **hp** at a rate of 1:1 (up to 5 - then it's diminishing) per second. Cancels if any hit zero. 
 
 ---
 
