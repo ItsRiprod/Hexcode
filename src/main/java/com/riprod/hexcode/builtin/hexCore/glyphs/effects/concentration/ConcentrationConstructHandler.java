@@ -19,7 +19,6 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
-import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.component.HexRoot;
 import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
@@ -58,12 +57,12 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             return true;
 
         if (holdStat.get() < 1f) {
-            fireReleaseAndKillHeld(status, buffer, casterRef);
+            fireRelease(status, buffer, casterRef);
             return true;
         }
 
         if (!payUpkeep(dt, status, statMap, buffer, casterRef)) {
-            fireReleaseAndKillHeld(status, buffer, casterRef);
+            fireRelease(status, buffer, casterRef);
             return true;
         }
 
@@ -149,7 +148,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         }
     }
 
-    private void fireReleaseAndKillHeld(HexStatus<ConcentrationState> status,
+    private void fireRelease(HexStatus<ConcentrationState> status,
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
         Glyph trigger = status.getTriggeringGlyph();
         HexContext heldCtx = status.getHexContext();
@@ -160,29 +159,18 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         if (heldTracker != null && heldTracker.getCurrent() <= 0f)
             return;
 
-        HexContext releaseCtx = HexContext.cloneState(heldCtx);
-        releaseCtx.updateRuntimeAccessors(buffer);
-        releaseCtx.beginRootBranch();
-
-        CasterStateComponent idle = buffer.getComponent(
-                casterRef, CasterStateComponent.getComponentType());
-        if (idle != null) {
-            idle.registerActiveTracker(releaseCtx.cast());
-        }
-
-        if (heldTracker != null)
-            heldTracker.setCurrent(0f);
+        heldCtx.updateRuntimeAccessors(buffer);
 
         try {
-            HexExecuter.continueFromSlot(trigger, ConcentrationGlyphSlots.RELEASE, releaseCtx);
+            HexExecuter.branchFromSlot(trigger, ConcentrationGlyphSlots.RELEASE, heldCtx);
         } catch (Exception e) {
-            LOGGER.atWarning().log("concentration: cleanup fire failed: %s", e.getMessage());
+            LOGGER.atWarning().log("concentration: release fire failed: %s", e.getMessage());
         }
 
         TransformComponent casterTransform = buffer.getComponent(
                 casterRef, TransformComponent.getComponentType());
         if (casterTransform != null) {
-            ConcentrationStyle.renderEnd(casterTransform.getPosition(), releaseCtx, buffer);
+            ConcentrationStyle.renderEnd(casterTransform.getPosition(), heldCtx, buffer);
         }
     }
 

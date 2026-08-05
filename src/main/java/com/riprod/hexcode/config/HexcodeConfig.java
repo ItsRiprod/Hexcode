@@ -31,6 +31,11 @@ public final class HexcodeConfig extends Config {
                     + "settings, non-modifiable environments, and Break/PlaceBlockEvent vetoes from "
                     + "land-claim plugins")
             .add()
+            .append(new KeyedCodec<>("AllowNametagOverrides", Codec.BOOLEAN),
+                    (config, b) -> config.allowNametagOverrides = b,
+                    config -> config.allowNametagOverrides)
+            .documentation("Whether or not glyphs can modify player's nametags")
+            .add()
             .append(new KeyedCodec<>("MaxGlyphsPerTick", Codec.INTEGER),
                     (config, i) -> config.maxGlyphsPerTick = i,
                     config -> config.maxGlyphsPerTick)
@@ -57,6 +62,7 @@ public final class HexcodeConfig extends Config {
 
     private boolean respectPvp = true;
     private boolean respectClaims = true;
+    private boolean allowNametagOverrides = true;
     private int maxGlyphsPerTick = 512;
     private int maxGlyphsPerCast = 128;
 
@@ -74,6 +80,10 @@ public final class HexcodeConfig extends Config {
 
     public boolean respectsClaims() {
         return respectClaims;
+    }
+
+    public boolean allowsNametagOverrides() {
+        return allowNametagOverrides;
     }
 
     public int getMaxGlyphsPerTick() {

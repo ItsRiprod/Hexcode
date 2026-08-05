@@ -2,6 +2,7 @@
   "Type": "Hexcode",
   "RespectPvp": true,
   "RespectClaims": true,
+  "AllowNametagOverrides": true,
   "MaxGlyphsPerTick": 512,
   "MaxGlyphsPerCast": 128
 }
