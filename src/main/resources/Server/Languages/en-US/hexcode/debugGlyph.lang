@@ -5,3 +5,5 @@ gis=Volatility: <color is="#f54150">{volatility}</color>\nComplexity:  <color is
 slots=Volatility: <color is="#f54150">{volatility}</color>\nComplexity:  <color is="#95eefa">{complexity}</color>\n{slots}
 stats=Volatility: <color is="#f54150">{volatility}</color>\nComplexity:  <color is="#95eefa">{complexity}</color>
 values={values}
+notification.value={value}
+notification.volatility={volatility}

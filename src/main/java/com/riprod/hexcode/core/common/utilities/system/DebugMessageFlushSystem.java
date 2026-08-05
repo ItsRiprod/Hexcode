@@ -28,25 +28,29 @@ public class DebugMessageFlushSystem extends TickingSystem<EntityStore> {
         while (it.hasNext()) {
             Map.Entry<Ref<EntityStore>, DebugMessageQueue.Entry> mapEntry = it.next();
             DebugMessageQueue.Entry entry = mapEntry.getValue();
-            if (!entry.isReady(dt)) {
+            Ref<EntityStore> ref = mapEntry.getKey();
+
+            if (ref == null || !ref.isValid()) {
+                it.remove();
                 continue;
             }
 
-            it.remove();
-
-            Ref<EntityStore> ref = mapEntry.getKey();
-            if (ref == null || !ref.isValid()) {
+            if (entry.getPending().isEmpty()) {
+                if (entry.isExpired(dt)) {
+                    it.remove();
+                }
                 continue;
             }
 
             try {
                 PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
-                if (playerRef == null) {
-                    continue;
+                if (playerRef != null) {
+                    playerRef.sendMessage(compose(entry));
                 }
-                playerRef.sendMessage(compose(entry));
             } catch (Exception e) {
                 LOGGER.atSevere().log("[hexcode] DebugMessageFlushSystem failed: %s", e.getMessage());
+            } finally {
+                entry.onFlushed();
             }
         }
     }

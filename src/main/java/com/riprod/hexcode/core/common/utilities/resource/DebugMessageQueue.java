@@ -16,12 +16,12 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 public final class DebugMessageQueue implements Resource<EntityStore> {
 
     public static final int MAX_PENDING = 10;
-    public static final float FLUSH_INTERVAL_SECONDS = 0.5f;
+    public static final float RETAIN_SECONDS = 2.0f;
 
     public static final class Entry {
         private final Deque<Message> pending = new ArrayDeque<>();
         private int dropped;
-        private float untilNextFlush = FLUSH_INTERVAL_SECONDS;
+        private float idle;
 
         public Deque<Message> getPending() {
             return pending;
@@ -31,9 +31,15 @@ public final class DebugMessageQueue implements Resource<EntityStore> {
             return dropped;
         }
 
-        public boolean isReady(float dt) {
-            untilNextFlush -= dt;
-            return untilNextFlush <= 0f;
+        public void onFlushed() {
+            pending.clear();
+            dropped = 0;
+            idle = 0f;
+        }
+
+        public boolean isExpired(float dt) {
+            idle += dt;
+            return idle >= RETAIN_SECONDS;
         }
 
         void append(Message message) {

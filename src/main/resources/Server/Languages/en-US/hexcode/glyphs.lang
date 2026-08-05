@@ -63,10 +63,10 @@ Debug.Next.name=Next
 Debug.Next.description=The next glyph in the execution chain
 Debug.mode.name=Mode
 Debug.mode.description=Selects what the readout prints
-Debug.mode.negative=Spell
-Debug.mode.negative.description=Volatility and complexity only
-Debug.mode.neutral=Values
-Debug.mode.neutral.description=Inspected glyph values only, or every variable when unwired
+Debug.mode.negative=Solo
+Debug.mode.negative.description=Displays either Spell Stats or Slot Value
+Debug.mode.neutral=Notification
+Debug.mode.neutral.description=Sends notification of value
 Debug.mode.positive=All
 Debug.mode.positive.description=Spell stats and glyph values together
 

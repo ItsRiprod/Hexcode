@@ -1,4 +1,6 @@
 {
   "Type": "Hexcode",
-  "RespectPVP": false
+  "RespectPvp": false,
+  "MaxGlyphsPerTick": 512,
+  "MaxGlyphsPerCast": 128
 }

@@ -6,9 +6,11 @@ import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.protocol.packets.interface_.NotificationStyle;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.NotificationUtil;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
@@ -56,26 +58,32 @@ public class DebugGlyph implements GlyphHandler {
 
         int mode = readMode(glyph, hexContext);
 
-        String volatility = volatilityText(hexContext.volatility());
-        String complexity = complexityText(hexContext);
-
         Slot slot = glyph.getSlot(DebugGlyphSlots.SLOT);
         boolean wired = slot != null && slot.getFirstLink() != null;
 
-        Message values = mode < 0 ? null
-                : wired ? buildSlotLines(slot, hexContext) : buildGisLines(hexContext);
+        if (mode == 0) {
+            notify(slot, wired, pr, hexContext);
+            return;
+        }
+
+        String volatility = volatilityText(hexContext.volatility());
+        String complexity = complexityText(hexContext);
 
         Message msg;
         if (mode < 0) {
-            msg = markup(Message.translation("hexcode.debugGlyph.stats")
-                    .param("volatility", volatility)
-                    .param("complexity", complexity));
-        } else if (mode == 0) {
-            if (values == null)
-                return;
-            msg = markup(Message.translation("hexcode.debugGlyph.values")
-                    .param("values", values));
+            if (!wired) {
+                msg = markup(Message.translation("hexcode.debugGlyph.stats")
+                        .param("volatility", volatility)
+                        .param("complexity", complexity));
+            } else {
+                Message lines = buildSlotLines(slot, hexContext);
+                if (lines == null)
+                    return;
+                msg = markup(Message.translation("hexcode.debugGlyph.values")
+                        .param("values", lines));
+            }
         } else {
+            Message values = wired ? buildSlotLines(slot, hexContext) : buildGisLines(hexContext);
             Message lines = values != null ? values : Message.raw("");
             msg = wired
                     ? markup(Message.translation("hexcode.debugGlyph.slots")
@@ -90,6 +98,33 @@ public class DebugGlyph implements GlyphHandler {
 
         hexContext.getAccessor().getResource(DebugMessageQueue.getResourceType()).append(casterRef, msg);
         LOGGER.atFine().log(msg.getAnsiMessage());
+    }
+
+    private void notify(@Nullable Slot slot, boolean wired, PlayerRef pr, HexContext hexContext) {
+        if (!wired) {
+            VolatilityComponent tracker = hexContext.volatility();
+            if (tracker == null)
+                return;
+            send(pr, Message.translation("hexcode.debugGlyph.notification.volatility")
+                    .param("volatility", String.format("%.1f", tracker.getCurrent())), null);
+            return;
+        }
+
+        for (String linkId : slot.getLinks()) {
+            Glyph linked = hexContext.getGlyph(linkId);
+            if (linked == null)
+                continue;
+
+            GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
+            send(pr, Message.translation("hexcode.debugGlyph.notification.value")
+                    .param("value", valueText(resolveLink(linked, hexContext))),
+                    linkedAsset != null ? linkedAsset.getIcon() : null);
+        }
+    }
+
+    private static void send(PlayerRef pr, Message message, @Nullable String icon) {
+        NotificationUtil.sendNotification(pr.getPacketHandler(), message, null, icon, null,
+                NotificationStyle.Default);
     }
 
     private static int readMode(Glyph glyph, HexContext hexContext) {

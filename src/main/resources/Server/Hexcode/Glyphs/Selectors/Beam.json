@@ -19,7 +19,10 @@
   "ManaConsumption": 0.8,
   "ShapeStructure": [
     "Square",
-    { "Parent": "Circle", "RelativeSize": 0.8 }
+    {
+      "Parent": "Circle",
+      "RelativeSize": 0.8
+    }
   ],
   "Slots": {
     "source": {
@@ -42,7 +45,11 @@
       "Label": "hexcode.glyphs.Beam.range.name",
       "Description": "hexcode.glyphs.Beam.range.description",
       "DefaultValue": 48,
-      "Unique": true
+      "Unique": true,
+      "Impact": {
+        "Type": "Linear",
+        "Offset": 48
+      }
     },
     "Next": {
       "Type": "Next",
