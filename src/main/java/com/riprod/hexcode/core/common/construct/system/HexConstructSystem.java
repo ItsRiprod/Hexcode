@@ -20,10 +20,11 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CAST);
 
     @Override
     public Query<EntityStore> getQuery() {

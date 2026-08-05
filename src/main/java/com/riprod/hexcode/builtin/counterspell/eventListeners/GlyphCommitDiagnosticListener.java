@@ -11,9 +11,10 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.dispatch.GlyphCommitEvent;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class GlyphCommitDiagnosticListener extends EntityEventSystem<EntityStore, GlyphCommitEvent> {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DIAG);
 
     public GlyphCommitDiagnosticListener() {
         super(GlyphCommitEvent.class);

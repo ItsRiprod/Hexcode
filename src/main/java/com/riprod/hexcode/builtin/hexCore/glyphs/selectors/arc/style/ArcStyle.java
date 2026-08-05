@@ -4,7 +4,6 @@ import com.hypixel.hytale.component.ComponentAccessor;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.Color;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -31,10 +30,10 @@ public class ArcStyle {
         VfxUtil.spawnPrimary(overrides, asset(), position, accessor);
     }
 
-    public static void renderArc(ComponentAccessor<EntityStore> accessor, World world,
+    public static void renderArc(ComponentAccessor<EntityStore> accessor,
             Vector3d sourcePos, Vector3d targetPos, HexContext ctx) {
         Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset());
-        VfxUtil.line(accessor, world, sourcePos, targetPos, color, BEAM_THICKNESS, BEAM_DURATION, 0,
+        VfxUtil.line(accessor, sourcePos, targetPos, color, BEAM_THICKNESS, BEAM_DURATION, 0,
                 VfxUtil.resolveAlpha(ctx, asset()));
         if (VfxUtil.resolveAlpha(ctx, asset()) > 0f) {
             Color tint = VfxUtil.resolvePrimaryColorRaw(ctx, asset());

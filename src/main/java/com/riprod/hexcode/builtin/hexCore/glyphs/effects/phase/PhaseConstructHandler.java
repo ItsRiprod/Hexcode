@@ -26,10 +26,11 @@ import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.utils.BlockUtils;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
     private static final float DEFAULT_CRUSH_DAMAGE = 4.0f;
 
     @Override

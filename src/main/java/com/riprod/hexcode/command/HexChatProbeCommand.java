@@ -15,9 +15,10 @@ import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProv
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class HexChatProbeCommand extends AbstractPlayerCommand {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CMD);
 
     private static final int DEFAULT_PACKETS = 30;
     private static final int DEFAULT_CHILDREN = 300;
@@ -50,7 +51,7 @@ public class HexChatProbeCommand extends AbstractPlayerCommand {
         switch (mode.toLowerCase()) {
             case "packets" -> {
                 int count = resolve(countArg.get(context), DEFAULT_PACKETS);
-                LOGGER.atInfo().log("[hexcode] chatprobe packets count=%s player=%s", count,
+                LOGGER.atInfo().log("chatprobe packets count=%s player=%s", count,
                         playerRef.getUsername());
                 for (int i = 0; i < count; i++) {
                     playerRef.sendMessage(Message.raw("probe " + i));
@@ -58,14 +59,14 @@ public class HexChatProbeCommand extends AbstractPlayerCommand {
             }
             case "lines" -> {
                 int count = resolve(countArg.get(context), DEFAULT_CHILDREN);
-                LOGGER.atInfo().log("[hexcode] chatprobe lines children=%s player=%s", count,
+                LOGGER.atInfo().log("chatprobe lines children=%s player=%s", count,
                         playerRef.getUsername());
                 playerRef.sendMessage(composite(count, "line "));
             }
             case "real" -> {
                 int count = resolve(countArg.get(context), DEFAULT_REAL_PACKETS);
                 int lines = resolve(linesArg.get(context), DEFAULT_REAL_LINES);
-                LOGGER.atInfo().log("[hexcode] chatprobe real packets=%s lines=%s total=%s player=%s",
+                LOGGER.atInfo().log("chatprobe real packets=%s lines=%s total=%s player=%s",
                         count, lines, count * lines, playerRef.getUsername());
                 for (int i = 0; i < count; i++) {
                     playerRef.sendMessage(composite(lines, "dump " + i + " line "));
@@ -74,7 +75,7 @@ public class HexChatProbeCommand extends AbstractPlayerCommand {
             case "markup" -> {
                 int count = resolve(countArg.get(context), DEFAULT_REAL_PACKETS);
                 int lines = resolve(linesArg.get(context), DEFAULT_REAL_LINES);
-                LOGGER.atInfo().log("[hexcode] chatprobe markup packets=%s lines=%s player=%s",
+                LOGGER.atInfo().log("chatprobe markup packets=%s lines=%s player=%s",
                         count, lines, playerRef.getUsername());
                 for (int i = 0; i < count; i++) {
                     playerRef.sendMessage(dumpLike(lines));
@@ -83,7 +84,7 @@ public class HexChatProbeCommand extends AbstractPlayerCommand {
             case "markupone" -> {
                 int count = resolve(countArg.get(context), DEFAULT_REAL_PACKETS);
                 int lines = resolve(linesArg.get(context), DEFAULT_REAL_LINES);
-                LOGGER.atInfo().log("[hexcode] chatprobe markupone dumps=%s lines=%s player=%s",
+                LOGGER.atInfo().log("chatprobe markupone dumps=%s lines=%s player=%s",
                         count, lines, playerRef.getUsername());
                 Message composite = Message.raw("");
                 for (int i = 0; i < count; i++) {

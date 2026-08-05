@@ -5,4 +5,5 @@ public final class DebugGlyphSlots {
     }
 
     public static final String SLOT = "slot";
+    public static final String MODE = "Mode";
 }

@@ -27,10 +27,11 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
+import com.riprod.hexcode.utils.LogScopes;
 
 public final class HexProtection {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.PROTECT);
 
     public static final String PROBE_CAUSE_ID = "Hex_Protection_Probe";
     private static final String BLOCKED_NOTIFICATION = "server.hexcode.notifications.glyphBlocked";

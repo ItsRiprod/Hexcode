@@ -12,9 +12,10 @@ import javax.imageio.ImageIO;
 
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class ShapeCacheManager {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DRAW);
     private static final int NUM_RAYS = 96;
     private static final Map<String, boolean[][]> imageData = new ConcurrentHashMap<>();
     private static final Map<String, int[][]> distanceTransformData = new ConcurrentHashMap<>();

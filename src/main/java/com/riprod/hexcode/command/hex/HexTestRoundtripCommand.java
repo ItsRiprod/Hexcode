@@ -29,10 +29,11 @@ import com.riprod.hexcode.core.common.hexes.codec.DecodeResult;
 import com.riprod.hexcode.core.common.hexes.codec.HexCodec;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class HexTestRoundtripCommand extends AbstractPlayerCommand {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CMD);
 
     private static final float ACC_TOL = 0.01f;
     private static final float SPEED_TOL = 0.01f;

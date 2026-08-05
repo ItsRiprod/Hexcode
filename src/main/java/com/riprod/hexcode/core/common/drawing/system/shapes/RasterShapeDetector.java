@@ -8,12 +8,13 @@ import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.drawing.utils.DrawRasterizer;
 import com.riprod.hexcode.core.common.drawing.utils.ShapeComparator;
+import com.riprod.hexcode.utils.LogScopes;
 
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 
 public class RasterShapeDetector implements ShapeDetector {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DRAW);
     private static final int GRID_SIZE = 32;
 
     @Override
@@ -54,13 +55,15 @@ public class RasterShapeDetector implements ShapeDetector {
         }
         candidates.sort((a, b) -> Float.compare(Float.parseFloat(b[1]), Float.parseFloat(a[1])));
 
-        StringBuilder sb = new StringBuilder("[Raster] top 3:");
-        for (int j = 0; j < Math.min(3, candidates.size()); j++) {
-            sb.append(String.format(" #%d: %s (%.4f)", j + 1, candidates.get(j)[0],
-                    Float.parseFloat(candidates.get(j)[1])));
-            if (j < 2 && j < candidates.size() - 1) sb.append(" |");
+        if (LOGGER.atFine().isEnabled()) {
+            StringBuilder sb = new StringBuilder("[Raster] top 3:");
+            for (int j = 0; j < Math.min(3, candidates.size()); j++) {
+                sb.append(String.format(" #%d: %s (%.4f)", j + 1, candidates.get(j)[0],
+                        Float.parseFloat(candidates.get(j)[1])));
+                if (j < 2 && j < candidates.size() - 1) sb.append(" |");
+            }
+            LOGGER.atFine().log(sb.toString());
         }
-        LOGGER.atFine().log(sb.toString());
     }
 
     @Override

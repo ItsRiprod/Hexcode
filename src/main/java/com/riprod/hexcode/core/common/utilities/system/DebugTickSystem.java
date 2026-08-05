@@ -1,7 +1,5 @@
 package com.riprod.hexcode.core.common.utilities.system;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
@@ -10,24 +8,19 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
-import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
-import com.hypixel.hytale.protocol.packets.player.DisplayDebug;
-import com.hypixel.hytale.server.core.modules.entity.EntityModule;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.utilities.DebugEmitter;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 public class DebugTickSystem extends EntityTickingSystem<EntityStore> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-
-    private static final double VIEW_DISTANCE = 75.0;
 
     @Override
     public Query<EntityStore> getQuery() {
@@ -89,42 +82,18 @@ public class DebugTickSystem extends EntityTickingSystem<EntityStore> {
             if (targetRef != null && targetRef.isValid()) {
                 PlayerRef playerRef = store.getComponent(targetRef, PlayerRef.getComponentType());
                 if (playerRef != null) {
-                    playerRef.getPacketHandler().write(buildPacket(debug, matrix));
+                    playerRef.getPacketHandler().write(DebugEmitter.packet(
+                            debug.getShape(), matrix, debug.getColor(),
+                            debug.getOpacity(), debug.getFadeTime(), debug.getFlags()));
                 }
                 return;
             }
 
-            SpatialResource<Ref<EntityStore>, EntityStore> playerSpatial = store
-                    .getResource(EntityModule.get().getPlayerSpatialResourceType());
-            List<Ref<EntityStore>> viewers = SpatialResource.getThreadLocalReferenceList();
-            playerSpatial.getSpatialStructure().collect(pos, VIEW_DISTANCE, viewers);
-            if (viewers.isEmpty()) {
-                return;
-            }
-
-            DisplayDebug packet = buildPacket(debug, matrix);
-            for (int i = 0; i < viewers.size(); i++) {
-                PlayerRef viewer = store.getComponent(viewers.get(i), PlayerRef.getComponentType());
-                if (viewer == null) {
-                    continue;
-                }
-                viewer.getPacketHandler().write(packet);
-            }
+            DebugEmitter.send(store, pos, DebugEmitter.packet(
+                    debug.getShape(), matrix, debug.getColor(),
+                    debug.getOpacity(), debug.getFadeTime(), debug.getFlags()));
         } catch (Exception e) {
             LOGGER.atSevere().log("[hexcode] DebugTickSystem failed: %s", e.getMessage());
         }
-    }
-
-    private static DisplayDebug buildPacket(DebugComponent debug, Matrix4d matrix) {
-        return new DisplayDebug(
-                debug.getShape(), matrixToFloatArray(matrix),
-                new Vector3f(debug.getColor().x, debug.getColor().y, debug.getColor().z),
-                debug.getFadeTime(), (byte) debug.getFlags(), null, debug.getOpacity());
-    }
-
-    private static float[] matrixToFloatArray(Matrix4d m) {
-        float[] arr = new float[16];
-        m.get(arr);
-        return arr;
     }
 }

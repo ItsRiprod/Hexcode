@@ -15,9 +15,10 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalItemUtil;
 import com.riprod.hexcode.utils.HexSlot;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class SessionRecoverySystem extends RefSystem<EntityStore> {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CRAFT);
 
     @Nonnull
     @Override
@@ -37,7 +38,7 @@ public class SessionRecoverySystem extends RefSystem<EntityStore> {
                 return;
             }
 
-            LOGGER.atFine().log("[hexcode] recovering orphaned session for reconnecting player");
+            LOGGER.atFine().log("recovering orphaned session for reconnecting player");
             ItemStack item = session.getStoredItem();
             if (item != null && !item.isEmpty()) {
                 HexSlot slot = session.getSourceSlot();
@@ -48,7 +49,7 @@ public class SessionRecoverySystem extends RefSystem<EntityStore> {
             }
             buffer.tryRemoveComponent(ref, HexcodeSessionComponent.getComponentType());
         } catch (Exception e) {
-            LOGGER.atSevere().withCause(e).log("[hexcode] session recovery failed");
+            LOGGER.atSevere().withCause(e).log("session recovery failed");
         }
     }
 

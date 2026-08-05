@@ -12,10 +12,11 @@ import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
+import com.riprod.hexcode.utils.LogScopes;
 
 public final class ConstructSplicer {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CAST);
     private static final String OUTPUT_GLYPH_ID = "Output";
 
     public enum VariablePolicy { PREFER_TARGET, PREFER_CASTER }

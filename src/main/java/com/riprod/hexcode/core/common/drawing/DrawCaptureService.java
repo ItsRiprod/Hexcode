@@ -24,9 +24,10 @@ import com.riprod.hexcode.core.common.drawing.system.shapes.ShapeDetector;
 import com.riprod.hexcode.core.common.drawing.utils.ShapeComparator;
 import com.riprod.hexcode.core.common.drawing.utils.StrokeCapture;
 import com.riprod.hexcode.utils.LatencyUtil;
+import com.riprod.hexcode.utils.LogScopes;
 
 public final class DrawCaptureService {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.ASSETS);
 
     private static final float FINALIZE_BASE_SECONDS = 0.65f;
     private static final float FINALIZE_PING_FACTOR = 2.0f;

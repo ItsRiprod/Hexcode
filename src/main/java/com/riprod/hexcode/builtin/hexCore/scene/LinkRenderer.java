@@ -7,7 +7,6 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
@@ -49,22 +48,21 @@ public class LinkRenderer {
         HexComponent hexComp = accessor.getComponent(hexRootRef, HexComponent.getComponentType());
         if (hexComp == null) return;
 
-        World world = accessor.getExternalData().getWorld();
         Hex hex = hexComp.getHex();
 
         for (Glyph glyph : hex.getGlyphs()) {
-            renderGlyphLinks(accessor, world, hexComp, glyph);
+            renderGlyphLinks(accessor, hexComp, glyph);
         }
 
-        renderAnchorLink(accessor, world, hexComp, anchorNodeRef, hex);
+        renderAnchorLink(accessor, hexComp, anchorNodeRef, hex);
     }
 
     public static void renderActiveLink(ComponentAccessor<EntityStore> accessor,
-            World world, Vector3d source, Vector3d target, Vector3f color) {
-        VfxUtil.line(accessor, world, source, target, color, LINK_THICKNESS, 0.04f, DebugUtils.FLAG_NONE);
+            Vector3d source, Vector3d target, Vector3f color) {
+        VfxUtil.line(accessor, source, target, color, LINK_THICKNESS, 0.04f, DebugUtils.FLAG_NONE);
     }
 
-    private static void renderGlyphLinks(CommandBuffer<EntityStore> accessor, World world,
+    private static void renderGlyphLinks(CommandBuffer<EntityStore> accessor,
             HexComponent hexComp, Glyph glyph) {
         Ref<EntityStore> sourceRef = hexComp.getChildGlyphRef(glyph.getId());
         if (sourceRef == null || !sourceRef.isValid()) return;
@@ -80,12 +78,12 @@ public class LinkRenderer {
 
         for (Slot slot : glyph.getSlots().values()) {
             for (String linkId : slot.getLinks()) {
-                renderSlotLink(accessor, world, hexComp, glyphCenter, slot, slotsVisible, linkId);
+                renderSlotLink(accessor, hexComp, glyphCenter, slot, slotsVisible, linkId);
             }
         }
     }
 
-    private static void renderSlotLink(CommandBuffer<EntityStore> accessor, World world,
+    private static void renderSlotLink(CommandBuffer<EntityStore> accessor,
             HexComponent hexComp, Vector3d glyphCenter, Slot slot, boolean slotsVisible, String linkId) {
         Ref<EntityStore> targetRef = hexComp.getChildGlyphRef(linkId);
         if (targetRef == null || !targetRef.isValid()) return;
@@ -105,10 +103,10 @@ public class LinkRenderer {
         }
 
         Vector3f color = slot.getColor() != null ? slot.getColor() : CraftingColors.GLYPH_LINK;
-        OrientedDebugUtil.addCone(world, origin, targetTransform.getPosition(), color, diameter, CONE_TIME);
+        OrientedDebugUtil.addCone(accessor, origin, targetTransform.getPosition(), color, diameter, CONE_TIME);
     }
 
-    private static void renderAnchorLink(CommandBuffer<EntityStore> accessor, World world,
+    private static void renderAnchorLink(CommandBuffer<EntityStore> accessor,
             HexComponent hexComp, Ref<EntityStore> anchorRef, Hex hex) {
         String firstId = hex.getFirstGlyphId();
         if (firstId == null) return;
@@ -120,7 +118,7 @@ public class LinkRenderer {
         TransformComponent targetTransform = accessor.getComponent(targetRef, TransformComponent.getComponentType());
         if (anchorTransform == null || targetTransform == null) return;
 
-        OrientedDebugUtil.addCone(world, anchorTransform.getPosition(), targetTransform.getPosition(),
+        OrientedDebugUtil.addCone(accessor, anchorTransform.getPosition(), targetTransform.getPosition(),
                 CraftingColors.ANCHOR, CONE_DIAMETER_NORMAL, CONE_TIME);
     }
 }

@@ -11,9 +11,10 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.context.DrawModeExitEvent;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class DrawModeExitDiagnosticListener extends EntityEventSystem<EntityStore, DrawModeExitEvent> {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DIAG);
 
     public DrawModeExitDiagnosticListener() {
         super(DrawModeExitEvent.class);

@@ -32,6 +32,7 @@ import com.riprod.hexcode.core.common.construct.state.ConstructState;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.utils.HexRefs;
 
 public class HexConstructSpawner {
 
@@ -197,10 +198,11 @@ public class HexConstructSpawner {
         }
     }
 
-    public static boolean hasPendingApply(@Nonnull Ref<EntityStore> ref, @Nonnull String handlerId) {
-        if (!ref.isValid()) return false;
+    public static boolean hasPendingApply(@Nonnull ComponentAccessor<EntityStore> accessor,
+            @Nonnull Ref<EntityStore> ref, @Nonnull String handlerId) {
+        if (!HexRefs.isLive(ref, accessor)) return false;
 
-        UUIDComponent uuidComponent = ref.getStore().getComponent(ref, UUIDComponent.getComponentType());
+        UUIDComponent uuidComponent = accessor.getComponent(ref, UUIDComponent.getComponentType());
         if (uuidComponent == null) return false;
         UUID targetUuid = uuidComponent.getUuid();
 

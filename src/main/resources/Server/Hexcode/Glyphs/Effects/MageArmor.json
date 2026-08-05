@@ -14,7 +14,7 @@
     },
     {
       "Parent": "Square",
-      "RelativeSize": 0.6
+      "RelativeSize": 0.288
     }
   ],
   "Slots": {
@@ -52,5 +52,6 @@
   "Config": {
     "Type": "MageArmor",
     "StatusEffect": "Hexcode_Mage_Armor"
-  }
+  },
+  "Icon": "UI/Custom/Pages/Memories/glyphs/MageArmor.png"
 }

@@ -12,10 +12,11 @@ import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class HexAppearanceRevertSystem extends RefSystem<EntityStore> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CAST);
 
     @Nonnull
     @Override
@@ -35,10 +36,10 @@ public class HexAppearanceRevertSystem extends RefSystem<EntityStore> {
                 return;
             }
 
-            LOGGER.atFine().log("[hexcode] appearance: reverting orphaned model on load");
+            LOGGER.atFine().log("appearance: reverting orphaned model on load");
             HexAppearanceService.restoreOriginal(buffer, ref);
         } catch (Exception e) {
-            LOGGER.atSevere().log("[hexcode] HexAppearanceRevertSystem.onEntityAdded failed: %s", e.getMessage());
+            LOGGER.atSevere().log("HexAppearanceRevertSystem.onEntityAdded failed: %s", e.getMessage());
         }
     }
 

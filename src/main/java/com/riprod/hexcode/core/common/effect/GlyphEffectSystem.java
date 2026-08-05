@@ -15,9 +15,10 @@ import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.utils.GlyphStyleUtil;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class GlyphEffectSystem extends RefSystem<EntityStore> {
-    private static HytaleLogger logger = HytaleLogger.forEnclosingClass();
+    private static HytaleLogger logger = HytaleLogger.get(LogScopes.CAST);
 
     @Nonnull
     @Override
@@ -52,7 +53,7 @@ public class GlyphEffectSystem extends RefSystem<EntityStore> {
 
             effectController.addEffect(ref, effect, buffer);
         } catch (Exception e) {
-            logger.atSevere().log("[hexcode] GlyphEffectSystem.onEntityAdded failed: %s", e.getMessage());
+            logger.atSevere().log("GlyphEffectSystem.onEntityAdded failed: %s", e.getMessage());
         }
     }
 

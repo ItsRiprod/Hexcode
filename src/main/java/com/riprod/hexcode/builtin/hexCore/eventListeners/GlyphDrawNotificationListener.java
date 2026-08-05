@@ -14,8 +14,6 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
 public class GlyphDrawNotificationListener implements Consumer<GlyphDrawnEvent> {
 
-    private static final String ICON_DIR = "UI/Custom/Pages/Memories/glyphs/";
-
     @Override
     public void accept(GlyphDrawnEvent event) {
         Ref<EntityStore> playerRef = event.getPlayerRef();
@@ -33,7 +31,7 @@ public class GlyphDrawNotificationListener implements Consumer<GlyphDrawnEvent> 
                 ? Message.translation(asset.getTitle())
                 : Message.raw(glyph.getGlyphId());
 
-        String icon = ICON_DIR + glyph.getGlyphId() + ".png";
+        String icon = asset != null ? asset.getIcon() : null;
         NotificationUtil.sendNotification(pr.getPacketHandler(), name, icon);
     }
 }

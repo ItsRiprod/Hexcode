@@ -9,9 +9,10 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class GlyphCreationManager {
-    public static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    public static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DRAW);
 
     public static void NormalizeShapeSizes(List<DrawnShapeComponent> drawn) {
         float maxSize = 0f;

@@ -16,10 +16,11 @@ import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class DisguiseConstructHandler implements ConstructHandler<DisguiseState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
     public boolean onTick(float dt, HexStatus<DisguiseState> status, ConstructTickContext ctx) {
@@ -76,7 +77,7 @@ public class DisguiseConstructHandler implements ConstructHandler<DisguiseState>
                 DisguiseStyle.renderRestore(tc.getPosition(), status.getHexContext(), buffer);
             }
         } catch (Exception e) {
-            LOGGER.atSevere().log("[hexcode] DisguiseConstructHandler cleanup failed: %s", e.getMessage());
+            LOGGER.atSevere().log("DisguiseConstructHandler cleanup failed: %s", e.getMessage());
         }
     }
 

@@ -19,6 +19,7 @@ public final class HexCast {
     private long branchIdSeq = 0L;
     @Nullable
     private String slotKey;
+    private boolean fizzleNotified;
     private CastComponent[] components = EMPTY;
 
     public HexCast() {
@@ -96,11 +97,20 @@ public final class HexCast {
         return activeBranches.size();
     }
 
+    public boolean claimFizzleNotice() {
+        if (fizzleNotified) {
+            return false;
+        }
+        fizzleNotified = true;
+        return true;
+    }
+
     @Nonnull
     public HexCast copy() {
         HexCast copy = new HexCast();
         copy.executionId = this.executionId;
         copy.slotKey = this.slotKey;
+        copy.fizzleNotified = this.fizzleNotified;
         copy.components = new CastComponent[this.components.length];
         for (int i = 0; i < this.components.length; i++) {
             CastComponent component = this.components[i];

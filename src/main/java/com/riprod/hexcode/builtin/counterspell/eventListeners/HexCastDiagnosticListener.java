@@ -10,10 +10,11 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class HexCastDiagnosticListener extends WorldEventSystem<EntityStore, HexCastEvent> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DIAG);
 
     public HexCastDiagnosticListener() {
         super(HexCastEvent.class);

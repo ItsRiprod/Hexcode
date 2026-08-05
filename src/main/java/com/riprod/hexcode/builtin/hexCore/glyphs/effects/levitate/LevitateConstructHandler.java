@@ -21,11 +21,12 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.LevitateStyle;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VelocityUtil;
 
 public class LevitateConstructHandler implements ConstructHandler<LevitateState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
     private static final float TERMINAL_VELOCITY = 130.0f;
 
     @Override

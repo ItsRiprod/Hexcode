@@ -12,10 +12,11 @@ public class HexExecutionTickSystem extends TickingSystem<EntityStore> {
     @Override
     public void tick(float dt, int systemIndex, @Nonnull Store<EntityStore> store) {
         HexExecutionQueue queue = store.getResource(HexExecutionQueue.getResourceType());
-        int n = queue.size();
-        if (n == 0) {
+        int pending = queue.size();
+        if (pending == 0) {
             return;
         }
-        store.invoke(new HexQueueDrainEvent(n));
+        queue.nextTick();
+        store.invoke(new HexQueueDrainEvent(pending));
     }
 }

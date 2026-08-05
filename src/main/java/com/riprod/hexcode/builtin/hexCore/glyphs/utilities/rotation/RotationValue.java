@@ -166,7 +166,7 @@ public class RotationValue implements GlyphHandler {
             return;
         }
 
-        if (HexConstructSpawner.hasPendingApply(ref, ID))
+        if (HexConstructSpawner.hasPendingApply(accessor, ref, ID))
             return;
 
         HexConstructSpawner.applyWithState(accessor, ref, hexContext, glyph, ID,

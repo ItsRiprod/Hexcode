@@ -2,7 +2,6 @@ package com.riprod.hexcode.builtin.imbued;
 
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -32,11 +31,10 @@ import com.riprod.hexcode.core.common.triggers.registry.TriggerListenerRegistry;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerRegistry;
 
 public class ImbuedPlugin extends JavaPlugin {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     public ImbuedPlugin(JavaPluginInit init) {
         super(init);
-        LOGGER.atFine().log("Hexcode %s sub-plugin v%s initializing...",
+        getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
                 this.getManifest().getName().toString(), this.getManifest().getVersion().toString());
     }
 

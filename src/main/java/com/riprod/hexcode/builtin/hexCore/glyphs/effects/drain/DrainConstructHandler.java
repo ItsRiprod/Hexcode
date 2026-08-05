@@ -17,10 +17,11 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.drain.style.DrainStyle;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class DrainConstructHandler implements ConstructHandler<DrainState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
     public boolean onTick(float dt, HexStatus<DrainState> status, ConstructTickContext ctx) {

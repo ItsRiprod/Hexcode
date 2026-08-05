@@ -3,6 +3,7 @@ package com.riprod.hexcode.core.common.obelisk.system;
 import java.util.List;
 
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 
@@ -46,7 +47,7 @@ public class ObeliskDispatcher {
         }
     }
 
-    public static void dispatchGlyphDrawn(CommandBuffer<EntityStore> buffer,
+    public static void dispatchGlyphDrawn(ComponentAccessor<EntityStore> buffer,
             PedestalBlockComponent pedestal, Ref<EntityStore> playerRef, Glyph glyph) {
         forEachHandler(buffer, pedestal, (handler, obelisk) ->
                 handler.onGlyphDrawn(buffer, playerRef, glyph, obelisk));
@@ -76,7 +77,7 @@ public class ObeliskDispatcher {
                 handler.onUnhover(buffer, playerRef, unhoveredRef, obelisk));
     }
 
-    private static void forEachHandler(CommandBuffer<EntityStore> buffer,
+    private static void forEachHandler(ComponentAccessor<EntityStore> buffer,
             PedestalBlockComponent pedestal, ObeliskCallback callback) {
         List<Vector3i> obelisks = pedestal.getActiveObelisks();
         if (obelisks.isEmpty()) return;

@@ -8,12 +8,13 @@ import java.util.concurrent.Executors;
 
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
+import com.riprod.hexcode.utils.LogScopes;
 
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 
 public class CompositeShapeDetector implements ShapeDetector {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DRAW);
 
     private final List<ShapeDetector> detectors;
     private final ExecutorService executor;
@@ -40,7 +41,7 @@ public class CompositeShapeDetector implements ShapeDetector {
                     long elapsedNanos = System.nanoTime() - startNanos;
                     return new TimedResult(detector.getName(), result, elapsedNanos);
                 } catch (Exception e) {
-                    LOGGER.atSevere().log("[hexcode] shape detector %s failed: %s", detector.getName(), e.getMessage());
+                    LOGGER.atSevere().log("shape detector %s failed: %s", detector.getName(), e.getMessage());
                     return new TimedResult(detector.getName(), null, 0);
                 }
             }, executor));
@@ -50,21 +51,23 @@ public class CompositeShapeDetector implements ShapeDetector {
                 .map(CompletableFuture::join)
                 .toList();
 
-        StringBuilder sb = new StringBuilder("[Composite] timing:");
-        for (TimedResult r : results) {
-            sb.append(String.format(" %s: %.2fms", r.name, r.elapsedNanos / 1_000_000.0));
-            if (r != results.getLast()) sb.append(" |");
-        }
-        LOGGER.atFine().log(sb.toString());
+        if (LOGGER.atFine().isEnabled()) {
+            StringBuilder sb = new StringBuilder("[Composite] timing:");
+            for (TimedResult r : results) {
+                sb.append(String.format(" %s: %.2fms", r.name, r.elapsedNanos / 1_000_000.0));
+                if (r != results.getLast()) sb.append(" |");
+            }
+            LOGGER.atFine().log(sb.toString());
 
-        StringBuilder resultSb = new StringBuilder("[Composite] results:");
-        for (TimedResult r : results) {
-            String shape = r.result != null ? r.result.getShapeId() : "none";
-            float score = r.result != null ? r.result.getVolatility() : 0f;
-            resultSb.append(String.format(" %s→%s (%.4f)", r.name, shape, score));
-            if (r != results.getLast()) resultSb.append(" |");
+            StringBuilder resultSb = new StringBuilder("[Composite] results:");
+            for (TimedResult r : results) {
+                String shape = r.result != null ? r.result.getShapeId() : "none";
+                float score = r.result != null ? r.result.getVolatility() : 0f;
+                resultSb.append(String.format(" %s→%s (%.4f)", r.name, shape, score));
+                if (r != results.getLast()) resultSb.append(" |");
+            }
+            LOGGER.atFine().log(resultSb.toString());
         }
-        LOGGER.atFine().log(resultSb.toString());
 
         if (results.isEmpty() || results.getFirst().result == null) {
             return null;

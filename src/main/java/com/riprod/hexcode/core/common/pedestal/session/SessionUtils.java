@@ -34,10 +34,11 @@ import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalItemUtil;
 import com.riprod.hexcode.state.HexState;
 import com.riprod.hexcode.utils.CleanupUtils;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class SessionUtils {
 
-    private static final HytaleLogger logger = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger logger = HytaleLogger.get(LogScopes.CRAFT);
 
     public static HexcodeSessionComponent createSession(CommandBuffer<EntityStore> buffer,
             PedestalBlockComponent pedestal, Vector3i pedestalLocation,

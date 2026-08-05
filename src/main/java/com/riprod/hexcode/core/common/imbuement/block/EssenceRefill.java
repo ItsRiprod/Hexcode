@@ -13,13 +13,14 @@ import com.hypixel.hytale.server.core.modules.block.components.ItemContainerBloc
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.riprod.hexcode.core.common.imbuement.asset.EssenceAsset;
+import com.riprod.hexcode.utils.LogScopes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 public final class EssenceRefill {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.IMBUE);
 
     private static final double HORIZONTAL_RADIUS = 2.0;
     private static final double VERTICAL_RADIUS = 2.0;

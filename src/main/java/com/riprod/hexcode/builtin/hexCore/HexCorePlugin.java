@@ -3,7 +3,6 @@ package com.riprod.hexcode.builtin.hexCore;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.ResourceType;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
@@ -224,11 +223,10 @@ import com.riprod.hexcode.builtin.hexCore.impact.SphereVolumeImpact;
 import com.riprod.hexcode.builtin.hexCore.impact.ThresholdImpact;
 
 public class HexCorePlugin extends JavaPlugin {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     public HexCorePlugin(JavaPluginInit init) {
         super(init);
-        LOGGER.atFine().log("Hexcode %s sub-plugin v%s initializing...",
+        getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
                 this.getManifest().getName().toString(), this.getManifest().getVersion().toString());
     }
 
@@ -511,6 +509,7 @@ public class HexCorePlugin extends JavaPlugin {
         entityStoreRegistry.registerSystem(new InvisibilityDamageSystem());
 
         entityStoreRegistry.registerSystem(new ContextForceExitSystem.OnDeath());
+        entityStoreRegistry.registerSystem(new ContextForceExitSystem.OnUnload());
 
         entityStoreRegistry.registerSystem(new FlycastingEnterListener());
         entityStoreRegistry.registerSystem(new FlycastingChangeListener());

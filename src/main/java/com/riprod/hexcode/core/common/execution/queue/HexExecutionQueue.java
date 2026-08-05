@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.function.Predicate;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.Resource;
@@ -16,6 +17,8 @@ public final class HexExecutionQueue implements Resource<EntityStore> {
     public record PendingGlyph(String glyphId, HexContext ctx) {
     }
 
+    private static final int INITIAL_CAPACITY = 1024;
+
     private static ResourceType<EntityStore, HexExecutionQueue> resourceType;
 
     public static ResourceType<EntityStore, HexExecutionQueue> getResourceType() {
@@ -26,13 +29,34 @@ public final class HexExecutionQueue implements Resource<EntityStore> {
         resourceType = type;
     }
 
-    private final Deque<PendingGlyph> pending = new ArrayDeque<>();
+    private final Deque<PendingGlyph> pending = new ArrayDeque<>(INITIAL_CAPACITY);
+    private final Deque<PendingGlyph> deferred = new ArrayDeque<>(INITIAL_CAPACITY);
+    private long tick;
 
     public HexExecutionQueue() {
     }
 
-    public void enqueue(PendingGlyph item) {
-        pending.add(item);
+    public void enqueue(@Nonnull PendingGlyph item) {
+        pending.addLast(item);
+    }
+
+    public void defer(@Nonnull PendingGlyph item) {
+        deferred.addLast(item);
+    }
+
+    public void restoreDeferred() {
+        PendingGlyph item;
+        while ((item = deferred.pollLast()) != null) {
+            pending.addFirst(item);
+        }
+    }
+
+    public long nextTick() {
+        return ++tick;
+    }
+
+    public long getTick() {
+        return tick;
     }
 
     public int size() {
@@ -41,12 +65,14 @@ public final class HexExecutionQueue implements Resource<EntityStore> {
 
     public void clear() {
         pending.clear();
+        deferred.clear();
     }
 
-    public int removeIf(Predicate<PendingGlyph> filter) {
-        int before = pending.size();
+    public int removeIf(@Nonnull Predicate<PendingGlyph> filter) {
+        int before = pending.size() + deferred.size();
         pending.removeIf(filter);
-        return before - pending.size();
+        deferred.removeIf(filter);
+        return before - pending.size() - deferred.size();
     }
 
     @Nullable

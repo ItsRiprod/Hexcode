@@ -24,7 +24,6 @@ import com.hypixel.hytale.server.core.modules.entity.component.PropComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.time.TimeResource;
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponent;
@@ -223,11 +222,10 @@ public class InterfaceManager {
         (color.green & 0xFF) / 255.0f,
         (color.blue & 0xFF) / 255.0f);
 
-    World world = accessor.getExternalData().getWorld();
     for (int i = 0; i < points.size() - 1; i++) {
       Vector3d a = points.get(i);
       Vector3d b = points.get(i + 1);
-      VfxUtil.line(accessor, world, a, b, lineColor, 0.05, 5.0f, DebugUtils.FLAG_FADE, playerRef);
+      VfxUtil.line(accessor, a, b, lineColor, 0.05, 5.0f, DebugUtils.FLAG_FADE, playerRef);
     }
   }
 

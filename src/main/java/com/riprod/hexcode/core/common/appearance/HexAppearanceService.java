@@ -21,6 +21,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.utils.HexRefs;
 
 public final class HexAppearanceService {
 
@@ -242,6 +243,6 @@ public final class HexAppearanceService {
     }
 
     private static boolean isUsable(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref) {
-        return ref.isValid() && ref.getStore() == buffer.getExternalData().getStore();
+        return HexRefs.isLive(ref, buffer);
     }
 }

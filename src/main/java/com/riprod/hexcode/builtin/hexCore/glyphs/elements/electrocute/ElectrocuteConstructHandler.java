@@ -12,10 +12,11 @@ import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class ElectrocuteConstructHandler implements ConstructHandler<ElectrocuteState> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
     public boolean onTick(float dt, HexStatus<ElectrocuteState> status, ConstructTickContext ctx) {

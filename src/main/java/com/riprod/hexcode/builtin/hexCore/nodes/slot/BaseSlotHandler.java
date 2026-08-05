@@ -21,9 +21,10 @@ import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.CraftingColors;
 import com.riprod.hexcode.core.common.node.BaseNodeHandler;
 import com.riprod.hexcode.builtin.hexCore.scene.LinkRenderer;
+import com.riprod.hexcode.utils.LogScopes;
 
 public abstract class BaseSlotHandler extends BaseNodeHandler {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CRAFT);
 
     @Override
     public InteractionState enter(CommandBuffer<EntityStore> accessor, Ref<EntityStore> node,
@@ -58,7 +59,7 @@ public abstract class BaseSlotHandler extends BaseNodeHandler {
                 look.getPosition().z + look.getDirection().z * 2);
 
         Vector3f color = resolveActiveLinkColor(accessor, node);
-        LinkRenderer.renderActiveLink(accessor, accessor.getExternalData().getWorld(),
+        LinkRenderer.renderActiveLink(accessor,
                 nodeTransform.getPosition(), targetPoint, color);
         return InteractionState.Finished;
     }

@@ -21,10 +21,11 @@ import com.riprod.hexcode.core.common.hexes.codec.DecodeResult;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 import com.riprod.hexcode.utils.HexSlot;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class HexSerializeCommand extends AbstractPlayerCommand {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CMD);
 
     public HexSerializeCommand() {
         super("serialize", "import/export hex spells");

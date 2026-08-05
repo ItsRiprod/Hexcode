@@ -7,9 +7,10 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.drawing.system.shapes.ShapeCacheManager;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class ShapeComparator {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DRAW);
 
     private static final int GRID = 32;
     private static final int RADIUS = 3;

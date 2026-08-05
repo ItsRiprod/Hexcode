@@ -33,6 +33,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.HexRefs;
 
 public class DisguiseGlyph implements GlyphHandler {
 
@@ -156,9 +157,8 @@ public class DisguiseGlyph implements GlyphHandler {
 
     private AppearanceLayer resolveEntityDisguise(EntityVar referenceEntity,
             CommandBuffer<EntityStore> accessor) {
-        Ref<EntityStore> referenceRef = referenceEntity.getRef(accessor);
-        if (referenceRef == null || !referenceRef.isValid()
-                || referenceRef.getStore() != accessor.getExternalData().getStore()) {
+        Ref<EntityStore> referenceRef = HexRefs.live(referenceEntity.getRef(accessor), accessor);
+        if (referenceRef == null) {
             return null;
         }
 

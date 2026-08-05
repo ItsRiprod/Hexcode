@@ -31,9 +31,10 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.api.imbuement.ImbuedBlockActivator;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact.style.InteractStyle;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class InteractGlyph implements GlyphHandler {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     public static final String ID = "Interact";
 

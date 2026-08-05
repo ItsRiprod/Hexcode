@@ -31,10 +31,11 @@ import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.builtin.hexCore.nodes.slot.NextSlotConfig;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class HexInspectCommand extends AbstractPlayerCommand {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CMD);
 
     private final FlagArg detailedFlag;
 

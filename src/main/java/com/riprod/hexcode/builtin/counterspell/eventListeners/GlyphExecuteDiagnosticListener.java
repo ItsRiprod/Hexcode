@@ -9,10 +9,11 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class GlyphExecuteDiagnosticListener implements Consumer<GlyphExecuteEvent> {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DIAG);
 
     @Override
     public void accept(GlyphExecuteEvent event) {

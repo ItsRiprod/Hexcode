@@ -31,9 +31,10 @@ import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class CraftingShapeDrawnSystem extends EntityEventSystem<EntityStore, ShapeDrawnEvent> {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CRAFT);
 
     public CraftingShapeDrawnSystem() {
         super(ShapeDrawnEvent.class);

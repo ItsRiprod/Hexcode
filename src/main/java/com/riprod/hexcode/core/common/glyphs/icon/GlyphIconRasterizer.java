@@ -23,7 +23,7 @@ public final class GlyphIconRasterizer {
     private static final Gson GSON = new Gson();
 
     private static final int INTERNAL = 1024;
-    private static final int FINAL = 256;
+    private static final int FINAL = 128;
     private static final double REFERENCE_QUAD_UNITS = 64.0;
     private static final double REFERENCE_FILL = 0.85;
     private static final double PX_PER_UNIT = INTERNAL * REFERENCE_FILL / REFERENCE_QUAD_UNITS;

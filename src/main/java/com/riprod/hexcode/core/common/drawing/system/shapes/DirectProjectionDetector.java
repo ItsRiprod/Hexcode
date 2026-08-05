@@ -6,12 +6,13 @@ import java.util.List;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
+import com.riprod.hexcode.utils.LogScopes;
 
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 
 public class DirectProjectionDetector implements ShapeDetector {
 
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.DRAW);
     private static final int GRID = 32;
     private static final int RADIUS = 3;
     private static final float PRECISION_WEIGHT = 0.7f;
@@ -185,6 +186,8 @@ public class DirectProjectionDetector implements ShapeDetector {
     }
 
     private void logTopCandidates(List<String> names, List<Float> scores) {
+        if (!LOGGER.atFine().isEnabled()) return;
+
         List<int[]> indices = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
             indices.add(new int[] { i });
