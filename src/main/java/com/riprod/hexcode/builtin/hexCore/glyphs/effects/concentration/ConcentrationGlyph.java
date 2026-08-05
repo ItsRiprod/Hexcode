@@ -79,7 +79,8 @@ public class ConcentrationGlyph implements GlyphHandler {
         EntityStatValue holdStat = statMap != null
                 ? statMap.get(HexcodeEntityStatTypes.getIsHolding()) : null;
         if (holdStat == null || holdStat.get() < 1f) {
-            HexExecuter.continueFromSlot(glyph, ConcentrationGlyphSlots.RELEASE, hexContext);
+            HexExecuter.branchFromSlot(glyph, ConcentrationGlyphSlots.RELEASE, hexContext);
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
         }
 
@@ -105,7 +106,7 @@ public class ConcentrationGlyph implements GlyphHandler {
                         + convert(staminaRate, config.getStaminaImpact())
                         + convert(healthRate, config.getHealthImpact()));
         HexConstructSpawner.applyWithState(
-                accessor, casterRef, hexContext, glyph, ConcentrationGlyph.ID, state);
+                accessor, casterRef, hexContext.branch(), glyph, ConcentrationGlyph.ID, state);
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }

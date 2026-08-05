@@ -14,6 +14,7 @@ import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.protocol.PlayerSkin;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
@@ -21,6 +22,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.config.HexcodeConfig;
 import com.riprod.hexcode.utils.HexRefs;
 
 public final class HexAppearanceService {
@@ -185,6 +187,11 @@ public final class HexAppearanceService {
 
     private static void applyNameplate(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref,
             @Nullable String nameplate, @Nullable String originalNameplate) {
+        if (!HexcodeConfig.get().allowsNametagOverrides()
+                && buffer.getComponent(ref, Player.getComponentType()) != null) {
+            return;
+        }
+
         Nameplate current = buffer.getComponent(ref, Nameplate.getComponentType());
 
         if (nameplate != null) {

@@ -36,7 +36,7 @@ Chaos.Next.name=Next
 Chaos.Next.description=The next glyph in the execution chain
 
 Concentration.name=Concentration
-Concentration.description=Boosts Volatility while holding click. Cancels glyph on release.
+Concentration.description=Boosts Volatility while holding click
 Concentration.Next.name=Next
 Concentration.Next.description=Children sustained while concentrating
 Concentration.release.name=Release
