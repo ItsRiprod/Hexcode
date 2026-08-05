@@ -22,7 +22,14 @@ public final class HexcodeConfig extends Config {
             .append(new KeyedCodec<>("RespectPvp", Codec.BOOLEAN),
                     (config, b) -> config.respectPvp = b,
                     config -> config.respectPvp)
-            .documentation("Whether Hexcode spells honour the server PVP setting")
+            .documentation("Whether Hexcode utility/status spells honour the server PVP setting - damage spells will always respect the PVP config.")
+            .add()
+            .append(new KeyedCodec<>("RespectClaims", Codec.BOOLEAN),
+                    (config, b) -> config.respectClaims = b,
+                    config -> config.respectClaims)
+            .documentation("Whether Hexcode spells honour block protection - world block break/place "
+                    + "settings, non-modifiable environments, and Break/PlaceBlockEvent vetoes from "
+                    + "land-claim plugins")
             .add()
             .append(new KeyedCodec<>("MaxGlyphsPerTick", Codec.INTEGER),
                     (config, i) -> config.maxGlyphsPerTick = i,
@@ -49,6 +56,7 @@ public final class HexcodeConfig extends Config {
             .build();
 
     private boolean respectPvp = true;
+    private boolean respectClaims = true;
     private int maxGlyphsPerTick = 512;
     private int maxGlyphsPerCast = 128;
 
@@ -62,6 +70,10 @@ public final class HexcodeConfig extends Config {
 
     public boolean respectsPvp() {
         return respectPvp;
+    }
+
+    public boolean respectsClaims() {
+        return respectClaims;
     }
 
     public int getMaxGlyphsPerTick() {

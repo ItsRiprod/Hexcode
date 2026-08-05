@@ -27,6 +27,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
+import com.riprod.hexcode.config.HexcodeConfig;
 import com.riprod.hexcode.utils.LogScopes;
 
 public final class HexProtection {
@@ -46,6 +47,9 @@ public final class HexProtection {
      * announced twice.
      */
     public static boolean isBlockActionAllowed(World world, BlockAction action) {
+        if (!HexcodeConfig.get().respectsClaims()) {
+            return true;
+        }
         var worldConfig = world.getGameplayConfig().getWorldConfig();
         return switch (action) {
             case BREAK -> worldConfig.isBlockBreakingAllowed();
@@ -55,6 +59,10 @@ public final class HexProtection {
 
     public static boolean canModifyBlock(World world, Ref<EntityStore> casterRef,
             CommandBuffer<EntityStore> accessor, Vector3i pos, BlockAction action) {
+        if (!HexcodeConfig.get().respectsClaims()) {
+            return true;
+        }
+
         if (!isBlockActionAllowed(world, action)) {
             return false;
         }
@@ -103,12 +111,17 @@ public final class HexProtection {
             return true;
         }
 
-        boolean targetIsPlayer = accessor.getComponent(targetRef, Player.getComponentType()) != null;
+        Player targetPlayer = accessor.getComponent(targetRef, Player.getComponentType());
         boolean casterIsPlayer = accessor.getComponent(casterRef, Player.getComponentType()) != null;
-        if (targetIsPlayer && casterIsPlayer && !world.getWorldConfig().isPvpEnabled()) {
-            LOGGER.atFine().atMostEvery(5, TimeUnit.SECONDS)
-                    .log("Blocked glyph from doing damage - PVP is Disabled");
-            return false;
+        if (targetPlayer != null && casterIsPlayer) {
+            if (!HexcodeConfig.get().respectsPvp()) {
+                return !targetPlayer.hasSpawnProtection();
+            }
+            if (!world.getWorldConfig().isPvpEnabled()) {
+                LOGGER.atFine().atMostEvery(5, TimeUnit.SECONDS)
+                        .log("Blocked glyph from doing damage - PVP is Disabled");
+                return false;
+            }
         }
 
         if (isDamageImmune(accessor, targetRef)) {
