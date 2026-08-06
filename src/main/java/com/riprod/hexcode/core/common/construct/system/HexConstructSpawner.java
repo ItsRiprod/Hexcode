@@ -92,6 +92,10 @@ public class HexConstructSpawner {
             return GlyphModelUtil.withDefaultBox(shaped, modelAsset);
         }
 
+        if (modelAsset == null && glyphAsset != null) {
+            return GlyphModelUtil.assemble(glyphAsset, glyphAsset.getStyle(), defaultScale);
+        }
+
         return modelAsset != null ? Model.createScaledModel(modelAsset, defaultScale) : null;
     }
 

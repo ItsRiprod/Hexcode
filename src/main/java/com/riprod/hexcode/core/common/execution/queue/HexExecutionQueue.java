@@ -1,7 +1,5 @@
 package com.riprod.hexcode.core.common.execution.queue;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
@@ -11,6 +9,8 @@ import com.hypixel.hytale.component.Resource;
 import com.hypixel.hytale.component.ResourceType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 public final class HexExecutionQueue implements Resource<EntityStore> {
 
@@ -29,26 +29,45 @@ public final class HexExecutionQueue implements Resource<EntityStore> {
         resourceType = type;
     }
 
-    private final Deque<PendingGlyph> pending = new ArrayDeque<>(INITIAL_CAPACITY);
-    private final Deque<PendingGlyph> deferred = new ArrayDeque<>(INITIAL_CAPACITY);
+    private ObjectArrayList<PendingGlyph> pending = new ObjectArrayList<>(INITIAL_CAPACITY);
+    private ObjectArrayList<PendingGlyph> snapshot = new ObjectArrayList<>(INITIAL_CAPACITY);
+    private final ObjectArrayList<PendingGlyph> deferred = new ObjectArrayList<>(INITIAL_CAPACITY);
     private long tick;
 
     public HexExecutionQueue() {
     }
 
     public void enqueue(@Nonnull PendingGlyph item) {
-        pending.addLast(item);
+        pending.add(item);
     }
 
     public void defer(@Nonnull PendingGlyph item) {
-        deferred.addLast(item);
+        deferred.add(item);
     }
 
-    public void restoreDeferred() {
-        PendingGlyph item;
-        while ((item = deferred.pollLast()) != null) {
-            pending.addFirst(item);
+    @Nonnull
+    public ObjectArrayList<PendingGlyph> beginDrain() {
+        ObjectArrayList<PendingGlyph> swap = pending;
+        pending = snapshot;
+        snapshot = swap;
+        return snapshot;
+    }
+
+    public void endDrain(int consumed) {
+        int size = snapshot.size();
+        int cut = Math.min(consumed, size);
+        if (cut == size && deferred.isEmpty()) {
+            snapshot.clear();
+            return;
         }
+        snapshot.removeElements(0, cut);
+        snapshot.addAll(snapshot.size(), deferred);
+        snapshot.addAll(snapshot.size(), pending);
+        ObjectArrayList<PendingGlyph> swap = pending;
+        pending = snapshot;
+        snapshot = swap;
+        snapshot.clear();
+        deferred.clear();
     }
 
     public long nextTick() {
@@ -65,19 +84,16 @@ public final class HexExecutionQueue implements Resource<EntityStore> {
 
     public void clear() {
         pending.clear();
+        snapshot.clear();
         deferred.clear();
     }
 
     public int removeIf(@Nonnull Predicate<PendingGlyph> filter) {
-        int before = pending.size() + deferred.size();
+        int before = pending.size() + snapshot.size() + deferred.size();
         pending.removeIf(filter);
+        snapshot.removeIf(filter);
         deferred.removeIf(filter);
-        return before - pending.size() - deferred.size();
-    }
-
-    @Nullable
-    public PendingGlyph poll() {
-        return pending.poll();
+        return before - pending.size() - snapshot.size() - deferred.size();
     }
 
     @Nullable

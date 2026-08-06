@@ -32,6 +32,8 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ConcentrationGlyph implements GlyphHandler {
@@ -52,10 +54,31 @@ public class ConcentrationGlyph implements GlyphHandler {
     }
 
     @Override
+    public HexVar readValue(Glyph glyph, HexContext hexContext) {
+
+        Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
+        if (casterRef == null || !casterRef.isValid())
+            return new NumberVar(0.0);
+
+        CommandBuffer<EntityStore> buffer = hexContext.getAccessor();
+        EntityStatMap statMap = buffer.getComponent(
+                casterRef, EntityStatMap.getComponentType());
+        EntityStatValue holdStat = statMap != null
+                ? statMap.get(HexcodeEntityStatTypes.getIsHolding())
+                : null;
+
+        if (holdStat == null || holdStat.get() < 1f) {
+            return new NumberVar(0.0);
+        }
+        return new NumberVar(1.0);
+    }
+
+    @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         ConcentrationConfig config = getConfig(ConcentrationConfig.class, asset);
-        if (config == null) config = ConcentrationConfig.DEFAULTS;
+        if (config == null)
+            config = ConcentrationConfig.DEFAULTS;
         Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
         if (casterRef == null || !casterRef.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -77,7 +100,8 @@ public class ConcentrationGlyph implements GlyphHandler {
         EntityStatMap statMap = accessor.getComponent(
                 casterRef, EntityStatMap.getComponentType());
         EntityStatValue holdStat = statMap != null
-                ? statMap.get(HexcodeEntityStatTypes.getIsHolding()) : null;
+                ? statMap.get(HexcodeEntityStatTypes.getIsHolding())
+                : null;
         if (holdStat == null || holdStat.get() < 1f) {
             HexExecuter.branchFromSlot(glyph, ConcentrationGlyphSlots.RELEASE, hexContext);
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
@@ -133,7 +157,9 @@ public class ConcentrationGlyph implements GlyphHandler {
                 new NetworkId(accessor.getExternalData().takeNextNetworkId()));
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
         holder.addComponent(MountedComponent.getComponentType(),
-                new MountedComponent(casterRef, new Rotation3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z), MountController.Minecart));
+                new MountedComponent(casterRef,
+                        new Rotation3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z),
+                        MountController.Minecart));
 
         Model model = HexConstructSpawner.attachModel(holder, hexContext,
                 GlyphAsset.getAssetMap().getAsset(ID), 1.0f);

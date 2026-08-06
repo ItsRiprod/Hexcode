@@ -96,7 +96,7 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
         if (effectIndex == Integer.MIN_VALUE) return false;
         EffectControllerComponent controller = buffer.getComponent(
                 target, EffectControllerComponent.getComponentType());
-        return controller == null || !controller.hasEffect(effectIndex);
+        return controller != null && !controller.hasEffect(effectIndex);
     }
 
     private static void removeEffect(CommandBuffer<EntityStore> buffer,

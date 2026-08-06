@@ -16,6 +16,8 @@ import com.riprod.hexcode.core.common.execution.component.HexContext;
 import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue.PendingGlyph;
 import com.riprod.hexcode.utils.LogScopes;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 public class HexQueueDrainEventSystem extends WorldEventSystem<EntityStore, HexQueueDrainEvent> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CAST);
@@ -33,18 +35,13 @@ public class HexQueueDrainEventSystem extends WorldEventSystem<EntityStore, HexQ
         int maxPerCast = config.getMaxGlyphsPerCast();
         long tick = queue.getTick();
         int executed = 0;
+        int index = 0;
         boolean truncated = false;
 
+        ObjectArrayList<PendingGlyph> work = queue.beginDrain();
         try {
-            for (int i = 0; i < event.getCount(); i++) {
-                if (executed >= maxPerTick) {
-                    truncated = true;
-                    break;
-                }
-                PendingGlyph item = queue.poll();
-                if (item == null) {
-                    break;
-                }
+            for (; index < work.size() && executed < maxPerTick; index++) {
+                PendingGlyph item = work.get(index);
                 HexContext ctx = item.ctx();
                 HexCast cast = ctx.cast();
                 if (cast != null) {
@@ -63,8 +60,9 @@ public class HexQueueDrainEventSystem extends WorldEventSystem<EntityStore, HexQ
                 CoreHexExecuter.executeQueuedGlyph(item.glyphId(), ctx);
                 executed++;
             }
+            truncated = index < work.size();
         } finally {
-            queue.restoreDeferred();
+            queue.endDrain(index);
         }
 
         if (truncated) {

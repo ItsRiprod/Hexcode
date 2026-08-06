@@ -13,7 +13,9 @@ import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.beam.style.BeamStyle;
+import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.utils.BlockResolution;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -92,8 +94,12 @@ public class BeamGlyph implements GlyphHandler {
             return;
         }
 
-        int beamLength = HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(BeamGlyphSlots.RANGE, hexContext), asset.getSlot(BeamGlyphSlots.RANGE)).intValue();
+        double requestedRange = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(BeamGlyphSlots.RANGE, hexContext), asset.getSlot(BeamGlyphSlots.RANGE)).doubleValue();
+
+        int beamLength = (int) Math.abs(requestedRange);
+        if (requestedRange < 0)
+            direction = new Vector3d(direction).negate();
 
         double dlen = direction.length();
         double nx = dlen > 1e-9 ? direction.x / dlen : 0;
@@ -165,10 +171,24 @@ public class BeamGlyph implements GlyphHandler {
                 glyph.writeOutput(new PositionVar(endPoint, true), hexContext);
         }
 
+        if (!passive)
+            chargeReach(asset, hexContext, new Vector3d(origin).sub(endPoint).length());
+
         BeamStyle.render(beamOrigin, endPoint, new Vector3f(rotation.x, rotation.y, rotation.z), hitType, hexContext,
                 hexContext.getAccessor());
 
         if (!passive)
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+    }
+
+    private void chargeReach(GlyphAsset asset, HexContext hexContext, double reach) {
+        Impact impact = asset == null || asset.getConfig() == null
+                ? null : asset.getConfig().getVolatilityImpact();
+        if (impact == null)
+            return;
+        VolatilityComponent volatility = hexContext.volatility();
+        if (volatility == null)
+            return;
+        volatility.consume(Impact.scale(impact, reach));
     }
 }

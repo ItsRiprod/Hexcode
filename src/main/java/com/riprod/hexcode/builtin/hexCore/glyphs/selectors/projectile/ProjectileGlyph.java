@@ -18,6 +18,7 @@ import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.DespawnComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
+import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.Interactions;
@@ -156,6 +157,9 @@ public class ProjectileGlyph implements GlyphHandler {
         }
 
         holder.addComponent(BoundingBox.getComponentType(), new BoundingBox(model.getBoundingBox()));
+
+        holder.addComponent(EntityScaleComponent.getComponentType(),
+                new EntityScaleComponent(model.getScale()));
 
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());

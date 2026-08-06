@@ -14,4 +14,6 @@
 - Performance updates across the board with crafting/casting/flycasting/etc
 - Various other bugfixes I found
 - Added a Creative Staff (Etherial Staff) with busted stats 
+- Fixed a bug where a poorly made spell could prevent all interactions on the server
+- Fixed pages so they no longer have infinite volatility
 \+ Added Configly 

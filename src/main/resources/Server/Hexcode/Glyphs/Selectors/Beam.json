@@ -45,11 +45,7 @@
       "Label": "hexcode.glyphs.Beam.range.name",
       "Description": "hexcode.glyphs.Beam.range.description",
       "DefaultValue": 48,
-      "Unique": true,
-      "Impact": {
-        "Type": "Linear",
-        "Offset": 48
-      }
+      "Unique": true
     },
     "Next": {
       "Type": "Next",
@@ -64,6 +60,11 @@
   },
   "Config": {
     "Type": "Beam",
-    "OriginOffset": 1.5
+    "OriginOffset": 1.5,
+    "VolatilityImpact": {
+      "Type": "Linear",
+      "Slope": 0.1,
+      "Offset": 0.0
+    }
   }
 }
