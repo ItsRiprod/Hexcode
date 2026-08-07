@@ -21,7 +21,7 @@ First thing you’re going to wish to have is the **Crude Hex Staff**. It will t
 
 Holding your staff, press Secondary (RMB) to enter “Casting Mode” - this is where you will Select and Assemble your glyphs. Then, hold Primary (LMB) - while not hovering over another glyph - and drag to make a shape. Wait ~1s for the shape to appear (like below)
 
-<video width="100%" autoplay loop muted playsinline src="https://cdn.internal.hytalemodding.dev/wiki/hexcode/CombiningGlyphs.webm"></video>
+<video width="100%" autoplay loop muted playsinline src="https://cdn.internal.hytalemodding.dev/wiki/hexcode/Force.webm"></video>
 
 > **Terminology:** Casting Mode is simply the selection phase to choose which hex to execute. This will be more important later with Hexbooks
 
@@ -37,6 +37,6 @@ Now, one shape is great and all, but let’s look at what it takes to make a Hex
 
 First, draw a Force glyph (circle). Then, draw a Delay glyph (triangle). While still Secondary, hover over the Force glyph then press and hold Primary to drag it onto the Delay glyph. When you release Primary, it should “nest” them into one another, creating a Hex. Exit crafting mode and cast your hex. It should wait a second (delay) and then launch you (force)!
 
-<video width="100%" autoplay loop muted playsinline src="https://cdn.internal.hytalemodding.dev/wiki/hexcode/Force.webm"></video>
+<video width="100%" autoplay loop muted playsinline src="https://cdn.internal.hytalemodding.dev/wiki/hexcode/CombiningGlyphs.webm"></video>
 
 That’s it! You’ve mastered entry-level hexcode. Now create small hexes to your heart’s content. Experiment and learn how each one works. Once you are ready, you can move on to Advanced Crafting
