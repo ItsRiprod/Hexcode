@@ -282,7 +282,7 @@ Clashing occurs when two domains interset. The domain with the higher Energy win
 
 ### \[◯◇△\] Illuminate
 
-Makes the Target glow with an emissive colored light for a duration, visible to everyone. The Mode toggle picks how: \+1 lights the target entity in place, 0 also shows a colored volume box around it, and \-1 spawns a separate glowing entity mounted to the target. Blocks are lit by a spawned light entity placed at them, since block light cannot be injected without replacing the block. The glowing entity owns the effect (like Ignite or Freeze), and the light color comes from the cast Style.
+Makes the Target glow with an emissive colored light for a duration, visible to everyone. The light color comes from the current cast Style.
 
 # Tier 4
 

@@ -18,7 +18,7 @@ Arcane_Hexbook.name=Arcane Hex Book
 Arcane_Hexbook.description=<color is="#ffcc00"><b>12</b></color> <color is="#aaaaaa">Hex Slots</color> - <color is="#ff5555"><b>+Fire</b></color> <color is="#55ccff"><b>+Ice</b></color> <color is="#55ff55"><b>+Life</b></color> <color is="#cc88ff"><b>+Void</b></color> <color is="#aaaaaa">Damage</color> - <color is="#aaaaaa">+Spell Power</color>\n\n<b>To write spells</b>\nPlace into a <b>Pedestal</b> to draw Hexes into the Book\n\n<b>To cast spells</b>\nHold in your <b>Offhand</b> alongside a Hex Staff\nPress and Hold <b>Secondary</b> on the Staff to select from saved Hexes
 Template_Hexbook.name=Template Hex Book
 
-hexstaff.body=\n\nPress <b>LMB</b> to Cast Spell or Select/Draw\nPress <b>RMB</b> to enter Draing Mode\nPress <b>Ability 1</b> to Clear Active Spells\nPress <b>Ability 2</b> to Early Resolve a drawn hex\nPress <b>Ability 3</b> to Delete Hexes
+hexstaff.body=\n\nPress <b>LMB</b> to Cast Spell or Select/Draw\nPress <b>RMB</b> to enter Drawing Mode\nPress <b>Ability 1</b> to Clear Active Spells\nPress <b>Ability 2</b> to Early Resolve a drawn hex\nPress <b>Ability 3</b> to Delete Hexes
 
 hexstaff.style.ring=<color is="#cc88ff"><b>Ring</b></color> <color is="#aaaaaa">Style</color>
 hexstaff.style.arc=<color is="#cc88ff"><b>Arc</b></color> <color is="#aaaaaa">Style</color>
