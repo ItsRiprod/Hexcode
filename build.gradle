@@ -1,14 +1,14 @@
 plugins {
     id 'java'
     id 'com.gradleup.shadow' version '9.4.2'
-    id 'com.azuredoom.hytale-tools' version '1.0.38'
+    id 'com.azuredoom.hytale-tools' version '1.0.+'
     id 'com.azuredoom.hytalepublisher' version '1.+'
 }
 
 repositories {
     mavenCentral()
     gradlePluginPortal()
-    maven { url "https://www.cursemaven.com" }
+    maven { url = uri("https://www.cursemaven.com") }
 }
 
 java {
@@ -34,10 +34,10 @@ dependencies {
     compileOnly libs.jetbrains.annotations
     compileOnly libs.jspecify
     // shadowBundle(files('lib/Patchly-3.4.4.jar'))
-    shadowBundle('curse.maven:patchly-1550889:8585118')
+    shadowBundle('com.riprod:patchly:3.+')
+    // shadowBundle(files('lib/Configly-1.0.1.jar'))
+    shadowBundle('com.riprod:configly:1.+')
 
-    // shadowBundle(files('lib/Configly-1.0.0.jar'))
-    shadowBundle('curse.maven:configly-1640076:8580658')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.3'
 }
