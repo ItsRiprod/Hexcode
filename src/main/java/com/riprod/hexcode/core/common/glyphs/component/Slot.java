@@ -12,7 +12,7 @@ import com.hypixel.hytale.codec.lookup.CodecMapCodec;
 import com.hypixel.hytale.codec.lookup.Priority;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.DebugShape;
-import com.riprod.hexcode.core.common.execution.component.HexColors;
+import com.riprod.hexcode.core.common.hexes.component.HexColors;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 

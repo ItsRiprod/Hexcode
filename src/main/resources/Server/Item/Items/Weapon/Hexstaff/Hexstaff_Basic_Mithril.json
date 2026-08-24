@@ -77,8 +77,10 @@
             "Parent": "CastConfig_Tier1",
             "Style": "Hexstaff_Basic_Mithril",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 27.5
+              "Resources": {
+                "Initial": {
+                  "Arcane": 27.5
+                }
               }
             }
           }
@@ -98,8 +100,10 @@
             "Parent": "CastConfig_Tier2",
             "Style": "Hexstaff_Basic_Mithril",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 31.5
+              "Resources": {
+                "Initial": {
+                  "Arcane": 31.5
+                }
               }
             }
           }
@@ -119,8 +123,10 @@
             "Parent": "CastConfig_Tier3",
             "Style": "Hexstaff_Basic_Mithril",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 35.5
+              "Resources": {
+                "Initial": {
+                  "Arcane": 35.5
+                }
               }
             }
           }
@@ -140,8 +146,10 @@
             "Parent": "CastConfig_Tier4",
             "Style": "Hexstaff_Basic_Mithril",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 39.5
+              "Resources": {
+                "Initial": {
+                  "Arcane": 39.5
+                }
               }
             }
           }

@@ -29,7 +29,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.EnsnareComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.SpikeEntry;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.style.EnsnareStyle;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -193,7 +193,7 @@ public static final String ID = "Ensnare";
 
         Ref<EntityStore> trackerRef = accessor.addEntity(holder, AddReason.SPAWN);
 
-        hexContext.getHexRoot().addDependency(hexContext, trackerRef);
+        hexContext.addDependency(trackerRef);
     }
 
 }

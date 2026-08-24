@@ -1,4 +1,8 @@
 {
   "HexStorageType": "ExecutionConfig",
-  "TierScale": 1.2
+  "HexStats": {
+    "Policy": {
+      "TierScale": 1.2
+    }
+  }
 }

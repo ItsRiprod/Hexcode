@@ -9,7 +9,9 @@
   },
   "Defaults": {
     "HexStats": {
-      "InitialVolatility": 30
+      "Volatility": {
+        "Initial": 30
+      }
     }
   }
 }

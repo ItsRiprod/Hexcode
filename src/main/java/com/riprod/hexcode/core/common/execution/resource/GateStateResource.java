@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.common.execution.gate;
+package com.riprod.hexcode.core.common.execution.resource;
 
 import java.util.UUID;
 

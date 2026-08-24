@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.common.execution.component;
+package com.riprod.hexcode.core.common.execution.root;
 
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -8,6 +8,7 @@ import com.hypixel.hytale.math.vector.Vector3iUtil;
 
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.imbuement.block.BlockImbuementCapacity;
@@ -44,10 +45,6 @@ public class BlockHexRoot implements HexRoot {
     @Override
     public Ref<EntityStore> getSourceRef(ComponentAccessor<EntityStore> accessor) {
         return null;
-    }
-
-    @Override
-    public void addDependency(HexContext ctx, Ref<EntityStore> ref) {
     }
 
     @Override

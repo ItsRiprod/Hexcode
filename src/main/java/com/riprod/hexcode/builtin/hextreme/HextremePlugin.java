@@ -8,7 +8,7 @@ import com.riprod.hexcode.builtin.hextreme.execution.system.CraftingExportSystem
 import com.riprod.hexcode.builtin.hextreme.imbuement.PageProfile;
 import com.riprod.hexcode.builtin.hextreme.obelisk.PageLoadInteraction;
 import com.riprod.hexcode.builtin.hextreme.obelisk.PageLoaderObelisk;
-import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
+import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerRegistry;
 

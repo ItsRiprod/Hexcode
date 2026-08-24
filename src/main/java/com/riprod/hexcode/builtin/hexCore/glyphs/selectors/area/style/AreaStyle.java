@@ -1,26 +1,21 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.area.style;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
-import org.joml.Matrix4d;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
-import com.hypixel.hytale.protocol.DebugShape;
-import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
-import com.riprod.hexcode.core.common.utilities.DebugEmitter;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.utils.VfxUtil;
-import java.util.List;
-
-import static com.hypixel.hytale.server.core.modules.debug.DebugUtils.COLOR_WHITE;
 
 public class AreaStyle {
 
     private static final String GLYPH_ID = "Area";
-    private static final float SPHERE_DURATION = 0.5f;
 
     private AreaStyle() {
     }
@@ -29,32 +24,15 @@ public class AreaStyle {
         return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
     }
 
-    public static void render(Vector3d center, double radius, HexContext ctx,
+    public static void renderSpawn(Vector3d center, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset());
-
-        Matrix4d matrix = new Matrix4d();
-        matrix.identity();
-        matrix.translate(center.x, center.y, center.z);
-        matrix.scale(radius * 2.0, radius * 2.0, radius * 2.0);
-
-        float opacity = VfxUtil.resolveAlpha(ctx, asset());
-        if (opacity > 0f) {
-            int flags = DebugUtils.FLAG_FADE | DebugUtils.FLAG_NO_WIREFRAME;
-            DebugEmitter.add(accessor, DebugShape.Sphere, matrix, color, opacity, SPHERE_DURATION, flags);
-        }
-
         VfxUtil.spawnPrimary(overrides, asset(), center, accessor);
     }
 
     public static void renderHit(Vector3d pos, HexContext ctx,
-            ComponentAccessor<EntityStore> accessor) {
-        renderHit(pos, ctx, accessor, null);
-    }
-
-    public static void renderHit(Vector3d pos, HexContext ctx,
-            ComponentAccessor<EntityStore> accessor, List<Ref<EntityStore>> recipients) {
+            ComponentAccessor<EntityStore> accessor,
+            @Nullable List<Ref<EntityStore>> recipients) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         VfxUtil.spawnSecondary(overrides, asset(), pos, accessor, recipients);
     }

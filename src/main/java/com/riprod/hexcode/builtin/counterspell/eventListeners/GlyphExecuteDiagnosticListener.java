@@ -5,8 +5,8 @@ import java.util.function.Consumer;
 
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.api.event.GlyphExecuteEvent;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.utils.LogScopes;

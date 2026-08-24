@@ -1,8 +1,17 @@
-package com.riprod.hexcode.core.common.execution.cast;
+package com.riprod.hexcode.core.common.execution.cast.component;
 
 import javax.annotation.Nonnull;
 
-public final class VolatilityComponent implements CastComponent {
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.riprod.hexcode.core.common.execution.cast.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
+import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
+
+public final class VolatilityComponent implements CastComponent, CastOverlay<VolatilityComponent> {
+
+    private static final float UNSET = -1f;
 
     private static CastComponentType<VolatilityComponent> componentType;
 
@@ -14,7 +23,7 @@ public final class VolatilityComponent implements CastComponent {
         componentType = type;
     }
 
-    private float initial;
+    private float initial = UNSET;
     private float current;
     private float volatilityMultiplier = 1.0f;
     private float complexityMultiplier = 1.0f;
@@ -29,8 +38,18 @@ public final class VolatilityComponent implements CastComponent {
         this.complexityMultiplier = complexityMultiplier;
     }
 
+    @Override
+    public void applyTo(@Nonnull VolatilityComponent target) {
+        if (this.initial >= 0f) {
+            target.setInitial(this.initial);
+            target.setCurrent(this.initial);
+        }
+        target.setVolatilityMultiplier(target.getVolatilityMultiplier() * this.volatilityMultiplier);
+        target.setComplexityMultiplier(target.getComplexityMultiplier() * this.complexityMultiplier);
+    }
+
     public float getInitial() {
-        return initial;
+        return Math.max(0f, initial);
     }
 
     public void setInitial(float initial) {
@@ -80,4 +99,23 @@ public final class VolatilityComponent implements CastComponent {
         copy.complexityMultiplier = this.complexityMultiplier;
         return copy;
     }
+
+    public static final BuilderCodec<VolatilityComponent> CODEC = BuilderCodec
+            .builder(VolatilityComponent.class, VolatilityComponent::new)
+            .append(new KeyedCodec<>("Initial", Codec.FLOAT),
+                    (c, v) -> c.initial = v,
+                    c -> c.initial < 0f ? null : c.initial)
+            .documentation("Volatility budget the cast starts with. Assigns, replacing any earlier layer.")
+            .add()
+            .append(new KeyedCodec<>("Multiplier", Codec.FLOAT),
+                    (c, v) -> c.volatilityMultiplier = v,
+                    c -> c.volatilityMultiplier)
+            .documentation("Scales volatility consumed per glyph. Compounds with earlier layers.")
+            .add()
+            .append(new KeyedCodec<>("ComplexityMultiplier", Codec.FLOAT),
+                    (c, v) -> c.complexityMultiplier = v,
+                    c -> c.complexityMultiplier)
+            .documentation("Scales spell power. Compounds with earlier layers.")
+            .add()
+            .build();
 }

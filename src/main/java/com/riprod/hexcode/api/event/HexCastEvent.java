@@ -1,7 +1,7 @@
 package com.riprod.hexcode.api.event;
 
 import com.hypixel.hytale.component.system.CancellableEcsEvent;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 
 public class HexCastEvent extends CancellableEcsEvent {
 

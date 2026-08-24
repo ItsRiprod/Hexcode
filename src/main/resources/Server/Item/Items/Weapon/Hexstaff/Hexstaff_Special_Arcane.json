@@ -122,9 +122,13 @@
             "Parent": "CastConfig_Tier1",
             "Style": "Hexstaff_Special_Arcane",
             "HexStats": {
-              "VolatilityMultiplier": 0.75,
-              "InitialResources": {
-                "Arcane": 30
+              "Volatility": {
+                "Multiplier": 0.75
+              },
+              "Resources": {
+                "Initial": {
+                  "Arcane": 30
+                }
               }
             }
           }
@@ -144,9 +148,13 @@
             "Parent": "CastConfig_Tier2",
             "Style": "Hexstaff_Special_Arcane",
             "HexStats": {
-              "VolatilityMultiplier": 0.75,
-              "InitialResources": {
-                "Arcane": 40
+              "Volatility": {
+                "Multiplier": 0.75
+              },
+              "Resources": {
+                "Initial": {
+                  "Arcane": 40
+                }
               }
             }
           }
@@ -166,9 +174,13 @@
             "Parent": "CastConfig_Tier3",
             "Style": "Hexstaff_Special_Arcane",
             "HexStats": {
-              "VolatilityMultiplier": 0.75,
-              "InitialResources": {
-                "Arcane": 50
+              "Volatility": {
+                "Multiplier": 0.75
+              },
+              "Resources": {
+                "Initial": {
+                  "Arcane": 50
+                }
               }
             }
           }
@@ -188,9 +200,13 @@
             "Parent": "CastConfig_Tier4",
             "Style": "Hexstaff_Special_Arcane",
             "HexStats": {
-              "VolatilityMultiplier": 0.75,
-              "InitialResources": {
-                "Arcane": 60
+              "Volatility": {
+                "Multiplier": 0.75
+              },
+              "Resources": {
+                "Initial": {
+                  "Arcane": 60
+                }
               }
             }
           }

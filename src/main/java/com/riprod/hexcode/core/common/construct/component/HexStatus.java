@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 
 public class HexStatus<S extends ConstructState> {
@@ -27,10 +27,6 @@ public class HexStatus<S extends ConstructState> {
 
     @Nullable
     private S state;
-
-    public HexStatus() {
-        this.hexContext = new HexContext();
-    }
 
     public HexStatus(@Nullable String handlerId,
             @Nonnull HexContext hexContext,
@@ -118,19 +114,4 @@ public class HexStatus<S extends ConstructState> {
         this.state = state;
     }
 
-    @Nonnull
-    @Override
-    @SuppressWarnings("unchecked")
-    public HexStatus<S> clone() {
-        HexStatus<S> copy = new HexStatus<>();
-        copy.handlerId = this.handlerId;
-        copy.killRequested = this.killRequested;
-        copy.firedFirstTick = this.firedFirstTick;
-        copy.hexContext = HexContext.cloneState(this.hexContext);
-        copy.triggeringGlyph = this.triggeringGlyph;
-        copy.elapsedTime = this.elapsedTime;
-        copy.constructId = this.constructId;
-        copy.state = this.state != null ? (S) this.state.copy() : null;
-        return copy;
-    }
 }

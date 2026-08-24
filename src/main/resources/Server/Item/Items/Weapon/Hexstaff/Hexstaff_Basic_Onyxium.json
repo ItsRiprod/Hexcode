@@ -77,8 +77,10 @@
             "Parent": "CastConfig_Tier1",
             "Style": "Hexstaff_Basic_Onyxium",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 31.5
+              "Resources": {
+                "Initial": {
+                  "Arcane": 31.5
+                }
               }
             }
           }
@@ -98,8 +100,10 @@
             "Parent": "CastConfig_Tier2",
             "Style": "Hexstaff_Basic_Onyxium",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 36
+              "Resources": {
+                "Initial": {
+                  "Arcane": 36
+                }
               }
             }
           }
@@ -119,8 +123,10 @@
             "Parent": "CastConfig_Tier3",
             "Style": "Hexstaff_Basic_Onyxium",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 41
+              "Resources": {
+                "Initial": {
+                  "Arcane": 41
+                }
               }
             }
           }
@@ -140,8 +146,10 @@
             "Parent": "CastConfig_Tier4",
             "Style": "Hexstaff_Basic_Onyxium",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 45.5
+              "Resources": {
+                "Initial": {
+                  "Arcane": 45.5
+                }
               }
             }
           }

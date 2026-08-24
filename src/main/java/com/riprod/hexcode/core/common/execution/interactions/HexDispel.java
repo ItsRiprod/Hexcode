@@ -15,6 +15,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Sim
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
+import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
 
 public class HexDispel extends SimpleInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -45,10 +46,8 @@ public class HexDispel extends SimpleInteraction {
 
             CasterStateComponent casterState = buffer.getComponent(player,
                     CasterStateComponent.getComponentType());
-            int count = casterState != null ? casterState.getActiveCount() : 0;
-            if (casterState != null) {
-                casterState.cancelAll(player);
-            }
+            HexCastStore casts = buffer.getResource(HexCastStore.getResourceType());
+            int count = casterState != null ? casterState.cancelAll(casts) : 0;
             PlayerRef pr = buffer.getComponent(player, PlayerRef.getComponentType());
             if (pr != null && count > 0) {
                 pr.sendMessage(Message.raw("dispelled " + count + " active spell(s)"));

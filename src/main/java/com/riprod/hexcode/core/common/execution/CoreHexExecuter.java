@@ -8,8 +8,8 @@ import com.riprod.hexcode.api.event.GlyphExecuteEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -42,7 +42,7 @@ public class CoreHexExecuter {
             return;
         }
 
-        if (context.isConsumeMana() && !context.getHexRoot().tryConsumeMana(context.getManaCost(), buffer)) {
+        if (context.policy().isConsumeMana() && !context.getHexRoot().tryConsumeMana(context.getManaCost(), buffer)) {
             HytaleServer.get().getEventBus().dispatchFor(GlyphFizzleEvent.class)
                     .dispatch(new GlyphFizzleEvent(null, GlyphFizzleEvent.Reason.INSUFFICIENT_MANA, context));
             return;

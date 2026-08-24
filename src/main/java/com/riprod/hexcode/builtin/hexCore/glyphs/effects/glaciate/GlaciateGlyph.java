@@ -23,14 +23,13 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollision;
 import com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
-import com.hypixel.hytale.server.core.modules.projectile.ProjectileModule;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.component.GlaciateComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.style.GlaciateStyle;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -145,7 +144,6 @@ public static final String ID = "Glaciate";
         holder.addComponent(BoundingBox.getComponentType(),
                 new BoundingBox(model.getBoundingBox()));
         holder.ensureComponent(PropComponent.getComponentType());
-        holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());
         holder.addComponent(Velocity.getComponentType(), new Velocity());
 
@@ -166,7 +164,7 @@ public static final String ID = "Glaciate";
         UUID iceUuid = iceUuidComp != null ? iceUuidComp.getUuid() : UUID.randomUUID();
         glyph.writeSelfOutput(new EntityVar(iceUuid, iceRef), hexContext);
 
-        hexContext.getHexRoot().addDependency(hexContext, iceRef);
+        hexContext.addDependency(iceRef);
 
         GlaciateStyle.renderSpawn(spawnPos, hexContext, accessor);
     }

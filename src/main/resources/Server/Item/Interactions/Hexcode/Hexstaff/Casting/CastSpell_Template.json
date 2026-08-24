@@ -3,8 +3,10 @@
   "Config": {
     "HexStorageType": "ExecutionConfig",
     "HexStats": {
-      "InitialVolatility": 0,
-      "VolatilityMultiplier": 1.0
+      "Volatility": {
+        "Initial": 0,
+        "Multiplier": 1.0
+      }
     }
   },
   "Effects": {

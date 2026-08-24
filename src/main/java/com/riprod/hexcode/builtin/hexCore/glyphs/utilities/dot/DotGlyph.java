@@ -2,17 +2,13 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.dot;
 
 import javax.annotation.Nullable;
 
-import org.joml.Vector3f;
-
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
-import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
-import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 
 public class DotGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

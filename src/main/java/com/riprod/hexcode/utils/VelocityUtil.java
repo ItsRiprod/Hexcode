@@ -14,10 +14,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public class VelocityUtil {
 
-    public static boolean isProjectile(Ref<EntityStore> ref, ComponentAccessor<EntityStore> buffer) {
-        return buffer.getComponent(ref, StandardPhysicsProvider.getComponentType()) != null;
-    }
-
     public static boolean isPhysicsTicked(Ref<EntityStore> ref, ComponentAccessor<EntityStore> buffer) {
         return buffer.getComponent(ref, StandardPhysicsProvider.getComponentType()) != null
                 && buffer.getComponent(ref, HeadRotation.getComponentType()) != null;

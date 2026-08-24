@@ -1,12 +1,15 @@
 package com.riprod.hexcode.api.execution;
 
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.CoreHexExecuter;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
@@ -23,11 +26,23 @@ public class HexExecuter {
      */
     public static void cast(HexContext context, CommandBuffer<EntityStore> buffer) {
         context.updateRuntimeAccessors(buffer);
+        cast(context, (ComponentAccessor<EntityStore>) buffer);
+    }
+
+    public static void cast(HexContext context, ComponentAccessor<EntityStore> accessor) {
         if (context.getStyle() == null) context.setStyle(HexStyleAsset.empty());
+
+        HexCast cast = context.cast();
+        HexCastStore casts = accessor.getResource(HexCastStore.getResourceType());
+        if (cast != null) casts.register(cast);
+
         HexCastEvent.Pre pre = new HexCastEvent.Pre(context);
-        buffer.invoke(pre);
-        if (pre.isCancelled()) return;
-        buffer.invoke(new HexCastEvent(context));
+        accessor.invoke(pre);
+        if (pre.isCancelled()) {
+            if (cast != null) casts.remove(cast.getExecutionId());
+            return;
+        }
+        accessor.invoke(new HexCastEvent(context));
     }
 
     public static void continueFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {

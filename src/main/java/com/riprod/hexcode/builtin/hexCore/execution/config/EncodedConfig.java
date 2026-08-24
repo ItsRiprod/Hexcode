@@ -5,9 +5,9 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexRoot;
+import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.root.HexRoot;
 import com.riprod.hexcode.core.common.hexes.codec.HexFieldCodec;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 

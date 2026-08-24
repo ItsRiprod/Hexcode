@@ -19,7 +19,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.dat
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style.ShatterStyle;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 
 public class HexShatterBounceInteraction extends SimpleInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

@@ -16,7 +16,7 @@ import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 public class PedestalBlockUtil {
 
     public static void changeBlockState(World world, Vector3i pos, String stateName) {
-        BlockType blockType = BlockAccess.blockType(world, pos.x, pos.y, pos.z);
+        BlockType blockType = BlockAccess.blockType(world, pos.x(), pos.y(), pos.z());
         if (blockType == null || blockType.isUnknown()) {
             return;
         }
@@ -29,7 +29,7 @@ public class PedestalBlockUtil {
             }
         }
 
-        BlockAccess.setInteractionState(world, pos.x, pos.y, pos.z, blockType, stateName);
+        BlockAccess.setInteractionState(world, pos.x(), pos.y(), pos.z(), blockType, stateName);
     }
 
     public static PedestalBlockComponent resolvePedestal(Ref<EntityStore> playerRef,

@@ -117,9 +117,11 @@
             "Parent": "CastConfig_Tier1",
             "Style": "Hexstaff_Special_Astral",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 15,
-                "Void": 15
+              "Resources": {
+                "Initial": {
+                  "Arcane": 15,
+                  "Void": 15
+                }
               }
             }
           }
@@ -139,9 +141,11 @@
             "Parent": "CastConfig_Tier2",
             "Style": "Hexstaff_Special_Astral",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 20,
-                "Void": 20
+              "Resources": {
+                "Initial": {
+                  "Arcane": 20,
+                  "Void": 20
+                }
               }
             }
           }
@@ -161,9 +165,11 @@
             "Parent": "CastConfig_Tier3",
             "Style": "Hexstaff_Special_Astral",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 25,
-                "Void": 25
+              "Resources": {
+                "Initial": {
+                  "Arcane": 25,
+                  "Void": 25
+                }
               }
             }
           }
@@ -183,9 +189,11 @@
             "Parent": "CastConfig_Tier4",
             "Style": "Hexstaff_Special_Astral",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 30,
-                "Void": 30
+              "Resources": {
+                "Initial": {
+                  "Arcane": 30,
+                  "Void": 30
+                }
               }
             }
           }

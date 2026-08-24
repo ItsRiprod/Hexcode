@@ -1,14 +1,6 @@
 package com.riprod.hexcode;
 
 import com.riprod.configly.Configly;
-import com.riprod.hexcode.builtin.counterspell.CounterspellPlugin;
-import com.riprod.hexcode.builtin.hexCore.HexCorePlugin;
-import com.riprod.hexcode.builtin.hexability.HexabilityPlugin;
-import com.riprod.hexcode.builtin.hexomation.HexomationPlugin;
-import com.riprod.hexcode.builtin.hextras.HextrasPlugin;
-import com.riprod.hexcode.builtin.hextreme.HextremePlugin;
-import com.riprod.hexcode.builtin.imbued.ImbuedPlugin;
-import com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.utils.CraftingGlyphEditorSpawn;
 import com.riprod.hexcode.command.HexcodeCommand;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
@@ -29,28 +21,34 @@ import com.riprod.hexcode.core.common.drawing.interactions.HexDrawMode;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.drawing.registry.TemplateAsset;
 import com.riprod.hexcode.core.common.effect.GlyphEffectSystem;
-import com.riprod.hexcode.core.common.execution.component.BlockHexRoot;
+import com.riprod.hexcode.core.common.execution.root.BlockHexRoot;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
-import com.riprod.hexcode.core.common.execution.component.HexRoot;
-import com.riprod.hexcode.core.common.execution.cast.GlyphBudgetComponent;
+import com.riprod.hexcode.core.common.execution.root.HexRoot;
+import com.riprod.hexcode.core.common.execution.cast.component.CastDependenciesComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastManaComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastVariablesComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.GlyphBudgetComponent;
+import com.riprod.hexcode.core.common.execution.cast.CastRegistryProxy;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
-import com.riprod.hexcode.core.common.execution.cast.ResourcePoolComponent;
-import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
-import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
+import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
+import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
-import com.riprod.hexcode.core.common.execution.precast.CasterStateProvisionSystem;
-import com.riprod.hexcode.core.common.execution.precast.CastChargesSystem;
-import com.riprod.hexcode.core.common.execution.precast.CastDecaySystem;
-import com.riprod.hexcode.core.common.execution.precast.CastBookStyleSystem;
-import com.riprod.hexcode.core.common.execution.precast.CastSpellPowerSystem;
-import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
+import com.riprod.hexcode.core.common.execution.system.CasterStateProvisionSystem;
+import com.riprod.hexcode.core.common.execution.system.CastChargesSystem;
+import com.riprod.hexcode.core.common.execution.system.CastDecaySystem;
+import com.riprod.hexcode.core.common.execution.system.CastBookStyleSystem;
+import com.riprod.hexcode.core.common.execution.system.CastSpellPowerSystem;
+import com.riprod.hexcode.core.common.execution.root.PlayerHexRoot;
 import com.riprod.hexcode.core.common.execution.condition.HexHoldingCondition;
 import com.riprod.hexcode.core.common.execution.interactions.HexCastHoldInteraction;
 import com.riprod.hexcode.core.common.execution.interactions.HexDispel;
-import com.riprod.hexcode.core.common.execution.events.HexCastEventSystem;
-import com.riprod.hexcode.core.common.execution.queue.HexQueueDrainEventSystem;
-import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
-import com.riprod.hexcode.core.common.execution.queue.HexExecutionTickSystem;
+import com.riprod.hexcode.core.common.execution.system.HexCastEventSystem;
+import com.riprod.hexcode.core.common.execution.system.HexQueueDrainEventSystem;
+import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
+import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
+import com.riprod.hexcode.core.common.execution.system.HexExecutionTickSystem;
 import com.riprod.hexcode.core.common.execution.system.CasterSpellTeardownSystem;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.icon.GlyphEditorPreview;
@@ -139,6 +137,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public class Hexcode extends JavaPlugin {
     private final PatchManager patchManager;
+    private final CastRegistryProxy castRegistry = new CastRegistryProxy(HexCast.REGISTRY);
 
     public Hexcode(JavaPluginInit init) {
         super(init);
@@ -170,13 +169,31 @@ public class Hexcode extends JavaPlugin {
         getLogger().atFine().log("Hexcode %s setup complete!", this.getManifest().getVersion().toString());
     }
 
+    @Override
+    protected void shutdown() {
+        castRegistry.unregisterAll();
+        patchManager.shutdown();
+    }
+
     private void registerCastComponents() {
-        VolatilityComponent.setComponentType(
-                HexCast.REGISTRY.registerComponent(VolatilityComponent.class, VolatilityComponent::new));
-        ResourcePoolComponent.setComponentType(
-                HexCast.REGISTRY.registerComponent(ResourcePoolComponent.class, ResourcePoolComponent::new));
-        GlyphBudgetComponent.setComponentType(
-                HexCast.REGISTRY.registerComponent(GlyphBudgetComponent.class, GlyphBudgetComponent::new));
+        VolatilityComponent.setComponentType(castRegistry.registerComponent(
+                VolatilityComponent.class, "Volatility",
+                VolatilityComponent::new, VolatilityComponent.CODEC));
+        ResourcePoolComponent.setComponentType(castRegistry.registerComponent(
+                ResourcePoolComponent.class, "Resources",
+                ResourcePoolComponent::new, ResourcePoolComponent.Seeds.CODEC));
+        CastPolicyComponent.setComponentType(castRegistry.registerComponent(
+                CastPolicyComponent.class, "Policy",
+                CastPolicyComponent::new, CastPolicyComponent.Overlay.CODEC));
+        GlyphBudgetComponent.setComponentType(castRegistry.registerComponent(
+                GlyphBudgetComponent.class, GlyphBudgetComponent::new));
+        CastDependenciesComponent.setComponentType(castRegistry.registerComponent(
+                CastDependenciesComponent.class, CastDependenciesComponent::new));
+        CastVariablesComponent.setComponentType(castRegistry.registerComponent(
+                CastVariablesComponent.class, CastVariablesComponent::new));
+        CastManaComponent.setComponentType(castRegistry.registerComponent(
+                CastManaComponent.class, "Mana",
+                CastManaComponent::new, CastManaComponent.CODEC));
     }
 
     @SuppressWarnings("null")
@@ -394,6 +411,10 @@ public class Hexcode extends JavaPlugin {
                         TriggerListenerRegistry.class, TriggerListenerRegistry::new);
         TriggerListenerRegistry.setResourceType(triggerRegistryType);
 
+        ResourceType<EntityStore, HexCastStore> hexCastStoreType = entityStoreRegistry
+                .registerResource(HexCastStore.class, HexCastStore::new);
+        HexCastStore.setResourceType(hexCastStoreType);
+
         ResourceType<EntityStore, HexExecutionQueue> hexExecutionQueueType = entityStoreRegistry
                 .registerResource(HexExecutionQueue.class, HexExecutionQueue::new);
         HexExecutionQueue.setResourceType(hexExecutionQueueType);
@@ -483,11 +504,6 @@ public class Hexcode extends JavaPlugin {
         EntityStore.REGISTRY.registerSystem(new HexConstructTeardownSystem());
         EntityStore.REGISTRY.registerSystem(new CasterSpellTeardownSystem());
         RegisterAssetEditorIntegrations();
-    }
-
-    @Override
-    protected void shutdown() {
-        patchManager.shutdown();
     }
 
     private void RegisterAssetEditorIntegrations() {

@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.common.execution.component;
+package com.riprod.hexcode.core.common.execution.root;
 
 import javax.annotation.Nullable;
 
@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
@@ -86,21 +87,6 @@ public class PlayerHexRoot implements HexRoot {
             return false;
         statMap.addStatValue(manaIndex, amount);
         return true;
-    }
-
-    @Override
-    public void addDependency(HexContext ctx, Ref<EntityStore> ref) {
-        Ref<EntityStore> casterRef = getSourceRef(ctx.getAccessor());
-        if (casterRef == null) {
-            return;
-        }
-        CasterStateComponent casterState = ctx.getAccessor().getComponent(
-                casterRef, CasterStateComponent.getComponentType());
-        if (casterState != null) {
-            casterState.addDependency(ctx.getExecutionId(), ref);
-        } else {
-            ctx.getAccessor().ensureComponent(casterRef, CasterStateComponent.getComponentType());
-        }
     }
 
     public float resolveSpellPower(ComponentAccessor<EntityStore> accessor) {

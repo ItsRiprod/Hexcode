@@ -100,6 +100,11 @@ public class PedestalSystem {
 
         Vector3i blockPos = pedestal.getLocation();
 
+        if (blockPos == null) {
+            logger.atWarning().log("Pedestal location is null, cannot update state");
+            return;
+        }
+
         String defaultName = switch (state) {
             case IDLE -> "Idle";
             case READY -> "Ready";

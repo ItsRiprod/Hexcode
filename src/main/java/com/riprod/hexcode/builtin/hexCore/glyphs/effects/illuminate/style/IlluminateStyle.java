@@ -4,8 +4,8 @@ import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.Color;
 import com.hypixel.hytale.protocol.ColorLight;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.IlluminateConfig;
-import com.riprod.hexcode.core.common.execution.component.HexColors;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.hexes.component.HexColors;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 

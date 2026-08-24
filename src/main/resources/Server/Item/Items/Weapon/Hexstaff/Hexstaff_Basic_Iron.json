@@ -104,8 +104,10 @@
             "Parent": "CastConfig_Tier1",
             "Style": "Hexstaff_Basic_Iron",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 14
+              "Resources": {
+                "Initial": {
+                  "Arcane": 14
+                }
               }
             }
           }
@@ -125,8 +127,10 @@
             "Parent": "CastConfig_Tier2",
             "Style": "Hexstaff_Basic_Iron",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 16
+              "Resources": {
+                "Initial": {
+                  "Arcane": 16
+                }
               }
             }
           }
@@ -146,8 +150,10 @@
             "Parent": "CastConfig_Tier3",
             "Style": "Hexstaff_Basic_Iron",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 18
+              "Resources": {
+                "Initial": {
+                  "Arcane": 18
+                }
               }
             }
           }
@@ -167,8 +173,10 @@
             "Parent": "CastConfig_Tier4",
             "Style": "Hexstaff_Basic_Iron",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 20
+              "Resources": {
+                "Initial": {
+                  "Arcane": 20
+                }
               }
             }
           }

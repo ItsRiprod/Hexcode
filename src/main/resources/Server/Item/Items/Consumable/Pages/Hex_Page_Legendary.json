@@ -10,15 +10,21 @@
           "Config": {
             "HexStorageType": "PageConfig",
             "HexStats": {
-              "InitialVolatility": 79,
-              "VolatilityMultiplier": 1.0,
-              "InitialResources": {
-                "Arcane": 32
+              "Volatility": {
+                "Initial": 79,
+                "Multiplier": 1.0
+              },
+              "Resources": {
+                "Initial": {
+                  "Arcane": 32
+                }
+              },
+              "Policy": {
+                "RequireMagicCharges": false,
+                "BypassVolatilityDepletion": false,
+                "ApplyVolatilityDecay": false
               }
-            },
-            "RequireMagicCharges": false,
-            "BypassVolatilityDepletion": false,
-            "ApplyVolatilityDecay": false
+            }
           },
           "Effects": {
             "ItemAnimationId": "HexExecution_Primary"

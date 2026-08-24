@@ -8,7 +8,7 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.DomainConfig;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.DomainGlyph;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.utils.VfxUtil;

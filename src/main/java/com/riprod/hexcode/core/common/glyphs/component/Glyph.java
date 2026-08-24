@@ -16,7 +16,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import org.joml.Vector3f;
 import com.hypixel.hytale.math.vector.Rotation3f;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
@@ -85,10 +85,14 @@ public class Glyph {
         return computeBaseCost(GlyphAsset.getAssetMap().getAsset(glyphId));
     }
 
+    public float computeDrawQuality() {
+        return (1 - volatility) * 0.5f + 0.5f;
+    }
+
     public float computeBaseCost(GlyphAsset asset) {
         if (asset == null)
             return 0f;
-        return asset.getVolatility().getInstantCost() * ((1 - volatility) * 0.5f + 0.5f);
+        return asset.getVolatility().getInstantCost() * computeDrawQuality();
     }
 
     public String getId() {

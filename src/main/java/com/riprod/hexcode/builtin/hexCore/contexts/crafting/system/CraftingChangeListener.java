@@ -40,7 +40,6 @@ import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
 import com.riprod.hexcode.builtin.hexCore.scene.CraftingDragHandler;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
-import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.GravityUtil;
 
 public class CraftingChangeListener extends WorldEventSystem<EntityStore, HexContextChangeEvent> {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

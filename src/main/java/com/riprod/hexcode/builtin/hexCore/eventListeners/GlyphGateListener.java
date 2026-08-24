@@ -13,9 +13,9 @@ import com.hypixel.hytale.component.system.WorldEventSystem;
 import com.hypixel.hytale.server.core.modules.time.TimeResource;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexQueueDrainEvent;
-import com.riprod.hexcode.core.common.execution.gate.GateStateResource;
-import com.riprod.hexcode.core.common.execution.queue.HexQueueDrainEventSystem;
-import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
+import com.riprod.hexcode.core.common.execution.resource.GateStateResource;
+import com.riprod.hexcode.core.common.execution.system.HexQueueDrainEventSystem;
+import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
 
 public class GlyphGateListener extends WorldEventSystem<EntityStore, HexQueueDrainEvent> {
 

@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.common.execution.precast;
+package com.riprod.hexcode.core.common.execution.system;
 
 import javax.annotation.Nonnull;
 
@@ -8,9 +8,9 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.system.WorldEventSystem;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexCastEvent;
-import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
+import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.root.PlayerHexRoot;
 import com.riprod.hexcode.core.common.hexbook.component.HexBookAsset;
 import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;

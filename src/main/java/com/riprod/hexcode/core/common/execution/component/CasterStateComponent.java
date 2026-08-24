@@ -1,19 +1,16 @@
 package com.riprod.hexcode.core.common.execution.component;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
-import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
 
 public class CasterStateComponent implements Component<EntityStore> {
 
@@ -27,109 +24,75 @@ public class CasterStateComponent implements Component<EntityStore> {
         return componentType;
     }
 
-    private Map<UUID, List<Ref<EntityStore>>> dependencies = new HashMap<>();
-    private List<HexCast> activeTrackers = new ArrayList<>();
+    private List<UUID> activeCastIds = new ArrayList<>();
 
     public CasterStateComponent() {
     }
 
-    public void registerActiveTracker(HexCast tracker) {
-        if (activeTrackers == null)
-            activeTrackers = new ArrayList<>();
-        if (tracker == null)
-            return;
-        pruneCompletedTrackers();
-        activeTrackers.add(tracker);
+    public void registerActiveCast(@Nonnull HexCast cast) {
+        activeCastIds.add(cast.getExecutionId());
     }
 
-    public void pruneCompletedTrackers() {
-        if (activeTrackers == null || activeTrackers.isEmpty())
-            return;
-        activeTrackers.removeIf(t -> t == null || t.volatility().getCurrent() <= 0f
-                || t.getActiveBranchCount() <= 0);
+    public void pruneCompleted(@Nonnull HexCastStore casts) {
+        activeCastIds.removeIf(id -> casts.get(id) == null);
     }
 
-    public int getActiveCount() {
-        pruneCompletedTrackers();
-        if (activeTrackers == null) return 0;
+    public int getActiveCount(@Nonnull HexCastStore casts) {
+        pruneCompleted(casts);
         int n = 0;
-        for (HexCast t : activeTrackers) {
-            if (t != null && t.getSlotKey() == null) n++;
+        for (UUID id : activeCastIds) {
+            HexCast cast = casts.get(id);
+            if (cast != null && cast.getSlotKey() == null) n++;
         }
         return n;
     }
 
-    public void evictOldest() {
-        if (activeTrackers == null || activeTrackers.isEmpty())
-            return;
-        for (int i = 0; i < activeTrackers.size(); i++) {
-            HexCast t = activeTrackers.get(i);
-            if (t != null && t.getSlotKey() == null) {
-                activeTrackers.remove(i);
-                t.volatility().setCurrent(0f);
-                UUID execId = t.getExecutionId();
-                if (execId != null) dependencies.remove(execId);
+    public void evictOldest(@Nonnull HexCastStore casts) {
+        for (int i = 0; i < activeCastIds.size(); i++) {
+            UUID id = activeCastIds.get(i);
+            HexCast cast = casts.get(id);
+            if (cast != null && cast.getSlotKey() == null) {
+                activeCastIds.remove(i);
+                cast.volatility().setCurrent(0f);
+                casts.remove(id);
                 return;
             }
         }
     }
 
-    public void fizzleSlot(@Nonnull String slotKey) {
-        if (activeTrackers == null || activeTrackers.isEmpty()) return;
-        pruneCompletedTrackers();
-        for (HexCast t : activeTrackers) {
-            if (t == null) continue;
-            if (slotKey.equals(t.getSlotKey()) && t.volatility().getCurrent() > 0f) {
-                t.volatility().setCurrent(0f);
-                UUID execId = t.getExecutionId();
-                if (execId != null) dependencies.remove(execId);
+    public void fizzleSlot(@Nonnull HexCastStore casts, @Nonnull String slotKey) {
+        pruneCompleted(casts);
+        for (UUID id : activeCastIds) {
+            HexCast cast = casts.get(id);
+            if (cast == null) continue;
+            if (slotKey.equals(cast.getSlotKey()) && cast.volatility().getCurrent() > 0f) {
+                cast.volatility().setCurrent(0f);
+                casts.remove(id);
             }
         }
     }
 
-    public List<HexCast> getActiveTrackers() {
-        if (activeTrackers == null)
-            activeTrackers = new ArrayList<>();
-        return activeTrackers;
-    }
-
-    public void cancelAll(Ref<EntityStore> casterRef) {
-        if (activeTrackers == null || activeTrackers.isEmpty())
-            return;
-        for (HexCast tracker : new ArrayList<>(activeTrackers)) {
-            if (tracker == null)
-                continue;
-            if (tracker.volatility().getCurrent() <= 0f)
-                continue;
-            tracker.volatility().setCurrent(0f);
+    public int cancelAll(@Nonnull HexCastStore casts) {
+        int cancelled = 0;
+        for (UUID id : new ArrayList<>(activeCastIds)) {
+            HexCast cast = casts.get(id);
+            if (cast == null || cast.volatility().getCurrent() <= 0f) continue;
+            cast.volatility().setCurrent(0f);
+            cancelled++;
         }
+        return cancelled;
     }
 
-    public void addDependency(UUID hexId, Ref<EntityStore> dependent) {
-        dependencies.computeIfAbsent(hexId, k -> new ArrayList<>()).add(dependent);
-    }
-
-    public Map<UUID, List<Ref<EntityStore>>> getDependencies() {
-        return dependencies;
-    }
-
-    public List<Ref<EntityStore>> getDependenciesForHex(UUID hexId) {
-        return dependencies.getOrDefault(hexId, Collections.emptyList());
-    }
-
-    public List<Ref<EntityStore>> getDependencyList() {
-        return dependencies.values().stream().flatMap(List::stream).toList();
+    @Nonnull
+    public List<UUID> getActiveCastIds() {
+        return activeCastIds;
     }
 
     @Nonnull
     @Override
     public CasterStateComponent clone() {
         CasterStateComponent copy = new CasterStateComponent();
-        copy.dependencies = new HashMap<>();
-        for (Map.Entry<UUID, List<Ref<EntityStore>>> entry : this.dependencies.entrySet()) {
-            copy.dependencies.put(entry.getKey(), new ArrayList<>(entry.getValue()));
-        }
-        copy.activeTrackers = this.activeTrackers != null ? new ArrayList<>(this.activeTrackers) : new ArrayList<>();
+        copy.activeCastIds = new ArrayList<>(this.activeCastIds);
         return copy;
     }
 }

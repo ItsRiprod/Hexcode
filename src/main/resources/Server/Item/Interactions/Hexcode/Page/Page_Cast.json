@@ -23,15 +23,21 @@
                 "Config": {
                   "HexStorageType": "PageConfig",
                   "HexStats": {
-                    "InitialVolatility": 40,
-                    "VolatilityMultiplier": 1.0,
-                    "InitialResources": {
-                      "Arcane": 8
+                    "Volatility": {
+                      "Initial": 40,
+                      "Multiplier": 1.0
+                    },
+                    "Resources": {
+                      "Initial": {
+                        "Arcane": 8
+                      }
+                    },
+                    "Policy": {
+                      "RequireMagicCharges": false,
+                      "BypassVolatilityDepletion": true,
+                      "ApplyVolatilityDecay": false
                     }
-                  },
-                  "RequireMagicCharges": false,
-                  "BypassVolatilityDepletion": true,
-                  "ApplyVolatilityDecay": false
+                  }
                 },
                 "Effects": {
                   "ItemAnimationId": "HexExecution_Primary"

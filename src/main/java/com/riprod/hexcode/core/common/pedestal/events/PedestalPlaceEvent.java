@@ -17,6 +17,7 @@ import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
+import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
@@ -37,29 +38,34 @@ public class PedestalPlaceEvent extends RefSystem<ChunkStore> {
             @Nonnull Store<ChunkStore> store, @Nonnull CommandBuffer<ChunkStore> commandBuffer) {
 
         PedestalBlockComponent pedestal = commandBuffer.getComponent(ref, PedestalBlockComponent.getComponentType());
-        BlockModule.BlockStateInfo blockStateInfo = commandBuffer.getComponent(ref,
+
+        var blockStateInfo = commandBuffer.getComponent(ref,
                 BlockModule.BlockStateInfo.getComponentType());
+
         if (pedestal == null || blockStateInfo == null) {
+            LOGGER.atWarning().log("Pedestal placed but %s is null for ref=%s",
+                    pedestal == null ? "PedestalBlockComponent" : "BlockStateInfo",
+                    ref);
             return;
         }
 
         Ref<ChunkStore> chunkRef = blockStateInfo.getSectionRef();
         if (!chunkRef.isValid()) {
+            LOGGER.atWarning().log("Pedestal placed but sectionRef is invalid for ref=%s", ref);
             return;
         }
 
-        BlockChunk blockChunk = commandBuffer.getComponent(chunkRef, BlockChunk.getComponentType());
+        var blockChunk = commandBuffer.getComponent(chunkRef, BlockSection.getComponentType());
         if (blockChunk == null) {
+            LOGGER.atWarning().log("Pedestal placed but BlockChunk is null for sectionRef=%s", chunkRef);
             return;
         }
 
-        int blockIndex = blockStateInfo.getIndex();
-        int localX = ChunkUtil.xFromColumn(blockIndex);
-        int localY = ChunkUtil.yFromIndex(blockIndex);
-        int localZ = ChunkUtil.zFromColumn(blockIndex);
-        int blockX = ChunkUtil.worldCoordFromLocalCoord(blockChunk.getX(), localX);
-        int blockZ = ChunkUtil.worldCoordFromLocalCoord(blockChunk.getZ(), localZ);
-        Vector3i blockPos = new Vector3i(blockX, localY, blockZ);
+        Vector3i blockPos = new Vector3i();
+        if (!blockStateInfo.fillWorldPos(commandBuffer, blockPos)) {
+            LOGGER.atWarning().log("Pedestal placed but world position is unresolvable for ref=%s", ref);
+            return;
+        }
 
         pedestal.setLocation(blockPos);
 
@@ -70,15 +76,9 @@ public class PedestalPlaceEvent extends RefSystem<ChunkStore> {
             return;
         }
 
-        world.execute(() -> {
-            Ref<EntityStore> anchorRef = entityStore.addEntity(anchorHolder, AddReason.SPAWN);
-            PedestalBlockComponent ped = BlockModule.getComponent(
-                    PedestalBlockComponent.getComponentType(), world,
-                    blockPos.x, blockPos.y, blockPos.z);
-            if (ped != null) {
-                ped.setAnchorRef(anchorRef);
-            }
-        });
+        Ref<EntityStore> anchorRef = new Ref<>(entityStore);
+        pedestal.setAnchorRef(anchorRef);
+        world.execute(() -> entityStore.addEntity(anchorHolder, anchorRef, AddReason.SPAWN));
     }
 
     @Override
