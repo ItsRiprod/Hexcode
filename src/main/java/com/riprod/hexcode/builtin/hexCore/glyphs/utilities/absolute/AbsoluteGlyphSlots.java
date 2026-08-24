@@ -4,5 +4,5 @@ public final class AbsoluteGlyphSlots {
     private AbsoluteGlyphSlots() {
     }
 
-    public static final String A = "a";
+    public static final String A = "A";
 }

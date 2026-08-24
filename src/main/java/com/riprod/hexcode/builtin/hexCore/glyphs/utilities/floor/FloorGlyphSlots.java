@@ -4,5 +4,5 @@ public final class FloorGlyphSlots {
     private FloorGlyphSlots() {
     }
 
-    public static final String A = "a";
+    public static final String A = "A";
 }

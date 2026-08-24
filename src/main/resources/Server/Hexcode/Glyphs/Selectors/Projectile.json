@@ -26,7 +26,7 @@
     { "Parent": "Triangle", "RelativeSize": 0.8 }
   ],
   "Slots": {
-    "source": {
+    "Source": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Projectile.source.name",
@@ -40,7 +40,7 @@
       "Description": "hexcode.glyphs.Projectile.direction.description",
       "Unique": true
     },
-    "speed": {
+    "Speed": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Projectile.speed.name",
@@ -48,7 +48,7 @@
       "DefaultValue": 30,
       "Unique": true
     },
-    "gravity": {
+    "Gravity": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Projectile.gravity.name",
@@ -56,7 +56,7 @@
       "DefaultValue": 0,
       "Unique": true
     },
-    "bounces": {
+    "Bounces": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Projectile.bounces.name",
@@ -76,7 +76,7 @@
       "Label": "hexcode.glyphs.Projectile.immediate.name",
       "Description": "hexcode.glyphs.Projectile.immediate.description"
     },
-    "bounce": {
+    "Bounce": {
       "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Projectile.bounce.name",

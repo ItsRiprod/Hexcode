@@ -13,14 +13,14 @@
     { "Parent": "Antiline", "StatContribution": 0 }
   ],
   "Slots": {
-    "a": {
+    "A": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Equal.a.name",
       "Description": "hexcode.glyphs.Equal.a.description",
       "DefaultValue": 0
     },
-    "b": {
+    "B": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Equal.b.name",

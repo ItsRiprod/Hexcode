@@ -5,6 +5,7 @@ import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.api.event.HexCastEvent;
@@ -53,8 +54,7 @@ public final class ImbuedBlockActivator {
         ImbuementData base = comp.read(ImbuementMetadata.DEFAULT_SLOT);
         if (base == null) return ActivationOutcome.noHex();
 
-        int blockId = world.getBlock(blockPos.x, blockPos.y, blockPos.z);
-        BlockType blockType = blockId == 0 ? null : BlockType.getAssetMap().getAsset(blockId);
+        BlockType blockType = BlockAccess.blockType(world, blockPos.x, blockPos.y, blockPos.z);
         BlockImbuementCapacity.Capacity capacity = BlockImbuementCapacity.tryFor(blockType);
         if (capacity == null) return ActivationOutcome.noHex();
 

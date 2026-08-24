@@ -9,7 +9,6 @@ import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
-import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.Color;
 import com.hypixel.hytale.protocol.ColorLight;
 import com.hypixel.hytale.protocol.MountController;
@@ -108,7 +107,7 @@ public class IlluminateGlyph implements GlyphHandler {
             holder.addComponent(DynamicLight.getComponentType(), new DynamicLight(light));
             if (mountTo != null) {
                 holder.addComponent(MountedComponent.getComponentType(),
-                        new MountedComponent(mountTo, new Rotation3f(), MountController.Minecart));
+                        new MountedComponent(mountTo, new Vector3f(), MountController.Minecart));
             }
             accessor.addEntity(holder, AddReason.SPAWN);
         }

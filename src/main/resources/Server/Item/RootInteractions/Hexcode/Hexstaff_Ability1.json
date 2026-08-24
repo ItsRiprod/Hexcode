@@ -6,5 +6,6 @@
   },
   "Interactions": [
     "Hexstaff_Ability1"
-  ]
+  ],
+  "HudInputBindingEntry": "server.hexcode.interactions.hexstaff.ability1.description"
 }

@@ -24,9 +24,6 @@
     "HitboxType": "Full",
     "BlockSoundSetId": "Stone",
     "BlockParticleSetId": "Stone",
-    "Flags": {
-      "IsUsable": true
-    },
     "Interactions": {
       "Use": {
         "RequireNewClick": true,

@@ -4,6 +4,6 @@ public final class LessGlyphSlots {
     private LessGlyphSlots() {
     }
 
-    public static final String A = "a";
-    public static final String B = "b";
+    public static final String A = "A";
+    public static final String B = "B";
 }

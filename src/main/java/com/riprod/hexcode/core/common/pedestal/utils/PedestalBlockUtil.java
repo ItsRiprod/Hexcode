@@ -3,12 +3,11 @@ package com.riprod.hexcode.core.common.pedestal.utils;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.math.util.ChunkUtil;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
@@ -17,12 +16,7 @@ import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 public class PedestalBlockUtil {
 
     public static void changeBlockState(World world, Vector3i pos, String stateName) {
-        WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(pos.x, pos.z));
-        if (chunk == null) {
-            return;
-        }
-
-        BlockType blockType = chunk.getBlockType(pos.x, pos.y, pos.z);
+        BlockType blockType = BlockAccess.blockType(world, pos.x, pos.y, pos.z);
         if (blockType == null || blockType.isUnknown()) {
             return;
         }
@@ -35,7 +29,7 @@ public class PedestalBlockUtil {
             }
         }
 
-        chunk.setBlockInteractionState(pos, blockType, stateName);
+        BlockAccess.setInteractionState(world, pos.x, pos.y, pos.z, blockType, stateName);
     }
 
     public static PedestalBlockComponent resolvePedestal(Ref<EntityStore> playerRef,

@@ -29,21 +29,21 @@
     }
   ],
   "Slots": {
-    "anchor": {
+    "Anchor": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Conjure.anchor.name",
       "Description": "hexcode.glyphs.Conjure.anchor.description",
       "Unique": true
     },
-    "coordsA": {
+    "CoordsA": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Conjure.coordsA.name",
       "Description": "hexcode.glyphs.Conjure.coordsA.description",
       "Unique": true
     },
-    "coordsB": {
+    "CoordsB": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Conjure.coordsB.name",

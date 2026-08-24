@@ -133,7 +133,7 @@ public class SlotNodeHandler extends BaseSlotHandler {
                 new NodeComponent(parentRef, config.getId()));
 
         holder.addComponent(MountedComponent.getComponentType(),
-                new MountedComponent(parentRef, new Rotation3f(offset.x, offset.y, offset.z), MountController.Minecart));
+                new MountedComponent(parentRef, new Vector3f(offset.x, offset.y, offset.z), MountController.Minecart));
 
         return accessor.addEntity(holder, AddReason.SPAWN);
     }

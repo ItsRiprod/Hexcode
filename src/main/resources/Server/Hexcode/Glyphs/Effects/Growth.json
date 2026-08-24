@@ -77,11 +77,13 @@
     "AttemptsPerAmount": 1.5,
     "GrowthEffect": "Hexcode_Growth",
     "VegetationBlocks": [
-      "Plant_Grass_Short",
-      "Plant_Grass_Tall",
-      "Plant_Flower_Daisy",
-      "Plant_Flower_Poppy",
-      "Plant_Fern"
+      "Plant_Grass_Lush_Short",
+      "Plant_Grass_Lush",
+      "Plant_Grass_Lush_Tall",
+      "Plant_Flower_Common_Lime",
+      "Plant_Fern",
+      "Plant_Flower_Common_Blue",
+      "Plant_Flower_Common_Pink"
     ],
     "GrassDirtPrefixes": [
       "Soil_Grass",

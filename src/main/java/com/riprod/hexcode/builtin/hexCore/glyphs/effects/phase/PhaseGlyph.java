@@ -17,7 +17,9 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockGathering;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
@@ -33,6 +35,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.LogScopes;
 
@@ -89,7 +92,12 @@ public class PhaseGlyph implements GlyphHandler {
             return;
         }
 
-        int blockId = world.getBlock(pos.x, pos.y, pos.z);
+        Vector3i base = BlockAccess.resolveBase(world, pos.x, pos.y, pos.z);
+        if (base != null) {
+            pos = base;
+        }
+
+        int blockId = BlockAccess.blockId(world, pos.x, pos.y, pos.z);
         if (blockId == BlockType.EMPTY_ID) {
             LOGGER.atWarning().log("Phase: target block is empty");
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -114,7 +122,7 @@ public class PhaseGlyph implements GlyphHandler {
         }
 
         String typeId = blockType.getId();
-        int rotationIndex = world.getBlockRotationIndex(pos.x, pos.y, pos.z);
+        int rotationIndex = BlockAccess.rotationIndex(world, pos.x, pos.y, pos.z);
 
         Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
         if (!HexProtection.canModifyBlock(world, caster, accessor, pos, BlockAction.BREAK)) {
@@ -123,10 +131,18 @@ public class PhaseGlyph implements GlyphHandler {
             return;
         }
 
-        List<PhasedBlock> phasedBlocks = new ArrayList<>();
-        phasedBlocks.add(new PhasedBlock(pos, typeId, rotationIndex));
+        Holder<ChunkStore> blockEntity = BlockAccess.takeBlockEntity(world, pos.x, pos.y, pos.z);
 
-        world.setBlock(pos.x, pos.y, pos.z, "Empty");
+        if (!BlockAccess.clearBlock(world, pos.x, pos.y, pos.z, SetBlockSettings.NO_SEND_PARTICLES)) {
+            BlockAccess.putBlockEntity(world, pos.x, pos.y, pos.z, blockType, rotationIndex, blockEntity);
+            LOGGER.atWarning().log("Phase: could not clear target block");
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "Phase: could not clear target block");
+            return;
+        }
+
+        List<PhasedBlock> phasedBlocks = new ArrayList<>();
+        phasedBlocks.add(new PhasedBlock(pos, typeId, rotationIndex, blockEntity));
 
         Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
         PhaseStyle.renderPhaseOut(blockCenter, hexContext, accessor);

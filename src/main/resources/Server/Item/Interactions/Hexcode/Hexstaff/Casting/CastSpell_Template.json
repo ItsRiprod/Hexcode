@@ -35,9 +35,9 @@
           "Flag_IsHolding": 0
         }
       },
-      "CancelOnItemChange": true,
       "FailOnDamage": true,
-      "CancelOnOtherClick": true
+      "CancelOnOtherClick": true,
+      "OnItemChangeBehavior": "Fail"
     }
   }
 }

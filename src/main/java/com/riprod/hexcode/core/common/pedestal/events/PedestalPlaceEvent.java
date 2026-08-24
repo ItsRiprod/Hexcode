@@ -43,7 +43,7 @@ public class PedestalPlaceEvent extends RefSystem<ChunkStore> {
             return;
         }
 
-        Ref<ChunkStore> chunkRef = blockStateInfo.getChunkRef();
+        Ref<ChunkStore> chunkRef = blockStateInfo.getSectionRef();
         if (!chunkRef.isValid()) {
             return;
         }
@@ -54,9 +54,9 @@ public class PedestalPlaceEvent extends RefSystem<ChunkStore> {
         }
 
         int blockIndex = blockStateInfo.getIndex();
-        int localX = ChunkUtil.xFromBlockInColumn(blockIndex);
-        int localY = ChunkUtil.yFromBlockInColumn(blockIndex);
-        int localZ = ChunkUtil.zFromBlockInColumn(blockIndex);
+        int localX = ChunkUtil.xFromColumn(blockIndex);
+        int localY = ChunkUtil.yFromIndex(blockIndex);
+        int localZ = ChunkUtil.zFromColumn(blockIndex);
         int blockX = ChunkUtil.worldCoordFromLocalCoord(blockChunk.getX(), localX);
         int blockZ = ChunkUtil.worldCoordFromLocalCoord(blockChunk.getZ(), localZ);
         Vector3i blockPos = new Vector3i(blockX, localY, blockZ);

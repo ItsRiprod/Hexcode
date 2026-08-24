@@ -102,6 +102,7 @@ public static final String ID = "Gust";
         ExplosionUtils.performExplosion(
                 new Damage.EnvironmentSource("hex_gust"),
                 explosionCenter,
+                null,
                 explosionConfig,
                 null,
                 accessor,

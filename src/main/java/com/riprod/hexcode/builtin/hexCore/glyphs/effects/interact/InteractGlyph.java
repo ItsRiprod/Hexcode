@@ -16,6 +16,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.modules.interaction.InteractionModule;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
@@ -126,7 +127,7 @@ public class InteractGlyph implements GlyphHandler {
             return;
         }
 
-        BlockType blockType = world.getBlockType(blockPos);
+        BlockType blockType = BlockAccess.blockType(world, blockPos.x, blockPos.y, blockPos.z);
         if (blockType == null || blockType.isUnknown()) {
             return;
         }

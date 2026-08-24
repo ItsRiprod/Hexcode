@@ -17,6 +17,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
+import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
@@ -25,6 +26,7 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.BlockUtils;
 import com.riprod.hexcode.utils.LogScopes;
 
@@ -86,10 +88,16 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
                 Vector3i pos = block.getPosition();
                 Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
 
-                int blockId = BlockType.getAssetMap().getIndex(block.getBlockTypeId());
-                BlockType blockType = BlockType.getAssetMap().getAsset(blockId);
-                world.getChunk(ChunkUtil.indexChunkFromBlock(pos.x, pos.z))
-                        .setBlock(pos.x, pos.y, pos.z, blockId, blockType, block.getRotationIndex(), 0, 0);
+                BlockType blockType = BlockType.getAssetMap().getAsset(block.getBlockTypeId());
+                if (blockType == null) continue;
+
+                if (!BlockAccess.setBlock(world, pos.x, pos.y, pos.z, blockType,
+                        block.getRotationIndex(), SetBlockSettings.PERFORM_BLOCK_UPDATE)) {
+                    LOGGER.atWarning().log("phase: could not restore block at %s", pos);
+                    continue;
+                }
+                BlockAccess.putBlockEntity(world, pos.x, pos.y, pos.z, blockType,
+                        block.getRotationIndex(), block.getBlockEntity());
 
                 applyCrushDamage(pos, blockCenter, elapsedSeconds, world, status, ctx.getBuffer());
 

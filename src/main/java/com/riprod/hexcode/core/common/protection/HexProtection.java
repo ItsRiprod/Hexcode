@@ -23,8 +23,8 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
 import com.riprod.hexcode.config.HexcodeConfig;
@@ -76,7 +76,7 @@ public final class HexProtection {
         }
 
         if (action == BlockAction.BREAK) {
-            BlockType type = BlockType.getAssetMap().getAsset(world.getBlock(pos.x, pos.y, pos.z));
+            BlockType type = BlockAccess.blockType(world, pos.x, pos.y, pos.z);
             BreakBlockEvent event = new BreakBlockEvent(null, pos, type);
             accessor.invoke(casterRef, event);
             if (event.isCancelled()) {
@@ -172,11 +172,10 @@ public final class HexProtection {
     }
 
     private static boolean isEnvironmentModifiable(World world, Vector3i pos) {
-        WorldChunk chunk = world.getChunk(ChunkUtil.indexChunkFromBlock(pos.x, pos.z));
-        if (chunk == null) {
+        int environmentId = BlockAccess.environmentId(world, pos.x, pos.y, pos.z);
+        if (environmentId < 0) {
             return true;
         }
-        int environmentId = chunk.getBlockChunk().getEnvironment(pos.x, pos.y, pos.z);
         Environment environment = Environment.getAssetMap().getAsset(environmentId);
         return environment == null || environment.isBlockModificationAllowed();
     }

@@ -158,7 +158,7 @@ public class ConcentrationGlyph implements GlyphHandler {
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
         holder.addComponent(MountedComponent.getComponentType(),
                 new MountedComponent(casterRef,
-                        new Rotation3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z),
+                        new Vector3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z),
                         MountController.Minecart));
 
         Model model = HexConstructSpawner.attachModel(holder, hexContext,

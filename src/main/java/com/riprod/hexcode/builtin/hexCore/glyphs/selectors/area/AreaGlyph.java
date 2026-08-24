@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.Intangible;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
@@ -151,16 +152,18 @@ public class AreaGlyph implements GlyphHandler {
         int cy = (int) Math.floor(center.y);
         int cz = (int) Math.floor(center.z);
 
-        for (int dx = -r; dx <= r; dx++) {
-            for (int dy = -r; dy <= r; dy++) {
-                for (int dz = -r; dz <= r; dz++) {
+        BlockAccess.Cursor cursor = new BlockAccess.Cursor(world);
+
+        for (int dy = -r; dy <= r; dy++) {
+            for (int dz = -r; dz <= r; dz++) {
+                for (int dx = -r; dx <= r; dx++) {
                     if (dx * dx + dy * dy + dz * dz > radiusSq) continue;
 
                     int bx = cx + dx;
                     int by = cy + dy;
                     int bz = cz + dz;
 
-                    int blockId = world.getBlock(bx, by, bz);
+                    int blockId = cursor.blockId(bx, by, bz);
                     if (blockId == BlockType.EMPTY_ID) continue;
 
                     gathered.add(new Vector3i(bx, by, bz));

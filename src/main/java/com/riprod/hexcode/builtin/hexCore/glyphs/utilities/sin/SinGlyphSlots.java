@@ -4,5 +4,5 @@ public final class SinGlyphSlots {
     private SinGlyphSlots() {
     }
 
-    public static final String A = "a";
+    public static final String A = "A";
 }

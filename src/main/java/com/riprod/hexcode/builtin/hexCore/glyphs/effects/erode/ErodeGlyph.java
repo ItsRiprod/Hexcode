@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.BlockHarvestUtils;
+import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -151,9 +152,8 @@ public class ErodeGlyph implements GlyphHandler {
         }
 
         ChunkStore chunkStore = world.getChunkStore();
-        long chunkIndex = ChunkUtil.indexChunkFromBlock(pos.x, pos.z);
-        Ref<ChunkStore> chunkRef = chunkStore.getChunkReference(chunkIndex);
-        if (chunkRef == null || !chunkRef.isValid())
+        var chunkSection = chunkStore.getChunkSectionReference(pos.x, pos.y, pos.z);
+        if (chunkSection == null || !chunkSection.isValid())
             return;
 
         int tier = amountToTier(amount, config);
@@ -170,14 +170,16 @@ public class ErodeGlyph implements GlyphHandler {
 
         BlockHarvestUtils.performBlockDamage(
                 casterRef,
+                null,
                 pos,
                 null,
                 tool,
                 null,
                 false,
                 damageScale,
-                0,
-                chunkRef,
+                SetBlockSettings.NONE,
+                false,
+                chunkSection,
                 accessor,
                 chunkStore.getStore());
 

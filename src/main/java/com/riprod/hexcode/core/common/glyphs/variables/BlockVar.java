@@ -13,6 +13,8 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public final class BlockVar extends HexVar {
@@ -41,7 +43,8 @@ public final class BlockVar extends HexVar {
 
     @Override
     public PositionVar toPosition(ComponentAccessor<EntityStore> accessor) {
-        if (position == null) return new PositionVar(new Vector3d(0, 0, 0), true);
+        if (position == null)
+            return new PositionVar(new Vector3d(0, 0, 0), true);
         return new PositionVar(new Vector3d(position.x + 0.5, position.y + 0.5, position.z + 0.5), true);
     }
 
@@ -52,23 +55,40 @@ public final class BlockVar extends HexVar {
 
     @Override
     public RotationVar toRotation(ComponentAccessor<EntityStore> accessor) {
-        if (position == null) return new RotationVar(new Rotation3f());
+        if (position == null)
+            return new RotationVar(new Rotation3f());
         try {
-            World world = accessor.getExternalData().getWorld();
-            int blockId = world.getBlock(position.x, position.y, position.z);
-            if (blockId == BlockType.EMPTY_ID) return new RotationVar(new Rotation3f());
-            int idx = world.getBlockRotationIndex(position.x, position.y, position.z);
-            RotationTuple tuple = RotationTuple.get(idx);
-            return new RotationVar(new Rotation3f(
-                    radians(tuple.pitch()),
-                    radians(tuple.yaw()),
-                    radians(tuple.roll())));
+            var world = accessor.getExternalData().getWorld();
+            var chunkStore = world.getChunkStore();
+
+            var ref = chunkStore.getChunkSectionReference(position.x, position.y, position.z);
+
+            if (ref == null || !ref.isValid()) {
+                return new RotationVar(new Rotation3f());
+            }
+
+            var blockSection = chunkStore.getStore().getComponent(ref, BlockSection.getComponentType());
+            if (blockSection == null) {
+                return new RotationVar(new Rotation3f());
+            }
+
+            var rot = blockSection.getRotation(position.x, position.y, position.z);
+
+            var euler = new Rotation3f(
+                    radians(rot.pitch()),
+                    radians(rot.yaw()),
+                    radians(rot.roll())
+                );
+                
+            return new RotationVar(euler);
+
         } catch (Exception e) {
             return new RotationVar(new Rotation3f());
         }
     }
 
-    // wrapped so block rotations compare against entity rotations, which are always (-PI, PI]
+    // wrapped so block rotations compare against entity rotations, which are always
+    // (-PI, PI]
     private static float radians(Rotation rotation) {
         return MathUtil.wrapAngle((float) rotation.getRadians());
     }
@@ -80,14 +100,16 @@ public final class BlockVar extends HexVar {
 
     @Override
     public String describe() {
-        if (position == null) return "BlockVar: [null]";
+        if (position == null)
+            return "BlockVar: [null]";
         return "BlockVar: (" + position.x + ", " + position.y + ", " + position.z + ")";
     }
 
     @Override
     public boolean equalTo(HexVar other) {
         if (other instanceof BlockVar bb) {
-            if (position == null || bb.position == null) return position == bb.position;
+            if (position == null || bb.position == null)
+                return position == bb.position;
             return position.equals(bb.position);
         }
         return super.equalTo(other);
@@ -96,9 +118,12 @@ public final class BlockVar extends HexVar {
     @Override
     public int compareTo(HexVar other) {
         if (other instanceof BlockVar bb) {
-            if (position == null && bb.position == null) return 0;
-            if (position == null) return -1;
-            if (bb.position == null) return 1;
+            if (position == null && bb.position == null)
+                return 0;
+            if (position == null)
+                return -1;
+            if (bb.position == null)
+                return 1;
             return Double.compare(this.toScalar(), bb.toScalar());
         }
         return super.compareTo(other);

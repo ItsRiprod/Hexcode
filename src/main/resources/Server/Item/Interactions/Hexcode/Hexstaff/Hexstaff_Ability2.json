@@ -1,4 +1,4 @@
 {
   "Type": "HexContextAbility",
-  "CancelOnItemChange": true
+  "OnItemChangeBehavior": "Cancel"
 }

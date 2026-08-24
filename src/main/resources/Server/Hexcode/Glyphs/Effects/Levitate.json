@@ -25,7 +25,7 @@
     }
   ],
   "Slots": {
-    "T": {
+    "Target": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Levitate.target.name",

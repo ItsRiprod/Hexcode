@@ -63,7 +63,7 @@ public class DebugTickSystem extends EntityTickingSystem<EntityStore> {
                             TransformComponent.getComponentType());
                     if (parentTransform != null) {
                         Vector3d parentPos = parentTransform.getPosition();
-                        Rotation3f offset = mount.getAttachmentOffset();
+                        var offset = mount.getAttachmentOffset();
                         pos = new Vector3d(
                                 parentPos.x + offset.x(),
                                 parentPos.y + offset.y(),

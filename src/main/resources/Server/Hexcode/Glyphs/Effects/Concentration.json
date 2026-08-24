@@ -43,7 +43,7 @@
       "Label": "hexcode.glyphs.Concentration.Next.name",
       "Description": "hexcode.glyphs.Concentration.Next.description"
     },
-    "release": {
+    "Release": {
       "Type": "Next",
       "Parent": "Next",
       "Label": "hexcode.glyphs.Concentration.release.name",

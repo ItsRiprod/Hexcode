@@ -3,6 +3,7 @@ package com.riprod.hexcode.core.common.glyphs.utils;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 
 public final class BlockResolution {
@@ -34,7 +35,7 @@ public final class BlockResolution {
         int by = (int) Math.floor(pos.y);
         int bz = (int) Math.floor(pos.z);
         if (world == null) return new Vector3i(bx, by, bz);
-        if (world.getBlock(bx, by, bz) != BlockType.EMPTY_ID) {
+        if (BlockAccess.blockId(world, bx, by, bz) != BlockType.EMPTY_ID) {
             return new Vector3i(bx, by, bz);
         }
         double fx = pos.x - bx, fy = pos.y - by, fz = pos.z - bz;
@@ -63,7 +64,7 @@ public final class BlockResolution {
             if (best < 0) break;
             used[best] = true;
             Vector3i c = candidates[best];
-            if (world.getBlock(c.x, c.y, c.z) != BlockType.EMPTY_ID) {
+            if (BlockAccess.blockId(world, c.x, c.y, c.z) != BlockType.EMPTY_ID) {
                 return c;
             }
         }

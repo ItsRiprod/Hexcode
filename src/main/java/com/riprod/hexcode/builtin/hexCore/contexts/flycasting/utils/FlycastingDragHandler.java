@@ -34,7 +34,7 @@ public final class FlycastingDragHandler {
         Ref<EntityStore> glyphRef = hex.getSelfRef();
         if (glyphRef != null && glyphRef.isValid()) {
             buffer.putComponent(glyphRef, MountedComponent.getComponentType(),
-                    new MountedComponent(headAnchorRef, new Rotation3f(0, 0, -hex.getDistance()),
+                    new MountedComponent(headAnchorRef, new Vector3f(0, 0, -hex.getDistance()),
                             MountController.Minecart));
         }
         state.setDraggingHex(hex);
@@ -93,7 +93,7 @@ public final class FlycastingDragHandler {
         Vector3f doff = draggedHex.getOffset();
         buffer.putComponent(draggedHex.getSelfRef(), MountedComponent.getComponentType(),
                 new MountedComponent(draggedHex.getRootRef(),
-                        new Rotation3f(doff.x, doff.y, doff.z),
+                        new Vector3f(doff.x, doff.y, doff.z),
                         MountController.Minecart));
     }
 

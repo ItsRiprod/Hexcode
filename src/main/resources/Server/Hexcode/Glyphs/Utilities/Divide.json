@@ -9,14 +9,14 @@
     { "Parent": "Slash", "StatContribution": 0 }
   ],
   "Slots": {
-    "a": {
+    "A": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Divide.a.name",
       "Description": "hexcode.glyphs.Divide.a.description",
       "DefaultValue": 0
     },
-    "b": {
+    "B": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Divide.b.name",

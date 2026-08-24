@@ -1,6 +1,5 @@
 {
   "Type": "Charging",
-  "CancelOnItemChange": true,
   "Effects": {
     "ItemAnimationId": "CastSpellCharging",
     "ClearAnimationOnFinish": true,

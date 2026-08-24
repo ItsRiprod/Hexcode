@@ -4,7 +4,7 @@ public final class ChaosGlyphSlots {
     private ChaosGlyphSlots() {
     }
 
-    public static final String SOURCE = "source";
-    public static final String MIN = "min";
-    public static final String MAX = "max";
+    public static final String SOURCE = "Source";
+    public static final String MIN = "Min";
+    public static final String MAX = "Max";
 }

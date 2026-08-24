@@ -4,5 +4,5 @@ public final class CeilingGlyphSlots {
     private CeilingGlyphSlots() {
     }
 
-    public static final String A = "a";
+    public static final String A = "A";
 }

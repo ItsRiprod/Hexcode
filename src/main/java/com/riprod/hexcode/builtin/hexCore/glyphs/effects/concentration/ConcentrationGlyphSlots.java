@@ -4,7 +4,7 @@ public final class ConcentrationGlyphSlots {
     private ConcentrationGlyphSlots() {
     }
 
-    public static final String RELEASE = "release";
+    public static final String RELEASE = "Release";
 
     public static final String MANA_PER_SECOND = "ManaPerSecond";
 

@@ -11,14 +11,14 @@
     { "Parent": "Greater", "StatContribution": 0 }
   ],
   "Slots": {
-    "a": {
+    "A": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Greater.a.name",
       "Description": "hexcode.glyphs.Greater.a.description",
       "DefaultValue": 0
     },
-    "b": {
+    "B": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Greater.b.name",

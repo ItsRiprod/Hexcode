@@ -54,7 +54,7 @@ public class CreateGlyph {
     holder.addComponent(NetworkId.getComponentType(), new NetworkId(networkId));
 
     holder.addComponent(MountedComponent.getComponentType(),
-        new MountedComponent(playerRef, new Rotation3f(0, eyeHeight, 0),
+        new MountedComponent(playerRef, new Vector3f(0, eyeHeight, 0),
             MountController.Minecart));
 
     return accessor.addEntity(holder, AddReason.SPAWN);
@@ -103,7 +103,7 @@ public class CreateGlyph {
 
     if (hexRoot != null) {
       Vector3f goff = glyph.getOffset();
-      MountedComponent mountComponent = new MountedComponent(hexRoot, new Rotation3f(goff.x, goff.y, goff.z),
+      MountedComponent mountComponent = new MountedComponent(hexRoot, new Vector3f(goff.x, goff.y, goff.z),
           MountController.Minecart);
       holder.addComponent(MountedComponent.getComponentType(), mountComponent);
     }

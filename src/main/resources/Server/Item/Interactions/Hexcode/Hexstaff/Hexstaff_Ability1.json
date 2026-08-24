@@ -1,4 +1,4 @@
 {
   "Type": "HexDispel",
-  "CancelOnItemChange": true
+  "OnItemChangeBehavior": "Cancel"
 }

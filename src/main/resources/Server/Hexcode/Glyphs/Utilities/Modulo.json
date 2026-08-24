@@ -12,14 +12,14 @@
     { "Parent": "Circle", "StatContribution": 0 }
   ],
   "Slots": {
-    "a": {
+    "A": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Modulo.a.name",
       "Description": "hexcode.glyphs.Modulo.a.description",
       "DefaultValue": 0
     },
-    "b": {
+    "B": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Modulo.b.name",
