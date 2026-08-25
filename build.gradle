@@ -126,3 +126,11 @@ tasks.build {
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
+
+tasks.register('syncGlyphImages', Sync) {
+    group = 'documentation'
+    description = 'Mirrors the Memories glyph icons into docs/Images/glyphs for the wiki pages.'
+    from layout.projectDirectory.dir('src/main/resources/Common/UI/Custom/Pages/Memories/glyphs')
+    into layout.projectDirectory.dir('docs/Images/glyphs')
+    include '**/*.png'
+}

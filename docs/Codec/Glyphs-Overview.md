@@ -48,41 +48,89 @@ These are the foundational glyphs. Single-shape draws.
 
 ---
 
-### \[◯\] Force
+<figure style="position:relative;float:left;width:96px;margin:0.9rem 1.4rem 0.6rem 0">
+<img src="../Images/glyphs/Force.png" alt="Force glyph" width="96" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:12px;padding:10px" />
+<figcaption style="position:absolute;right:-9px;bottom:-9px;min-width:26px;padding:2px 7px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.85rem;line-height:1.4;text-align:center;opacity:0.85">◯</figcaption>
+</figure>
+
+### Force
 
 Applies directional force to the target. Does not deal damage directly. Direction, magnitude, and target can all be specified via the slots.
 
+<div style="clear:both"></div>
+
 ---
 
-### \[△\] Delay
+<figure style="position:relative;float:left;width:96px;margin:0.9rem 1.4rem 0.6rem 0">
+<img src="../Images/glyphs/Delay.png" alt="Delay glyph" width="96" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:12px;padding:10px" />
+<figcaption style="position:absolute;right:-9px;bottom:-9px;min-width:26px;padding:2px 7px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.85rem;line-height:1.4;text-align:center;opacity:0.85">△</figcaption>
+</figure>
+
+### Delay
 
 Delays execution of child glyphs. Everything after this glyph in the chain waits the specified time before continuing.
 
+<div style="clear:both"></div>
+
 ---
 
-### \[▽\] Halt
+<figure style="position:relative;float:left;width:96px;margin:0.9rem 1.4rem 0.6rem 0">
+<img src="../Images/glyphs/Halt.png" alt="Halt glyph" width="96" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:12px;padding:10px" />
+<figcaption style="position:absolute;right:-9px;bottom:-9px;min-width:26px;padding:2px 7px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.85rem;line-height:1.4;text-align:center;opacity:0.85">▽</figcaption>
+</figure>
+
+### Halt
 
 Instantly zeros all velocity on targets. Things stop moving. Useful for freezing mid-air after a Force launch, or stopping a Propel projectile. It can either be Immediate or over time \- duration scales harshly against volatility cost.
 
+<div style="clear:both"></div>
+
 ---
 
-### \[□\] Identify
+<div style="display:flex;align-items:center;gap:1.1rem;margin:2rem 0 0.75rem">
+<figure style="position:relative;flex:none;width:72px;margin:0">
+<img src="../Images/glyphs/Identify.png" alt="Identify glyph" width="72" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:10px;padding:8px" />
+<figcaption style="position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);padding:1px 9px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.8rem;line-height:1.5;opacity:0.85">□</figcaption>
+</figure>
+
+### Identify
+
+</div>
 
 Compares two values by identity and locks in the result as its value (like a math glyph). Returns \-1 if A and B are different categories, 0 if they are identical, or \+1 if they share a category but are not identical. A Position is treated as the block at that position.
 
 ---
 
-### \[◇\] Chaos
+<div style="display:flex;align-items:center;gap:1.1rem;margin:2rem 0 0.75rem">
+<figure style="position:relative;flex:none;width:72px;margin:0">
+<img src="../Images/glyphs/Chaos.png" alt="Chaos glyph" width="72" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:10px;padding:8px" />
+<figcaption style="position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);padding:1px 9px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.8rem;line-height:1.5;opacity:0.85">◇</figcaption>
+</figure>
+
+### Chaos
+
+</div>
 
 Randomly generates a number between the Min (default 0\) and Max (default 1\) values.
 
 ---
 
-### \[𝟢\] Drain
+<div style="display:flex;align-items:center;gap:1.1rem;margin:2rem 0 0.75rem">
+<figure style="position:relative;flex:none;width:72px;margin:0">
+<img src="../Images/glyphs/Drain.png" alt="Drain glyph" width="72" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:10px;padding:8px" />
+<figcaption style="position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);padding:1px 9px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.8rem;line-height:1.5;opacity:0.85">𝟢</figcaption>
+</figure>
+
+### Drain
+
+</div>
+
 > Drain is in the middle of a refactor - it may not behave properly
 
 Used to modify Entity Stats like mana / stamina / health  
 Can be used to either gain knowledge of the target’s current stats OR to transfer from one stat to another (stamina \-\> mana or mana \-\> hp \- etc)  
+
+<div style="clear:both"></div>
 
 ---
 
@@ -92,49 +140,109 @@ Two-shape draws. These are the core toolbox for building useful hexes. Most of t
 
 ---
 
-### \[◯△\] Projectile
+<figure style="position:relative;float:left;width:96px;margin:0.9rem 1.4rem 0.6rem 0">
+<img src="../Images/glyphs/Projectile.png" alt="Projectile glyph" width="96" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:12px;padding:10px" />
+<figcaption style="position:absolute;right:-9px;bottom:-9px;min-width:26px;padding:2px 7px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.85rem;line-height:1.4;text-align:center;opacity:0.85">◯△</figcaption>
+</figure>
+
+### Projectile
 
 Your cheapest selector. Launches a projectile that triggers child glyphs on collision. Children do not execute until the projectile hits something. You can add Gravity, Bounces, or Speed as configuration options.  
 
+<div style="clear:both"></div>
+
 ---
 
-### \[□◯\] Beam
+<figure style="position:relative;float:left;width:96px;margin:0.9rem 1.4rem 0.6rem 0">
+<img src="../Images/glyphs/Beam.png" alt="Beam glyph" width="96" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:12px;padding:10px" />
+<figcaption style="position:absolute;right:-9px;bottom:-9px;min-width:26px;padding:2px 7px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.85rem;line-height:1.4;text-align:center;opacity:0.85">□◯</figcaption>
+</figure>
+
+### Beam
 
 Raycasts from an entity in a direction and stores the first thing it hits. Your primary single-target selector. Has a limited range and costs more the longer the range.
 
+<div style="clear:both"></div>
+
 ---
 
-### \[◯□\] Area
+<figure style="position:relative;float:left;width:96px;margin:0.9rem 1.4rem 0.6rem 0">
+<img src="../Images/glyphs/Area.png" alt="Area glyph" width="96" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:12px;padding:10px" />
+<figcaption style="position:absolute;right:-9px;bottom:-9px;min-width:26px;padding:2px 7px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.85rem;line-height:1.4;text-align:center;opacity:0.85">◯□</figcaption>
+</figure>
+
+### Area
 
 Collects all targets within a radius around a center point. Has a slot to continue on every entity hit, every block hit, or both. Does not ignore the caster.
 
+<div style="clear:both"></div>
+
 ---
 
-### \[◯◇\] Arc
+<figure style="position:relative;float:left;width:96px;margin:0.9rem 1.4rem 0.6rem 0">
+<img src="../Images/glyphs/Arc.png" alt="Arc glyph" width="96" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:12px;padding:10px" />
+<figcaption style="position:absolute;right:-9px;bottom:-9px;min-width:26px;padding:2px 7px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.85rem;line-height:1.4;text-align:center;opacity:0.85">◯◇</figcaption>
+</figure>
+
+### Arc
 
 Chaining selector. Fixed to a target (entity, block, or position - block/position spawn a marker entity to host the chain), it fires the wired output on the nearest entity once per `Iterations`, waiting `Interval` seconds between arcs and searching within `Range`. It hits each in-range entity once, then cycles the list again from nearest, repeating until the iterations run out (a miss only happens when no entity is in range at all). Per-arc volatility scales quadratically with the jump distance (a longer `Interval` makes each arc cheaper), so long-range chains naturally fizzle out. Applies no effect of its own - downstream glyphs act on each selected entity.
 
+<div style="clear:both"></div>
+
 ---
 
-### \[△△\] Debug
+<div style="display:flex;align-items:center;gap:1.1rem;margin:2rem 0 0.75rem">
+<figure style="position:relative;flex:none;width:72px;margin:0">
+<img src="../Images/glyphs/Debug.png" alt="Debug glyph" width="72" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:10px;padding:8px" />
+<figcaption style="position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);padding:1px 9px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.8rem;line-height:1.5;opacity:0.85">△△</figcaption>
+</figure>
+
+### Debug
+
+</div>
 
 The best way to get a peek into what hexcode is doing during execution. Connect to several variables to inspect their values. Sends debug info into the chat to you.
 
 ---
 
-### \[□△\] Conjure
+<div style="display:flex;align-items:center;gap:1.1rem;margin:2rem 0 0.75rem">
+<figure style="position:relative;flex:none;width:72px;margin:0">
+<img src="../Images/glyphs/Conjure.png" alt="Conjure glyph" width="72" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:10px;padding:8px" />
+<figcaption style="position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);padding:1px 9px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.8rem;line-height:1.5;opacity:0.85">□△</figcaption>
+</figure>
+
+### Conjure
+
+</div>
 
 Spawns a temporary area zone at a position. The zone can trigger child glyphs on an interval for entities inside it. You can also connect “immediate” to do things like add velocity to the zone and push it along, or warp it, or change its color.
 
 ---
 
-### \[◇𝟢\] Interfere
+<div style="display:flex;align-items:center;gap:1.1rem;margin:2rem 0 0.75rem">
+<figure style="position:relative;flex:none;width:72px;margin:0">
+<img src="../Images/glyphs/Interfere.png" alt="Interfere glyph" width="72" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:10px;padding:8px" />
+<figcaption style="position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);padding:1px 9px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.8rem;line-height:1.5;opacity:0.85">◇𝟢</figcaption>
+</figure>
+
+### Interfere
+
+</div>
 
 Hijacks active hex constructs or strips hex effects from targets. On persistent hex entities (Propel projectiles, Conjure zones, Arc chains): replaces their glyph chain with yours. On buffed entities: strips the buff. Children of Interfere become the injected payload, not continuations. The primary way to Counterspell.
 
 ---
 
-### \[◇◯\] Resonate
+<div style="display:flex;align-items:center;gap:1.1rem;margin:2rem 0 0.75rem">
+<figure style="position:relative;flex:none;width:72px;margin:0">
+<img src="../Images/glyphs/Resonate.png" alt="Resonate glyph" width="72" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:10px;padding:8px" />
+<figcaption style="position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);padding:1px 9px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.8rem;line-height:1.5;opacity:0.85">◇◯</figcaption>
+</figure>
+
+### Resonate
+
+</div>
 
 Appends a parallel glyph chain to an ally's active hex construct. You pay for your injected glyphs. Multiple casters can Resonate on the same construct. The cooperative counterpart to Interfere.
 
