@@ -130,8 +130,6 @@ Randomly generates a number between the Min (default 0\) and Max (default 1\) va
 Used to modify Entity Stats like mana / stamina / health  
 Can be used to either gain knowledge of the target’s current stats OR to transfer from one stat to another (stamina \-\> mana or mana \-\> hp \- etc)  
 
-<div style="clear:both"></div>
-
 ---
 
 # Tier 2
