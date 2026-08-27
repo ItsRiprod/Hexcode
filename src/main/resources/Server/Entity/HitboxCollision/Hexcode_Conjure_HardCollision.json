@@ -1,4 +1,7 @@
 {
-	"CollisionType": "Hard",
-	"SoftCollisionOffsetRatio": 0
+  "CollisionType": "Hard",
+  "SoftCollisionOffsetRatio": 0,
+  "RotateHitbox": true,
+  "AllowEntityAnchoring": true,
+  "RotateAnchoredEntities": true
 }

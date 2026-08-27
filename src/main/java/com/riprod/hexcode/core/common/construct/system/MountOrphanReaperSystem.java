@@ -31,7 +31,8 @@ public class MountOrphanReaperSystem extends EntityTickingSystem<EntityStore> {
             if (mounted == null) return;
 
             Ref<EntityStore> parentRef = mounted.getMountedToEntity();
-            if (parentRef == null || parentRef.isValid()) return;
+            if (parentRef != null && parentRef.isValid()) return;
+            if (parentRef == null && mounted.getMountedToBlock() != null) return;
 
             Ref<EntityStore> selfRef = chunk.getReferenceTo(index);
             buffer.tryRemoveComponent(selfRef, MountedComponent.getComponentType());

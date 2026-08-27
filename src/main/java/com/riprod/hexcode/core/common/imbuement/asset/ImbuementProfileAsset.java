@@ -22,7 +22,7 @@ import com.hypixel.hytale.server.core.asset.type.item.config.ItemCategory;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
+import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
 import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;

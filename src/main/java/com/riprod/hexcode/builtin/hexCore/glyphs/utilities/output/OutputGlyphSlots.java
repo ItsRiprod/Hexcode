@@ -4,5 +4,5 @@ public final class OutputGlyphSlots {
     private OutputGlyphSlots() {
     }
 
-    public static final String COLOR = "color";
+    public static final String COLOR = "Color";
 }

@@ -105,8 +105,10 @@
             "Parent": "CastConfig_Tier1",
             "Style": "Hexstaff_Basic_Thorium",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 15.5
+              "Resources": {
+                "Initial": {
+                  "Arcane": 15.5
+                }
               }
             }
           }
@@ -126,8 +128,10 @@
             "Parent": "CastConfig_Tier2",
             "Style": "Hexstaff_Basic_Thorium",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 18
+              "Resources": {
+                "Initial": {
+                  "Arcane": 18
+                }
               }
             }
           }
@@ -147,8 +151,10 @@
             "Parent": "CastConfig_Tier3",
             "Style": "Hexstaff_Basic_Thorium",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 20
+              "Resources": {
+                "Initial": {
+                  "Arcane": 20
+                }
               }
             }
           }
@@ -168,8 +174,10 @@
             "Parent": "CastConfig_Tier4",
             "Style": "Hexstaff_Basic_Thorium",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 22.5
+              "Resources": {
+                "Initial": {
+                  "Arcane": 22.5
+                }
               }
             }
           }

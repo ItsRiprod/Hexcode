@@ -5,12 +5,13 @@ import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
@@ -79,7 +80,7 @@ public class IdentifyGlyph implements GlyphHandler {
     private Integer blockId(World world, Vector3i pos) {
         if (pos == null) return null;
         try {
-            return world.getBlock(pos.x, pos.y, pos.z);
+            return BlockAccess.blockId(world, pos.x, pos.y, pos.z);
         } catch (Exception e) {
             return null;
         }

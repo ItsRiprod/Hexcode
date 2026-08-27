@@ -9,8 +9,8 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractWorldC
 import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProvider;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.gate.GateStateResource;
-import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue;
+import com.riprod.hexcode.core.common.execution.resource.GateStateResource;
+import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
 
 public class HexStopCommand extends AbstractWorldCommand {
 

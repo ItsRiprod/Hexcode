@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.common.execution.precast;
+package com.riprod.hexcode.core.common.execution.system;
 
 import java.util.Set;
 
@@ -14,9 +14,9 @@ import com.hypixel.hytale.component.system.WorldEventSystem;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
-import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
+import com.riprod.hexcode.core.common.execution.root.PlayerHexRoot;
 
 public class CastDecaySystem extends WorldEventSystem<EntityStore, HexCastEvent.Pre> {
 
@@ -37,7 +37,7 @@ public class CastDecaySystem extends WorldEventSystem<EntityStore, HexCastEvent.
             @Nonnull HexCastEvent.Pre event) {
         if (event.isCancelled()) return;
         HexContext context = event.getContext();
-        if (!context.isApplyVolatilityDecay()) return;
+        if (!context.policy().isApplyVolatilityDecay()) return;
         if (context.getCastSlotKey() != null) return;
         if (!(context.getHexRoot() instanceof PlayerHexRoot playerRoot)) return;
         Ref<EntityStore> casterRef = playerRoot.getSourceRef(buffer);
@@ -50,7 +50,7 @@ public class CastDecaySystem extends WorldEventSystem<EntityStore, HexCastEvent.
 
         float stability = Math.max(0f, Math.min(100f, playerRoot.resolveStability(buffer)));
         float retention = (float) Math.pow(stability / 100f, exec.getCastCount());
-        float volMax = (tracker.getInitial() + playerRoot.resolveVolatility(buffer)) * context.getTierScale();
+        float volMax = (tracker.getInitial() + playerRoot.resolveVolatility(buffer)) * context.policy().getTierScale();
         float startingBudget = Math.max(0f, volMax * retention);
         tracker.setCurrent(startingBudget);
         tracker.setInitial(startingBudget);

@@ -22,6 +22,8 @@ import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
+import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuedBlockComponent;
@@ -61,7 +63,8 @@ public class ImbuedBlockBreakHandler extends EntityEventSystem<EntityStore, Brea
             ItemStack drop = ImbuementUtils.writeAll(new ItemStack(dropItemId), comp.getSlots());
             Vector3d dropPos = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
 
-            world.execute(() -> world.breakBlock(pos.x, pos.y, pos.z, 0));
+            world.execute(() -> BlockAccess.clearBlock(world, pos.x, pos.y, pos.z,
+                    SetBlockSettings.PERFORM_BLOCK_UPDATE));
 
             Holder<EntityStore> dropHolder = ItemComponent.generateItemDrop(
                     buffer, drop, dropPos, new Rotation3f(), 0f, 0f, 0f);

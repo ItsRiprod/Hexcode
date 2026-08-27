@@ -99,8 +99,10 @@
             "Parent": "CastConfig_Tier1",
             "Style": "Hexstaff_Basic_Crude",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 1
+              "Resources": {
+                "Initial": {
+                  "Arcane": 1
+                }
               }
             }
           }
@@ -120,8 +122,10 @@
             "Parent": "CastConfig_Tier2",
             "Style": "Hexstaff_Basic_Crude",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 4
+              "Resources": {
+                "Initial": {
+                  "Arcane": 4
+                }
               }
             }
           }
@@ -141,8 +145,10 @@
             "Parent": "CastConfig_Tier3",
             "Style": "Hexstaff_Basic_Crude",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 6
+              "Resources": {
+                "Initial": {
+                  "Arcane": 6
+                }
               }
             }
           }
@@ -162,8 +168,10 @@
             "Parent": "CastConfig_Tier4",
             "Style": "Hexstaff_Basic_Crude",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 8
+              "Resources": {
+                "Initial": {
+                  "Arcane": 8
+                }
               }
             }
           }

@@ -19,6 +19,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.PropComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
@@ -28,7 +29,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.EnsnareComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.SpikeEntry;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.style.EnsnareStyle;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -148,10 +149,11 @@ public static final String ID = "Ensnare";
     }
 
     private int findGround(World world, int x, int centerY, int z, EnsnareConfig config) {
+        BlockAccess.Cursor cursor = new BlockAccess.Cursor(world);
         for (int y = centerY + config.getGroundScanRange(); y >= centerY - config.getGroundScanRange(); y--) {
-            int blockId = world.getBlock(x, y, z);
+            int blockId = cursor.blockId(x, y, z);
             if (blockId != BlockType.EMPTY_ID) {
-                int aboveId = world.getBlock(x, y + 1, z);
+                int aboveId = cursor.blockId(x, y + 1, z);
                 if (aboveId == BlockType.EMPTY_ID) {
                     return y;
                 }
@@ -191,7 +193,7 @@ public static final String ID = "Ensnare";
 
         Ref<EntityStore> trackerRef = accessor.addEntity(holder, AddReason.SPAWN);
 
-        hexContext.getHexRoot().addDependency(hexContext, trackerRef);
+        hexContext.addDependency(trackerRef);
     }
 
 }

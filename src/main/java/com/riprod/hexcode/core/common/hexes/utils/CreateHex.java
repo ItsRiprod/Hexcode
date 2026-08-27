@@ -38,7 +38,7 @@ public class CreateHex {
 
         if (hexParent != null) {
             Vector3f hoff = hex.getOffset();
-            MountedComponent mounted = new MountedComponent(hexParent, new Rotation3f(hoff.x, hoff.y, hoff.z),
+            MountedComponent mounted = new MountedComponent(hexParent, new Vector3f(hoff.x, hoff.y, hoff.z),
                     MountController.Minecart);
             holder.addComponent(MountedComponent.getComponentType(), mounted);
         }

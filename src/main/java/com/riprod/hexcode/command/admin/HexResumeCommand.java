@@ -15,7 +15,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.gate.GateStateResource;
+import com.riprod.hexcode.core.common.execution.resource.GateStateResource;
 
 public class HexResumeCommand extends AbstractAsyncCommand {
 

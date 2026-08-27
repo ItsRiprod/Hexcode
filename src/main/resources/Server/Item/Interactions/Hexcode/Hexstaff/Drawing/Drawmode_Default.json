@@ -4,7 +4,6 @@
     "Primary": "Draw",
     "Ability2": "Hexstaff_Ability2"
   },
-  "CancelOnItemChange": true,
   "AllowIndefiniteHold": true,
   "Effects": {
     "ItemAnimationId": "HexCrafting_Enter",
@@ -44,5 +43,6 @@
       "SystemId": "Ring_Spawner"
     }
   ],
-  "CastStyleId": "ring"
+  "CastStyleId": "ring",
+  "OnItemChangeBehavior": "Fail"
 }

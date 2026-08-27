@@ -21,7 +21,7 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.component.DomainZoneComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.style.DomainStyle;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
@@ -157,6 +157,6 @@ public static final String ID = "Domain";
 
         DomainStyle.renderSpawn(anchorPos, (float) radius, hexContext, hexContext.getAccessor());
 
-        hexContext.getHexRoot().addDependency(hexContext, zoneRef);
+        hexContext.addDependency(zoneRef);
     }
 }

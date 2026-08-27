@@ -1,3 +1,15 @@
+# v0.10.0
+- feat: Updated to Hytale Update 6
+- feat: Conjure can be rotated!
+- feat: Conjure hitbox now stops projectiles and entities
+- feat: Area can now be a Sphere, Box, or Cylindar (trilean)
+- feat: Area now "grows" at a set rate of blocks/s until scale is achieved.
+- feat: Area can be a non-uniform shape (Corner A/B defined now)
+- 
+- fix: Updated Cast logic to be more aligned with an expandable ECS system
+- fix: Updated Block Accessing logic
+- fix: Updated Block Rotation logic
+
 # v0.9.0-Patch-1
 *The patch has to be like this till Update 6 releases*
 

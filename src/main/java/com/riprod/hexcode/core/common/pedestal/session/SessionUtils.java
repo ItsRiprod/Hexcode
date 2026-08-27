@@ -28,6 +28,7 @@ import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
+import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
@@ -46,10 +47,7 @@ public class SessionUtils {
 
         HexcodeSessionComponent session = new HexcodeSessionComponent(pedestalLocation, ownerRef, isOpen);
 
-        Ref<EntityStore> anchorRef = pedestal.getAnchorRef();
-        if (anchorRef != null && anchorRef.isValid()) {
-            session.setAnchorEntityRef(anchorRef);
-        }
+        session.setAnchorEntityRef(PedestalEntity.ensureAnchor(buffer, pedestal));
 
         buffer.addComponent(ownerRef, HexcodeSessionComponent.getComponentType(), session);
 

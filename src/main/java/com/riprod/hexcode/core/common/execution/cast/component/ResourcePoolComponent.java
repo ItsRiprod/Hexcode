@@ -1,10 +1,19 @@
-package com.riprod.hexcode.core.common.execution.cast;
+package com.riprod.hexcode.core.common.execution.cast.component;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.codecs.map.MapCodec;
+import com.riprod.hexcode.core.common.execution.cast.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
+import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -182,5 +191,29 @@ public final class ResourcePoolComponent implements CastComponent {
             copy.resources.put(entry.getKey(), sub);
         }
         return copy;
+    }
+
+    public static final class Seeds implements CastOverlay<ResourcePoolComponent> {
+
+        @Nullable
+        private Map<String, Float> initial;
+
+        public Seeds() {
+        }
+
+        @Override
+        public void applyTo(@Nonnull ResourcePoolComponent target) {
+            if (initial == null || initial.isEmpty()) return;
+            initial.forEach((id, amount) -> target.addResource(id, SEED_SOURCE, amount));
+        }
+
+        public static final BuilderCodec<Seeds> CODEC = BuilderCodec
+                .builder(Seeds.class, Seeds::new)
+                .append(new KeyedCodec<>("Initial", new MapCodec<>(Codec.FLOAT, HashMap::new)),
+                        (c, v) -> c.initial = v,
+                        c -> c.initial)
+                .documentation("Resource pools seeded before the first glyph runs.")
+                .add()
+                .build();
     }
 }

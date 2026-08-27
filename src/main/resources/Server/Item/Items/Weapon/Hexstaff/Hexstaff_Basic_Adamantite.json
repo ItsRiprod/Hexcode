@@ -104,8 +104,10 @@
             "Parent": "CastConfig_Tier1",
             "Style": "Hexstaff_Basic_Adamantite",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 22
+              "Resources": {
+                "Initial": {
+                  "Arcane": 22
+                }
               }
             }
           }
@@ -125,8 +127,10 @@
             "Parent": "CastConfig_Tier2",
             "Style": "Hexstaff_Basic_Adamantite",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 25
+              "Resources": {
+                "Initial": {
+                  "Arcane": 25
+                }
               }
             }
           }
@@ -146,8 +150,10 @@
             "Parent": "CastConfig_Tier3",
             "Style": "Hexstaff_Basic_Adamantite",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 28.5
+              "Resources": {
+                "Initial": {
+                  "Arcane": 28.5
+                }
               }
             }
           }
@@ -167,8 +173,10 @@
             "Parent": "CastConfig_Tier4",
             "Style": "Hexstaff_Basic_Adamantite",
             "HexStats": {
-              "InitialResources": {
-                "Arcane": 31.5
+              "Resources": {
+                "Initial": {
+                  "Arcane": 31.5
+                }
               }
             }
           }

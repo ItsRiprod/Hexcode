@@ -32,7 +32,7 @@ public class RootSpawner {
         holder.addComponent(TransformComponent.getComponentType(),
                 new TransformComponent(playerPos, new Rotation3f()));
         holder.addComponent(MountedComponent.getComponentType(),
-                new MountedComponent(playerRef, new Rotation3f(0, eyeHeight, 0),
+                new MountedComponent(playerRef, new Vector3f(0, eyeHeight, 0),
                         MountController.Minecart));
 
         holder.addComponent(UUIDComponent.getComponentType(),

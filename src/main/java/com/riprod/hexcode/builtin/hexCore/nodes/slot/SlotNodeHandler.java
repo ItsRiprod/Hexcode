@@ -22,7 +22,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexColors;
+import com.riprod.hexcode.core.common.hexes.component.HexColors;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -133,7 +133,7 @@ public class SlotNodeHandler extends BaseSlotHandler {
                 new NodeComponent(parentRef, config.getId()));
 
         holder.addComponent(MountedComponent.getComponentType(),
-                new MountedComponent(parentRef, new Rotation3f(offset.x, offset.y, offset.z), MountController.Minecart));
+                new MountedComponent(parentRef, new Vector3f(offset.x, offset.y, offset.z), MountController.Minecart));
 
         return accessor.addEntity(holder, AddReason.SPAWN);
     }

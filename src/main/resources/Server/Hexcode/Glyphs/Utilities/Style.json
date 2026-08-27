@@ -14,34 +14,34 @@
     { "Parent": "Greater", "RelativeSize": 0.4, "StatContribution": 0 }
   ],
   "Slots": {
-    "style": {
+    "Style": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Style.style.name",
       "Description": "hexcode.glyphs.Style.style.description"
     },
-    "r": {
+    "R": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Style.r.name",
       "Description": "hexcode.glyphs.Style.r.description",
       "DefaultValue": 0
     },
-    "g": {
+    "G": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Style.g.name",
       "Description": "hexcode.glyphs.Style.g.description",
       "DefaultValue": 0
     },
-    "b": {
+    "B": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Style.b.name",
       "Description": "hexcode.glyphs.Style.b.description",
       "DefaultValue": 0
     },
-    "a": {
+    "A": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Style.a.name",

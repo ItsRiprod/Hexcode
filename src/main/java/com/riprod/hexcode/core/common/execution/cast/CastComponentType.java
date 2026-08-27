@@ -1,23 +1,35 @@
 package com.riprod.hexcode.core.common.execution.cast;
 
-import java.util.function.Supplier;
-
 import javax.annotation.Nonnull;
 
 public final class CastComponentType<T extends CastComponent> {
 
-    private final Class<T> typeClass;
-    private final Supplier<T> supplier;
-    private final int index;
+    private CastComponentRegistry registry;
+    private Class<? super T> typeClass;
+    private int index;
+    private boolean valid;
 
-    CastComponentType(@Nonnull Class<T> typeClass, @Nonnull Supplier<T> supplier, int index) {
+    CastComponentType() {
+    }
+
+    void init(@Nonnull CastComponentRegistry registry, @Nonnull Class<? super T> typeClass, int index) {
+        this.registry = registry;
         this.typeClass = typeClass;
-        this.supplier = supplier;
         this.index = index;
+        this.valid = true;
+    }
+
+    void invalidate() {
+        this.valid = false;
     }
 
     @Nonnull
-    public Class<T> getTypeClass() {
+    public CastComponentRegistry getRegistry() {
+        return registry;
+    }
+
+    @Nonnull
+    public Class<? super T> getTypeClass() {
         return typeClass;
     }
 
@@ -25,8 +37,12 @@ public final class CastComponentType<T extends CastComponent> {
         return index;
     }
 
-    @Nonnull
-    T create() {
-        return supplier.get();
+    public boolean isValid() {
+        return valid;
+    }
+
+    @Override
+    public String toString() {
+        return "CastComponentType[" + typeClass.getSimpleName() + "@" + index + "]";
     }
 }

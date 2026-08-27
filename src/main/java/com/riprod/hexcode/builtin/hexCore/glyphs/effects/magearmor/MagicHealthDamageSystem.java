@@ -18,7 +18,7 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageModule;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor.component.MagicHealthComponent;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
-import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 
 public class MagicHealthDamageSystem extends DamageEventSystem {
 

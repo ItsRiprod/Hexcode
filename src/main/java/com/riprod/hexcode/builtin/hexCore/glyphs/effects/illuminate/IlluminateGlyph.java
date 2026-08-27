@@ -9,7 +9,6 @@ import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
-import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.Color;
 import com.hypixel.hytale.protocol.ColorLight;
 import com.hypixel.hytale.protocol.MountController;
@@ -22,7 +21,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.style.IlluminateStyle;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.utils.GlowUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -108,7 +107,7 @@ public class IlluminateGlyph implements GlyphHandler {
             holder.addComponent(DynamicLight.getComponentType(), new DynamicLight(light));
             if (mountTo != null) {
                 holder.addComponent(MountedComponent.getComponentType(),
-                        new MountedComponent(mountTo, new Rotation3f(), MountController.Minecart));
+                        new MountedComponent(mountTo, new Vector3f(), MountController.Minecart));
             }
             accessor.addEntity(holder, AddReason.SPAWN);
         }

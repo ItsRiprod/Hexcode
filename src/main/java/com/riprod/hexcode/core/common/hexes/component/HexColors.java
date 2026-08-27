@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.common.execution.component;
+package com.riprod.hexcode.core.common.hexes.component;
 
 import javax.annotation.Nullable;
 

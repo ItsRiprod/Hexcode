@@ -22,7 +22,7 @@ import com.riprod.hexcode.core.common.appearance.AppearanceLayer;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;

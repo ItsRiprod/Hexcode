@@ -4,6 +4,6 @@ public final class DebugGlyphSlots {
     private DebugGlyphSlots() {
     }
 
-    public static final String SLOT = "slot";
+    public static final String SLOT = "Slot";
     public static final String MODE = "Mode";
 }

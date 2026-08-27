@@ -1,7 +1,7 @@
 {
     "Group": "Riprod",
     "Name": "Hexcode",
-    "Version": "0.9.0-Patch-1",
+    "Version": "0.10.0",
     "Description": "Magic By Design.",
     "Authors": [
         {
@@ -9,7 +9,7 @@
         }
     ],
     "Website": "https://modtale.net/mod/hexcode",
-    "ServerVersion": ">=0.5.0 <0.6.0",
+    "ServerVersion": "^0.6.0",
     "Dependencies": {
         
     },
@@ -28,63 +28,63 @@
             "Main": "com.riprod.hexcode.builtin.hextras.HextrasPlugin",
             "DisabledByDefault": false,
             "IncludesAssetPack": false,
-            "ServerVersion": ">=0.5.0 <0.6.0"
+            "ServerVersion": "^0.6.0"
         },
         {
             "Name": "Hextreme",
             "Main": "com.riprod.hexcode.builtin.hextreme.HextremePlugin",
             "DisabledByDefault": false,
             "IncludesAssetPack": false,
-            "ServerVersion": ">=0.5.0 <0.6.0"
+            "ServerVersion": "^0.6.0"
         },
         {
             "Name": "Imbued",
             "Main": "com.riprod.hexcode.builtin.imbued.ImbuedPlugin",
             "DisabledByDefault": false,
             "IncludesAssetPack": false,
-            "ServerVersion": ">=0.5.0 <0.6.0"
+            "ServerVersion": "^0.6.0"
         },
         {
             "Name": "HexCore",
             "Main": "com.riprod.hexcode.builtin.hexCore.HexCorePlugin",
             "DisabledByDefault": false,
             "IncludesAssetPack": false,
-            "ServerVersion": ">=0.5.0 <0.6.0"
+            "ServerVersion": "^0.6.0"
         },
         {
             "Name": "Statly",
             "Main": "com.riprod.hexcode.builtin.statly.StatlyPlugin",
             "DisabledByDefault": false,
             "IncludesAssetPack": false,
-            "ServerVersion": ">=0.5.0 <0.6.0"
+            "ServerVersion": "^0.6.0"
         },
         {
             "Name": "Ritualistic",
             "Main": "com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin",
             "DisabledByDefault": true,
             "IncludesAssetPack": false,
-            "ServerVersion": ">=0.5.0 <0.6.0"
+            "ServerVersion": "^0.6.0"
         },
         {
             "Name": "Hexability",
             "Main": "com.riprod.hexcode.builtin.hexability.HexabilityPlugin",
             "DisabledByDefault": true,
             "IncludesAssetPack": false,
-            "ServerVersion": ">=0.5.0 <0.6.0"
+            "ServerVersion": "^0.6.0"
         },
         {
             "Name": "Hexomation",
             "Main": "com.riprod.hexcode.builtin.hexomation.HexomationPlugin",
             "DisabledByDefault": true,
             "IncludesAssetPack": false,
-            "ServerVersion": ">=0.5.0 <0.6.0"
+            "ServerVersion": "^0.6.0"
         },
         {
             "Name": "Counterspell",
             "Main": "com.riprod.hexcode.builtin.counterspell.CounterspellPlugin",
             "DisabledByDefault": true,
             "IncludesAssetPack": false,
-            "ServerVersion": ">=0.5.0 <0.6.0"
+            "ServerVersion": "^0.6.0"
         }
     ]
 }

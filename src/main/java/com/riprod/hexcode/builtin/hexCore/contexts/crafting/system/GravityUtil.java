@@ -2,6 +2,7 @@ package com.riprod.hexcode.builtin.hexCore.contexts.crafting.system;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.protocol.FlyMode;
 import com.hypixel.hytale.protocol.MovementSettings;
 import com.hypixel.hytale.protocol.SavedMovementStates;
 import com.hypixel.hytale.protocol.packets.player.SetMovementStates;
@@ -21,7 +22,7 @@ public class GravityUtil {
         if (mm == null) return;
 
         MovementSettings settings = mm.getSettings();
-        settings.canFly = true;
+        settings.fly = FlyMode.fromValue(1);
         settings.horizontalFlySpeed = FLY_HORIZONTAL_SPEED;
         settings.verticalFlySpeed = FLY_VERTICAL_SPEED;
 

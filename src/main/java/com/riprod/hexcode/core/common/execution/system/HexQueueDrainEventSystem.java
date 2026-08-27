@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.common.execution.queue;
+package com.riprod.hexcode.core.common.execution.system;
 
 import javax.annotation.Nonnull;
 
@@ -10,10 +10,11 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexQueueDrainEvent;
 import com.riprod.hexcode.config.HexcodeConfig;
 import com.riprod.hexcode.core.common.execution.CoreHexExecuter;
-import com.riprod.hexcode.core.common.execution.cast.GlyphBudgetComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.GlyphBudgetComponent;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.queue.HexExecutionQueue.PendingGlyph;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
+import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue.PendingGlyph;
 import com.riprod.hexcode.utils.LogScopes;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;

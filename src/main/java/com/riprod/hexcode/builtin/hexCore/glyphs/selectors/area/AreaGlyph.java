@@ -1,173 +1,158 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.area;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
 
+import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.component.Holder;
 import org.joml.Vector3d;
-import org.joml.Vector3i;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.Intangible;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.area.style.AreaStyle;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
-import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
-import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.hypixel.hytale.server.core.entity.reference.PersistentRef;
+import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
+import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
+import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
 public class AreaGlyph implements GlyphHandler {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    
-    @Override
-    public String getId() { return ID; };
 
     public static final String ID = "Area";
+
+    private static final float PASSIVE_FLOOR = 0.1f;
+
+    @Override
+    public String getId() {
+        return ID;
+    }
 
     @Override
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
         return ConfigBinding.of(AreaConfig.class, AreaConfig.CODEC);
     }
 
-    private static final float PASSIVE_FLOOR = 0.1f;
+    private static List<String> linksOf(Glyph glyph, String slotKey) {
+        Slot slot = glyph.getSlot(slotKey);
+        String[] links = slot != null ? slot.getLinks() : null;
+        return links == null || links.length == 0 ? List.of() : Arrays.asList(links);
+    }
 
-    private boolean isPassive(Glyph glyph) {
-        return !hasLinks(glyph, AreaGlyphSlots.BLOCKS) && !hasLinks(glyph, AreaGlyphSlots.ENTITIES);
+    private static boolean isDisplayOnly(Glyph glyph) {
+        return linksOf(glyph, AreaGlyphSlots.ENTITIES).isEmpty()
+                && linksOf(glyph, AreaGlyphSlots.BLOCKS).isEmpty();
+    }
+
+    private static boolean isAbsolute(@Nullable HexVar var) {
+        if (var instanceof PositionVar positionVar)
+            return positionVar.isAbsolute();
+        return !(var instanceof NumberVar);
     }
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        return isPassive(glyph) ? PASSIVE_FLOOR
-                : GlyphHandler.super.getVolatilityCost(glyph, hexContext, asset);
+        return isDisplayOnly(glyph) ? PASSIVE_FLOOR : glyph.computeBaseCost(asset);
     }
-
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         AreaConfig config = getConfig(AreaConfig.class, asset);
-        if (config == null) config = AreaConfig.DEFAULTS;
-
-        HexVar centerVar = glyph.readSlot(AreaGlyphSlots.CENTER, hexContext);
-        double radius = HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(AreaGlyphSlots.RADIUS, hexContext), asset.getSlot(AreaGlyphSlots.RADIUS));
+        if (config == null)
+            config = AreaConfig.DEFAULTS;
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        Vector3d center = HexVarUtil.position(centerVar, accessor);
 
-        if (center == null) {
+        Vector3d anchorPos = HexVarUtil.position(
+                glyph.readSlot(AreaGlyphSlots.ANCHOR, hexContext), accessor);
+        if (anchorPos == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Center Variable is not a valid position");
+                    "Anchor is not a valid position");
             return;
         }
 
-        AreaStyle.render(center, radius, hexContext, accessor);
-
-        boolean blocksLinked = hasLinks(glyph, AreaGlyphSlots.BLOCKS);
-        boolean entitiesLinked = hasLinks(glyph, AreaGlyphSlots.ENTITIES);
-        List<Ref<EntityStore>> particleRecipients = blocksLinked || entitiesLinked
-                ? VfxUtil.collectParticleRecipients(center, radius + config.getParticleMargin(), accessor)
-                : null;
-
-        if (blocksLinked) {
-            List<Vector3i> blocks = gatherBlocks(center, radius, accessor);
-            for (Vector3i pos : blocks) {
-                AreaStyle.renderHit(new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5),
-                        hexContext, accessor, particleRecipients);
-                HexContext copy = hexContext.branch();
-                copy.enterLocalScope();
-                glyph.writeOutput(new BlockVar(pos), copy);
-                HexExecuter.continueFromSlot(glyph, AreaGlyphSlots.BLOCKS, copy);
-            }
+        HexVar coordsAVar = glyph.readSlot(AreaGlyphSlots.COORDS_A, hexContext);
+        HexVar coordsBVar = glyph.readSlot(AreaGlyphSlots.COORDS_B, hexContext);
+        Vector3d coordsA = HexVarUtil.position(coordsAVar, accessor);
+        Vector3d coordsB = HexVarUtil.position(coordsBVar, accessor);
+        if (coordsA == null || coordsB == null) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "Corner coordinates must be valid positions");
+            return;
         }
 
-        if (entitiesLinked) {
-            List<PersistentRef> entities = gatherEntities(center, radius, hexContext);
-            for (PersistentRef ref : entities) {
-                Ref<EntityStore> entRef = ref.getEntity(accessor);
-                if (entRef != null && entRef.isValid()) {
-                    TransformComponent t = accessor.getComponent(entRef, TransformComponent.getComponentType());
-                    if (t != null) {
-                        AreaStyle.renderHit(t.getPosition(), hexContext, accessor, particleRecipients);
-                    }
-                }
-                HexContext copy = hexContext.branch();
-                copy.enterLocalScope();
-                glyph.writeOutput(new EntityVar(ref), copy);
-                HexExecuter.continueFromSlot(glyph, AreaGlyphSlots.ENTITIES, copy);
-            }
-        }
-    }
+        Vector3d cornerA = isAbsolute(coordsAVar) ? coordsA : new Vector3d(anchorPos).add(coordsA);
+        Vector3d cornerB = isAbsolute(coordsBVar) ? coordsB : new Vector3d(anchorPos).add(coordsB);
 
-    private static boolean hasLinks(Glyph glyph, String slotKey) {
-        Slot s = glyph.getSlot(slotKey);
-        return s != null && s.getLinks().length > 0;
-    }
+        double minAxis = config.getMinAxisSize();
+        Vector3d center = new Vector3d(
+                (cornerA.x + cornerB.x) * 0.5,
+                (cornerA.y + cornerB.y) * 0.5,
+                (cornerA.z + cornerB.z) * 0.5);
+        Vector3d half = new Vector3d(
+                Math.max(minAxis, Math.abs(cornerA.x - cornerB.x)) * 0.5,
+                Math.max(minAxis, Math.abs(cornerA.y - cornerB.y)) * 0.5,
+                Math.max(minAxis, Math.abs(cornerA.z - cornerB.z)) * 0.5);
 
-    private List<PersistentRef> gatherEntities(Vector3d center, double radius, HexContext hexContext) {
-        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        List<PersistentRef> gathered = new ArrayList<>();
+        AreaShape shape = AreaShape.fromSlotValue(HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(AreaGlyphSlots.AREA_SHAPE, hexContext),
+                asset != null ? asset.getSlot(AreaGlyphSlots.AREA_SHAPE) : null));
 
-        List<Ref<EntityStore>> nearby = TargetUtil.getAllEntitiesInSphere(center, radius, accessor);
-        for (Ref<EntityStore> ref : nearby) {
-            if (ref == null || !ref.isValid()) continue;
-
-            UUIDComponent uuid = accessor.getComponent(ref, UUIDComponent.getComponentType());
-            if (uuid == null) continue;
-            var intangible = accessor.getComponent(ref, Intangible.getComponentType());
-
-            if (intangible != null) continue;
-
-            gathered.add(EntityVar.createRef(uuid.getUuid(), ref));
+        double blocksPerSecond = HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(AreaGlyphSlots.BLOCKS_PER_SECOND, hexContext),
+                asset != null ? asset.getSlot(AreaGlyphSlots.BLOCKS_PER_SECOND) : null);
+        if (!(blocksPerSecond > 0)) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "BlocksPerSecond must be greater than zero");
+            return;
         }
 
-        return gathered;
-    }
-
-    private List<Vector3i> gatherBlocks(Vector3d center, double radius,
-            CommandBuffer<EntityStore> accessor) {
-        World world = accessor.getExternalData().getWorld();
-        List<Vector3i> gathered = new ArrayList<>();
-        int r = (int) Math.ceil(radius);
-        double radiusSq = radius * radius;
-
-        int cx = (int) Math.floor(center.x);
-        int cy = (int) Math.floor(center.y);
-        int cz = (int) Math.floor(center.z);
-
-        for (int dx = -r; dx <= r; dx++) {
-            for (int dy = -r; dy <= r; dy++) {
-                for (int dz = -r; dz <= r; dz++) {
-                    if (dx * dx + dy * dy + dz * dz > radiusSq) continue;
-
-                    int bx = cx + dx;
-                    int by = cy + dy;
-                    int bz = cz + dz;
-
-                    int blockId = world.getBlock(bx, by, bz);
-                    if (blockId == BlockType.EMPTY_ID) continue;
-
-                    gathered.add(new Vector3i(bx, by, bz));
-                }
-            }
+        double totalBlocks = shape.volume(half);
+        if (!(totalBlocks > 0)) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "Area has no volume");
+            return;
         }
 
-        return gathered;
+        double price = config.getPerBlockPrice()
+                * Impact.scale(config.getRatePriceImpact(), blocksPerSecond)
+                * glyph.computeDrawQuality();
+        if (isDisplayOnly(glyph))
+            price *= config.getDisplayPriceMultiplier();
+
+        AreaState state = new AreaState(center, half, shape, blocksPerSecond, totalBlocks,
+                (float) price, linksOf(glyph, AreaGlyphSlots.ENTITIES),
+                linksOf(glyph, AreaGlyphSlots.BLOCKS));
+
+        Holder<EntityStore> holder = HexConstructSpawner.createWithState(
+                accessor, hexContext, glyph, ID, new Vector3d(center), state);
+
+        float alpha = VfxUtil.resolveAlpha(hexContext, asset);
+        if (alpha > 0f) {
+            DebugComponent debug = new DebugComponent(shape.debugShape(),
+                    VfxUtil.resolvePrimaryColor(hexContext, asset), new Vector3d(), 0.1f);
+            debug.setOpacity(alpha * 0.15f);
+            debug.setIntervalMultiplier(0.01f);
+            debug.setFadeMultiplier(2.0f);
+            debug.setFlags(DebugUtils.FLAG_FADE | DebugUtils.FLAG_NO_WIREFRAME);
+            holder.addComponent(DebugComponent.getComponentType(), debug);
+        }
+
+        accessor.addEntity(holder, AddReason.SPAWN);
+
+        AreaStyle.renderSpawn(new Vector3d(center), hexContext, accessor);
     }
 }

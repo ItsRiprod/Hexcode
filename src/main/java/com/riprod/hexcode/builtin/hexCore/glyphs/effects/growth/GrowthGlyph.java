@@ -13,6 +13,7 @@ import com.hypixel.hytale.math.util.ChunkUtil;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.farming.FarmingData;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.farming.FarmingStageData;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
@@ -20,9 +21,11 @@ import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBeha
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.time.WorldTimeResource;
+import com.hypixel.hytale.server.core.modules.block.BlockEntity;
+import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.BlockComponentChunk;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
+import com.hypixel.hytale.server.core.universe.world.chunk.BlockOperations;
+import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockComponentSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -30,7 +33,7 @@ import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.growth.style.GrowthStyle;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -42,6 +45,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
+import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.LogScopes;
 
@@ -148,10 +152,7 @@ public static final String ID = "Growth";
         if (pos == null) return;
 
         World world = accessor.getExternalData().getWorld();
-        int blockId = world.getBlock(pos.x, pos.y, pos.z);
-        if (blockId == BlockType.EMPTY_ID) return;
-
-        BlockType blockType = BlockType.getAssetMap().getAsset(blockId);
+        BlockType blockType = BlockAccess.blockType(world, pos.x, pos.y, pos.z);
         if (blockType == null) return;
 
         if (tryAdvanceGrowth(world, pos, blockType, amount, config, hexContext, accessor)) {
@@ -168,20 +169,22 @@ public static final String ID = "Growth";
         FarmingData farmingConfig = blockType.getFarming();
         if (farmingConfig == null || farmingConfig.getStages() == null) return false;
 
-        WorldChunk worldChunk = world.getChunk(ChunkUtil.indexChunkFromBlock(pos.x, pos.z));
-        if (worldChunk == null) return false;
+        Ref<ChunkStore> sectionRef = BlockAccess.sectionRef(world, pos.x, pos.y, pos.z);
+        if (sectionRef == null) return false;
 
         Store<ChunkStore> chunkStore = world.getChunkStore().getStore();
-        Ref<ChunkStore> chunkRef = world.getChunkStore().getChunkReference(
-                ChunkUtil.indexChunkFromBlock(pos.x, pos.z));
-        if (chunkRef == null) return false;
+        BlockSection blockSection = chunkStore.getComponent(sectionRef, BlockSection.getComponentType());
+        BlockComponentSection blockComponentSection = chunkStore.getComponent(
+                sectionRef, BlockComponentSection.getComponentType());
+        if (blockSection == null || blockComponentSection == null) return false;
 
-        BlockComponentChunk blockComponentChunk = chunkStore.getComponent(
-                chunkRef, BlockComponentChunk.getComponentType());
-        if (blockComponentChunk == null) return false;
-
-        int blockIndexColumn = ChunkUtil.indexBlockInColumn(pos.x, pos.y, pos.z);
-        Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(blockIndexColumn);
+        int blockIndex = ChunkUtil.indexBlock(pos.x, pos.y, pos.z);
+        Ref<ChunkStore> blockRef = blockComponentSection.getBlockReference(blockIndex);
+        if ((blockRef == null || !blockRef.isValid())
+                && BlockEntity.declaresComponent(blockType, FarmingBlock.getComponentType())) {
+            blockRef = BlockEntity.ensureBlockEntity(chunkStore, sectionRef, blockComponentSection,
+                    pos.x, pos.y, pos.z, blockType, blockSection.getFiller(blockIndex));
+        }
         if (blockRef == null || !blockRef.isValid()) return false;
 
         FarmingBlock farmingBlock = chunkStore.getComponent(blockRef, FarmingBlock.getComponentType());
@@ -210,19 +213,13 @@ public static final String ID = "Growth";
         farmingBlock.setExecutions(0);
         farmingBlock.setGeneration(farmingBlock.getGeneration() + 1);
         farmingBlock.setLastTickGameTime(now);
+        blockComponentSection.markBlockNeedsSaving(blockIndex);
 
-        Ref<ChunkStore> sectionRef = world.getChunkStore()
-                .getChunkSectionReferenceAtBlock(pos.x, pos.y, pos.z);
-        if (sectionRef != null && sectionRef.isValid()) {
-            BlockSection blockSection = chunkStore.getComponent(
-                    sectionRef, BlockSection.getComponentType());
-            if (blockSection != null) {
-                blockSection.scheduleTick(ChunkUtil.indexBlock(pos.x, pos.y, pos.z), now);
-            }
-            stages[newStage].apply(chunkStore, sectionRef, blockRef, pos.x, pos.y, pos.z, previousStage);
-        }
-
-        worldChunk.setTicking(pos.x, pos.y, pos.z, true);
+        blockSection.scheduleTick(blockIndex, now);
+        stages[newStage].apply(chunkStore, sectionRef, blockRef,
+                ChunkUtil.localCoordinate(pos.x), ChunkUtil.localCoordinate(pos.y),
+                ChunkUtil.localCoordinate(pos.z), previousStage);
+        blockSection.setTicking(pos.x, pos.y, pos.z, true);
 
         Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
         GrowthStyle.renderBlockHit(blockCenter, hexContext, accessor);
@@ -248,6 +245,7 @@ public static final String ID = "Growth";
 
         Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
         boolean blocked = false;
+        BlockAccess.Cursor cursor = new BlockAccess.Cursor(world);
 
         for (int a = 0; a < attempts; a++) {
             int dx = rng.nextInt(-bonemealRadius, bonemealRadius + 1);
@@ -256,11 +254,9 @@ public static final String ID = "Growth";
             int tz = pos.z + dz;
             int ty = pos.y;
 
-            int belowId = world.getBlock(tx, ty, tz);
-            if (belowId == BlockType.EMPTY_ID) continue;
+            if (cursor.blockId(tx, ty, tz) == BlockType.EMPTY_ID) continue;
 
-            int aboveId = world.getBlock(tx, ty + 1, tz);
-            if (aboveId != BlockType.EMPTY_ID) continue;
+            if (cursor.blockId(tx, ty + 1, tz) != BlockType.EMPTY_ID) continue;
 
             if (rng.nextFloat() > config.getBonemealChance()) continue;
 
@@ -272,7 +268,23 @@ public static final String ID = "Growth";
 
             String[] vegetationBlocks = config.getVegetationBlocks();
             String vegetation = vegetationBlocks[rng.nextInt(vegetationBlocks.length)];
-            world.setBlock(tx, ty + 1, tz, vegetation);
+            BlockType vegetationType = BlockType.getAssetMap().getAsset(vegetation);
+            if (vegetationType == null) continue;
+
+            Ref<ChunkStore> vegetationSection = BlockAccess.sectionRef(world, tx, ty + 1, tz);
+            if (vegetationSection == null) continue;
+
+            BlockSection vegetationBlockSection = world.getChunkStore().getStore()
+                    .getComponent(vegetationSection, BlockSection.getComponentType());
+            if (vegetationBlockSection == null) continue;
+
+            if (!BlockOperations.testPlaceBlock(world.getChunkStore().getStore(), vegetationBlockSection,
+                    tx, ty + 1, tz, vegetationType, RotationTuple.NONE_INDEX)) {
+                continue;
+            }
+
+            BlockAccess.setBlock(world, tx, ty + 1, tz, vegetationType,
+                    RotationTuple.NONE_INDEX, SetBlockSettings.PERFORM_BLOCK_UPDATE);
 
             Vector3d effectPos = new Vector3d(tx + 0.5, ty + 1.5, tz + 0.5);
             GrowthStyle.renderBlockHit(effectPos, hexContext, accessor);

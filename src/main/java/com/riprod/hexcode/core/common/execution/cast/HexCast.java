@@ -6,6 +6,12 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolComponent;
+import com.riprod.hexcode.core.common.execution.root.HexRoot;
+import com.riprod.hexcode.core.common.hexes.component.Hex;
+import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
+
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 
 public final class HexCast {
@@ -15,6 +21,10 @@ public final class HexCast {
     private static final CastComponent[] EMPTY = new CastComponent[0];
 
     private UUID executionId = UUID.randomUUID();
+    @Nullable
+    private Hex hex;
+    @Nullable
+    private HexRoot root;
     private final LongOpenHashSet activeBranches = new LongOpenHashSet();
     private long branchIdSeq = 0L;
     @Nullable
@@ -41,10 +51,15 @@ public final class HexCast {
         }
         CastComponent existing = components[index];
         if (existing == null) {
-            existing = type.create();
+            existing = type.getRegistry().create(index);
             components[index] = existing;
         }
         return (T) existing;
+    }
+
+    public void applyOverlay(@Nonnull CastComponentType<?> type, @Nonnull CastOverlay<?> overlay) {
+        CastComponent component = getOrCreate((CastComponentType) type);
+        ((CastOverlay) overlay).applyTo(component);
     }
 
     public <T extends CastComponent> void put(@Nonnull CastComponentType<T> type, @Nonnull T component) {
@@ -60,6 +75,11 @@ public final class HexCast {
         return getOrCreate(VolatilityComponent.getComponentType());
     }
 
+    @Nonnull
+    public CastPolicyComponent policy() {
+        return getOrCreate(CastPolicyComponent.getComponentType());
+    }
+
     @Nullable
     public ResourcePoolComponent resources() {
         return get(ResourcePoolComponent.getComponentType());
@@ -72,6 +92,24 @@ public final class HexCast {
 
     public UUID getExecutionId() {
         return executionId;
+    }
+
+    @Nullable
+    public Hex getHex() {
+        return hex;
+    }
+
+    public void setHex(@Nullable Hex hex) {
+        this.hex = hex;
+    }
+
+    @Nullable
+    public HexRoot getRoot() {
+        return root;
+    }
+
+    public void setRoot(@Nullable HexRoot root) {
+        this.root = root;
     }
 
     @Nullable
@@ -109,6 +147,8 @@ public final class HexCast {
     public HexCast copy() {
         HexCast copy = new HexCast();
         copy.executionId = this.executionId;
+        copy.hex = this.hex != null ? this.hex.clone() : null;
+        copy.root = this.root != null ? this.root.copy() : null;
         copy.slotKey = this.slotKey;
         copy.fizzleNotified = this.fizzleNotified;
         copy.components = new CastComponent[this.components.length];

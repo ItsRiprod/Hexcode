@@ -21,26 +21,48 @@
     }
   ],
   "Slots": {
-    "Center": {
+    "Anchor": {
       "Type": "Input",
       "Parent": "Input",
-      "Label": "hexcode.glyphs.Area.center.name",
-      "Description": "hexcode.glyphs.Area.center.description",
+      "Label": "hexcode.glyphs.Area.anchor.name",
+      "Description": "hexcode.glyphs.Area.anchor.description",
       "Unique": true
     },
-    "Radius": {
+    "CoordsA": {
       "Type": "Input",
       "Parent": "Input",
-      "Label": "hexcode.glyphs.Area.radius.name",
-      "Description": "hexcode.glyphs.Area.radius.description",
+      "Label": "hexcode.glyphs.Area.coordsA.name",
+      "Description": "hexcode.glyphs.Area.coordsA.description",
       "DefaultValue": 2,
-      "Unique": true,
-      "Impact": {
-        "Type": "SphereVolume",
-        "DefaultMagnitude": 523.0,
-        "Exponent": 0.6667,
-        "Multiplier": 1.0
-      }
+      "Unique": true
+    },
+    "CoordsB": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Area.coordsB.name",
+      "Description": "hexcode.glyphs.Area.coordsB.description",
+      "DefaultValue": -2,
+      "Unique": true
+    },
+    "AreaShape": {
+      "Parent": "Boolean",
+      "DefaultValue": 0,
+      "Label": "hexcode.glyphs.Area.areaShape.name",
+      "Description": "hexcode.glyphs.Area.areaShape.description",
+      "NegativeLabel": "hexcode.glyphs.Area.areaShape.cube",
+      "NeutralLabel": "hexcode.glyphs.Area.areaShape.circle",
+      "PositiveLabel": "hexcode.glyphs.Area.areaShape.cylinder",
+      "NegativeDescription": "hexcode.glyphs.Area.areaShape.cube.description",
+      "NeutralDescription": "hexcode.glyphs.Area.areaShape.circle.description",
+      "PositiveDescription": "hexcode.glyphs.Area.areaShape.cylinder.description"
+    },
+    "BlocksPerSecond": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Area.blocksPerSecond.name",
+      "Description": "hexcode.glyphs.Area.blocksPerSecond.description",
+      "DefaultValue": 6,
+      "Unique": true
     },
     "Blocks": {
       "Type": "Next",
@@ -61,6 +83,14 @@
   },
   "Config": {
     "Type": "Area",
-    "ParticleMargin": 25.0
+    "MinAxisSize": 1.0,
+    "PerBlockPrice": 0.002,
+    "DisplayPriceMultiplier": 0.1,
+    "RatePriceImpact": {
+      "Type": "Linear",
+      "Slope": 0.125,
+      "Offset": 0.25,
+      "OutputMin": 0.25
+    }
   }
 }

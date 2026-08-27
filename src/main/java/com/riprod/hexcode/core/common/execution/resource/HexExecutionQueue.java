@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.common.execution.queue;
+package com.riprod.hexcode.core.common.execution.resource;
 
 import java.util.function.Predicate;
 
@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import com.hypixel.hytale.component.Resource;
 import com.hypixel.hytale.component.ResourceType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 

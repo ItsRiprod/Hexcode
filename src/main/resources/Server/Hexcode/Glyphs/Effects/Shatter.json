@@ -33,7 +33,7 @@
     }
   ],
   "Slots": {
-    "source": {
+    "Source": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.source.name",
@@ -47,7 +47,7 @@
       "Description": "hexcode.glyphs.Shatter.direction.description",
       "Unique": true
     },
-    "count": {
+    "Count": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.count.name",
@@ -55,7 +55,7 @@
       "DefaultValue": 5,
       "Unique": true
     },
-    "spread": {
+    "Spread": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.spread.name",
@@ -63,7 +63,7 @@
       "DefaultValue": 0.5236,
       "Unique": true
     },
-    "speed": {
+    "Speed": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.speed.name",
@@ -71,7 +71,7 @@
       "DefaultValue": 20,
       "Unique": true
     },
-    "gravity": {
+    "Gravity": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Shatter.gravity.name",

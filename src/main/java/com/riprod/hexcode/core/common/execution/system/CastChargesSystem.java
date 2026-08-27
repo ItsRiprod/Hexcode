@@ -1,4 +1,4 @@
-package com.riprod.hexcode.core.common.execution.precast;
+package com.riprod.hexcode.core.common.execution.system;
 
 import javax.annotation.Nonnull;
 
@@ -12,9 +12,10 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
-import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
+import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
+import com.riprod.hexcode.core.common.execution.root.PlayerHexRoot;
 
 public class CastChargesSystem extends WorldEventSystem<EntityStore, HexCastEvent.Pre> {
 
@@ -32,8 +33,8 @@ public class CastChargesSystem extends WorldEventSystem<EntityStore, HexCastEven
         if (!(context.getHexRoot() instanceof PlayerHexRoot playerRoot)) return;
         Ref<EntityStore> casterRef = playerRoot.getSourceRef(buffer);
         if (casterRef == null || !casterRef.isValid()) return;
-        HexCast tracker = context.cast();
-        if (tracker == null) return;
+        HexCast cast = context.cast();
+        if (cast == null) return;
 
         CasterStateComponent casterState = buffer.getComponent(casterRef,
                 CasterStateComponent.getComponentType());
@@ -42,26 +43,27 @@ public class CastChargesSystem extends WorldEventSystem<EntityStore, HexCastEven
             return;
         }
 
+        HexCastStore casts = store.getResource(HexCastStore.getResourceType());
         String slotKey = context.getCastSlotKey();
-        tracker.setSlotKey(slotKey);
+        cast.setSlotKey(slotKey);
 
         if (slotKey == null) {
-            if (context.isRequireMagicCharges()) {
+            if (context.policy().isRequireMagicCharges()) {
                 int max = (int) playerRoot.resolveMaxMagicCharges(buffer);
                 if (max <= 0) {
                     sendNoSlotsMessage(buffer, casterRef);
                     event.setCancelled(true);
                     return;
                 }
-                while (casterState.getActiveCount() >= max) {
-                    casterState.evictOldest();
+                while (casterState.getActiveCount(casts) >= max) {
+                    casterState.evictOldest(casts);
                 }
             }
         } else {
-            casterState.fizzleSlot(slotKey);
+            casterState.fizzleSlot(casts, slotKey);
         }
 
-        casterState.registerActiveTracker(tracker);
+        casterState.registerActiveCast(cast);
     }
 
     private static void sendNoSlotsMessage(CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {

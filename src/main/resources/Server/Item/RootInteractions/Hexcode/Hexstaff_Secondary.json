@@ -11,5 +11,6 @@
     "Interrupting": [
       "Primary"
     ]
-  }
+  },
+  "HudInputBindingEntry": "server.hexcode.interactions.hexstaff.secondary.description"
 }

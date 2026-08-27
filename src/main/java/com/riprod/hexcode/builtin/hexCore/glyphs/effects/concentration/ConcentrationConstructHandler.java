@@ -19,9 +19,9 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.HexRoot;
-import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.root.HexRoot;
+import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -90,7 +90,8 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
         ConcentrationState state = status.getState();
         HexContext ctx = status.getHexContext();
-        if (state == null || ctx == null || !ctx.isConsumeMana())
+        
+        if (state == null || ctx == null || !ctx.policy().isConsumeMana())
             return true;
 
         HexRoot root = ctx.getHexRoot();

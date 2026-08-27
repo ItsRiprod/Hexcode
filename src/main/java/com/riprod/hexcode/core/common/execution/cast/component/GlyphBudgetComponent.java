@@ -1,6 +1,9 @@
-package com.riprod.hexcode.core.common.execution.cast;
+package com.riprod.hexcode.core.common.execution.cast.component;
 
 import javax.annotation.Nonnull;
+
+import com.riprod.hexcode.core.common.execution.cast.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
 
 public final class GlyphBudgetComponent implements CastComponent {
 

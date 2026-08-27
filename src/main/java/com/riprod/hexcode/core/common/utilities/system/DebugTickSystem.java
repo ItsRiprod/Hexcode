@@ -10,6 +10,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import org.joml.Matrix4d;
+import org.joml.Quaterniond;
 import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -63,7 +64,7 @@ public class DebugTickSystem extends EntityTickingSystem<EntityStore> {
                             TransformComponent.getComponentType());
                     if (parentTransform != null) {
                         Vector3d parentPos = parentTransform.getPosition();
-                        Rotation3f offset = mount.getAttachmentOffset();
+                        var offset = mount.getAttachmentOffset();
                         pos = new Vector3d(
                                 parentPos.x + offset.x(),
                                 parentPos.y + offset.y(),
@@ -73,9 +74,14 @@ public class DebugTickSystem extends EntityTickingSystem<EntityStore> {
             }
 
             Vector3d scale = debug.getScale();
+            Rotation3f rotation = transform.getRotation();
             Matrix4d matrix = new Matrix4d();
             matrix.identity();
             matrix.translate(pos.x, pos.y, pos.z);
+            if (rotation.pitch() != 0f || rotation.yaw() != 0f || rotation.roll() != 0f) {
+                matrix.rotate(new Quaterniond().rotationYXZ(
+                        rotation.yaw(), rotation.pitch(), rotation.roll()));
+            }
             matrix.scale(scale.x, scale.y, scale.z);
 
             Ref<EntityStore> targetRef = debug.getTargetRef();

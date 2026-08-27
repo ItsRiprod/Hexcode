@@ -11,8 +11,8 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
-import com.riprod.hexcode.core.common.execution.component.HexColors;
-import com.riprod.hexcode.core.common.execution.component.HexConfigAsset;
+import com.riprod.hexcode.core.common.hexes.component.HexColors;
+import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 import javax.annotation.Nullable;

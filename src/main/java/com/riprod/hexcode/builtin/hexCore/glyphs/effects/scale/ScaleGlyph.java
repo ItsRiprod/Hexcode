@@ -11,6 +11,8 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
+import org.joml.Vector3f;
+
 import com.hypixel.hytale.protocol.MountController;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
@@ -25,7 +27,7 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.components.ScaleState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.style.ScaleStyle;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -226,7 +228,7 @@ public class ScaleGlyph implements GlyphHandler {
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
         holder.addComponent(MountedComponent.getComponentType(),
                 new MountedComponent(targetRef,
-                        new Rotation3f(0f, config.getMountOffsetY(), 0f),
+                        new Vector3f(0f, config.getMountOffsetY(), 0f),
                         MountController.Minecart));
 
         HexConstructSpawner.attachModel(holder, hexContext,

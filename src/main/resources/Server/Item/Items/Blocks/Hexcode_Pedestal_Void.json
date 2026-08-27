@@ -60,9 +60,6 @@
     "CustomModelAnimation": "Blocks/Hexcode/Pedestals/Animations/Pedestal_Void_Idle.blockyanim",
     "BlockParticleSetId": "Stone",
     "VariantRotation": "NESW",
-    "Flags": {
-      "IsUsable": true
-    },
     "Gathering": {
       "Breaking": {
         "GatherType": "SoftBlocks"

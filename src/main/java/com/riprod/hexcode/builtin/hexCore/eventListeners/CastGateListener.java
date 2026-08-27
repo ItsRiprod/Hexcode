@@ -18,10 +18,10 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.HexCastEvent;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
-import com.riprod.hexcode.core.common.execution.events.HexCastEventSystem;
-import com.riprod.hexcode.core.common.execution.gate.GateStateResource;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.root.PlayerHexRoot;
+import com.riprod.hexcode.core.common.execution.system.HexCastEventSystem;
+import com.riprod.hexcode.core.common.execution.resource.GateStateResource;
 
 public class CastGateListener extends WorldEventSystem<EntityStore, HexCastEvent> {
 

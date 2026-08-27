@@ -29,7 +29,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style.ShatterStyle;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -196,7 +196,7 @@ public class ShatterGlyph implements GlyphHandler {
                 new ShatterState(branched, glyph));
 
         Ref<EntityStore> shardRef = hexContext.getAccessor().addEntity(holder, AddReason.SPAWN);
-        hexContext.getHexRoot().addDependency(branched, shardRef);
+        branched.addDependency(shardRef);
     }
 
     private List<Vector3d> computeConeDirections(Vector3d center, int count, double spread) {

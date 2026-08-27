@@ -20,9 +20,6 @@
     "HitboxType": "Full",
     "BlockSoundSetId": "Stone",
     "BlockParticleSetId": "Stone",
-    "Flags": {
-      "IsUsable": true
-    },
     "State": {
       "Definitions": {
         "Idle": {

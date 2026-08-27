@@ -12,7 +12,7 @@
     "Antisquare"
   ],
   "Slots": {
-    "min": {
+    "Min": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Chaos.min.name",
@@ -20,7 +20,7 @@
       "DefaultValue": 0,
       "Unique": true
     },
-    "max": {
+    "Max": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Chaos.max.name",

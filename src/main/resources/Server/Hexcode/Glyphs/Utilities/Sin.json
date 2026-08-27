@@ -10,7 +10,7 @@
     { "Parent": "Less", "RelativeSize": 0.4, "StatContribution": 0 }
   ],
   "Slots": {
-    "a": {
+    "A": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Sin.a.name",

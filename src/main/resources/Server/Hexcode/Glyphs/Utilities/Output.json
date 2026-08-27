@@ -10,7 +10,7 @@
     { "Parent": "Antitriangle", "RelativeSize": 0.5, "StatContribution": 0 }
   ],
   "Slots": {
-    "color": {
+    "Color": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Output.color.name",

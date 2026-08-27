@@ -157,7 +157,7 @@ public class HexSpawner {
             childGlyph.setHexRef(droppedOnGlyph.getHexRef());
         }
 
-        MountedComponent mounted = new MountedComponent(droppedOnGlyph.getSelfRef(), new Rotation3f(),
+        MountedComponent mounted = new MountedComponent(droppedOnGlyph.getSelfRef(), new Vector3f(),
                 MountController.Minecart);
         accessor.putComponent(firstGlyphRef, MountedComponent.getComponentType(), mounted);
 

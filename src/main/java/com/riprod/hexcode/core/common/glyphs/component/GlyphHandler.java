@@ -7,9 +7,9 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
-import com.riprod.hexcode.core.common.execution.cast.ResourcePoolComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolComponent;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -45,7 +45,7 @@ public interface GlyphHandler {
 
         float volatilityCost = getVolatilityCost(glyph, hexContext, asset);
         float currentVolatility = cast.volatility().consume(volatilityCost);
-        if (!hexContext.isBypassVolatilityDepletion() && currentVolatility <= 0f) {
+        if (!hexContext.policy().isBypassVolatilityDepletion() && currentVolatility <= 0f) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.VOLATILITY_DEPLETED);
             return;
         }

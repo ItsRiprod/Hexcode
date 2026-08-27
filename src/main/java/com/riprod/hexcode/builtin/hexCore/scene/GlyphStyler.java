@@ -84,7 +84,7 @@ public class GlyphStyler {
         try {
 
             MountedComponent newMount = new MountedComponent(glyph.getParentRef(),
-                    new Rotation3f(newPosition.x, newPosition.y, newPosition.z),
+                    new Vector3f(newPosition.x, newPosition.y, newPosition.z),
                     MountController.Minecart);
             accessor.putComponent(glyph.getSelfRef(), MountedComponent.getComponentType(), newMount);
 

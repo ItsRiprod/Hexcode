@@ -23,8 +23,8 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation.utils.Rotati
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
-import com.riprod.hexcode.core.common.execution.cast.VolatilityComponent;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -115,7 +115,7 @@ public class RotationValue implements GlyphHandler {
             return;
         }
 
-        if (VelocityUtil.isProjectile(ref, accessor)) {
+        if (VelocityUtil.isPhysicsTicked(ref, accessor)) {
             applyToProjectile(ref, rotation, hexContext);
             return;
         }

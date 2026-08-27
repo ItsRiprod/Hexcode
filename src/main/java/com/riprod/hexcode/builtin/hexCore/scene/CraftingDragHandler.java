@@ -4,7 +4,6 @@ import com.hypixel.hytale.builtin.mounts.MountedComponent;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3f;
-import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.MountController;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
@@ -27,7 +26,7 @@ public class CraftingDragHandler {
         Ref<EntityStore> headAnchorRef = CreateGlyph.createHeadAnchor(accessor, playerRef, eyeHeight);
 
         accessor.putComponent(entityRef, MountedComponent.getComponentType(),
-                new MountedComponent(headAnchorRef, new Rotation3f(0, 0, -2f), MountController.Minecart));
+                new MountedComponent(headAnchorRef, new Vector3f(0, 0, -2f), MountController.Minecart));
 
         return headAnchorRef;
     }

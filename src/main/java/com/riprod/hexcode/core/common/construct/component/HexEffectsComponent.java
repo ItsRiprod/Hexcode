@@ -43,11 +43,6 @@ public class HexEffectsComponent implements Component<EntityStore> {
     @Nonnull
     @Override
     public HexEffectsComponent clone() {
-        HexEffectsComponent copy = new HexEffectsComponent();
-        copy.activeEffects = new HashMap<>();
-        for (Map.Entry<UUID, HexStatus<?>> e : this.activeEffects.entrySet()) {
-            copy.activeEffects.put(e.getKey(), e.getValue().clone());
-        }
-        return copy;
+        return new HexEffectsComponent();
     }
 }

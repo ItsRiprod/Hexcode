@@ -14,9 +14,9 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
-import com.riprod.hexcode.api.event.HexCastEvent;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
-import com.riprod.hexcode.core.common.execution.component.PlayerHexRoot;
+import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.root.PlayerHexRoot;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
 
@@ -51,8 +51,10 @@ public class HexCastCommand extends AbstractPlayerCommand {
         var playerHexRoot = new PlayerHexRoot(playerEntityRef, store);
 
         var castCtx = new HexContext(hex, 0, playerHexRoot, null, hexStats);
+        castCtx.policy().setRequireMagicCharges(false);
+        castCtx.policy().setConsumeMana(false);
 
-        store.invoke(new HexCastEvent(castCtx));
+        HexExecuter.cast(castCtx, store);
 
         playerRef.sendMessage(Message.raw("cast hex: " + name));
     }

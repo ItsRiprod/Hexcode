@@ -31,7 +31,7 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -191,7 +191,7 @@ public class ProjectileGlyph implements GlyphHandler {
 
         UUIDComponent uuidComp = holder.getComponent(UUIDComponent.getComponentType());
         if (uuidComp != null) {
-            hexContext.getHexRoot().addDependency(hexContext, projectileRef);
+            hexContext.addDependency(projectileRef);
             EntityVar projectileVar = new EntityVar(uuidComp.getUuid(), projectileRef);
             glyph.writeOutput(projectileVar, hexContext);
         }

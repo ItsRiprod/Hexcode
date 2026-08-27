@@ -80,6 +80,26 @@ public class PedestalEntity {
         return accessor.addEntity(holder, AddReason.SPAWN);
     }
 
+    @Nullable
+    public static Ref<EntityStore> ensureAnchor(CommandBuffer<EntityStore> accessor,
+            PedestalBlockComponent pedestal) {
+
+        Ref<EntityStore> anchorRef = pedestal.getAnchorRef();
+        if (anchorRef != null && anchorRef.isValid()) {
+            return anchorRef;
+        }
+
+        Vector3i blockPos = pedestal.getLocation();
+        if (blockPos == null) {
+            logger.atWarning().log("pedestal ensureAnchor: pedestal has no location");
+            return null;
+        }
+
+        Ref<EntityStore> spawned = spawnAnchorEntity(accessor, blockPos);
+        pedestal.setAnchorRef(spawned);
+        return spawned;
+    }
+
     public static Ref<EntityStore> spawnBookDisplay(CommandBuffer<EntityStore> accessor,
             PedestalBlockComponent pedestal,
             HexcodeSessionComponent session, Vector3d anchorPos, ItemStack stack, Ref<EntityStore> playerRef) {
@@ -100,9 +120,14 @@ public class PedestalEntity {
 
         var posOff = pedestal.getDisplayOffset();
 
-        holder.addComponent(MountedComponent.getComponentType(),
-                new MountedComponent(session.getAnchorRef(), new Rotation3f(posOff.x, posOff.y, posOff.z),
-                        MountController.Minecart));
+        Ref<EntityStore> anchorRef = session.getAnchorRef();
+        if (anchorRef != null) {
+            holder.addComponent(MountedComponent.getComponentType(),
+                    new MountedComponent(anchorRef, new Vector3f(posOff.x, posOff.y, posOff.z),
+                            MountController.Minecart));
+        } else {
+            logger.atWarning().log("pedestal spawnBookDisplay: no anchor, display will not be mounted");
+        }
 
         return accessor.addEntity(holder, AddReason.SPAWN);
     }

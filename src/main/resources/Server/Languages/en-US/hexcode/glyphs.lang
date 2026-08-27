@@ -472,15 +472,27 @@ Variable.Next.description=The next glyph in the execution chain
 # Selectors
 
 Area.name=Area
-Area.description=Selects a sphere around the caster
-Area.center.name=Center
-Area.center.description=Center point to gather around
-Area.radius.name=Radius
-Area.radius.description=Radius of the gathering area
+Area.description=Grows a volume that acts on what it reaches
+Area.anchor.name=Anchor
+Area.anchor.description=Origin the corners are measured from
+Area.coordsA.name=Corner A
+Area.coordsA.description=First corner of the area
+Area.coordsB.name=Corner B
+Area.coordsB.description=Second corner of the area
+Area.areaShape.name=Shape
+Area.areaShape.description=Shape the volume grows into
+Area.areaShape.cube=Cube
+Area.areaShape.cube.description=Fills the whole box
+Area.areaShape.circle=Circle
+Area.areaShape.circle.description=Rounded volume inside the box
+Area.areaShape.cylinder=Cylinder
+Area.areaShape.cylinder.description=Upright cylinder inside the box
+Area.blocksPerSecond.name=Blocks Per Second
+Area.blocksPerSecond.description=Growth speed. Faster costs more
 Area.Blocks.name=Blocks
-Area.Blocks.description=Executes once per non-empty block in the area
+Area.Blocks.description=Runs per block as it is reached
 Area.Next.name=Entities
-Area.Next.description=Executes once per entity in the area
+Area.Next.description=Runs per entity as it is reached
 
 Beam.name=Beam
 Beam.description=Raycasts from an entity in a direction, storing the first hit

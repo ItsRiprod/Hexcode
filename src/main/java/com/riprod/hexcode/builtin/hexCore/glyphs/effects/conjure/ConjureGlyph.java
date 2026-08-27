@@ -26,7 +26,6 @@ import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
-import com.hypixel.hytale.server.core.modules.projectile.ProjectileModule;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
@@ -34,7 +33,7 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.component.ConjureZoneComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.style.ConjureStyle;
-import com.riprod.hexcode.core.common.execution.component.HexContext;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -191,7 +190,6 @@ public class ConjureGlyph implements GlyphHandler {
                 (max.x - min.x) / 2,
                 (max.y - min.y) / 2,
                 (max.z - min.z) / 2);
-        Vector3d size = new Vector3d(max.x - min.x, max.y - min.y, max.z - min.z);
 
         float durationSeconds = HexVarUtil.numberOrSlotDefault(
                 durationVar, asset.getSlot(ConjureGlyphSlots.DURATION)).floatValue();
@@ -214,13 +212,13 @@ public class ConjureGlyph implements GlyphHandler {
                 hexContext.getAccessor(), hexContext, glyph, ConjureGlyph.ID, new Vector3d(center));
 
         holder.ensureComponent(PropComponent.getComponentType());
-        holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());
         float debugAlpha = VfxUtil.resolveAlpha(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
         if (debugAlpha > 0f) {
             Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext,
                     GlyphAsset.getAssetMap().getAsset(ID));
-            DebugComponent debugComp = new DebugComponent(DebugShape.Cube, debugColor, size, 0.1f);
+            DebugComponent debugComp = new DebugComponent(DebugShape.Cube, debugColor,
+                    zoneComp.getDebugSize(), 0.1f);
             debugComp.setOpacity(debugAlpha * 0.5f);
             debugComp.setIntervalMultiplier(0.01f);
             debugComp.setFlags(DebugUtils.FLAG_NO_WIREFRAME);
@@ -277,6 +275,6 @@ public class ConjureGlyph implements GlyphHandler {
         glyph.writeSelfOutput(zoneEntityVar, hexContext);
         glyph.writeOutput(zoneEntityVar, hexContext);
 
-        hexContext.getHexRoot().addDependency(hexContext, zoneRef);
+        hexContext.addDependency(zoneRef);
     }
 }
