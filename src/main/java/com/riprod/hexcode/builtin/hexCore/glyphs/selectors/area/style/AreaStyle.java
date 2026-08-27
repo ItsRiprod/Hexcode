@@ -1,11 +1,6 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.area.style;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.hypixel.hytale.component.ComponentAccessor;
-import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
@@ -28,12 +23,5 @@ public class AreaStyle {
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         VfxUtil.spawnPrimary(overrides, asset(), center, accessor);
-    }
-
-    public static void renderHit(Vector3d pos, HexContext ctx,
-            ComponentAccessor<EntityStore> accessor,
-            @Nullable List<Ref<EntityStore>> recipients) {
-        HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), pos, accessor, recipients);
     }
 }

@@ -31,6 +31,7 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -70,6 +71,7 @@ public class DelayGlyph implements GlyphHandler {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         HexVar incomingDefault = hexContext.getDefaultVariable();
+        HexVar positionalDefault = incomingDefault instanceof NumberVar ? null : incomingDefault;
         HexVar sourceVar = glyph.readSlot(DelayGlyphSlots.SOURCE, hexContext);
         if (sourceVar == null) {
             sourceVar = incomingDefault;
@@ -118,7 +120,7 @@ public class DelayGlyph implements GlyphHandler {
         switch (sourceVar) {
             case RotationVar r -> {
                 rot = HexVarUtil.rotation(r, accessor);
-                spawnPos = HexVarUtil.position(incomingDefault, accessor);
+                spawnPos = HexVarUtil.position(positionalDefault, accessor);
             }
             case PositionVar p -> {
                 spawnPos = HexVarUtil.position(p, accessor);
@@ -129,7 +131,7 @@ public class DelayGlyph implements GlyphHandler {
                 rot = HexVarUtil.rotation(b, accessor);
             }
             case null, default -> {
-                spawnPos = HexVarUtil.position(incomingDefault, accessor);
+                spawnPos = HexVarUtil.position(positionalDefault, accessor);
                 rot = HexVarUtil.rotation(incomingDefault, accessor);
             }
         }

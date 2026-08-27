@@ -1,6 +1,5 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.area;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -18,31 +17,18 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.area.style.AreaStyle;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.utils.BlockAccess;
-import com.riprod.hexcode.utils.VfxUtil;
 
 public class AreaConstructHandler implements ConstructHandler<AreaState> {
-
-    private static AreaConfig resolveConfig(HexStatus<AreaState> status) {
-        Glyph triggering = status.getTriggeringGlyph();
-        GlyphAsset asset = triggering != null
-                ? GlyphAsset.getAssetMap().getAsset(triggering.getGlyphId())
-                : null;
-        if (asset != null && asset.getConfig() instanceof AreaConfig areaConfig)
-            return areaConfig;
-        return AreaConfig.DEFAULTS;
-    }
 
     @Override
     public boolean onTick(float dt, HexStatus<AreaState> status, ConstructTickContext ctx) {
@@ -50,29 +36,23 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
         if (state == null)
             return true;
 
-        double newBlocks = state.advanceSweep(dt);
+        Vector3d halfPrevious = state.scaledExtents(state.getScale());
+        double newBlocks = state.advanceScale(dt);
+        Vector3d halfCurrent = state.scaledExtents(state.getScale());
+
         VolatilityComponent volatility = status.getHexContext().volatility();
         if (volatility != null && newBlocks > 0)
             volatility.consume((float) (newBlocks * state.getCostPerBlock()));
-
-        Vector3d halfPrevious = state.scaledExtents(state.getScale());
-        state.setScale(Math.cbrt(state.getSweptBlocks() / state.getTotalBlocks()));
-        Vector3d halfCurrent = state.scaledExtents(state.getScale());
 
         DebugComponent debug = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), DebugComponent.getComponentType());
         if (debug != null)
             debug.setScale(new Vector3d(halfCurrent.x * 2, halfCurrent.y * 2, halfCurrent.z * 2));
 
-        AreaConfig config = resolveConfig(status);
-        List<Vector3d> hits = new ArrayList<>();
-
         if (state.isEntitiesWired())
-            sweepEntities(state, status, ctx, halfCurrent, hits);
+            sweepEntities(state, status, ctx, halfCurrent);
         if (state.isBlocksWired())
-            sweepBlocks(state, status, ctx, halfPrevious, halfCurrent, hits);
-
-        renderHits(hits, state, status, ctx, halfCurrent, config);
+            sweepBlocks(state, status, ctx, halfPrevious, halfCurrent);
 
         if (state.isComplete())
             return true;
@@ -80,7 +60,7 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
     }
 
     private void sweepEntities(AreaState state, HexStatus<AreaState> status,
-            ConstructTickContext ctx, Vector3d half, List<Vector3d> hits) {
+            ConstructTickContext ctx, Vector3d half) {
         Glyph triggering = status.getTriggeringGlyph();
         if (triggering == null)
             return;
@@ -110,8 +90,6 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
             if (!state.markFired(uuid.getUuid()))
                 continue;
 
-            hits.add(new Vector3d(pos));
-
             HexContext branch = status.getHexContext().branch();
             branch.updateRuntimeAccessors(buffer);
             branch.enterLocalScope();
@@ -121,8 +99,7 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
     }
 
     private void sweepBlocks(AreaState state, HexStatus<AreaState> status,
-            ConstructTickContext ctx, Vector3d halfPrevious, Vector3d halfCurrent,
-            List<Vector3d> hits) {
+            ConstructTickContext ctx, Vector3d halfPrevious, Vector3d halfCurrent) {
         Glyph triggering = status.getTriggeringGlyph();
         if (triggering == null)
             return;
@@ -169,8 +146,6 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
                         if (cursor.blockId(bx, by, bz) == BlockType.EMPTY_ID)
                             continue;
 
-                        hits.add(new Vector3d(bx + 0.5, by + 0.5, bz + 0.5));
-
                         HexContext branch = status.getHexContext().branch();
                         branch.updateRuntimeAccessors(buffer);
                         branch.enterLocalScope();
@@ -180,17 +155,6 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
                 }
             }
         }
-    }
-
-    private void renderHits(List<Vector3d> hits, AreaState state, HexStatus<AreaState> status,
-            ConstructTickContext ctx, Vector3d half, AreaConfig config) {
-        if (hits.isEmpty())
-            return;
-        double reach = Math.max(half.x, Math.max(half.y, half.z)) + config.getParticleMargin();
-        List<Ref<EntityStore>> recipients = VfxUtil.collectParticleRecipients(
-                state.getCenter(), reach, ctx.getBuffer());
-        for (Vector3d hit : hits)
-            AreaStyle.renderHit(hit, status.getHexContext(), ctx.getBuffer(), recipients);
     }
 
     @Override

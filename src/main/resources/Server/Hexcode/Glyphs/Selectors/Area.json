@@ -6,9 +6,6 @@
       "SystemId": "Area_Pulse"
     },
     "PrimarySound": "SFX_Skeleton_Mage_Spellbook_Impact",
-    "SecondaryParticle": {
-      "SystemId": "Area_Hit"
-    },
     "PrimaryColor": "#4D99E6",
     "SecondaryColor": "#B3D9F2"
   },
@@ -64,7 +61,7 @@
       "Parent": "Input",
       "Label": "hexcode.glyphs.Area.blocksPerSecond.name",
       "Description": "hexcode.glyphs.Area.blocksPerSecond.description",
-      "DefaultValue": 200,
+      "DefaultValue": 6,
       "Unique": true
     },
     "Blocks": {
@@ -86,15 +83,14 @@
   },
   "Config": {
     "Type": "Area",
-    "ParticleMargin": 25.0,
     "MinAxisSize": 1.0,
     "PerBlockPrice": 0.002,
     "DisplayPriceMultiplier": 0.1,
     "RatePriceImpact": {
       "Type": "Linear",
-      "Slope": 0.004,
-      "Offset": 0.0,
-      "OutputMin": 1.0
+      "Slope": 0.125,
+      "Offset": 0.25,
+      "OutputMin": 0.25
     }
   }
 }

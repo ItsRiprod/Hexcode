@@ -12,16 +12,11 @@ public final class AreaConfig extends GlyphConfig {
 
     public static final AreaConfig DEFAULTS = new AreaConfig();
 
-    private double particleMargin = 25.0;
     private double minAxisSize = 1.0;
     private double perBlockPrice = 0.002;
     private double displayPriceMultiplier = 0.1;
     @Nullable
     private Impact ratePriceImpact;
-
-    public double getParticleMargin() {
-        return particleMargin;
-    }
 
     public double getMinAxisSize() {
         return minAxisSize;
@@ -42,9 +37,6 @@ public final class AreaConfig extends GlyphConfig {
 
     public static final BuilderCodec<AreaConfig> CODEC = BuilderCodec
             .builder(AreaConfig.class, AreaConfig::new, GlyphConfig.BASE_CODEC)
-            .append(new KeyedCodec<>("ParticleMargin", Codec.DOUBLE, true),
-                    (c, v) -> c.particleMargin = v, c -> c.particleMargin)
-            .add()
             .append(new KeyedCodec<>("MinAxisSize", Codec.DOUBLE, true),
                     (c, v) -> c.minAxisSize = v, c -> c.minAxisSize)
             .add()

@@ -16,12 +16,12 @@ public class AreaState implements ConstructState {
     private Vector3d halfExtents;
     private AreaShape shape;
     private double blocksPerSecond;
+    private double scaleRatePerSecond;
     private double totalBlocks;
     private float costPerBlock;
     private List<String> entityLinks;
     private List<String> blockLinks;
 
-    private double sweptBlocks;
     private double scale;
     private Set<UUID> firedEntities;
 
@@ -41,11 +41,12 @@ public class AreaState implements ConstructState {
         this.halfExtents = new Vector3d(halfExtents);
         this.shape = shape;
         this.blocksPerSecond = blocksPerSecond;
+        this.scaleRatePerSecond = blocksPerSecond
+                / Math.max(halfExtents.x, Math.max(halfExtents.y, halfExtents.z));
         this.totalBlocks = totalBlocks;
         this.costPerBlock = costPerBlock;
         this.entityLinks = new ArrayList<>(entityLinks);
         this.blockLinks = new ArrayList<>(blockLinks);
-        this.sweptBlocks = 0.0;
         this.scale = 0.0;
         this.firedEntities = new HashSet<>();
     }
@@ -94,26 +95,18 @@ public class AreaState implements ConstructState {
         return entityLinks.isEmpty() && blockLinks.isEmpty();
     }
 
-    public double getSweptBlocks() {
-        return sweptBlocks;
-    }
-
-    public double advanceSweep(float dt) {
-        double previous = sweptBlocks;
-        sweptBlocks = Math.min(totalBlocks, sweptBlocks + blocksPerSecond * dt);
-        return sweptBlocks - previous;
+    public double advanceScale(float dt) {
+        double previous = scale;
+        scale = Math.min(1.0, scale + scaleRatePerSecond * dt);
+        return totalBlocks * (scale * scale * scale - previous * previous * previous);
     }
 
     public boolean isComplete() {
-        return sweptBlocks >= totalBlocks;
+        return scale >= 1.0;
     }
 
     public double getScale() {
         return scale;
-    }
-
-    public void setScale(double scale) {
-        this.scale = scale;
     }
 
     public Vector3d scaledExtents(double at) {
@@ -128,7 +121,6 @@ public class AreaState implements ConstructState {
     public AreaState copy() {
         AreaState c = new AreaState(center, halfExtents, shape, blocksPerSecond,
                 totalBlocks, costPerBlock, entityLinks, blockLinks);
-        c.sweptBlocks = this.sweptBlocks;
         c.scale = this.scale;
         c.firedEntities = new HashSet<>(this.firedEntities);
         return c;
