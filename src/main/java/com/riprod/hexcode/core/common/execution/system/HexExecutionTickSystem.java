@@ -38,12 +38,6 @@ public class HexExecutionTickSystem extends TickingSystem<EntityStore> {
         casts.reclaimFinished();
 
         HexcodeConfig config = HexcodeConfig.get();
-        int lifetime = config.getMaxCastLifetimeTicks();
-        for (HexCast cast : casts.endExpired(lifetime)) {
-            LOGGER.atWarning().log(
-                    "spell %s outlived the %d tick limit with %d branch(es) still open; forced to end",
-                    cast.getExecutionId(), lifetime, cast.getActiveBranchCount());
-        }
 
         int cap = config.getMaxActiveCastsPerWorld();
         List<HexCast> overCap = casts.endOverCap(cap);

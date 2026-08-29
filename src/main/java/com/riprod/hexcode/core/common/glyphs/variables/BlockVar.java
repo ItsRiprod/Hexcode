@@ -61,7 +61,7 @@ public final class BlockVar extends HexVar {
             var world = accessor.getExternalData().getWorld();
             var chunkStore = world.getChunkStore();
 
-            var ref = chunkStore.getChunkSectionReference(position.x, position.y, position.z);
+            var ref = chunkStore.getChunkSectionReferenceAtBlock(position.x, position.y, position.z);
 
             if (ref == null || !ref.isValid()) {
                 return new RotationVar(new Rotation3f());

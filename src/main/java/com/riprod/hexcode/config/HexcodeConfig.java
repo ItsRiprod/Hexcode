@@ -50,14 +50,6 @@ public final class HexcodeConfig extends Config {
                     + "monopolise the world budget")
             .addValidator(Validators.min(1))
             .add()
-            .append(new KeyedCodec<>("MaxCastLifetimeTicks", Codec.INTEGER),
-                    (config, i) -> config.maxCastLifetimeTicks = i,
-                    config -> config.maxCastLifetimeTicks)
-            .documentation("Ticks a spell may stay live before it is force-ended and logged. A spell hitting "
-                    + "this limit means a branch or construct failed to release it, so the limit firing is "
-                    + "worth investigating rather than tuning up.")
-            .addValidator(Validators.min(1))
-            .add()
             .append(new KeyedCodec<>("MaxActiveCastsPerWorld", Codec.INTEGER),
                     (config, i) -> config.maxActiveCastsPerWorld = i,
                     config -> config.maxActiveCastsPerWorld)
@@ -109,10 +101,6 @@ public final class HexcodeConfig extends Config {
 
     public int getMaxGlyphsPerCast() {
         return maxGlyphsPerCast;
-    }
-
-    public int getMaxCastLifetimeTicks() {
-        return maxCastLifetimeTicks;
     }
 
     public int getMaxActiveCastsPerWorld() {

@@ -151,8 +151,11 @@ public class ErodeGlyph implements GlyphHandler {
             return;
         }
 
+        if (pos.y < ChunkUtil.MIN_Y || pos.y >= ChunkUtil.HEIGHT)
+            return;
+
         ChunkStore chunkStore = world.getChunkStore();
-        var chunkSection = chunkStore.getChunkSectionReference(pos.x, pos.y, pos.z);
+        var chunkSection = chunkStore.getChunkSectionReferenceAtBlock(pos.x, pos.y, pos.z);
         if (chunkSection == null || !chunkSection.isValid())
             return;
 
