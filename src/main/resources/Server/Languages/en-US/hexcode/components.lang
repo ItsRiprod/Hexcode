@@ -15,3 +15,7 @@ encode.armed=Encoding Capture Armed
 encode.armedDesc=The next drawn series becomes the Encoding
 encode.set=Encoding Set
 encode.setDesc=This Component is now encrypted
+encode.notOwner=Only the pedestal owner can set an Encoding
+
+paste.tooLarge=Component Too Large
+paste.tooLargeDesc=This Component is too big to paste

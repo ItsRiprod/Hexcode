@@ -379,14 +379,28 @@ public class CodecUtil {
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
+    static final int RAW_STRING_ESCAPE = 4095;
+    static final int RAW_STRING_MAX = 0xFFFFFF;
+
     static void writeRawString(BitWriter bw, String s) {
         byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
-        bw.writeVarInt(bytes.length);
+        if (bytes.length > RAW_STRING_MAX) {
+            throw new HexCodecException("raw string exceeds 24-bit cap: " + bytes.length);
+        }
+        if (bytes.length < RAW_STRING_ESCAPE) {
+            bw.writeVarInt(bytes.length);
+        } else {
+            bw.writeVarInt(RAW_STRING_ESCAPE);
+            bw.write(bytes.length, 24);
+        }
         for (byte b : bytes) bw.write(b & 0xFF, 8);
     }
 
     static String readRawString(BitReader br) {
         int len = br.readVarInt();
+        if (len == RAW_STRING_ESCAPE) {
+            len = br.read(24);
+        }
         byte[] bytes = new byte[len];
         for (int i = 0; i < len; i++) bytes[i] = (byte) br.read(8);
         return new String(bytes, StandardCharsets.UTF_8);

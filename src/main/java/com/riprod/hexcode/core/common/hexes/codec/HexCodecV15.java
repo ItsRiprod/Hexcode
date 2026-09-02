@@ -53,7 +53,7 @@ public class HexCodecV15 {
     static final int SECTION_ENCODING = 0x08;
     static final int SECTION_COMPONENT = 0x09;
 
-    private static final int MAX_SECTION_BYTES = 65536;
+    public static final int MAX_SECTION_BYTES = 65536;
 
     private static final int EXTRAS_KIND_ROTATION = 0x01;
 

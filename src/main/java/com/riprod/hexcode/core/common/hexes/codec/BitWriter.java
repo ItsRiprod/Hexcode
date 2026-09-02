@@ -29,6 +29,9 @@ public class BitWriter {
             write(0, 1);
             write(value - 8, 6);
         } else {
+            if (value > 4095) {
+                throw new HexCodecException("varint value exceeds 12-bit cap: " + value);
+            }
             write(1, 1);
             write(1, 1);
             write(value, 12);
