@@ -66,7 +66,7 @@ public final class ItemEquippedArmorCastDispatcher implements CastRootDispatcher
             Hex hex, ImbuementData data, ImbuementProfileAsset profile) {
         PlayerHexRoot hexRoot = new PlayerHexRoot(player, buffer);
         float volatilityMax = ItemStatExtractor.extractVolatility(stack);
-        float baseMana = SpellMana.computeTotalMana(hex);
+        float baseMana = SpellMana.computeTotalMana(hex, buffer);
         float resolvedPower = 1.0f + ItemStatExtractor.extractPower(stack);
         HexCast tracker = new HexCast();
         tracker.volatility().init(volatilityMax, 1.0f, resolvedPower);

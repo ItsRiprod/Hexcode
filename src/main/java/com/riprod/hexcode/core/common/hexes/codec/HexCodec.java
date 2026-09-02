@@ -1,5 +1,6 @@
 package com.riprod.hexcode.core.common.hexes.codec;
 
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 
@@ -9,6 +10,25 @@ public class HexCodec {
 
     public static String serialize(Hex hex) {
         return HexCodecV15.serialize(hex);
+    }
+
+    public static String canonicalizeSnapshot(String data) {
+        DecodeResult result = deserialize(data);
+        Hex hex = result.getHex();
+        if (hex == null || hex.getGlyphs().isEmpty()) {
+            throw new HexCodecException("snapshot decode produced no glyphs");
+        }
+        HexUtils.validate(hex);
+        if (hex.getGlyphs().isEmpty()) {
+            throw new HexCodecException("snapshot empty after validation");
+        }
+        for (var glyph : hex.getGlyphs()) {
+            glyph.getPosition().x = 0f;
+            glyph.getPosition().z = 0f;
+            glyph.setRotation(new Rotation3f());
+        }
+        HexUtils.rekeyCanonical(hex);
+        return HexCodecV15.serialize(hex, false);
     }
 
     @SuppressWarnings("deprecation")

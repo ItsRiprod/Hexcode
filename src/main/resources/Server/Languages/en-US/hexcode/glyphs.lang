@@ -804,6 +804,26 @@ Skull.target.description=???
 Skull.Next.name=???
 Skull.Next.description=???
 
+Component.name=Component
+Component.description=Spell Component
+
+Slot.name=Slot
+Slot.description=Marks a wireable port on a Component
+Slot.Mode.name=Mode
+Slot.Mode.description=Port style for this slot
+Slot.Mode.next.name=Next Port
+Slot.Mode.next.description=Fires outward when reached
+Slot.Mode.trilean.name=Trilean Port
+Slot.Mode.trilean.description=Three-way toggle set by the user
+Slot.Mode.input.name=Input Port
+Slot.Mode.input.description=Reads the wired value
+Slot.Default.name=Default
+Slot.Default.description=Fallback when the port is unwired
+Slot.Next.name=Next
+Slot.Next.description=The next glyph in the execution chain
+Slot.Name.name=Name
+Slot.Name.description=Click to name this port
+
 Swap.name=Swap
 Swap.description=Exchanges positions between two variable arrays element-by-element
 Swap.a.name=A

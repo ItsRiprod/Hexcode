@@ -249,7 +249,7 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
     try {
       GlyphAsset glyphAsset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
       if (glyphAsset != null) {
-        displayName = Message.translation(glyphAsset.getTitle())
+        displayName = Message.translation(glyph.displayTitle(accessor))
             .color(GlyphStyleUtil.getQualityColor(glyph.getVolatility(), glyph.getEfficiency()));
         hoverComp.setHintText("description", Message.translation(glyphAsset.getDescription()));
         hoverComp.setHintText("extra", Message.raw("V " + Math.round(glyph.getVolatility() * 100.0) / 100.0

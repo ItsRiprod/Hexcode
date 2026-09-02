@@ -1,0 +1,7 @@
+{
+  "$Requires": "Riprod:Components",
+  "Categories": [
+    "Hexcode.Components",
+    "Items.Ingredients"
+  ]
+}

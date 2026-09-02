@@ -1,11 +1,15 @@
 package com.riprod.hexcode.command.hex;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,9 +25,15 @@ import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProv
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlot;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlotState;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.LinkSlot;
+import com.riprod.hexcode.builtin.hexCore.nodes.slot.NamedSlot;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.hexes.component.EncodingStroke;
 import com.riprod.hexcode.core.common.hexes.codec.DecodeIssue;
 import com.riprod.hexcode.core.common.hexes.codec.DecodeResult;
 import com.riprod.hexcode.core.common.hexes.codec.HexCodec;
@@ -85,6 +95,157 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
         } else {
             send(playerRef, "ROUNDTRIP OK (" + result.getHex().getGlyphs().size() + " glyphs)");
         }
+
+        componentWireTest(playerRef, active);
+        canonicalizeTest(playerRef, active);
+    }
+
+    private static void canonicalizeTest(PlayerRef playerRef, Hex active) {
+        var source = HexCodec.serialize(active);
+        String canon;
+        try {
+            canon = HexCodec.canonicalizeSnapshot(source);
+        } catch (Exception e) {
+            send(playerRef, "CANONICALIZE FAIL: " + e.getMessage());
+            return;
+        }
+        if (!canon.equals(HexCodec.canonicalizeSnapshot(source))) {
+            send(playerRef, "CANONICALIZE FAIL: not deterministic");
+            return;
+        }
+        if (!canon.equals(HexCodec.canonicalizeSnapshot(canon))) {
+            send(playerRef, "CANONICALIZE FAIL: not idempotent");
+            return;
+        }
+
+        var decoded = HexCodec.deserialize(canon).getHex();
+        if (decoded == null) {
+            send(playerRef, "CANONICALIZE FAIL: canonical string does not decode");
+            return;
+        }
+        var expectedY = new ArrayList<Float>();
+        for (Glyph g : active.getGlyphs()) expectedY.add(g.getPosition().y);
+        var actualY = new ArrayList<Float>();
+        for (Glyph g : decoded.getGlyphs()) {
+            Vector3f p = g.getPosition();
+            if (Math.abs(p.x) > POS_TOL || Math.abs(p.z) > POS_TOL) {
+                send(playerRef, "CANONICALIZE FAIL: x/z not stripped on " + g.getId());
+                return;
+            }
+            var r = g.getRotation();
+            if (Math.abs(r.x) > 0.03f || Math.abs(r.y) > 0.03f || Math.abs(r.z) > 0.03f) {
+                send(playerRef, "CANONICALIZE FAIL: rotation not stripped on " + g.getId());
+                return;
+            }
+            actualY.add(p.y);
+        }
+        expectedY.sort(Float::compare);
+        actualY.sort(Float::compare);
+        if (expectedY.size() != actualY.size()) {
+            send(playerRef, "CANONICALIZE FAIL: glyph count changed");
+            return;
+        }
+        for (int i = 0; i < expectedY.size(); i++) {
+            if (Math.abs(expectedY.get(i) - actualY.get(i)) > POS_TOL) {
+                send(playerRef, "CANONICALIZE FAIL: y heights not preserved");
+                return;
+            }
+        }
+        if (!Objects.equals(decoded.getDisplayName(), active.getDisplayName())) {
+            send(playerRef, "CANONICALIZE FAIL: display name lost");
+            return;
+        }
+        if (encodingDiff(active.getEncoding(), decoded.getEncoding()) != null) {
+            send(playerRef, "CANONICALIZE FAIL: encoding lost");
+            return;
+        }
+        send(playerRef, "CANONICALIZE OK (deterministic, idempotent, x/z+rotation stripped, y kept)");
+    }
+
+    private static void componentWireTest(PlayerRef playerRef, Hex active) {
+        var payloadA = HexCodec.serialize(active);
+        var variant = active.clone();
+        variant.setDisplayName("component-wire-b");
+        var payloadB = HexCodec.serialize(variant);
+        if (payloadA.equals(payloadB)) {
+            send(playerRef, "COMPONENT WIRE FAIL: variant payload not byte-distinct");
+            return;
+        }
+
+        var carrier = GlyphAsset.getAssetMap().getAsset(active.getGlyphs().get(0).getGlyphId());
+        if (carrier == null) {
+            send(playerRef, "COMPONENT WIRE SKIP: carrier asset unresolved");
+            return;
+        }
+
+        var host = new Hex();
+        var instances = new ArrayList<Glyph>(3);
+        for (int i = 0; i < 3; i++) {
+            var instance = new Glyph(carrier, 0.9f, 0.8f);
+            instance.setPayload(i < 2 ? payloadA : payloadB);
+            instance.setPosition(new Vector3f(0, i, 0));
+            host.put(instance.getId(), instance);
+            instances.add(instance);
+        }
+        host.setFirstGlyphId(instances.get(0).getId());
+        for (int i = 0; i < 3; i++) {
+            var port = new LinkSlot();
+            port.addLink(instances.get((i + 1) % 3).getId());
+            instances.get(i).getSlots().put("Port_In", port);
+            var toggle = new BooleanSlot();
+            toggle.setState(BooleanSlotState.POSITIVE);
+            instances.get(i).getSlots().put("Toggle", toggle);
+            var label = new NamedSlot();
+            label.setValue("Port_" + i);
+            instances.get(i).getSlots().put("Label", label);
+        }
+
+        var result = HexCodec.deserialize(HexCodec.serialize(host));
+        if (result.getHex() == null) {
+            send(playerRef, "COMPONENT WIRE FAIL: decode returned null");
+            return;
+        }
+
+        var reference = new BooleanSlot();
+        reference.setState(BooleanSlotState.POSITIVE);
+        byte[] expectedState = reference.encodeState();
+
+        var payloads = new ArrayList<String>();
+        var labelStates = new HashSet<String>();
+        for (Glyph g : result.getHex().getGlyphs()) {
+            payloads.add(g.getPayload());
+            var portIn = g.getSlot("Port_In");
+            if (portIn == null || portIn.getLinks().length != 1) {
+                send(playerRef, "COMPONENT WIRE FAIL: dynamic Port_In dropped on " + g.getId());
+                return;
+            }
+            var toggle = g.getSlot("Toggle");
+            if (toggle == null || !Arrays.equals(toggle.encodeState(), expectedState)) {
+                send(playerRef, "COMPONENT WIRE FAIL: Toggle state lost on " + g.getId());
+                return;
+            }
+            var label = g.getSlot("Label");
+            byte[] labelState = label == null ? null : label.encodeState();
+            if (labelState == null) {
+                send(playerRef, "COMPONENT WIRE FAIL: Label state lost on " + g.getId());
+                return;
+            }
+            labelStates.add(new String(labelState, StandardCharsets.UTF_8));
+        }
+        if (payloads.contains(null) || new HashSet<>(payloads).size() != 2) {
+            send(playerRef, "COMPONENT WIRE FAIL: payload dedup mapping broken: "
+                    + new HashSet<>(payloads).size() + " distinct");
+            return;
+        }
+        if (!new HashSet<>(payloads).equals(new HashSet<>(List.of(payloadA, payloadB)))) {
+            send(playerRef, "COMPONENT WIRE FAIL: payload bytes not verbatim");
+            return;
+        }
+        if (!labelStates.equals(new HashSet<>(List.of("Port_0", "Port_1", "Port_2")))) {
+            send(playerRef, "COMPONENT WIRE FAIL: Label slot states lost: " + labelStates);
+            return;
+        }
+        send(playerRef, "COMPONENT WIRE OK (dedup, verbatim payloads, dynamic ports, state, labels)");
     }
 
     @Nullable
@@ -92,6 +253,11 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
         if (a.getGlyphs().size() != b.getGlyphs().size()) {
             return "glyph count: " + a.getGlyphs().size() + " vs " + b.getGlyphs().size();
         }
+        if (!Objects.equals(a.getDisplayName(), b.getDisplayName())) {
+            return "displayName: " + a.getDisplayName() + " vs " + b.getDisplayName();
+        }
+        String encodingDiff = encodingDiff(a.getEncoding(), b.getEncoding());
+        if (encodingDiff != null) return encodingDiff;
 
         List<Glyph> aOrder = canonicalOrder(a);
         List<Glyph> bOrder = canonicalOrder(b);
@@ -119,6 +285,9 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
             }
             if (Math.abs(ga.getEfficiency() - gb.getEfficiency()) > SPEED_TOL) {
                 return "[" + i + "] Speed: " + ga.getEfficiency() + " vs " + gb.getEfficiency();
+            }
+            if (!Objects.equals(ga.getPayload(), gb.getPayload())) {
+                return "[" + i + "] Payload differs";
             }
             Vector3f pa = ga.getPosition();
             Vector3f pb = gb.getPosition();
@@ -154,6 +323,24 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
                                 + la + " vs " + lb;
                     }
                 }
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private static String encodingDiff(@Nullable List<EncodingStroke> a, @Nullable List<EncodingStroke> b) {
+        int sizeA = a != null ? a.size() : 0;
+        int sizeB = b != null ? b.size() : 0;
+        if (sizeA != sizeB) return "encoding stroke count: " + sizeA + " vs " + sizeB;
+        for (int i = 0; i < sizeA; i++) {
+            EncodingStroke sa = a.get(i);
+            EncodingStroke sb = b.get(i);
+            if (!Objects.equals(sa.getShapeId(), sb.getShapeId())) {
+                return "encoding[" + i + "] shape: " + sa.getShapeId() + " vs " + sb.getShapeId();
+            }
+            if (Math.abs(sa.getRelativeSize() - sb.getRelativeSize()) > ACC_TOL) {
+                return "encoding[" + i + "] size: " + sa.getRelativeSize() + " vs " + sb.getRelativeSize();
             }
         }
         return null;

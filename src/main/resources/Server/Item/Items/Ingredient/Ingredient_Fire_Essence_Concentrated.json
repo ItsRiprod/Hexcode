@@ -41,6 +41,7 @@
     ],
     "BenchRequirement": [
       {
+        "Type": "Crafting",
         "Id": "Arcanebench",
         "Categories": [
           "Arcane_Misc"

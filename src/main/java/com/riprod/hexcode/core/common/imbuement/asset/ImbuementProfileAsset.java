@@ -27,6 +27,7 @@ import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
+import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerKeyValidator;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 
 import javax.annotation.Nullable;
@@ -47,6 +48,7 @@ public abstract class ImbuementProfileAsset
     @Nullable
     protected ItemArmorSlot armorSlot;
     protected String[] excludedCategories = new String[0];
+    protected String[] enabledObelisks = new String[0];
     @Nullable
     protected String defaultsId;
     @Nullable
@@ -80,6 +82,13 @@ public abstract class ImbuementProfileAsset
 
     public String[] getExcludedCategories() {
         return excludedCategories;
+    }
+
+    public boolean allowsObelisk(String handlerId) {
+        for (String enabled : enabledObelisks) {
+            if (enabled.equals(handlerId)) return true;
+        }
+        return false;
     }
 
     @Nullable
@@ -173,6 +182,15 @@ public abstract class ImbuementProfileAsset
                 .metadata(new UIEditor(new UIEditor.Dropdown("ItemCategories")))
                 .addValidatorLate(() -> new ArrayValidator<>(ItemCategory.VALIDATOR_CACHE.getValidator().late()).late())
                 .documentation("Optional. If any of an item's Categories matches an entry in this list, the profile rejects the item.")
+                .add()
+                .appendInherited(new KeyedCodec<>("EnabledObelisks",
+                        new ArrayCodec<>(Codec.STRING, String[]::new)),
+                        (a, v) -> { if (v != null) a.enabledObelisks = v; },
+                        a -> a.enabledObelisks,
+                        (a, p) -> a.enabledObelisks = p.enabledObelisks)
+                .metadata(new UIEditor(new UIEditor.Dropdown("HexcodeObeliskHandlers")))
+                .addValidatorLate(() -> new ArrayValidator<>(ObeliskHandlerKeyValidator.INSTANCE.late()).late())
+                .documentation("Optional. Restricted obelisk handler ids this profile may bind; universal obelisks always bind.")
                 .add()
                 .appendInherited(new KeyedCodec<>("Defaults", HexConfigAsset.CHILD_ASSET_CODEC),
                         (a, v) -> a.defaultsId = v,

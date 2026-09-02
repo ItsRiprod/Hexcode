@@ -1,6 +1,7 @@
 {
   "Parent": "Glyph_Template",
   "Handler": "Output",
+  "IsDeprecated": true,
   "Title": "hexcode.glyphs.Output.name",
   "Description": "hexcode.glyphs.Output.description",
   "BasePower": 0,

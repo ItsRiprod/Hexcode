@@ -10,6 +10,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.lookup.CodecMapCodec;
 import com.hypixel.hytale.codec.lookup.Priority;
+import com.hypixel.hytale.server.core.Message;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.DebugShape;
 import com.riprod.hexcode.core.common.hexes.component.HexColors;
@@ -30,6 +31,7 @@ public abstract class Slot {
     protected transient String key;
     protected transient String label;
     protected transient String description;
+    protected transient String rawDisplayName;
     protected transient Vector3f color;
     protected transient Vector3f offset;
     protected transient DebugShape shape;
@@ -76,6 +78,12 @@ public abstract class Slot {
         this.links = new String[0];
     }
 
+    public void replaceLink(String oldId, String newId) {
+        for (int i = 0; i < this.links.length; i++) {
+            if (this.links[i].equals(oldId)) this.links[i] = newId;
+        }
+    }
+
     @Nullable
     public String getFirstLink() {
         return this.links.length > 0 ? this.links[0] : null;
@@ -109,6 +117,16 @@ public abstract class Slot {
 
     public String displayLabel() {
         return this.label;
+    }
+
+    public void setRawDisplayName(@Nullable String rawDisplayName) {
+        this.rawDisplayName = rawDisplayName;
+    }
+
+    public Message displayMessage() {
+        return this.rawDisplayName != null
+                ? Message.raw(this.rawDisplayName)
+                : Message.translation(displayLabel());
     }
 
     public String displayDescription() {
@@ -145,6 +163,7 @@ public abstract class Slot {
         copy.key = this.key;
         copy.label = this.label;
         copy.description = this.description;
+        copy.rawDisplayName = this.rawDisplayName;
         copy.color = this.color;
         copy.offset = this.offset;
         copy.shape = this.shape;

@@ -1,0 +1,14 @@
+{
+  "$Requires": "Riprod:Components",
+  "PedestalType": "Component",
+  "CategoryId": "Hexcode.Components",
+  "EnabledObelisks": [
+    "encryption"
+  ],
+  "Slots": {
+    "Default": {
+      "Label": "hexcode.components.slot.label",
+      "Description": "hexcode.components.slot.description"
+    }
+  }
+}

@@ -11,6 +11,10 @@ import org.joml.Vector3i;
 
 public interface ObeliskInterface {
 
+    default boolean isUniversal() {
+        return true;
+    }
+
     default void onStateChange(CommandBuffer<EntityStore> buffer, ObeliskBlockComponent obelisk,
             Vector3i obeliskPos, PedestalState previousState, PedestalState newState) {}
 

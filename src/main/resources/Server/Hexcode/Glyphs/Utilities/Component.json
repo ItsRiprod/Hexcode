@@ -1,0 +1,11 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Component",
+  "Title": "hexcode.glyphs.Component.name",
+  "Description": "hexcode.glyphs.Component.description",
+  "BasePower": 0,
+  "ManaConsumption": 0,
+  "Volatility": {
+    "InstantCost": 0,
+    "DrainPerSecond": 0.0}
+}

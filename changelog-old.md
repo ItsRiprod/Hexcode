@@ -1,3 +1,8 @@
+# v0.10.1
+
+- fix: Erode actually breaks blocks again
+- fix: Arbitrary spell duration limit removed
+
 # v0.10.0
 - feat: Updated to Hytale Update 6
 - feat: Conjure can be rotated!

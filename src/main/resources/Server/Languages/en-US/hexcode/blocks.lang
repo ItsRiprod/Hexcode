@@ -20,6 +20,9 @@ Hexcode_Obelisk_Seeker.description=<color is="#aaaaaa">Place near a pedestal to 
 Hexcode_Obelisk_Seeker.hint=Press [{key}] to name this Hex
 Hexcode_Obelisk_Ice.name=Ice Obelisk
 Hexcode_Obelisk_Ice.description=<color is="#aaaaaa">Place near a pedestal to augment crafting.\n\nIncreases max <b>efficiency</b> at the cost of volatility.\nDraw more precisely -- but with less room to work.</color>
+Hexcode_Obelisk_Encryption.name=Encryption Obelisk
+Hexcode_Obelisk_Encryption.description=<color is="#aaaaaa">Place near a pedestal to augment crafting.\n\nRequired to <b>encode</b> a Component and to open\nan encoded essence.\n\nWhile crafting a Component, interact to make the\nnext drawn series its <b>Encoding</b>.</color>
+Hexcode_Obelisk_Encryption.hint=Press [{key}] to set this Component's Encoding
 Hexcode_Obelisk_Import_Export.name=Import/Export Obelisk
 Hexcode_Obelisk_Template.name=[Developer Item] Template Obelisk
 Hexcode_Obelisk_Template.description=<color is="#e7bd00">Creative-Only item</color>\nFunctionally the same as the Seeker Obelisk.\nOnly obtainable in Creative

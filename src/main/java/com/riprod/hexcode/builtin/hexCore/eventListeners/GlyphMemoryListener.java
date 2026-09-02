@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
 import com.riprod.hexcode.api.event.GlyphDrawnEvent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.memories.GlyphMemory;
 
 public class GlyphMemoryListener implements Consumer<GlyphDrawnEvent> {
@@ -28,6 +29,12 @@ public class GlyphMemoryListener implements Consumer<GlyphDrawnEvent> {
 
         Glyph glyph = event.getGlyph();
         if (glyph == null || glyph.getGlyphId() == null) return;
+
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        if (asset == null || asset.getTitle() == null
+                || asset.getShapes() == null || asset.getShapes().isEmpty()) {
+            return;
+        }
 
         Store<EntityStore> store = playerRef.getStore();
         PlayerMemories playerMemories = store.getComponent(playerRef, PlayerMemories.getComponentType());

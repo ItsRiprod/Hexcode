@@ -105,7 +105,10 @@ public class PedestalContextHandler implements Consumer<PedestalInteractEvent> {
                     CraftingState.CONTEXT_ID, SelectingState.CONTEXT_ID, SelectingState.PRIORITY);
         } else if (state == PedestalState.SELECTING) {
             VfxUtil.sound("SFX_Deployable_Totem_Heal_Despawn", new Vector3d(loc.x, loc.y, loc.z), buffer);
-            ContextTransitionService.exit(buffer, playerRef, SelectingState.CONTEXT_ID);
+            String stageContext = profile != null && profile.getEntryContextId() != null
+                    ? profile.getEntryContextId()
+                    : SelectingState.CONTEXT_ID;
+            ContextTransitionService.exit(buffer, playerRef, stageContext);
         } else {
             VfxUtil.sound("SFX_Arcane_Workbench_Open_Local", new Vector3d(loc.x, loc.y, loc.z), buffer);
             HexcasterCraftingComponent craftingComp = buffer.ensureAndGetComponent(playerRef,
@@ -126,7 +129,12 @@ public class PedestalContextHandler implements Consumer<PedestalInteractEvent> {
 
         boolean isParticipant = session.isParticipant(playerRef);
         PedestalState state = session.getState();
-        boolean joinable = state == PedestalState.CRAFTING || state == PedestalState.SELECTING;
+        ImbuementProfileAsset profile = session.getProfile();
+        boolean ownerStillEntering = state == PedestalState.SELECTING
+                && profile != null && profile.getEntryContextId() != null
+                && session.getActiveContainerRef() == null;
+        boolean joinable = !ownerStillEntering
+                && (state == PedestalState.CRAFTING || state == PedestalState.SELECTING);
 
         if (!isParticipant) {
             if (!session.isOpen()) {

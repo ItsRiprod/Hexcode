@@ -1,11 +1,13 @@
 package com.riprod.hexcode.core.common.pedestal.session;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,6 +16,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.EnumCodec;
+import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.ComponentType;
@@ -31,6 +34,7 @@ import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
+import com.riprod.hexcode.core.common.obelisk.ObeliskSessionState;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
 import com.riprod.hexcode.core.common.pedestal.constants.CraftingColors;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
@@ -93,6 +97,7 @@ public class HexcodeSessionComponent implements Component<EntityStore> {
     private Hex pendingImportHex = null;
     private ItemStack pendingExportPage = null;
     private String pendingReenterSlotKey = null;
+    private transient Map<String, ObeliskSessionState> obeliskState = new HashMap<>();
 
     public HexcodeSessionComponent() {
     }
@@ -314,6 +319,23 @@ public class HexcodeSessionComponent implements Component<EntityStore> {
         this.pendingReenterSlotKey = slotKey;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends ObeliskSessionState> T obeliskState(String handlerId, Supplier<T> factory) {
+        return (T) obeliskState.computeIfAbsent(handlerId, k -> factory.get());
+    }
+
+    @Nullable
+    public ObeliskSessionState peekObeliskState(String handlerId) {
+        return obeliskState.get(handlerId);
+    }
+
+    public void teardownObeliskState(CommandBuffer<EntityStore> buffer) {
+        for (ObeliskSessionState state : obeliskState.values()) {
+            state.onTeardown(buffer);
+        }
+        obeliskState.clear();
+    }
+
     public List<Ref<EntityStore>> getAllRefs() {
         List<Ref<EntityStore>> all = new ArrayList<>();
         if (imbuedItemDisplayRef != null && imbuedItemDisplayRef.isValid()) all.add(imbuedItemDisplayRef);
@@ -348,6 +370,7 @@ public class HexcodeSessionComponent implements Component<EntityStore> {
         copy.pendingImportHex = this.pendingImportHex;
         copy.pendingExportPage = this.pendingExportPage;
         copy.pendingReenterSlotKey = this.pendingReenterSlotKey;
+        copy.obeliskState = new HashMap<>(this.obeliskState);
         return copy;
     }
 }

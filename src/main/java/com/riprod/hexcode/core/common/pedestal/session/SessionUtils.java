@@ -206,6 +206,7 @@ public class SessionUtils {
         }
         participants.clear();
 
+        session.teardownObeliskState(buffer);
         despawnPreviewScene(buffer, session);
 
         Ref<EntityStore> anchorNodeRef = session.getAnchorNodeRef();

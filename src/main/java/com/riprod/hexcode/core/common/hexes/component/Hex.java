@@ -9,6 +9,7 @@ import java.util.UUID;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -19,6 +20,7 @@ public class Hex {
     private String hexId;
     private String firstGlyphId;
     private String displayName;
+    private List<EncodingStroke> encoding;
 
     public Hex() {
         this.hexGraph = new HashMap<>();
@@ -46,6 +48,7 @@ public class Hex {
         this.hexId = other.hexId;
         this.firstGlyphId = other.firstGlyphId;
         this.displayName = other.displayName;
+        this.encoding = copyEncoding(other.encoding);
     }
 
     public void absorb(Hex other, String insertLocation) {
@@ -121,6 +124,21 @@ public class Hex {
         this.displayName = displayName;
     }
 
+    public List<EncodingStroke> getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(List<EncodingStroke> encoding) {
+        this.encoding = encoding != null && encoding.isEmpty() ? null : encoding;
+    }
+
+    private static List<EncodingStroke> copyEncoding(List<EncodingStroke> source) {
+        if (source == null || source.isEmpty()) return null;
+        List<EncodingStroke> copy = new ArrayList<>(source.size());
+        for (EncodingStroke stroke : source) copy.add(stroke.copy());
+        return copy;
+    }
+
     public static final BuilderCodec<Hex> CODEC = BuilderCodec
             .builder(Hex.class, Hex::new)
             .append(new KeyedCodec<>("HexGraph", new MapCodec<>(Glyph.CODEC, HashMap::new, false)),
@@ -139,6 +157,11 @@ public class Hex {
                     (c, v) -> c.displayName = v,
                     c -> c.displayName)
             .add()
+            .append(new KeyedCodec<>("Encoding", new ArrayCodec<>(EncodingStroke.CODEC, EncodingStroke[]::new)),
+                    (c, v) -> c.encoding = v != null && v.length > 0 ? new ArrayList<>(List.of(v)) : null,
+                    c -> c.encoding != null && !c.encoding.isEmpty()
+                            ? c.encoding.toArray(EncodingStroke[]::new) : null)
+            .add()
             .build();
 
     public Hex clone() {
@@ -149,12 +172,13 @@ public class Hex {
         newHex.setFirstGlyphId(this.firstGlyphId);
         newHex.set(this.hexId);
         newHex.setDisplayName(this.displayName);
+        newHex.encoding = copyEncoding(this.encoding);
         return newHex;
     }
 
     @Override
     public String toString() {
         return "Hex{id=" + hexId + ", displayName=" + displayName + ", firstGlyphId=" + firstGlyphId
-                + ", glyphs=" + hexGraph.values() + "}";
+                + ", encoded=" + (encoding != null) + ", glyphs=" + hexGraph.values() + "}";
     }
 }

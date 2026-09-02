@@ -14,6 +14,7 @@ import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.hexes.component.EncodingStroke;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 public final class GlyphModelUtil {
@@ -94,6 +95,29 @@ public final class GlyphModelUtil {
         for (ShapeAsset shape : shapes) {
             String texture = shape.getTexture();
             String model = resolveRung(shape.getModel(), rung(shape.getRelativeSize()));
+            if (model == null || texture == null) {
+                continue;
+            }
+            attachments.add(new ModelAttachment(model, texture, null, null, 1.0));
+        }
+
+        return attachments.isEmpty() ? EMPTY : attachments.toArray(ModelAttachment[]::new);
+    }
+
+    @Nonnull
+    public static ModelAttachment[] deriveFromStrokes(@Nullable List<EncodingStroke> strokes) {
+        if (strokes == null || strokes.isEmpty()) {
+            return EMPTY;
+        }
+
+        List<ModelAttachment> attachments = new ArrayList<>(strokes.size());
+        for (EncodingStroke stroke : strokes) {
+            ShapeAsset shape = ShapeAsset.getAssetMap().getAsset(stroke.getShapeId());
+            if (shape == null) {
+                continue;
+            }
+            String texture = shape.getTexture();
+            String model = resolveRung(shape.getModel(), rung(stroke.getRelativeSize()));
             if (model == null || texture == null) {
                 continue;
             }

@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -16,12 +17,17 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import org.joml.Vector3f;
 import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
+import com.riprod.hexcode.core.common.hexes.codec.HexCacheResource;
+import com.riprod.hexcode.core.common.hexes.component.Hex;
+import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 
 public class Glyph {
     public static final String NEXT_SLOT = "Next";
@@ -36,6 +42,9 @@ public class Glyph {
     private Map<String, Slot> slots;
     private Vector3f relPosition;
     private Rotation3f relRotation;
+    private String payload;
+    private transient boolean boundaryOrigin;
+    private transient Hex payloadView;
 
     public Glyph() {
         this.glyphId = "";
@@ -119,6 +128,58 @@ public class Glyph {
         this.relRotation = rotation;
     }
 
+    @Nullable
+    public String getPayload() {
+        return payload;
+    }
+
+    public void setPayload(@Nullable String payload) {
+        this.payload = payload;
+        this.payloadView = null;
+    }
+
+    @Nullable
+    public Hex payloadView(@Nullable ComponentAccessor<EntityStore> accessor) {
+        if (payload == null) return null;
+        if (payloadView == null) {
+            try {
+                var cache = accessor != null
+                        ? accessor.getResource(HexCacheResource.getResourceType()) : null;
+                payloadView = cache != null ? cache.getOrDecode(payload) : HexUtils.deserialize(payload);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return payloadView;
+    }
+
+    public boolean isComponentInstance() {
+        return payload != null;
+    }
+
+    public String displayTitle(@Nullable ComponentAccessor<EntityStore> accessor) {
+        if (isComponentInstance()) {
+            Hex view = payloadView(accessor);
+            String name = view != null ? view.getDisplayName() : null;
+            if (name != null && !name.isBlank()) {
+                return name;
+            }
+        }
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
+        if (asset != null && asset.getTitle() != null) {
+            return asset.getTitle();
+        }
+        return glyphId;
+    }
+
+    public boolean isBoundaryOrigin() {
+        return boundaryOrigin;
+    }
+
+    public void setBoundaryOrigin(boolean boundaryOrigin) {
+        this.boundaryOrigin = boundaryOrigin;
+    }
+
     public Map<String, Slot> getSlots() {
         return slots;
     }
@@ -129,12 +190,27 @@ public class Glyph {
     }
 
     @Nullable
+    private static Function<Glyph, Map<String, SlotConfig>> portSchemaSynthesizer;
+
+    public static void registerPortSchemaSynthesizer(Function<Glyph, Map<String, SlotConfig>> synthesizer) {
+        portSchemaSynthesizer = synthesizer;
+    }
+
+    public Map<String, SlotConfig> effectiveSlots() {
+        if (isComponentInstance()) {
+            if (portSchemaSynthesizer == null) return Map.of();
+            Map<String, SlotConfig> synthesized = portSchemaSynthesizer.apply(this);
+            return synthesized != null ? synthesized : Map.of();
+        }
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(this.glyphId);
+        return asset != null ? asset.getSlots() : Map.of();
+    }
+
     public Slot getOrCreateSlot(String key) {
         Slot existing = slots.get(key);
         if (existing != null)
             return existing;
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(this.glyphId);
-        SlotConfig config = asset != null ? asset.getSlot(key) : null;
+        SlotConfig config = effectiveSlots().get(key);
         if (config == null)
             return null;
         Slot created = config.create();
@@ -257,16 +333,14 @@ public class Glyph {
     }
 
     public List<String> getFlowLinks() {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
-        if (asset == null)
+        if (!isComponentInstance() && GlyphAsset.getAssetMap().getAsset(glyphId) == null)
             return getNextLinks();
 
         LinkedHashSet<String> flowLinks = new LinkedHashSet<>();
-        for (String key : asset.getSlotKeys()) {
-            SlotConfig config = asset.getSlot(key);
-            if (config == null || !config.isFlow())
+        for (Map.Entry<String, SlotConfig> entry : effectiveSlots().entrySet()) {
+            if (!entry.getValue().isFlow())
                 continue;
-            Slot slot = slots.get(key);
+            Slot slot = slots.get(entry.getKey());
             if (slot == null)
                 continue;
             flowLinks.addAll(Arrays.asList(slot.getLinks()));
@@ -347,6 +421,9 @@ public class Glyph {
                         (c, v) -> c.relRotation = new Rotation3f(v[0], v[1], v[2]),
                         c -> new float[] { c.relRotation.x, c.relRotation.y, c.relRotation.z })
                 .add()
+                .append(new KeyedCodec<>("Payload", Codec.STRING),
+                        (c, v) -> c.payload = v, c -> c.payload)
+                .add()
                 .build();
     }
 
@@ -362,6 +439,8 @@ public class Glyph {
         }
         clone.relPosition = new Vector3f(this.relPosition.x, this.relPosition.y, this.relPosition.z);
         clone.relRotation = new Rotation3f(this.relRotation.x, this.relRotation.y, this.relRotation.z);
+        clone.payload = this.payload;
+        clone.boundaryOrigin = this.boundaryOrigin;
         return clone;
     }
 

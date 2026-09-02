@@ -14,6 +14,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HexExecuter {
     private HexExecuter() {
@@ -29,10 +30,22 @@ public class HexExecuter {
         cast(context, (ComponentAccessor<EntityStore>) buffer);
     }
 
+    private static final List<CastTransform> CAST_TRANSFORMS = new CopyOnWriteArrayList<>();
+
+    public static void registerCastTransform(CastTransform transform) {
+        CAST_TRANSFORMS.add(transform);
+    }
+
     public static void cast(HexContext context, ComponentAccessor<EntityStore> accessor) {
         if (context.getStyle() == null) context.setStyle(HexStyleAsset.empty());
 
         HexCast cast = context.cast();
+        if (cast != null && cast.getHex() != null) {
+            cast.setHex(cast.getHex().clone());
+            for (CastTransform transform : CAST_TRANSFORMS) {
+                transform.apply(context, accessor);
+            }
+        }
         HexCastStore casts = accessor.getResource(HexCastStore.getResourceType());
         if (cast != null) casts.register(cast);
 

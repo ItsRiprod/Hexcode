@@ -52,6 +52,13 @@
             "ServerVersion": "^0.6.0"
         },
         {
+            "Name": "Components",
+            "Main": "com.riprod.hexcode.builtin.components.ComponentsPlugin",
+            "DisabledByDefault": false,
+            "IncludesAssetPack": false,
+            "ServerVersion": "^0.6.0"
+        },
+        {
             "Name": "Statly",
             "Main": "com.riprod.hexcode.builtin.statly.StatlyPlugin",
             "DisabledByDefault": false,

@@ -40,12 +40,6 @@ public final class HexProtection {
     private HexProtection() {
     }
 
-    /**
-     * Event-free half of {@link #canModifyBlock}: the world-config gate only, with no
-     * Break/PlaceBlockEvent probe. For hot paths that already route through an engine pipeline
-     * which fires its own cancellable event (e.g. BlockHarvestUtils), so the block action is not
-     * announced twice.
-     */
     public static boolean isBlockActionAllowed(World world, BlockAction action) {
         if (!HexcodeConfig.get().respectsClaims()) {
             return true;

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.output.OutputGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.slot.SlotGlyph;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
@@ -17,7 +19,6 @@ import com.riprod.hexcode.utils.LogScopes;
 public final class ConstructSplicer {
 
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CAST);
-    private static final String OUTPUT_GLYPH_ID = "Output";
 
     public enum VariablePolicy { PREFER_TARGET, PREFER_CASTER }
     public enum ChainMode { APPEND_TAIL, REPLACE }
@@ -43,13 +44,13 @@ public final class ConstructSplicer {
 
         HexContext targetCtx = target.getHexContext();
         Hex targetHex = targetCtx.getHex();
-        Hex casterHex = caster.getHex();
+        Hex spliceSource = caster.getHex().clone();
 
-        int outputsRewired = rewireOutputs(casterHex, originalNext);
+        int outputsRewired = rewireOutputs(spliceSource, originalNext);
 
         int glyphsCopied = 0;
-        for (Glyph g : casterHex.getGlyphs()) {
-            targetHex.put(g.getId(), g.clone());
+        for (Glyph g : spliceSource.getGlyphs()) {
+            targetHex.put(g.getId(), g);
             glyphsCopied++;
         }
 
@@ -74,7 +75,7 @@ public final class ConstructSplicer {
     private static int rewireOutputs(Hex casterHex, List<String> originalNext) {
         int count = 0;
         for (Glyph g : casterHex.getGlyphs()) {
-            if (!OUTPUT_GLYPH_ID.equals(g.getGlyphId())) continue;
+            if (!isContinuationMarker(g)) continue;
             g.clearSlot(Glyph.NEXT_SLOT);
             for (String id : originalNext) {
                 g.addSlotLink(Glyph.NEXT_SLOT, id);
@@ -82,6 +83,13 @@ public final class ConstructSplicer {
             count++;
         }
         return count;
+    }
+
+    private static boolean isContinuationMarker(Glyph g) {
+        if (OutputGlyph.ID.equals(g.getGlyphId())) return true;
+        return !g.isBoundaryOrigin()
+                && SlotGlyph.isSlotGlyph(g)
+                && SlotGlyph.mode(g) == SlotGlyph.MODE_NEXT;
     }
 
     private static void mergeVariables(HexContext targetCtx,

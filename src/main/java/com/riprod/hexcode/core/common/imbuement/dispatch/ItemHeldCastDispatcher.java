@@ -46,7 +46,7 @@ public final class ItemHeldCastDispatcher implements CastRootDispatcher {
 
         PlayerHexRoot hexRoot = new PlayerHexRoot(player, buffer);
         float volatilityMax = ItemStatExtractor.extractVolatility(heldItem);
-        float baseMana = SpellMana.computeTotalMana(hex);
+        float baseMana = SpellMana.computeTotalMana(hex, buffer);
         float resolvedPower = 1.0f + ItemStatExtractor.extractPower(heldItem);
         HexCast tracker = new HexCast();
         tracker.volatility().init(volatilityMax, 1.0f, resolvedPower);

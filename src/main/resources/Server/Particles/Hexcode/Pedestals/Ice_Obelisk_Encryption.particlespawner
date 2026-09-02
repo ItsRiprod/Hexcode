@@ -1,0 +1,85 @@
+{
+  "RenderMode": "BlendAdd",
+  "EmitOffset": {
+    "X": {
+      "Min": -0.3,
+      "Max": 0.3
+    },
+    "Y": {
+      "Min": 0.5,
+      "Max": 1.5
+    },
+    "Z": {
+      "Min": -0.3,
+      "Max": 0.3
+    }
+  },
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": true,
+  "LightInfluence": 0,
+  "MaxConcurrentParticles": 50,
+  "ParticleLifeSpan": {
+    "Min": 2.4,
+    "Max": 3.2
+  },
+  "ParticleRotateWithSpawner": false,
+  "SpawnRate": {
+    "Min": 15,
+    "Max": 30
+  },
+  "Particle": {
+    "Texture": "Particles/Hexcode/Glyphs/glyph_2.png",
+    "FrameSize": {
+      "Width": 32,
+      "Height": 32
+    },
+    "ScaleRatioConstraint": "OneToOne",
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 0.05,
+            "Max": 0.09
+          },
+          "Y": {
+            "Min": 0.05,
+            "Max": 0.09
+          }
+        },
+        "Opacity": 0,
+        "Color": "#33efff"
+      },
+      "15": {
+        "Opacity": 1.0
+      },
+      "55": {
+        "Opacity": 0.9,
+        "Color": "#ff77aa"
+      },
+      "100": {
+        "Opacity": 0,
+        "Scale": {
+          "X": {
+            "Min": 0.02,
+            "Max": 0.02
+          },
+          "Y": {
+            "Min": 0.02,
+            "Max": 0.02
+          }
+        },
+        "Color": "#ffffff"
+      }
+    }
+  },
+  "InitialVelocity": {
+    "Pitch": {
+      "Min": 90,
+      "Max": 90
+    },
+    "Speed": {
+      "Min": 0.5,
+      "Max": 0.9
+    }
+  }
+}

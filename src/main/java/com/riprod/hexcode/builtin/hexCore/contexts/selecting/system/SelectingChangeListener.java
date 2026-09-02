@@ -80,9 +80,10 @@ public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexCo
 
         World world = buffer.getExternalData().getWorld();
         SelectingScene.spawnPreviews(buffer, player, pedestal, session);
-        PedestalSystem.registerObelisks(buffer, world, pedestal);
 
         ImbuementProfileAsset profile = session.getProfile();
+        PedestalSystem.registerObelisks(buffer, world, pedestal, profile);
+
         if (profile != null) {
             Map<String, PedestalSlot> slots = profile.resolveSlots(session.getStoredItem());
             if (profile.isSkipSelecting(session.getStoredItem()) && !slots.isEmpty()) {

@@ -1,0 +1,33 @@
+{
+  "$Requires": "Riprod:Components",
+  "$Import": "Ingredient_Fire_Essence_Concentrated",
+  "TranslationProperties": {
+    "Name": "hexcode.items.ingredient.essence.water_concentrated",
+    "Description": ""
+  },
+  "Icon": "Icons/ItemsGenerated/Ingredient_Water_Essence_Concentrated.png",
+  "Quality": "Rare",
+  "Light": {
+    "Color": "#103",
+    "Radius": 1
+  },
+  "Texture": "Resources/Ingredients/Essence_Textures/Water_Essence_Texture.png",
+  "Recipe": {
+    "Input": [
+      {
+        "ItemId": "Ingredient_Water_Essence",
+        "Quantity": 100
+      }
+    ],
+    "Output": [
+      {
+        "ItemId": "Ingredient_Water_Essence_Concentrated",
+        "Quantity": 1
+      }
+    ]
+  },
+  "Categories": [
+    "Hexcode.Components",
+    "Items.Ingredients"
+  ]
+}

@@ -27,9 +27,7 @@ public class GlyphDrawNotificationListener implements Consumer<GlyphDrawnEvent> 
         if (pr == null) return;
 
         GlyphAsset asset = event.getMatchedGlyphAsset();
-        Message name = asset != null && asset.getTitle() != null
-                ? Message.translation(asset.getTitle())
-                : Message.raw(glyph.getGlyphId());
+        Message name = Message.translation(glyph.displayTitle(store));
 
         String icon = asset != null ? asset.getIcon() : null;
         NotificationUtil.sendNotification(pr.getPacketHandler(), name, icon);

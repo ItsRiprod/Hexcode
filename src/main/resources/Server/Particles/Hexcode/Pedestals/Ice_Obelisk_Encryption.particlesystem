@@ -1,0 +1,9 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Ice_Obelisk_Encryption",
+      "StartDelay": 3
+    }
+  ],
+  "CullDistance": 50
+}

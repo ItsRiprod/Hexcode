@@ -24,8 +24,10 @@ import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.hexes.component.Hex;
 
 public class CreateGlyph {
   private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -86,7 +88,7 @@ public class CreateGlyph {
 
     Model model = withAttachments(
         Model.createScaledModel(modelAsset, glyph.getScale() * MERGED_HANDLER_SCALE_BUMP),
-        asset);
+        asset, glyph.getGlyph(), accessor);
 
     holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
 
@@ -111,13 +113,20 @@ public class CreateGlyph {
     return holder;
   }
 
-  private static Model withAttachments(Model scaled, GlyphAsset asset) {
+  private static Model withAttachments(Model scaled, GlyphAsset asset, Glyph data,
+      ComponentAccessor<EntityStore> accessor) {
     ModelAttachment[] existing = scaled.getAttachments();
     if (existing != null && existing.length > 0) {
       return scaled;
     }
 
-    ModelAttachment[] derived = GlyphModelUtil.resolveAttachments(asset, existing);
+    ModelAttachment[] derived;
+    if (data != null && data.isComponentInstance()) {
+      Hex view = data.payloadView(accessor);
+      derived = GlyphModelUtil.deriveFromStrokes(view != null ? view.getEncoding() : null);
+    } else {
+      derived = GlyphModelUtil.resolveAttachments(asset, existing);
+    }
     if (derived.length == 0) {
       return scaled;
     }

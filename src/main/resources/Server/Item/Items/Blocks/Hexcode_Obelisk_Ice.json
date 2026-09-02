@@ -54,6 +54,7 @@
         "Weight": 1
       }
     ],
+    "CustomModelAnimation": "Blocks/Hexcode/Obelisks/Animations/Obelisk_Ice_Dormant.blockyanim",
     "CustomModel": "Blocks/Hexcode/Obelisks/Ice_Obelisk.blockymodel",
     "Material": "Solid",
     "Opacity": "Transparent",
@@ -80,7 +81,8 @@
         "Idle": {
           "Light": {
             "Color": "#00bbdd"
-          }
+          },
+          "CustomModelAnimation": "Blocks/Hexcode/Obelisks/Animations/Obelisk_Ice_Idle.blockyanim"
         },
         "Ready": {
           "Light": {
@@ -108,7 +110,8 @@
               },
               "DetachedFromModel": false
             }
-          ]
+          ],
+          "CustomModelAnimation": "Blocks/Hexcode/Obelisks/Animations/Obelisk_Ice_Selecting.blockyanim"
         },
         "Crafting": {
           "Light": {
@@ -119,7 +122,9 @@
               "SystemId": "Ice_Obelisk_Crafting",
               "DetachedFromModel": false
             }
-          ]
+          ],
+          "CustomModelAnimation": "Blocks/Hexcode/Obelisks/Animations/Obelisk_Ice_Crafting.blockyanim",
+          "Looping": true
         }
       }
     },

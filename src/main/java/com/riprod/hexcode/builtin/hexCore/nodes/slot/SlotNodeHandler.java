@@ -23,10 +23,11 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.hexes.component.HexColors;
+import java.util.Arrays;
+
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.modules.entity.component.DisplayNameComponent;
@@ -51,10 +52,7 @@ public class SlotNodeHandler extends BaseSlotHandler {
         if (glyphComp == null) return;
 
         Glyph glyph = glyphComp.getGlyph();
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        if (asset == null) return;
-
-        Map<String, SlotConfig> assetSlots = asset.getSlots();
+        Map<String, SlotConfig> assetSlots = glyph.effectiveSlots();
         if (assetSlots.isEmpty()) return;
 
         HeadRotation headRot = accessor.getComponent(playerRef, HeadRotation.getComponentType());
@@ -78,6 +76,10 @@ public class SlotNodeHandler extends BaseSlotHandler {
 
             Slot slot = glyph.getOrCreateSlot(key);
             if (slot == null) continue;
+            if (glyph.isComponentInstance()) {
+                slot = retypePort(glyph, key, config, slot);
+                slot.setRawDisplayName(key);
+            }
             slot.hydrateFrom(config, key, offset);
 
             TransformComponent parentTransform = accessor.getComponent(glyphRef, TransformComponent.getComponentType());
@@ -89,6 +91,16 @@ public class SlotNodeHandler extends BaseSlotHandler {
                 glyphComp.getSlotEntityRefs().add(slotRef);
             }
         }
+    }
+
+    private static Slot retypePort(Glyph glyph, String key, SlotConfig config, Slot slot) {
+        Slot typed = config.create();
+        if (typed == null || typed.getClass() == slot.getClass()) return slot;
+        typed.setLinks(Arrays.copyOf(slot.getLinks(), slot.getLinks().length));
+        byte[] state = slot.encodeState();
+        if (state != null) typed.decodeState(state);
+        glyph.getSlots().put(key, typed);
+        return typed;
     }
 
     private Ref<EntityStore> spawnSlotEntityAt(CommandBuffer<EntityStore> accessor,
@@ -127,7 +139,7 @@ public class SlotNodeHandler extends BaseSlotHandler {
         hoverable.setHintText("description", Message.translation(slot.displayDescription()));
         holder.addComponent(HoverableComponent.getComponentType(), hoverable);
         holder.addComponent(DisplayNameComponent.getComponentType(),
-                new DisplayNameComponent(Message.translation(slot.displayLabel())));
+                new DisplayNameComponent(slot.displayMessage()));
 
         holder.addComponent(NodeComponent.getComponentType(),
                 new NodeComponent(parentRef, config.getId()));

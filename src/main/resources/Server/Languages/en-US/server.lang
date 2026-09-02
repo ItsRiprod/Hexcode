@@ -27,12 +27,9 @@ hexcode.assetEditor.messages.glyphIcon.notRenderable={id} has no renderable mode
 hexcode.assetEditor.messages.glyphIcon.noWritablePack=No writable asset pack is available to hold glyph icons
 hexcode.assetEditor.messages.glyphIcon.writeFailed=Failed to write the icon for {id} - check the server log
 hexcode.assetEditor.buttons.spawnGlyph=Spawn Glyph
-hexcode.assetEditor.messages.spawnGlyph.spawned=Spawned {id} in front of you
+hexcode.assetEditor.messages.spawnGlyph.spawned=Placed {id} into your active drawing context
 hexcode.assetEditor.messages.spawnGlyph.noGameClient=Join the world with a game client to spawn a glyph
-hexcode.assetEditor.messages.spawnGlyph.notCrafting=Stand at a pedestal in crafting mode to spawn {id}
-hexcode.assetEditor.messages.spawnGlyph.noSession=No active pedestal session to attach {id} to
-hexcode.assetEditor.messages.spawnGlyph.outOfRange=Look closer to the pedestal - {id} would land outside its range
-hexcode.assetEditor.messages.spawnGlyph.cancelled=Something blocked {id} from being placed
+hexcode.assetEditor.messages.spawnGlyph.noContext=Enter a drawing context (crafting or flycasting) to spawn {id}
 
 hexcode.assetEditor.messages.glyphIcon.overridden=Regenerated the icon for {id}, but this glyph uses a custom icon override so the generated one is not shown
 

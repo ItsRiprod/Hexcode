@@ -3,6 +3,8 @@ package com.riprod.hexcode.core.common.pedestal.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
@@ -67,10 +69,10 @@ public class PedestalSystem {
     }
 
     public static void registerObelisks(CommandBuffer<EntityStore> buffer, World world,
-            PedestalBlockComponent pedestal) {
+            PedestalBlockComponent pedestal, @Nullable ImbuementProfileAsset profile) {
         List<Pair<Vector3i, ObeliskBlockComponent>> obeliskPairs = ObeliskBlockUtil
                 .getAvailableObelisks(pedestal.getLocation(), pedestal.getObeliskRange(),
-                        world, pedestal.getMaxObelisks());
+                        world, pedestal.getMaxObelisks(), profile);
         List<Vector3i> obelisks = new ArrayList<>();
         for (Pair<Vector3i, ObeliskBlockComponent> obeliskPair : obeliskPairs) {
             obelisks.add(obeliskPair.getFirst());

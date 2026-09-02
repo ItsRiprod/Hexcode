@@ -1,6 +1,7 @@
 package com.riprod.hexcode.core.common.hexes.utils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +45,61 @@ public class HexUtils {
         for (Glyph glyph : glyphs) {
             idMap.put(glyph.getId(), prefix + "-" + counter++);
         }
+        applyIdMap(hex, glyphs, idMap);
+    }
 
+    public static void rekeyDecodeOrder(Hex hex, List<String> orderedIds) {
+        List<Glyph> glyphs = new ArrayList<>(orderedIds.size());
+        for (String id : orderedIds) {
+            Glyph glyph = hex.get(id);
+            if (glyph != null) glyphs.add(glyph);
+        }
+        if (glyphs.isEmpty()) return;
+
+        String prefix = String.format("%04x", ThreadLocalRandom.current().nextInt(0x10000));
+        Map<String, String> idMap = new HashMap<>();
+        int counter = 0;
+        for (Glyph glyph : glyphs) {
+            idMap.put(glyph.getId(), prefix + "-" + counter++);
+        }
+        applyIdMap(hex, glyphs, idMap);
+    }
+
+    public static void rekeyPrefixed(Hex hex, String prefix) {
+        List<Glyph> glyphs = hex.getGlyphs();
+        if (glyphs.isEmpty()) return;
+
+        Map<String, String> idMap = new HashMap<>();
+        for (Glyph glyph : glyphs) {
+            idMap.put(glyph.getId(), prefix + glyph.getId());
+        }
+        applyIdMap(hex, glyphs, idMap);
+    }
+
+    public static void rekeyCanonical(Hex hex) {
+        List<Glyph> glyphs = hex.getGlyphs();
+        if (glyphs.isEmpty()) return;
+
+        glyphs.sort(Comparator.comparingInt(g -> parseStreamIndex(g.getId())));
+        Map<String, String> idMap = new HashMap<>();
+        int counter = 0;
+        for (Glyph glyph : glyphs) {
+            idMap.put(glyph.getId(), String.format("c-%06d", counter++));
+        }
+        applyIdMap(hex, glyphs, idMap);
+    }
+
+    private static int parseStreamIndex(String id) {
+        int dash = id.lastIndexOf('-');
+        if (dash < 0 || dash == id.length() - 1) return Integer.MAX_VALUE;
+        try {
+            return Integer.parseInt(id.substring(dash + 1));
+        } catch (NumberFormatException e) {
+            return Integer.MAX_VALUE;
+        }
+    }
+
+    private static void applyIdMap(Hex hex, List<Glyph> glyphs, Map<String, String> idMap) {
         String oldFirstId = hex.getFirstGlyphId();
 
         for (Glyph glyph : glyphs) {

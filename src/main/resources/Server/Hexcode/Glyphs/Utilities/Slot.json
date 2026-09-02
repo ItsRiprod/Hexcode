@@ -1,0 +1,50 @@
+{
+  "Parent": "Glyph_Template",
+  "Handler": "Slot",
+  "Title": "hexcode.glyphs.Slot.name",
+  "Description": "hexcode.glyphs.Slot.description",
+  "BasePower": 0,
+  "ManaConsumption": 0,
+  "ShapeStructure": [
+    { "Parent": "Circle", "StatContribution": 0 },
+    { "Parent": "Line", "RelativeSize": 0.5, "StatContribution": 0 }
+  ],
+  "Slots": {
+    "Mode": {
+      "Type": "Boolean",
+      "Parent": "Boolean",
+      "Label": "hexcode.glyphs.Slot.Mode.name",
+      "Description": "hexcode.glyphs.Slot.Mode.description",
+      "DefaultValue": -1,
+      "NegativeLabel": "hexcode.glyphs.Slot.Mode.next.name",
+      "NegativeDescription": "hexcode.glyphs.Slot.Mode.next.description",
+      "NeutralLabel": "hexcode.glyphs.Slot.Mode.trilean.name",
+      "NeutralDescription": "hexcode.glyphs.Slot.Mode.trilean.description",
+      "PositiveLabel": "hexcode.glyphs.Slot.Mode.input.name",
+      "PositiveDescription": "hexcode.glyphs.Slot.Mode.input.description"
+    },
+    "Default": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Slot.Default.name",
+      "Description": "hexcode.glyphs.Slot.Default.description",
+      "DefaultValue": 0,
+      "Unique": true
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Slot.Next.name",
+      "Description": "hexcode.glyphs.Slot.Next.description"
+    },
+    "Name": {
+      "Type": "Named",
+      "Parent": "Named",
+      "Label": "hexcode.glyphs.Slot.Name.name",
+      "Description": "hexcode.glyphs.Slot.Name.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.0}
+}

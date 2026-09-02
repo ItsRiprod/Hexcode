@@ -9,6 +9,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.hexes.component.EncodingStroke;
 import com.riprod.hexcode.utils.LogScopes;
 
 public class GlyphCreationManager {
@@ -44,13 +45,34 @@ public class GlyphCreationManager {
         return score / drawn.size();
     }
 
+    public static final float MATCH_THRESHOLD = 0.7f;
+
+    public static float ScoreSequence(List<DrawnShapeComponent> drawn, List<EncodingStroke> strokes) {
+        if (drawn.size() != strokes.size())
+            return 0f;
+
+        float score = 0f;
+        for (int i = 0; i < drawn.size(); i++) {
+            DrawnShapeComponent d = drawn.get(i);
+            EncodingStroke s = strokes.get(i);
+
+            if (!d.getShapeId().equals(s.getShapeId()))
+                return 0f;
+
+            float sizeDiff = Math.abs(d.getRelativeSize() - s.getRelativeSize());
+            score += 1.0f - sizeDiff;
+        }
+
+        return score / drawn.size();
+    }
+
     @Nullable
     public static GlyphAsset MatchGlyph(List<DrawnShapeComponent> drawn) {
         Map<String, GlyphAsset> assetMap = GlyphAsset.getAssetMap().getAssetMap();
 
         GlyphAsset bestMatch = null;
         float bestScore = 0f;
-        float threshold = 0.7f;
+        float threshold = MATCH_THRESHOLD;
 
         for (GlyphAsset asset : assetMap.values()) {
             float score = ScoreAsset(drawn, asset.getShapes());

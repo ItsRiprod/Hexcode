@@ -1,0 +1,17 @@
+slot.label=Component
+slot.description=The reusable hex stored in this essence
+
+encrypted.locked=Encrypted Component
+encrypted.needObelisk=An Encryption Obelisk is required to open this
+encrypted.drawPrompt=Magic Encrypted. Enter Encoding to Unlock
+encrypted.wrong=Shape Combination Not Recognized
+
+decrypted.title=Component Unlocked
+decrypted.description=The Encoding matches
+
+encode.mustCraft=You must be crafting a Component to set its Encoding
+encode.notComponent=This pedestal session cannot be encoded
+encode.armed=Encoding Capture Armed
+encode.armedDesc=The next drawn series becomes the Encoding
+encode.set=Encoding Set
+encode.setDesc=This Component is now encrypted

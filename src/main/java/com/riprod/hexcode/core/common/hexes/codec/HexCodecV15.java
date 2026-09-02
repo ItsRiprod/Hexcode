@@ -8,6 +8,7 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,9 +21,11 @@ import org.joml.Vector3f;
 
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.component.RawStateSlot;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
+import com.riprod.hexcode.core.common.hexes.component.EncodingStroke;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 
@@ -47,6 +50,10 @@ public class HexCodecV15 {
     private static final int SECTION_EXTRAS = 0x05;
     static final int SECTION_SLOT_STATE = 0x06;
     static final int SECTION_META = 0x07;
+    static final int SECTION_ENCODING = 0x08;
+    static final int SECTION_COMPONENT = 0x09;
+
+    private static final int MAX_SECTION_BYTES = 65536;
 
     private static final int EXTRAS_KIND_ROTATION = 0x01;
 
@@ -59,7 +66,6 @@ public class HexCodecV15 {
     public static String serialize(Hex hex, boolean includeFingerprint) {
         Hex clone = hex.clone();
         HexUtils.validate(clone);
-        HexUtils.compress(clone);
         byte[] body = encode(clone, includeFingerprint);
         return frame(body, includeFingerprint, MAGIC, FLAG_ZLIB, FLAG_FINGERPRINT, FRAME_PREFIX);
     }
@@ -191,10 +197,13 @@ public class HexCodecV15 {
         byte[] extrasBytes = encodeRotationExtras(glyphs);
         byte[] slotStateBytes = encodeSlotStates(glyphs);
         byte[] metaBytes = encodeMeta(hex);
+        byte[] encodingBytes = encodeEncoding(hex);
+        byte[] componentBytes = encodeComponentTable(glyphs);
 
         ByteArrayOutputStream body = new ByteArrayOutputStream();
         int sectionCount = 4 + (extrasBytes != null ? 1 : 0) + (slotStateBytes != null ? 1 : 0)
-                + (metaBytes != null ? 1 : 0);
+                + (metaBytes != null ? 1 : 0) + (encodingBytes != null ? 1 : 0)
+                + (componentBytes != null ? 1 : 0);
         CodecUtil.writeByteVarInt(body, sectionCount);
         appendSection(body, SECTION_HEADER, header);
         appendSection(body, SECTION_ASSET_PALETTE, assetPaletteBytes);
@@ -203,6 +212,8 @@ public class HexCodecV15 {
         if (extrasBytes != null) appendSection(body, SECTION_EXTRAS, extrasBytes);
         if (slotStateBytes != null) appendSection(body, SECTION_SLOT_STATE, slotStateBytes);
         if (metaBytes != null) appendSection(body, SECTION_META, metaBytes);
+        if (encodingBytes != null) appendSection(body, SECTION_ENCODING, encodingBytes);
+        if (componentBytes != null) appendSection(body, SECTION_COMPONENT, componentBytes);
         return body.toByteArray();
     }
 
@@ -339,7 +350,7 @@ public class HexCodecV15 {
         List<List<byte[]>> slotStates = new ArrayList<>();
         for (int i = 0; i < glyphs.size(); i++) {
             Glyph g = glyphs.get(i);
-            List<String> schema = getOrderedSlotKeys(g.getGlyphId());
+            List<String> schema = stateSlotOrder(g);
             List<Integer> idxs = null;
             List<byte[]> states = null;
             for (Map.Entry<String, Slot> e : g.getSlots().entrySet()) {
@@ -383,7 +394,7 @@ public class HexCodecV15 {
             int glyphIdx = br.readVarInt();
             int slotCount = br.readVarInt();
             Glyph g = glyphIdx < placeholderIds.size() ? hex.get(placeholderIds.get(glyphIdx)) : null;
-            List<String> schema = g != null ? getOrderedSlotKeys(g.getGlyphId()) : List.of();
+            List<String> schema = g != null ? stateSlotOrder(g) : List.of();
             for (int s = 0; s < slotCount; s++) {
                 int schemaIdx = br.readVarInt();
                 int len = br.readVarInt();
@@ -421,6 +432,82 @@ public class HexCodecV15 {
         String name = CodecUtil.readBareString(br);
         if (name != null && !name.isBlank()) hex.setDisplayName(name);
     }
+
+    @Nullable
+    static byte[] encodeEncoding(Hex hex) {
+        List<EncodingStroke> strokes = hex.getEncoding();
+        if (strokes == null || strokes.isEmpty()) return null;
+        BitWriter bw = new BitWriter();
+        bw.writeVarInt(strokes.size());
+        for (EncodingStroke stroke : strokes) {
+            CodecUtil.writeBareString(bw, stroke.getShapeId());
+            bw.write(Math.round(clamp01(stroke.getRelativeSize()) * 100f), 7);
+        }
+        return bw.flush();
+    }
+
+    static void decodeEncoding(byte[] data, Hex hex) {
+        BitReader br = new BitReader(data);
+        int count = br.readVarInt();
+        List<EncodingStroke> strokes = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            String shapeId = CodecUtil.readBareString(br);
+            strokes.add(new EncodingStroke(shapeId, br.read(7) / 100f));
+        }
+        if (!strokes.isEmpty()) hex.setEncoding(strokes);
+    }
+
+    record ComponentSection(List<String> table, int[] glyphIndices, int[] tableIndices) {
+        static final ComponentSection EMPTY = new ComponentSection(List.of(), new int[0], new int[0]);
+    }
+
+    @Nullable
+    static byte[] encodeComponentTable(List<Glyph> glyphs) {
+        List<String> table = new ArrayList<>();
+        Map<String, Integer> keyToIdx = new HashMap<>();
+        List<int[]> mappings = new ArrayList<>();
+        for (int i = 0; i < glyphs.size(); i++) {
+            String payload = glyphs.get(i).getPayload();
+            if (payload == null) continue;
+            Integer idx = keyToIdx.get(payload);
+            if (idx == null) {
+                idx = table.size();
+                table.add(payload);
+                keyToIdx.put(payload, idx);
+            }
+            mappings.add(new int[] { i, idx });
+        }
+        if (mappings.isEmpty()) return null;
+        BitWriter bw = new BitWriter();
+        bw.writeVarInt(table.size());
+        for (String entry : table) CodecUtil.writeRawString(bw, entry);
+        bw.writeVarInt(mappings.size());
+        for (int[] mapping : mappings) {
+            bw.writeVarInt(mapping[0]);
+            bw.writeVarInt(mapping[1]);
+        }
+        byte[] out = bw.flush();
+        if (out.length > MAX_SECTION_BYTES) {
+            throw new HexCodecException("component table exceeds section size: " + out.length);
+        }
+        return out;
+    }
+
+    static ComponentSection decodeComponentTable(byte[] data) {
+        BitReader br = new BitReader(data);
+        int tableSize = br.readVarInt();
+        List<String> table = new ArrayList<>(tableSize);
+        for (int i = 0; i < tableSize; i++) table.add(CodecUtil.readRawString(br));
+        int mappingCount = br.readVarInt();
+        int[] glyphIndices = new int[mappingCount];
+        int[] tableIndices = new int[mappingCount];
+        for (int i = 0; i < mappingCount; i++) {
+            glyphIndices[i] = br.readVarInt();
+            tableIndices[i] = br.readVarInt();
+        }
+        return new ComponentSection(table, glyphIndices, tableIndices);
+    }
+
 
     static void writeLinks(BitWriter bw, String[] links, Map<String, Integer> idToIdx, int refBits) {
         if (links == null || links.length == 0) { bw.write(0, 1); return; }
@@ -524,6 +611,18 @@ public class HexCodecV15 {
         }
         int spBits = Math.max(1, CodecUtil.nbits(slotPalette.size() - 1));
 
+        ComponentSection components = ComponentSection.EMPTY;
+        if (sections.containsKey(SECTION_COMPONENT)) {
+            try {
+                components = decodeComponentTable(sections.get(SECTION_COMPONENT));
+            } catch (Exception e) {
+                issues.add(new DecodeIssue("component table failed: " + e.getMessage()
+                        + "; instances decode payload-less", DecodeIssue.Severity.WARNING));
+            }
+        }
+        var componentIndices = new HashSet<Integer>();
+        for (int idx : components.glyphIndices()) componentIndices.add(idx);
+
         BitReader gs = new BitReader(sections.get(SECTION_GLYPH_STREAM));
         int gsCount = gs.readVarInt();
         if (gsCount != ne) {
@@ -556,7 +655,7 @@ public class HexCodecV15 {
                     z / (float) POS_SCALE);
 
             Map<String, Slot> decodedSlots = readSlots(gs, asset, storedSlotCount, slotPalette,
-                    spBits, refBits);
+                    spBits, refBits, componentIndices.contains(i));
 
             Glyph g = new Glyph();
             g.setVolatility(volatility);
@@ -576,6 +675,14 @@ public class HexCodecV15 {
 
         resolveLinks(hex, placeholderIds);
         if (!placeholderIds.isEmpty()) hex.setFirstGlyphId(placeholderIds.get(0));
+
+        for (int m = 0; m < components.glyphIndices().length; m++) {
+            int glyphIdx = components.glyphIndices()[m];
+            int tableIdx = components.tableIndices()[m];
+            if (glyphIdx >= placeholderIds.size() || tableIdx >= components.table().size()) continue;
+            Glyph g = hex.get(placeholderIds.get(glyphIdx));
+            if (g != null) g.setPayload(components.table().get(tableIdx));
+        }
 
         // rotation extras
         if (sections.containsKey(SECTION_EXTRAS)) {
@@ -620,13 +727,22 @@ public class HexCodecV15 {
             }
         }
 
+        if (sections.containsKey(SECTION_ENCODING)) {
+            try {
+                decodeEncoding(sections.get(SECTION_ENCODING), hex);
+            } catch (Exception e) {
+                issues.add(new DecodeIssue("encoding failed: " + e.getMessage()
+                        + "; hex stays unencoded", DecodeIssue.Severity.INFO));
+            }
+        }
+
         finalizeHex(hex, anyUnresolved, issues);
-        HexUtils.compress(hex);
+        HexUtils.rekeyDecodeOrder(hex, placeholderIds);
         return new DecodeResult(hex, issues);
     }
 
     static Map<String, Slot> readSlots(BitReader br, String asset, int storedSlotCount,
-            List<String> slotPalette, int spBits, int refBits) {
+            List<String> slotPalette, int spBits, int refBits, boolean dynamicSlots) {
         Map<String, Slot> out = new LinkedHashMap<>();
         if (br.read(1) == 0) return out;
         int schemaMatch = br.read(1);
@@ -636,7 +752,7 @@ public class HexCodecV15 {
             for (int k = 0; k < storedSlotCount; k++) {
                 String[] links = allEmpty == 1 ? new String[0] : readLinkPlaceholders(br, refBits);
                 String name = k < schema.size() ? schema.get(k) : "<slot_" + k + ">";
-                Slot slot = createSlot(asset, name);
+                Slot slot = createSlot(asset, name, dynamicSlots);
                 if (slot != null) {
                     slot.setLinks(links);
                     out.put(name, slot);
@@ -644,7 +760,7 @@ public class HexCodecV15 {
             }
             for (int k = storedSlotCount; k < schema.size(); k++) {
                 String name = schema.get(k);
-                Slot slot = createSlot(asset, name);
+                Slot slot = createSlot(asset, name, dynamicSlots);
                 if (slot != null) {
                     slot.setLinks(new String[0]);
                     out.put(name, slot);
@@ -657,7 +773,7 @@ public class HexCodecV15 {
                 String name = sIdx < slotPalette.size() ? slotPalette.get(sIdx) : null;
                 if (name == null) name = "<unresolved_" + sIdx + ">";
                 String[] links = readLinkPlaceholders(br, refBits);
-                Slot slot = createSlot(asset, name);
+                Slot slot = createSlot(asset, name, dynamicSlots);
                 if (slot != null) {
                     slot.setLinks(links);
                     out.put(name, slot);
@@ -665,6 +781,12 @@ public class HexCodecV15 {
             }
         }
         return out;
+    }
+
+    static Slot createSlot(String glyphId, String slotKey, boolean dynamicSlots) {
+        Slot slot = createSlot(glyphId, slotKey);
+        if (slot == null && dynamicSlots) slot = new RawStateSlot();
+        return slot;
     }
 
     static Slot createSlot(String glyphId, String slotKey) {
@@ -787,6 +909,11 @@ public class HexCodecV15 {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
         if (asset == null) return List.of();
         return new ArrayList<>(asset.getSlotKeys());
+    }
+
+    static List<String> stateSlotOrder(Glyph g) {
+        if (g.isComponentInstance()) return new ArrayList<>(g.getSlots().keySet());
+        return getOrderedSlotKeys(g.getGlyphId());
     }
 
     static boolean schemaMatches(String glyphId, Map<String, Slot> slots) {

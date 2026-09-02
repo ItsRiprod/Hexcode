@@ -379,6 +379,19 @@ public class CodecUtil {
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
+    static void writeRawString(BitWriter bw, String s) {
+        byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
+        bw.writeVarInt(bytes.length);
+        for (byte b : bytes) bw.write(b & 0xFF, 8);
+    }
+
+    static String readRawString(BitReader br) {
+        int len = br.readVarInt();
+        byte[] bytes = new byte[len];
+        for (int i = 0; i < len; i++) bytes[i] = (byte) br.read(8);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
     // unsigned LEB128 byte-level varint, used by v15 for tlv section lengths.
     static void writeByteVarInt(ByteArrayOutputStream out, int v) {
         while ((v & ~0x7F) != 0) {

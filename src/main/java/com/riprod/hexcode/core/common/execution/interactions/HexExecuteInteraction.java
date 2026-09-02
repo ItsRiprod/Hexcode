@@ -85,7 +85,7 @@ public class HexExecuteInteraction extends SimpleInteraction {
             Hex hexClone = hex.clone();
             HexUtils.validate(hexClone);
 
-            float baseMana = SpellMana.computeTotalMana(hexClone);
+            float baseMana = SpellMana.computeTotalMana(hexClone, buffer);
 
             HexContext context = new HexContext(hexClone, baseMana, hexRoot,
                     HexStyleAsset.empty(), new HexCast());

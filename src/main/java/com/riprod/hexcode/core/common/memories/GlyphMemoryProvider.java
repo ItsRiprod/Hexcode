@@ -28,7 +28,8 @@ public class GlyphMemoryProvider extends MemoryProvider<GlyphMemory> {
         for (Map.Entry<String, GlyphAsset> entry : GlyphAsset.getAssetMap().getAssetMap().entrySet()) {
             GlyphAsset asset = entry.getValue();
             // skips Glyph_Template and any untitled helper asset
-            if (asset == null || asset.getTitle() == null) {
+            if (asset == null || asset.getTitle() == null
+                    || asset.getShapes() == null || asset.getShapes().isEmpty()) {
                 continue;
             }
             glyphMemories.add(new GlyphMemory(entry.getKey()));

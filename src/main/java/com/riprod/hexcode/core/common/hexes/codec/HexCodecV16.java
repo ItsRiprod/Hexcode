@@ -134,7 +134,7 @@ public class HexCodecV16 {
             float efficiency = speedQ / 100f;
 
             Map<String, Slot> decodedSlots = HexCodecV15.readSlots(gs, asset, storedSlotCount,
-                    slotPalette, spBits, refBits);
+                    slotPalette, spBits, refBits, false);
 
             Glyph g = new Glyph();
             g.setVolatility(volatility);
@@ -175,7 +175,7 @@ public class HexCodecV16 {
         }
 
         HexCodecV15.finalizeHex(hex, anyUnresolved, issues);
-        HexUtils.compress(hex);
+        HexUtils.rekeyDecodeOrder(hex, placeholderIds);
         return new DecodeResult(hex, issues);
     }
 }
