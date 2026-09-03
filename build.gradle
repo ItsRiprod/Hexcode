@@ -33,8 +33,8 @@ configurations {
 dependencies {
     compileOnly libs.jetbrains.annotations
     compileOnly libs.jspecify
-    // shadowBundle(files('lib/Patchly-3.4.4.jar'))
-    shadowBundle('com.riprod:patchly:3.+')
+    shadowBundle(files('lib/Patchly-3.6.1.jar'))
+    // shadowBundle('com.riprod:patchly:3.+')
     // shadowBundle(files('lib/Configly-1.0.1.jar'))
     shadowBundle('com.riprod:configly:1.+')
 

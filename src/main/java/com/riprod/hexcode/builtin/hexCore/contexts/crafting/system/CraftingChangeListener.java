@@ -34,6 +34,7 @@ import com.riprod.hexcode.core.common.obelisk.system.ObeliskDispatcher;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
+import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
@@ -116,6 +117,7 @@ public class CraftingChangeListener extends WorldEventSystem<EntityStore, HexCon
 
     private static void enter(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
         GravityUtil.enterFly(buffer, player);
+        buffer.ensureComponent(player, HexcasterCraftingComponent.getComponentType());
         buffer.putComponent(player, CraftingState.getComponentType(), new CraftingState());
         ContextTransitionService.setInContextStat(buffer, player, true);
 
@@ -127,27 +129,43 @@ public class CraftingChangeListener extends WorldEventSystem<EntityStore, HexCon
             return;
         }
 
-        Ref<EntityStore> containerRef = session.getActiveContainerRef();
         String slotKey = session.getActiveSlotKey();
-        if (containerRef == null || !containerRef.isValid() || slotKey == null) {
+        if (slotKey == null) {
             return;
         }
-
-        Hex hex = ContainerNodeHandler.INSTANCE.prepareForCrafting(buffer, containerRef, session, slotKey);
 
         Vector3d anchorPos = PedestalEntity.getAnchorPosition(session.getPedestalLocation());
         Vector3d activePos = new Vector3d(
                 anchorPos.x + PedestalSystem.ACTIVE_HEX_OFFSET.x,
                 anchorPos.y + PedestalSystem.ACTIVE_HEX_OFFSET.y,
                 anchorPos.z + PedestalSystem.ACTIVE_HEX_OFFSET.z);
-        TransformComponent transform = buffer.getComponent(containerRef, TransformComponent.getComponentType());
-        if (transform != null) {
-            transform.getPosition().set(activePos);
-            transform.getRotation().set(0f, 0f, 0f);
+
+        Ref<EntityStore> containerRef = session.getActiveContainerRef();
+        if (containerRef == null || !containerRef.isValid()) {
+            var profile = session.getProfile();
+            PedestalSlot slotAsset = profile != null
+                    ? profile.findSlot(session.getStoredItem(), slotKey) : null;
+            if (slotAsset == null) {
+                return;
+            }
+            containerRef = ContainerNodeHandler.spawnForSlot(buffer, session, player, anchorPos,
+                    PedestalSystem.ACTIVE_HEX_OFFSET, slotKey, slotAsset, null);
+            if (containerRef == null) {
+                return;
+            }
+            session.setActiveContainerRef(containerRef);
+        } else {
+            TransformComponent transform = buffer.getComponent(containerRef, TransformComponent.getComponentType());
+            if (transform != null) {
+                transform.getPosition().set(activePos);
+                transform.getRotation().set(0f, 0f, 0f);
+            }
+            if (buffer.getComponent(containerRef, MountedComponent.getComponentType()) != null) {
+                buffer.removeComponent(containerRef, MountedComponent.getComponentType());
+            }
         }
-        if (buffer.getComponent(containerRef, MountedComponent.getComponentType()) != null) {
-            buffer.removeComponent(containerRef, MountedComponent.getComponentType());
-        }
+
+        Hex hex = ContainerNodeHandler.INSTANCE.prepareForCrafting(buffer, containerRef, session, slotKey);
 
         Ref<EntityStore> rootNodeRef = AnchorNodeHandler.INSTANCE.spawnNode(buffer, hex,
                 containerRef, activePos, player);

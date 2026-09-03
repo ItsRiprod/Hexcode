@@ -18,7 +18,6 @@ import com.riprod.hexcode.builtin.hexCore.contexts.decrypting.component.Decrypti
 import com.riprod.hexcode.builtin.hexCore.obelisks.encryption.EncryptionObelisk;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
-import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
@@ -60,7 +59,6 @@ public class DecryptingChangeListener extends WorldEventSystem<EntityStore, HexC
     }
 
     private static void enter(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
-        buffer.ensureComponent(player, HexcasterCraftingComponent.getComponentType());
         buffer.putComponent(player, DecryptingState.getComponentType(), new DecryptingState());
         ContextTransitionService.setInContextStat(buffer, player, true);
         GravityUtil.enterFly(buffer, player);

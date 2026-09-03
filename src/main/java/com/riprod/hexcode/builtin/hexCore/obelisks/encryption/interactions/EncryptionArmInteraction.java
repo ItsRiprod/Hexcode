@@ -89,6 +89,11 @@ public class EncryptionArmInteraction extends SimpleInteraction {
                 ctx.getState().state = InteractionState.Failed;
                 return;
             }
+            if (!session.isOwner(playerRef)) {
+                pr.sendMessage(Message.translation("hexcode.components.encode.notOwner"));
+                ctx.getState().state = InteractionState.Failed;
+                return;
+            }
 
             EncryptionSessionState state = session.obeliskState(EncryptionObelisk.HANDLER_ID,
                     EncryptionSessionState::new);

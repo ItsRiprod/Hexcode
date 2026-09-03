@@ -36,6 +36,7 @@ import com.riprod.hexcode.core.common.hover.component.HoverableType;
 import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
+import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.builtin.hexCore.scene.GlyphStyler;
@@ -56,6 +57,22 @@ public class ContainerNodeHandler extends BaseNodeHandler {
     private static final float GLYPH_DISPLAY_DISTANCE = 1.0f;
     private static final float PEDESTAL_GLYPH_PITCH = (float) (-Math.PI / 2);
     private static final Box PREVIEW_BOUNDING_BOX = new Box(-0.25, -0.25, -0.25, 0.25, 0.25, 0.25);
+
+    public static Ref<EntityStore> spawnForSlot(CommandBuffer<EntityStore> buffer,
+            HexcodeSessionComponent session, Ref<EntityStore> player, Vector3d anchorPos,
+            Vector3f offset, String slotKey, PedestalSlot slotAsset, Hex hex) {
+        Ref<EntityStore> anchorRef = session.getAnchorRef();
+        if (anchorRef == null || !anchorRef.isValid()) {
+            return null;
+        }
+        Ref<EntityStore> containerRef = INSTANCE.spawnContainer(buffer, hex, anchorRef, anchorPos,
+                offset, player, slotAsset);
+        if (containerRef == null) {
+            return null;
+        }
+        buffer.addComponent(containerRef, SlotComponent.getComponentType(), new SlotComponent(slotKey));
+        return containerRef;
+    }
 
     public Ref<EntityStore> spawnContainer(CommandBuffer<EntityStore> accessor, Hex hex,
             Ref<EntityStore> anchorRef, Vector3d anchorPos, Vector3f offset, Ref<EntityStore> playerRef,
@@ -205,7 +222,7 @@ public class ContainerNodeHandler extends BaseNodeHandler {
         Hex originalHex = storedHex != null ? storedHex.clone() : new Hex();
         HexComponent freshComp = new HexComponent(originalHex);
         freshComp.setSelfRef(node);
-        if (hexComp != null) freshComp.setRootRef(hexComp.getRootRef());
+        freshComp.setRootRef(hexComp != null ? hexComp.getRootRef() : session.getAnchorRef());
         accessor.putComponent(node, HexComponent.getComponentType(), freshComp);
         accessor.removeComponent(node, DebugComponent.getComponentType());
         return originalHex;
