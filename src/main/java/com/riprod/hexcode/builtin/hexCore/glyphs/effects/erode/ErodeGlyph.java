@@ -33,6 +33,8 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VfxUtil;
+import com.riprod.hexcode.utils.BlockAccess;
+import com.riprod.hexcode.utils.BlockUtils;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 import java.util.Arrays;
@@ -75,7 +77,8 @@ public class ErodeGlyph implements GlyphHandler {
         EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
         if (entityVar != null) {
             // sustained entity vulnerability defers continuation to the construct's onEnd
-            if (config.canImpactEntities() && applyToEntities(glyph, entityVar, (float) duration, config, hexContext, accessor)) {
+            if (config.canImpactEntities()
+                    && applyToEntities(glyph, entityVar, (float) duration, config, hexContext, accessor)) {
                 Slot immediate = glyph.getSlot(ErodeGlyphSlots.IMMEDIATE);
                 if (immediate != null && immediate.getLinks().length > 0) {
                     HexContext immediateCtx = hexContext.branch();
@@ -146,7 +149,10 @@ public class ErodeGlyph implements GlyphHandler {
             return;
 
         World world = accessor.getExternalData().getWorld();
-        if (!HexProtection.isBlockActionAllowed(world, BlockAction.BREAK)) {
+
+        var blockType = BlockAccess.blockType(world, pos.x, pos.y, pos.z);
+
+        if (!HexProtection.isBlockActionAllowed(world, BlockAction.BREAK, blockType)) {
             HexProtection.notifyBlocked(hexContext.getCasterRef(accessor), accessor, getId());
             return;
         }

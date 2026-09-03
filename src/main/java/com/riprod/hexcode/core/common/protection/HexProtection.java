@@ -40,13 +40,13 @@ public final class HexProtection {
     private HexProtection() {
     }
 
-    public static boolean isBlockActionAllowed(World world, BlockAction action) {
+    public static boolean isBlockActionAllowed(World world, BlockAction action, BlockType blockType) {
         if (!HexcodeConfig.get().respectsClaims()) {
             return true;
         }
         var worldConfig = world.getGameplayConfig().getWorldConfig();
         return switch (action) {
-            case BREAK -> worldConfig.isBlockBreakingAllowed();
+            case BREAK -> worldConfig.isBlockBreakingAllowed(blockType);
             case PLACE -> worldConfig.isBlockPlacementAllowed();
         };
     }
@@ -57,7 +57,9 @@ public final class HexProtection {
             return true;
         }
 
-        if (!isBlockActionAllowed(world, action)) {
+        var blockType = BlockAccess.blockType(world, pos.x, pos.y, pos.z);
+
+        if (!isBlockActionAllowed(world, action, blockType)) {
             return false;
         }
 
