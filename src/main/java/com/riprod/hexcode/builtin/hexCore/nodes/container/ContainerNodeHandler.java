@@ -201,9 +201,11 @@ public class ContainerNodeHandler extends BaseNodeHandler {
         return event.isCancelled() ? InteractionState.Failed : InteractionState.Finished;
     }
 
-    public Hex prepareForCrafting(CommandBuffer<EntityStore> accessor, Ref<EntityStore> node,
+    public HexComponent prepareForCrafting(CommandBuffer<EntityStore> accessor, Ref<EntityStore> node,
             HexcodeSessionComponent session, String slotKey) {
-        HexComponent hexComp = accessor.getComponent(node, HexComponent.getComponentType());
+        HexComponent hexComp = node.isValid()
+                ? accessor.getComponent(node, HexComponent.getComponentType())
+                : null;
         Hex storedHex = session.getHexAt(slotKey, accessor);
 
         if (hexComp != null) {
@@ -225,7 +227,7 @@ public class ContainerNodeHandler extends BaseNodeHandler {
         freshComp.setRootRef(hexComp != null ? hexComp.getRootRef() : session.getAnchorRef());
         accessor.putComponent(node, HexComponent.getComponentType(), freshComp);
         accessor.removeComponent(node, DebugComponent.getComponentType());
-        return originalHex;
+        return freshComp;
     }
 
     @Override

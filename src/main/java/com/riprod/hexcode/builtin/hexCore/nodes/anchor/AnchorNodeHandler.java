@@ -26,7 +26,6 @@ import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
-import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableType;
@@ -148,9 +147,8 @@ public class AnchorNodeHandler extends BaseNodeHandler {
         return InteractionState.Finished;
     }
 
-    public Ref<EntityStore> spawnNode(CommandBuffer<EntityStore> accessor, Hex coreHex, Ref<EntityStore> parentRef,
-            Vector3d rootPos,
-            Ref<EntityStore> playerRef) {
+    public Ref<EntityStore> spawnNode(CommandBuffer<EntityStore> accessor, HexComponent hexComp,
+            Ref<EntityStore> parentRef, Vector3d rootPos, Ref<EntityStore> playerRef) {
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
 
         holder.addComponent(TransformComponent.getComponentType(),
@@ -180,7 +178,6 @@ public class AnchorNodeHandler extends BaseNodeHandler {
         holder.addComponent(HoverableComponent.getComponentType(),
                 new HoverableComponent(HoverableType.NODE));
 
-        HexComponent hexComp = accessor.getComponent(parentRef, HexComponent.getComponentType());
         List<Glyph> children = hexComp != null ? hexComp.getHex().getGlyphs() : List.of();
 
         var store = accessor.getStore();
@@ -207,7 +204,7 @@ public class AnchorNodeHandler extends BaseNodeHandler {
                     rootPos.z + offset.z);
 
             GlyphNodeHandler.INSTANCE.spawnNode(accessor, nodeGlyph, worldPos,
-                    playerRef, new GlyphComponent(glyph), parentRef,
+                    playerRef, new GlyphComponent(glyph), hexComp, parentRef,
                     hexComp.getChildGlyphRef(glyph.getId()));
         }
 

@@ -106,9 +106,15 @@ public class EncryptionObelisk implements ObeliskInterface {
     public static List<EncodingStroke> liveEncoding(CommandBuffer<EntityStore> buffer,
             HexcodeSessionComponent session) {
         Ref<EntityStore> containerRef = session.getActiveContainerRef();
-        if (containerRef == null || !containerRef.isValid()) return null;
-        HexComponent hexComp = buffer.getComponent(containerRef, HexComponent.getComponentType());
-        Hex hex = hexComp != null ? hexComp.getHex() : null;
+        if (containerRef == null) return null;
+        Hex hex;
+        if (containerRef.isValid()) {
+            HexComponent hexComp = buffer.getComponent(containerRef, HexComponent.getComponentType());
+            hex = hexComp != null ? hexComp.getHex() : null;
+        } else {
+            String slotKey = session.getActiveSlotKey();
+            hex = slotKey != null ? session.getHexAt(slotKey, buffer) : null;
+        }
         return hex != null ? hex.getEncoding() : null;
     }
 

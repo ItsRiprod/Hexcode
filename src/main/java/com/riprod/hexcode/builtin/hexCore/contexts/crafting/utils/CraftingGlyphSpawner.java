@@ -95,7 +95,7 @@ public final class CraftingGlyphSpawner {
         hexComp.getHex().put(glyph.getId(), glyph);
         hexComp.addChildGlyphRef(glyph.getId(), new Ref<>(buffer.getStore()));
         GlyphNodeHandler.INSTANCE.spawnNode(buffer, hexRef, worldPos, playerRef,
-                glyphComponent, hexRef, hexComp.getChildGlyphRef(glyph.getId()));
+                glyphComponent, hexComp, hexRef, hexComp.getChildGlyphRef(glyph.getId()));
 
         VfxUtil.sound("SFX_Eye_Void_Attack_Summon", worldPos, buffer);
     }

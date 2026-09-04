@@ -278,7 +278,7 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
 
   public Ref<EntityStore> spawnNode(CommandBuffer<EntityStore> accessor, Ref<EntityStore> parentRef,
       Vector3d position, Ref<EntityStore> playerRef, GlyphComponent glyphComp,
-      Ref<EntityStore> hexEntityRef, Ref<EntityStore> glyphNodeRef) {
+      HexComponent hexComp, Ref<EntityStore> hexEntityRef, Ref<EntityStore> glyphNodeRef) {
     Glyph glyph = glyphComp.getGlyph();
     Rotation3f glyphRot = new Rotation3f(glyph.getRotation().x, glyph.getRotation().y, 0);
     Holder<EntityStore> glyphHolder = CreateGlyph.createGlyphHolder(accessor, glyphComp, position, glyphRot);
@@ -305,7 +305,6 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
     glyphHolder.addComponent(NodeComponent.getComponentType(),
         new NodeComponent(hexEntityRef, GlyphNodeConfig.TYPE));
 
-    HexComponent hexComp = accessor.getComponent(hexEntityRef, HexComponent.getComponentType());
     List<AttachedBeam> beams = hexComp != null ? VfxUtil.glyphLinkBeams(hexComp, glyph) : List.of();
     glyphHolder.addComponent(BeamComponent.getComponentType(),
         new BeamComponent(beams.toArray(AttachedBeam[]::new)));

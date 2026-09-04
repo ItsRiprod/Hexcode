@@ -165,9 +165,10 @@ public class CraftingChangeListener extends WorldEventSystem<EntityStore, HexCon
             }
         }
 
-        Hex hex = ContainerNodeHandler.INSTANCE.prepareForCrafting(buffer, containerRef, session, slotKey);
+        HexComponent hexComp = ContainerNodeHandler.INSTANCE.prepareForCrafting(buffer, containerRef, session, slotKey);
+        Hex hex = hexComp.getHex();
 
-        Ref<EntityStore> rootNodeRef = AnchorNodeHandler.INSTANCE.spawnNode(buffer, hex,
+        Ref<EntityStore> rootNodeRef = AnchorNodeHandler.INSTANCE.spawnNode(buffer, hexComp,
                 containerRef, activePos, player);
         session.setAnchorNodeRef(rootNodeRef);
 
