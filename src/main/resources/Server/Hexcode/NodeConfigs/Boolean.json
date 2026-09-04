@@ -1,5 +1,6 @@
 {
   "Type": "Boolean",
+  "LinkBeam": "Hexcode_Link_Boolean",
   "Color": "#CCCCCC",
   "Shape": "Cone",
   "DefaultValue": 0

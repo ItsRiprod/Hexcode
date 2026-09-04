@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
@@ -53,7 +53,7 @@ public final class CraftingGlyphSpawner {
         return new Vector3d(x / count, y / count, z / count);
     }
 
-    public static void spawnDrawnGlyph(ComponentAccessor<EntityStore> buffer, Glyph glyph,
+    public static void spawnDrawnGlyph(CommandBuffer<EntityStore> buffer, Glyph glyph,
             HexcodeSessionComponent session, Vector3d worldPos, Rotation3f rotation,
             Ref<EntityStore> playerRef) {
 
@@ -92,12 +92,11 @@ public final class CraftingGlyphSpawner {
                     (float) (worldPos.z - hexPos.z)));
         }
 
-        Ref<EntityStore> effectRef = GlyphNodeHandler.INSTANCE.spawnNode(buffer, hexRef, worldPos, playerRef,
-                glyphComponent, hexRef);
+        hexComp.getHex().put(glyph.getId(), glyph);
+        hexComp.addChildGlyphRef(glyph.getId(), new Ref<>(buffer.getStore()));
+        GlyphNodeHandler.INSTANCE.spawnNode(buffer, hexRef, worldPos, playerRef,
+                glyphComponent, hexRef, hexComp.getChildGlyphRef(glyph.getId()));
 
         VfxUtil.sound("SFX_Eye_Void_Attack_Summon", worldPos, buffer);
-
-        hexComp.addChildGlyphRef(glyph.getId(), effectRef);
-        hexComp.getHex().put(glyph.getId(), glyph);
     }
 }

@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hypixel.hytale.builtin.beam.AttachedBeam;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.spatial.SpatialResource;
@@ -33,11 +34,38 @@ import com.riprod.hexcode.core.common.hexes.component.HexColors;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
+import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 public class VfxUtil {
   private VfxUtil() {
+  }
+
+  public static List<AttachedBeam> linkBeams(HexComponent hexComp, Slot slot, SlotConfig config) {
+    var index = config.linkBeamIndex();
+    if (index < 0)
+      return List.of();
+    var beams = new ArrayList<AttachedBeam>();
+    for (var linkId : slot.getLinks()) {
+      var target = hexComp.getChildGlyphRef(linkId);
+      if (target == null)
+        continue;
+      beams.add(AttachedBeam.toEntity(index, config.getLinkBeamScale(), null, target, null));
+    }
+    return beams;
+  }
+
+  public static List<AttachedBeam> glyphLinkBeams(HexComponent hexComp, Glyph glyph) {
+    var beams = new ArrayList<AttachedBeam>();
+    for (var entry : glyph.effectiveSlots().entrySet()) {
+      var slot = glyph.getSlot(entry.getKey());
+      if (slot != null)
+        beams.addAll(linkBeams(hexComp, slot, entry.getValue()));
+    }
+    return beams;
   }
 
   public static @Nullable String resolveModelId(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {

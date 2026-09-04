@@ -1,5 +1,6 @@
 {
   "Type": "Named",
+  "LinkBeam": "Hexcode_Link_Named",
   "Color": "#CC88FF",
   "Shape": "Cylinder"
 }

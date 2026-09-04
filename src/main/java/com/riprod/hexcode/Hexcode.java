@@ -106,6 +106,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import com.hypixel.hytale.assetstore.AssetRegistry;
+import com.hypixel.hytale.builtin.beam.asset.Beam;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.builtin.asseteditor.AssetEditorPlugin;
 import com.hypixel.hytale.builtin.asseteditor.event.AssetEditorActivateButtonEvent;
@@ -205,6 +206,7 @@ public class Hexcode extends JavaPlugin {
                         .setPath("Hexcode/NodeConfigs")
                         .setCodec(NodeConfig.CODEC)
                         .setKeyFunction(NodeConfig::getId)
+                        .loadsAfter(Beam.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore

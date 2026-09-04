@@ -18,8 +18,6 @@ import com.riprod.hexcode.core.common.hover.utils.HoverableUtils;
 import com.riprod.hexcode.core.common.obelisk.system.ObeliskDispatcher;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
-import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
-import com.riprod.hexcode.builtin.hexCore.scene.LinkRenderer;
 
 public final class PedestalSceneHover {
 
@@ -29,7 +27,7 @@ public final class PedestalSceneHover {
     }
 
     public static void tick(CommandBuffer<EntityStore> buffer, float dt, Ref<EntityStore> player,
-            PedestalBlockComponent pedestal, HexcodeSessionComponent session) {
+            PedestalBlockComponent pedestal) {
         HexcasterCraftingComponent craftingComp = buffer.getComponent(player,
                 HexcasterCraftingComponent.getComponentType());
         if (craftingComp == null)
@@ -71,10 +69,6 @@ public final class PedestalSceneHover {
         }
 
         hoverParticles(buffer, craftingComp.getHoveredRef(), dt, pedestal);
-
-        if (session != null) {
-            LinkRenderer.renderLinks(buffer, session, pedestal, dt);
-        }
     }
 
     private static void unhover(CommandBuffer<EntityStore> accessor, Ref<EntityStore> unhoveredRef,

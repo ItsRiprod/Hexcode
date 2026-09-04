@@ -8,6 +8,7 @@ import com.hypixel.hytale.assetstore.codec.AssetCodecMapCodec;
 import com.hypixel.hytale.assetstore.codec.ContainedAssetCodec;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
+import com.hypixel.hytale.builtin.beam.asset.Beam;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -23,12 +24,16 @@ public abstract class NodeConfig implements JsonAssetWithMap<String, DefaultAsse
     public static final BuilderCodec<NodeConfig> BASE_CODEC;
     public static final Codec<String> CHILD_ASSET_CODEC;
     public static final ValidatorCache<String> VALIDATOR_CACHE;
+    public static final ValidatorCache<String> LINK_BEAM_VALIDATOR =
+            new ValidatorCache<>(new AssetKeyValidator<>(Beam::getAssetStore));
     private static AssetStore<String, NodeConfig, DefaultAssetMap<String, NodeConfig>> ASSET_STORE;
 
     protected AssetExtraInfo.Data data;
     protected String id;
     protected Color color = new Color((byte) 153, (byte) 153, (byte) 153);
     protected DebugShape shape = DebugShape.Cube;
+    protected String linkBeam;
+    protected float linkBeamScale = 0.05f;
 
     public static AssetStore<String, NodeConfig, DefaultAssetMap<String, NodeConfig>> getAssetStore() {
         if (ASSET_STORE == null) {
@@ -56,6 +61,18 @@ public abstract class NodeConfig implements JsonAssetWithMap<String, DefaultAsse
         return this.shape;
     }
 
+    public String getLinkBeam() {
+        return this.linkBeam;
+    }
+
+    public float getLinkBeamScale() {
+        return this.linkBeamScale;
+    }
+
+    public int linkBeamIndex() {
+        return this.linkBeam == null ? -1 : Beam.getAssetMap().getIndex(this.linkBeam);
+    }
+
     static {
         CODEC = new AssetCodecMapCodec<>("Type", Codec.STRING,
                 (a, s) -> a.id = s,
@@ -71,6 +88,15 @@ public abstract class NodeConfig implements JsonAssetWithMap<String, DefaultAsse
                 .appendInherited(new KeyedCodec<>("Shape", new EnumCodec<>(DebugShape.class)),
                         (a, v) -> { if (v != null) a.shape = v; }, a -> a.shape,
                         (a, p) -> a.shape = p.shape)
+                .add()
+                .appendInherited(new KeyedCodec<>("LinkBeam", Codec.STRING),
+                        (a, v) -> a.linkBeam = v, a -> a.linkBeam,
+                        (a, p) -> a.linkBeam = p.linkBeam)
+                .addValidatorLate(() -> LINK_BEAM_VALIDATOR.getValidator().late())
+                .add()
+                .appendInherited(new KeyedCodec<>("LinkBeamScale", Codec.FLOAT),
+                        (a, v) -> { if (v != null) a.linkBeamScale = v; }, a -> a.linkBeamScale,
+                        (a, p) -> a.linkBeamScale = p.linkBeamScale)
                 .add()
                 .build();
 

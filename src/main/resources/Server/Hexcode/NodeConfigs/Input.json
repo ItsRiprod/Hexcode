@@ -1,5 +1,6 @@
 {
   "Type": "Input",
+  "LinkBeam": "Hexcode_Link_Input",
   "Color": "#1A80FF",
   "Shape": "Cube"
 }

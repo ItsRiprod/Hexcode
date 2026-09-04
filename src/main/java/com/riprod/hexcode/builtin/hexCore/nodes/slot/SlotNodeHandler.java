@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hypixel.hytale.builtin.beam.AttachedBeam;
+import com.hypixel.hytale.builtin.beam.BeamComponent;
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -29,6 +31,8 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
+import com.riprod.hexcode.core.common.hexes.component.HexComponent;
+import com.riprod.hexcode.utils.VfxUtil;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.modules.entity.component.DisplayNameComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
@@ -54,6 +58,10 @@ public class SlotNodeHandler extends BaseSlotHandler {
         Glyph glyph = glyphComp.getGlyph();
         Map<String, SlotConfig> assetSlots = glyph.effectiveSlots();
         if (assetSlots.isEmpty()) return;
+
+        HexComponent hexComp = glyphComp.getHexRef() != null
+                ? accessor.getComponent(glyphComp.getHexRef(), HexComponent.getComponentType())
+                : null;
 
         HeadRotation headRot = accessor.getComponent(playerRef, HeadRotation.getComponentType());
         float pitch = headRot != null ? headRot.getRotation().x : 0f;
@@ -86,7 +94,7 @@ public class SlotNodeHandler extends BaseSlotHandler {
             if (parentTransform == null) continue;
 
             Ref<EntityStore> slotRef = spawnSlotEntityAt(accessor, glyphRef, key, config, offset,
-                    parentTransform.getPosition(), slot);
+                    parentTransform.getPosition(), slot, hexComp);
             if (slotRef != null) {
                 glyphComp.getSlotEntityRefs().add(slotRef);
             }
@@ -105,7 +113,7 @@ public class SlotNodeHandler extends BaseSlotHandler {
 
     private Ref<EntityStore> spawnSlotEntityAt(CommandBuffer<EntityStore> accessor,
             Ref<EntityStore> parentRef, String slotKey, SlotConfig config, Vector3f offset,
-            Vector3d parentWorldPos, Slot slot) {
+            Vector3d parentWorldPos, Slot slot, HexComponent hexComp) {
         Vector3d slotPos = new Vector3d(
                 parentWorldPos.x + offset.x,
                 parentWorldPos.y + offset.y,
@@ -146,6 +154,10 @@ public class SlotNodeHandler extends BaseSlotHandler {
 
         holder.addComponent(MountedComponent.getComponentType(),
                 new MountedComponent(parentRef, new Vector3f(offset.x, offset.y, offset.z), MountController.Minecart));
+
+        List<AttachedBeam> beams = hexComp != null ? VfxUtil.linkBeams(hexComp, slot, config) : List.of();
+        holder.addComponent(BeamComponent.getComponentType(),
+                new BeamComponent(beams.toArray(AttachedBeam[]::new)));
 
         return accessor.addEntity(holder, AddReason.SPAWN);
     }

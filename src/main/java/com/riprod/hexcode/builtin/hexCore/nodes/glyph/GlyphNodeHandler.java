@@ -3,6 +3,10 @@ import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.component.ComponentAccessor;
 
+import java.util.List;
+
+import com.hypixel.hytale.builtin.beam.AttachedBeam;
+import com.hypixel.hytale.builtin.beam.BeamComponent;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
@@ -37,6 +41,7 @@ import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 import com.riprod.hexcode.utils.LogScopes;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class GlyphNodeHandler extends BaseGlyphHandler {
   private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CRAFT);
@@ -109,7 +114,6 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
     glyphComp.setOffset(dropOffset);
     glyphComp.setRotation(playerRotation);
     clearExpandedIfMatches(accessor, playerRef, nodeRef);
-    glyphComp.setSlotsVisible(false);
     return InteractionState.Finished;
   }
 
@@ -142,8 +146,7 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
     if (previous != null && previous.isValid() && !previous.equals(newRef)) {
       GlyphComponent prevComp = accessor.getComponent(previous, GlyphComponent.getComponentType());
       if (prevComp != null) {
-        SlotNodeHandler.INSTANCE.despawnSlotsForGlyph(accessor, previous);
-        prevComp.setSlotsVisible(false);
+        collapseSlots(accessor, previous, prevComp);
       }
     }
 
@@ -153,9 +156,28 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
       GlyphComponent newComp = accessor.getComponent(newRef, GlyphComponent.getComponentType());
       if (newComp != null && !newComp.areSlotsVisible()) {
         newComp.setSlotsVisible(true);
+        var beams = accessor.getComponent(newRef, BeamComponent.getComponentType());
+        if (beams != null)
+          beams.clear();
         SlotNodeHandler.INSTANCE.spawnSlotsForGlyph(accessor, newRef, playerRef);
       }
     }
+  }
+
+  private static void collapseSlots(CommandBuffer<EntityStore> accessor, Ref<EntityStore> glyphRef,
+      GlyphComponent glyphComp) {
+    SlotNodeHandler.INSTANCE.despawnSlotsForGlyph(accessor, glyphRef);
+    glyphComp.setSlotsVisible(false);
+
+    var beams = accessor.getComponent(glyphRef, BeamComponent.getComponentType());
+    var hexComp = hexComponentOf(accessor, glyphComp);
+    if (beams != null && hexComp != null)
+      beams.set(VfxUtil.glyphLinkBeams(hexComp, glyphComp.getGlyph()));
+  }
+
+  private static HexComponent hexComponentOf(CommandBuffer<EntityStore> accessor, GlyphComponent glyphComp) {
+    Ref<EntityStore> hexEntityRef = glyphComp.getHexRef();
+    return hexEntityRef != null ? accessor.getComponent(hexEntityRef, HexComponent.getComponentType()) : null;
   }
 
   private void resetGlyphTransform(CommandBuffer<EntityStore> accessor, Ref<EntityStore> nodeRef,
@@ -197,18 +219,33 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
 
     if (hasAnyLink) {
       glyph.clearAllSlots();
+      clearLinkBeams(accessor, nodeRef, glyphComp);
       return InteractionState.Finished;
     }
 
     return deleteGlyph(accessor, nodeRef, playerRef, glyphComp);
   }
 
+  private static void clearLinkBeams(CommandBuffer<EntityStore> accessor, Ref<EntityStore> nodeRef,
+      GlyphComponent glyphComp) {
+    if (glyphComp.areSlotsVisible()) {
+      for (Ref<EntityStore> slotRef : glyphComp.getSlotEntityRefs()) {
+        var beams = slotRef != null && slotRef.isValid()
+            ? accessor.getComponent(slotRef, BeamComponent.getComponentType())
+            : null;
+        if (beams != null)
+          beams.clear();
+      }
+      return;
+    }
+    var beams = accessor.getComponent(nodeRef, BeamComponent.getComponentType());
+    if (beams != null)
+      beams.clear();
+  }
+
   private InteractionState deleteGlyph(CommandBuffer<EntityStore> accessor, Ref<EntityStore> nodeRef,
       Ref<EntityStore> playerRef, GlyphComponent glyphComp) {
-    Ref<EntityStore> hexEntityRef = glyphComp.getHexRef();
-    HexComponent hexComp = hexEntityRef != null
-        ? accessor.getComponent(hexEntityRef, HexComponent.getComponentType())
-        : null;
+    HexComponent hexComp = hexComponentOf(accessor, glyphComp);
 
     String glyphId = glyphComp.getId();
     if (hexComp != null) {
@@ -233,13 +270,15 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
     Ref<EntityStore> expanded = craftingComp.getExpandedGlyphRef();
     if (expanded != null && expanded.equals(nodeRef)) {
       craftingComp.setExpandedGlyphRef(null);
-      SlotNodeHandler.INSTANCE.despawnSlotsForGlyph(accessor, nodeRef);
+      GlyphComponent glyphComp = accessor.getComponent(nodeRef, GlyphComponent.getComponentType());
+      if (glyphComp != null)
+        collapseSlots(accessor, nodeRef, glyphComp);
     }
   }
 
-  public Ref<EntityStore> spawnNode(ComponentAccessor<EntityStore> accessor, Ref<EntityStore> parentRef,
+  public Ref<EntityStore> spawnNode(CommandBuffer<EntityStore> accessor, Ref<EntityStore> parentRef,
       Vector3d position, Ref<EntityStore> playerRef, GlyphComponent glyphComp,
-      Ref<EntityStore> hexEntityRef) {
+      Ref<EntityStore> hexEntityRef, Ref<EntityStore> glyphNodeRef) {
     Glyph glyph = glyphComp.getGlyph();
     Rotation3f glyphRot = new Rotation3f(glyph.getRotation().x, glyph.getRotation().y, 0);
     Holder<EntityStore> glyphHolder = CreateGlyph.createGlyphHolder(accessor, glyphComp, position, glyphRot);
@@ -266,15 +305,15 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
     glyphHolder.addComponent(NodeComponent.getComponentType(),
         new NodeComponent(hexEntityRef, GlyphNodeConfig.TYPE));
 
-    Ref<EntityStore> glyphNodeRef = accessor.addEntity(glyphHolder, AddReason.SPAWN);
+    HexComponent hexComp = accessor.getComponent(hexEntityRef, HexComponent.getComponentType());
+    List<AttachedBeam> beams = hexComp != null ? VfxUtil.glyphLinkBeams(hexComp, glyph) : List.of();
+    glyphHolder.addComponent(BeamComponent.getComponentType(),
+        new BeamComponent(beams.toArray(AttachedBeam[]::new)));
+
+    accessor.addEntity(glyphHolder, glyphNodeRef, AddReason.SPAWN);
     glyphComp.setSelfRef(glyphNodeRef);
     glyphComp.setHexRef(hexEntityRef);
     glyphComp.setParentRef(hexEntityRef);
-
-    HexComponent hexComp = accessor.getComponent(hexEntityRef, HexComponent.getComponentType());
-    if (hexComp != null) {
-      hexComp.addChildGlyphRef(glyph.getId(), glyphNodeRef);
-    }
 
     return glyphNodeRef;
   }
@@ -285,13 +324,10 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
     if (glyphComp == null)
       return;
 
-    Ref<EntityStore> hexEntityRef = glyphComp.getHexRef();
-    if (hexEntityRef != null) {
-      HexComponent hexComp = accessor.getComponent(hexEntityRef, HexComponent.getComponentType());
-      if (hexComp != null) {
-        hexComp.getHex().removeGlyph(glyphComp.getId());
-        hexComp.removeChildGlyph(glyphComp.getId());
-      }
+    HexComponent hexComp = hexComponentOf(accessor, glyphComp);
+    if (hexComp != null) {
+      hexComp.getHex().removeGlyph(glyphComp.getId());
+      hexComp.removeChildGlyph(glyphComp.getId());
     }
 
     clearExpandedIfMatches(accessor, playerRef, nodeRef);

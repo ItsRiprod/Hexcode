@@ -37,6 +37,8 @@ public final class DrawCaptureService {
     private record TrainingRequest(String shapeId, String packOverride) {
     }
 
+    // just as a note - this IS an antipattern i fully admit. I don't like this, but I'm not registering a whole pipeline for something
+    // that only happens during development. So this is what it shall be - since you only ever "train" a shape once as you make it.
     private static final Map<UUID, TrainingRequest> trainingRequests = new ConcurrentHashMap<>();
 
     private DrawCaptureService() {
