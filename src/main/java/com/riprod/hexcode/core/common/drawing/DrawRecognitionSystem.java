@@ -86,7 +86,7 @@ public class DrawRecognitionSystem extends EntityTickingSystem<EntityStore> {
         if (ability == null) {
             return false;
         }
-        if (ability != InteractionType.Ability2) {
+        if (ability != InteractionType.Ability4) {
             if (capture.getFinalizeDelaySeconds() < 0f) {
                 caster.pressAbility(ability);
             }

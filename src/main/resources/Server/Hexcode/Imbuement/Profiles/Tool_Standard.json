@@ -18,13 +18,17 @@
       "Label": "Ability 1",
       "Description": "Execute on the Ability 1 keybind (Q)"
     },
+    "Ability4": {
+      "Label": "Ability 4",
+      "Description": "Execute on the Ability 4 keybind (H)"
+    },
     "Ability2": {
-      "Label": "Ability 2",
-      "Description": "Execute on the Ability 2 keybind (E)"
+      "Label": "Ability 2 (Legacy)",
+      "Description": "No longer fires since Hytale Update 7. Copy the spell off this slot; it will be removed."
     },
     "Ability3": {
-      "Label": "Ability 3",
-      "Description": "Execute on the Ability 3 keybind (R)"
+      "Label": "Ability 3 (Legacy)",
+      "Description": "No longer fires since Hytale Update 7. Copy the spell off this slot; it will be removed."
     }
   },
   "Defaults": {

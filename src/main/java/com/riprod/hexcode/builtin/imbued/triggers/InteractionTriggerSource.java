@@ -65,6 +65,7 @@ public final class InteractionTriggerSource {
             case Ability1 -> Ability1Trigger.ID;
             case Ability2 -> Ability2Trigger.ID;
             case Ability3 -> Ability3Trigger.ID;
+            case Ability4 -> Ability4Trigger.ID;
             default -> null;
         };
     }

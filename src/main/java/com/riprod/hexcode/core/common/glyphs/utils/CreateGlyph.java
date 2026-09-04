@@ -12,6 +12,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.protocol.MountController;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
@@ -40,9 +41,13 @@ public class CreateGlyph {
     Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
     Vector3d playerPos = accessor.getComponent(playerRef, TransformComponent.getComponentType())
         .getPosition();
+    var headRot = accessor.getComponent(playerRef, HeadRotation.getComponentType());
+    var rotation = headRot != null
+        ? new Rotation3f(headRot.getRotation().x, headRot.getRotation().y, 0f)
+        : new Rotation3f();
 
     holder.addComponent(TransformComponent.getComponentType(),
-        new TransformComponent(playerPos, new Rotation3f()));
+        new TransformComponent(playerPos, rotation));
     holder.addComponent(UUIDComponent.getComponentType(),
         new UUIDComponent(UUID.randomUUID()));
 

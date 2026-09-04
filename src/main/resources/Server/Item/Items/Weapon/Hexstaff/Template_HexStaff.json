@@ -19,8 +19,7 @@
     "Primary": "Hexstaff_Primary",
     "Secondary": "Hexstaff_Secondary",
     "Ability1": "Hexstaff_Ability1",
-    "Ability2": "Hexstaff_Ability2",
-    "Ability3": "Hexstaff_Ability3"
+    "Ability4": "Hexstaff_Ability4"
   },
   "ItemAppearanceConditions": {
     "SignatureEnergy": [

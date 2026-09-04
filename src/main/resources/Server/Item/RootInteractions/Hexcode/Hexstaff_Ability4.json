@@ -5,7 +5,7 @@
     "Cooldown": 0.5
   },
   "Interactions": [
-    "Hexstaff_Ability2"
+    "Hexstaff_Ability4"
   ],
-  "HudInputBindingEntry": "server.hexcode.interactions.hexstaff.ability2.description"
+  "HudInputBindingEntry": "Complete Early"
 }

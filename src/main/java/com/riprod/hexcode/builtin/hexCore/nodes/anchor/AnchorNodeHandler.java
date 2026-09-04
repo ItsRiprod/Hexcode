@@ -41,7 +41,7 @@ import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeHandler;
 public class AnchorNodeHandler extends BaseNodeHandler {
 
     private static final double ROOT_NODE_SCALE = 0.2;
-    private static final float DRAG_REACH = 5f;
+    private static final float DRAG_REACH = 2f;
 
     public static final AnchorNodeHandler INSTANCE = new AnchorNodeHandler();
 
@@ -105,7 +105,7 @@ public class AnchorNodeHandler extends BaseNodeHandler {
     public InteractionState ability(CommandBuffer<EntityStore> accessor, Ref<EntityStore> nodeRef,
             InteractionType type, Ref<EntityStore> playerRef) {
 
-        if (type != InteractionType.Ability3)
+        if (type != InteractionType.Ability1)
             return InteractionState.Finished;
 
         NodeComponent nodeComp = accessor.getComponent(nodeRef, NodeComponent.getComponentType());

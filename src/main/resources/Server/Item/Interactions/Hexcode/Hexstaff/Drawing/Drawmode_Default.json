@@ -2,7 +2,7 @@
   "Type": "HexDrawMode",
   "Forks": {
     "Primary": "Draw",
-    "Ability2": "Hexstaff_Ability2"
+    "Ability4": "Hexstaff_Ability4"
   },
   "AllowIndefiniteHold": true,
   "Effects": {

@@ -102,7 +102,7 @@ public abstract class BaseSlotHandler extends BaseNodeHandler {
     @Override
     public InteractionState ability(CommandBuffer<EntityStore> accessor, Ref<EntityStore> nodeRef,
             InteractionType inputType, Ref<EntityStore> playerRef) {
-        if (inputType != InteractionType.Ability3) return InteractionState.Failed;
+        if (inputType != InteractionType.Ability1) return InteractionState.Failed;
 
         SlotComponent slotComp = accessor.getComponent(nodeRef, SlotComponent.getComponentType());
         NodeComponent nodeComp = accessor.getComponent(nodeRef, NodeComponent.getComponentType());

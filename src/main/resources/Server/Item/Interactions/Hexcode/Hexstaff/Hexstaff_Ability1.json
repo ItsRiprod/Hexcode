@@ -1,4 +1,14 @@
 {
-  "Type": "HexDispel",
-  "OnItemChangeBehavior": "Cancel"
+  "Type": "StatsCondition",
+  "Costs": {
+    "InContext": 1
+  },
+  "Next": {
+    "Type": "HexContextAbility",
+    "OnItemChangeBehavior": "Cancel"
+  },
+  "Failed": {
+    "Type": "HexDispel",
+    "OnItemChangeBehavior": "Cancel"
+  }
 }

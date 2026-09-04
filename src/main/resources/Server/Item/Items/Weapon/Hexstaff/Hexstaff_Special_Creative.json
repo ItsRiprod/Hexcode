@@ -49,7 +49,7 @@
         {
           "Target": "Max",
           "CalculationType": "Additive",
-          "Amount": 9999
+          "Amount": 999999
         }
       ]
     },

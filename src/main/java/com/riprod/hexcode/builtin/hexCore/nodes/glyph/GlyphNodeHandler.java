@@ -206,7 +206,7 @@ public class GlyphNodeHandler extends BaseGlyphHandler {
   @Override
   public InteractionState ability(CommandBuffer<EntityStore> accessor, Ref<EntityStore> nodeRef,
       InteractionType inputType, Ref<EntityStore> playerRef) {
-    if (inputType != InteractionType.Ability3)
+    if (inputType != InteractionType.Ability1)
       return InteractionState.Failed;
 
     GlyphComponent glyphComp = accessor.getComponent(nodeRef, GlyphComponent.getComponentType());

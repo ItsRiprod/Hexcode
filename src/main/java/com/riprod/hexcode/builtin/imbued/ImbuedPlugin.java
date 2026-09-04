@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.imbued.triggers.Ability1Trigger;
 import com.riprod.hexcode.builtin.imbued.triggers.Ability2Trigger;
 import com.riprod.hexcode.builtin.imbued.triggers.Ability3Trigger;
+import com.riprod.hexcode.builtin.imbued.triggers.Ability4Trigger;
 import com.riprod.hexcode.builtin.imbued.triggers.AttackedTrigger;
 import com.riprod.hexcode.builtin.imbued.triggers.BlockTrigger;
 import com.riprod.hexcode.builtin.imbued.triggers.InteractionTriggerSource;
@@ -80,6 +81,7 @@ public class ImbuedPlugin extends JavaPlugin {
         TriggerRegistry.register(new Ability1Trigger());
         TriggerRegistry.register(new Ability2Trigger());
         TriggerRegistry.register(new Ability3Trigger());
+        TriggerRegistry.register(new Ability4Trigger());
         TriggerRegistry.register(new OnAttackTrigger());
         TriggerRegistry.register(new OnShootTrigger());
         TriggerRegistry.register(new BlockTrigger());
