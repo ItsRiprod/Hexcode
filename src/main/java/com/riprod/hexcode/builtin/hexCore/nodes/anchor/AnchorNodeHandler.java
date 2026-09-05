@@ -36,7 +36,6 @@ import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingCompon
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.CraftingColors;
 import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeHandler;
-import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.builtin.hexCore.scene.LinkRenderer;
 
 public class AnchorNodeHandler extends BaseNodeHandler {
