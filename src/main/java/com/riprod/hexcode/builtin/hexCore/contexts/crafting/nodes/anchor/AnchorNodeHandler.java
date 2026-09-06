@@ -173,7 +173,8 @@ public class AnchorNodeHandler extends BaseNodeHandler {
         return InteractionState.Finished;
     }
 
-    public Ref<EntityStore> spawnNode(CommandBuffer<EntityStore> accessor, Hex coreHex, Ref<EntityStore> parentRef,
+    public Ref<EntityStore> spawnNode(CommandBuffer<EntityStore> accessor, HexComponent hexComp,
+            Ref<EntityStore> parentRef,
             Vector3d rootPos,
             Ref<EntityStore> playerRef) {
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
@@ -205,7 +206,6 @@ public class AnchorNodeHandler extends BaseNodeHandler {
         holder.addComponent(HoverableComponent.getComponentType(),
                 new HoverableComponent(HoverableType.NODE));
 
-        HexComponent hexComp = accessor.getComponent(parentRef, HexComponent.getComponentType());
         Ref<EntityStore> nodeGlyph = accessor.addEntity(holder, AddReason.SPAWN);
 
         if (hexComp == null) {
@@ -224,8 +224,8 @@ public class AnchorNodeHandler extends BaseNodeHandler {
 
             GlyphComponent glyphComp = new GlyphComponent(glyph);
 
-            Ref<EntityStore> glyphRef = GlyphNodeHandler.INSTANCE.spawnNode(accessor, nodeGlyph, worldPos,
-                    playerRef, glyphComp, parentRef);
+            Ref<EntityStore> glyphRef = GlyphNodeHandler.INSTANCE.spawnNode(accessor, worldPos, playerRef,
+                    glyphComp, hexComp, parentRef);
 
             hexComp.addChildGlyphRef(glyph.getId(), glyphRef);
         }
@@ -245,9 +245,10 @@ public class AnchorNodeHandler extends BaseNodeHandler {
         return InteractionState.Finished;
     }
 
-    public Hex prepareForCrafting(CommandBuffer<EntityStore> accessor, Ref<EntityStore> node,
+    public HexComponent prepareForCrafting(CommandBuffer<EntityStore> accessor, Ref<EntityStore> nodeRef,
             HexcodeSessionComponent session, String slotKey) {
-        HexComponent hexComp = accessor.getComponent(node, HexComponent.getComponentType());
+        HexComponent hexComp = nodeRef.isValid() ? accessor.getComponent(nodeRef, HexComponent.getComponentType())
+                : null;
         Hex storedHex = session.getHexAt(slotKey, accessor);
 
         if (hexComp != null) {
@@ -265,11 +266,11 @@ public class AnchorNodeHandler extends BaseNodeHandler {
 
         Hex originalHex = storedHex != null ? storedHex.clone() : new Hex();
         HexComponent freshComp = new HexComponent(originalHex);
-        freshComp.setSelfRef(node);
+        freshComp.setSelfRef(nodeRef);
         freshComp.setRootRef(hexComp != null ? hexComp.getRootRef() : session.getAnchorRef());
-        accessor.putComponent(node, HexComponent.getComponentType(), freshComp);
-        accessor.removeComponent(node, DebugComponent.getComponentType());
-        return originalHex;
+        accessor.putComponent(nodeRef, HexComponent.getComponentType(), freshComp);
+        accessor.removeComponent(nodeRef, DebugComponent.getComponentType());
+        return freshComp;
     }
 
     @Override

@@ -92,8 +92,8 @@ public final class CraftingGlyphSpawner {
                     (float) (worldPos.z - hexPos.z)));
         }
 
-        Ref<EntityStore> effectRef = GlyphNodeHandler.INSTANCE.spawnNode(buffer, hexRef, worldPos, playerRef,
-                glyphComponent, hexRef);
+        Ref<EntityStore> effectRef = GlyphNodeHandler.INSTANCE.spawnNode(buffer, worldPos, playerRef,
+                glyphComponent, hexComp, hexRef);
 
         VfxUtil.sound("SFX_Eye_Void_Attack_Summon", worldPos, buffer);
 

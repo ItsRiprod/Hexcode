@@ -258,8 +258,8 @@ public class GlyphNodeHandler extends BaseNodeHandler {
     }
   }
 
-  public Ref<EntityStore> spawnNode(ComponentAccessor<EntityStore> accessor, Ref<EntityStore> parentRef,
-      Vector3d position, Ref<EntityStore> playerRef, GlyphComponent glyphComp,
+  public Ref<EntityStore> spawnNode(ComponentAccessor<EntityStore> accessor,
+      Vector3d position, Ref<EntityStore> playerRef, GlyphComponent glyphComp, HexComponent hexComp,
       Ref<EntityStore> hexEntityRef) {
     Glyph glyph = glyphComp.getGlyph();
     Rotation3f glyphRot = new Rotation3f(glyph.getRotation().x, glyph.getRotation().y, 0);
@@ -292,10 +292,7 @@ public class GlyphNodeHandler extends BaseNodeHandler {
     glyphComp.setHexRef(hexEntityRef);
     glyphComp.setParentRef(hexEntityRef);
 
-    HexComponent hexComp = accessor.getComponent(hexEntityRef, HexComponent.getComponentType());
-    if (hexComp != null) {
-      hexComp.addChildGlyphRef(glyph.getId(), glyphNodeRef);
-    }
+    hexComp.addChildGlyphRef(glyph.getId(), glyphNodeRef);
 
     return glyphNodeRef;
   }
