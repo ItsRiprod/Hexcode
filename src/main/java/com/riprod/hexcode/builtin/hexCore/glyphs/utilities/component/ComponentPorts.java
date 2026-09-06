@@ -10,11 +10,11 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.LinkSlot;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.named.NamedSlot;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlot;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.slot.SlotGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.slot.SlotGlyphSlots;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlot;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.LinkSlot;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.NamedSlot;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
@@ -94,7 +94,7 @@ public final class ComponentPorts {
 
     public static Slot typedPort(Port port, @Nullable Slot persisted) {
         if (port.mode() == SlotGlyph.MODE_TRILEAN) {
-            var typed = new BooleanSlot();
+            var typed = new TrileanSlot();
             copyInto(typed, persisted);
             return typed;
         }

@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 
+/** All Crafting-Related ECS actions and events */
 public class CraftingEvent implements IEvent<Void> {
 
     public enum Reason {

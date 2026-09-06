@@ -1,5 +1,4 @@
 {
-  "$Requires": "Riprod:Components",
   "$Import": "Ingredient_Fire_Essence_Concentrated",
   "TranslationProperties": {
     "Name": "hexcode.items.ingredient.essence.water_concentrated",

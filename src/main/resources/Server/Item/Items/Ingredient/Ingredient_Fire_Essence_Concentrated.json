@@ -55,5 +55,9 @@
       "SystemId": "Seeds_Eternal"
     }
   ],
-  "Texture": "Resources/Ingredients/Essence_Textures/Fire_Essence_Texture.png"
+  "Texture": "Resources/Ingredients/Essence_Textures/Fire_Essence_Texture.png",
+  "Categories": [
+    "Hexcode.Components",
+    "Items.Ingredients"
+  ]
 }

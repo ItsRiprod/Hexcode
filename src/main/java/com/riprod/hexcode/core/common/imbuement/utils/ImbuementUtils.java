@@ -22,18 +22,8 @@ import com.riprod.hexcode.core.common.imbuement.ImbuementMetadata;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuedBlockComponent;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
-import com.riprod.hexcode.core.common.imbuement.registry.ImbuementProfileRegistry;
 
 public class ImbuementUtils {
-
-    @Deprecated public static final String METADATA_KEY = ImbuementMetadata.KEY;
-    @Deprecated public static final String DEFAULT_SLOT = ImbuementMetadata.DEFAULT_SLOT;
-
-    private ImbuementUtils() {
-    }
-
-    // slot-keyed API
-
     public static Map<String, ImbuementData> readAll(@Nullable ItemStack item) {
         if (item == null || item.isEmpty()) return Collections.emptyMap();
         Map<String, ImbuementData> map = item.getFromMetadataOrNull(ImbuementMetadata.KEY, ImbuementMetadata.CODEC);
@@ -63,7 +53,7 @@ public class ImbuementUtils {
 
     @Nullable
     public static ImbuementProfileAsset resolveProfile(@Nullable ItemStack item) {
-        return ImbuementProfileRegistry.first(item);
+        return ImbuementProfileUtils.first(item);
     }
 
     // legacy slotless API — delegates to DEFAULT_SLOT for backwards compat

@@ -23,10 +23,11 @@ import org.joml.Vector3d;
 import com.riprod.hexcode.api.context.HexContextChangeEvent;
 import com.riprod.hexcode.api.event.CraftingEvent;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.anchor.AnchorNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.SlotNodeHandler;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.SelectingState;
-import com.riprod.hexcode.builtin.hexCore.nodes.anchor.AnchorNodeHandler;
-import com.riprod.hexcode.builtin.hexCore.nodes.container.ContainerNodeHandler;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.SlotNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.contexts.selecting.nodes.preview.PreviewNodeHandler;
+import com.riprod.hexcode.builtin.hexCore.contexts.utils.GravityUtil;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
@@ -148,7 +149,7 @@ public class CraftingChangeListener extends WorldEventSystem<EntityStore, HexCon
             if (slotAsset == null) {
                 return;
             }
-            containerRef = ContainerNodeHandler.spawnForSlot(buffer, session, player, anchorPos,
+            containerRef = PreviewNodeHandler.spawnForSlot(buffer, session, player, anchorPos,
                     PedestalSystem.ACTIVE_HEX_OFFSET, slotKey, slotAsset, null);
             if (containerRef == null) {
                 return;
@@ -165,7 +166,7 @@ public class CraftingChangeListener extends WorldEventSystem<EntityStore, HexCon
             }
         }
 
-        Hex hex = ContainerNodeHandler.INSTANCE.prepareForCrafting(buffer, containerRef, session, slotKey);
+        Hex hex = AnchorNodeHandler.INSTANCE.prepareForCrafting(buffer, containerRef, session, slotKey);
 
         Ref<EntityStore> rootNodeRef = AnchorNodeHandler.INSTANCE.spawnNode(buffer, hex,
                 containerRef, activePos, player);

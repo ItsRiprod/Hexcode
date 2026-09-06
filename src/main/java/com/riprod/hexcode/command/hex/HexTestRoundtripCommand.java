@@ -25,10 +25,10 @@ import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProv
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlot;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlotState;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.LinkSlot;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.NamedSlot;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.LinkSlot;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.named.NamedSlot;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlot;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlotState;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -192,8 +192,8 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
             var port = new LinkSlot();
             port.addLink(instances.get((i + 1) % 3).getId());
             instances.get(i).getSlots().put("Port_In", port);
-            var toggle = new BooleanSlot();
-            toggle.setState(BooleanSlotState.POSITIVE);
+            var toggle = new TrileanSlot();
+            toggle.setState(TrileanSlotState.POSITIVE);
             instances.get(i).getSlots().put("Toggle", toggle);
             var label = new NamedSlot();
             label.setValue("Port_" + i);
@@ -206,8 +206,8 @@ public class HexTestRoundtripCommand extends AbstractPlayerCommand {
             return;
         }
 
-        var reference = new BooleanSlot();
-        reference.setState(BooleanSlotState.POSITIVE);
+        var reference = new TrileanSlot();
+        reference.setState(TrileanSlotState.POSITIVE);
         byte[] expectedState = reference.encodeState();
 
         var payloads = new ArrayList<String>();

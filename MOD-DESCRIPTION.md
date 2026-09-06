@@ -141,7 +141,37 @@ A list of every glyph is at https://docs.hexcodec.com
 Feel free to stop in [Discord](https://discord.hexcodec.com) and say hi!
 
 <h1 style="text-align: center;">
-<img src="https://media.forgecdn.net/attachments/description/1448311/description_af33667b-4924-42b3-b25d-bcb271873444.png" />
+<img src="https://media.forgecdn.net/attachments/description/1448311/description_af33667b-4924-42b3-b25d-bcb271873444.png" style="text-align: center;" /><br>
+Resources
+</h1>
+
+# Youtube
+- [Getting Started with Hexcode - Guaz](https://www.youtube.com/watch?v=DM2qBc8_gEw)
+- [Item Imbuements - Guaz](https://www.youtube.com/watch?v=9EaQHZuLQrA)
+- [Hexcode Trailer](https://showcase.hexcodec.com)
+- [Hexcode Trailer Cinematic](https://youtu.be/9DedUMCRQxk?si=uPwbhkpnCVjkzs4K)
+
+# Docs
+- [HytaleModding Docs](https://docs.hexcodec.com)
+
+# Community
+|[![](https://cdn.discordapp.com/icons/1486567272792457319/4aad025f138baa3777b6684f0c2559c2.webp?size=80&quality=lossless)](https://discord.hexcodec.com)|<h2>Hexcasters Server</h2> |
+| --- |: --- |
+| IP: | Whitelist only on the discord |
+| Discord|![Discord](https://img.shields.io/discord/1486567272792457319?label=Hexcode%20Server) |
+
+|[![](https://cdn.discordapp.com/icons/1483542564576432301/e4923af11afcfa264bdc6c9137bf8607.webp?size=80&quality=lossless)](https://discord.com/invite/XK9jJqMvhq)|<h2>Aethertale Server</h2>|
+| --- | :--- |
+| IP: | aethertale.net:5100 |
+| Discord|https://discord.com/invite/XK9jJqMvhq |
+
+|[![](https://cdn.discordapp.com/icons/327615716494802946/76dbacdba7b854399092124f21c91fac.webp?size=80&quality=lossless)](https://discord.gg/F9nJvqWnZU)|<h2>PyreTale Server</h2> |
+| --- | :--- |
+| IP: | 69.41.177.239:25588 |
+| Discord|https://discord.gg/F9nJvqWnZU |
+
+<h1 style="text-align: center;">
+<img src="https://media.forgecdn.net/attachments/description/1448311/description_af33667b-4924-42b3-b25d-bcb271873444.png" /><br>
 A Special Thanks to...
 </h1>
 
@@ -171,6 +201,5 @@ Everyone who helped bugtest and believed in the vision of hexcode - even when it
 | Dragon | Kil | AlmostAwake | Cacao |
 | Kita Leelik | Ferox | WithWe | Hex |
 and so so so many more
-
 
 [![](https://www.bisecthosting.com/partners/custom-banners/982a55f3-ff77-4a69-a22e-a32210b4a199.webp)](https://bisecthosting.com/Hexcode)

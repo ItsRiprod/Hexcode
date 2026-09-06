@@ -11,13 +11,13 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
-import com.riprod.hexcode.builtin.hexCore.nodes.container.ContainerNodeHandler;
 import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.builtin.hexCore.contexts.selecting.nodes.preview.PreviewNodeHandler;
 import com.riprod.hexcode.builtin.hexCore.scene.RadialPositionUtil;
 
 public final class SelectingScene {
@@ -47,7 +47,7 @@ public final class SelectingScene {
         for (Map.Entry<String, PedestalSlot> entry : slots.entrySet()) {
             Vector3f offset = offsets.get(i++);
             String slotKey = entry.getKey();
-            spawnedRefs.add(ContainerNodeHandler.spawnForSlot(buffer, session, playerRef, anchorPos,
+            spawnedRefs.add(PreviewNodeHandler.spawnForSlot(buffer, session, playerRef, anchorPos,
                     offset, slotKey, entry.getValue(), session.getHexAt(slotKey, buffer)));
         }
 

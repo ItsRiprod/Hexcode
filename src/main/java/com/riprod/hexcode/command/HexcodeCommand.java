@@ -17,7 +17,6 @@ import com.riprod.hexcode.command.draw.DrawTrainCommand;
 import com.riprod.hexcode.command.glyph.GlyphsForgetCommand;
 import com.riprod.hexcode.command.glyph.GlyphsLearnCommand;
 import com.riprod.hexcode.command.glyph.GlyphsListCommand;
-import com.riprod.hexcode.command.hex.HexCastCommand;
 import com.riprod.hexcode.command.hex.HexInspectCommand;
 import com.riprod.hexcode.command.hex.HexSaveCommand;
 import com.riprod.hexcode.command.hex.HexSerializeCommand;
@@ -43,7 +42,6 @@ public class HexcodeCommand extends AbstractPlayerCommand {
         addSubCommand(new HexSerializeCommand());
         addSubCommand(new HexSaveCommand());
         addSubCommand(new HexTestRoundtripCommand());
-        addSubCommand(new HexCastCommand());
         addSubCommand(new DrawTrainCommand());
         addSubCommand(new HexResetCommand());
         addSubCommand(new HexPageCommand());

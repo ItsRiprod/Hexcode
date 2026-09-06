@@ -11,9 +11,9 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.item.config.metadata.ItemDisplayMetadata;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.riprod.hexcode.builtin.hexCore.imbuements.profiles.StaticSlotProfile;
 import com.riprod.hexcode.builtin.hextreme.execution.config.PageConfig;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.common.imbuement.asset.profiles.StaticSlotProfile;
 import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 
 public final class PageProfile extends StaticSlotProfile {

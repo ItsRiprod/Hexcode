@@ -20,7 +20,7 @@ import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
 import com.riprod.hexcode.core.common.imbuement.extract.ItemStatExtractor;
-import com.riprod.hexcode.core.common.imbuement.registry.ImbuementProfileRegistry;
+import com.riprod.hexcode.core.common.imbuement.utils.ImbuementProfileUtils;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
 import com.riprod.hexcode.core.common.triggers.component.TriggerEvent;
 import com.riprod.hexcode.core.common.triggers.registry.Trigger;
@@ -49,7 +49,7 @@ public final class ItemEquippedArmorCastDispatcher implements CastRootDispatcher
             if (stack == null || stack.isEmpty()) continue;
             if (ImbuementUtils.readAll(stack).isEmpty()) continue;
 
-            ImbuementProfileAsset profile = ImbuementProfileRegistry.first(stack);
+            ImbuementProfileAsset profile = ImbuementProfileUtils.first(stack);
             if (profile == null || profile.findSlot(stack, trigger.getId()) == null) continue;
 
             ImbuementData data = ImbuementUtils.read(stack, trigger.getId());

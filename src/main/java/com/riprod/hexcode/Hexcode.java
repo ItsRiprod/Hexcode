@@ -515,7 +515,7 @@ public class Hexcode extends JavaPlugin {
         events.register(AssetEditorActivateButtonEvent.class, GlyphIconEditorButton.BUTTON_ID,
                 (Consumer<AssetEditorActivateButtonEvent>) event -> GlyphIconEditorButton.activate(event,
                         this.getManifest()));
-        events.register(AssetEditorActivateButtonEvent.class, CraftingGlyphEditorSpawn.BUTTON_ID,
+        events.register(AssetEditorActivateButtonEvent.class, "HexcodeSpawnGlyph",
                 (Consumer<AssetEditorActivateButtonEvent>) CraftingGlyphEditorSpawn::activate);
         events.registerGlobal(AssetEditorSelectAssetEvent.class,
                 (Consumer<AssetEditorSelectAssetEvent>) GlyphEditorPreview::onSelectAsset);

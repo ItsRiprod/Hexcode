@@ -72,8 +72,6 @@ hytaleTools {
     subPlugin("Imbued", "com.riprod.hexcode.builtin.imbued.ImbuedPlugin", false, false)
     // The base hexcode glyphs + styles + assets
     subPlugin("HexCore", "com.riprod.hexcode.builtin.hexCore.HexCorePlugin", false, false)
-    // Components
-    subPlugin("Components", "com.riprod.hexcode.builtin.components.ComponentsPlugin", false, false)
     // The unified magic system - elemental damage causes, statuses, and interaction reactions
     subPlugin("Statly", "com.riprod.hexcode.builtin.statly.StatlyPlugin", false, false)
     // The ritual-casting plugin
@@ -117,8 +115,6 @@ shadowJar {
     archiveClassifier.set('')
     mergeServiceFiles()
     configurations = [project.configurations.shadowBundle]
-    relocate('com.riprod.patchly', 'com.riprod.hexcode.shaded.patchly')
-    relocate('com.riprod.configly', 'com.riprod.hexcode.shaded.configly')
 }
 
 tasks.build {
