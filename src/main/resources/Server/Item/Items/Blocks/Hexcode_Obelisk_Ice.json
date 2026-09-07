@@ -14,15 +14,15 @@
   },
   "Icon": "Icons/ItemsGenerated/Hexcode_Obelisk_Ice.png",
   "TranslationProperties": {
-    "Name": "hexcode.blocks.Hexcode_Obelisk_Ice.name",
-    "Description": "hexcode.blocks.Hexcode_Obelisk_Ice.description"
+    "Name": "hexcode.blocks.Hexcode_Obelisk_Encryption.name",
+    "Description": "hexcode.blocks.Hexcode_Obelisk_Encryption.description"
   },
   "Quality": "Epic",
   "Recipe": {
     "Input": [
       {
         "ItemId": "Ingredient_Ice_Essence_Concentrated",
-        "Quantity": 15
+        "Quantity": 1
       },
       {
         "ItemId": "Ingredient_Bar_Cobalt",
@@ -30,7 +30,7 @@
       },
       {
         "ItemId": "Plant_Petals_Azure",
-        "Quantity": 30
+        "Quantity": 15
       },
       {
         "ItemId": "Rock_Shale_Cobble",
@@ -47,6 +47,16 @@
     ]
   },
   "BlockType": {
+    "InteractionHint": "hexcode.blocks.Hexcode_Obelisk_Encryption.hint",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "HexEncryptionArmInteraction"
+          }
+        ]
+      }
+    },
     "DrawType": "Model",
     "CustomModelTexture": [
       {
@@ -63,7 +73,7 @@
     "VariantRotation": "NESW",
     "Gathering": {
       "Breaking": {
-        "GatherType": "Obelisks"
+        "GatherType": "SoftBlocks"
       }
     },
     "HitboxType": "Full",
@@ -125,14 +135,25 @@
           ],
           "CustomModelAnimation": "Blocks/Hexcode/Obelisks/Animations/Obelisk_Ice_Crafting.blockyanim",
           "Looping": true
+        },
+        "Encryption": {
+          "Light": {
+            "Color": "#ff3378"
+          },
+          "Particles": [
+            {
+              "SystemId": "Ice_Obelisk_Encryption",
+              "DetachedFromModel": false
+            }
+          ],
+          "CustomModelAnimation": "Blocks/Hexcode/Obelisks/Animations/Obelisk_Ice_Selecting.blockyanim"
         }
       }
     },
     "BlockEntity": {
       "Components": {
         "Hexcode_ObeliskBlock": {
-          "Power": 10,
-          "HandlerId": "efficiency"
+          "HandlerId": "encryption"
         }
       }
     }

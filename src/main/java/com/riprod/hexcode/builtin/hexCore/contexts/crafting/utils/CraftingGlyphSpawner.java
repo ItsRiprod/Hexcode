@@ -16,12 +16,12 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import com.riprod.hexcode.api.event.CraftingEvent;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.glyph.GlyphNodeHandler;
 import com.riprod.hexcode.core.common.drawing.component.DrawnShapeComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
-import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeHandler;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.utils.VfxUtil;
 

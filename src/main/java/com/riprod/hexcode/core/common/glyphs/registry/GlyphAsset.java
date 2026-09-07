@@ -33,7 +33,6 @@ import javax.annotation.Nullable;
 import com.riprod.hexcode.core.common.node.NodeConfig;
 
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
-import com.riprod.hexcode.builtin.hexCore.contexts.crafting.utils.CraftingGlyphEditorSpawn;
 import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconEditorButton;
 import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconStore;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
@@ -234,13 +233,13 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                 .metadata(new UISidebarButtons(
                         new UIButton(GlyphIconEditorButton.BUTTON_TEXT_ID,
                                 GlyphIconEditorButton.BUTTON_ID),
-                        new UIButton(CraftingGlyphEditorSpawn.BUTTON_TEXT_ID,
-                                CraftingGlyphEditorSpawn.BUTTON_ID)))
+                        new UIButton("server.hexcode.assetEditor.buttons.spawnGlyph",
+                                "HexcodeSpawnGlyph")))
                 .metadata(new UICreateButtons(
                         new UIButton(GlyphIconEditorButton.BUTTON_TEXT_ID,
                                 GlyphIconEditorButton.BUTTON_ID),
-                        new UIButton(CraftingGlyphEditorSpawn.BUTTON_TEXT_ID,
-                                CraftingGlyphEditorSpawn.BUTTON_ID)))
+                        new UIButton("server.hexcode.assetEditor.buttons.spawnGlyph",
+                                "HexcodeSpawnGlyph")))
 
                 // documentation
                 .<String>appendInherited(new KeyedCodec<>("Title", Codec.STRING),

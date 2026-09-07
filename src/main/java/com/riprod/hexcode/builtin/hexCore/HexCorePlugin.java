@@ -13,7 +13,20 @@ import com.riprod.hexcode.api.event.GlyphDrawnEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.riprod.hexcode.builtin.hexCore.common.ContextForceExitSystem;
+import com.riprod.hexcode.builtin.hexCore.components.component.ComponentPasteCache;
+import com.riprod.hexcode.builtin.hexCore.components.system.ComponentCacheCleanupSystem;
+import com.riprod.hexcode.builtin.hexCore.components.system.ComponentCacheSystem;
+import com.riprod.hexcode.builtin.hexCore.components.system.ComponentResolveListener;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.anchor.AnchorNodeConfig;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.glyph.GlyphNodeConfig;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.LinkSlot;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.input.InputSlotConfig;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.named.NamedSlot;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.named.NamedSlotConfig;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.next.NextSlotConfig;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlot;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlotConfig;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingChangeListener;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingDrawModeEnterListener;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.system.CraftingCleanupSystem;
@@ -34,6 +47,7 @@ import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingT
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingTickSystem;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.system.FlycastingUnequipSystem;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.SelectingState;
+import com.riprod.hexcode.builtin.hexCore.contexts.selecting.nodes.preview.PreviewNodeConfig;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingChangeListener;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingForceExitSystem;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.system.SelectingSlotSelectSystem;
@@ -50,24 +64,9 @@ import com.riprod.hexcode.builtin.hexCore.execution.config.EncodedConfig;
 import com.riprod.hexcode.builtin.hexCore.execution.config.ExecutionConfig;
 import com.riprod.hexcode.builtin.hexCore.execution.config.OverlayConfig;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
-import com.riprod.hexcode.core.common.imbuement.asset.profiles.ArmorProfile;
-import com.riprod.hexcode.core.common.imbuement.asset.profiles.BlockProfile;
-import com.riprod.hexcode.core.common.imbuement.asset.profiles.BookProfile;
-import com.riprod.hexcode.core.common.imbuement.asset.profiles.WeaponProfile;
-import com.riprod.hexcode.builtin.hexCore.config.BasicConfig;
 import com.riprod.hexcode.builtin.hexCore.pedestals.PedestalContextHandler;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalInteractEvent;
 import com.riprod.hexcode.core.common.node.NodeRouter;
-import com.riprod.hexcode.builtin.hexCore.nodes.anchor.AnchorNodeConfig;
-import com.riprod.hexcode.builtin.hexCore.nodes.container.ContainerNodeConfig;
-import com.riprod.hexcode.builtin.hexCore.nodes.glyph.GlyphNodeConfig;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlot;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlotConfig;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.InputSlotConfig;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.LinkSlot;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.NamedSlot;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.NamedSlotConfig;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.NextSlotConfig;
 import com.riprod.hexcode.core.common.glyphs.component.RawStateSlot;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.node.NodeConfig;
@@ -216,6 +215,12 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.style.StyleGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.subtract.SubtractGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.tan.TanGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.variable.VariableValue;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utils.BasicConfig;
+import com.riprod.hexcode.builtin.hexCore.imbuements.profiles.ArmorProfile;
+import com.riprod.hexcode.builtin.hexCore.imbuements.profiles.BlockProfile;
+import com.riprod.hexcode.builtin.hexCore.imbuements.profiles.BookProfile;
+import com.riprod.hexcode.builtin.hexCore.imbuements.profiles.ComponentProfile;
+import com.riprod.hexcode.builtin.hexCore.imbuements.profiles.WeaponProfile;
 import com.riprod.hexcode.builtin.hexCore.obelisks.accuracy.AccuracyObelisk;
 import com.riprod.hexcode.builtin.hexCore.obelisks.efficiency.EfficiencyObelisk;
 import com.riprod.hexcode.builtin.hexCore.obelisks.importexport.ImportExportObelisk;
@@ -271,7 +276,8 @@ public class HexCorePlugin extends JavaPlugin {
         Impact.CODEC
                 .register(PowerLawImpact.ID, PowerLawImpact.class, PowerLawImpact.CODEC)
                 .register(SphereVolumeImpact.ID, SphereVolumeImpact.class, SphereVolumeImpact.CODEC)
-                .register(RatioToDefaultImpact.ID, RatioToDefaultImpact.class, RatioToDefaultImpact.CODEC)
+                .register(RatioToDefaultImpact.ID, RatioToDefaultImpact.class,
+                        RatioToDefaultImpact.CODEC)
                 .register(ThresholdImpact.ID, ThresholdImpact.class, ThresholdImpact.CODEC)
                 .register(ExponentialImpact.ID, ExponentialImpact.class, ExponentialImpact.CODEC)
                 .register(ConstantImpact.ID, ConstantImpact.class, ConstantImpact.CODEC)
@@ -397,17 +403,17 @@ public class HexCorePlugin extends JavaPlugin {
 
     private void RegisterNodes() {
         Slot.registerType(Priority.DEFAULT, "Link", LinkSlot.class, LinkSlot.CODEC);
-        Slot.registerType("Boolean", BooleanSlot.class, BooleanSlot.CODEC);
+        Slot.registerType("Boolean", TrileanSlot.class, TrileanSlot.CODEC);
         Slot.registerType(RawStateSlot.TYPE, RawStateSlot.class, RawStateSlot.CODEC);
         Slot.registerType(NamedSlotConfig.TYPE, NamedSlot.class, NamedSlot.CODEC);
 
         NodeConfig.CODEC.register(InputSlotConfig.TYPE, InputSlotConfig.class, InputSlotConfig.CODEC);
         NodeConfig.CODEC.register(NextSlotConfig.TYPE, NextSlotConfig.class, NextSlotConfig.CODEC);
-        NodeConfig.CODEC.register(BooleanSlotConfig.TYPE, BooleanSlotConfig.class, BooleanSlotConfig.CODEC);
+        NodeConfig.CODEC.register(TrileanSlotConfig.TYPE, TrileanSlotConfig.class, TrileanSlotConfig.CODEC);
         NodeConfig.CODEC.register(NamedSlotConfig.TYPE, NamedSlotConfig.class, NamedSlotConfig.CODEC);
         NodeConfig.CODEC.register(AnchorNodeConfig.TYPE, AnchorNodeConfig.class, AnchorNodeConfig.CODEC);
-        NodeConfig.CODEC.register(ContainerNodeConfig.TYPE, ContainerNodeConfig.class,
-                ContainerNodeConfig.CODEC);
+        NodeConfig.CODEC.register(PreviewNodeConfig.TYPE, PreviewNodeConfig.class,
+                PreviewNodeConfig.CODEC);
         NodeConfig.CODEC.register(GlyphNodeConfig.TYPE, GlyphNodeConfig.class, GlyphNodeConfig.CODEC);
     }
 
@@ -465,6 +471,8 @@ public class HexCorePlugin extends JavaPlugin {
         ImbuementProfileAsset.CODEC.register("Weapon", WeaponProfile.class, WeaponProfile.CODEC);
         ImbuementProfileAsset.CODEC.register("Armor", ArmorProfile.class, ArmorProfile.CODEC);
         ImbuementProfileAsset.CODEC.register("Block", BlockProfile.class, BlockProfile.CODEC);
+        ImbuementProfileAsset.CODEC.register("Component", ComponentProfile.class, ComponentProfile.CODEC);
+
     }
 
     private void RegisterComponents() {
@@ -530,6 +538,10 @@ public class HexCorePlugin extends JavaPlugin {
         ComponentType<EntityStore, CraftingState> craftingStateType = entityStoreRegistry
                 .registerComponent(CraftingState.class, CraftingState::new);
         CraftingState.setComponentType(craftingStateType);
+
+        ComponentType<EntityStore, ComponentPasteCache> pasteCacheType = this.getEntityStoreRegistry()
+                .registerComponent(ComponentPasteCache.class, ComponentPasteCache::new);
+        ComponentPasteCache.setComponentType(pasteCacheType);
     }
 
     private void RegisterSystems() {
@@ -581,6 +593,10 @@ public class HexCorePlugin extends JavaPlugin {
         GateStateResource.setResourceType(gateStateType);
         entityStoreRegistry.registerSystem(new CastGateListener());
         entityStoreRegistry.registerSystem(new GlyphGateListener());
+
+        entityStoreRegistry.registerSystem(new ComponentCacheSystem());
+        entityStoreRegistry.registerSystem(new ComponentCacheCleanupSystem());
+        entityStoreRegistry.registerSystem(new ComponentResolveListener());
     }
 
     private void RegisterConstructs() {

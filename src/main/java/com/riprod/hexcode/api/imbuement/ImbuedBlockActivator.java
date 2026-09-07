@@ -19,11 +19,11 @@ import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.core.common.imbuement.ImbuementMetadata;
 import com.riprod.hexcode.core.common.imbuement.asset.EssenceAsset;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
-import com.riprod.hexcode.core.common.imbuement.registry.ImbuementProfileRegistry;
 import com.riprod.hexcode.core.common.imbuement.block.BlockImbuementCapacity;
 import com.riprod.hexcode.core.common.imbuement.block.EssenceRefill;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuedBlockComponent;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
+import com.riprod.hexcode.core.common.imbuement.utils.ImbuementProfileUtils;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
 
 import javax.annotation.Nonnull;
@@ -122,7 +122,7 @@ public final class ImbuedBlockActivator {
         if (blockType == null) return null;
         Item item = blockType.getItem();
         if (item == null) return null;
-        return ImbuementProfileRegistry.first(item.getCategories());
+        return ImbuementProfileUtils.first(item.getCategories());
     }
 
     private static void applyEssence(@Nonnull HexContext ctx, @Nonnull EssenceAsset essence) {

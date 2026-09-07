@@ -20,42 +20,47 @@ public class HexExecuter {
     private HexExecuter() {
     }
 
-    /**
-     * Casts a hex with the provided context and buffer. Invokes the hexCastEvent
-     * @param context
-     * @param buffer
-     */
-    public static void cast(HexContext context, CommandBuffer<EntityStore> buffer) {
-        context.updateRuntimeAccessors(buffer);
-        cast(context, (ComponentAccessor<EntityStore>) buffer);
-    }
-
     private static final List<CastTransform> CAST_TRANSFORMS = new CopyOnWriteArrayList<>();
 
     public static void registerCastTransform(CastTransform transform) {
         CAST_TRANSFORMS.add(transform);
     }
 
-    public static void cast(HexContext context, ComponentAccessor<EntityStore> accessor) {
-        if (context.getStyle() == null) context.setStyle(HexStyleAsset.empty());
+    /**
+     * Casts a hex with the provided context and buffer. Invokes the hexCastEvent
+     * 
+     * 
+     * 
+     * @param context
+     * @param buffer
+     */
+    public static void cast(HexContext context, ComponentAccessor<EntityStore> buffer) {
+        if (buffer instanceof CommandBuffer<EntityStore> buff) {
+            context.updateRuntimeAccessors(buff);
+        }
+
+        if (context.getStyle() == null)
+            context.setStyle(HexStyleAsset.empty());
 
         HexCast cast = context.cast();
         if (cast != null && cast.getHex() != null) {
             cast.setHex(cast.getHex().clone());
             for (CastTransform transform : CAST_TRANSFORMS) {
-                transform.apply(context, accessor);
+                transform.apply(context, buffer);
             }
         }
-        HexCastStore casts = accessor.getResource(HexCastStore.getResourceType());
-        if (cast != null) casts.register(cast);
+        HexCastStore casts = buffer.getResource(HexCastStore.getResourceType());
+        if (cast != null)
+            casts.register(cast);
 
         HexCastEvent.Pre pre = new HexCastEvent.Pre(context);
-        accessor.invoke(pre);
+        buffer.invoke(pre);
         if (pre.isCancelled()) {
-            if (cast != null) casts.remove(cast.getExecutionId());
+            if (cast != null)
+                casts.remove(cast.getExecutionId());
             return;
         }
-        accessor.invoke(new HexCastEvent(context));
+        buffer.invoke(new HexCastEvent(context));
     }
 
     public static void continueFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {

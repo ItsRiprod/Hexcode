@@ -23,7 +23,7 @@ import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
-import com.riprod.hexcode.core.common.imbuement.registry.ImbuementProfileRegistry;
+import com.riprod.hexcode.core.common.imbuement.utils.ImbuementProfileUtils;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalInteractEvent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
@@ -193,14 +193,14 @@ public class PedestalContextHandler implements Consumer<PedestalInteractEvent> {
         HexSlot chosenSlot = null;
         ImbuementProfileAsset profile = null;
         if (mainHand != null && !mainHand.isEmpty()) {
-            profile = ImbuementProfileRegistry.first(mainHand);
+            profile = ImbuementProfileUtils.first(mainHand);
             if (profile != null) {
                 chosen = mainHand;
                 chosenSlot = HexSlot.MainHand;
             }
         }
         if (profile == null && utilityHand != null && !utilityHand.isEmpty()) {
-            profile = ImbuementProfileRegistry.first(utilityHand);
+            profile = ImbuementProfileUtils.first(utilityHand);
             if (profile != null) {
                 chosen = utilityHand;
                 chosenSlot = HexSlot.OffHand;

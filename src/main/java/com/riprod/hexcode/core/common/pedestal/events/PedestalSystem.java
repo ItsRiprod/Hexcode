@@ -20,7 +20,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
-import com.riprod.hexcode.core.common.imbuement.registry.ImbuementProfileRegistry;
+import com.riprod.hexcode.core.common.imbuement.utils.ImbuementProfileUtils;
 import com.riprod.hexcode.core.common.obelisk.component.ObeliskBlockComponent;
 import com.riprod.hexcode.core.common.obelisk.system.ObeliskSystem;
 import com.riprod.hexcode.core.common.obelisk.utils.ObeliskBlockUtil;
@@ -44,7 +44,7 @@ public class PedestalSystem {
             Player player, ItemStack stack, HexSlot slot, PedestalBlockComponent pedestalComponent,
             HexcodeSessionComponent session, Vector3i blockPos) {
 
-        ImbuementProfileAsset profile = ImbuementProfileRegistry.first(stack);
+        ImbuementProfileAsset profile = ImbuementProfileUtils.first(stack);
         if (profile == null) return;
 
         Vector3d anchorPos = PedestalEntity.getAnchorPosition(blockPos);

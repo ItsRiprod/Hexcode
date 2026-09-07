@@ -15,7 +15,7 @@ import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interfere.style.InterfereStyle;
-import com.riprod.hexcode.builtin.hexCore.utils.ConstructSplicer;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utils.ConstructSplicer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;

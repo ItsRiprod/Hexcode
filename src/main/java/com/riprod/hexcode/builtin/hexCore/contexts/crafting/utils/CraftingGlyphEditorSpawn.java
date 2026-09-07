@@ -17,9 +17,6 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
 public final class CraftingGlyphEditorSpawn {
 
-    public static final String BUTTON_ID = "HexcodeSpawnGlyph";
-    public static final String BUTTON_TEXT_ID = "server.hexcode.assetEditor.buttons.spawnGlyph";
-
     private static final String MESSAGE_PREFIX = "server.hexcode.assetEditor.messages.spawnGlyph.";
     private static final float SPAWN_QUALITY = 1.0f;
 

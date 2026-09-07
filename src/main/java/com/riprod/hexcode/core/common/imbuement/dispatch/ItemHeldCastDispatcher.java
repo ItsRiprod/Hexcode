@@ -19,7 +19,7 @@ import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
 import com.riprod.hexcode.core.common.imbuement.extract.ItemStatExtractor;
-import com.riprod.hexcode.core.common.imbuement.registry.ImbuementProfileRegistry;
+import com.riprod.hexcode.core.common.imbuement.utils.ImbuementProfileUtils;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
 import com.riprod.hexcode.core.common.triggers.component.TriggerEvent;
 import com.riprod.hexcode.core.common.triggers.registry.Trigger;
@@ -53,7 +53,7 @@ public final class ItemHeldCastDispatcher implements CastRootDispatcher {
 
         HexContext context = new HexContext(hex, baseMana, hexRoot, null, tracker);
 
-        ImbuementProfileAsset profile = ImbuementProfileRegistry.first(heldItem);
+        ImbuementProfileAsset profile = ImbuementProfileUtils.first(heldItem);
         HexConfigAsset profileDefaults = profile != null ? profile.getDefaults() : null;
         if (profileDefaults != null) profileDefaults.applyTo(context);
         HexConfigAsset overrides = data.getOverrides();

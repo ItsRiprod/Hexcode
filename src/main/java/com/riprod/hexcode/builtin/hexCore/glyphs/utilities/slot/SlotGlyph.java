@@ -1,7 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.slot;
 
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.nodes.slot.BooleanSlot;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlot;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -36,7 +36,7 @@ public class SlotGlyph implements GlyphHandler {
     }
 
     public static int mode(Glyph glyph) {
-        if (glyph.getSlot(SlotGlyphSlots.MODE) instanceof BooleanSlot bool && bool.getState() != null) {
+        if (glyph.getSlot(SlotGlyphSlots.MODE) instanceof TrileanSlot bool && bool.getState() != null) {
             return bool.getState().value();
         }
         var asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());

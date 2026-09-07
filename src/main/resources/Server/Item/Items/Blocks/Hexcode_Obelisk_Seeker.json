@@ -108,7 +108,6 @@
     "VariantRotation": "NESW",
     "CustomModelScale": 1.3
   },
- 
   "IconProperties": {
     "Scale": 0.58823,
     "Rotation": [
@@ -140,12 +139,12 @@
         "Quantity": 3
       },
       {
-        "ItemId": "Ingredient_Bar_Silver",
-        "Quantity": 5
+        "ItemId": "Ingredient_Bar_Iron",
+        "Quantity": 15
       },
       {
         "ResourceTypeId": "Rock",
-        "Quantity": 1
+        "Quantity": 15
       }
     ]
   },

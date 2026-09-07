@@ -10,7 +10,6 @@ import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 
 public abstract class BaseNodeHandler implements NodeInterface {
 
-    @Override
     public InteractionState enter(CommandBuffer<EntityStore> accessor, Ref<EntityStore> node,
             Ref<EntityStore> playerRef) {
         return InteractionState.Finished;

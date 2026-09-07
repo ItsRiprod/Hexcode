@@ -11,8 +11,6 @@ import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
 
 public final class VolatilityComponent implements CastComponent, CastOverlay<VolatilityComponent> {
 
-    private static final float UNSET = -1f;
-
     private static CastComponentType<VolatilityComponent> componentType;
 
     public static CastComponentType<VolatilityComponent> getComponentType() {
@@ -23,7 +21,7 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
         componentType = type;
     }
 
-    private float initial = UNSET;
+    private float initial = -1f;
     private float current;
     private float volatilityMultiplier = 1.0f;
     private float complexityMultiplier = 1.0f;
