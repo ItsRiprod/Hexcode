@@ -22,7 +22,7 @@
     "Input": [
       {
         "ItemId": "Ingredient_Ice_Essence_Concentrated",
-        "Quantity": 15
+        "Quantity": 1
       },
       {
         "ItemId": "Ingredient_Bar_Cobalt",
@@ -30,7 +30,7 @@
       },
       {
         "ItemId": "Plant_Petals_Azure",
-        "Quantity": 30
+        "Quantity": 15
       },
       {
         "ItemId": "Rock_Shale_Cobble",
@@ -73,7 +73,7 @@
     "VariantRotation": "NESW",
     "Gathering": {
       "Breaking": {
-        "GatherType": "Obelisks"
+        "GatherType": "SoftBlocks"
       }
     },
     "HitboxType": "Full",
