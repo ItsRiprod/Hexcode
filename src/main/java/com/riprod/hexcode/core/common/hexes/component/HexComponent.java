@@ -31,7 +31,7 @@ public class HexComponent implements Component<EntityStore> {
 
     public static final BuilderCodec<HexComponent> CODEC = BuilderCodec
             .builder(HexComponent.class, HexComponent::new)
-            .append(new KeyedCodec<>("Hex", HexFieldCodec.PLAYER),
+            .append(new KeyedCodec<>("Hex", HexFieldCodec.CODEC),
                     (c, v) -> c.hex = v,
                     c -> c.hex)
             .add()

@@ -1,0 +1,80 @@
+package com.riprod.hexcode.plugins.hexCore.glyphs.elements.rebreathing;
+
+import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+
+import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.plugins.hexCore.glyphs.elements.ElementSupport;
+
+import java.util.Arrays;
+
+public class RebreathingGlyph implements GlyphHandler {
+
+    public static final String ID = "Rebreathing";
+
+    @Override
+    public String getId() {
+        return ID;
+    }
+
+    @Override
+    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
+        return ConfigBinding.of(RebreathingConfig.class, RebreathingConfig.CODEC);
+    }
+
+
+    @Override
+    public void execute(Glyph glyph, HexContext hexContext) {
+        Ref<EntityStore> target = ElementSupport.resolveTarget(glyph, hexContext);
+        if (target == null) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "Rebreathing must target an entity");
+            return;
+        }
+
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        RebreathingConfig config = getConfig(RebreathingConfig.class, asset);
+        if (config == null) config = RebreathingConfig.DEFAULTS;
+
+        float affinity = ElementSupport.affinityFactor(
+                hexContext, config.getAffinityStat(), config.getAffinityScale());
+        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
+        float seconds = ElementSupport.scaledDuration(ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit),
+                config.getEfficiency(), config.getDurationPerComplexity(),
+                affinity);
+
+        String effectId = config.getStatusEffect();
+        CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        if (!ElementSupport.applyStatus(hexContext, target, glyph, effectId, seconds)) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "Rebreathing could not apply " + effectId);
+            return;
+        }
+
+        RebreathingState existing = ConstructStateUtil.findState(
+                accessor, target, RebreathingGlyph.ID, RebreathingState.class);
+        if (existing != null) {
+            existing.refresh(seconds, glyph.getNextLinks());
+        } else {
+            RebreathingState state = new RebreathingState(effectId, seconds, glyph.getNextLinks());
+            HexConstructSpawner.applyWithState(
+                    accessor, target, hexContext, glyph, RebreathingGlyph.ID, state);
+        }
+
+        Slot immediate = glyph.getSlot(RebreathingGlyphSlots.IMMEDIATE);
+        if (immediate != null && immediate.getLinks().length > 0) {
+            HexContext immediateCtx = hexContext.branch();
+            HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
+        }
+    }
+}

@@ -12,9 +12,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.hexbook.component.HexBookAsset;
 import com.riprod.hexcode.core.common.hexbook.component.HexBookComponent;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
+import com.riprod.hexcode.core.common.profiles.assets.ProfileAsset;
 import com.riprod.hexcode.utils.HexSlot;
 
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class CasterInventory {
 
     @Nullable
     private static String nextFreeBookSlot(ItemStack item, Map<String, ImbuementData> map) {
-        ImbuementProfileAsset profile = ImbuementUtils.resolveProfile(item);
+        ProfileAsset profile = ImbuementUtils.resolveProfile(item);
         if (profile == null) return null;
         for (String key : profile.resolveSlots(item).keySet()) {
             if (!map.containsKey(key)) return key;

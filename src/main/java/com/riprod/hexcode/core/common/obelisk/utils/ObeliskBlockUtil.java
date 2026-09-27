@@ -10,10 +10,10 @@ import com.hypixel.hytale.math.block.BlockSphereUtil;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.obelisk.component.ObeliskBlockComponent;
 import com.riprod.hexcode.core.common.obelisk.interfaces.ObeliskInterface;
 import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerRegistry;
+import com.riprod.hexcode.core.common.profiles.assets.ProfileAsset;
 
 import io.sentry.util.Pair;
 
@@ -34,7 +34,7 @@ public class ObeliskBlockUtil {
 
     public static List<Pair<Vector3i, ObeliskBlockComponent>> getAvailableObelisks(
             Vector3i center, double radius, World world, int maxCount,
-            @Nullable ImbuementProfileAsset profile) {
+            @Nullable ProfileAsset profile) {
 
         List<Pair<Vector3i, ObeliskBlockComponent>> results = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public class ObeliskBlockUtil {
     }
 
     private static boolean bindsForProfile(ObeliskBlockComponent comp,
-            @Nullable ImbuementProfileAsset profile) {
+            @Nullable ProfileAsset profile) {
         String handlerId = comp.getHandlerId();
         if (handlerId == null || handlerId.isEmpty()) return true;
         ObeliskInterface handler = ObeliskHandlerRegistry.get(handlerId);

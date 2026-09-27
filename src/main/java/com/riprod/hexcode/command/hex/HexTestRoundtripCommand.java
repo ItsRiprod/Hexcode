@@ -25,10 +25,6 @@ import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProv
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.LinkSlot;
-import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.named.NamedSlot;
-import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlot;
-import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlotState;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -39,6 +35,10 @@ import com.riprod.hexcode.core.common.hexes.codec.DecodeResult;
 import com.riprod.hexcode.core.common.hexes.codec.HexCodec;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
+import com.riprod.hexcode.plugins.hexCore.contexts.crafting.nodes.slot.LinkSlot;
+import com.riprod.hexcode.plugins.hexCore.contexts.crafting.nodes.slot.named.NamedSlot;
+import com.riprod.hexcode.plugins.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlot;
+import com.riprod.hexcode.plugins.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlotState;
 import com.riprod.hexcode.utils.LogScopes;
 
 public class HexTestRoundtripCommand extends AbstractPlayerCommand {

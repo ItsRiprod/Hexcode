@@ -21,8 +21,7 @@ import com.riprod.hexcode.command.hex.HexInspectCommand;
 import com.riprod.hexcode.command.hex.HexSaveCommand;
 import com.riprod.hexcode.command.hex.HexSerializeCommand;
 import com.riprod.hexcode.command.hex.HexTestRoundtripCommand;
-import com.riprod.hexcode.builtin.hextreme.command.HexPageCommand;
-
+import com.riprod.hexcode.plugins.hextreme.command.HexPageCommand;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.utils.LogScopes;
 

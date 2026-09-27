@@ -15,8 +15,8 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.permissions.provider.HytalePermissionsProvider;
-import com.riprod.hexcode.core.common.drawing.DrawCaptureService;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
+import com.riprod.hexcode.core.common.drawing.utils.DrawUtils;
 
 public class DrawTrainCommand extends AbstractPlayerCommand {
 
@@ -53,7 +53,7 @@ public class DrawTrainCommand extends AbstractPlayerCommand {
         }
 
         String overridePack = packArg.provided(context) ? packArg.get(context) : null;
-        DrawCaptureService.requestTraining(uuid.getUuid(), shapeId, overridePack);
+        DrawUtils.requestTraining(store, playerEntityRef, shapeId, overridePack);
 
         String suffix = overridePack != null ? " (writing to pack '" + overridePack + "')" : "";
         playerRef.sendMessage(Message.raw("training mode: draw a '" + shapeId + "' now. next shape will be recorded." + suffix));

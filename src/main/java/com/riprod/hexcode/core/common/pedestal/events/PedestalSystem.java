@@ -19,7 +19,6 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
-import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementProfileUtils;
 import com.riprod.hexcode.core.common.obelisk.component.ObeliskBlockComponent;
 import com.riprod.hexcode.core.common.obelisk.system.ObeliskSystem;
@@ -28,6 +27,7 @@ import com.riprod.hexcode.core.common.obelisk.utils.ObeliskBlockUtil;
 import io.sentry.util.Pair;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
+import com.riprod.hexcode.core.common.profiles.assets.ProfileAsset;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
@@ -44,7 +44,7 @@ public class PedestalSystem {
             Player player, ItemStack stack, HexSlot slot, PedestalBlockComponent pedestalComponent,
             HexcodeSessionComponent session, Vector3i blockPos) {
 
-        ImbuementProfileAsset profile = ImbuementProfileUtils.first(stack);
+        ProfileAsset profile = ImbuementProfileUtils.first(stack);
         if (profile == null) return;
 
         Vector3d anchorPos = PedestalEntity.getAnchorPosition(blockPos);
@@ -69,7 +69,7 @@ public class PedestalSystem {
     }
 
     public static void registerObelisks(CommandBuffer<EntityStore> buffer, World world,
-            PedestalBlockComponent pedestal, @Nullable ImbuementProfileAsset profile) {
+            PedestalBlockComponent pedestal, @Nullable ProfileAsset profile) {
         List<Pair<Vector3i, ObeliskBlockComponent>> obeliskPairs = ObeliskBlockUtil
                 .getAvailableObelisks(pedestal.getLocation(), pedestal.getObeliskRange(),
                         world, pedestal.getMaxObelisks(), profile);
@@ -113,7 +113,7 @@ public class PedestalSystem {
             case SELECTING -> "Selecting";
             case CRAFTING -> "Crafting";
         };
-        ImbuementProfileAsset profile = session.getProfile();
+        ProfileAsset profile = session.getProfile();
         String animName = profile != null
                 ? profile.getStateAnimations().getOrDefault(state, defaultName)
                 : defaultName;

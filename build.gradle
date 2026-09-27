@@ -82,7 +82,7 @@ hytaleTools {
     subPlugin("Hexomation", "com.riprod.hexcode.builtin.hexomation.HexomationPlugin", true, false)
     // The debug code
     subPlugin("Counterspell", "com.riprod.hexcode.builtin.counterspell.CounterspellPlugin", true, false)
-} 
+}
 
 hytalePublisher {
     version       = project.version

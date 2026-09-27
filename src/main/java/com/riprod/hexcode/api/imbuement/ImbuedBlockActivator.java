@@ -18,13 +18,13 @@ import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.core.common.imbuement.ImbuementMetadata;
 import com.riprod.hexcode.core.common.imbuement.asset.EssenceAsset;
-import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.block.BlockImbuementCapacity;
 import com.riprod.hexcode.core.common.imbuement.block.EssenceRefill;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuedBlockComponent;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementProfileUtils;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
+import com.riprod.hexcode.core.common.profiles.assets.ProfileAsset;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,7 +82,7 @@ public final class ImbuedBlockActivator {
         tracker.volatility().init(hexRoot.resolveVolatility(), 1.0f, 1.0f);
         HexContext context = new HexContext(hex, 0f, hexRoot, null, tracker);
 
-        ImbuementProfileAsset profile = resolveProfile(blockType);
+        ProfileAsset profile = resolveProfile(blockType);
         HexConfigAsset profileDefaults = profile != null ? profile.getDefaults() : null;
         if (profileDefaults != null) profileDefaults.applyTo(context);
         if (essence != null) applyEssence(context, essence);
@@ -118,7 +118,7 @@ public final class ImbuedBlockActivator {
     }
 
     @Nullable
-    private static ImbuementProfileAsset resolveProfile(@Nullable BlockType blockType) {
+    private static ProfileAsset resolveProfile(@Nullable BlockType blockType) {
         if (blockType == null) return null;
         Item item = blockType.getItem();
         if (item == null) return null;

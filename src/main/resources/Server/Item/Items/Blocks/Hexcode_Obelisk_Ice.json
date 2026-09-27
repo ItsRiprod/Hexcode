@@ -47,12 +47,12 @@
     ]
   },
   "BlockType": {
-    "InteractionHint": "hexcode.blocks.Hexcode_Obelisk_Encryption.hint",
+    "InteractionHint": "hexcode.blocks.Hexcode_Obelisk_Encryption.clear.hint",
     "Interactions": {
       "Use": {
         "Interactions": [
           {
-            "Type": "HexEncryptionArmInteraction"
+            "Type": "HexEncryptionInteraction"
           }
         ]
       }
@@ -134,7 +134,17 @@
             }
           ],
           "CustomModelAnimation": "Blocks/Hexcode/Obelisks/Animations/Obelisk_Ice_Crafting.blockyanim",
-          "Looping": true
+          "Looping": true,
+          "Interactions": {
+            "Use": {
+              "Interactions": [
+                {
+                  "Type": "HexEncryptionInteraction"
+                }
+              ]
+            }
+          },
+          "InteractionHint": "hexcode.blocks.Hexcode_Obelisk_Encryption.hint"
         },
         "Encryption": {
           "Light": {

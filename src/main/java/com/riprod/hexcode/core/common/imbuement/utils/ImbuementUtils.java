@@ -19,9 +19,9 @@ import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 import com.riprod.hexcode.core.common.imbuement.ImbuementMetadata;
-import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuedBlockComponent;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
+import com.riprod.hexcode.core.common.profiles.assets.ProfileAsset;
 
 public class ImbuementUtils {
     public static Map<String, ImbuementData> readAll(@Nullable ItemStack item) {
@@ -52,7 +52,7 @@ public class ImbuementUtils {
     }
 
     @Nullable
-    public static ImbuementProfileAsset resolveProfile(@Nullable ItemStack item) {
+    public static ProfileAsset resolveProfile(@Nullable ItemStack item) {
         return ImbuementProfileUtils.first(item);
     }
 
@@ -79,7 +79,7 @@ public class ImbuementUtils {
     }
 
     private static boolean isBlockImbuement(ItemStack item) {
-        ImbuementProfileAsset profile = resolveProfile(item);
+        ProfileAsset profile = resolveProfile(item);
         return profile != null && profile.writesBlockHolder();
     }
 
@@ -98,11 +98,8 @@ public class ImbuementUtils {
     @Nullable
     public static Hex resolveHex(ImbuementData data, ComponentAccessor<EntityStore> accessor) {
         if (data.getHexCompressedId() != null) {
-            HexCacheResource cache = accessor.getResource(HexCacheResource.getResourceType());
-            Hex hex = cache != null
-                    ? cache.getOrDecode(data.getHexCompressedId())
-                    : HexUtils.deserialize(data.getHexCompressedId());
-            if (hex != null) return cache != null ? hex : hex.clone();
+            Hex hex = HexCacheResource.get(accessor, data.getHexCompressedId());
+            if (hex != null) return hex;
         }
         if (data.getHex() != null) return data.getHex().clone();
         if (data.getHexAssetId() != null) {

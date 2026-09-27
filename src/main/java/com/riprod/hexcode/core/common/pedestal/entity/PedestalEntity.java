@@ -30,9 +30,9 @@ import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
 import com.hypixel.hytale.server.core.modules.entity.item.PreventPickup;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
+import com.riprod.hexcode.core.common.profiles.assets.ProfileAsset;
 import com.hypixel.hytale.logger.HytaleLogger;
 
 public class PedestalEntity {
@@ -133,7 +133,7 @@ public class PedestalEntity {
     }
 
     private static void addDisplayRendering(PedestalBlockComponent pedestal,
-            @Nullable ImbuementProfileAsset profile,
+            @Nullable ProfileAsset profile,
             Holder<EntityStore> holder, ItemStack stack, String anchorId, float scale) {
 
         Item item = stack.getItem();

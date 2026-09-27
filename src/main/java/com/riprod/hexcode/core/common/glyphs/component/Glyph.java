@@ -143,9 +143,7 @@ public class Glyph {
         if (payload == null) return null;
         if (payloadView == null) {
             try {
-                var cache = accessor != null
-                        ? accessor.getResource(HexCacheResource.getResourceType()) : null;
-                payloadView = cache != null ? cache.getOrDecode(payload) : HexUtils.deserialize(payload);
+                payloadView = HexCacheResource.get(accessor, payload);;
             } catch (Exception e) {
                 return null;
             }

@@ -18,8 +18,8 @@ import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.client.ChargingInteraction;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.drawing.DrawCaptureService;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
+import com.riprod.hexcode.core.common.drawing.utils.DrawUtils;
 
 public class HexDraw extends ChargingInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -65,10 +65,10 @@ public class HexDraw extends ChargingInteraction {
                 if (capture.getHoveredHex() != null) {
                     capture.setDraggingHex(capture.getHoveredHex());
                 } else {
-                    DrawCaptureService.beginStroke(buffer, player, capture, head);
+                    DrawUtils.beginStroke(buffer, player, capture, head);
                 }
             } else if (capture.isStrokeActive()) {
-                DrawCaptureService.tickStroke(buffer, player, capture, head);
+                DrawUtils.tickStroke(buffer, player, capture, head);
             }
 
             super.tick0(firstRun, dt, type, ctx, cooldown);
@@ -77,18 +77,12 @@ public class HexDraw extends ChargingInteraction {
                 if (capture.getDraggingHex() != null) {
                     capture.requestDragRelease();
                 } else if (capture.isStrokeActive()) {
-                    DrawCaptureService.endStroke(buffer, player, capture, resolveUuid(buffer, player));
+                    DrawUtils.endStroke(buffer, player, capture);
                 }
             }
         } catch (Exception e) {
             LOGGER.atSevere().log("[hexcode] HexDraw failed: %s", e.getMessage());
             ctx.getState().state = InteractionState.Failed;
         }
-    }
-
-    @Nullable
-    private static UUID resolveUuid(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
-        UUIDComponent uuid = buffer.getComponent(player, UUIDComponent.getComponentType());
-        return uuid != null ? uuid.getUuid() : null;
     }
 }

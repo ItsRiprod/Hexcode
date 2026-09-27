@@ -13,8 +13,6 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
-import com.riprod.hexcode.core.common.hexes.codec.DecodeResult;
-import com.riprod.hexcode.core.common.hexes.codec.HexCodec;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 
 public class HexUtils {
@@ -125,18 +123,6 @@ public class HexUtils {
         if (oldFirstId != null) {
             hex.setFirstGlyphId(idMap.get(oldFirstId));
         }
-    }
-
-    public static String serialize(Hex hex) {
-        return HexCodec.serialize(hex);
-    }
-
-    public static DecodeResult deserializeWithResult(String data) {
-        return HexCodec.deserialize(data);
-    }
-
-    public static Hex deserialize(String data) {
-        return HexCodec.deserialize(data).getHex();
     }
 
     private static void removeUnregisteredGlyphs(Hex hex) {

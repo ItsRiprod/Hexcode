@@ -1,0 +1,253 @@
+package com.riprod.hexcode.plugins.hexCore.glyphs.utilities.debug;
+
+import java.util.Map;
+
+import javax.annotation.Nullable;
+
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.protocol.packets.interface_.NotificationStyle;
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.NotificationUtil;
+import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
+import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
+import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.core.common.utilities.resource.DebugMessageQueue;
+import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.LogScopes;
+
+public class DebugGlyph implements GlyphHandler {
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
+    public static final String ID = "Debug";
+
+    @Override
+    public String getId() {
+        return ID;
+    };
+
+    @Override
+    public HexVar readValue(Glyph glyph, HexContext hexContext) {
+        dump(glyph, hexContext);
+
+        return glyph.readSlot(DebugGlyphSlots.SLOT, hexContext);
+    }
+
+    @Override
+    public void execute(Glyph glyph, HexContext hexContext) {
+        dump(glyph, hexContext);
+        HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+    }
+
+    private void dump(Glyph glyph, HexContext hexContext) {
+        Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
+        if (casterRef == null || !casterRef.isValid())
+            return;
+        if (hexContext.getAccessor() == null)
+            return;
+        PlayerRef pr = hexContext.getAccessor().getComponent(casterRef, PlayerRef.getComponentType());
+        if (pr == null)
+            return;
+
+        int mode = readMode(glyph, hexContext);
+
+        Slot slot = glyph.getSlot(DebugGlyphSlots.SLOT);
+        boolean wired = slot != null && slot.getFirstLink() != null;
+
+        if (mode == 0) {
+            notify(slot, wired, pr, hexContext);
+            return;
+        }
+
+        String volatility = volatilityText(hexContext.volatility());
+        String complexity = complexityText(hexContext);
+
+        Message msg;
+        if (mode < 0) {
+            if (!wired) {
+                msg = markup(Message.translation("hexcode.debugGlyph.stats")
+                        .param("volatility", volatility)
+                        .param("complexity", complexity));
+            } else {
+                Message lines = buildSlotLines(slot, hexContext);
+                if (lines == null)
+                    return;
+                msg = markup(Message.translation("hexcode.debugGlyph.values")
+                        .param("values", lines));
+            }
+        } else {
+            Message values = wired ? buildSlotLines(slot, hexContext) : buildGisLines(hexContext);
+            Message lines = values != null ? values : Message.raw("");
+            msg = wired
+                    ? markup(Message.translation("hexcode.debugGlyph.slots")
+                            .param("volatility", volatility)
+                            .param("complexity", complexity)
+                            .param("slots", lines))
+                    : markup(Message.translation("hexcode.debugGlyph.gis")
+                            .param("volatility", volatility)
+                            .param("complexity", complexity)
+                            .param("gis", lines));
+        }
+
+        hexContext.getAccessor().getResource(DebugMessageQueue.getResourceType()).append(casterRef, msg);
+        LOGGER.atFine().log(msg.getAnsiMessage());
+    }
+
+    private void notify(@Nullable Slot slot, boolean wired, PlayerRef pr, HexContext hexContext) {
+        if (!wired) {
+            VolatilityComponent tracker = hexContext.volatility();
+            if (tracker == null)
+                return;
+            send(pr, Message.translation("hexcode.debugGlyph.notification.volatility")
+                    .param("volatility", String.format("%.1f", tracker.getCurrent())), null);
+            return;
+        }
+
+        for (String linkId : slot.getLinks()) {
+            Glyph linked = hexContext.getGlyph(linkId);
+            if (linked == null)
+                continue;
+
+            GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
+            send(pr, Message.translation("hexcode.debugGlyph.notification.value")
+                    .param("value", valueText(resolveLink(linked, hexContext))),
+                    linkedAsset != null ? linkedAsset.getIcon() : null);
+        }
+    }
+
+    private static void send(PlayerRef pr, Message message, @Nullable String icon) {
+        NotificationUtil.sendNotification(pr.getPacketHandler(), message, null, icon, null,
+                NotificationStyle.Default);
+    }
+
+    private static int readMode(Glyph glyph, HexContext hexContext) {
+        HexVar value = glyph.readSlot(DebugGlyphSlots.MODE, hexContext);
+        long rounded = Math.round(HexVarUtil.numberOrDefault(value, 1.0));
+        return (int) Math.max(-1L, Math.min(1L, rounded));
+    }
+
+    @Nullable
+    private Message buildSlotLines(Slot slot, HexContext hexContext) {
+        Message composite = Message.raw("");
+        int index = 0;
+        for (String linkId : slot.getLinks()) {
+            Glyph linked = hexContext.getGlyph(linkId);
+            if (linked == null)
+                continue;
+
+            HexVar value = resolveLink(linked, hexContext);
+
+            Message line = markup(Message.translation("hexcode.debugGlyph.slots.line")
+                    .param("index", index)
+                    .param("value", valueText(value))
+                    .param("glyph", linked.getGlyphId())
+                    .param("accuracy", String.format("%.2f", linked.getVolatility()))
+                    .param("speed", String.format("%.2f", linked.getEfficiency()))
+                    .param("metadata", typeLabel(value)));
+
+            if (index > 0)
+                composite.insert("\n");
+            composite.insert(line);
+            index++;
+        }
+        return index == 0 ? null : composite;
+    }
+
+    @Nullable
+    private Message buildGisLines(HexContext hexContext) {
+        Message composite = Message.raw("");
+        HexVar defaultVar = hexContext.getDefaultVariable();
+        int index = 0;
+        for (Map.Entry<String, HexVar> entry : hexContext.getVariables().entrySet()) {
+            HexVar value = entry.getValue();
+            if (value == null)
+                continue;
+
+            Glyph source = hexContext.getGlyph(entry.getKey());
+            String glyph = source != null ? source.getGlyphId() : shortId(entry.getKey());
+
+            Message line = markup(Message.translation("hexcode.debugGlyph.slots.gis")
+                    .param("index", entry.getKey())
+                    .param("value", valueText(value))
+                    .param("glyph", glyph)
+                    .param("metadata", gisMetadata(value, defaultVar)));
+
+            if (index > 0)
+                composite.insert("\n");
+            composite.insert(line);
+            index++;
+        }
+        return index == 0 ? null : composite;
+    }
+
+    private static HexVar resolveLink(Glyph linked, HexContext hexContext) {
+        GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
+        GlyphHandler handler = linkedAsset != null ? GlyphRegistry.get(linkedAsset.getHandler()) : null;
+        if (handler == null || hexContext.isResolving(linked.getId()))
+            return null;
+        hexContext.pushResolving(linked.getId());
+        try {
+            return handler.readValue(linked, hexContext);
+        } finally {
+            hexContext.popResolving();
+        }
+    }
+
+    private static Message markup(Message message) {
+        message.getFormattedMessage().markupEnabled = true;
+        return message;
+    }
+
+    private static String volatilityText(VolatilityComponent tracker) {
+        if (tracker == null)
+            return "-";
+        return String.format("%.1f / %.1f", tracker.getCurrent(), tracker.getInitial());
+    }
+
+    private static String complexityText(HexContext hexContext) {
+        if (hexContext == null)
+            return "-";
+        Map<String, Float> resources = hexContext.getResources();
+        if (resources.isEmpty())
+            return "-";
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Float> entry : resources.entrySet()) {
+            if (entry.getValue() <= 0f) continue;
+            if (sb.length() > 0) sb.append(' ');
+            sb.append(entry.getKey()).append('=').append(String.format("%.1f", entry.getValue()));
+        }
+        return sb.length() == 0 ? "-" : sb.toString();
+    }
+
+    private static String valueText(HexVar value) {
+        if (value == null)
+            return "[none]";
+        String described = value.describe();
+        int split = described.indexOf(": ");
+        return split >= 0 ? described.substring(split + 2) : described;
+    }
+
+    private static String typeLabel(HexVar value) {
+        if (value == null)
+            return "[none]";
+        return value.getClass().getSimpleName().replace("Var", "");
+    }
+
+    private static String gisMetadata(HexVar value, HexVar defaultVar) {
+        String label = typeLabel(value);
+        return value == defaultVar ? label + " *" : label;
+    }
+
+    private static String shortId(String id) {
+        if (id == null || id.length() < 8)
+            return id == null ? "?" : id;
+        return id.substring(0, 8);
+    }
+}

@@ -1,0 +1,68 @@
+package com.riprod.hexcode.plugins.hextreme.execution.config;
+
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
+import com.riprod.hexcode.core.common.execution.root.HexRoot;
+import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
+import com.riprod.hexcode.core.common.hexes.component.Hex;
+import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
+import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
+import com.riprod.hexcode.core.common.profiles.assets.ProfileAsset;
+import com.riprod.hexcode.utils.HexSlot;
+
+import javax.annotation.Nullable;
+
+public class PageConfig extends HexConfigAsset {
+
+    public static final String METADATA_KEY = "PageHex";
+
+    public Hex getHex(ComponentAccessor<EntityStore> accessor, HexRoot hexRoot) {
+        Ref<EntityStore> playerRef = hexRoot.getSourceRef(accessor);
+        if (playerRef == null || !playerRef.isValid()) {
+            return null;
+        }
+        return resolvePageHex(accessor, PlayerUtils.getHandItem(accessor, playerRef, HexSlot.MainHand));
+    }
+
+    public static Hex resolvePageHex(ComponentAccessor<EntityStore> accessor, ItemStack page) {
+        if (page == null || page.isEmpty()) {
+            return null;
+        }
+        Hex imbued = resolveImbuedHex(accessor, page);
+        return imbued != null ? imbued : resolveSavedHex(page);
+    }
+
+    @Nullable
+    private static Hex resolveImbuedHex(ComponentAccessor<EntityStore> accessor, ItemStack page) {
+        ProfileAsset profile = ImbuementUtils.resolveProfile(page);
+        if (profile == null) {
+            return null;
+        }
+        for (String slotKey : profile.resolveSlots(page).keySet()) {
+            Hex hex = profile.readHex(page, slotKey, accessor);
+            if (hex != null) {
+                return hex;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private static Hex resolveSavedHex(ItemStack page) {
+        String hexId = page.getFromMetadataOrNull(METADATA_KEY, Codec.STRING);
+        if (hexId == null) {
+            return null;
+        }
+        SavedHexAsset saved = SavedHexAsset.getAssetMap().getAsset(hexId);
+        return saved != null && saved.getHex() != null ? saved.getHex().clone() : null;
+    }
+
+    public static final BuilderCodec<PageConfig> CODEC = BuilderCodec
+            .builder(PageConfig.class, PageConfig::new, PageConfig.BASE_CODEC)
+            .build();
+}

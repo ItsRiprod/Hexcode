@@ -10,19 +10,19 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.imbued.triggers.InteractionPayload;
 import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.root.PlayerHexRoot;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
 import com.riprod.hexcode.core.common.imbuement.extract.ItemStatExtractor;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementProfileUtils;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
+import com.riprod.hexcode.core.common.profiles.assets.ProfileAsset;
 import com.riprod.hexcode.core.common.triggers.component.TriggerEvent;
 import com.riprod.hexcode.core.common.triggers.registry.Trigger;
+import com.riprod.hexcode.plugins.imbued.triggers.InteractionPayload;
 import com.riprod.hexcode.utils.SpellMana;
 
 public final class ItemHeldCastDispatcher implements CastRootDispatcher {
@@ -53,7 +53,7 @@ public final class ItemHeldCastDispatcher implements CastRootDispatcher {
 
         HexContext context = new HexContext(hex, baseMana, hexRoot, null, tracker);
 
-        ImbuementProfileAsset profile = ImbuementProfileUtils.first(heldItem);
+        ProfileAsset profile = ImbuementProfileUtils.first(heldItem);
         HexConfigAsset profileDefaults = profile != null ? profile.getDefaults() : null;
         if (profileDefaults != null) profileDefaults.applyTo(context);
         HexConfigAsset overrides = data.getOverrides();

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Resource;
 import com.hypixel.hytale.component.ResourceType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -30,6 +31,15 @@ public final class HexCacheResource implements Resource<EntityStore> {
             return size() > MAX_ENTRIES;
         }
     };
+
+    public static HexCacheResource get(ComponentAccessor<EntityStore> accessor) {
+        return accessor.getResource(resourceType);
+    }
+
+    @Nullable
+    public static Hex get(ComponentAccessor<EntityStore> accessor, String data) {
+        return get(accessor).getOrDecode(data);
+    }
 
     public HexCacheResource() {
     }

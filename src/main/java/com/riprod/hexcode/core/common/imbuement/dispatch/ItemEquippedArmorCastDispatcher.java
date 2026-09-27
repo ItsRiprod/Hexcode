@@ -17,11 +17,11 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.root.PlayerHexRoot;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuementData;
 import com.riprod.hexcode.core.common.imbuement.extract.ItemStatExtractor;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementProfileUtils;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
+import com.riprod.hexcode.core.common.profiles.assets.ProfileAsset;
 import com.riprod.hexcode.core.common.triggers.component.TriggerEvent;
 import com.riprod.hexcode.core.common.triggers.registry.Trigger;
 import com.riprod.hexcode.utils.SpellMana;
@@ -49,7 +49,7 @@ public final class ItemEquippedArmorCastDispatcher implements CastRootDispatcher
             if (stack == null || stack.isEmpty()) continue;
             if (ImbuementUtils.readAll(stack).isEmpty()) continue;
 
-            ImbuementProfileAsset profile = ImbuementProfileUtils.first(stack);
+            ProfileAsset profile = ImbuementProfileUtils.first(stack);
             if (profile == null || profile.findSlot(stack, trigger.getId()) == null) continue;
 
             ImbuementData data = ImbuementUtils.read(stack, trigger.getId());
@@ -63,7 +63,7 @@ public final class ItemEquippedArmorCastDispatcher implements CastRootDispatcher
 
     private void fireOne(Trigger trigger, TriggerEvent event,
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> player, ItemStack stack,
-            Hex hex, ImbuementData data, ImbuementProfileAsset profile) {
+            Hex hex, ImbuementData data, ProfileAsset profile) {
         PlayerHexRoot hexRoot = new PlayerHexRoot(player, buffer);
         float volatilityMax = ItemStatExtractor.extractVolatility(stack);
         float baseMana = SpellMana.computeTotalMana(hex, buffer);

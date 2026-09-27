@@ -18,6 +18,7 @@ import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
 import com.riprod.hexcode.core.common.hexes.codec.DecodeIssue;
 import com.riprod.hexcode.core.common.hexes.codec.DecodeResult;
+import com.riprod.hexcode.core.common.hexes.codec.HexCodec;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 import com.riprod.hexcode.utils.HexSlot;
@@ -66,7 +67,7 @@ public class HexSerializeCommand extends AbstractPlayerCommand {
                 return;
             }
 
-            String data = HexUtils.serialize(hex);
+            String data = HexCodec.serialize(hex);
             send(playerRef, "exported hex:");
             send(playerRef, data);
         }
@@ -88,7 +89,7 @@ public class HexSerializeCommand extends AbstractPlayerCommand {
 
             String data = context.get(dataArg);
 
-            DecodeResult result = HexUtils.deserializeWithResult(data);
+            DecodeResult result = HexCodec.deserialize(data);
             if (result.getHex() == null) {
                 send(playerRef, "invalid hex data - check that you copied the full string");
                 for (DecodeIssue issue : result.getIssues()) {

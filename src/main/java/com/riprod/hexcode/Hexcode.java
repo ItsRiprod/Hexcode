@@ -1,7 +1,6 @@
 package com.riprod.hexcode;
 
 import com.riprod.configly.Configly;
-import com.riprod.hexcode.builtin.hexCore.contexts.crafting.utils.CraftingGlyphEditorSpawn;
 import com.riprod.hexcode.command.HexcodeCommand;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.construct.system.HexConstructTeardownSystem;
@@ -11,15 +10,15 @@ import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.redirect.EntityRedirectComponent;
 import com.riprod.hexcode.core.common.context.interactions.HexContextAbility;
 import com.riprod.hexcode.core.common.context.interactions.HexContextPrimary;
-import com.riprod.hexcode.core.common.drawing.DrawAnchorSystem;
-import com.riprod.hexcode.core.common.drawing.DrawModeLifecycleSystem;
-import com.riprod.hexcode.core.common.drawing.DrawRecognitionSystem;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponent;
 import com.riprod.hexcode.core.common.drawing.interactions.HexDraw;
 import com.riprod.hexcode.core.common.drawing.interactions.HexDrawMode;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.drawing.registry.TemplateAsset;
+import com.riprod.hexcode.core.common.drawing.system.DrawAnchorSystem;
+import com.riprod.hexcode.core.common.drawing.system.DrawModeLifecycleSystem;
+import com.riprod.hexcode.core.common.drawing.system.DrawRecognitionSystem;
 import com.riprod.hexcode.core.common.effect.GlyphEffectSystem;
 import com.riprod.hexcode.core.common.execution.root.BlockHexRoot;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
@@ -72,7 +71,6 @@ import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hover.system.HoverableSpatialSystem;
 import com.riprod.hexcode.core.common.imbuement.asset.EssenceAsset;
-import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.obelisk.component.ObeliskBlockComponent;
 import com.riprod.hexcode.core.common.obelisk.events.ObeliskBreakEvent;
 import com.riprod.hexcode.core.common.triggers.registry.FireTriggerSystem;
@@ -85,6 +83,8 @@ import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalBlockEvent;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalPlaceEvent;
 import com.riprod.hexcode.core.common.pedestal.system.SessionRecoverySystem;
+import com.riprod.hexcode.core.common.profiles.assets.ItemFilter;
+import com.riprod.hexcode.core.common.profiles.assets.ProfileAsset;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.core.common.utilities.resource.DebugMessageQueue;
 import com.riprod.hexcode.core.common.utilities.system.DebugMessageFlushSystem;
@@ -99,14 +99,17 @@ import com.riprod.hexcode.core.common.memories.GlyphMemory;
 import com.riprod.hexcode.core.common.memories.GlyphMemoryProvider;
 import com.riprod.hexcode.core.common.execution.interactions.HexExecuteInteraction;
 import com.riprod.hexcode.interaction.PedestalInteraction;
+import com.riprod.hexcode.plugins.hexCore.contexts.crafting.utils.CraftingGlyphEditorSpawn;
 import com.riprod.hexcode.config.HexcodeConfig;
 import com.riprod.patchly.PatchManager;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import com.hypixel.hytale.assetstore.AssetRegistry;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
+import com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap;
 import com.hypixel.hytale.builtin.asseteditor.AssetEditorPlugin;
 import com.hypixel.hytale.builtin.asseteditor.event.AssetEditorActivateButtonEvent;
 import com.hypixel.hytale.builtin.asseteditor.event.AssetEditorRequestDataSetEvent;
@@ -128,6 +131,7 @@ import com.hypixel.hytale.server.core.asset.LoadAssetEvent;
 import com.hypixel.hytale.server.core.modules.entity.condition.Condition;
 import com.hypixel.hytale.builtin.adventure.memories.MemoriesPlugin;
 import com.hypixel.hytale.builtin.adventure.memories.memories.Memory;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.RootInteractionPacketGenerator;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
@@ -198,10 +202,19 @@ public class Hexcode extends JavaPlugin {
 
     @SuppressWarnings("null")
     private void registerAssets() {
+
+        AssetRegistry.register(
+                HytaleAssetStore
+                        .builder(ItemFilter.class, new DefaultAssetMap<>())
+                        .setPath("Hexcode/ItemFilters")
+                        .setCodec(ItemFilter.CODEC)
+                        .setKeyFunction(ItemFilter::getId)
+                        .build());
+
         AssetRegistry.register(
                 HytaleAssetStore
                         .builder(NodeConfig.class,
-                                new DefaultAssetMap<String, NodeConfig>())
+                                new DefaultAssetMap<>())
                         .setPath("Hexcode/NodeConfigs")
                         .setCodec(NodeConfig.CODEC)
                         .setKeyFunction(NodeConfig::getId)
@@ -279,12 +292,13 @@ public class Hexcode extends JavaPlugin {
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
-                        .builder(ImbuementProfileAsset.class,
-                                new DefaultAssetMap<String, ImbuementProfileAsset>())
+                        .builder(ProfileAsset.class,
+                                new DefaultAssetMap<String, ProfileAsset>())
                         .setPath("Hexcode/Imbuement/Profiles")
-                        .setCodec(ImbuementProfileAsset.CODEC)
-                        .setKeyFunction(ImbuementProfileAsset::getId)
+                        .setCodec(ProfileAsset.CODEC)
+                        .setKeyFunction(ProfileAsset::getId)
                         .loadsAfter(NodeConfig.class)
+                        .loadsAfter(ItemFilter.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
@@ -402,7 +416,7 @@ public class Hexcode extends JavaPlugin {
                 .registerSpatialResource(() -> new KDTree<>(Ref::isValid));
         entityStoreRegistry.registerSystem(new HoverableSpatialSystem(hoverableSpatialResourceType));
 
-        ResourceType<EntityStore, HexCacheResource> resourceType = entityStoreRegistry.registerResource(
+        var resourceType = entityStoreRegistry.registerResource(
                 HexCacheResource.class, HexCacheResource::new);
         HexCacheResource.setResourceType(resourceType);
 

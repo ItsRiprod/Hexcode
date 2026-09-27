@@ -75,7 +75,7 @@ public class SavedHexAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
                         (asset) -> asset.id,
                         (asset, d) -> asset.data = d,
                         (asset) -> asset.data)
-                .appendInherited(new KeyedCodec<>("Hex", HexFieldCodec.PLAYER),
+                .appendInherited(new KeyedCodec<>("Hex", HexFieldCodec.CODEC),
                         (a, v) -> a.hex = v,
                         a -> a.hex,
                         (a, p) -> { if (p.hex != null) a.hex = p.hex.clone(); })

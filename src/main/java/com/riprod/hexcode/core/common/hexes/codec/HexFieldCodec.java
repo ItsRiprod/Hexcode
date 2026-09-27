@@ -20,7 +20,7 @@ import com.riprod.hexcode.core.common.hexes.component.Hex;
 
 public final class HexFieldCodec implements Codec<Hex> {
 
-    public static final HexFieldCodec PLAYER = new HexFieldCodec(HexCodec::serialize);
+    public static final HexFieldCodec CODEC = new HexFieldCodec(HexCodec::serialize);
 
     private final Function<Hex, String> encoder;
 

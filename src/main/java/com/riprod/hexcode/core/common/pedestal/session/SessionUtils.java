@@ -26,13 +26,13 @@ import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
-import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.entity.PedestalEntity;
 import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalItemUtil;
+import com.riprod.hexcode.core.common.profiles.assets.ProfileAsset;
 import com.riprod.hexcode.state.HexState;
 import com.riprod.hexcode.utils.CleanupUtils;
 import com.riprod.hexcode.utils.LogScopes;
@@ -133,7 +133,7 @@ public class SessionUtils {
             return;
         }
 
-        ImbuementProfileAsset profile = session.getProfile();
+        ProfileAsset profile = session.getProfile();
         if (profile == null) {
             return;
         }
@@ -274,7 +274,7 @@ public class SessionUtils {
     @Nullable
     public static Ref<EntityStore> findPreviewForSlot(HexcodeSessionComponent session, String slotKey) {
         if (session == null || slotKey == null) return null;
-        ImbuementProfileAsset profile = session.getProfile();
+        ProfileAsset profile = session.getProfile();
         if (profile == null) return null;
         List<Ref<EntityStore>> previews = session.getHexPreviewRefs();
         int i = 0;
