@@ -14,9 +14,10 @@ public class GlyphMemoryProvider extends MemoryProvider<GlyphMemory> {
     @Nonnull
     public static final String CATEGORY = "Hexcode";
     public static final double DEFAULT_RADIUS = 0.0;
+    public static final double DEFAULT_KILL_RANGE = 0.0;
 
     public GlyphMemoryProvider() {
-        super(GlyphMemory.ID, GlyphMemory.CODEC, DEFAULT_RADIUS);
+        super(GlyphMemory.ID, GlyphMemory.CODEC, DEFAULT_RADIUS, DEFAULT_KILL_RANGE);
     }
 
     @Nonnull
