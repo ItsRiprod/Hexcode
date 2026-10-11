@@ -10,11 +10,10 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.modules.block.BlockEntity;
 import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockOperations;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockComponentSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
-import com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection;
+import com.hypixel.hytale.server.core.universe.world.chunk.section.EnvironmentSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.util.FillerBlockUtil;
 
@@ -114,15 +113,8 @@ public class BlockAccess {
         Ref<ChunkStore> ref = sectionRef(world, x, y, z);
         if (ref == null)
             return -1;
-        Store<ChunkStore> store = world.getChunkStore().getStore();
-        ChunkSection section = store.getComponent(ref, ChunkSection.getComponentType());
-        if (section == null)
-            return -1;
-        Ref<ChunkStore> columnRef = section.getChunkColumnReference();
-        if (columnRef == null || !columnRef.isValid())
-            return -1;
-        BlockChunk blockChunk = store.getComponent(columnRef, BlockChunk.getComponentType());
-        return blockChunk == null ? -1 : blockChunk.getEnvironment(x, y, z);
+        var section = world.getChunkStore().getStore().getComponent(ref, EnvironmentSection.getComponentType());
+        return section == null ? -1 : section.get(x, y, z);
     }
 
     public static class Cursor {

@@ -23,7 +23,7 @@ import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockOperations;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
+import com.hypixel.hytale.server.core.universe.world.accessor.SectionReader;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockComponentSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -368,9 +368,10 @@ public class BlockUtils {
             return;
         }
 
-        WorldChunk chunkA = world.getChunk(ChunkUtil.indexChunkFromBlock(ax, az));
-        WorldChunk chunkB = world.getChunk(ChunkUtil.indexChunkFromBlock(bx, bz));
-        if (chunkA == null || chunkB == null)
+        var reader = new SectionReader(world.getChunkStore());
+        var cursorA = reader.sectionCursor();
+        var cursorB = reader.sectionCursor();
+        if (!cursorA.moveTo(ax, ay, az) || !cursorB.moveTo(bx, by, bz))
             return;
 
         if (isMultiCell(world, ax, ay, az) || isMultiCell(world, bx, by, bz)) {
@@ -378,13 +379,13 @@ public class BlockUtils {
             return;
         }
 
-        BlockSelection selA = new BlockSelection();
+        var selA = new BlockSelection();
         selA.setPosition(ax, ay, az);
-        selA.copyFromAtWorld(ax, ay, az, chunkA, null);
+        cursorA.copyInto(selA);
 
-        BlockSelection selB = new BlockSelection();
+        var selB = new BlockSelection();
         selB.setPosition(bx, by, bz);
-        selB.copyFromAtWorld(bx, by, bz, chunkB, null);
+        cursorB.copyInto(selB);
 
         selA.setPosition(bx, by, bz);
         selB.setPosition(ax, ay, az);
