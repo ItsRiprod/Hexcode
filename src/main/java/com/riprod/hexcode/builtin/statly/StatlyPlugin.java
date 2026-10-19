@@ -12,26 +12,18 @@ import com.riprod.hexcode.builtin.statly.assets.BaseElementInteraction;
 import com.riprod.hexcode.builtin.statly.assets.ElementAsset;
 import com.riprod.hexcode.builtin.statly.interaction.GenericElementInteraction;
 import com.riprod.hexcode.builtin.statly.systems.StatlyReactionSystem;
-import com.riprod.hexcode.core.common.casting.registry.CastingStyleRegistry;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
-import com.riprod.hexcode.core.common.node.NodeRouter;
-import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerRegistry;
 
-public class StatlyPlugin extends JavaPlugin {
+public class StatlyPlugin {
 
-    public StatlyPlugin(JavaPluginInit init) {
-        super(init);
-        getLogger().atFine().log("Unified Magic System sub-plugin initializing...");
+    public static void setup(JavaPlugin plugin) {
+        registerAssets(plugin);
+        registerInteractions(plugin);
+        registerSystems(plugin);
+        plugin.getLogger().atFine().log("Unified Magic System sub-plugin initializing...");
+
     }
 
-    @Override
-    public void setup() {
-        registerAssets();
-        registerInteractions();
-        registerSystems();
-    }
-
-    private void registerAssets() {
+    private static void registerAssets(JavaPlugin plugin) {
         AssetRegistry.register(
                 HytaleAssetStore
                         .builder(ElementAsset.class, new DefaultAssetMap<String, ElementAsset>())
@@ -42,13 +34,13 @@ public class StatlyPlugin extends JavaPlugin {
                         .build());
     }
 
-    private void registerInteractions() {
+    private static void registerInteractions(JavaPlugin plugin) {
         BaseElementInteraction.CODEC.register(GenericElementInteraction.ID, GenericElementInteraction.class,
                 GenericElementInteraction.CODEC);
     }
 
-    private void registerSystems() {
-        ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
+    private static void registerSystems(JavaPlugin plugin) {
+        ComponentRegistryProxy<EntityStore> entityStoreRegistry = plugin.getEntityStoreRegistry();
         entityStoreRegistry.registerSystem(new StatlyReactionSystem());
     }
 }

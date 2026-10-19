@@ -31,24 +31,19 @@ import com.riprod.hexcode.core.common.triggers.registry.ManualTrigger;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerListenerRegistry;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerRegistry;
 
-public class ImbuedPlugin extends JavaPlugin {
+public class ImbuedPlugin {
 
-    public ImbuedPlugin(JavaPluginInit init) {
-        super(init);
-        getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
-                this.getManifest().getName().toString(), this.getManifest().getVersion().toString());
-    }
-
-    @Override
-    public void setup() {
-        RegisterComponents();
-        RegisterSystems();
-        RegisterConstructs();
+    public static void setup(JavaPlugin plugin) {
+        RegisterComponents(plugin);
+        RegisterSystems(plugin);
+        RegisterConstructs(plugin);
+        plugin.getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
+                "ImbuedPlugin", plugin.getManifest().getVersion().toString());
 
     }
 
-    private void RegisterComponents() {
-        ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
+    private static void RegisterComponents(JavaPlugin plugin) {
+        var entityStoreRegistry = plugin.getEntityStoreRegistry();
 
         ComponentType<EntityStore, ImbuedHotbarMarker> hotbarMarkerType = entityStoreRegistry
                 .registerComponent(ImbuedHotbarMarker.class, ImbuedHotbarMarker::new);
@@ -63,8 +58,8 @@ public class ImbuedPlugin extends JavaPlugin {
         TriggerListenerComponent.setComponentType(triggerListenerType);
     }
 
-    private void RegisterSystems() {
-        ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
+    private static void RegisterSystems(JavaPlugin plugin) {
+        var entityStoreRegistry = plugin.getEntityStoreRegistry();
 
         entityStoreRegistry.registerSystem(new DeathTriggerSource());
         entityStoreRegistry.registerSystem(new CastTriggerSource());
@@ -95,7 +90,7 @@ public class ImbuedPlugin extends JavaPlugin {
         TriggerListenerRegistry.registerBootstrap(ImbuementTriggerBootstrap::register);
     }
 
-    private void RegisterConstructs() {
+    private static void RegisterConstructs(JavaPlugin plugin) {
         ConstructRegistry.register(TriggerConstructHandler.HANDLER_ID, new TriggerConstructHandler());
     }
 }

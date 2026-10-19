@@ -63,25 +63,6 @@ hytaleTools {
     debugSuspend = false
 
     requireDcevm = true
-
-    // The bonus extras
-    subPlugin("Hextras", "com.riprod.hexcode.builtin.hextras.HextrasPlugin", false, false)
-    // The survival plugin
-    subPlugin("Hextreme", "com.riprod.hexcode.builtin.hextreme.HextremePlugin", false, false)
-    // Imbuements / Block Imbuements / Item Imbuements
-    subPlugin("Imbued", "com.riprod.hexcode.builtin.imbued.ImbuedPlugin", false, false)
-    // The base hexcode glyphs + styles + assets
-    subPlugin("HexCore", "com.riprod.hexcode.builtin.hexCore.HexCorePlugin", false, false)
-    // The unified magic system - elemental damage causes, statuses, and interaction reactions
-    subPlugin("Statly", "com.riprod.hexcode.builtin.statly.StatlyPlugin", false, false)
-    // The ritual-casting plugin
-    subPlugin("Ritualistic", "com.riprod.hexcode.builtin.ritualistic.RitualisticPlugin", true, false)
-    // The ultimate compatibility pack between hexcode and every-other plugin in existence
-    subPlugin("Hexability", "com.riprod.hexcode.builtin.hexability.HexabilityPlugin", true, false)
-    // The ultimate compatibility pack between hexcode and every-other plugin in existence
-    subPlugin("Hexomation", "com.riprod.hexcode.builtin.hexomation.HexomationPlugin", true, false)
-    // The debug code
-    subPlugin("Counterspell", "com.riprod.hexcode.builtin.counterspell.CounterspellPlugin", true, false)
 } 
 
 hytalePublisher {

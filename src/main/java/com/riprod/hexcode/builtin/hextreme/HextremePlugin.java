@@ -12,45 +12,42 @@ import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
 import com.riprod.hexcode.core.common.obelisk.registry.ObeliskHandlerRegistry;
 
-public class HextremePlugin extends JavaPlugin {
+public class HextremePlugin {
 
-    public HextremePlugin(JavaPluginInit init) {
-        super(init);
-        getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
-                this.getManifest().getName().toString(), this.getManifest().getVersion().toString());
+
+    public static void setup(JavaPlugin plugin) {
+        RegisterConfigs(plugin);
+        RegisterProfiles(plugin);
+        RegisterObelisks(plugin);
+        RegisterInteractions(plugin);
+        RegisterSystems(plugin);
+        RegisterListeners(plugin);
+
+        plugin.getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
+                "Hextreme", plugin.getManifest().getVersion().toString());
     }
 
-    @Override
-    public void setup() {
-        RegisterConfigs();
-        RegisterProfiles();
-        RegisterObelisks();
-        RegisterInteractions();
-        RegisterSystems();
-        RegisterListeners();
-    }
-
-    private void RegisterConfigs() {
+    private static void RegisterConfigs(JavaPlugin plugin) {
         HexConfigAsset.CODEC.register("PageConfig", PageConfig.class, PageConfig.CODEC);
     }
 
-    private void RegisterProfiles() {
+    private static void RegisterProfiles(JavaPlugin plugin) {
         ImbuementProfileAsset.CODEC.register("Page", PageProfile.class, PageProfile.CODEC);
     }
 
-    private void RegisterObelisks() {
+    private static void RegisterObelisks(JavaPlugin plugin) {
         ObeliskHandlerRegistry.register("page_load", new PageLoaderObelisk());
     }
 
-    private void RegisterInteractions() {
+    private static void RegisterInteractions(JavaPlugin plugin) {
         Interaction.CODEC.register("HexPageLoadInteraction", PageLoadInteraction.class, PageLoadInteraction.CODEC);
     }
 
-    private void RegisterListeners() {
+    private static void RegisterListeners(JavaPlugin plugin) {
     }
 
-    private void RegisterSystems() {
-        this.getEntityStoreRegistry().registerSystem(new CraftingExportSystem());
+    private static void RegisterSystems(JavaPlugin plugin) {
+        plugin.getEntityStoreRegistry().registerSystem(new CraftingExportSystem());
     }
 
 }

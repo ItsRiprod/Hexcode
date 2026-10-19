@@ -1,26 +1,20 @@
 package com.riprod.hexcode.builtin.hexability;
 
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
-import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 
-public class HexabilityPlugin extends JavaPlugin {
+public class HexabilityPlugin {
 
-    public HexabilityPlugin(JavaPluginInit init) {
-        super(init);
-        getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
-                this.getManifest().getName().toString(), this.getManifest().getVersion().toString());
+    public static void setup(JavaPlugin plugin) {
+        RegisterSystems(plugin);
+        RegisterListeners(plugin);
+        plugin.getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
+                "Hexability", plugin.getManifest().getVersion().toString());
     }
 
-    @Override
-    public void setup() {
-        RegisterSystems();
-        RegisterListeners();
+    private static void RegisterListeners(JavaPlugin plugin) {
     }
 
-    private void RegisterListeners() {
-    }
-
-    private void RegisterSystems() {
+    private static void RegisterSystems(JavaPlugin plugin) {
     }
 
 }

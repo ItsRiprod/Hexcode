@@ -247,32 +247,27 @@ import com.riprod.hexcode.builtin.hexCore.impact.RatioToDefaultImpact;
 import com.riprod.hexcode.builtin.hexCore.impact.SphereVolumeImpact;
 import com.riprod.hexcode.builtin.hexCore.impact.ThresholdImpact;
 
-public class HexCorePlugin extends JavaPlugin {
+public class HexCorePlugin {
 
-    public HexCorePlugin(JavaPluginInit init) {
-        super(init);
-        getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
-                this.getManifest().getName().toString(), this.getManifest().getVersion().toString());
+    public static void setup(JavaPlugin plugin) {
+        RegisterImpacts(plugin);
+        RegisterGlyphs(plugin);
+        RegisterStyles(plugin);
+        RegisterObelisks(plugin);
+        RegisterNodes(plugin);
+        RegisterComponents(plugin);
+        RegisterSystems(plugin);
+        RegisterConstructs(plugin);
+        RegisterInteractions(plugin);
+        RegisterEvents(plugin);
+        RegisterHexConfigs(plugin);
+        RegisterGlyphConfigs(plugin);
+        RegisterProfiles(plugin);
+        plugin.getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
+                "Internal", plugin.getManifest().getVersion().toString());
     }
 
-    @Override
-    public void setup() {
-        RegisterImpacts();
-        RegisterGlyphs();
-        RegisterStyles();
-        RegisterObelisks();
-        RegisterNodes();
-        RegisterComponents();
-        RegisterSystems();
-        RegisterConstructs();
-        RegisterInteractions();
-        RegisterEvents();
-        RegisterHexConfigs();
-        RegisterGlyphConfigs();
-        RegisterProfiles();
-    }
-
-    private void RegisterImpacts() {
+    private static void RegisterImpacts(JavaPlugin plugin) {
         Impact.CODEC
                 .register(PowerLawImpact.ID, PowerLawImpact.class, PowerLawImpact.CODEC)
                 .register(SphereVolumeImpact.ID, SphereVolumeImpact.class, SphereVolumeImpact.CODEC)
@@ -284,7 +279,7 @@ public class HexCorePlugin extends JavaPlugin {
                 .register(LinearImpact.ID, LinearImpact.class, LinearImpact.CODEC);
     }
 
-    private void RegisterGlyphs() {
+    private static void RegisterGlyphs(JavaPlugin plugin) {
 
         // utilities
         GlyphRegistry.register(new MultiplyGlyph());
@@ -386,7 +381,7 @@ public class HexCorePlugin extends JavaPlugin {
 
     }
 
-    private void RegisterObelisks() {
+    private static void RegisterObelisks(JavaPlugin plugin) {
         ObeliskHandlerRegistry.register("seeker", new SeekerObelisk());
         ObeliskHandlerRegistry.register("accuracy", new AccuracyObelisk());
         ObeliskHandlerRegistry.register("efficiency", new EfficiencyObelisk());
@@ -394,14 +389,14 @@ public class HexCorePlugin extends JavaPlugin {
         ObeliskHandlerRegistry.register(EncryptionObelisk.HANDLER_ID, new EncryptionObelisk());
     }
 
-    private void RegisterStyles() {
+    private static void RegisterStyles(JavaPlugin plugin) {
         CastingStyleRegistry.register(new ArcStyle());
         CastingStyleRegistry.register(new RingStyle());
         CastingStyleRegistry.register(new SphereStyle());
         CastingStyleRegistry.setDefault(RingStyle.ID);
     }
 
-    private void RegisterNodes() {
+    private static void RegisterNodes(JavaPlugin plugin) {
         Slot.registerType(Priority.DEFAULT, "Link", LinkSlot.class, LinkSlot.CODEC);
         Slot.registerType("Boolean", TrileanSlot.class, TrileanSlot.CODEC);
         Slot.registerType(RawStateSlot.TYPE, RawStateSlot.class, RawStateSlot.CODEC);
@@ -417,7 +412,7 @@ public class HexCorePlugin extends JavaPlugin {
         NodeConfig.CODEC.register(GlyphNodeConfig.TYPE, GlyphNodeConfig.class, GlyphNodeConfig.CODEC);
     }
 
-    private void RegisterInteractions() {
+    private static void RegisterInteractions(JavaPlugin plugin) {
         Interaction.CODEC.register("HexImportExportInteraction", ImportInteraction.class,
                 ImportInteraction.CODEC);
         Interaction.CODEC.register("HexNameInteraction", HexNameInteraction.class,
@@ -444,29 +439,29 @@ public class HexCorePlugin extends JavaPlugin {
                 HexShatterBounceInteraction.CODEC);
     }
 
-    private void RegisterEvents() {
-        this.getEventRegistry().registerGlobal(GlyphFizzleEvent.class, new FizzleMessageListener());
-        this.getEventRegistry().registerGlobal(CraftingEvent.class, new CraftingNotificationListener());
-        this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphMemoryListener());
-        this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDrawNotificationListener());
-        this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class,
+    private static void RegisterEvents(JavaPlugin plugin) {
+        plugin.getEventRegistry().registerGlobal(GlyphFizzleEvent.class, new FizzleMessageListener());
+        plugin.getEventRegistry().registerGlobal(CraftingEvent.class, new CraftingNotificationListener());
+        plugin.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphMemoryListener());
+        plugin.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDrawNotificationListener());
+        plugin.getEventRegistry().registerGlobal(GlyphDrawnEvent.class,
                 new GlyphDrawnDisabledNotificationListener());
-        this.getEventRegistry().registerGlobal(PedestalInteractEvent.class, new PedestalContextHandler());
-        this.getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
+        plugin.getEventRegistry().registerGlobal(PedestalInteractEvent.class, new PedestalContextHandler());
+        plugin.getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
                 ContextForceExitSystem::onPlayerDisconnect);
     }
 
-    private void RegisterHexConfigs() {
+    private static void RegisterHexConfigs(JavaPlugin plugin) {
         HexConfigAsset.CODEC.register(Priority.DEFAULT, "Overlay", OverlayConfig.class, OverlayConfig.CODEC);
         HexConfigAsset.CODEC.register("ExecutionConfig", ExecutionConfig.class, ExecutionConfig.CODEC);
         HexConfigAsset.CODEC.register("EncodedConfig", EncodedConfig.class, EncodedConfig.CODEC);
     }
 
-    private void RegisterGlyphConfigs() {
+    private static void RegisterGlyphConfigs(JavaPlugin plugin) {
         GlyphConfig.CODEC.register(BasicConfig.ID, BasicConfig.class, BasicConfig.CODEC);
     }
 
-    private void RegisterProfiles() {
+    private static void RegisterProfiles(JavaPlugin plugin) {
         ImbuementProfileAsset.CODEC.register("Book", BookProfile.class, BookProfile.CODEC);
         ImbuementProfileAsset.CODEC.register("Weapon", WeaponProfile.class, WeaponProfile.CODEC);
         ImbuementProfileAsset.CODEC.register("Armor", ArmorProfile.class, ArmorProfile.CODEC);
@@ -475,77 +470,77 @@ public class HexCorePlugin extends JavaPlugin {
 
     }
 
-    private void RegisterComponents() {
-        ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
+    private static void RegisterComponents(JavaPlugin plugin) {
+        ComponentRegistryProxy<EntityStore> entityStoreRegistry = plugin.getEntityStoreRegistry();
 
-        ComponentType<EntityStore, ProjectileState> hexProjectileStateType = entityStoreRegistry
+        var hexProjectileStateType = entityStoreRegistry
                 .registerComponent(ProjectileState.class, ProjectileState::new);
         ProjectileState.setComponentType(hexProjectileStateType);
 
-        ComponentType<EntityStore, ConjureZoneComponent> conjureZoneType = entityStoreRegistry
+        var conjureZoneType = entityStoreRegistry
                 .registerComponent(ConjureZoneComponent.class, ConjureZoneComponent::new);
         ConjureZoneComponent.setComponentType(conjureZoneType);
 
-        ComponentType<EntityStore, PhaseComponent> phaseComponentType = entityStoreRegistry
+        var phaseComponentType = entityStoreRegistry
                 .registerComponent(PhaseComponent.class, PhaseComponent::new);
         PhaseComponent.setComponentType(phaseComponentType);
 
-        ComponentType<EntityStore, EnsnareComponent> ensnareComponentType = entityStoreRegistry
+        var ensnareComponentType = entityStoreRegistry
                 .registerComponent(EnsnareComponent.class, EnsnareComponent::new);
         EnsnareComponent.setComponentType(ensnareComponentType);
 
-        ComponentType<EntityStore, GlaciateComponent> glaciateComponentType = entityStoreRegistry
+        var glaciateComponentType = entityStoreRegistry
                 .registerComponent(GlaciateComponent.class, GlaciateComponent::new);
         GlaciateComponent.setComponentType(glaciateComponentType);
 
-        ComponentType<EntityStore, ShatterState> shatterStateType = entityStoreRegistry
+        var shatterStateType = entityStoreRegistry
                 .registerComponent(ShatterState.class, ShatterState::new);
         ShatterState.setComponentType(shatterStateType);
 
-        ComponentType<EntityStore, DomainZoneComponent> domainZoneComponentType = entityStoreRegistry
+        var domainZoneComponentType = entityStoreRegistry
                 .registerComponent(DomainZoneComponent.class, DomainZoneComponent::new);
         DomainZoneComponent.setComponentType(domainZoneComponentType);
 
-        ComponentType<EntityStore, HexEffectsComponent> hexConstructType = entityStoreRegistry
+        var hexConstructType = entityStoreRegistry
                 .registerComponent(HexEffectsComponent.class, HexEffectsComponent::new);
         HexEffectsComponent.setComponentType(hexConstructType);
 
-        ComponentType<EntityStore, HexAppearanceComponent> hexAppearanceComponentType = entityStoreRegistry
+        var hexAppearanceComponentType = entityStoreRegistry
                 .registerComponent(HexAppearanceComponent.class, "HexAppearance",
                         HexAppearanceComponent.CODEC);
         HexAppearanceComponent.setComponentType(hexAppearanceComponentType);
 
-        ComponentType<EntityStore, MagicHealthComponent> magicHealthComponentType = entityStoreRegistry
+        var magicHealthComponentType = entityStoreRegistry
                 .registerComponent(MagicHealthComponent.class, MagicHealthComponent::new);
         MagicHealthComponent.setComponentType(magicHealthComponentType);
 
-        ComponentType<EntityStore, FortifyWardComponent> fortifyWardComponentType = entityStoreRegistry
+        var fortifyWardComponentType = entityStoreRegistry
                 .registerComponent(FortifyWardComponent.class, () -> FortifyWardComponent.INSTANCE);
         FortifyWardComponent.setComponentType(fortifyWardComponentType);
 
-        ComponentType<EntityStore, FlycastingState> flycastingStateType = entityStoreRegistry
+        var flycastingStateType = entityStoreRegistry
                 .registerComponent(FlycastingState.class, FlycastingState::new);
         FlycastingState.setComponentType(flycastingStateType);
 
-        ComponentType<EntityStore, SelectingState> selectingStateType = entityStoreRegistry
+        var selectingStateType = entityStoreRegistry
                 .registerComponent(SelectingState.class, SelectingState::new);
         SelectingState.setComponentType(selectingStateType);
 
-        ComponentType<EntityStore, DecryptingState> decryptingStateType = entityStoreRegistry
+        var decryptingStateType = entityStoreRegistry
                 .registerComponent(DecryptingState.class, DecryptingState::new);
         DecryptingState.setComponentType(decryptingStateType);
 
-        ComponentType<EntityStore, CraftingState> craftingStateType = entityStoreRegistry
+        var craftingStateType = entityStoreRegistry
                 .registerComponent(CraftingState.class, CraftingState::new);
         CraftingState.setComponentType(craftingStateType);
 
-        ComponentType<EntityStore, ComponentPasteCache> pasteCacheType = this.getEntityStoreRegistry()
+        var pasteCacheType = plugin.getEntityStoreRegistry()
                 .registerComponent(ComponentPasteCache.class, ComponentPasteCache::new);
         ComponentPasteCache.setComponentType(pasteCacheType);
     }
 
-    private void RegisterSystems() {
-        ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
+    private static void RegisterSystems(JavaPlugin plugin) {
+        ComponentRegistryProxy<EntityStore> entityStoreRegistry = plugin.getEntityStoreRegistry();
 
         entityStoreRegistry.registerSystem(new HexAppearanceRevertSystem());
 
@@ -599,7 +594,7 @@ public class HexCorePlugin extends JavaPlugin {
         entityStoreRegistry.registerSystem(new ComponentResolveListener());
     }
 
-    private void RegisterConstructs() {
+    private static void RegisterConstructs(JavaPlugin plugin) {
         ConstructRegistry.register(ScaleGlyph.ID, new ScaleConstructHandler());
         ConstructRegistry.register(DisguiseGlyph.ID, new DisguiseConstructHandler());
         ConstructRegistry.register(ConcentrationGlyph.ID, new ConcentrationConstructHandler());

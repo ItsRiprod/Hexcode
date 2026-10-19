@@ -1,9 +1,6 @@
 package com.riprod.hexcode.builtin.counterspell;
 
-import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
-import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphDrawnEvent;
 import com.riprod.hexcode.api.event.GlyphExecuteEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
@@ -20,30 +17,24 @@ import com.riprod.hexcode.builtin.counterspell.eventListeners.HexContextChangeDi
 import com.riprod.hexcode.builtin.counterspell.eventListeners.HexStateDiagnosticListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.ShapeDrawnDiagnosticListener;
 
-public class CounterspellPlugin extends JavaPlugin {
+public class CounterspellPlugin {
 
-    public CounterspellPlugin(JavaPluginInit init) {
-        super(init);
-        getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
-                this.getManifest().getName().toString(), this.getManifest().getVersion().toString());
+    public static void setup(JavaPlugin plugin) {
+        RegisterSystems(plugin);
+        RegisterListeners(plugin);
+        plugin.getLogger().atFine().log("Hexcode %s sub-plugin v%s initializing...",
+                "Counterspell", plugin.getManifest().getVersion().toString());
     }
 
-    @Override
-    public void setup() {
-        RegisterSystems();
-        RegisterListeners();
+    private static void RegisterListeners(JavaPlugin plugin) {
+        plugin.getEventRegistry().registerGlobal(GlyphFizzleEvent.class, new GlyphDiagnosticListener());
+        plugin.getEventRegistry().registerGlobal(GlyphExecuteEvent.class, new GlyphExecuteDiagnosticListener());
+        plugin.getEventRegistry().registerGlobal(HexStateChangeEvent.class, new HexStateDiagnosticListener());
+        plugin.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDeprecatedNotificationListener());
     }
 
-    private void RegisterListeners() {
-
-        this.getEventRegistry().registerGlobal(GlyphFizzleEvent.class, new GlyphDiagnosticListener());
-        this.getEventRegistry().registerGlobal(GlyphExecuteEvent.class, new GlyphExecuteDiagnosticListener());
-        this.getEventRegistry().registerGlobal(HexStateChangeEvent.class, new HexStateDiagnosticListener());
-        this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDeprecatedNotificationListener());
-    }
-
-    private void RegisterSystems() {
-        ComponentRegistryProxy<EntityStore> entityStoreRegistry = this.getEntityStoreRegistry();
+    private static void RegisterSystems(JavaPlugin plugin) {
+        var entityStoreRegistry = plugin.getEntityStoreRegistry();
         entityStoreRegistry.registerSystem(new HexCastDiagnosticListener());
 
         entityStoreRegistry.registerSystem(new DrawModeEnterDiagnosticListener());
