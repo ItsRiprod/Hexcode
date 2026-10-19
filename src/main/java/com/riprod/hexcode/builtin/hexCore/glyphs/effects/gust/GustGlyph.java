@@ -22,10 +22,13 @@ import com.riprod.hexcode.utils.HexVarUtil;
 
 public class GustGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    @Override
-public String getId() { return ID; };
 
-public static final String ID = "Gust";
+    @Override
+    public String getId() {
+        return ID;
+    };
+
+    public static final String ID = "Gust";
 
     @Override
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
@@ -43,7 +46,8 @@ public static final String ID = "Gust";
         double effective = mag * radius * radius;
 
         Impact impact = asset == null || asset.getConfig() == null
-                ? null : asset.getConfig().getVolatilityImpact();
+                ? null
+                : asset.getConfig().getVolatilityImpact();
         return glyph.computeBaseCost(asset) * Impact.scale(impact, effective);
     }
 
@@ -53,7 +57,8 @@ public static final String ID = "Gust";
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         GustConfig config = getConfig(GustConfig.class, asset);
-        if (config == null) config = GustConfig.DEFAULTS;
+        if (config == null)
+            config = GustConfig.DEFAULTS;
 
         double radius = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(GustGlyphSlots.RADIUS, hexContext), asset.getSlot(GustGlyphSlots.RADIUS));
@@ -66,10 +71,9 @@ public static final String ID = "Gust";
             return;
         }
 
-        Vector3d center = HexVarUtil.position(centerVar, hexContext.getAccessor());
+        Vector3d center = centerVar.position(hexContext.getAccessor());
         if (center == null) {
-            center = HexVarUtil.position(
-                    hexContext.getDefaultVariable(), hexContext.getAccessor());
+            center = hexContext.getDefaultVariable().position(hexContext.getAccessor());
         }
         if (center == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,

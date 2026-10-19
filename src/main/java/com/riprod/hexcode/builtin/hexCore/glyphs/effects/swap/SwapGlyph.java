@@ -37,8 +37,8 @@ public static final String ID = "Swap";
         HexVar varsB = glyph.readSlot(SwapGlyphSlots.B, hexContext);
         if (varsB == null) varsB = hexContext.getDefaultVariable();
         if (varsA != null && varsB != null) {
-            Vector3d posA = HexVarUtil.position(varsA, hexContext.getAccessor());
-            Vector3d posB = HexVarUtil.position(varsB, hexContext.getAccessor());
+            Vector3d posA = varsA.position(hexContext.getAccessor());
+            Vector3d posB = varsB.position(hexContext.getAccessor());
             if (posA != null && posB != null) {
                 double dx = posA.x - posB.x;
                 double dy = posA.y - posB.y;
@@ -67,8 +67,8 @@ public static final String ID = "Swap";
 
         World world = hexContext.getAccessor().getExternalData().getWorld();
 
-        Vector3d posA = HexVarUtil.position(varsA, hexContext.getAccessor());
-        Vector3d posB = HexVarUtil.position(varsB, hexContext.getAccessor());
+        Vector3d posA = varsA.position(hexContext.getAccessor());
+        Vector3d posB = varsB.position(hexContext.getAccessor());
         if (posA != null && posB != null) {
             SwapStyle.render(posA, posB, hexContext, hexContext.getAccessor());
         }

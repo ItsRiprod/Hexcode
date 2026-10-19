@@ -56,12 +56,6 @@ public class AreaGlyph implements GlyphHandler {
                 && linksOf(glyph, AreaGlyphSlots.BLOCKS).isEmpty();
     }
 
-    private static boolean isAbsolute(@Nullable HexVar var) {
-        if (var instanceof PositionVar positionVar)
-            return positionVar.isAbsolute();
-        return !(var instanceof NumberVar);
-    }
-
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         return isDisplayOnly(glyph) ? PASSIVE_FLOOR : glyph.computeBaseCost(asset);
@@ -76,8 +70,8 @@ public class AreaGlyph implements GlyphHandler {
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        Vector3d anchorPos = HexVarUtil.position(
-                glyph.readSlot(AreaGlyphSlots.ANCHOR, hexContext), accessor);
+        Vector3d anchorPos =
+                glyph.readSlot(AreaGlyphSlots.ANCHOR, hexContext).position(accessor);
         if (anchorPos == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Anchor is not a valid position");
@@ -86,16 +80,16 @@ public class AreaGlyph implements GlyphHandler {
 
         HexVar coordsAVar = glyph.readSlot(AreaGlyphSlots.COORDS_A, hexContext);
         HexVar coordsBVar = glyph.readSlot(AreaGlyphSlots.COORDS_B, hexContext);
-        Vector3d coordsA = HexVarUtil.position(coordsAVar, accessor);
-        Vector3d coordsB = HexVarUtil.position(coordsBVar, accessor);
+        Vector3d coordsA = coordsAVar.position(accessor);
+        Vector3d coordsB = coordsBVar.position(accessor);
         if (coordsA == null || coordsB == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Corner coordinates must be valid positions");
             return;
         }
 
-        Vector3d cornerA = isAbsolute(coordsAVar) ? coordsA : new Vector3d(anchorPos).add(coordsA);
-        Vector3d cornerB = isAbsolute(coordsBVar) ? coordsB : new Vector3d(anchorPos).add(coordsB);
+        var cornerA = coordsA.add(anchorPos);
+        var cornerB = coordsB.add(anchorPos);
 
         double minAxis = config.getMinAxisSize();
         Vector3d center = new Vector3d(

@@ -93,14 +93,12 @@ public class ConjureGlyph implements GlyphHandler {
             config = ConjureConfig.DEFAULTS;
         double half = config.getBoxHalfExtent();
 
-        Vector3d a = HexVarUtil.position(
-                glyph.readSlot(ConjureGlyphSlots.COORDS_A, hexContext,
-                        new PositionVar(new Vector3d(half, half, half))),
-                hexContext.getAccessor());
-        Vector3d b = HexVarUtil.position(
-                glyph.readSlot(ConjureGlyphSlots.COORDS_B, hexContext,
-                        new PositionVar(new Vector3d(-half, -half, -half))),
-                hexContext.getAccessor());
+        Vector3d a = glyph.readSlot(ConjureGlyphSlots.COORDS_A, hexContext,
+                new PositionVar(new Vector3d(half, half, half))).position(
+                        hexContext.getAccessor());
+        Vector3d b = glyph.readSlot(ConjureGlyphSlots.COORDS_B, hexContext,
+                new PositionVar(new Vector3d(-half, -half, -half))).position(
+                        hexContext.getAccessor());
         double volume = 1.0;
         if (a != null && b != null) {
             double minAxis = config.getMinAxisSize();
@@ -151,15 +149,15 @@ public class ConjureGlyph implements GlyphHandler {
             }
             anchorVar = resolvedVar;
         }
-        Vector3d anchorPos = HexVarUtil.position(anchorVar, hexContext.getAccessor());
+        Vector3d anchorPos = anchorVar.position(hexContext.getAccessor());
         if (anchorPos == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Anchor variable is not a valid position");
             return;
         }
 
-        Vector3d coordsA = HexVarUtil.position(coordsAVar, hexContext.getAccessor());
-        Vector3d coordsB = HexVarUtil.position(coordsBVar, hexContext.getAccessor());
+        Vector3d coordsA = coordsAVar.position(hexContext.getAccessor());
+        Vector3d coordsB = coordsBVar.position(hexContext.getAccessor());
 
         if (coordsA == null || coordsB == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -167,26 +165,22 @@ public class ConjureGlyph implements GlyphHandler {
             return;
         }
 
-        boolean absA = (coordsAVar instanceof PositionVar pa && pa.isAbsolute())
-                || (!(coordsAVar instanceof PositionVar) && !(coordsAVar instanceof NumberVar));
-        boolean absB = (coordsBVar instanceof PositionVar pb && pb.isAbsolute())
-                || (!(coordsBVar instanceof PositionVar) && !(coordsBVar instanceof NumberVar));
-        Vector3d cornerA = absA ? coordsA : new Vector3d(anchorPos).add(coordsA);
-        Vector3d cornerB = absB ? coordsB : new Vector3d(anchorPos).add(coordsB);
+        var cornerA = new Vector3d(anchorPos).add(coordsA);
+        var cornerB = new Vector3d(anchorPos).add(coordsB);
 
-        Vector3d min = new Vector3d(
+        var min = new Vector3d(
                 Math.min(cornerA.x, cornerB.x),
                 Math.min(cornerA.y, cornerB.y),
                 Math.min(cornerA.z, cornerB.z));
-        Vector3d max = new Vector3d(
+        var max = new Vector3d(
                 Math.max(cornerA.x, cornerB.x),
                 Math.max(cornerA.y, cornerB.y),
                 Math.max(cornerA.z, cornerB.z));
-        Vector3d center = new Vector3d(
+        var center = new Vector3d(
                 (min.x + max.x) / 2,
                 (min.y + max.y) / 2,
                 (min.z + max.z) / 2);
-        Vector3d halfExtents = new Vector3d(
+        var halfExtents = new Vector3d(
                 (max.x - min.x) / 2,
                 (max.y - min.y) / 2,
                 (max.z - min.z) / 2);
@@ -196,19 +190,19 @@ public class ConjureGlyph implements GlyphHandler {
         float interval = HexVarUtil.numberOrSlotDefault(
                 intervalVar, asset.getSlot(ConjureGlyphSlots.INTERVAL)).floatValue();
 
-        ConjureZoneComponent zoneComp = new ConjureZoneComponent(halfExtents, interval, durationSeconds);
+        var zoneComp = new ConjureZoneComponent(halfExtents, interval, durationSeconds);
 
         double hitboxMode = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(ConjureGlyphSlots.HITBOX, hexContext),
                 asset.getSlot(ConjureGlyphSlots.HITBOX)).doubleValue();
-        String collisionId = hitboxMode > 0 ? config.getHardCollisionId()
+        var collisionId = hitboxMode > 0 ? config.getHardCollisionId()
                 : hitboxMode < 0 ? config.getSoftCollisionId()
                         : null;
-        HitboxCollisionConfig collisionConfig = collisionId != null
+        var collisionConfig = collisionId != null
                 ? HitboxCollisionConfig.getAssetMap().getAsset(collisionId)
                 : null;
 
-        Holder<EntityStore> holder = HexConstructSpawner.create(
+        var holder = HexConstructSpawner.create(
                 hexContext.getAccessor(), hexContext, glyph, ConjureGlyph.ID, new Vector3d(center));
 
         holder.ensureComponent(PropComponent.getComponentType());
@@ -239,7 +233,7 @@ public class ConjureGlyph implements GlyphHandler {
 
         holder.addComponent(ConjureZoneComponent.getComponentType(), zoneComp);
 
-        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(config.getAnchorModelId());
+        var modelAsset = ModelAsset.getAssetMap().getAsset(config.getAnchorModelId());
         if (modelAsset != null) {
 
             Box modelBox = new Box(
@@ -264,7 +258,7 @@ public class ConjureGlyph implements GlyphHandler {
                     new PersistentModel(model.toReference()));
         }
 
-        Ref<EntityStore> zoneRef = hexContext.getAccessor().addEntity(holder, AddReason.SPAWN);
+        var zoneRef = hexContext.getAccessor().addEntity(holder, AddReason.SPAWN);
         zoneComp.setZoneRef(zoneRef);
 
         ConjureStyle.renderSpawn(center, hexContext, hexContext.getAccessor());

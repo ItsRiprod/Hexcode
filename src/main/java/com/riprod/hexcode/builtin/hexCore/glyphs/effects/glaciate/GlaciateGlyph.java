@@ -43,9 +43,11 @@ import com.riprod.hexcode.utils.HexVarUtil;
 
 public class GlaciateGlyph implements GlyphHandler {
     @Override
-public String getId() { return ID; };
+    public String getId() {
+        return ID;
+    };
 
-public static final String ID = "Glaciate";
+    public static final String ID = "Glaciate";
 
     @Override
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
@@ -61,7 +63,7 @@ public static final String ID = "Glaciate";
             return;
         }
 
-        Vector3d targetPos = HexVarUtil.position(targetVar, hexContext.getAccessor());
+        Vector3d targetPos = targetVar.position(hexContext.getAccessor());
         if (targetPos == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Could not resolve target position");
@@ -70,7 +72,8 @@ public static final String ID = "Glaciate";
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         GlaciateConfig config = getConfig(GlaciateConfig.class, asset);
-        if (config == null) config = GlaciateConfig.DEFAULTS;
+        if (config == null)
+            config = GlaciateConfig.DEFAULTS;
 
         HexVar offsetVar = glyph.readSlot(GlaciateGlyphSlots.OFFSET, hexContext);
         double defaultHeight = HexVarUtil.numberOrSlotDefault(
@@ -93,34 +96,10 @@ public static final String ID = "Glaciate";
         HitboxCollisionConfig collisionConfig = HitboxCollisionConfig.getAssetMap()
                 .getAsset(config.getHardCollisionConfigId());
 
-        Vector3d spawnPos = resolveSpawnPosition(targetPos, offsetVar, hexContext, defaultHeight);
+        var spawnPos = new Vector3d(targetPos)
+                .add(new Vector3d(0, HexVarUtil.numberOrDefault(offsetVar, defaultHeight), 0));
         spawnIceBlock(glyph, hexContext, spawnPos, (float) duration,
                 modelAsset, collisionConfig, config);
-    }
-
-    private Vector3d resolveSpawnPosition(Vector3d targetPos, HexVar offsetVar, HexContext hexContext,
-            double defaultHeight) {
-        if (offsetVar == null) {
-            return new Vector3d(targetPos).add(new Vector3d(0, defaultHeight, 0));
-        }
-
-        if (offsetVar instanceof EntityVar) {
-            Vector3d absPos = HexVarUtil.position(offsetVar, hexContext.getAccessor());
-            if (absPos != null) return absPos;
-            return new Vector3d(targetPos).add(new Vector3d(0, defaultHeight, 0));
-        }
-
-        if (offsetVar instanceof PositionVar posVar && posVar.getValue() != null) {
-            if (posVar.isAbsolute()) return new Vector3d(posVar.getValue());
-            return new Vector3d(targetPos).add(new Vector3d(posVar.getValue()));
-        }
-
-        if (offsetVar instanceof NumberVar) {
-            double height = HexVarUtil.numberOrDefault(offsetVar, defaultHeight);
-            return new Vector3d(targetPos).add(new Vector3d(0, height, 0));
-        }
-
-        return new Vector3d(targetPos).add(new Vector3d(0, defaultHeight, 0));
     }
 
     private void spawnIceBlock(Glyph glyph, HexContext hexContext, Vector3d spawnPos,
@@ -153,7 +132,8 @@ public static final String ID = "Glaciate";
         }
 
         holder.addComponent(GlaciateComponent.getComponentType(),
-                new GlaciateComponent(config.getDamageRadius(), config.getDamageMultiplier(), duration));
+                new GlaciateComponent(config.getDamageRadius(), config.getDamageMultiplier(),
+                        duration));
 
         GlaciatePhysicsConfig.INSTANCE.apply(holder, hexContext.getCasterRef(accessor),
                 new Vector3d(), accessor, false);

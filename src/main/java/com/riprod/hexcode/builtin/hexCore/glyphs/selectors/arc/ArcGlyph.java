@@ -98,7 +98,7 @@ public class ArcGlyph implements GlyphHandler {
             return;
         }
 
-        Vector3d origin = HexVarUtil.position(targetVar, accessor);
+        Vector3d origin = targetVar.position(accessor);
         if (origin == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target must be an entity, block, or position");

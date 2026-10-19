@@ -72,7 +72,7 @@ public class HexProjectileBounceInteraction extends SimpleInteraction {
             BlockPosition hitBlock = ctx.getMetaStore().getMetaObject(Interaction.TARGET_BLOCK_RAW);
             HexVar resultVar = hitBlock != null
                     ? new BlockVar(new Vector3i(hitBlock.x, hitBlock.y, hitBlock.z))
-                    : new PositionVar(hitPos, true);
+                    : new PositionVar(hitPos);
             Glyph triggering = state.getTriggeringGlyph();
 
             if (triggering == null) {

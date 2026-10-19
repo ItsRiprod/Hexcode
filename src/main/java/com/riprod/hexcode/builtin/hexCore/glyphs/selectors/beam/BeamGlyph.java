@@ -87,7 +87,7 @@ public class BeamGlyph implements GlyphHandler {
             return;
         }
 
-        Vector3d direction = HexVarUtil.resolveDirection(rotVar, origin, hexContext.getAccessor());
+        Vector3d direction = rotVar.direction(hexContext.getAccessor());
         if (direction == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Rotation variable is not valid");
@@ -121,21 +121,19 @@ public class BeamGlyph implements GlyphHandler {
             blockHitDist = new Vector3d(origin).sub(blockHitLocation).length();
         }
 
-        if (!passive) {
-            EntityVar sourceEntityVar = HexVarUtil.resolveEntityVar(posVar, hexContext);
-            if (sourceEntityVar != null) {
-                Ref<EntityStore> sourceRef = sourceEntityVar.getRef(hexContext.getAccessor());
-                if (sourceRef != null && sourceRef.isValid()) {
-                    List<Ref<EntityStore>> candidates = new ArrayList<>(
-                            TargetUtil.getAllEntitiesInSphere(origin, beamLength, hexContext.getAccessor()));
-                    candidates.removeIf(ref -> ref == null || ref.equals(sourceRef));
-                    entityHit = TargetFilter.getSmallestTarget(origin, new Vector3d(direction).normalize(),
-                            candidates, hexContext.getAccessor(), beamLength);
-                    if (entityHit != null) {
-                        Vector3d entityPos = hexContext.getAccessor().getComponent(entityHit,
-                                TransformComponent.getComponentType()).getPosition();
-                        entityHitDist = new Vector3d(origin).sub(entityPos).length();
-                    }
+        if (!passive && posVar instanceof EntityVar sourceEntityVar) {
+
+            Ref<EntityStore> sourceRef = sourceEntityVar.getRef(hexContext.getAccessor());
+            if (sourceRef != null && sourceRef.isValid()) {
+                List<Ref<EntityStore>> candidates = new ArrayList<>(
+                        TargetUtil.getAllEntitiesInSphere(origin, beamLength, hexContext.getAccessor()));
+                candidates.removeIf(ref -> ref == null || ref.equals(sourceRef));
+                entityHit = TargetFilter.getSmallestTarget(origin, new Vector3d(direction).normalize(),
+                        candidates, hexContext.getAccessor(), beamLength);
+                if (entityHit != null) {
+                    Vector3d entityPos = hexContext.getAccessor().getComponent(entityHit,
+                            TransformComponent.getComponentType()).getPosition();
+                    entityHitDist = new Vector3d(origin).sub(entityPos).length();
                 }
             }
         }
@@ -162,13 +160,13 @@ public class BeamGlyph implements GlyphHandler {
             hitType = BeamStyle.HitType.BLOCK;
             if (!passive)
                 glyph.writeOutput(
-                        new PositionVar(BlockResolution.nudgeIntoBlock(blockHitLocation, direction), true),
+                        new PositionVar(BlockResolution.nudgeIntoBlock(blockHitLocation, direction)),
                         hexContext);
         } else {
             endPoint = new Vector3d(origin).add(new Vector3d(direction).mul(beamLength));
             hitType = BeamStyle.HitType.MISS;
             if (!passive)
-                glyph.writeOutput(new PositionVar(endPoint, true), hexContext);
+                glyph.writeOutput(new PositionVar(endPoint), hexContext);
         }
 
         if (!passive)
@@ -183,7 +181,8 @@ public class BeamGlyph implements GlyphHandler {
 
     private void chargeReach(GlyphAsset asset, HexContext hexContext, double reach) {
         Impact impact = asset == null || asset.getConfig() == null
-                ? null : asset.getConfig().getVolatilityImpact();
+                ? null
+                : asset.getConfig().getVolatilityImpact();
         if (impact == null)
             return;
         VolatilityComponent volatility = hexContext.volatility();

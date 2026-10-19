@@ -56,7 +56,8 @@ public class DisguiseGlyph implements GlyphHandler {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
 
         DisguiseConfig config = getConfig(DisguiseConfig.class, asset);
-        if (config == null) config = DisguiseConfig.DEFAULTS;
+        if (config == null)
+            config = DisguiseConfig.DEFAULTS;
 
         AppearanceLayer disguise = resolveDisguise(glyph, hexContext, accessor);
         if (disguise == null) {
@@ -69,13 +70,14 @@ public class DisguiseGlyph implements GlyphHandler {
                 glyph.readSlot(DisguiseGlyphSlots.DURATION, hexContext),
                 asset.getSlot(DisguiseGlyphSlots.DURATION)));
 
-        EntityVar targetEntity = HexVarUtil.resolveEntityVar(targetVar, hexContext);
-        if (targetEntity == null) {
+        if (!(targetVar instanceof EntityVar entityVar)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target must be a creature");
             return;
+
         }
-        applyToEntity(glyph, hexContext, accessor, targetEntity, disguise, durationSeconds, config);
+
+        applyToEntity(glyph, hexContext, accessor, entityVar, disguise, durationSeconds, config);
     }
 
     private void applyToEntity(Glyph glyph, HexContext hexContext, CommandBuffer<EntityStore> accessor,
@@ -132,7 +134,8 @@ public class DisguiseGlyph implements GlyphHandler {
         TransformComponent targetTransform = accessor.getComponent(
                 targetRef, TransformComponent.getComponentType());
         Vector3d spawnPos = targetTransform != null
-                ? new Vector3d(targetTransform.getPosition()) : new Vector3d();
+                ? new Vector3d(targetTransform.getPosition())
+                : new Vector3d();
         DisguiseStyle.renderApply(spawnPos, hexContext, accessor);
     }
 
@@ -148,11 +151,11 @@ public class DisguiseGlyph implements GlyphHandler {
     private AppearanceLayer resolveDisguise(Glyph glyph, HexContext hexContext,
             CommandBuffer<EntityStore> accessor) {
         HexVar referenceVar = glyph.readSlot(DisguiseGlyphSlots.REFERENCE, hexContext);
-        EntityVar referenceEntity = HexVarUtil.resolveEntityVar(referenceVar, hexContext);
-        if (referenceEntity == null) {
+        if (!(referenceVar instanceof EntityVar entityVar)) {
             return null;
         }
-        return resolveEntityDisguise(referenceEntity, accessor);
+    
+        return resolveEntityDisguise(entityVar, accessor);
     }
 
     private AppearanceLayer resolveEntityDisguise(EntityVar referenceEntity,
@@ -163,9 +166,11 @@ public class DisguiseGlyph implements GlyphHandler {
         }
 
         ModelComponent modelComp = accessor.getComponent(referenceRef, ModelComponent.getComponentType());
-        if (modelComp == null || modelComp.getModel() == null) return null;
+        if (modelComp == null || modelComp.getModel() == null)
+            return null;
         String modelId = modelComp.getModel().getModelAssetId();
-        if (modelId == null) return null;
+        if (modelId == null)
+            return null;
 
         float referenceScale = modelComp.getModel().getScale();
         EntityScaleComponent scaleComp = accessor.getComponent(

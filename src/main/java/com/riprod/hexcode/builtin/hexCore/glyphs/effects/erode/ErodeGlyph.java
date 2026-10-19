@@ -74,8 +74,7 @@ public class ErodeGlyph implements GlyphHandler {
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
-        if (entityVar != null) {
+        if (targets instanceof EntityVar entityVar) {
             // sustained entity vulnerability defers continuation to the construct's onEnd
             if (config.canImpactEntities()
                     && applyToEntities(glyph, entityVar, (float) duration, config, hexContext, accessor)) {
@@ -87,8 +86,9 @@ public class ErodeGlyph implements GlyphHandler {
                 }
                 return;
             }
-        } else {
-            BlockVar blockVar = HexVarUtil.resolveBlockVar(targets, hexContext);
+        }
+
+        if (targets instanceof BlockVar blockVar) {
             if (blockVar != null) {
                 double amount = HexVarUtil.numberOrSlotDefault(
                         glyph.readSlot(ErodeGlyphSlots.AMOUNT, hexContext),
@@ -96,6 +96,7 @@ public class ErodeGlyph implements GlyphHandler {
                 applyToBlocks(blockVar, amount, config, hexContext, accessor);
             }
         }
+
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 

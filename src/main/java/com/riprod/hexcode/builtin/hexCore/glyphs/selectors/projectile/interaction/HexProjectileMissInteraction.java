@@ -80,7 +80,7 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
                             buffer.getExternalData().getWorld(), hitPos, travelDir);
                     triggering.writeOutput(snapped != null
                             ? new BlockVar(snapped)
-                            : new PositionVar(hitPos, true), hexContext);
+                            : new PositionVar(hitPos), hexContext);
                 }
                 ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
             }

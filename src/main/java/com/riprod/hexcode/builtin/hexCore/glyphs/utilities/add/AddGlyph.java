@@ -47,8 +47,7 @@ public class AddGlyph implements GlyphHandler {
             case PositionVar pa -> {
                 PositionVar pb = (PositionVar) b;
                 yield new PositionVar(
-                        new Vector3d(pa.getValue()).add(pb.getValue()),
-                        pa.isAbsolute() || pb.isAbsolute());
+                        new Vector3d(pa.getValue()).add(pb.getValue()));
             }
             case RotationVar ra -> {
                 RotationVar rb = (RotationVar) b;

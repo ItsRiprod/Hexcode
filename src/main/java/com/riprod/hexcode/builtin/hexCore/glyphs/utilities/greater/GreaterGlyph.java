@@ -1,4 +1,4 @@
-package com.riprod.hexcode.builtin.hexCore.glyphs.effects.greater;
+package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.greater;
 
 import java.util.List;
 

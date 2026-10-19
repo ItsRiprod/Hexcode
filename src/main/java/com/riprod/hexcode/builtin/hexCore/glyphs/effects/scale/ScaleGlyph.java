@@ -64,7 +64,8 @@ public class ScaleGlyph implements GlyphHandler {
             return 0f;
 
         ScaleConfig config = getConfig(ScaleConfig.class, asset);
-        if (config == null) config = ScaleConfig.DEFAULTS;
+        if (config == null)
+            config = ScaleConfig.DEFAULTS;
 
         double magnitude = clamp(HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(ScaleGlyphSlots.MAGNITUDE, hexContext),
@@ -75,15 +76,15 @@ public class ScaleGlyph implements GlyphHandler {
         double resultScale = clamp(currentScale * magnitude, config.getMinMagnitude(), config.getMaxMagnitude());
 
         Impact impact = asset == null || asset.getConfig() == null
-                ? null : asset.getConfig().getVolatilityImpact();
+                ? null
+                : asset.getConfig().getVolatilityImpact();
         return baseCost * Impact.scale(impact, resultScale);
     }
 
     private float readCurrentScale(Glyph glyph, HexContext hexContext) {
         try {
             HexVar targets = glyph.readSlot(ScaleGlyphSlots.TARGET, hexContext);
-            EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
-            if (entityVar == null)
+            if (!(targets instanceof EntityVar entityVar))
                 return 1.0f;
             CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
             Ref<EntityStore> targetRef = entityVar.getRef(accessor);
@@ -104,8 +105,7 @@ public class ScaleGlyph implements GlyphHandler {
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
         var targets = glyph.readSlot(ScaleGlyphSlots.TARGET, hexContext);
-        var entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
-        if (entityVar == null) {
+        if (!(targets instanceof EntityVar entityVar)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target must be a creature");
             return new NumberVar(1);
@@ -126,8 +126,8 @@ public class ScaleGlyph implements GlyphHandler {
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar targets = glyph.readSlot(ScaleGlyphSlots.TARGET, hexContext);
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
-        if (entityVar == null) {
+        if (!(targets instanceof EntityVar entityVar)) {
+
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target must be a creature");
             return;
@@ -150,7 +150,8 @@ public class ScaleGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         ScaleConfig config = getConfig(ScaleConfig.class, asset);
-        if (config == null) config = ScaleConfig.DEFAULTS;
+        if (config == null)
+            config = ScaleConfig.DEFAULTS;
 
         double magnitude = clamp(HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(ScaleGlyphSlots.MAGNITUDE, hexContext), asset.getSlot(ScaleGlyphSlots.MAGNITUDE)),

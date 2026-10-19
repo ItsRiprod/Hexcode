@@ -10,6 +10,7 @@ import org.joml.Vector4d;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionChainData;
 import com.hypixel.hytale.protocol.InteractionType;
@@ -126,9 +127,9 @@ public class InteractionGlyph implements GlyphHandler {
         } else if (target instanceof PositionVar positionVar && positionVar.getValue() != null) {
             Vector3d pos = positionVar.getValue();
             targetHit = new Vector4d(pos.x, pos.y, pos.z, 1);
-            BlockVar snapped = positionVar.toBlockVar(accessor);
-            if (snapped != null && snapped.getValue() != null) {
-                Vector3i b = snapped.getValue();
+            var position = positionVar.position(accessor);
+            if (position != null) {
+                Vector3i b = new Vector3i(MathUtil.floor(position.x()), MathUtil.floor(position.y()), MathUtil.floor(position.z()));
                 targetBlock = new BlockPosition(b.x, b.y, b.z);
             }
             resultVar = target;

@@ -104,7 +104,6 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.Invisibili
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.GlaciateConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.GlaciateGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.component.GlaciateComponent;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.greater.GreaterGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.growth.GrowthConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.growth.GrowthGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.gust.GustGlyph;
@@ -170,6 +169,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.dot.DotGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.compare.CompareGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.equal.EqualGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.floor.FloorGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.greater.GreaterGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.isHolding.IsHoldingValue;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.less.LessGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.modulo.ModuloGlyph;

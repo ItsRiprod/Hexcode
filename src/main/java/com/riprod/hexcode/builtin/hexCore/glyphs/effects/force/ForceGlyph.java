@@ -35,18 +35,20 @@ public class ForceGlyph implements GlyphHandler {
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
         HexVar targets = glyph.readSlot(ForceGlyphSlots.TARGET, hexContext);
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
-        if (entityVar == null) return null;
+        if (!(targets instanceof EntityVar entityVar))
+            return null;
+
         Ref<EntityStore> ref = entityVar.getRef(hexContext.getAccessor());
-        if (ref == null || !ref.isValid()) return null;
+        if (ref == null || !ref.isValid())
+            return null;
         return new PositionVar(VelocityUtil.currentVelocity(ref, hexContext.getAccessor()));
     }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar targets = glyph.readSlot(ForceGlyphSlots.TARGET, hexContext);
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
-        if (entityVar == null) {
+        if (!(targets instanceof EntityVar entityVar)) {
+
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target must be an Entity");
             return;
@@ -78,8 +80,7 @@ public class ForceGlyph implements GlyphHandler {
                 Vector3d targetPos = tc.getPosition();
                 Vector3d direction = null;
                 if (dirInput != null) {
-                    direction = HexVarUtil.resolveDirection(dirInput, targetPos,
-                            hexContext.getAccessor());
+                    direction = dirInput.direction(hexContext.getAccessor());
                 }
                 if (direction == null) {
                     direction = new Vector3d(0, 1, 0);

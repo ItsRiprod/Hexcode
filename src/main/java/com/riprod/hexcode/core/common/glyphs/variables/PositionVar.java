@@ -47,7 +47,7 @@ public final class PositionVar extends HexVar {
 
     @Override
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
-        return position;
+        return new Vector3d(position);
     }
 
     @Override

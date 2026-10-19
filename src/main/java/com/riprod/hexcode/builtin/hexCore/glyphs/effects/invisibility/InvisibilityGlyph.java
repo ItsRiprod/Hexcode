@@ -33,7 +33,9 @@ public class InvisibilityGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
-    public String getId() { return ID; }
+    public String getId() {
+        return ID;
+    }
 
     public static final String ID = "Invisibility";
 
@@ -45,12 +47,18 @@ public class InvisibilityGlyph implements GlyphHandler {
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(
-                glyph.readSlot(InvisibilityGlyphSlots.TARGET, hexContext), hexContext);
+        var targetVar = glyph.readSlot(InvisibilityGlyphSlots.TARGET, hexContext);
+
+        if (!(targetVar instanceof EntityVar entityVar))
+            return new NumberVar(0);
+
         Ref<EntityStore> ref = entityVar != null ? entityVar.getRef(accessor) : null;
-        if (ref == null || !ref.isValid()) return new NumberVar(0);
+        if (ref == null || !ref.isValid())
+            return new NumberVar(0);
+
         InvisibilityState state = ConstructStateUtil.findState(
                 accessor, ref, InvisibilityGlyph.ID, InvisibilityState.class);
+
         return new NumberVar(state != null ? state.getRemainingDuration() : 0);
     }
 
@@ -65,7 +73,8 @@ public class InvisibilityGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         InvisibilityConfig config = getConfig(InvisibilityConfig.class, asset);
-        if (config == null) config = InvisibilityConfig.DEFAULTS;
+        if (config == null)
+            config = InvisibilityConfig.DEFAULTS;
 
         double duration = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(InvisibilityGlyphSlots.DURATION, hexContext),
@@ -73,11 +82,16 @@ public class InvisibilityGlyph implements GlyphHandler {
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
+        if (!(targets instanceof EntityVar entityVar)) {
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+            return;
+        }
+
         boolean sustained = entityVar != null
                 && applyToEntities(glyph, entityVar, (float) duration, config, hexContext, accessor);
 
-        // sustained cast defers continuation to the construct's onEnd; otherwise pass through
+        // sustained cast defers continuation to the construct's onEnd; otherwise pass
+        // through
         if (sustained) {
             Slot immediate = glyph.getSlot(InvisibilityGlyphSlots.IMMEDIATE);
             if (immediate != null && immediate.getLinks().length > 0) {
@@ -93,7 +107,8 @@ public class InvisibilityGlyph implements GlyphHandler {
     private boolean applyToEntities(Glyph glyph, EntityVar entityVar, float durationSeconds,
             InvisibilityConfig config, HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         Ref<EntityStore> ref = entityVar.getRef(accessor);
-        if (ref == null || !ref.isValid()) return false;
+        if (ref == null || !ref.isValid())
+            return false;
 
         String effectId = config.getEffectId();
         EntityEffect invisibilityEffect = EntityEffect.getAssetMap().getAsset(effectId);

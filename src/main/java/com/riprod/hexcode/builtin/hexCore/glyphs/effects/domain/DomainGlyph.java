@@ -88,7 +88,7 @@ public static final String ID = "Domain";
             return;
         }
 
-        Vector3d anchorPos = HexVarUtil.position(targetVar, hexContext.getAccessor());
+        Vector3d anchorPos = targetVar.position(hexContext.getAccessor());
         if (anchorPos == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target position invalid");

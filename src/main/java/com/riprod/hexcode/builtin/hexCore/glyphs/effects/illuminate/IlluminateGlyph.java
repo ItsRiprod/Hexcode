@@ -6,6 +6,8 @@ import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.math.util.MathUtil;
+
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
@@ -51,7 +53,8 @@ public class IlluminateGlyph implements GlyphHandler {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         IlluminateConfig config = getConfig(IlluminateConfig.class, asset);
-        if (config == null) config = IlluminateConfig.DEFAULTS;
+        if (config == null)
+            config = IlluminateConfig.DEFAULTS;
 
         double mode = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(IlluminateGlyphSlots.MODE, hexContext),
@@ -70,38 +73,42 @@ public class IlluminateGlyph implements GlyphHandler {
         boolean showBox = mode == 0;
 
         HexVar targetSlot = glyph.readSlot(IlluminateGlyphSlots.TARGET, hexContext);
-        EntityVar targetEntity = HexVarUtil.resolveEntityVar(targetSlot, hexContext);
-        Ref<EntityStore> targetRef = targetEntity != null ? targetEntity.getRef(accessor) : null;
-        boolean isEntity = targetRef != null && targetRef.isValid();
 
-        if (isEntity && mode >= 0) {
+        if (targetSlot instanceof EntityVar entityVar && mode >= 0) {
+            var targetRef = entityVar.getRef(accessor);
             // glow the target entity in place; it owns the effect
-            IlluminateState state = new IlluminateState(seconds, showBox, false,
+            var state = new IlluminateState(seconds, showBox, false,
                     GlowUtil.nextVolumeId(), boxColor, glyph.getNextLinks());
             accessor.putComponent(targetRef, DynamicLight.getComponentType(), new DynamicLight(light));
             HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, ID, state);
         } else {
-            // blocks can't be lit, and mode -1 wants a separate entity: spawn a light holder that owns the effect
+            // blocks can't be lit, and mode -1 wants a separate entity: spawn a light
+            // holder that owns the effect
             Vector3d spawnPos;
             Ref<EntityStore> mountTo = null;
             Vector3i blockPos = null;
-            if (isEntity) {
+            if (targetSlot instanceof EntityVar entityVar) {
+                var targetRef = entityVar.getRef(accessor);
+
                 TransformComponent tc = accessor.getComponent(targetRef, TransformComponent.getComponentType());
                 spawnPos = tc != null ? new Vector3d(tc.getPosition()) : new Vector3d();
                 mountTo = targetRef;
             } else {
-                BlockVar blockVar = HexVarUtil.resolveBlockVar(targetSlot, hexContext);
-                if (blockVar == null || blockVar.getValue() == null) {
+                var pos = targetSlot.position(accessor);
+                if (pos == null) {
                     finish(glyph, hexContext);
                     return;
                 }
-                blockPos = blockVar.getValue();
-                spawnPos = new Vector3d(blockPos.x + 0.5, blockPos.y + 0.5, blockPos.z + 0.5);
+                blockPos = new Vector3i(MathUtil.floor(pos.x() - 0.5), MathUtil.floor(pos.y() - 0.5),
+                        MathUtil.floor(pos.z() - 0.5));
+
+                spawnPos = pos;
             }
 
             IlluminateState state = new IlluminateState(seconds, showBox, true,
                     GlowUtil.nextVolumeId(), boxColor, glyph.getNextLinks(), blockPos);
-            // createWithState bakes the construct into the holder so a fresh (not-yet-valid) ref is never used
+            // createWithState bakes the construct into the holder so a fresh
+            // (not-yet-valid) ref is never used
             Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                     accessor, hexContext, glyph, ID, spawnPos, state);
             holder.addComponent(DynamicLight.getComponentType(), new DynamicLight(light));

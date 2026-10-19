@@ -61,19 +61,22 @@ public class InteractGlyph implements GlyphHandler {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         World world = accessor.getExternalData().getWorld();
 
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(target, hexContext);
-        BlockVar blockVar = entityVar == null ? HexVarUtil.resolveBlockVar(target, hexContext) : null;
-        if (entityVar != null) {
+        if (target instanceof EntityVar entityVar) {
             handleEntityTarget(entityVar, accessor, hexContext);
-        } else if (blockVar != null) {
-            handleBlockTarget(glyph, hexContext, blockVar, accessor, world);
-        } else {
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Target must be an Entity or Block");
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
         }
 
-        HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+        
+        if (target instanceof BlockVar blockVar) {
+            handleBlockTarget(glyph, hexContext, blockVar, accessor, world);
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+            return;
+        }
+
+        HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                "Target must be an Entity or Block");
+
     }
 
     private void handleEntityTarget(EntityVar entityVar, CommandBuffer<EntityStore> accessor,

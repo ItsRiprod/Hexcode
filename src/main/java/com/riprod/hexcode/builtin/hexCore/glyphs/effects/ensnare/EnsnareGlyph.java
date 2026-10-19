@@ -42,10 +42,13 @@ import com.riprod.hexcode.utils.HexVarUtil;
 public class EnsnareGlyph implements GlyphHandler {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    @Override
-public String getId() { return ID; };
 
-public static final String ID = "Ensnare";
+    @Override
+    public String getId() {
+        return ID;
+    };
+
+    public static final String ID = "Ensnare";
 
     @Override
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
@@ -63,7 +66,8 @@ public static final String ID = "Ensnare";
     }
 
     private static Impact slotImpact(GlyphAsset asset, String key) {
-        if (asset == null) return null;
+        if (asset == null)
+            return null;
         SlotConfig slot = asset.getSlot(key);
         return slot == null ? null : slot.getImpact();
     }
@@ -75,15 +79,15 @@ public static final String ID = "Ensnare";
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         EnsnareConfig config = getConfig(EnsnareConfig.class, asset);
-        if (config == null) config = EnsnareConfig.DEFAULTS;
+        if (config == null)
+            config = EnsnareConfig.DEFAULTS;
 
         double radius = Math.max(0, HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(EnsnareGlyphSlots.RADIUS, hexContext), asset.getSlot(EnsnareGlyphSlots.RADIUS)));
         double duration = Math.max(0, HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(EnsnareGlyphSlots.DURATION, hexContext), asset.getSlot(EnsnareGlyphSlots.DURATION)));
 
-        Vector3d center = HexVarUtil.position(
-                glyph.readSlot(EnsnareGlyphSlots.TARGET, hexContext), accessor);
+        var center = glyph.readSlot(EnsnareGlyphSlots.TARGET, hexContext).position(accessor);
         if (center == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target position required");

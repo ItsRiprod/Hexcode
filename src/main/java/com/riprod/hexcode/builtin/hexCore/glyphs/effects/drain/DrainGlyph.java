@@ -31,10 +31,13 @@ import com.riprod.hexcode.utils.HexVarUtil;
 
 public class DrainGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    @Override
-public String getId() { return ID; };
 
-public static final String ID = "Drain";
+    @Override
+    public String getId() {
+        return ID;
+    };
+
+    public static final String ID = "Drain";
 
     @Override
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
@@ -42,8 +45,10 @@ public static final String ID = "Drain";
     }
 
     private static float conversionRate(int sourceStat, DrainConfig config) {
-        if (sourceStat == DefaultEntityStatTypes.getHealth()) return config.getHpToManaRate();
-        if (sourceStat == DefaultEntityStatTypes.getStamina()) return config.getStaminaToManaRate();
+        if (sourceStat == DefaultEntityStatTypes.getHealth())
+            return config.getHpToManaRate();
+        if (sourceStat == DefaultEntityStatTypes.getStamina())
+            return config.getStaminaToManaRate();
         return config.getDefaultConversionRate();
     }
 
@@ -51,11 +56,11 @@ public static final String ID = "Drain";
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         DrainConfig config = getConfig(DrainConfig.class, asset);
-        if (config == null) config = DrainConfig.DEFAULTS;
+        if (config == null)
+            config = DrainConfig.DEFAULTS;
 
         HexVar targetVar = glyph.readSlot(DrainGlyphSlots.TARGET, hexContext);
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(targetVar, hexContext);
-        if (entityVar == null) {
+        if (!(targetVar instanceof EntityVar entityVar)) {
             HexExecuter.fail(glyph, hexContext,
                     GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target required");
@@ -110,10 +115,10 @@ public static final String ID = "Drain";
 
         HexVar destVar = glyph.readSlot(DrainGlyphSlots.DESTINATION, hexContext);
         Ref<EntityStore> destRef = hexContext.getCasterRef(accessor);
-        EntityVar destEntityVar = HexVarUtil.resolveEntityVar(destVar, hexContext);
-        if (destEntityVar != null) {
+        if (destVar instanceof EntityVar destEntityVar) {
             Ref<EntityStore> resolved = destEntityVar.getRef(hexContext.getAccessor());
-            if (resolved != null && resolved.isValid()) destRef = resolved;
+            if (resolved != null && resolved.isValid())
+                destRef = resolved;
         }
 
         float rate = conversionRate(sourceStatIndex, config);
@@ -195,13 +200,16 @@ public static final String ID = "Drain";
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
         HexVar targetVar = glyph.readSlot(DrainGlyphSlots.TARGET, hexContext);
-        if (!(targetVar instanceof EntityVar entityVar)) return new NumberVar(0);
+        if (!(targetVar instanceof EntityVar entityVar))
+            return new NumberVar(0);
 
         Ref<EntityStore> targetRef = entityVar.getRef(hexContext.getAccessor());
-        if (targetRef == null || !targetRef.isValid()) return new NumberVar(0);
+        if (targetRef == null || !targetRef.isValid())
+            return new NumberVar(0);
 
         EntityStatMap statMap = hexContext.getAccessor().getComponent(targetRef, EntityStatMap.getComponentType());
-        if (statMap == null) return new NumberVar(0);
+        if (statMap == null)
+            return new NumberVar(0);
 
         HexVar hpInput = glyph.readSlot(DrainGlyphSlots.HP, hexContext);
         HexVar staminaInput = glyph.readSlot(DrainGlyphSlots.STAMINA, hexContext);
@@ -216,7 +224,8 @@ public static final String ID = "Drain";
         }
 
         EntityStatValue stat = statMap.get(statIndex);
-        if (stat == null || stat.getMax() == 0) return new NumberVar(0);
+        if (stat == null || stat.getMax() == 0)
+            return new NumberVar(0);
 
         double fillPercent = (stat.get() / stat.getMax()) * 100.0;
         return new NumberVar(fillPercent);

@@ -9,6 +9,8 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.math.util.MathUtil;
+
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockGathering;
@@ -80,13 +82,14 @@ public class PhaseGlyph implements GlyphHandler {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         World world = accessor.getExternalData().getWorld();
 
-        Vector3i pos = resolveBlockPosition(targets, hexContext);
-        if (pos == null) {
+        var rawPos = targets.position(accessor);
+        if (rawPos == null) {
             LOGGER.atWarning().log("Phase: target ref unresolved");
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Phase: target ref unresolved");
             return;
         }
+        Vector3i pos = new Vector3i(MathUtil.floor(rawPos.x()), MathUtil.floor(rawPos.y()), MathUtil.floor(rawPos.z()));
 
         Vector3i base = BlockAccess.resolveBase(world, pos.x, pos.y, pos.z);
         if (base != null) {
@@ -164,21 +167,6 @@ public class PhaseGlyph implements GlyphHandler {
         hexContext.addDependency(phaseRef);
 
         LOGGER.atFine().log("phase: phased block for %.1f seconds", duration);
-    }
-
-    private Vector3i resolveBlockPosition(HexVar targets, HexContext hexContext) {
-        BlockVar blockVar = HexVarUtil.resolveBlockVar(targets, hexContext);
-        if (blockVar != null)
-            return blockVar.getValue();
-        PositionVar posVar = HexVarUtil.resolvePositionVar(targets, hexContext);
-        if (posVar != null) {
-            Vector3d pos = posVar.getValue();
-            if (pos != null) {
-                return new Vector3i((int) Math.floor(pos.x), (int) Math.floor(pos.y),
-                        (int) Math.floor(pos.z));
-            }
-        }
-        return null;
     }
 
     private int getBlockQuality(BlockType blockType) {

@@ -9,9 +9,11 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-
+import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.InvisibilityGlyphSlots;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -28,7 +30,8 @@ public final class ElementSupport {
     }
 
     public static float resourceLimit(Glyph glyph, GlyphAsset asset, HexContext hexContext) {
-        if (asset == null || asset.getSlot(RESOURCE_LIMIT_SLOT) == null) return -1f;
+        if (asset == null || asset.getSlot(RESOURCE_LIMIT_SLOT) == null)
+            return -1f;
         return HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(RESOURCE_LIMIT_SLOT, hexContext),
                 asset.getSlot(RESOURCE_LIMIT_SLOT)).floatValue();
@@ -43,15 +46,17 @@ public final class ElementSupport {
         // arcane is the generic fallback, so the element pool drains first
         float fromElement = hexContext.consumeResource(resource, spender, cap);
         float remaining = cap < 0f ? -1f : Math.max(0f, cap - fromElement);
-        if (cap >= 0f && remaining <= 1e-4f) return fromElement;
+        if (cap >= 0f && remaining <= 1e-4f)
+            return fromElement;
         return fromElement + hexContext.consumeResource(ARCANE_RESOURCE, spender, remaining);
     }
 
     @Nullable
     public static Ref<EntityStore> resolveTarget(Glyph glyph, HexContext hexContext) {
         HexVar subject = glyph.readSlot(TARGET_SLOT, hexContext);
-        EntityVar entityVar = subject != null ? HexVarUtil.resolveEntityVar(subject, hexContext) : null;
-        if (entityVar == null) return null;
+        if (!(subject instanceof EntityVar entityVar)) {
+            return null;
+        }
         Ref<EntityStore> ref = entityVar.getRef(hexContext.getAccessor());
         return ref != null && ref.isValid() ? ref : null;
     }
@@ -68,16 +73,21 @@ public final class ElementSupport {
     }
 
     public static float affinityFactor(HexContext hexContext, @Nullable String affinityStat, float scale) {
-        if (affinityStat == null || affinityStat.isEmpty() || scale == 0f) return 1.0f;
+        if (affinityStat == null || affinityStat.isEmpty() || scale == 0f)
+            return 1.0f;
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
-        if (caster == null || !caster.isValid()) return 1.0f;
+        if (caster == null || !caster.isValid())
+            return 1.0f;
         EntityStatMap stats = accessor.getComponent(caster, EntityStatMap.getComponentType());
-        if (stats == null) return 1.0f;
+        if (stats == null)
+            return 1.0f;
         int index = EntityStatType.getAssetMap().getIndex(affinityStat);
-        if (index == Integer.MIN_VALUE) return 1.0f;
+        if (index == Integer.MIN_VALUE)
+            return 1.0f;
         EntityStatValue value = stats.get(index);
-        if (value == null) return 1.0f;
+        if (value == null)
+            return 1.0f;
         return 1.0f + (value.getMax() / 100f) * scale;
     }
 }

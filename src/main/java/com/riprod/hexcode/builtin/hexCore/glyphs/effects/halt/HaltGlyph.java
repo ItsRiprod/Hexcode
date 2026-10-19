@@ -46,8 +46,8 @@ public static final String ID = "Halt";
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar targets = glyph.readSlot(HaltGlyphSlots.TARGET, hexContext);
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
-        if (entityVar == null) {
+        if (!(targets instanceof EntityVar entityVar)) {
+
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
         }

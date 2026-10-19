@@ -5,17 +5,12 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
-import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Vector3iUtil;
 
 import org.joml.Vector3d;
 import org.joml.Vector3i;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
-import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public final class BlockVar extends HexVar {

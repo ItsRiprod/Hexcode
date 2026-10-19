@@ -23,7 +23,6 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ResonateGlyph implements GlyphHandler {
     public static final String ID = "Resonate";
@@ -34,8 +33,7 @@ public class ResonateGlyph implements GlyphHandler {
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar targetVar = glyph.readSlot(ResonateGlyphSlots.TARGET, hexContext);
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(targetVar, hexContext);
-        if (entityVar == null) {
+        if (!(targetVar instanceof EntityVar entityVar)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target must be a creature");
             return;

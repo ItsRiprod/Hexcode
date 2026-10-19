@@ -92,7 +92,7 @@ public class HexProjectileHitInteraction extends SimpleInteraction {
                         buffer.getExternalData().getWorld(), hitPos, travelDir);
                 resultVar = snapped != null
                         ? new BlockVar(snapped)
-                        : new PositionVar(hitPos, true);
+                        : new PositionVar(hitPos);
                 ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
             }
 

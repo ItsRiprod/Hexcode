@@ -40,7 +40,7 @@ public static final String ID = "Warp";
         var accessor = hexContext.getAccessor();
         Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
         if (destInput != null && casterRef != null && casterRef.isValid()) {
-            Vector3d destination = HexVarUtil.position(destInput, accessor);
+            Vector3d destination = destInput.position(accessor);
             TransformComponent tc = accessor.getComponent(
                     casterRef, TransformComponent.getComponentType());
             if (destination != null && tc != null) {
@@ -70,7 +70,7 @@ public static final String ID = "Warp";
             return;
         }
 
-        Vector3d destination = HexVarUtil.position(destInput, hexContext.getAccessor());
+        Vector3d destination = destInput.position(hexContext.getAccessor());
 
         if (destination == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -85,7 +85,7 @@ public static final String ID = "Warp";
 
         World world = hexContext.getAccessor().getExternalData().getWorld();
 
-        Vector3d departurePos = HexVarUtil.position(targets, hexContext.getAccessor());
+        Vector3d departurePos = targets.position(hexContext.getAccessor());
         BlockUtils.moveToDestination(targets, destination, world, hexContext, ID);
         WarpStyle.applyEffect(targets, hexContext, hexContext.getAccessor());
         if (departurePos != null) {

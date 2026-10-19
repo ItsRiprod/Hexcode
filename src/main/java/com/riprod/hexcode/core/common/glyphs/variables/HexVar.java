@@ -7,6 +7,7 @@ import com.hypixel.hytale.codec.lookup.CodecMapCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.vector.Rotation3fc;
 import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.math.vector.Vector3dUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public abstract class HexVar {
@@ -29,6 +30,12 @@ public abstract class HexVar {
 
     public Transform transform(ComponentAccessor<EntityStore> accessor) {
         return new Transform(position(accessor), rotation(accessor));
+    }
+
+    public Vector3d direction(ComponentAccessor<EntityStore> accessor) {
+        var rotation = rotation(accessor);
+        if (rotation == null) return new Vector3d(Vector3dUtil.FORWARD);
+        return Vector3dUtil.setYawPitch(rotation.yaw(), rotation.pitch(), new Vector3d());
     }
 
     public boolean equalTo(HexVar other) {

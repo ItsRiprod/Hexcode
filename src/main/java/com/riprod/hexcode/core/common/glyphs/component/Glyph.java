@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.codec.Codec;
@@ -249,8 +250,8 @@ public class Glyph {
         return readSlot(key, hexContext, null);
     }
 
-    @Nullable
-    public HexVar readSlot(String key, HexContext hexContext, @Nullable HexVar javaDefault) {
+    @Nonnull 
+    public HexVar readSlot(String key, HexContext hexContext, HexVar javaDefault) {
         if (hexContext.resolutionDepth() >= MAX_RESOLVE_DEPTH)
             return null;
 

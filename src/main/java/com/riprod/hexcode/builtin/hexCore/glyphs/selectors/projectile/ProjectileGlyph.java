@@ -102,7 +102,7 @@ public class ProjectileGlyph implements GlyphHandler {
 
         Vector3d spawnPos = HexVarUtil.resolveEyePosition(sourceVar, hexContext.getAccessor());
         if (spawnPos == null) {
-            spawnPos = HexVarUtil.position(sourceVar, hexContext.getAccessor());
+            spawnPos = sourceVar.position(hexContext.getAccessor());
         }
         if (spawnPos == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -110,7 +110,7 @@ public class ProjectileGlyph implements GlyphHandler {
             return;
         }
 
-        Vector3d direction = HexVarUtil.resolveDirection(directionVar, spawnPos, hexContext.getAccessor());
+        Vector3d direction = directionVar.direction(hexContext.getAccessor());
         if (direction == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Cannot determine direction");

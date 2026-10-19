@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.InvisibilityGlyphSlots;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.component.FortifyWardComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.style.FortifyStyle;
@@ -56,13 +57,18 @@ public class FortifyGlyph implements GlyphHandler {
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(targets, hexContext);
+          if (!(targets instanceof EntityVar entityVar)) {
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+            return;
+        }
+
         boolean sustained = entityVar != null
                 && applyToEntities(glyph, entityVar, config, hexContext, accessor, asset);
 
-        // sustained cast defers continuation to the construct's onEnd; otherwise pass through
+        // sustained cast defers continuation to the construct's onEnd; otherwise pass
+        // through
         if (sustained) {
-            Slot immediate = glyph.getSlot(FortifyGlyphSlots.IMMEDIATE);
+            Slot immediate = glyph.getSlot(InvisibilityGlyphSlots.IMMEDIATE);
             if (immediate != null && immediate.getLinks().length > 0) {
                 HexContext immediateCtx = hexContext.branch();
                 immediateCtx.setDefaultVariable(entityVar);

@@ -46,9 +46,11 @@ public final class EntityVar extends HexVar {
     @Nullable
     public Ref<EntityStore> getRef(ComponentAccessor<EntityStore> accessor) {
         Ref<EntityStore> ref = getRawRef(accessor);
-        if (ref == null) return null;
+        if (ref == null)
+            return null;
         EntityRedirectComponent redirect = accessor.getComponent(ref, EntityRedirectComponent.getComponentType());
-        if (redirect == null) return ref;
+        if (redirect == null)
+            return ref;
         Ref<EntityStore> deferral = HexRefs.live(redirect.resolveDeferral(accessor), accessor);
         return deferral != null ? deferral : ref;
     }
@@ -74,7 +76,8 @@ public final class EntityVar extends HexVar {
         if (entityRef == null || !entityRef.isValid()) {
             return new Vector3d(0, 0, 0);
         }
-        Vector3d pos = new Vector3d(accessor.getComponent(entityRef, TransformComponent.getComponentType()).getPosition());
+        Vector3d pos = new Vector3d(
+                accessor.getComponent(entityRef, TransformComponent.getComponentType()).getPosition());
         return pos;
     }
 
@@ -86,7 +89,8 @@ public final class EntityVar extends HexVar {
         }
         try {
             HeadRotation headRot = accessor.getComponent(entityRef, HeadRotation.getComponentType());
-            if (headRot != null) return headRot.getRotation();
+            if (headRot != null)
+                return headRot.getRotation();
         } catch (Exception e) {
         }
         Rotation3f r = accessor.getComponent(entityRef, TransformComponent.getComponentType()).getRotation();
@@ -95,9 +99,11 @@ public final class EntityVar extends HexVar {
 
     @Override
     public String describe() {
-        if (entity == null) return "EntityVar: [null]";
+        if (entity == null)
+            return "EntityVar: [null]";
         UUID id = entity.getUuid();
-        if (id == null) return "EntityVar: [unset]";
+        if (id == null)
+            return "EntityVar: [unset]";
         String s = id.toString();
         return "EntityVar: " + s.substring(0, Math.min(8, s.length()));
     }
@@ -105,7 +111,8 @@ public final class EntityVar extends HexVar {
     @Override
     public boolean equalTo(HexVar other) {
         if (other instanceof EntityVar ev) {
-            if (entity == null || ev.entity == null) return entity == ev.entity;
+            if (entity == null || ev.entity == null)
+                return entity == ev.entity;
             return entity.getUuid().equals(ev.entity.getUuid());
         }
         return super.equalTo(other);
@@ -114,9 +121,12 @@ public final class EntityVar extends HexVar {
     @Override
     public int compareTo(HexVar other) {
         if (other instanceof EntityVar ev) {
-            if (entity == null && ev.entity == null) return 0;
-            if (entity == null) return -1;
-            if (ev.entity == null) return 1;
+            if (entity == null && ev.entity == null)
+                return 0;
+            if (entity == null)
+                return -1;
+            if (ev.entity == null)
+                return 1;
             return entity.getUuid().compareTo(ev.entity.getUuid());
         }
         return super.compareTo(other);
@@ -125,6 +135,21 @@ public final class EntityVar extends HexVar {
     @Override
     public String toString() {
         return "EntityVar(" + entity.getUuid() + ")";
+    }
+
+    @Override
+    public Vector3d direction(ComponentAccessor<EntityStore> accessor) {
+        Ref<EntityStore> entityRef = getRef(accessor);
+        if (entityRef == null || !entityRef.isValid())
+            return null;
+        try {
+            HeadRotation headRot = accessor.getComponent(entityRef, HeadRotation.getComponentType());
+            if (headRot != null)
+                return headRot.getDirection();
+        } catch (Exception e) {
+        }
+        Rotation3f bodyRot = accessor.getComponent(entityRef, TransformComponent.getComponentType()).getRotation();
+        return new RotationVar(bodyRot).forward();
     }
 
     public static final BuilderCodec<EntityVar> CODEC = BuilderCodec

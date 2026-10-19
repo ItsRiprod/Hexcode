@@ -43,13 +43,14 @@ public class WardGlyph implements GlyphHandler {
             return;
         }
 
-        EntityVar targetVar = HexVarUtil.resolveEntityVar(
-                glyph.readSlot(WardGlyphSlots.TARGET, hexContext), hexContext);
-        EntityVar deferralVar = HexVarUtil.resolveEntityVar(
-                glyph.readSlot(WardGlyphSlots.DEFERRAL, hexContext), hexContext);
-        if (targetVar == null || deferralVar == null) {
+        if (!(glyph.readSlot(WardGlyphSlots.TARGET, hexContext) instanceof EntityVar targetVar)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Target and Deferral are both required");
+                    "A ward target must be defined");
+            return;
+        }
+        if (!(glyph.readSlot(WardGlyphSlots.DEFERRAL, hexContext) instanceof EntityVar deferralVar)) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "A ward deferral target must be defined");
             return;
         }
 

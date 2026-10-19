@@ -41,9 +41,10 @@ public class InterfereGlyph implements GlyphHandler {
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(targetVar, hexContext);
-        if (entityVar == null)
+        if (!(targetVar instanceof EntityVar entityVar)) {
+            HexExecuter.fail(hexContext);
             return;
+        }
 
         Ref<EntityStore> ref = entityVar.getRef(accessor);
         if (ref == null || !ref.isValid()) {
@@ -99,7 +100,7 @@ public class InterfereGlyph implements GlyphHandler {
         return tc != null ? tc.getPosition() : null;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private void invokeOnEnd(ConstructHandler<?> handler, HexStatus<?> status, ConstructTickContext ctx) {
         ConstructHandler raw = handler;
         HexStatus rawStatus = status;
