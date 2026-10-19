@@ -18,7 +18,7 @@ public class TanGlyph implements GlyphHandler {
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(TanGlyphSlots.A, hexContext);
         if (a == null) return null;
-        Double s = a.toScalar();
+        Double s = a.scalar();
         if (s == null) return null;
         return new NumberVar(Math.tan(s));
     }

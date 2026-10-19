@@ -45,7 +45,7 @@ public class VariableValue implements GlyphHandler {
 
         if (outputs != null && outputs.size() > 0) {
             for (HexVar output : outputs) {
-                NumberVar numberVar = new NumberVar(output.toScalar());
+                NumberVar numberVar = new NumberVar(output.scalar());
                 hexContext.setVariable(numberVar.toString(), input);
             }
         }

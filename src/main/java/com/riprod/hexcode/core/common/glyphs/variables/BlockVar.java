@@ -5,6 +5,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Vector3iUtil;
 
 import org.joml.Vector3d;
@@ -37,26 +38,21 @@ public final class BlockVar extends HexVar {
     }
 
     @Override
-    public Double toScalar() {
+    public Double scalar() {
         return position == null ? 0.0 : 1.0;
     }
 
     @Override
-    public PositionVar toPosition(ComponentAccessor<EntityStore> accessor) {
+    public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         if (position == null)
-            return new PositionVar(new Vector3d(0, 0, 0), true);
-        return new PositionVar(new Vector3d(position.x + 0.5, position.y + 0.5, position.z + 0.5), true);
+            return new Vector3d(0, 0, 0);
+        return new Vector3d(position.x + 0.5, position.y + 0.5, position.z + 0.5);
     }
 
     @Override
-    public BlockVar toBlockVar(ComponentAccessor<EntityStore> accessor) {
-        return this;
-    }
-
-    @Override
-    public RotationVar toRotation(ComponentAccessor<EntityStore> accessor) {
+    public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
         if (position == null)
-            return new RotationVar(new Rotation3f());
+            return new Rotation3f();
         try {
             var world = accessor.getExternalData().getWorld();
             var chunkStore = world.getChunkStore();
@@ -64,12 +60,12 @@ public final class BlockVar extends HexVar {
             var ref = chunkStore.getChunkSectionReferenceAtBlock(position.x, position.y, position.z);
 
             if (ref == null || !ref.isValid()) {
-                return new RotationVar(new Rotation3f());
+                return new Rotation3f();
             }
 
             var blockSection = chunkStore.getStore().getComponent(ref, BlockSection.getComponentType());
             if (blockSection == null) {
-                return new RotationVar(new Rotation3f());
+                return new Rotation3f();
             }
 
             var rot = blockSection.getRotation(position.x, position.y, position.z);
@@ -80,10 +76,10 @@ public final class BlockVar extends HexVar {
                     radians(rot.roll())
                 );
                 
-            return new RotationVar(euler);
+            return euler;
 
         } catch (Exception e) {
-            return new RotationVar(new Rotation3f());
+            return new Rotation3f();
         }
     }
 
@@ -91,11 +87,6 @@ public final class BlockVar extends HexVar {
     // (-PI, PI]
     private static float radians(Rotation rotation) {
         return MathUtil.wrapAngle((float) rotation.getRadians());
-    }
-
-    @Override
-    public HexVar resolveSelf(HexVar partner, ComponentAccessor<EntityStore> accessor) {
-        return toPosition(accessor);
     }
 
     @Override
@@ -124,7 +115,7 @@ public final class BlockVar extends HexVar {
                 return -1;
             if (bb.position == null)
                 return 1;
-            return Double.compare(this.toScalar(), bb.toScalar());
+            return Double.compare(this.scalar(), bb.scalar());
         }
         return super.compareTo(other);
     }

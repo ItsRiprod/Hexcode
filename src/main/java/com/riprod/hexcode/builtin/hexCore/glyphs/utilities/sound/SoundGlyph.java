@@ -29,7 +29,7 @@ public class SoundGlyph implements GlyphHandler {
         }
 
         HexVar input = glyph.readSlot(SoundGlyphSlots.VOLUME, hexContext);
-        double raw = input == null || input.toScalar() == null ? VOLUME_UNITY : input.toScalar();
+        double raw = input == null || input.scalar() == null ? VOLUME_UNITY : input.scalar();
         double clamped = raw < 0.0 ? 0.0 : Math.min(raw, VOLUME_INPUT_MAX);
 
         HexStyleAsset style = hexContext.mutableStyle();

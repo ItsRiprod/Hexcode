@@ -28,11 +28,11 @@ public class DotGlyph implements GlyphHandler {
             return new NumberVar(0);
         }
         if (v == null || w == null) {
-            return new NumberVar(v == null ? w.toScalar() : v.toScalar());
+            return new NumberVar(v == null ? w.scalar() : v.scalar());
         }
 
-        var posV = v.toPosition(hexContext.getAccessor());
-        var posW = w.toPosition(hexContext.getAccessor());
+        var posV = v.position(hexContext.getAccessor());
+        var posW = w.position(hexContext.getAccessor());
 
         var vecV = posV.getValue();
         var vecW = posW.getValue();

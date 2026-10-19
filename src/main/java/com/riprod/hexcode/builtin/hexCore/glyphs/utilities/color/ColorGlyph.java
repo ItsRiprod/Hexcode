@@ -42,11 +42,11 @@ public class ColorGlyph implements GlyphHandler {
             g = splat.y;
             b = splat.z;
         } else {
-            r = rIn == null || rIn.toScalar() == null ? 0.0 : rIn.toScalar();
-            g = gIn == null || gIn.toScalar() == null ? 0.0 : gIn.toScalar();
-            b = bIn == null || bIn.toScalar() == null ? 0.0 : bIn.toScalar();
+            r = rIn == null || rIn.scalar() == null ? 0.0 : rIn.scalar();
+            g = gIn == null || gIn.scalar() == null ? 0.0 : gIn.scalar();
+            b = bIn == null || bIn.scalar() == null ? 0.0 : bIn.scalar();
         }
-        double a = aIn == null || aIn.toScalar() == null ? CHANNEL_MAX : aIn.toScalar();
+        double a = aIn == null || aIn.scalar() == null ? CHANNEL_MAX : aIn.scalar();
 
         return new double[] {
                 clamp(r, 0, CHANNEL_MAX),
@@ -60,7 +60,7 @@ public class ColorGlyph implements GlyphHandler {
         for (HexVar v : new HexVar[] { r, g, b }) {
             if (v instanceof PositionVar || v instanceof RotationVar
                     || v instanceof EntityVar || v instanceof BlockVar) {
-                PositionVar pv = v.toPosition(buf);
+                PositionVar pv = v.position(buf);
                 if (pv != null && pv.getValue() != null) return pv.getValue();
             }
             if (v instanceof ColorVar cv) {

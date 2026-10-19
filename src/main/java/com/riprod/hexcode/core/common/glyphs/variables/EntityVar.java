@@ -64,38 +64,33 @@ public final class EntityVar extends HexVar {
     }
 
     @Override
-    public Double toScalar() {
+    public Double scalar() {
         return entity != null ? 1.0 : 0.0;
     }
 
     @Override
-    public PositionVar toPosition(ComponentAccessor<EntityStore> accessor) {
+    public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         Ref<EntityStore> entityRef = getRef(accessor);
         if (entityRef == null || !entityRef.isValid()) {
-            return new PositionVar(new Vector3d(0, 0, 0), true);
+            return new Vector3d(0, 0, 0);
         }
         Vector3d pos = new Vector3d(accessor.getComponent(entityRef, TransformComponent.getComponentType()).getPosition());
-        return new PositionVar(pos, true);
+        return pos;
     }
 
     @Override
-    public RotationVar toRotation(ComponentAccessor<EntityStore> accessor) {
+    public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
         Ref<EntityStore> entityRef = getRef(accessor);
         if (entityRef == null || !entityRef.isValid()) {
-            return new RotationVar(new Rotation3f());
+            return new Rotation3f();
         }
         try {
             HeadRotation headRot = accessor.getComponent(entityRef, HeadRotation.getComponentType());
-            if (headRot != null) return new RotationVar(headRot.getRotation());
+            if (headRot != null) return headRot.getRotation();
         } catch (Exception e) {
         }
         Rotation3f r = accessor.getComponent(entityRef, TransformComponent.getComponentType()).getRotation();
-        return new RotationVar(r);
-    }
-
-    @Override
-    public HexVar resolveSelf(HexVar partner, ComponentAccessor<EntityStore> accessor) {
-        return partner instanceof RotationVar ? toRotation(accessor) : toPosition(accessor);
+        return r;
     }
 
     @Override

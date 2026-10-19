@@ -19,7 +19,7 @@ public class CosGlyph implements GlyphHandler {
         HexVar a = glyph.readSlot(CosGlyphSlots.A, hexContext);
         if (a == null)
             return null;
-        Double s = a.toScalar();
+        Double s = a.scalar();
         if (s == null)
             return null;
         return new NumberVar(Math.cos(s));

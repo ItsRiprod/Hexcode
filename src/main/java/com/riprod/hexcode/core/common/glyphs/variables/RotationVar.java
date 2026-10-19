@@ -33,18 +33,18 @@ public final class RotationVar extends HexVar {
     }
 
     @Override
-    public Double toScalar() {
+    public Double scalar() {
         return rotation == null ? 0.0 : 1.0;
     }
 
     @Override
-    public PositionVar toPosition(ComponentAccessor<EntityStore> accessor) {
-        return new PositionVar(forward(), false);
+    public Vector3d position(ComponentAccessor<EntityStore> accessor) {
+        return forward();
     }
 
     @Override
-    public RotationVar toRotation(ComponentAccessor<EntityStore> accessor) {
-        return this;
+    public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
+        return rotation;
     }
 
     public Vector3d forward() {

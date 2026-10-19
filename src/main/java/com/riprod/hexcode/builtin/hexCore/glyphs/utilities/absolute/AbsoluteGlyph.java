@@ -18,7 +18,7 @@ public class AbsoluteGlyph implements GlyphHandler {
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(AbsoluteGlyphSlots.A, hexContext);
         if (a == null) return null;
-        Double s = a.toScalar();
+        Double s = a.scalar();
         return new NumberVar(s == null ? 0.0 : Math.abs(s));
     }
 

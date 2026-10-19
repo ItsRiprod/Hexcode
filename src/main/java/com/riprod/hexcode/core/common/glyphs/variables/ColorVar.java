@@ -4,6 +4,9 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Rotation3fc;
+
 import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -34,23 +37,18 @@ public final class ColorVar extends HexVar {
     }
 
     @Override
-    public Double toScalar() {
+    public Double scalar() {
         return 0.299 * r + 0.587 * g + 0.114 * b;
     }
 
     @Override
-    public PositionVar toPosition(ComponentAccessor<EntityStore> accessor) {
-        return new PositionVar(new Vector3d(r, g, b), false);
+    public Vector3d position(ComponentAccessor<EntityStore> accessor) {
+        return new Vector3d(r, g, b);
     }
 
     @Override
-    public RotationVar toRotation(ComponentAccessor<EntityStore> accessor) {
-        return toPosition(accessor).toRotation(accessor);
-    }
-
-    @Override
-    public ColorVar toColor(ComponentAccessor<EntityStore> accessor) {
-        return this;
+    public Rotation3fc rotation(ComponentAccessor<EntityStore> accessor) {
+        return new Rotation3f(0, 0, 0);
     }
 
     @Override

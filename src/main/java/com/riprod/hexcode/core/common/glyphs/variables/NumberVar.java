@@ -4,6 +4,8 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.math.vector.Rotation3f;
+
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -36,29 +38,20 @@ public final class NumberVar extends HexVar {
     }
 
     @Override
-    public Double toScalar() {
+    public Double scalar() {
         return number;
     }
 
     @Override
-    public PositionVar toPosition(ComponentAccessor<EntityStore> accessor) {
+    public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         double n = number == null ? 0.0 : number;
-        return new PositionVar(new Vector3d(n, n, n), false);
+        return new Vector3d(n, n, n);
     }
 
     @Override
-    public RotationVar toRotation(ComponentAccessor<EntityStore> accessor) {
+    public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
         float n = number == null ? 0f : number.floatValue();
-        return new RotationVar(new Vector3f(n, n, n));
-    }
-
-    @Override
-    public HexVar resolveSelf(HexVar partner, ComponentAccessor<EntityStore> accessor) {
-        if (number != null && number != 0.0)
-            return this;
-        if (partner instanceof PositionVar || partner instanceof RotationVar)
-            return convertTo(partner.getClass(), accessor);
-        return this;
+        return new Rotation3f(n, n, n);
     }
 
     @Override

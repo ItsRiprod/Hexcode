@@ -32,7 +32,7 @@ public class HexVarUtil {
     public static Vector3d position(@Nullable HexVar var, @Nonnull ComponentAccessor<EntityStore> accessor) {
         if (var == null)
             return null;
-        PositionVar pv = var.toPosition(accessor);
+        PositionVar pv = var.position(accessor);
         if (pv == null || pv.getValue() == null)
             return null;
         return new Vector3d(pv.getValue());
@@ -42,7 +42,7 @@ public class HexVarUtil {
     public static Rotation3f rotation(@Nullable HexVar var, @Nonnull ComponentAccessor<EntityStore> accessor) {
         if (var == null)
             return null;
-        RotationVar rv = var.toRotation(accessor);
+        RotationVar rv = var.rotation(accessor);
         return rv == null ? null : rv.getValue();
     }
 
@@ -68,7 +68,7 @@ public class HexVarUtil {
             @Nonnull ComponentAccessor<EntityStore> accessor) {
         if (var == null || var instanceof NumberVar)
             return false;
-        PositionVar pv = var.toPosition(accessor);
+        PositionVar pv = var.position(accessor);
         return pv != null && pv.isAbsolute();
     }
 
@@ -98,7 +98,7 @@ public class HexVarUtil {
     public static Double numberOrDefault(@Nullable HexVar var, Double defaultValue) {
         if (var == null)
             return defaultValue;
-        Double s = var.toScalar();
+        Double s = var.scalar();
         return s == null ? defaultValue : s;
     }
 
@@ -119,12 +119,12 @@ public class HexVarUtil {
 
     @Nullable
     public static PositionVar resolvePositionVar(@Nullable HexVar var, @Nonnull HexContext ctx) {
-        return var == null ? null : var.toPosition(ctx.getAccessor());
+        return var == null ? null : var.position(ctx.getAccessor());
     }
 
     @Nullable
     public static RotationVar resolveRotationVar(@Nullable HexVar var, @Nonnull HexContext ctx) {
-        return var == null ? null : var.toRotation(ctx.getAccessor());
+        return var == null ? null : var.rotation(ctx.getAccessor());
     }
 
     @Nullable
@@ -190,7 +190,7 @@ public class HexVarUtil {
                 if (dir.length() > 1e-9)
                     return dir.normalize();
             }
-            return blockVar.toRotation(accessor).forward();
+            return blockVar.rotation(accessor).forward();
         }
         return null;
     }
