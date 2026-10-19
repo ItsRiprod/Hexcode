@@ -17,6 +17,9 @@ public abstract class Impact {
     public abstract float compute(double input);
 
     public static float scale(@Nullable Impact impact, double input) {
-        return impact == null ? 1.0f : Math.max(0.0f, impact.compute(input));
+        if (impact == null)
+            return 1.0f;
+        var result = impact.compute(input);
+        return Float.isFinite(result) ? Math.max(0.0f, result) : 1.0f;
     }
 }

@@ -1,15 +1,11 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.compare;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
-import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
@@ -29,11 +25,7 @@ public class CompareGlyph implements GlyphHandler {
 
         glyph.writeSelfOutput(new NumberVar(result), hexContext);
 
-        Slot slot = glyph.getSlot(slotFor(result));
-        List<String> links = slot != null ? Arrays.asList(slot.getLinks()) : List.of();
-        if (!links.isEmpty()) {
-            HexExecuter.continueExecution(links, hexContext);
-        }
+        HexExecuter.continueFromSlot(glyph, slotFor(result), hexContext);
     }
 
     @Override

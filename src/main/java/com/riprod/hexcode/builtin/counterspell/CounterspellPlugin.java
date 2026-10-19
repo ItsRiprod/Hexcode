@@ -7,7 +7,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphDrawnEvent;
 import com.riprod.hexcode.api.event.GlyphExecuteEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.api.event.HexStateChangeEvent;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.GlyphDeprecatedNotificationListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.GlyphExecuteDiagnosticListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.ContextForceExitDiagnosticListener;
@@ -17,7 +16,6 @@ import com.riprod.hexcode.builtin.counterspell.eventListeners.GlyphCommitDiagnos
 import com.riprod.hexcode.builtin.counterspell.eventListeners.GlyphDiagnosticListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.HexCastDiagnosticListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.HexContextChangeDiagnosticListener;
-import com.riprod.hexcode.builtin.counterspell.eventListeners.HexStateDiagnosticListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.ShapeDrawnDiagnosticListener;
 
 public class CounterspellPlugin extends JavaPlugin {
@@ -38,7 +36,6 @@ public class CounterspellPlugin extends JavaPlugin {
 
         this.getEventRegistry().registerGlobal(GlyphFizzleEvent.class, new GlyphDiagnosticListener());
         this.getEventRegistry().registerGlobal(GlyphExecuteEvent.class, new GlyphExecuteDiagnosticListener());
-        this.getEventRegistry().registerGlobal(HexStateChangeEvent.class, new HexStateDiagnosticListener());
         this.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDeprecatedNotificationListener());
     }
 

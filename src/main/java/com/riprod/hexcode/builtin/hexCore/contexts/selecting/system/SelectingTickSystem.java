@@ -4,9 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.joml.Vector3d;
-import org.joml.Vector3i;
-
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -14,7 +11,6 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.SelectingState;
@@ -60,7 +56,7 @@ public class SelectingTickSystem extends EntityTickingSystem<EntityStore> {
 
             PedestalSceneHover.tick(buffer, dt, player, pedestal);
 
-            if (outsideRadius(buffer, player, pedestal)) {
+            if (PedestalBlockUtil.outsideRadius(buffer, player, pedestal)) {
                 ContextTransitionService.exit(buffer, player, SelectingState.CONTEXT_ID);
                 return;
             }
@@ -127,20 +123,5 @@ public class SelectingTickSystem extends EntityTickingSystem<EntityStore> {
             }
         }
         return null;
-    }
-
-    private static boolean outsideRadius(CommandBuffer<EntityStore> buffer, Ref<EntityStore> player,
-            PedestalBlockComponent pedestal) {
-        Vector3i pedestalLoc = pedestal.getLocation();
-        TransformComponent transform = buffer.getComponent(player, TransformComponent.getComponentType());
-        if (pedestalLoc == null || transform == null || transform.getPosition() == null) {
-            return false;
-        }
-        Vector3d center = new Vector3d(
-                pedestalLoc.x() + 0.5,
-                pedestalLoc.y() + 0.5,
-                pedestalLoc.z() + 0.5);
-        double maxRadius = pedestal.getMaxRadius();
-        return transform.getPosition().distanceSquared(center) > maxRadius * maxRadius;
     }
 }

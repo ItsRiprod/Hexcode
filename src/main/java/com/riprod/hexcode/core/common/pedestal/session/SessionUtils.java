@@ -33,7 +33,6 @@ import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalItemUtil;
-import com.riprod.hexcode.state.HexState;
 import com.riprod.hexcode.utils.CleanupUtils;
 import com.riprod.hexcode.utils.LogScopes;
 

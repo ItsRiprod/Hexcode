@@ -44,14 +44,14 @@ public class LessGlyph implements GlyphHandler {
         }
 
         List<String> next = glyph.getNextLinks();
-        if (resultVar instanceof NumberVar numberVar && numberVar.getValue() != null && numberVar.getValue() != 0) {
-            if (!next.isEmpty()) {
-                HexExecuter.continueExecution(List.of(next.get(0)), hexContext);
-            }
+        boolean passed = resultVar instanceof NumberVar numberVar && numberVar.getValue() != null
+                && numberVar.getValue() != 0;
+        List<String> selected;
+        if (passed) {
+            selected = next.isEmpty() ? List.of() : List.of(next.get(0));
         } else {
-            if (next.size() > 1) {
-                HexExecuter.continueExecution(next.subList(1, next.size()), hexContext);
-            }
+            selected = next.size() > 1 ? next.subList(1, next.size()) : List.of();
         }
+        HexExecuter.continueExecution(selected, hexContext);
     }
 }

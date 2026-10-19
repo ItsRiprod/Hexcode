@@ -48,18 +48,16 @@ public class EqualGlyph implements GlyphHandler {
         Slot lessSlot = glyph.getSlot(EqualGlyphSlots.LESS);
         List<String> lessLinks = Arrays.asList(lessSlot.getLinks());
 
+        List<String> selected;
         if (result) {
-            if (!next.isEmpty()) {
-                HexExecuter.continueExecution(next, hexContext);
-            }
+            selected = next;
         } else if (HexCompareUtil.isGreater(a, b)) {
-            if (!greaterLinks.isEmpty()) {
-                HexExecuter.continueExecution(greaterLinks, hexContext);
-            }
+            selected = greaterLinks;
         } else if (HexCompareUtil.isLess(a, b)) {
-            if (!lessLinks.isEmpty()) {
-                HexExecuter.continueExecution(lessLinks, hexContext);
-            }
+            selected = lessLinks;
+        } else {
+            selected = List.of();
         }
+        HexExecuter.continueExecution(selected, hexContext);
     }
 }

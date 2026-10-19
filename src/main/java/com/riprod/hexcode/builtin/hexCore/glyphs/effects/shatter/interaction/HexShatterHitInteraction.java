@@ -8,7 +8,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
-import org.joml.Vector3i;
 import org.joml.Vector4d;
 
 import com.hypixel.hytale.protocol.InteractionState;
@@ -20,15 +19,18 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHa
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInteraction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.Collector;
+import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style.ShatterStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.utils.BlockResolution;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 
 public class HexShatterHitInteraction extends SimpleInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -80,7 +82,14 @@ public class HexShatterHitInteraction extends SimpleInteraction {
                     resultVar = new EntityVar(uuid.getUuid(), targetRef);
                 }
             } else if (hitPos != null) {
-                resultVar = new BlockVar(new Vector3i((int) Math.floor(hitPos.x), (int) Math.floor(hitPos.y), (int) Math.floor(hitPos.z)));
+                var shardVel = buffer.getComponent(shardRef, Velocity.getComponentType());
+                var travelDir = shardVel != null && shardVel.getVelocity().lengthSquared() > 1e-6
+                        ? new Vector3d(shardVel.getVelocity()) : null;
+                var snapped = BlockResolution.snapIntoBlock(
+                        buffer.getExternalData().getWorld(), hitPos, travelDir);
+                resultVar = snapped != null
+                        ? new BlockVar(snapped)
+                        : new PositionVar(hitPos, true);
             }
 
             if (hitPos != null) {

@@ -75,7 +75,7 @@ public class HexcodeCommand extends AbstractPlayerCommand {
         ctx.sendMessage(Message.raw("/hexcode cast <hexId> - Cast a saved hex by its asset id"));
         ctx.sendMessage(Message.raw("/hexcode page <hexId> --name=<override> --quantity=<n> - Create Spell Page item(s) inscribed with a saved hex"));
         ctx.sendMessage(Message.raw("/hexcode train - Start a draw training session"));
-        ctx.sendMessage(Message.raw("/hexcode reset - Force reset hexcode state to IDLE"));
+        ctx.sendMessage(Message.raw("/hexcode reset - Force reset hexcode state"));
         ctx.sendMessage(Message.raw("/hexcode testvisual --radius=<r> - Send a trigger-volume sphere at your position"));
         ctx.sendMessage(Message.raw("/hexcode log <scope|all|list> --level=<level> - Read or set hexcode log scope levels"));
     }

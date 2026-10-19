@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate;
 
+import java.util.List;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.server.core.modules.entity.component.DynamicLight;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -43,6 +45,18 @@ public class IlluminateConstructHandler implements ConstructHandler<IlluminateSt
     @Override
     public void onAbort(HexStatus<IlluminateState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
+    }
+
+    @Override
+    public List<String> getPendingNextGlyphIds(HexStatus<IlluminateState> status) {
+        var state = status.getState();
+        return state != null ? state.getNextGlyphIds() : List.of();
+    }
+
+    @Override
+    public void setPendingNextGlyphIds(HexStatus<IlluminateState> status, List<String> ids) {
+        var state = status.getState();
+        if (state != null) state.setNextGlyphIds(ids);
     }
 
     private void cleanup(HexStatus<IlluminateState> status, ConstructTickContext ctx) {

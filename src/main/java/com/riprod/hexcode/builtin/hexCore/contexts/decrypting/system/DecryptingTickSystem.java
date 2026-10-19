@@ -42,6 +42,11 @@ public class DecryptingTickSystem extends EntityTickingSystem<EntityStore> {
             return;
         }
 
+        if (PedestalBlockUtil.outsideRadius(buffer, player, pedestal)) {
+            ContextTransitionService.exit(buffer, player, DecryptingState.CONTEXT_ID);
+            return;
+        }
+
         CasterComponent caster = chunk.getComponent(index, CasterComponent.getComponentType());
         if (caster != null) {
             caster.consumePrimaryPressed();

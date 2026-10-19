@@ -177,8 +177,7 @@ public class BeamGlyph implements GlyphHandler {
         BeamStyle.render(beamOrigin, endPoint, new Vector3f(rotation.x, rotation.y, rotation.z), hitType, hexContext,
                 hexContext.getAccessor());
 
-        if (!passive)
-            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+        HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 
     private void chargeReach(GlyphAsset asset, HexContext hexContext, double reach) {

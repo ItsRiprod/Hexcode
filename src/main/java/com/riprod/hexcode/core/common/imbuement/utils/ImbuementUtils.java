@@ -117,10 +117,4 @@ public class ImbuementUtils {
         data.setHexFromValue(hex);
         return data;
     }
-
-    public static ImbuementData fromAsset(String hexAssetId) {
-        ImbuementData data = new ImbuementData();
-        data.setHexCompressedId(hexAssetId);
-        return data;
-    }
 }

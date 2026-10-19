@@ -1,3 +1,9 @@
+# v0.11.0
+
+- feat: Added Components
+
+
+
 # v0.10.1
 
 - fix: Erode actually breaks blocks again

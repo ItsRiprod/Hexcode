@@ -15,7 +15,6 @@ import com.riprod.hexcode.core.common.drawing.DrawAnchorSystem;
 import com.riprod.hexcode.core.common.drawing.DrawModeLifecycleSystem;
 import com.riprod.hexcode.core.common.drawing.DrawRecognitionSystem;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
-import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponent;
 import com.riprod.hexcode.core.common.drawing.interactions.HexDraw;
 import com.riprod.hexcode.core.common.drawing.interactions.HexDrawMode;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
@@ -35,7 +34,6 @@ import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolCompo
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
-import com.riprod.hexcode.core.common.execution.system.CasterStateProvisionSystem;
 import com.riprod.hexcode.core.common.execution.system.CastChargesSystem;
 import com.riprod.hexcode.core.common.execution.system.CastDecaySystem;
 import com.riprod.hexcode.core.common.execution.system.CastBookStyleSystem;
@@ -64,7 +62,6 @@ import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.hexbook.component.HexBookAsset;
-import com.riprod.hexcode.core.common.hexcaster.component.HexcasterComponent;
 import com.riprod.hexcode.core.common.hexes.codec.HexCacheResource;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
@@ -315,12 +312,6 @@ public class Hexcode extends JavaPlugin {
                 HexComponent.CODEC);
         HexComponent.setComponentType(hexComponentType);
 
-        ComponentType<EntityStore, HexcasterComponent> hexcasterComponentType = entityStoreRegistry
-                .registerComponent(
-                        HexcasterComponent.class, "HexcasterComponent",
-                        HexcasterComponent.CODEC);
-        HexcasterComponent.setComponentType(hexcasterComponentType);
-
         ComponentType<EntityStore, CasterStateComponent> casterStateComponentType = entityStoreRegistry
                 .registerComponent(CasterStateComponent.class,
                         CasterStateComponent::new);
@@ -356,11 +347,6 @@ public class Hexcode extends JavaPlugin {
                         HexcodeSessionComponent.CODEC);
         HexcodeSessionComponent.setComponentType(sessionComponentType);
 
-        ComponentType<EntityStore, HexcasterDrawingComponent> drawingRootComponentType = entityStoreRegistry
-                .registerComponent(HexcasterDrawingComponent.class,
-                        HexcasterDrawingComponent::new);
-        HexcasterDrawingComponent.setComponentType(drawingRootComponentType);
-
         ComponentType<EntityStore, NodeComponent> nodeComponentType = entityStoreRegistry
                 .registerComponent(NodeComponent.class,
                         NodeComponent::new);
@@ -382,7 +368,6 @@ public class Hexcode extends JavaPlugin {
         entityStoreRegistry.registerSystem(new ObeliskBreakEvent());
         entityStoreRegistry.registerSystem(new DebugTickSystem());
         entityStoreRegistry.registerSystem(new GlyphEffectSystem());
-        entityStoreRegistry.registerSystem(new CasterStateProvisionSystem());
         entityStoreRegistry.registerSystem(new CastChargesSystem());
         entityStoreRegistry.registerSystem(new CastDecaySystem());
         entityStoreRegistry.registerSystem(new CastBookStyleSystem());

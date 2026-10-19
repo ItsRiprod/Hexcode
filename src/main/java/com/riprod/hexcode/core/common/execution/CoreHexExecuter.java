@@ -37,27 +37,23 @@ public class CoreHexExecuter {
         context.updateRuntimeAccessors(buffer);
 
         if (context.getHexRoot() == null) {
-            HytaleServer.get().getEventBus().dispatchFor(GlyphFizzleEvent.class)
-                    .dispatch(new GlyphFizzleEvent(null, GlyphFizzleEvent.Reason.ERROR, context));
+            HexExecuter.fail(null, context, GlyphFizzleEvent.Reason.ERROR);
             return;
         }
 
         if (context.policy().isConsumeMana() && !context.getHexRoot().tryConsumeMana(context.getManaCost(), buffer)) {
-            HytaleServer.get().getEventBus().dispatchFor(GlyphFizzleEvent.class)
-                    .dispatch(new GlyphFizzleEvent(null, GlyphFizzleEvent.Reason.INSUFFICIENT_MANA, context));
+            HexExecuter.fail(null, context, GlyphFizzleEvent.Reason.INSUFFICIENT_MANA);
             return;
         }
 
         Hex hex = context.getHex();
         if (hex == null) {
-            HytaleServer.get().getEventBus().dispatchFor(GlyphFizzleEvent.class)
-                    .dispatch(new GlyphFizzleEvent(null, GlyphFizzleEvent.Reason.ERROR, context));
+            HexExecuter.fail(null, context, GlyphFizzleEvent.Reason.ERROR);
             return;
         }
         String startingGlyph = hex.getFirstGlyphId();
         if (startingGlyph == null) {
-            HytaleServer.get().getEventBus().dispatchFor(GlyphFizzleEvent.class)
-                    .dispatch(new GlyphFizzleEvent(null, GlyphFizzleEvent.Reason.ERROR, context));
+            HexExecuter.fail(null, context, GlyphFizzleEvent.Reason.ERROR);
             return;
         }
 

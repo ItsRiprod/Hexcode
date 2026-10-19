@@ -107,6 +107,7 @@ public class InterfaceManager {
     holder.addComponent(PersistentModel.getComponentType(),
         new PersistentModel(model.toReference()));
     holder.ensureComponent(PropComponent.getComponentType());
+    holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
 
     return accessor.addEntity(holder, AddReason.SPAWN);
   }
