@@ -32,7 +32,7 @@ public class HexVarUtil {
         if (var == null)
             return defaultValue;
         Double s = var.scalar();
-        return s == null ? defaultValue : s;
+        return s == null || !Double.isFinite(s) ? defaultValue : s;
     }
 
     public static Double numberOrSlotDefault(@Nullable HexVar var, @Nullable SlotConfig slot) {

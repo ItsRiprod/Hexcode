@@ -61,6 +61,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
 
     @Override
     public void onCleanup(HexStatus<NoState> status, ConstructTickContext ctx) {
+        status.getHexContext().endBranch();
         EnsnareComponent ensnare = ctx.getChunk().getComponent(
                 ctx.getIndex(), EnsnareComponent.getComponentType());
         if (ensnare != null) {

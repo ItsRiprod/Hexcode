@@ -13,7 +13,7 @@ public class IlluminateState implements ConstructState {
     private final boolean spawnedOwner;
     private final String volumeId;
     private final Vector3f boxColor;
-    private final List<String> nextGlyphIds;
+    private List<String> nextGlyphIds;
     private final Vector3i blockPos;
     private float remainingSeconds;
 
@@ -51,6 +51,10 @@ public class IlluminateState implements ConstructState {
 
     public List<String> getNextGlyphIds() {
         return nextGlyphIds;
+    }
+
+    public void setNextGlyphIds(List<String> ids) {
+        this.nextGlyphIds = ids != null ? ids : new ArrayList<>();
     }
 
     public Vector3i getBlockPos() {

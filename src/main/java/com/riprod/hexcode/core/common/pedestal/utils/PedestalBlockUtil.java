@@ -3,9 +3,11 @@ package com.riprod.hexcode.core.common.pedestal.utils;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
+import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -51,5 +53,20 @@ public class PedestalBlockUtil {
                 PedestalBlockComponent.getComponentType(),
                 buffer.getExternalData().getWorld(),
                 pos.x(), pos.y(), pos.z());
+    }
+
+    public static boolean outsideRadius(ComponentAccessor<EntityStore> buffer, Ref<EntityStore> player,
+            PedestalBlockComponent pedestal) {
+        Vector3i pedestalLoc = pedestal.getLocation();
+        TransformComponent transform = buffer.getComponent(player, TransformComponent.getComponentType());
+        if (pedestalLoc == null || transform == null || transform.getPosition() == null) {
+            return false;
+        }
+        var center = new Vector3d(
+                pedestalLoc.x() + 0.5,
+                pedestalLoc.y() + 0.5,
+                pedestalLoc.z() + 0.5);
+        double maxRadius = pedestal.getMaxRadius();
+        return transform.getPosition().distanceSquared(center) > maxRadius * maxRadius;
     }
 }

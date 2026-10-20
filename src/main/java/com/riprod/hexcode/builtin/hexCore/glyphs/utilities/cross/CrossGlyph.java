@@ -2,6 +2,8 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.cross;
 
 import javax.annotation.Nullable;
 
+import org.joml.Vector3d;
+
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -32,9 +34,9 @@ public class CrossGlyph implements GlyphHandler {
         var vecV = v.position(hexContext.getAccessor());
         var vecW = w.position(hexContext.getAccessor());
 
-        var dot = vecV.cross(vecW);
+        var cross = new Vector3d(vecV).cross(vecW);
 
-        return new PositionVar(dot);
+        return new PositionVar(cross);
     }
 
     @Override

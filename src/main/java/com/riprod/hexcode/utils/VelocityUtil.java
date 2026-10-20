@@ -30,10 +30,14 @@ public class VelocityUtil {
     public static void applyVelocity(Ref<EntityStore> ref, Vector3d velocity,
             ChangeVelocityType type, VelocityConfig config,
             CommandBuffer<EntityStore> buffer) {
-        if (type == ChangeVelocityType.Set && isPhysicsTicked(ref, buffer)) {
-            StandardPhysicsProvider physics = buffer.getComponent(ref,
-                    StandardPhysicsProvider.getComponentType());
-            physics.getForceProviderStandardState().nextTickVelocity.set(velocity);
+        if (isPhysicsTicked(ref, buffer)) {
+            var physics = buffer.getComponent(ref, StandardPhysicsProvider.getComponentType());
+            var forceState = physics.getForceProviderStandardState();
+            if (type == ChangeVelocityType.Set) {
+                forceState.nextTickVelocity.set(velocity);
+            } else {
+                forceState.externalVelocity.add(velocity);
+            }
             if (physics.getState() != StandardPhysicsProvider.STATE.ACTIVE) {
                 physics.setState(StandardPhysicsProvider.STATE.ACTIVE);
             }

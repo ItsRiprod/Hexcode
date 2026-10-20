@@ -169,7 +169,7 @@ public class RotationValue implements GlyphHandler {
         if (HexConstructSpawner.hasPendingApply(accessor, ref, ID))
             return;
 
-        HexConstructSpawner.applyWithState(accessor, ref, hexContext, glyph, ID,
+        HexConstructSpawner.applyWithState(accessor, ref, hexContext.branch(), glyph, ID,
                 new RotationState(priorRoll, config.getRollHoldSeconds()));
     }
 

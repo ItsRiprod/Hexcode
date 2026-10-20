@@ -57,6 +57,7 @@ public class ArcGlyph implements GlyphHandler {
 
         List<String> outputLinks = glyph.getNextLinks();
         if (outputLinks.isEmpty()) {
+            HexExecuter.continueExecution(outputLinks, hexContext);
             return;
         }
 
@@ -77,6 +78,7 @@ public class ArcGlyph implements GlyphHandler {
                 glyph.readSlot(ArcGlyphSlots.RANGE, hexContext), asset.getSlot(ArcGlyphSlots.RANGE)).floatValue();
 
         if (iterations <= 0) {
+            hexContext.endBranch();
             return;
         }
 
@@ -105,12 +107,12 @@ public class ArcGlyph implements GlyphHandler {
             return;
         }
 
+        var markerUuid = UUID.randomUUID();
+        exclusions.add(markerUuid);
         ArcState state = new ArcState(glyph, outputLinks, exclusions, range, interval, iterations, true);
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                 accessor, hexContext, glyph, ArcGlyph.ID, new Vector3d(origin), state);
-        UUIDComponent uuidComponent = new UUIDComponent(UUID.randomUUID());
-        holder.addComponent(UUIDComponent.getComponentType(), uuidComponent);
-        exclusions.add(uuidComponent.getUuid());
+        holder.putComponent(UUIDComponent.getComponentType(), new UUIDComponent(markerUuid));
         applyMarkerModel(holder, config.getModel());
         accessor.addEntity(holder, AddReason.SPAWN);
     }

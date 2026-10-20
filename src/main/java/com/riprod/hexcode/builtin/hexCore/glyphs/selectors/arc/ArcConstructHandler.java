@@ -56,6 +56,7 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
 
     @Override
     public void onCleanup(HexStatus<ArcState> status, ConstructTickContext ctx) {
+        status.getHexContext().endBranch();
         ArcState state = status.getState();
         if (state != null && state.isSpawnedHost()) {
             Ref<EntityStore> host = ctx.getEntityRef();

@@ -50,10 +50,12 @@ public class ImbuedBlockTickSystem extends EntityTickingSystem<ChunkStore> {
         World world = buffer.getExternalData().getWorld();
 
         BlockImbuementCapacity.Capacity cap = BlockImbuementCapacity.forBlock(blockType);
-        if (comp.getSlotsReady() >= cap.getSlots())
-            return;
-
         long now = world.getTick();
+        if (comp.getSlotsReady() >= cap.getSlots()) {
+            comp.setLastChargeTick(now);
+            return;
+        }
+
         long anchor = comp.getLastChargeTick();
         if (anchor <= 0L) {
             comp.setLastChargeTick(now);

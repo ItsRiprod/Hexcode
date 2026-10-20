@@ -26,8 +26,6 @@ import com.riprod.hexcode.core.common.appearance.HexAppearanceComponent;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
-import com.riprod.hexcode.core.common.drawing.component.HexcasterDrawingComponent;
-import com.riprod.hexcode.core.common.drawing.system.InterfaceManager;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
@@ -100,16 +98,6 @@ public class HexResetCommand extends AbstractPlayerCommand {
         if (capture != null) {
             safeRemoveRef(store, capture.getDrawTrailRef());
             tryRemoveComponent(store, ref, DrawCaptureComponent.getComponentType());
-            cleaned++;
-        }
-
-        HexcasterDrawingComponent drawing = store.getComponent(ref, HexcasterDrawingComponent.getComponentType());
-        if (drawing != null) {
-            try {
-                InterfaceManager.removeTrails(store, ref);
-            } catch (Exception ignored) {
-            }
-            tryRemoveComponent(store, ref, HexcasterDrawingComponent.getComponentType());
             cleaned++;
         }
 

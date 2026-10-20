@@ -8,7 +8,6 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Vector3dUtil;
 
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -57,14 +56,8 @@ public final class PositionVar extends HexVar {
 
     @Override
     public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
-        if (position == null)
-            return new Rotation3f(0f, 0f, 0f);
-        double len = position.length();
-        if (len == 0)
-            return new Rotation3f(0f, 0f, 0f);
-        double yaw = Math.atan2(-position.x, position.z);
-        double pitch = Math.asin(-position.y / len);
-        return new Rotation3f((float) pitch, (float) yaw, 0f);
+        if (position == null) return new Rotation3f();
+        return Rotation3f.lookAt(position);
     }
 
     @Override

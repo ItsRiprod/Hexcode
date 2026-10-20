@@ -85,7 +85,7 @@ public final class ContextForceExitSystem {
                 if (caster == null || caster.getCurrentContext() == null) {
                     return;
                 }
-                store.invoke(ref, new ContextForceExitEvent(ref));
+                buffer.invoke(ref, new ContextForceExitEvent(ref));
             } catch (Exception e) {
                 LOGGER.atSevere().log("[hexcode] force-exit on unload failed: %s", e.getMessage());
             }

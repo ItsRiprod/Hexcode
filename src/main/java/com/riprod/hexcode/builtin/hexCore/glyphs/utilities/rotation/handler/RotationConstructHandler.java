@@ -33,6 +33,7 @@ public class RotationConstructHandler implements ConstructHandler<RotationState>
 
     @Override
     public void onCleanup(HexStatus<RotationState> status, ConstructTickContext ctx) {
+        status.getHexContext().endBranch();
         try {
             RotationState state = status.getState();
             if (state == null) return;

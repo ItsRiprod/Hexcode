@@ -40,7 +40,8 @@ public class ObeliskBlockUtil {
 
         BlockSphereUtil.forEachBlockExact(center.x, center.y, center.z, radius, world, (x, y, z, w) -> {
             ObeliskBlockComponent comp = BlockModule.getComponent(ObeliskBlockComponent.getComponentType(), w, x, y, z);
-            if (comp != null && !comp.isRegistered() && bindsForProfile(comp, profile)) {
+            if (comp != null && (!comp.isRegistered() || center.equals(comp.getRegisteredPedestalLoc()))
+                    && bindsForProfile(comp, profile)) {
                 results.add(new Pair<>(new Vector3i(x, y, z), comp));
             }
             return true;

@@ -40,7 +40,7 @@ public class GustGlyph implements GlyphHandler {
         double radius = Math.max(0, HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(GustGlyphSlots.RADIUS, hexContext),
                 asset != null ? asset.getSlot(GustGlyphSlots.RADIUS) : null));
-        double mag = Math.max(0, HexVarUtil.numberOrSlotDefault(
+        double mag = Math.abs(HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(GustGlyphSlots.MAGNITUDE, hexContext),
                 asset != null ? asset.getSlot(GustGlyphSlots.MAGNITUDE) : null));
         double effective = mag * radius * radius;

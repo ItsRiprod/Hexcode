@@ -134,13 +134,18 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     static void abort(ConstructHandler<?> handler, HexStatus<?> status, ConstructTickContext ctx) {
-        if (handler == null) return;
         try {
+            if (handler == null) return;
             ConstructHandler raw = handler;
             HexStatus rawStatus = status;
             raw.onAbort(rawStatus, ctx);
         } catch (Exception e) {
             LOGGER.atWarning().log("construct handler onAbort failed: %s", e.getMessage());
+        } finally {
+            var hexContext = status.getHexContext();
+            if (hexContext != null) {
+                hexContext.endBranch();
+            }
         }
     }
 
