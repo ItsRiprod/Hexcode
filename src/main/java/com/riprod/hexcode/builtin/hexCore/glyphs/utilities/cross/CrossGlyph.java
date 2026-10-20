@@ -29,11 +29,8 @@ public class CrossGlyph implements GlyphHandler {
             return v == null ? w : v;
         }
 
-        var posV = v.position(hexContext.getAccessor());
-        var posW = w.position(hexContext.getAccessor());
-
-        var vecV = posV.getValue();
-        var vecW = posW.getValue();
+        var vecV = v.position(hexContext.getAccessor());
+        var vecW = w.position(hexContext.getAccessor());
 
         var dot = vecV.cross(vecW);
 

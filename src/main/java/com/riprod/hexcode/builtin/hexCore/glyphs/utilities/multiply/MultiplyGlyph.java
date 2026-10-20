@@ -15,7 +15,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
-import com.riprod.hexcode.core.common.glyphs.variables.TypeMismatchException;
+import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class MultiplyGlyph implements GlyphHandler {
     @Override
@@ -35,33 +35,29 @@ public class MultiplyGlyph implements GlyphHandler {
         if (b == null)
             return a;
 
+        
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
-        a = a.resolveSelf(b, buf);
-        b = b.resolveSelf(a, buf);
-        b = b.convertTo(a.getClass(), buf);
 
-        return switch (a) {
-            case NumberVar na -> {
-                NumberVar nb = (NumberVar) b;
-                yield new NumberVar(na.getValue() * nb.getValue());
+        var baseType = a.type();
+
+        return switch (baseType) {
+            case POSITION -> {
+                var vect = a.position(buf);
+                var vb = b.position(buf);
+                yield new PositionVar(vect.mul(vb));
             }
-            case PositionVar pa -> {
-                PositionVar pb = (PositionVar) b;
-                yield new PositionVar(new Vector3d(pa.getValue()).mul(pb.getValue()), false);
+            case ROTATION -> {
+                var v = a.rotation(buf);
+                var vb = b.rotation(buf);
+                yield new RotationVar(v.mul(vb));
             }
-            case RotationVar ra -> {
-                RotationVar rb = (RotationVar) b;
-                yield new RotationVar(new Rotation3f(ra.getValue()).mul(new Rotation3f(rb.getValue())));
+            case NUMBER -> new NumberVar(a.scalar() * b.scalar());
+            case TRANSFORM -> {
+                var t = a.transform(buf);
+                var tb = b.transform(buf);
+                yield new TransformVar(t.getPosition().mul(tb.getPosition()), t.getRotation().mul(tb.getRotation()));
             }
-            case ColorVar ca -> {
-                ColorVar cb = (ColorVar) b;
-                yield new ColorVar(
-                        ca.getR() * cb.getR(),
-                        ca.getG() * cb.getG(),
-                        ca.getB() * cb.getB(),
-                        ca.getA() * cb.getA());
-            }
-            default -> throw new TypeMismatchException(ID, a, b);
+            default -> a; // smth went wrong
         };
     }
 

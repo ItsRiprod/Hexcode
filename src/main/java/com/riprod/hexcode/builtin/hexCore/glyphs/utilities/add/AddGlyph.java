@@ -14,7 +14,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
-import com.riprod.hexcode.core.common.glyphs.variables.TypeMismatchException;
+import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class AddGlyph implements GlyphHandler {
     @Override
@@ -35,33 +35,19 @@ public class AddGlyph implements GlyphHandler {
             return a;
 
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
-        a = a.resolveSelf(b, buf);
-        b = b.resolveSelf(a, buf);
-        b = b.convertTo(a.getClass(), buf);
+        
+        var baseType = a.type();
 
-        return switch (a) {
-            case NumberVar na -> {
-                NumberVar nb = (NumberVar) b;
-                yield new NumberVar(na.getValue() + nb.getValue());
+        return switch (baseType) {
+            case POSITION -> new PositionVar(a.position(buf).add(b.position(buf)));
+            case ROTATION -> new RotationVar(a.rotation(buf).add(b.rotation(buf)));
+            case NUMBER -> new NumberVar(a.scalar() + b.scalar());
+            case TRANSFORM -> {
+                var transformA = a.transform(buf);
+                var transformB = b.transform(buf);
+                yield new TransformVar(transformA.getPosition().add(transformB.getPosition()), transformA.getRotation().add(transformB.getRotation()));
             }
-            case PositionVar pa -> {
-                PositionVar pb = (PositionVar) b;
-                yield new PositionVar(
-                        new Vector3d(pa.getValue()).add(pb.getValue()));
-            }
-            case RotationVar ra -> {
-                RotationVar rb = (RotationVar) b;
-                yield new RotationVar(new Rotation3f(ra.getValue()).add(rb.getValue()));
-            }
-            case ColorVar ca -> {
-                ColorVar cb = (ColorVar) b;
-                yield new ColorVar(
-                        ca.getR() + cb.getR(),
-                        ca.getG() + cb.getG(),
-                        ca.getB() + cb.getB(),
-                        Math.min(1.0, ca.getA() + cb.getA()));
-            }
-            default -> throw new TypeMismatchException(ID, a, b);
+            default -> null;  // smth went wrong
         };
     }
 

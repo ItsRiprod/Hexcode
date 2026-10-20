@@ -56,18 +56,6 @@ public class CompareGlyph implements GlyphHandler {
             b = new NumberVar(0.0);
         }
 
-        boolean aEntity = a instanceof EntityVar;
-        boolean bEntity = b instanceof EntityVar;
-        if (aEntity && bEntity) {
-            return a.equalTo(b) ? 0 : 1;
-        }
-        if (aEntity != bEntity) {
-            if (aEntity) {
-                a = a.convertTo(b.getClass(), accessor);
-            } else {
-                b = b.convertTo(a.getClass(), accessor);
-            }
-        }
         return Integer.signum(a.compareTo(b));
     }
 

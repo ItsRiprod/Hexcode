@@ -5,6 +5,7 @@ import org.joml.Vector3d;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.lookup.CodecMapCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Rotation3fc;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Vector3dUtil;
@@ -20,11 +21,13 @@ public abstract class HexVar {
 
     public abstract Double scalar();
 
+    public abstract VarType type();
+
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         throw new UnsupportedOperationException(getClass().getSimpleName() + " cannot convert to Position");
     }
 
-    public Rotation3fc rotation(ComponentAccessor<EntityStore> accessor) {
+    public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
         throw new UnsupportedOperationException(getClass().getSimpleName() + " cannot convert to Rotation");
     }
 

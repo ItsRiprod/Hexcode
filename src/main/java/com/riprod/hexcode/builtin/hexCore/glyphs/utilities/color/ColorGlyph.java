@@ -60,8 +60,8 @@ public class ColorGlyph implements GlyphHandler {
         for (HexVar v : new HexVar[] { r, g, b }) {
             if (v instanceof PositionVar || v instanceof RotationVar
                     || v instanceof EntityVar || v instanceof BlockVar) {
-                PositionVar pv = v.position(buf);
-                if (pv != null && pv.getValue() != null) return pv.getValue();
+                var pv = v.position(buf);
+                if (pv != null && pv != null) return pv;
             }
             if (v instanceof ColorVar cv) {
                 return new Vector3d(cv.getR(), cv.getG(), cv.getB());

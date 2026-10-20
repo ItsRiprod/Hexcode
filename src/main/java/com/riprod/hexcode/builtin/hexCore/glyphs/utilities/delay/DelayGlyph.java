@@ -119,20 +119,20 @@ public class DelayGlyph implements GlyphHandler {
         Rotation3f rot;
         switch (sourceVar) {
             case RotationVar r -> {
-                rot = HexVarUtil.rotation(r, accessor);
-                spawnPos = HexVarUtil.position(positionalDefault, accessor);
+                rot = r.rotation(accessor);
+                spawnPos = positionalDefault.position(accessor);
             }
             case PositionVar p -> {
-                spawnPos = HexVarUtil.position(p, accessor);
-                rot = HexVarUtil.rotation(incomingDefault, accessor);
+                spawnPos = p.position(accessor);
+                rot = incomingDefault.rotation(accessor);
             }
             case BlockVar b -> {
-                spawnPos = HexVarUtil.position(b, accessor);
-                rot = HexVarUtil.rotation(b, accessor);
+                spawnPos = b.position(accessor);
+                rot = b.rotation(accessor);
             }
             case null, default -> {
-                spawnPos = HexVarUtil.position(positionalDefault, accessor);
-                rot = HexVarUtil.rotation(incomingDefault, accessor);
+                spawnPos = positionalDefault.position(accessor);
+                rot = incomingDefault.rotation(accessor);
             }
         }
         if (spawnPos == null) {

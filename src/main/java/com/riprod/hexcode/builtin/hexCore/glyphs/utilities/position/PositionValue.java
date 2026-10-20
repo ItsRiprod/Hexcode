@@ -25,14 +25,9 @@ public class PositionValue implements GlyphHandler {
         HexVar zVar = glyph.readSlot(PositionValueSlots.Z, hexContext);
 
         var accessor = hexContext.getAccessor();
-        boolean absolute = HexVarUtil.isAbsolutePosition(xVar, accessor)
-                || HexVarUtil.isAbsolutePosition(yVar, accessor)
-                || HexVarUtil.isAbsolutePosition(zVar, accessor);
 
-        return new PositionVar(new Vector3d(
-                HexVarUtil.positionAxis(xVar, 0, accessor),
-                HexVarUtil.positionAxis(yVar, 1, accessor),
-                HexVarUtil.positionAxis(zVar, 2, accessor)), absolute);
+
+        return new PositionVar(new Vector3d(xVar.position(accessor).x, yVar.position(accessor).y, zVar.position(accessor).z));
     }
 
     @Override

@@ -27,6 +27,11 @@ public final class PositionVar extends HexVar {
     public Vector3d getValue() {
         return position;
     }
+    
+    @Override
+    public VarType type() {
+        return VarType.POSITION;
+    }
 
     @Override
     public HexVar copy() {

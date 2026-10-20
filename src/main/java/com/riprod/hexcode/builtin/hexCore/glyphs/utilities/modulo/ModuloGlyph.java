@@ -15,7 +15,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
-import com.riprod.hexcode.core.common.glyphs.variables.TypeMismatchException;
+import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class ModuloGlyph implements GlyphHandler {
     @Override
@@ -24,6 +24,14 @@ public class ModuloGlyph implements GlyphHandler {
     }
 
     public static final String ID = "Modulo";
+
+    private Double op(Double A, Double B) {
+        return B != 0 ? A % B : A;
+    }
+
+    private float op(float A, float B) {
+        return B != 0 ? A % B : A;
+    }
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(ModuloGlyphSlots.A, hexContext);
@@ -34,45 +42,35 @@ public class ModuloGlyph implements GlyphHandler {
             return b;
         if (b == null)
             return a;
+  
 
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
-        a = a.resolveSelf(b, buf);
-        b = b.resolveSelf(a, buf);
-        b = b.convertTo(a.getClass(), buf);
 
-        return switch (a) {
-            case NumberVar na -> {
-                NumberVar nb = (NumberVar) b;
-                double denom = nb.getValue();
-                yield new NumberVar(denom != 0 ? na.getValue() % denom : na.getValue());
+        var baseType = a.type();
+
+        return switch (baseType) {
+            case POSITION -> {
+                var vect = a.position(buf);
+                var vb = b.position(buf);
+                yield new PositionVar(new Vector3d(op(vect.x, vb.x), op(vect.y, vb.y), op(vect.z, vb.z)));
             }
-            case PositionVar pa -> {
-                PositionVar pb = (PositionVar) b;
-                Vector3d va = pa.getValue();
-                Vector3d vb = pb.getValue();
-                yield new PositionVar(new Vector3d(
-                        vb.x != 0 ? va.x % vb.x : va.x,
-                        vb.y != 0 ? va.y % vb.y : va.y,
-                        vb.z != 0 ? va.z % vb.z : va.z), false);
+            case ROTATION -> {
+                var v = a.rotation(buf);
+                var vb = b.rotation(buf);
+                yield new RotationVar(new Rotation3f(op(v.x, vb.x), op(v.y, vb.y), op(v.z, vb.z)));
             }
-            case RotationVar ra -> {
-                RotationVar rb = (RotationVar) b;
-                Rotation3f va = ra.getValue();
-                Rotation3f vb = rb.getValue();
-                yield new RotationVar(new Rotation3f(
-                        vb.x != 0 ? va.x % vb.x : va.x,
-                        vb.y != 0 ? va.y % vb.y : va.y,
-                        vb.z != 0 ? va.z % vb.z : va.z));
+            case NUMBER -> new NumberVar(op(a.scalar(), b.scalar()));
+            case TRANSFORM -> {
+                var t = a.transform(buf);
+                var v = t.getPosition();
+                var r = t.getRotation();
+                var tb = b.transform(buf);
+                var vb = tb.getPosition();
+                var rb = tb.getRotation();
+                yield new TransformVar(new Vector3d(op(v.x, vb.x), op(v.y, vb.y), op(v.z, vb.z)),
+                        new Rotation3f(op(r.x, rb.x), op(r.y, rb.y), op(r.z, rb.z)));
             }
-            case ColorVar ca -> {
-                ColorVar cb = (ColorVar) b;
-                yield new ColorVar(
-                        cb.getR() != 0 ? ca.getR() % cb.getR() : ca.getR(),
-                        cb.getG() != 0 ? ca.getG() % cb.getG() : ca.getG(),
-                        cb.getB() != 0 ? ca.getB() % cb.getB() : ca.getB(),
-                        cb.getA() != 0 ? ca.getA() % cb.getA() : ca.getA());
-            }
-            default -> throw new TypeMismatchException(ID, a, b);
+            default -> a; // smth went wrong
         };
     }
 

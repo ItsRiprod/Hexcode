@@ -1,7 +1,12 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.identify;
 
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Vector3dUtil;
+
+import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
@@ -21,6 +26,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
+import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class IdentifyGlyph implements GlyphHandler {
 
@@ -55,21 +61,24 @@ public class IdentifyGlyph implements GlyphHandler {
         if (a == null && b == null) return 0;
         if (a == null || b == null) return -1;
         CommandBuffer<EntityStore> accessor = ctx.getAccessor();
-        HexVar av = a instanceof PositionVar ? a.toBlockVar(accessor) : a;
-        HexVar bv = b instanceof PositionVar ? b.toBlockVar(accessor) : b;
-        if (av == null || bv == null || av.getClass() != bv.getClass()) return -1;
-        if (av instanceof BlockVar ab) return compareBlocks(ab, (BlockVar) bv, accessor);
-        if (av instanceof EntityVar ae) return compareEntities(ae, (EntityVar) bv, accessor);
-        if (av instanceof NumberVar || av instanceof RotationVar || av instanceof ColorVar) {
-            return av.equalTo(bv) ? 0 : 1;
-        }
-        return 1;
+
+        var baseType = a.type();
+
+        return switch (baseType) {
+            case POSITION, TRANSFORM -> {
+                yield compareBlocks(a.position(accessor), b.position(accessor), accessor);
+            }
+            case ROTATION, NUMBER -> {
+                yield a.equalTo(b) ? 0 : 1;
+            }
+            default -> -1;
+        };
     }
 
-    private int compareBlocks(BlockVar a, BlockVar b, CommandBuffer<EntityStore> accessor) {
+    private int compareBlocks(Vector3d a, Vector3d b, CommandBuffer<EntityStore> accessor) {
         World world = accessor.getExternalData().getWorld();
-        Integer idA = blockId(world, a.getValue());
-        Integer idB = blockId(world, b.getValue());
+        Integer idA = blockId(world, Vector3dUtil.toVector3i(a));
+        Integer idB = blockId(world, Vector3dUtil.toVector3i(b));
         boolean airA = idA == null || idA == BlockType.EMPTY_ID;
         boolean airB = idB == null || idB == BlockType.EMPTY_ID;
         if (airA && airB) return 0;
@@ -80,7 +89,7 @@ public class IdentifyGlyph implements GlyphHandler {
     private Integer blockId(World world, Vector3i pos) {
         if (pos == null) return null;
         try {
-            return BlockAccess.blockId(world, pos.x, pos.y, pos.z);
+            return BlockAccess.blockId(world, pos.x, pos.y,pos.z);
         } catch (Exception e) {
             return null;
         }

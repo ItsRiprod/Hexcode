@@ -19,6 +19,11 @@ public final class ColorVar extends HexVar {
     public ColorVar() {
     }
 
+    @Override
+    public VarType type() {
+        return VarType.POSITION;
+    }
+
     public ColorVar(double r, double g, double b, double a) {
         this.r = r;
         this.g = g;

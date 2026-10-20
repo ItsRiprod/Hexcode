@@ -15,7 +15,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
-import com.riprod.hexcode.core.common.glyphs.variables.TypeMismatchException;
+import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class PowerGlyph implements GlyphHandler {
     public static final String ID = "Power";
@@ -36,47 +36,43 @@ public class PowerGlyph implements GlyphHandler {
             return a;
 
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
-        a = a.resolveSelf(b, buf);
-        b = b.resolveSelf(a, buf);
-        b = b.convertTo(a.getClass(), buf);
 
-        return switch (a) {
-            case NumberVar na -> {
-                NumberVar nb = (NumberVar) b;
-                yield new NumberVar(safePow(na.getValue(), nb.getValue()));
+        var baseType = a.type();
+
+        return switch (baseType) {
+            case POSITION -> {
+                var vect = a.position(buf);
+                var vb = b.position(buf);
+                yield new PositionVar(new Vector3d(op(vect.x, vb.x), op(vect.y, vb.y), op(vect.z, vb.z)));
             }
-            case PositionVar pa -> {
-                PositionVar pb = (PositionVar) b;
-                Vector3d va = pa.getValue();
-                Vector3d vb = pb.getValue();
-                yield new PositionVar(new Vector3d(
-                        safePow(va.x, vb.x), safePow(va.y, vb.y), safePow(va.z, vb.z)),
-                        pa.isAbsolute() && pb.isAbsolute());
+            case ROTATION -> {
+                var v = a.rotation(buf);
+                var vb = b.rotation(buf);
+                yield new RotationVar(new Rotation3f(op(v.x, vb.x), op(v.y, vb.y), op(v.z, vb.z)));
             }
-            case RotationVar ra -> {
-                RotationVar rb = (RotationVar) b;
-                Rotation3f va = ra.getValue();
-                Rotation3f vb = rb.getValue();
-                yield new RotationVar(new Rotation3f(
-                        (float) safePow(va.x, vb.x),
-                        (float) safePow(va.y, vb.y),
-                        (float) safePow(va.z, vb.z)));
+            case NUMBER -> new NumberVar(op(a.scalar(), b.scalar()));
+            case TRANSFORM -> {
+                var t = a.transform(buf);
+                var v = t.getPosition();
+                var r = t.getRotation();
+                var tb = b.transform(buf);
+                var vb = tb.getPosition();
+                var rb = tb.getRotation();
+                yield new TransformVar(new Vector3d(op(v.x, vb.x), op(v.y, vb.y), op(v.z, vb.z)),
+                        new Rotation3f(op(r.x, rb.x), op(r.y, rb.y), op(r.z, rb.z)));
             }
-            case ColorVar ca -> {
-                ColorVar cb = (ColorVar) b;
-                yield new ColorVar(
-                        safePow(ca.getR(), cb.getR()),
-                        safePow(ca.getG(), cb.getG()),
-                        safePow(ca.getB(), cb.getB()),
-                        safePow(ca.getA(), cb.getA()));
-            }
-            default -> throw new TypeMismatchException(ID, a, b);
+            default -> a; // smth went wrong
         };
     }
 
-    private static double safePow(double base, double exp) {
-        double r = Math.pow(base, exp);
-        return Double.isNaN(r) || Double.isInfinite(r) ? base : r;
+    private Double op(Double A, Double B) {
+        var r = Math.pow(A, B);
+        return Double.isNaN(r) || Double.isInfinite(r) ? A : r;
+    }
+
+    private float op(float A, float B) {
+        var r = (float) Math.pow(A, B);
+        return Float.isNaN(r) || Float.isInfinite(r) ? A : r;
     }
 
     @Override

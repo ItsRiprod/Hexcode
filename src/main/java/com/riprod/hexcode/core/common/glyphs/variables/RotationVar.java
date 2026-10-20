@@ -28,6 +28,11 @@ public final class RotationVar extends HexVar {
     }
 
     @Override
+    public VarType type() {
+        return VarType.ROTATION;
+    }
+
+    @Override
     public HexVar copy() {
         return new RotationVar(rotation == null ? null : new Rotation3f(rotation.x, rotation.y, rotation.z));
     }

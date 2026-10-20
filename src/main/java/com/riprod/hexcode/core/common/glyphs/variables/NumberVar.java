@@ -31,6 +31,11 @@ public final class NumberVar extends HexVar {
     public Double getValue() {
         return number;
     }
+    
+    @Override
+    public VarType type() {
+        return VarType.NUMBER;
+    }
 
     @Override
     public HexVar copy() {

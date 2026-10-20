@@ -28,6 +28,11 @@ public final class BlockVar extends HexVar {
     }
 
     @Override
+    public VarType type() {
+        return VarType.TRANSFORM;
+    }
+
+    @Override
     public HexVar copy() {
         return new BlockVar(position == null ? null : new Vector3i(position));
     }

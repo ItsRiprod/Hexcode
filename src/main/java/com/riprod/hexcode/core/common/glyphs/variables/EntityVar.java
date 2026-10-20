@@ -9,7 +9,6 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.entity.reference.PersistentRef;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
@@ -36,6 +35,11 @@ public final class EntityVar extends HexVar {
         PersistentRef persistent = new PersistentRef();
         persistent.setEntity(ref, entityId);
         return persistent;
+    }
+
+    @Override
+    public VarType type() {
+        return VarType.TRANSFORM;
     }
 
     @Override
