@@ -1,10 +1,9 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.divide;
 
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.vector.Rotation3f;
-
-import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
@@ -37,12 +36,8 @@ public class DivideGlyph implements GlyphHandler {
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(DivideGlyphSlots.A, hexContext);
         HexVar b = glyph.readSlot(DivideGlyphSlots.B, hexContext);
-        if (a == null && b == null)
-            return null;
-        if (a == null)
-            return b;
-        if (b == null)
-            return a;
+        if (a == null || b == null || a.scalar() == 0 || b.scalar() == 0)
+            return new NumberVar(0); // X/0 = 0 (assertion) and 0/X = 0
 
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
 
@@ -70,7 +65,6 @@ public class DivideGlyph implements GlyphHandler {
                 yield new TransformVar(new Vector3d(op(v.x, vb.x), op(v.y, vb.y), op(v.z, vb.z)),
                         new Rotation3f(op(r.x, rb.x), op(r.y, rb.y), op(r.z, rb.z)));
             }
-            default -> a; // smth went wrong
         };
     }
 

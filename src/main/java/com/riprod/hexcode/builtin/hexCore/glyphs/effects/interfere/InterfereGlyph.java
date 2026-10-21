@@ -3,25 +3,25 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.interfere;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interfere.style.InterfereStyle;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utils.ConstructSplicer;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
-import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interfere.style.InterfereStyle;
-import com.riprod.hexcode.builtin.hexCore.glyphs.utils.ConstructSplicer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.utils.HexVarUtil;
 
 public class InterfereGlyph implements GlyphHandler {
     public static final String ID = "Interfere";

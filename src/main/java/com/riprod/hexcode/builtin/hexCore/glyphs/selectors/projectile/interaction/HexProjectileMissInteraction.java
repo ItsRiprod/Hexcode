@@ -2,14 +2,16 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.interacti
 
 import javax.annotation.Nonnull;
 
+import org.joml.Vector3d;
+import org.joml.Vector3i;
+import org.joml.Vector4d;
+
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
-import org.joml.Vector3d;
-import org.joml.Vector3i;
-import org.joml.Vector4d;
+import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.WaitForDataFrom;
@@ -18,10 +20,8 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHa
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInteraction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.Collector;
-import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.core.common.glyphs.utils.BlockResolution;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
@@ -62,26 +62,33 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
                 return;
             }
 
-            HexContext hexContext = state.getHexContext();
-            hexContext.updateRuntimeAccessors(buffer);
+            BlockPosition rawHitBlock = ctx.getMetaStore().getMetaObject(Interaction.TARGET_BLOCK_RAW);
 
-            Vector4d hitLocation = ctx.getMetaStore().getMetaObject(Interaction.HIT_LOCATION);
+            Vector3i hitBlock = rawHitBlock != null
+                    ? new Vector3i(rawHitBlock.x, rawHitBlock.y, rawHitBlock.z)
+                    : null;
+
+            // raw hit location
+            Vector4d hitLocation = ctx.getMetaStore()
+                    .getMetaObject(Interaction.HIT_LOCATION);
+
             Vector3d hitPos = hitLocation != null
                     ? new Vector3d(hitLocation.x, hitLocation.y, hitLocation.z)
                     : null;
 
+            HexContext hexContext = state.getHexContext();
+            hexContext.updateRuntimeAccessors(buffer);
+
             Glyph triggering = state.getTriggeringGlyph();
             if (hitPos != null) {
                 if (triggering != null) {
-                    Velocity projVel = buffer.getComponent(projectileRef, Velocity.getComponentType());
-                    Vector3d travelDir = projVel != null && projVel.getVelocity().lengthSquared() > 1e-6
-                            ? new Vector3d(projVel.getVelocity()) : null;
-                    Vector3i snapped = BlockResolution.snapIntoBlock(
-                            buffer.getExternalData().getWorld(), hitPos, travelDir);
-                    triggering.writeOutput(snapped != null
-                            ? new BlockVar(snapped)
-                            : new PositionVar(hitPos), hexContext);
+                    triggering.writeOutput(
+                            hitBlock != null
+                                    ? new BlockVar(hitBlock)
+                                    : new PositionVar(hitPos),
+                            hexContext);
                 }
+
                 ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
             }
 

@@ -1,12 +1,14 @@
 package com.riprod.hexcode.core.common.execution;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphExecuteEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
@@ -17,9 +19,6 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class CoreHexExecuter {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -113,7 +112,7 @@ public class CoreHexExecuter {
 
         HexExecutionQueue queue = accessor.getResource(HexExecutionQueue.getResourceType());
         queue.enqueue(new HexExecutionQueue.PendingGlyph(nextGlyphs.get(0), hexContext));
-        if (nextGlyphs.size() > 1) {
+        if (nextGlyphs.size() > 1) { // clones the ctx for each subsequent branch
             branchExecution(nextGlyphs.subList(1, nextGlyphs.size()), hexContext);
         }
         return true;

@@ -3,6 +3,9 @@ package com.riprod.hexcode.core.common.glyphs.variables;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
+
+import javax.annotation.Nonnull;
+
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.math.vector.Rotation3f;
@@ -43,15 +46,18 @@ public final class RotationVar extends HexVar {
     }
 
     @Override
+    @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         return forward();
     }
 
     @Override
+    @Nonnull
     public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
-        return rotation;
+        return rotation == null ? new Rotation3f() : new Rotation3f(rotation);
     }
 
+    @Nonnull
     public Vector3d forward() {
         if (rotation == null) return new Vector3d(Vector3dUtil.FORWARD);
         return Vector3dUtil.setYawPitch(rotation.yaw(), rotation.pitch(), new Vector3d());

@@ -7,7 +7,6 @@ import org.joml.Vector3i;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
@@ -23,11 +22,11 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
 import com.riprod.hexcode.config.HexcodeConfig;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.LogScopes;
 
 public final class HexProtection {
@@ -57,7 +56,7 @@ public final class HexProtection {
             return true;
         }
 
-        var blockType = BlockAccess.blockType(world, pos.x, pos.y, pos.z);
+        var blockType = BlockAccess.blockType(world, pos);
 
         if (!isBlockActionAllowed(world, action, blockType)) {
             return false;
@@ -72,8 +71,7 @@ public final class HexProtection {
         }
 
         if (action == BlockAction.BREAK) {
-            BlockType type = BlockAccess.blockType(world, pos.x, pos.y, pos.z);
-            BreakBlockEvent event = new BreakBlockEvent(null, pos, type);
+            BreakBlockEvent event = new BreakBlockEvent(null, pos, blockType);
             accessor.invoke(casterRef, event);
             if (event.isCancelled()) {
                 return false;
@@ -168,7 +166,7 @@ public final class HexProtection {
     }
 
     private static boolean isEnvironmentModifiable(World world, Vector3i pos) {
-        int environmentId = BlockAccess.environmentId(world, pos.x, pos.y, pos.z);
+        int environmentId = BlockAccess.environmentId(world, pos);
         if (environmentId < 0) {
             return true;
         }

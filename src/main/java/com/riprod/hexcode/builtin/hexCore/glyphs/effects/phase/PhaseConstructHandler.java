@@ -2,16 +2,14 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.phase;
 
 import java.util.List;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
-import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.math.shape.Box;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
-import com.hypixel.hytale.math.util.ChunkUtil;
+import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
@@ -21,14 +19,16 @@ import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
+import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
-import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.BlockUtils;
 import com.riprod.hexcode.utils.LogScopes;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
 
@@ -83,20 +83,21 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
         if (phase != null) {
             World world = ctx.getBuffer().getExternalData().getWorld();
             float elapsedSeconds = phase.getElapsedSeconds();
-
+            var scratch = new Vector3d();
+            var cursor = new BlockAccess.Cursor(world);
             for (PhasedBlock block : phase.getPhasedBlocks()) {
                 Vector3i pos = block.getPosition();
-                Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
+                Vector3d blockCenter = scratch.set(0.5).add(pos.x, pos.y, pos.z);
 
                 BlockType blockType = BlockType.getAssetMap().getAsset(block.getBlockTypeId());
                 if (blockType == null) continue;
 
-                if (!BlockAccess.setBlock(world, pos.x, pos.y, pos.z, blockType,
+                if (!BlockAccess.setBlock(cursor, pos, blockType,
                         block.getRotationIndex(), SetBlockSettings.PERFORM_BLOCK_UPDATE)) {
                     LOGGER.atWarning().log("phase: could not restore block at %s", pos);
                     continue;
                 }
-                BlockAccess.putBlockEntity(world, pos.x, pos.y, pos.z, blockType,
+                BlockAccess.putBlockEntity(world, pos, blockType,
                         block.getRotationIndex(), block.getBlockEntity());
 
                 applyCrushDamage(pos, blockCenter, elapsedSeconds, world, status, ctx.getBuffer());

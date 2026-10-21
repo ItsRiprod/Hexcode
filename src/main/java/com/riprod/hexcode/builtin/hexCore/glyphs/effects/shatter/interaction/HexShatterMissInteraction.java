@@ -2,13 +2,15 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.interaction;
 
 import javax.annotation.Nonnull;
 
+import org.joml.Vector3d;
+import org.joml.Vector3i;
+
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
-import org.joml.Vector3d;
-import org.joml.Vector4d;
+import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.WaitForDataFrom;
@@ -17,14 +19,10 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHa
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInteraction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.Collector;
-import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style.ShatterStyle;
-import com.riprod.hexcode.core.common.execution.context.HexContext;
-import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.utils.BlockResolution;
+import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 
@@ -61,27 +59,35 @@ public class HexShatterMissInteraction extends SimpleInteraction {
                 return;
             }
 
-            HexContext hexContext = state.getHexContext();
-            hexContext.updateRuntimeAccessors(buffer);
+            BlockPosition rawHitBlock = ctx.getMetaStore().getMetaObject(Interaction.TARGET_BLOCK_RAW);
 
-            Vector4d hitLocation = ctx.getMetaStore().getMetaObject(Interaction.HIT_LOCATION);
-            Vector3d hitPos = hitLocation != null
+            var hitBlock = rawHitBlock != null
+                    ? new Vector3i(rawHitBlock.x, rawHitBlock.y, rawHitBlock.z)
+                    : null;
+
+            // raw hit location
+            var hitLocation = ctx.getMetaStore()
+                    .getMetaObject(Interaction.HIT_LOCATION);
+
+            var hitPos = hitLocation != null
                     ? new Vector3d(hitLocation.x, hitLocation.y, hitLocation.z)
                     : null;
 
-            Glyph triggering = state.getTriggeringGlyph();
+            var hexContext = state.getHexContext();
+            
+            hexContext.updateRuntimeAccessors(buffer);
+
+            var triggering = state.getTriggeringGlyph();
             if (hitPos != null) {
                 if (triggering != null) {
-                    var shardVel = buffer.getComponent(shardRef, Velocity.getComponentType());
-                    var travelDir = shardVel != null && shardVel.getVelocity().lengthSquared() > 1e-6
-                            ? new Vector3d(shardVel.getVelocity()) : null;
-                    var snapped = BlockResolution.snapIntoBlock(
-                            buffer.getExternalData().getWorld(), hitPos, travelDir);
-                    triggering.writeOutput(snapped != null
-                            ? new BlockVar(snapped)
-                            : new PositionVar(hitPos, true), hexContext);
+                    triggering.writeOutput(
+                            hitBlock != null
+                                    ? new BlockVar(hitBlock)
+                                    : new PositionVar(hitPos),
+                            hexContext);
                 }
-                ShatterStyle.renderShardHit(hitPos, hexContext, buffer);
+
+                ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
             }
 
             HexExecuter.continueExecution(state.getNextLinks(), hexContext);

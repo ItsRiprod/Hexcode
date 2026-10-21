@@ -1,15 +1,13 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate;
 
-import java.util.List;
 import java.util.UUID;
+
+import org.joml.Vector3d;
 
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Rotation3f;
-
-import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
@@ -24,11 +22,11 @@ import com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxColli
 import com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
-import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.component.GlaciateComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.style.GlaciateStyle;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -36,9 +34,6 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
-import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
-import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class GlaciateGlyph implements GlyphHandler {

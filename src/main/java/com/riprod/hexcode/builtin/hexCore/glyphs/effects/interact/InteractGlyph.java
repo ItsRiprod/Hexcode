@@ -1,37 +1,35 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact;
 
+import org.joml.Vector3d;
+import org.joml.Vector3i;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
-import org.joml.Vector3d;
-import org.joml.Vector3i;
 import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.InteractionChain;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.InteractionManager;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.InteractionModule;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction;
-import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.api.imbuement.ImbuedBlockActivator;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact.style.InteractStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.api.imbuement.ImbuedBlockActivator;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact.style.InteractStyle;
-import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.LogScopes;
 
 public class InteractGlyph implements GlyphHandler {
@@ -130,7 +128,7 @@ public class InteractGlyph implements GlyphHandler {
             return;
         }
 
-        BlockType blockType = BlockAccess.blockType(world, blockPos.x, blockPos.y, blockPos.z);
+        BlockType blockType = BlockAccess.blockType(world, blockPos);
         if (blockType == null || blockType.isUnknown()) {
             return;
         }

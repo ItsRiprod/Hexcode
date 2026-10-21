@@ -1,17 +1,16 @@
 package com.riprod.hexcode;
 
+import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.riprod.configly.Configly;
-import com.riprod.hexcode.core.HexCore;
 import com.riprod.hexcode.builtin.counterspell.CounterspellPlugin;
 import com.riprod.hexcode.builtin.hexCore.HexCorePlugin;
 import com.riprod.hexcode.builtin.hextreme.HextremePlugin;
 import com.riprod.hexcode.builtin.imbued.ImbuedPlugin;
 import com.riprod.hexcode.builtin.statly.StatlyPlugin;
 import com.riprod.hexcode.config.HexcodeConfig;
+import com.riprod.hexcode.core.HexCore;
 import com.riprod.patchly.PatchManager;
-
-import com.hypixel.hytale.server.core.plugin.JavaPlugin;
-import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 
 public class Hexcode extends JavaPlugin {
     private final PatchManager patchManager;

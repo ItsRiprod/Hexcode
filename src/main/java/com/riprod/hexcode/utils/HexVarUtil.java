@@ -4,24 +4,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.ComponentAccessor;
-import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
-import org.joml.Vector3i;
 
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
-import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
-import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
-import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
-import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 
 public class HexVarUtil {
 
@@ -57,5 +50,22 @@ public class HexVarUtil {
         }
         if (var == null) return new Vector3d();
         return var.position(accessor);
+    }
+
+    public static double axis(Rotation3f pos, int axis) {
+        return switch (axis) {
+            case 0 -> pos.x();
+            case 1 -> pos.y();
+            case 2 -> pos.z();
+            default -> 0;
+        };
+    }
+    public static double axis(Vector3d pos, int axis) {
+        return switch (axis) {
+            case 0 -> pos.x;
+            case 1 -> pos.y;
+            case 2 -> pos.z;
+            default -> 0;
+        };
     }
 }

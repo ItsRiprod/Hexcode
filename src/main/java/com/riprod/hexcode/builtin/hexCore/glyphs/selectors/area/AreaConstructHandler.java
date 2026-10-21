@@ -117,7 +117,7 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
 
         int[] runFrom = new int[2];
         int[] runTo = new int[2];
-
+        var scratch = new Vector3i();
         for (int by = minY; by <= maxY; by++) {
             double dy = by + 0.5 - center.y;
             for (int bz = minZ; bz <= maxZ; bz++) {
@@ -143,13 +143,13 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
 
                 for (int run = 0; run < runs; run++) {
                     for (int bx = runFrom[run]; bx <= runTo[run]; bx++) {
-                        if (cursor.blockId(bx, by, bz) == BlockType.EMPTY_ID)
+                        if (cursor.blockId(scratch.set(bx, by, bz)) == BlockType.EMPTY_ID)
                             continue;
 
                         HexContext branch = status.getHexContext().branch();
                         branch.updateRuntimeAccessors(buffer);
                         branch.enterLocalScope();
-                        triggering.writeOutput(new BlockVar(new Vector3i(bx, by, bz)), branch);
+                        triggering.writeOutput(new BlockVar(new Vector3i(scratch)), branch);
                         HexExecuter.continueExecution(state.getBlockLinks(), branch);
                     }
                 }

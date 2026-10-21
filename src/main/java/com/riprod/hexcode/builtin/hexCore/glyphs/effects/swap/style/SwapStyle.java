@@ -1,8 +1,9 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.swap.style;
 
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
-import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -13,7 +14,6 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
-import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
 public class SwapStyle {
@@ -35,8 +35,9 @@ public class SwapStyle {
     }
 
     public static void applyEffect(HexVar var, HexContext ctx, ComponentAccessor<EntityStore> accessor) {
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(var, ctx);
-        if (entityVar == null) return;
+        if (!(var instanceof EntityVar entityVar)) {
+            return;
+        }
         Ref<EntityStore> ref = entityVar.getRef(accessor);
         if (ref == null || !ref.isValid()) return;
 

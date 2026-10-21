@@ -11,8 +11,11 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Vector3dUtil;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import org.joml.Vector3d;
+import org.joml.Vector3i;
+
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
@@ -144,7 +147,8 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
             Vector3d max = new Vector3d(
                     pos.x + half.x + margin, pos.y + half.y + margin, pos.z + half.z + margin);
 
-            List<Ref<EntityStore>> found = new ObjectArrayList<>(TargetUtil.getAllEntitiesInBox(min, max, ctx.getBuffer()));
+            List<Ref<EntityStore>> found = new ObjectArrayList<>(
+                    TargetUtil.getAllEntitiesInBox(min, max, ctx.getBuffer()));
 
             if (barrier) {
                 containEntities(zone, pos, found, config, ctx);
@@ -208,7 +212,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
         Vector3d halfExtents = new Vector3d();
         Vector3d boxCenter = new Vector3d();
         Vector3d direction = new Vector3d();
-
+        Vector3d scratch = new Vector3d();
         for (Ref<EntityStore> ref : found) {
             if (ref == null || !ref.isValid())
                 continue;
@@ -247,21 +251,23 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
                 }
                 double step = Math.min(depth + config.getCorrectionEpsilon(),
                         config.getMaxCorrectionPerTick());
-                double x = position.x + direction.x * step;
-                double y = position.y + direction.y * step;
-                double z = position.z + direction.z * step;
-                if (isSolid(world, x, y, z)) {
+                scratch.set(
+                        position.x + direction.x * step,
+                        position.y + direction.y * step,
+                        position.z + direction.z * step
+                    );
+                if (isSolid(world, Vector3dUtil.toVector3i(scratch))) {
                     continue;
                 }
-                position.set(x, y, z);
+
+                position.set(scratch);
                 break;
             }
         }
     }
 
-    private boolean isSolid(World world, double x, double y, double z) {
-        BlockType blockType = BlockAccess.blockType(world,
-                (int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
+    private boolean isSolid(World world, Vector3i pos) {
+        BlockType blockType = BlockAccess.blockType(world, pos);
         return blockType != null && blockType.getMaterial() == BlockMaterial.Solid;
     }
 

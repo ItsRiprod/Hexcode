@@ -1,16 +1,14 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.power;
 
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.vector.Rotation3f;
-
-import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
-import com.riprod.hexcode.core.common.glyphs.variables.ColorVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
@@ -29,11 +27,13 @@ public class PowerGlyph implements GlyphHandler {
         HexVar a = glyph.readSlot(PowerGlyphSlots.A, hexContext);
         HexVar b = glyph.readSlot(PowerGlyphSlots.B, hexContext);
         if (a == null && b == null)
-            return null;
-        if (a == null)
-            return b;
+            return new NumberVar(1); // 0^0 = 1 because math ig
         if (b == null)
-            return a;
+            return new NumberVar(1); // x^0 = 1
+        if (a == null || b.scalar() == 0 || a.scalar() == 0) // early return if a is null (0^x) or b = 0 (x^0) since
+                                                             // those are both constants
+            return b.scalar() == 0 ? new NumberVar(1) /** 0^0=1 */
+                    : new NumberVar(0); // 0^x = 0
 
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
 
@@ -61,7 +61,6 @@ public class PowerGlyph implements GlyphHandler {
                 yield new TransformVar(new Vector3d(op(v.x, vb.x), op(v.y, vb.y), op(v.z, vb.z)),
                         new Rotation3f(op(r.x, rb.x), op(r.y, rb.y), op(r.z, rb.z)));
             }
-            default -> a; // smth went wrong
         };
     }
 

@@ -3,15 +3,16 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
+
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
-
-import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
@@ -19,24 +20,23 @@ import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.PropComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
-import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
-import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.EnsnareComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.SpikeEntry;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.style.EnsnareStyle;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
+import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
-import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
-
+import com.riprod.hexcode.core.common.protection.HexcodeComponent;
+import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class EnsnareGlyph implements GlyphHandler {
@@ -109,6 +109,8 @@ public class EnsnareGlyph implements GlyphHandler {
         int intRadius = (int) Math.ceil(radius);
         long seed = centerBlockX * 73856093L ^ centerBlockZ * 19349663L ^ centerBlockY * 83492791L;
 
+        var cursor = new BlockAccess.Cursor(world);
+
         for (int dx = -intRadius; dx <= intRadius && spikes.size() < config.getMaxSpikes(); dx++) {
             for (int dz = -intRadius; dz <= intRadius && spikes.size() < config.getMaxSpikes(); dz++) {
                 if (dx * dx + dz * dz > radius * radius)
@@ -121,13 +123,14 @@ public class EnsnareGlyph implements GlyphHandler {
                 int worldX = centerBlockX + dx;
                 int worldZ = centerBlockZ + dz;
 
-                int groundY = findGround(world, worldX, centerBlockY, worldZ, config);
+                var spikeWorldPos = new Vector3i(worldX, centerBlockY, worldZ);
+                int groundY = findGround(cursor, spikeWorldPos, config);
                 if (groundY < 0)
                     continue;
                 if (Math.abs(groundY - centerBlockY) > config.getHeightTolerance())
                     continue;
 
-                Vector3d spikePos = new Vector3d(worldX + 0.5, groundY + 1.0, worldZ + 0.5);
+                Vector3d spikePos = new Vector3d(0.5, 1, 0.5).add(spikeWorldPos.x, spikeWorldPos.y, spikeWorldPos.z);
 
                 float yaw = (hash % 4) * (float) (Math.PI / 2.0);
                 Vector3f rotation = new Vector3f(0, yaw, 0);
@@ -152,12 +155,17 @@ public class EnsnareGlyph implements GlyphHandler {
         EnsnareStyle.renderSeismicBurst(center, hexContext, accessor);
     }
 
-    private int findGround(World world, int x, int centerY, int z, EnsnareConfig config) {
-        BlockAccess.Cursor cursor = new BlockAccess.Cursor(world);
-        for (int y = centerY + config.getGroundScanRange(); y >= centerY - config.getGroundScanRange(); y--) {
-            int blockId = cursor.blockId(x, y, z);
+    /** Mutates the initialPos in-place until it finds the ground */
+    private int findGround(BlockAccess.Cursor cursor, Vector3i pos, EnsnareConfig config) {
+        int initialY = pos.y;
+        int scanRange = config.getGroundScanRange();
+        for (int y = initialY + scanRange; y >= initialY - scanRange; y--) {
+            pos.y = y;
+            int blockId = cursor.blockId(pos);
             if (blockId != BlockType.EMPTY_ID) {
-                int aboveId = cursor.blockId(x, y + 1, z);
+                pos.y = y + 1;
+                int aboveId = cursor.blockId(pos);
+                pos.y = y;
                 if (aboveId == BlockType.EMPTY_ID) {
                     return y;
                 }

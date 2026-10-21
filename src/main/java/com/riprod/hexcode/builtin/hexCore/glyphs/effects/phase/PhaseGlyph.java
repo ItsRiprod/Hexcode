@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.joml.Vector3d;
+import org.joml.Vector3i;
+
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.util.MathUtil;
-
-import org.joml.Vector3d;
-import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockGathering;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
@@ -20,19 +20,18 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.protection.BlockAction;
-import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
+import com.riprod.hexcode.core.common.protection.BlockAction;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.LogScopes;
@@ -91,12 +90,12 @@ public class PhaseGlyph implements GlyphHandler {
         }
         Vector3i pos = new Vector3i(MathUtil.floor(rawPos.x()), MathUtil.floor(rawPos.y()), MathUtil.floor(rawPos.z()));
 
-        Vector3i base = BlockAccess.resolveBase(world, pos.x, pos.y, pos.z);
+        Vector3i base = BlockAccess.resolveBase(world, pos);
         if (base != null) {
             pos = base;
         }
 
-        int blockId = BlockAccess.blockId(world, pos.x, pos.y, pos.z);
+        int blockId = BlockAccess.blockId(world, pos);
         if (blockId == BlockType.EMPTY_ID) {
             LOGGER.atWarning().log("Phase: target block is empty");
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -121,7 +120,7 @@ public class PhaseGlyph implements GlyphHandler {
         }
 
         String typeId = blockType.getId();
-        int rotationIndex = BlockAccess.rotationIndex(world, pos.x, pos.y, pos.z);
+        int rotationIndex = BlockAccess.rotationIndex(world, pos);
 
         Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
         if (!HexProtection.canModifyBlock(world, caster, accessor, pos, BlockAction.BREAK)) {
@@ -130,10 +129,10 @@ public class PhaseGlyph implements GlyphHandler {
             return;
         }
 
-        Holder<ChunkStore> blockEntity = BlockAccess.takeBlockEntity(world, pos.x, pos.y, pos.z);
+        Holder<ChunkStore> blockEntity = BlockAccess.takeBlockEntity(world, pos);
 
-        if (!BlockAccess.clearBlock(world, pos.x, pos.y, pos.z, SetBlockSettings.NO_SEND_PARTICLES)) {
-            BlockAccess.putBlockEntity(world, pos.x, pos.y, pos.z, blockType, rotationIndex, blockEntity);
+        if (!BlockAccess.clearBlock(world, pos, SetBlockSettings.NO_SEND_PARTICLES)) {
+            BlockAccess.putBlockEntity(world, pos, blockType, rotationIndex, blockEntity);
             LOGGER.atWarning().log("Phase: could not clear target block");
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Phase: could not clear target block");

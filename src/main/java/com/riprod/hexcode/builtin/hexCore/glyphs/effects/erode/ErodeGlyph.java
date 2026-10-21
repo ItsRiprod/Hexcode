@@ -1,10 +1,14 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.erode;
 
+import java.util.Arrays;
+
+import org.joml.Vector3i;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import org.joml.Vector3i;
+import com.hypixel.hytale.math.vector.Vector3dUtil;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
@@ -26,18 +30,14 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
-import com.riprod.hexcode.core.common.protection.BlockAction;
-import com.riprod.hexcode.core.common.protection.HexProtection;
-import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
+import com.riprod.hexcode.core.common.protection.BlockAction;
+import com.riprod.hexcode.core.common.protection.HexProtection;
+import com.riprod.hexcode.utils.BlockAccess;
+import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VfxUtil;
-import com.riprod.hexcode.utils.BlockAccess;
-import com.riprod.hexcode.utils.BlockUtils;
-import com.riprod.hexcode.utils.HexVarUtil;
-
-import java.util.Arrays;
 
 public class ErodeGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
@@ -86,14 +86,13 @@ public class ErodeGlyph implements GlyphHandler {
                 }
                 return;
             }
-        }
-
-        if (targets instanceof BlockVar blockVar) {
-            if (blockVar != null) {
+        } else {
+            var pos = Vector3dUtil.toVector3i(targets.position(accessor));
+            if (pos != null) {
                 double amount = HexVarUtil.numberOrSlotDefault(
                         glyph.readSlot(ErodeGlyphSlots.AMOUNT, hexContext),
                         asset.getSlot(ErodeGlyphSlots.AMOUNT));
-                applyToBlocks(blockVar, amount, config, hexContext, accessor);
+                applyToBlocks(pos, amount, config, hexContext, accessor);
             }
         }
 
@@ -143,22 +142,22 @@ public class ErodeGlyph implements GlyphHandler {
         return true;
     }
 
-    private void applyToBlocks(BlockVar blockVar, double amount, ErodeConfig config,
+    private void applyToBlocks(Vector3i pos, double amount, ErodeConfig config,
             HexContext hexContext, CommandBuffer<EntityStore> accessor) {
-        Vector3i pos = blockVar.getValue();
+
         if (pos == null)
             return;
 
         World world = accessor.getExternalData().getWorld();
 
-        var blockType = BlockAccess.blockType(world, pos.x, pos.y, pos.z);
+        var blockType = BlockAccess.blockType(world, pos);
 
         if (!HexProtection.isBlockActionAllowed(world, BlockAction.BREAK, blockType)) {
             HexProtection.notifyBlocked(hexContext.getCasterRef(accessor), accessor, getId());
             return;
         }
 
-        if (pos.y < ChunkUtil.MIN_Y || pos.y >= ChunkUtil.HEIGHT)
+        if (pos.y < ChunkUtil.MIN_Y)
             return;
 
         ChunkStore chunkStore = world.getChunkStore();

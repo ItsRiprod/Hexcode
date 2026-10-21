@@ -17,7 +17,6 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.redirect.EntityRedirectSpawner;
-import com.riprod.hexcode.utils.HexVarUtil;
 
 public class WardGlyph implements GlyphHandler {
 

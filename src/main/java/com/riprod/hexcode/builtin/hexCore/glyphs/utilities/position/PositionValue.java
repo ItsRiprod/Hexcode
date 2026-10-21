@@ -9,8 +9,6 @@ import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 
-import com.riprod.hexcode.utils.HexVarUtil;
-
 public class PositionValue implements GlyphHandler {
     public static final String ID = "Position";
 
@@ -26,8 +24,8 @@ public class PositionValue implements GlyphHandler {
 
         var accessor = hexContext.getAccessor();
 
-
-        return new PositionVar(new Vector3d(xVar.position(accessor).x, yVar.position(accessor).y, zVar.position(accessor).z));
+        return new PositionVar(
+                new Vector3d(xVar.position(accessor).x, yVar.position(accessor).y, zVar.position(accessor).z));
     }
 
     @Override

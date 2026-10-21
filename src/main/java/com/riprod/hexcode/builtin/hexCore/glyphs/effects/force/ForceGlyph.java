@@ -1,9 +1,9 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.force;
 
-import com.hypixel.hytale.component.CommandBuffer;
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
-import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig;
@@ -12,14 +12,13 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
-import com.riprod.hexcode.utils.VelocityUtil;
-
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VelocityUtil;
 
 public class ForceGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

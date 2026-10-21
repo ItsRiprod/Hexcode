@@ -4,14 +4,12 @@ import java.time.Duration;
 import java.util.EnumMap;
 import java.util.Map;
 
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
-
-import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
@@ -27,10 +25,10 @@ import com.hypixel.hytale.server.core.modules.projectile.ProjectileModule;
 import com.hypixel.hytale.server.core.modules.time.TimeResource;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
@@ -38,12 +36,9 @@ import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
-import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ProjectileGlyph implements GlyphHandler {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     @Override
     public String getId() {
@@ -81,18 +76,18 @@ public class ProjectileGlyph implements GlyphHandler {
                 : GlyphHandler.super.getVolatilityCost(glyph, hexContext, asset);
     }
 
-
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         ProjectileConfig config = getConfig(ProjectileConfig.class, asset);
-        if (config == null) config = ProjectileConfig.DEFAULTS;
+        if (config == null)
+            config = ProjectileConfig.DEFAULTS;
 
-        HexVar sourceVar = glyph.readSlot(ProjectileGlyphSlots.SOURCE, hexContext);
-        HexVar directionVar = glyph.readSlot(ProjectileGlyphSlots.DIRECTION, hexContext);
-        HexVar speedVar = glyph.readSlot(ProjectileGlyphSlots.SPEED, hexContext);
-        HexVar gravityVar = glyph.readSlot(ProjectileGlyphSlots.GRAVITY, hexContext);
-        HexVar bouncesVar = glyph.readSlot(ProjectileGlyphSlots.BOUNCES, hexContext);
+        var sourceVar = glyph.readSlot(ProjectileGlyphSlots.SOURCE, hexContext);
+        var directionVar = glyph.readSlot(ProjectileGlyphSlots.DIRECTION, hexContext);
+        var speedVar = glyph.readSlot(ProjectileGlyphSlots.SPEED, hexContext);
+        var gravityVar = glyph.readSlot(ProjectileGlyphSlots.GRAVITY, hexContext);
+        var bouncesVar = glyph.readSlot(ProjectileGlyphSlots.BOUNCES, hexContext);
 
         if (sourceVar == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,

@@ -54,7 +54,7 @@ public final class ImbuedBlockActivator {
         ImbuementData base = comp.read(ImbuementMetadata.DEFAULT_SLOT);
         if (base == null) return ActivationOutcome.noHex();
 
-        BlockType blockType = BlockAccess.blockType(world, blockPos.x, blockPos.y, blockPos.z);
+        BlockType blockType = BlockAccess.blockType(world, blockPos);
         BlockImbuementCapacity.Capacity capacity = BlockImbuementCapacity.tryFor(blockType);
         if (capacity == null) return ActivationOutcome.noHex();
 

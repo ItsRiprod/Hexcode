@@ -3,6 +3,9 @@ package com.riprod.hexcode.core.common.imbuement.block;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.joml.Vector3d;
+import org.joml.Vector3i;
+
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.Archetype;
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -12,9 +15,6 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
-import org.joml.Vector3i;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
@@ -23,11 +23,11 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
 import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
-import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.imbuement.component.ImbuedBlockComponent;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
+import com.riprod.hexcode.utils.BlockAccess;
 
 public class ImbuedBlockBreakHandler extends EntityEventSystem<EntityStore, BreakBlockEvent> {
 
@@ -63,7 +63,7 @@ public class ImbuedBlockBreakHandler extends EntityEventSystem<EntityStore, Brea
             ItemStack drop = ImbuementUtils.writeAll(new ItemStack(dropItemId), comp.getSlots());
             Vector3d dropPos = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
 
-            world.execute(() -> BlockAccess.clearBlock(world, pos.x, pos.y, pos.z,
+            world.execute(() -> BlockAccess.clearBlock(world, pos,
                     SetBlockSettings.PERFORM_BLOCK_UPDATE));
 
             Holder<EntityStore> dropHolder = ItemComponent.generateItemDrop(

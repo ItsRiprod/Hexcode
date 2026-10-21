@@ -2,6 +2,7 @@ package com.riprod.hexcode.core.common.glyphs.variables;
 
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -75,29 +76,36 @@ public final class EntityVar extends HexVar {
     }
 
     @Override
+    @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         Ref<EntityStore> entityRef = getRef(accessor);
         if (entityRef == null || !entityRef.isValid()) {
-            return new Vector3d(0, 0, 0);
+            return new Vector3d(0);
         }
-        Vector3d pos = new Vector3d(
-                accessor.getComponent(entityRef, TransformComponent.getComponentType()).getPosition());
+        var tc = accessor.getComponent(entityRef, TransformComponent.getComponentType());
+        if (tc == null)
+            return new Vector3d(0);
+        var pos = new Vector3d(tc.getPosition());
         return pos;
     }
 
     @Override
+    @Nonnull
     public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
         Ref<EntityStore> entityRef = getRef(accessor);
         if (entityRef == null || !entityRef.isValid()) {
             return new Rotation3f();
         }
         try {
-            HeadRotation headRot = accessor.getComponent(entityRef, HeadRotation.getComponentType());
+            var headRot = accessor.getComponent(entityRef, HeadRotation.getComponentType());
             if (headRot != null)
                 return headRot.getRotation();
         } catch (Exception e) {
         }
-        Rotation3f r = accessor.getComponent(entityRef, TransformComponent.getComponentType()).getRotation();
+        var tc = accessor.getComponent(entityRef, TransformComponent.getComponentType());
+        if (tc == null)
+            return new Rotation3f();
+        var r = tc.getRotation();
         return r;
     }
 

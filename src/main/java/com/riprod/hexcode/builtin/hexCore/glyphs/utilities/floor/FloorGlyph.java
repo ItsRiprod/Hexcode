@@ -1,7 +1,6 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.floor;
 
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.vector.Rotation3f;
@@ -54,7 +53,6 @@ public class FloorGlyph implements GlyphHandler {
                 var v = t.getPosition();
                 yield new TransformVar(new Vector3d(op(v.x), op(v.y), op(v.z)), t.getRotation());
             }
-            default -> a; // smth went wrong
         };
     }
 

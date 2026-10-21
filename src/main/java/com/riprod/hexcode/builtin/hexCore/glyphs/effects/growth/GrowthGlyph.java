@@ -4,14 +4,15 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.joml.Vector3d;
+import org.joml.Vector3i;
+
 import com.hypixel.hytale.builtin.adventure.farming.states.FarmingBlock;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import org.joml.Vector3d;
-import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.farming.FarmingData;
@@ -19,9 +20,9 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.farming.Farmin
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
+import com.hypixel.hytale.server.core.modules.block.BlockEntity;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.time.WorldTimeResource;
-import com.hypixel.hytale.server.core.modules.block.BlockEntity;
 import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockOperations;
@@ -29,22 +30,21 @@ import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockComponen
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
-import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.growth.style.GrowthStyle;
+import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
-import com.riprod.hexcode.core.common.protection.BlockAction;
-import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-
+import com.riprod.hexcode.core.common.protection.BlockAction;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.LogScopes;
@@ -160,7 +160,7 @@ public class GrowthGlyph implements GlyphHandler {
             return;
 
         World world = accessor.getExternalData().getWorld();
-        BlockType blockType = BlockAccess.blockType(world, pos.x, pos.y, pos.z);
+        BlockType blockType = BlockAccess.blockType(world, pos);
         if (blockType == null)
             return;
 
@@ -179,7 +179,7 @@ public class GrowthGlyph implements GlyphHandler {
         if (farmingConfig == null || farmingConfig.getStages() == null)
             return false;
 
-        Ref<ChunkStore> sectionRef = BlockAccess.sectionRef(world, pos.x, pos.y, pos.z);
+        Ref<ChunkStore> sectionRef = BlockAccess.sectionRef(world, pos);
         if (sectionRef == null)
             return false;
 
@@ -267,52 +267,50 @@ public class GrowthGlyph implements GlyphHandler {
         boolean blocked = false;
         BlockAccess.Cursor cursor = new BlockAccess.Cursor(world);
 
+        var base = new Vector3i();
+        var block = new Vector3i();
+        var blockPos = new Vector3d(0.5);
+        String[] vegetationBlocks = config.getVegetationBlocks();
+
         for (int a = 0; a < attempts; a++) {
             int dx = rng.nextInt(-bonemealRadius, bonemealRadius + 1);
             int dz = rng.nextInt(-bonemealRadius, bonemealRadius + 1);
-            int tx = pos.x + dx;
-            int tz = pos.z + dz;
-            int ty = pos.y;
+            base.set(pos).add(dx, 0, dz);
+            block.set(pos).add(dx, 1, dz);
 
-            if (cursor.blockId(tx, ty, tz) == BlockType.EMPTY_ID)
+            if (cursor.blockId(base) == BlockType.EMPTY_ID)
                 continue;
 
-            if (cursor.blockId(tx, ty + 1, tz) != BlockType.EMPTY_ID)
+            if (cursor.blockId(block) != BlockType.EMPTY_ID)
                 continue;
 
             if (rng.nextFloat() > config.getBonemealChance())
                 continue;
 
             if (!HexProtection.canModifyBlock(world, caster, accessor,
-                    new Vector3i(tx, ty + 1, tz), BlockAction.PLACE)) {
+                    block, BlockAction.PLACE)) {
                 blocked = true;
                 continue;
             }
 
-            String[] vegetationBlocks = config.getVegetationBlocks();
             String vegetation = vegetationBlocks[rng.nextInt(vegetationBlocks.length)];
             BlockType vegetationType = BlockType.getAssetMap().getAsset(vegetation);
             if (vegetationType == null)
                 continue;
 
-            Ref<ChunkStore> vegetationSection = BlockAccess.sectionRef(world, tx, ty + 1, tz);
-            if (vegetationSection == null)
-                continue;
-
-            BlockSection vegetationBlockSection = world.getChunkStore().getStore()
-                    .getComponent(vegetationSection, BlockSection.getComponentType());
+            var vegetationBlockSection = cursor.section(block);
             if (vegetationBlockSection == null)
                 continue;
 
-            if (!BlockOperations.testPlaceBlock(world.getChunkStore().getStore(), vegetationBlockSection,
-                    tx, ty + 1, tz, vegetationType, RotationTuple.NONE_INDEX)) {
+            if (!BlockOperations.testPlaceBlock(cursor.chunkStore().getStore(), vegetationBlockSection,
+                    block.x, block.y, block.z, vegetationType, RotationTuple.NONE_INDEX)) {
                 continue;
             }
 
-            BlockAccess.setBlock(world, tx, ty + 1, tz, vegetationType,
+            BlockAccess.setBlock(cursor, block, vegetationType,
                     RotationTuple.NONE_INDEX, SetBlockSettings.PERFORM_BLOCK_UPDATE);
 
-            Vector3d effectPos = new Vector3d(tx + 0.5, ty + 1.5, tz + 0.5);
+            var effectPos = blockPos.set(0.5).add(block.x, block.y, block.z);
             GrowthStyle.renderBlockHit(effectPos, hexContext, accessor);
         }
 

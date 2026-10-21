@@ -1,13 +1,14 @@
 package com.riprod.hexcode.core.common.glyphs.variables;
 
+import javax.annotation.Nonnull;
+
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.vector.Rotation3f;
-
-import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public final class NumberVar extends HexVar {
@@ -31,7 +32,7 @@ public final class NumberVar extends HexVar {
     public Double getValue() {
         return number;
     }
-    
+
     @Override
     public VarType type() {
         return VarType.NUMBER;
@@ -48,12 +49,14 @@ public final class NumberVar extends HexVar {
     }
 
     @Override
+    @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         double n = number == null ? 0.0 : number;
-        return new Vector3d(n, n, n);
+        return new Vector3d(n);
     }
 
     @Override
+    @Nonnull
     public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
         float n = number == null ? 0f : number.floatValue();
         return new Rotation3f(n, n, n);
@@ -83,7 +86,7 @@ public final class NumberVar extends HexVar {
     @Override
     public String toString() {
         return String.valueOf(number.intValue());
-    }   
+    }
 
     public static final BuilderCodec<NumberVar> CODEC = BuilderCodec
             .builder(NumberVar.class, NumberVar::new, HexVar.BASE_CODEC)

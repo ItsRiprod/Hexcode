@@ -6,6 +6,8 @@ import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Transform;
 
+import javax.annotation.Nonnull;
+
 import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -42,11 +44,13 @@ public final class TransformVar extends HexVar {
     }
 
     @Override
+    @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         return new Vector3d(transform.getPosition());
     }
 
     @Override
+    @Nonnull
     public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
         return new Rotation3f(transform.getRotation());
     }

@@ -78,11 +78,11 @@ public class QueryGlyph implements GlyphHandler {
             return new NumberVar(readEntityStat(entityVar, trilean, hexContext));
         }
         if (value instanceof RotationVar) {
-            return new NumberVar(HexVarUtil.rotationAxis(value, trilean + 1, accessor));
+            return new NumberVar(HexVarUtil.axis(value.rotation(accessor), trilean + 1));
         }
         // positions, blocks and colors all reach their three channels through toPosition;
         // numbers short-circuit inside the helper and ignore the axis
-        return new NumberVar(HexVarUtil.positionAxis(value, trilean + 1, accessor));
+        return new NumberVar(HexVarUtil.axis(value.position(accessor), trilean + 1));
     }
 
     /**

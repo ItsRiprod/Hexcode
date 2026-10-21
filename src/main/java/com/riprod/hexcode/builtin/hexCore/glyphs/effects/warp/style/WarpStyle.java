@@ -13,7 +13,6 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
-import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
 public class WarpStyle {
@@ -35,8 +34,9 @@ public class WarpStyle {
     }
 
     public static void applyEffect(HexVar var, HexContext ctx, ComponentAccessor<EntityStore> accessor) {
-        EntityVar entityVar = HexVarUtil.resolveEntityVar(var, ctx);
-        if (entityVar == null) return;
+        if (!(var instanceof EntityVar entityVar)) {
+            return;
+        }
         Ref<EntityStore> ref = entityVar.getRef(accessor);
         if (ref == null || !ref.isValid()) return;
 

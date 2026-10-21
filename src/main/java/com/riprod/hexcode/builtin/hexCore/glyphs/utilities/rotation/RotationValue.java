@@ -1,14 +1,13 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation;
 
+import org.joml.Vector3d;
+import org.joml.Vector3i;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Vector3dUtil;
-
-import org.joml.Vector3d;
-import org.joml.Vector3f;
-import org.joml.Vector3i;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
@@ -29,15 +28,12 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
-import com.riprod.hexcode.core.common.protection.HexProtection;
-import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
+import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
-
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.utils.BlockUtils;
-import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VelocityUtil;
 
 public class RotationValue implements GlyphHandler {
@@ -55,15 +51,15 @@ public class RotationValue implements GlyphHandler {
     }
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
-        HexVar xVar = glyph.readSlot(RotationValueSlots.X, hexContext);
-        HexVar yVar = glyph.readSlot(RotationValueSlots.Y, hexContext);
-        HexVar zVar = glyph.readSlot(RotationValueSlots.Z, hexContext);
+        HexVar xVar = glyph.readSlot(RotationValueSlots.X, hexContext, new NumberVar(0));
+        HexVar yVar = glyph.readSlot(RotationValueSlots.Y, hexContext, new NumberVar(0));
+        HexVar zVar = glyph.readSlot(RotationValueSlots.Z, hexContext, new NumberVar(0));
 
         var accessor = hexContext.getAccessor();
         return new RotationVar(new Rotation3f(
-                (float) HexVarUtil.rotationAxis(xVar, 0, accessor),
-                (float) HexVarUtil.rotationAxis(yVar, 1, accessor),
-                (float) HexVarUtil.rotationAxis(zVar, 2, accessor)));
+                xVar.rotation(accessor).x,
+                yVar.rotation(accessor).y,
+                zVar.rotation(accessor).z));
     }
 
     @Override
@@ -87,14 +83,11 @@ public class RotationValue implements GlyphHandler {
 
         if (result instanceof RotationVar rotVar && rotVar.getValue() != null) {
             HexVar target = glyph.readSlot(RotationValueSlots.TARGET, hexContext);
-            EntityVar entityVar = HexVarUtil.resolveEntityVar(target, hexContext);
-            if (entityVar != null) {
+            if (target instanceof EntityVar entityVar) {
                 applyToEntity(entityVar, rotVar.getValue(), glyph, hexContext);
-            } else {
-                BlockVar blockVar = HexVarUtil.resolveBlockVar(target, hexContext);
-                if (blockVar != null && blockVar.getValue() != null) {
-                    applyToBlock(blockVar.getValue(), rotVar.getValue(), hexContext);
-                }
+            } else if (target != null) {
+                applyToBlock(Vector3dUtil.toVector3i(target.position(hexContext.getAccessor())), rotVar.getValue(),
+                        hexContext);
             }
         }
 

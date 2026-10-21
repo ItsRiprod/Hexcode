@@ -1,13 +1,14 @@
 package com.riprod.hexcode.core.common.glyphs.variables;
 
+import javax.annotation.Nonnull;
+
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.vector.Rotation3f;
-import com.hypixel.hytale.math.vector.Rotation3fc;
-
-import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public final class ColorVar extends HexVar {
@@ -46,13 +47,13 @@ public final class ColorVar extends HexVar {
         return 0.299 * r + 0.587 * g + 0.114 * b;
     }
 
-    @Override
+    @Override @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         return new Vector3d(r, g, b);
     }
 
-    @Override
-    public Rotation3fc rotation(ComponentAccessor<EntityStore> accessor) {
+    @Override @Nonnull
+    public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
         return new Rotation3f(0, 0, 0);
     }
 

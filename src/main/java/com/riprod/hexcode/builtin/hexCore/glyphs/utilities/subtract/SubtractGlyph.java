@@ -1,21 +1,17 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.subtract;
 
 import com.hypixel.hytale.component.ComponentAccessor;
-import com.hypixel.hytale.math.vector.Rotation3f;
-
-import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.power.PowerGlyphSlots;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
-import com.riprod.hexcode.core.common.glyphs.variables.ColorVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
-import com.riprod.hexcode.core.common.glyphs.variables.TypeMismatchException;
+import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class SubtractGlyph implements GlyphHandler {
     @Override
@@ -26,57 +22,43 @@ public class SubtractGlyph implements GlyphHandler {
     public static final String ID = "Subtract";
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
-        HexVar a = glyph.readSlot(SubtractGlyphSlots.A, hexContext, null);
-        HexVar b = glyph.readSlot(SubtractGlyphSlots.B, hexContext, null);
-        if (a == null && b == null) return null;
-        if (b == null) return a;
-        if (a == null) return negate(b);
+        HexVar a = glyph.readSlot(PowerGlyphSlots.A, hexContext);
+        HexVar b = glyph.readSlot(PowerGlyphSlots.B, hexContext);
+        if (a == null && b == null)
+            return null;
+        if (b == null)
+            return a; // X - 0 = X, skip the math and return directly
+
+        // set the type to a if a is not null, otherwise, set it to B so B negates
+        // correctly
+        var baseType = a == null ? b.type() : a.type();
+
+        if (a == null)
+            a = new NumberVar(0); // set A to 0 so that it results in 0 - B or -B
 
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
-        a = a.resolveSelf(b, buf);
-        b = b.resolveSelf(a, buf);
-        b = b.convertTo(a.getClass(), buf);
 
-        return switch (a) {
-            case NumberVar na -> {
-                NumberVar nb = (NumberVar) b;
-                yield new NumberVar(na.getValue() - nb.getValue());
+        return switch (baseType) {
+            case POSITION -> {
+                var vect = a.position(buf);
+                var vb = b.position(buf);
+                yield new PositionVar(vect.sub(vb)); // if A = 0, then (0,0,0) - (bx,by,bz) = -b
             }
-            case PositionVar pa -> {
-                PositionVar pb = (PositionVar) b;
-                yield new PositionVar(
-                        new Vector3d(pa.getValue()).sub(pb.getValue()),
-                        pa.isAbsolute() && !pb.isAbsolute());
+            case ROTATION -> {
+                var v = a.rotation(buf);
+                var vb = b.rotation(buf);
+                yield new RotationVar(v.sub(vb));
             }
-            case RotationVar ra -> {
-                RotationVar rb = (RotationVar) b;
-                yield new RotationVar(new Rotation3f(ra.getValue()).sub(rb.getValue()));
+            case NUMBER -> new NumberVar(a.scalar() - b.scalar());
+            case TRANSFORM -> {
+                var t = a.transform(buf);
+                var v = t.getPosition();
+                var r = t.getRotation();
+                var tb = b.transform(buf);
+                var vb = tb.getPosition();
+                var rb = tb.getRotation();
+                yield new TransformVar(v.sub(vb), r.sub(rb));
             }
-            case ColorVar ca -> {
-                ColorVar cb = (ColorVar) b;
-                yield new ColorVar(
-                        ca.getR() - cb.getR(),
-                        ca.getG() - cb.getG(),
-                        ca.getB() - cb.getB(),
-                        ca.getA());
-            }
-            default -> throw new TypeMismatchException(ID, a, b);
-        };
-    }
-
-    private HexVar negate(HexVar v) {
-        return switch (v) {
-            case NumberVar nv -> new NumberVar(nv.getValue() == null ? 0.0 : -nv.getValue());
-            case PositionVar pv -> {
-                Vector3d p = pv.getValue();
-                yield p == null ? pv : new PositionVar(new Vector3d(-p.x, -p.y, -p.z), false);
-            }
-            case RotationVar rv -> {
-                Rotation3f r = rv.getValue();
-                yield r == null ? rv : new RotationVar(new Rotation3f(-r.x, -r.y, -r.z));
-            }
-            case ColorVar cv -> new ColorVar(-cv.getR(), -cv.getG(), -cv.getB(), cv.getA());
-            default -> v;
         };
     }
 
