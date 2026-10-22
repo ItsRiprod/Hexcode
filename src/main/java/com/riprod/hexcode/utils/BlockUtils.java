@@ -1,5 +1,7 @@
 package com.riprod.hexcode.utils;
 
+import javax.annotation.Nonnull;
+
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
@@ -15,10 +17,20 @@ import com.hypixel.hytale.server.core.asset.type.blockhitbox.BlockBoundingBoxes;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
+import com.hypixel.hytale.server.core.asset.type.item.config.Item;
+import com.hypixel.hytale.server.core.asset.type.model.config.Model;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.blocktype.component.BlockPhysics;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.block.BlockEntity;
+import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
+import com.hypixel.hytale.server.core.modules.entity.component.PropComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollision;
+import com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
+import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -294,7 +306,7 @@ public class BlockUtils {
             return;
 
         if (!HexProtection.canModifyBlock(world, caster, accessor, move.base(), BlockAction.BREAK)
-            || !HexProtection.canModifyBlock(world, caster, accessor, move.dest(), BlockAction.PLACE)) {
+                || !HexProtection.canModifyBlock(world, caster, accessor, move.dest(), BlockAction.PLACE)) {
             HexProtection.notifyBlocked(caster, accessor, glyphName);
             return;
         }
@@ -348,5 +360,62 @@ public class BlockUtils {
         selB.setPosition(blockA.x, blockA.y, blockA.z);
         selA.placeNoReturn(world, new Vector3i(), accessor);
         selB.placeNoReturn(world, new Vector3i(), accessor);
+    }
+
+    /** Gets the blockId - returns null if the block is empty */
+    public static BlockType blockType(BlockAccess.Cursor cursor, Vector3i blockPos) {
+        var blockId = cursor.blockId(blockPos);
+        if (blockId == BlockType.EMPTY_ID)
+            return null;
+        return BlockType.getAssetMap().getAsset(blockId);
+    }
+
+    public static Holder<EntityStore> toBlockEntity(@Nonnull Vector3i blockPos, @Nonnull Store<EntityStore> store) {
+        var world = store.getExternalData().getWorld();
+        var cursor = new BlockAccess.Cursor(world);
+        return toBlockEntity(blockPos, cursor, store);
+    }
+
+    public static Holder<EntityStore> toBlockEntity(@Nonnull Vector3i blockPos, BlockAccess.Cursor cursor,
+            @Nonnull Store<EntityStore> store) {
+        var blockType = blockType(cursor, blockPos);
+
+        if (blockType == null)
+            return null;
+
+        var section = cursor.section(blockPos);
+
+        // use the item's model since the block returns blockymodel files
+        var item = Item.getAssetMap().getAsset(blockType.getId());
+        if (item == null)
+            return null; // no model found!
+        var modelId = item.getModel();
+
+        var modelAsset = ModelAsset.getAssetMap().getAsset(modelId);
+        var modelScale = blockType.getCustomModelScale();
+        var model = Model.createStaticScaledModel(modelAsset, modelScale);
+
+        // get the rotation
+        var rotationIndex = section.getRotationIndex(blockPos.x, blockPos.y, blockPos.z);
+
+        // get the center
+        var center = new Vector3d();
+        blockType.getBlockCenter(rotationIndex, center);
+
+        var holder = store.getRegistry().newHolder();
+
+        holder.addComponent(NetworkId.getComponentType(),
+                new NetworkId(store.getExternalData().takeNextNetworkId()));
+        holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
+        holder.addComponent(PersistentModel.getComponentType(),
+                new PersistentModel(new Model.ModelReference(modelId, modelScale, null, true)));
+        holder.ensureComponent(UUIDComponent.getComponentType());
+
+        // generic hard hitbox
+        var hitbox = HitboxCollisionConfig.getAssetMap().getAsset("HardRotated");
+        holder.addComponent(TransformComponent.getComponentType(), new TransformComponent(center, new Rotation3f()));
+        holder.addComponent(PropComponent.getComponentType(), PropComponent.get());
+        holder.addComponent(HitboxCollision.getComponentType(), new HitboxCollision(hitbox));
+        return holder;
     }
 }

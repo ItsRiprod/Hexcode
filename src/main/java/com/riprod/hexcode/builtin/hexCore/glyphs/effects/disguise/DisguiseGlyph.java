@@ -6,6 +6,8 @@ import org.joml.Vector3d;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.math.vector.Vector3dUtil;
+import com.hypixel.hytale.protocol.PlayerSkin;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
 import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
@@ -13,7 +15,6 @@ import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.protocol.PlayerSkin;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.components.DisguiseState;
@@ -24,16 +25,18 @@ import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.utils.VfxUtil;
-import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.core.common.protection.HexProtection;
+import com.riprod.hexcode.utils.BlockAccess;
+import com.riprod.hexcode.utils.BlockUtils;
 import com.riprod.hexcode.utils.HexRefs;
+import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class DisguiseGlyph implements GlyphHandler {
 
@@ -59,7 +62,13 @@ public class DisguiseGlyph implements GlyphHandler {
         if (config == null)
             config = DisguiseConfig.DEFAULTS;
 
-        AppearanceLayer disguise = resolveDisguise(glyph, hexContext, accessor);
+        if (!(targetVar instanceof EntityVar entityVar)) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "Target must be a creature");
+            return;
+        }
+
+        var disguise = resolveDisguise(glyph, hexContext, accessor);
         if (disguise == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Reference must be a creature");
@@ -69,13 +78,6 @@ public class DisguiseGlyph implements GlyphHandler {
         float durationSeconds = (float) Math.max(0.0, HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(DisguiseGlyphSlots.DURATION, hexContext),
                 asset.getSlot(DisguiseGlyphSlots.DURATION)));
-
-        if (!(targetVar instanceof EntityVar entityVar)) {
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Target must be a creature");
-            return;
-
-        }
 
         applyToEntity(glyph, hexContext, accessor, entityVar, disguise, durationSeconds, config);
     }
@@ -150,12 +152,22 @@ public class DisguiseGlyph implements GlyphHandler {
 
     private AppearanceLayer resolveDisguise(Glyph glyph, HexContext hexContext,
             CommandBuffer<EntityStore> accessor) {
-        HexVar referenceVar = glyph.readSlot(DisguiseGlyphSlots.REFERENCE, hexContext);
-        if (!(referenceVar instanceof EntityVar entityVar)) {
+        var referenceVar = glyph.readSlot(DisguiseGlyphSlots.REFERENCE, hexContext);
+
+        if (referenceVar instanceof EntityVar entityVar) {
+            return resolveEntityDisguise(entityVar, accessor);
+        }
+
+        if (referenceVar == null || !HexVarUtil.isPositionType(referenceVar)) {
             return null;
         }
-    
-        return resolveEntityDisguise(entityVar, accessor);
+
+        var pos = referenceVar.position(accessor);
+        var blockPos = Vector3dUtil.toVector3i(pos);
+        var cursor = new BlockAccess.Cursor(accessor.getExternalData().getWorld());
+        var blockType = BlockUtils.blockType(cursor, blockPos);
+
+        return AppearanceLayer.ofBlock(blockType.getId(), null, null, blockType.getCustomModelScale());
     }
 
     private AppearanceLayer resolveEntityDisguise(EntityVar referenceEntity,

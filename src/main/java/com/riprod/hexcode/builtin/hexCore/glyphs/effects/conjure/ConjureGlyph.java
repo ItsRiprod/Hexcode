@@ -36,7 +36,6 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.utils.HexVarUtil;
@@ -133,14 +132,10 @@ public class ConjureGlyph implements GlyphHandler {
                     "Anchor is required");
             return;
         }
-        if (anchorVar instanceof NumberVar anchorNum) {
-            HexVar resolvedVar = hexContext.getVariable(anchorNum.getValue().toString());
-            if (resolvedVar == null) {
-                HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                        "Anchor variable is invalid");
-                return;
-            }
-            anchorVar = resolvedVar;
+        if (!HexVarUtil.isPositionType(anchorVar)) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "Anchor variable is invalid");
+            return;
         }
         Vector3d anchorPos = anchorVar.position(hexContext.getAccessor());
         if (anchorPos == null) {

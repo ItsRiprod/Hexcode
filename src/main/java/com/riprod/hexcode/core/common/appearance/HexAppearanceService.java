@@ -14,6 +14,7 @@ import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.protocol.PlayerSkin;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import com.hypixel.hytale.server.core.entity.entities.BlockEntity;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
@@ -36,12 +37,14 @@ public final class HexAppearanceService {
 
     public static boolean addLayer(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref,
             @Nonnull String layerId, @Nonnull AppearanceLayer layer) {
-        if (!isUsable(buffer, ref)) return false;
+        if (!isUsable(buffer, ref))
+            return false;
 
         HexAppearanceComponent appearance = buffer.getComponent(ref, HexAppearanceComponent.getComponentType());
         if (appearance == null) {
             appearance = capture(buffer, ref);
-            if (appearance == null) return false;
+            if (appearance == null)
+                return false;
             buffer.putComponent(ref, HexAppearanceComponent.getComponentType(), appearance);
         }
 
@@ -51,10 +54,12 @@ public final class HexAppearanceService {
 
     public static void removeLayer(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref,
             @Nonnull String layerId) {
-        if (!isUsable(buffer, ref)) return;
+        if (!isUsable(buffer, ref))
+            return;
 
         HexAppearanceComponent appearance = buffer.getComponent(ref, HexAppearanceComponent.getComponentType());
-        if (appearance == null) return;
+        if (appearance == null)
+            return;
 
         appearance.removeLayer(layerId);
         if (appearance.hasLayers()) {
@@ -67,10 +72,12 @@ public final class HexAppearanceService {
     }
 
     public static void restoreOriginal(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref) {
-        if (!isUsable(buffer, ref)) return;
+        if (!isUsable(buffer, ref))
+            return;
 
         HexAppearanceComponent appearance = buffer.getComponent(ref, HexAppearanceComponent.getComponentType());
-        if (appearance == null) return;
+        if (appearance == null)
+            return;
 
         appearance.clearLayers();
         apply(buffer, ref, appearance);
@@ -81,10 +88,12 @@ public final class HexAppearanceService {
     private static HexAppearanceComponent capture(@Nonnull ComponentAccessor<EntityStore> buffer,
             @Nonnull Ref<EntityStore> ref) {
         ModelComponent modelComponent = buffer.getComponent(ref, ModelComponent.getComponentType());
-        if (modelComponent == null || modelComponent.getModel() == null) return null;
+        if (modelComponent == null || modelComponent.getModel() == null)
+            return null;
 
         Model model = modelComponent.getModel();
-        if (model.getModelAssetId() == null) return null;
+        if (model.getModelAssetId() == null)
+            return null;
 
         Model.ModelReference reference = model.toReference();
         Map<String, String> attachments = reference.getRandomAttachmentIds();
@@ -108,7 +117,9 @@ public final class HexAppearanceService {
     private static boolean apply(@Nonnull ComponentAccessor<EntityStore> buffer, @Nonnull Ref<EntityStore> ref,
             @Nonnull HexAppearanceComponent appearance) {
         String modelAssetId = appearance.getOriginalModelAssetId();
-        if (modelAssetId == null) return false;
+        String blockTypeId = null;
+        if (modelAssetId == null)
+            return false;
 
         PlayerSkin disguiseSkin = null;
         Float overriddenBaseScale = null;
@@ -117,15 +128,21 @@ public final class HexAppearanceService {
         long nameplateSequence = Long.MIN_VALUE;
         float scaleProduct = 1.0f;
 
+        Model model;
+
         for (AppearanceLayer layer : appearance.getLayers().values()) {
             if (layer.scaleMultiplier() != null) {
                 scaleProduct *= layer.scaleMultiplier();
             }
-            if (layer.modelAssetId() != null && layer.sequence() > modelSequence) {
-                modelAssetId = layer.modelAssetId();
-                disguiseSkin = layer.skin();
-                overriddenBaseScale = layer.baseScale();
-                modelSequence = layer.sequence();
+            if (blockTypeId == null && layer.sequence() > modelSequence) {
+                if (layer.blockAssetId() != null) {
+                    blockTypeId = layer.blockAssetId();
+                } else if (layer.modelAssetId() != null) {
+                    modelAssetId = layer.modelAssetId();
+                    disguiseSkin = layer.skin();
+                    overriddenBaseScale = layer.baseScale();
+                    modelSequence = layer.sequence();
+                }
             }
             if (layer.nameplate() != null && layer.sequence() > nameplateSequence) {
                 nameplate = layer.nameplate();
@@ -151,12 +168,19 @@ public final class HexAppearanceService {
             scale = 1.0f;
         }
 
-        Model model = overridden
+        model = overridden
                 ? Model.createScaledModel(asset, scale, null)
                 : Model.createScaledModel(asset, scale, appearance.getOriginalRandomAttachmentIds(),
                         null, appearance.isOriginalStatic());
 
-        buffer.putComponent(ref, ModelComponent.getComponentType(), new ModelComponent(model));
+        if (blockTypeId != null) {
+            buffer.putComponent(ref, BlockEntity.getComponentType(), new BlockEntity(blockTypeId));
+            buffer.tryRemoveComponent(ref, ModelComponent.getComponentType());
+        } else {
+            buffer.putComponent(ref, ModelComponent.getComponentType(), new ModelComponent(model));
+            buffer.tryRemoveComponent(ref, BlockEntity.getComponentType());
+        }
+
         buffer.putComponent(ref, EntityScaleComponent.getComponentType(), new EntityScaleComponent(scale));
         applyBoundingBox(buffer, ref, model);
 

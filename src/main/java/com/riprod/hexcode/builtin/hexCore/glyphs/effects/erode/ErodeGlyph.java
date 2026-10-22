@@ -86,7 +86,7 @@ public class ErodeGlyph implements GlyphHandler {
                 }
                 return;
             }
-        } else {
+        } else if (HexVarUtil.isPositionType(targets)) {
             var pos = Vector3dUtil.toVector3i(targets.position(accessor));
             if (pos != null) {
                 double amount = HexVarUtil.numberOrSlotDefault(

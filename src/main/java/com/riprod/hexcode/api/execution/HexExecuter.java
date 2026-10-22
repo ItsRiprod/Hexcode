@@ -1,5 +1,8 @@
 package com.riprod.hexcode.api.execution;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.server.core.HytaleServer;
@@ -8,13 +11,10 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.event.HexCastEvent;
 import com.riprod.hexcode.core.common.execution.CoreHexExecuter;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
-import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
-
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HexExecuter {
     private HexExecuter() {
@@ -28,8 +28,6 @@ public class HexExecuter {
 
     /**
      * Casts a hex with the provided context and buffer. Invokes the hexCastEvent
-     * 
-     * 
      * 
      * @param context
      * @param buffer

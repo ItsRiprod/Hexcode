@@ -21,10 +21,13 @@ import com.riprod.hexcode.utils.BlockUtils;
 
 public class WarpGlyph implements GlyphHandler {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    @Override
-public String getId() { return ID; };
 
-public static final String ID = "Warp";
+    @Override
+    public String getId() {
+        return ID;
+    };
+
+    public static final String ID = "Warp";
 
     @Override
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
@@ -35,7 +38,8 @@ public static final String ID = "Warp";
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         double distance = 0.0;
         HexVar destInput = glyph.readSlot(WarpGlyphSlots.DESTINATION, hexContext);
-        if (destInput == null) destInput = hexContext.getDefaultVariable();
+        if (destInput == null)
+            destInput = hexContext.getDefaultVariable();
         var accessor = hexContext.getAccessor();
         Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
         if (destInput != null && casterRef != null && casterRef.isValid()) {
@@ -52,16 +56,19 @@ public static final String ID = "Warp";
         }
 
         Impact impact = asset == null || asset.getConfig() == null
-                ? null : asset.getConfig().getVolatilityImpact();
+                ? null
+                : asset.getConfig().getVolatilityImpact();
         return glyph.computeBaseCost(asset) * Impact.scale(impact, distance);
     }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar targets = glyph.readSlot(WarpGlyphSlots.TARGET, hexContext);
-        if (targets == null) targets = hexContext.getDefaultVariable();
+        if (targets == null)
+            targets = hexContext.getDefaultVariable();
         HexVar destInput = glyph.readSlot(WarpGlyphSlots.DESTINATION, hexContext);
-        if (destInput == null) destInput = hexContext.getDefaultVariable();
+        if (destInput == null)
+            destInput = hexContext.getDefaultVariable();
 
         if (destInput == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
