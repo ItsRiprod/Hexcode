@@ -15,6 +15,7 @@ public final class NumberVar extends HexVar {
     private Double number;
 
     public NumberVar() {
+        this.number = 0.0;
     }
 
     public NumberVar(Double number) {

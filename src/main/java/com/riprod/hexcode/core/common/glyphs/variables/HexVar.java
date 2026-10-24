@@ -24,12 +24,12 @@ public abstract class HexVar {
 
     public abstract VarType type();
 
-    @Nonnull 
+    @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         throw new UnsupportedOperationException(getClass().getSimpleName() + " cannot convert to Position");
     }
 
-    @Nonnull 
+    @Nonnull
     public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
         throw new UnsupportedOperationException(getClass().getSimpleName() + " cannot convert to Rotation");
     }
@@ -40,7 +40,8 @@ public abstract class HexVar {
 
     public Vector3d direction(ComponentAccessor<EntityStore> accessor) {
         var rotation = rotation(accessor);
-        if (rotation == null) return new Vector3d(Vector3dUtil.FORWARD);
+        if (rotation == null)
+            return new Vector3d(Vector3dUtil.FORWARD);
         return Vector3dUtil.setYawPitch(rotation.yaw(), rotation.pitch(), new Vector3d());
     }
 

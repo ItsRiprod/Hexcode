@@ -1,16 +1,14 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.modulo;
 
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.vector.Rotation3f;
-
-import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
-import com.riprod.hexcode.core.common.glyphs.variables.ColorVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
@@ -38,7 +36,6 @@ public class ModuloGlyph implements GlyphHandler {
         HexVar b = glyph.readSlot(ModuloGlyphSlots.B, hexContext);
         if (a == null || b == null || a.scalar() == 0 || b.scalar() == 0)
             return new NumberVar(0); // X%0 = zero (assertion) and 0%x = 0
-  
 
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
 
@@ -71,13 +68,6 @@ public class ModuloGlyph implements GlyphHandler {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        HexVar b = glyph.readSlot(ModuloGlyphSlots.B, hexContext);
-        if (hasZeroDivisor(b)) {
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Attempted to modulo by zero");
-            return;
-        }
-
         HexVar result = compute(glyph, hexContext);
 
         if (result != null) {
@@ -85,24 +75,6 @@ public class ModuloGlyph implements GlyphHandler {
         }
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
-    }
-
-    private static boolean hasZeroDivisor(HexVar b) {
-        if (b instanceof NumberVar nb) {
-            return nb.getValue() == 0;
-        }
-        if (b instanceof PositionVar pb) {
-            Vector3d v = pb.getValue();
-            return v != null && (v.x == 0 || v.y == 0 || v.z == 0);
-        }
-        if (b instanceof RotationVar rb) {
-            Rotation3f v = rb.getValue();
-            return v != null && (v.x == 0 || v.y == 0 || v.z == 0);
-        }
-        if (b instanceof ColorVar cb) {
-            return cb.getR() == 0 || cb.getG() == 0 || cb.getB() == 0 || cb.getA() == 0;
-        }
-        return false;
     }
 
     @Override

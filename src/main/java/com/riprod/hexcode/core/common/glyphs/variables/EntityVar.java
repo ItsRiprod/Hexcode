@@ -5,11 +5,12 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
-import org.joml.Vector3d;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.entity.reference.PersistentRef;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
@@ -50,13 +51,13 @@ public final class EntityVar extends HexVar {
 
     @Nullable
     public Ref<EntityStore> getRef(ComponentAccessor<EntityStore> accessor) {
-        Ref<EntityStore> ref = getRawRef(accessor);
+        var ref = getRawRef(accessor);
         if (ref == null)
             return null;
-        EntityRedirectComponent redirect = accessor.getComponent(ref, EntityRedirectComponent.getComponentType());
+        var redirect = accessor.getComponent(ref, EntityRedirectComponent.getComponentType());
         if (redirect == null)
             return ref;
-        Ref<EntityStore> deferral = HexRefs.live(redirect.resolveDeferral(accessor), accessor);
+        var deferral = HexRefs.live(redirect.resolveDeferral(accessor), accessor);
         return deferral != null ? deferral : ref;
     }
 
@@ -78,7 +79,7 @@ public final class EntityVar extends HexVar {
     @Override
     @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
-        Ref<EntityStore> entityRef = getRef(accessor);
+        var entityRef = getRef(accessor);
         if (entityRef == null || !entityRef.isValid()) {
             return new Vector3d(0);
         }
@@ -92,7 +93,7 @@ public final class EntityVar extends HexVar {
     @Override
     @Nonnull
     public Rotation3f rotation(ComponentAccessor<EntityStore> accessor) {
-        Ref<EntityStore> entityRef = getRef(accessor);
+        var entityRef = getRef(accessor);
         if (entityRef == null || !entityRef.isValid()) {
             return new Rotation3f();
         }
@@ -113,10 +114,10 @@ public final class EntityVar extends HexVar {
     public String describe() {
         if (entity == null)
             return "EntityVar: [null]";
-        UUID id = entity.getUuid();
+        var id = entity.getUuid();
         if (id == null)
             return "EntityVar: [unset]";
-        String s = id.toString();
+        var s = id.toString();
         return "EntityVar: " + s.substring(0, Math.min(8, s.length()));
     }
 

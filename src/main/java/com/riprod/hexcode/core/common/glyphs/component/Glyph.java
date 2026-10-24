@@ -8,17 +8,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
-import org.joml.Vector3f;
-import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Rotation3fc;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -141,11 +145,13 @@ public class Glyph {
 
     @Nullable
     public Hex payloadView(@Nullable ComponentAccessor<EntityStore> accessor) {
-        if (payload == null) return null;
+        if (payload == null)
+            return null;
         if (payloadView == null) {
             try {
                 var cache = accessor != null
-                        ? accessor.getResource(HexCacheResource.getResourceType()) : null;
+                        ? accessor.getResource(HexCacheResource.getResourceType())
+                        : null;
                 payloadView = cache != null ? cache.getOrDecode(payload) : HexUtils.deserialize(payload);
             } catch (Exception e) {
                 return null;
@@ -199,7 +205,8 @@ public class Glyph {
 
     public Map<String, SlotConfig> effectiveSlots() {
         if (isComponentInstance()) {
-            if (portSchemaSynthesizer == null) return Map.of();
+            if (portSchemaSynthesizer == null)
+                return Map.of();
             Map<String, SlotConfig> synthesized = portSchemaSynthesizer.apply(this);
             return synthesized != null ? synthesized : Map.of();
         }
@@ -246,31 +253,47 @@ public class Glyph {
     }
 
     @Nullable
-    public HexVar readSlot(String key, HexContext hexContext) {
-        return readSlot(key, hexContext, null);
+    public Vector3d read(String key, HexContext hexContext, Vector3d fallback) {
+        return null;
     }
 
-    @Nonnull 
-    public HexVar readSlot(String key, HexContext hexContext, HexVar javaDefault) {
+    @Nullable
+    public Vector3d read(String key, HexContext hexContext, Rotation3fc fallback) {
+        return null;
+
+    }
+
+    @Nullable
+    public HexVar readSlot(String key, HexContext hexContext) {
+        return readSlot(key, hexContext, () -> null);
+    }
+
+    @Nonnull
+    public HexVar readSlot(String key, HexContext hexContext, @Nullable HexVar javaDefault) {
+        return readSlot(key, hexContext, () -> javaDefault);
+    }
+
+    @Nonnull
+    public HexVar readSlot(String key, HexContext hexContext, @Nullable Supplier<HexVar> defaultSupplier) {
         if (hexContext.resolutionDepth() >= MAX_RESOLVE_DEPTH)
             return null;
 
         Slot slot = slots.get(key);
         String firstLink = slot != null ? slot.getFirstLink() : null;
         if (firstLink == null)
-            return resolveAssetDefault(key, hexContext, javaDefault);
+            return resolveAssetDefault(key, hexContext, defaultSupplier);
 
         Glyph linked = hexContext.getGlyph(firstLink);
         if (linked == null)
-            return resolveAssetDefault(key, hexContext, javaDefault);
+            return resolveAssetDefault(key, hexContext, defaultSupplier);
 
         GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
         if (linkedAsset == null)
-            return resolveAssetDefault(key, hexContext, javaDefault);
+            return resolveAssetDefault(key, hexContext, defaultSupplier);
 
         GlyphHandler handler = GlyphRegistry.get(linkedAsset.getHandler());
         if (handler == null)
-            return resolveAssetDefault(key, hexContext, javaDefault);
+            return resolveAssetDefault(key, hexContext, defaultSupplier);
 
         if (hexContext.isResolving(linked.getId()))
             return null;
@@ -278,7 +301,7 @@ public class Glyph {
         hexContext.pushResolving(linked.getId());
         try {
             HexVar v = handler.readValue(linked, hexContext);
-            return v != null ? v : resolveAssetDefault(key, hexContext, javaDefault);
+            return v != null ? v : resolveAssetDefault(key, hexContext, defaultSupplier);
         } finally {
             hexContext.popResolving();
         }
@@ -302,11 +325,11 @@ public class Glyph {
         hexContext.setOwnVariable(this.id, value);
     }
 
-    @Nullable
-    private HexVar resolveAssetDefault(String key, HexContext hexContext, @Nullable HexVar javaDefault) {
+    @Nonnull
+    private HexVar resolveAssetDefault(String key, HexContext hexContext, @Nullable Supplier<HexVar> javaDefault) {
         Slot slot = slots.get(key);
         if (slot != null) {
-            HexVar inline = slot.inlineValue();
+            var inline = slot.inlineValue();
             if (inline != null)
                 return inline;
         }
@@ -315,9 +338,14 @@ public class Glyph {
         Double defaultNum = slotConfig != null ? slotConfig.getDefaultValue() : null;
         if (defaultNum != null)
             return new NumberVar(defaultNum);
-        if (javaDefault != null)
-            return javaDefault;
-        HexVar slotZero = hexContext.getDefaultVariable();
+        if (javaDefault != null) {
+            var jDefault = javaDefault.get();
+            if (jDefault != null)
+                return jDefault;
+        }
+
+        // get the default slot - else return 0
+        var slotZero = hexContext.getDefaultVariable();
         if (slotZero != null)
             return slotZero;
         return new NumberVar(0.0);

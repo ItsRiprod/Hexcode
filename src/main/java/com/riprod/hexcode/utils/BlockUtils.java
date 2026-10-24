@@ -30,10 +30,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.FillerBlockUtil;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
-import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
+import com.riprod.hexcode.core.common.glyphs.variables.VarType;
 import com.riprod.hexcode.core.common.protection.BlockAction;
 import com.riprod.hexcode.core.common.protection.HexProtection;
 
@@ -276,14 +275,9 @@ public class BlockUtils {
 
             accessor.putComponent(entityRef, Teleport.getComponentType(),
                     new Teleport(dest, Rotation3f.NaN));
-        } else if (var instanceof BlockVar blockVar && blockVar.getValue() != null) {
-            moveBlockGated(blockVar.getValue(), dest, world, accessor, caster, glyphName);
-        } else if (var instanceof PositionVar posVar && posVar.getValue() != null) {
-            Vector3i sourceBlock = new Vector3i(
-                    (int) Math.floor(posVar.getValue().x()),
-                    (int) Math.floor(posVar.getValue().y()),
-                    (int) Math.floor(posVar.getValue().z()));
-            moveBlockGated(sourceBlock, dest, world, accessor, caster, glyphName);
+        } else if (var.type() == VarType.POSITION || var.type() == VarType.TRANSFORM) {
+            var pos = var.position(accessor);
+            moveBlockGated(Vector3dUtil.toVector3i(pos), dest, world, accessor, caster, glyphName);
         }
     }
 
@@ -294,7 +288,7 @@ public class BlockUtils {
             return;
 
         if (!HexProtection.canModifyBlock(world, caster, accessor, move.base(), BlockAction.BREAK)
-            || !HexProtection.canModifyBlock(world, caster, accessor, move.dest(), BlockAction.PLACE)) {
+                || !HexProtection.canModifyBlock(world, caster, accessor, move.dest(), BlockAction.PLACE)) {
             HexProtection.notifyBlocked(caster, accessor, glyphName);
             return;
         }
