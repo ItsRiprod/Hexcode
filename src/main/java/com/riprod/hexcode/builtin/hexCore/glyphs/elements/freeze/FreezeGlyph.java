@@ -1,10 +1,11 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze;
 
+import java.util.Arrays;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
@@ -13,15 +14,12 @@ import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
-import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 
-import java.util.Arrays;
-
-public class FreezeGlyph implements GlyphHandler {
+public class FreezeGlyph extends GlyphAsset {
 
     public static final String ID = "Freeze";
 
@@ -34,7 +32,6 @@ public class FreezeGlyph implements GlyphHandler {
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
         return ConfigBinding.of(FreezeConfig.class, FreezeConfig.CODEC);
     }
-
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -55,12 +52,14 @@ public class FreezeGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         FreezeConfig config = getConfig(FreezeConfig.class, asset);
-        if (config == null) config = FreezeConfig.DEFAULTS;
+        if (config == null)
+            config = FreezeConfig.DEFAULTS;
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
-        float seconds = ElementSupport.scaledDuration(ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit),
+        float seconds = ElementSupport.scaledDuration(
+                ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit),
                 config.getEfficiency(), config.getDurationPerComplexity(), affinity);
 
         String effectId = config.getStatusEffect();

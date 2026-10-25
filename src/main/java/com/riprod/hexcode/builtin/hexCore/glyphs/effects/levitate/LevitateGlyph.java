@@ -19,7 +19,6 @@ import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -29,7 +28,7 @@ import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
-public class LevitateGlyph implements GlyphHandler {
+public class LevitateGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     @Override
@@ -70,7 +69,8 @@ public class LevitateGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         LevitateConfig config = getConfig(LevitateConfig.class, asset);
-        if (config == null) config = LevitateConfig.DEFAULTS;
+        if (config == null)
+            config = LevitateConfig.DEFAULTS;
 
         float intensity = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(LevitateGlyphSlots.INTENSITY, hexContext),

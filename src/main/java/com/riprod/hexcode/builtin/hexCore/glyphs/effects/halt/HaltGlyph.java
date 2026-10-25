@@ -19,7 +19,6 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.halt.style.HaltStyle;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -30,12 +29,15 @@ import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VelocityUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
-public class HaltGlyph implements GlyphHandler {
+public class HaltGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    @Override
-public String getId() { return ID; };
 
-public static final String ID = "Halt";
+    @Override
+    public String getId() {
+        return ID;
+    };
+
+    public static final String ID = "Halt";
 
     @Override
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
@@ -68,7 +70,8 @@ public static final String ID = "Halt";
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         HaltConfig config = getConfig(HaltConfig.class, asset);
-        if (config == null) config = HaltConfig.DEFAULTS;
+        if (config == null)
+            config = HaltConfig.DEFAULTS;
 
         double duration = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(HaltGlyphSlots.DURATION, hexContext),

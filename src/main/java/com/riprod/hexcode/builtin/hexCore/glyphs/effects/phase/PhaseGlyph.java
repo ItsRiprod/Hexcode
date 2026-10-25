@@ -24,10 +24,8 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.protection.BlockAction;
@@ -36,7 +34,7 @@ import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.LogScopes;
 
-public class PhaseGlyph implements GlyphHandler {
+public class PhaseGlyph extends GlyphAsset {
 
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
@@ -76,7 +74,8 @@ public class PhaseGlyph implements GlyphHandler {
                 asset.getSlot(PhaseGlyphSlots.INTENSITY).getDefaultValue());
 
         PhaseConfig config = getConfig(PhaseConfig.class, asset);
-        if (config == null) config = PhaseConfig.DEFAULTS;
+        if (config == null)
+            config = PhaseConfig.DEFAULTS;
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         World world = accessor.getExternalData().getWorld();

@@ -10,14 +10,14 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.add.AddGlyphSlots;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
-public class CeilingGlyph implements GlyphHandler {
+public class CeilingGlyph extends GlyphAsset {
     public static final String ID = "Ceiling";
 
     @Override
@@ -31,10 +31,11 @@ public class CeilingGlyph implements GlyphHandler {
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(CeilingGlyphSlots.A, hexContext);
-        if (a == null) return null;
+        if (a == null)
+            return null;
 
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
-        
+
         var baseType = a.type();
 
         return switch (baseType) {
@@ -52,7 +53,7 @@ public class CeilingGlyph implements GlyphHandler {
                 var v = t.getPosition();
                 yield new TransformVar(new Vector3d(op(v.x), op(v.y), op(v.z)), t.getRotation());
             }
-            default -> a;  // smth went wrong
+            default -> a; // smth went wrong
         };
     }
 

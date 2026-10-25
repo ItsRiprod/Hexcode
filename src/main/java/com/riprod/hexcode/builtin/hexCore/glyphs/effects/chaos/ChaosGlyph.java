@@ -2,16 +2,18 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.chaos;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
-public class ChaosGlyph implements GlyphHandler {
+public class ChaosGlyph extends GlyphAsset {
+    public static final BuilderCodec<ChaosGlyph> CODEC = BuilderCodec.builder(ChaosGlyph.class, ChaosGlyph::new)
+            .build();
     public static final String ID = "Chaos";
 
     @Override
@@ -25,7 +27,8 @@ public class ChaosGlyph implements GlyphHandler {
         HexVar maxVar = glyph.readSlot(ChaosGlyphSlots.MAX, hexContext);
         double min = HexVarUtil.numberOrSlotDefault(minVar, asset.getSlot(ChaosGlyphSlots.MIN));
         double max = HexVarUtil.numberOrSlotDefault(maxVar, asset.getSlot(ChaosGlyphSlots.MAX));
-        if (min == max) return min;
+        if (min == max)
+            return min;
         if (min > max) {
             double tmp = min;
             min = max;

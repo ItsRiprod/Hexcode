@@ -1,9 +1,10 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.elements.rebreathing;
 
+import java.util.Arrays;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
@@ -11,14 +12,11 @@ import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 
-import java.util.Arrays;
-
-public class RebreathingGlyph implements GlyphHandler {
+public class RebreathingGlyph extends GlyphAsset {
 
     public static final String ID = "Rebreathing";
 
@@ -32,7 +30,6 @@ public class RebreathingGlyph implements GlyphHandler {
         return ConfigBinding.of(RebreathingConfig.class, RebreathingConfig.CODEC);
     }
 
-
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         Ref<EntityStore> target = ElementSupport.resolveTarget(glyph, hexContext);
@@ -44,12 +41,14 @@ public class RebreathingGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         RebreathingConfig config = getConfig(RebreathingConfig.class, asset);
-        if (config == null) config = RebreathingConfig.DEFAULTS;
+        if (config == null)
+            config = RebreathingConfig.DEFAULTS;
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
-        float seconds = ElementSupport.scaledDuration(ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit),
+        float seconds = ElementSupport.scaledDuration(
+                ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit),
                 config.getEfficiency(), config.getDurationPerComplexity(),
                 affinity);
 

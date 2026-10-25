@@ -17,7 +17,7 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -26,7 +26,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
-public class QueryGlyph implements GlyphHandler {
+public class QueryGlyph extends GlyphAsset {
 
     public static final String ID = "Query";
 
@@ -57,7 +57,8 @@ public class QueryGlyph implements GlyphHandler {
 
     private static HexVar compute(Glyph glyph, HexContext hexContext) {
         Slot reference = glyph.getSlot(QueryGlyphSlots.REFERENCE);
-        // an unwired Input slot resolves to the context default variable rather than null,
+        // an unwired Input slot resolves to the context default variable rather than
+        // null,
         // so emptiness has to be read off the link itself
         boolean referenceWired = reference != null && reference.getFirstLink() != null;
 
@@ -80,32 +81,40 @@ public class QueryGlyph implements GlyphHandler {
         if (value instanceof RotationVar) {
             return new NumberVar(HexVarUtil.axis(value.rotation(accessor), trilean + 1));
         }
-        // positions, blocks and colors all reach their three channels through toPosition;
+        // positions, blocks and colors all reach their three channels through
+        // toPosition;
         // numbers short-circuit inside the helper and ignore the axis
         return new NumberVar(HexVarUtil.axis(value.position(accessor), trilean + 1));
     }
 
     /**
-     * A single-shape glyph wired into the trilean slot names its shape's resource instead of
-     * supplying a value. Resolved by inspecting the link rather than reading it, because reading
+     * A single-shape glyph wired into the trilean slot names its shape's resource
+     * instead of
+     * supplying a value. Resolved by inspecting the link rather than reading it,
+     * because reading
      * would run the linked glyph's own value semantics.
      */
     @Nullable
     private static String resolveResourceId(Glyph glyph, HexContext hexContext) {
         Slot trilean = glyph.getSlot(QueryGlyphSlots.TRILEAN);
-        if (trilean == null) return null;
+        if (trilean == null)
+            return null;
 
         String linkId = trilean.getFirstLink();
-        if (linkId == null) return null;
+        if (linkId == null)
+            return null;
 
         Glyph linked = hexContext.getGlyph(linkId);
-        if (linked == null) return null;
+        if (linked == null)
+            return null;
 
         GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
-        if (linkedAsset == null) return null;
+        if (linkedAsset == null)
+            return null;
 
         List<ShapeAsset> shapes = linkedAsset.getShapes();
-        if (shapes.size() != 1) return null;
+        if (shapes.size() != 1)
+            return null;
 
         return shapes.get(0).getStatResource();
     }
@@ -118,7 +127,8 @@ public class QueryGlyph implements GlyphHandler {
 
     private static double readSpellStat(int trilean, HexContext hexContext) {
         VolatilityComponent stats = hexContext.volatility();
-        if (stats == null) return 0.0;
+        if (stats == null)
+            return 0.0;
 
         return switch (trilean) {
             case -1 -> stats.getInitial();
@@ -128,7 +138,8 @@ public class QueryGlyph implements GlyphHandler {
     }
 
     private static double totalResources(@Nullable ResourcePoolComponent pools) {
-        if (pools == null) return 0.0;
+        if (pools == null)
+            return 0.0;
         Set<String> counted = new HashSet<>();
         double total = 0.0;
         for (ShapeAsset shape : ShapeAsset.getAssetMap().getAssetMap().values()) {
@@ -144,10 +155,12 @@ public class QueryGlyph implements GlyphHandler {
         var accessor = hexContext.getAccessor();
 
         Ref<EntityStore> ref = entityVar.getRef(accessor);
-        if (ref == null || !ref.isValid()) return 0.0;
+        if (ref == null || !ref.isValid())
+            return 0.0;
 
         EntityStatMap statMap = accessor.getComponent(ref, EntityStatMap.getComponentType());
-        if (statMap == null) return 0.0;
+        if (statMap == null)
+            return 0.0;
 
         int index = switch (trilean) {
             case -1 -> DefaultEntityStatTypes.getStamina();

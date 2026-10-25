@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify;
 
+import java.util.Arrays;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -17,7 +19,6 @@ import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -25,15 +26,14 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VfxUtil;
-import com.riprod.hexcode.utils.HexVarUtil;
 
-import java.util.Arrays;
-
-public class FortifyGlyph implements GlyphHandler {
+public class FortifyGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     @Override
-    public String getId() { return ID; }
+    public String getId() {
+        return ID;
+    }
 
     public static final String ID = "Fortify";
 
@@ -53,11 +53,12 @@ public class FortifyGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         FortifyConfig config = getConfig(FortifyConfig.class, asset);
-        if (config == null) config = FortifyConfig.DEFAULTS;
+        if (config == null)
+            config = FortifyConfig.DEFAULTS;
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-          if (!(targets instanceof EntityVar entityVar)) {
+        if (!(targets instanceof EntityVar entityVar)) {
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
         }
@@ -82,7 +83,8 @@ public class FortifyGlyph implements GlyphHandler {
     private boolean applyToEntities(Glyph glyph, EntityVar entityVar, FortifyConfig config,
             HexContext hexContext, CommandBuffer<EntityStore> accessor, GlyphAsset asset) {
         Ref<EntityStore> ref = entityVar.getRef(accessor);
-        if (ref == null || !ref.isValid()) return false;
+        if (ref == null || !ref.isValid())
+            return false;
 
         String effectId = config.getEffectId();
         EntityEffect fortifyEffect = EntityEffect.getAssetMap().getAsset(effectId);
@@ -91,7 +93,8 @@ public class FortifyGlyph implements GlyphHandler {
             return false;
         }
 
-        // resource consumed 100% at cast regardless of when the ward is spent - the stacking gate
+        // resource consumed 100% at cast regardless of when the ward is spent - the
+        // stacking gate
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);

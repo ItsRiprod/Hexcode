@@ -3,11 +3,11 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.sin;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
-public class SinGlyph implements GlyphHandler {
+public class SinGlyph extends GlyphAsset {
     public static final String ID = "Sin";
 
     @Override
@@ -17,9 +17,11 @@ public class SinGlyph implements GlyphHandler {
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(SinGlyphSlots.A, hexContext);
-        if (a == null) return null;
+        if (a == null)
+            return null;
         Double s = a.scalar();
-        if (s == null) return null;
+        if (s == null)
+            return null;
         return new NumberVar(Math.sin(s));
     }
 

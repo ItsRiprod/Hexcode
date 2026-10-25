@@ -3,11 +3,11 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.pi;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
-public class PiValue implements GlyphHandler {
+public class PiValue extends GlyphAsset {
     public static final String ID = "Pi";
 
     @Override

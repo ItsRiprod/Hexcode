@@ -1,27 +1,25 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor;
 
+import java.util.Arrays;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor.component.MagicHealthComponent;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
-import java.util.Arrays;
-
-public class MageArmorGlyph implements GlyphHandler {
+public class MageArmorGlyph extends GlyphAsset {
 
     public static final String ID = "MageArmor";
 
@@ -35,7 +33,6 @@ public class MageArmorGlyph implements GlyphHandler {
         return ConfigBinding.of(MageArmorConfig.class, MageArmorConfig.CODEC);
     }
 
-
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         Ref<EntityStore> target = ElementSupport.resolveTarget(glyph, hexContext);
@@ -47,7 +44,8 @@ public class MageArmorGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         MageArmorConfig config = getConfig(MageArmorConfig.class, asset);
-        if (config == null) config = MageArmorConfig.DEFAULTS;
+        if (config == null)
+            config = MageArmorConfig.DEFAULTS;
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 

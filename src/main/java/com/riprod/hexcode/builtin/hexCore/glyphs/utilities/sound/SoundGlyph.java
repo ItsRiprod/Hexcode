@@ -3,15 +3,16 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.sound;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
-public class SoundGlyph implements GlyphHandler {
+public class SoundGlyph extends GlyphAsset {
     public static final String ID = "Sound";
 
-    // authored on the same 0-512 axis as Color's channels, where unity is half scale
+    // authored on the same 0-512 axis as Color's channels, where unity is half
+    // scale
     private static final double VOLUME_UNITY = 256.0;
     private static final double VOLUME_INPUT_MAX = 512.0;
 

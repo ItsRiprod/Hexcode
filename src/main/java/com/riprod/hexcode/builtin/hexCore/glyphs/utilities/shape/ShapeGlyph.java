@@ -7,14 +7,14 @@ import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.utils.GlyphModelUtil;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.utils.HexVarUtil;
 
-public class ShapeGlyph implements GlyphHandler {
+public class ShapeGlyph extends GlyphAsset {
     public static final String ID = "Shape";
 
     public static final float MIN_MODEL_SCALE = 0.1f;
@@ -32,7 +32,8 @@ public class ShapeGlyph implements GlyphHandler {
         GlyphAsset linked = resolveLinkedGlyph(glyph, hexContext);
         if (linked != null) {
             HexStyleAsset linkedStyle = linked.getStyle();
-            if (linkedStyle != null) hexContext.mutableStyle().applyOverride(linkedStyle);
+            if (linkedStyle != null)
+                hexContext.mutableStyle().applyOverride(linkedStyle);
 
             Model assembled = GlyphModelUtil.assemble(linked, linkedStyle, resolveScale(glyph, hexContext));
             if (assembled != null) {
@@ -55,11 +56,14 @@ public class ShapeGlyph implements GlyphHandler {
 
     private static @Nullable GlyphAsset resolveLinkedGlyph(Glyph glyph, HexContext hexContext) {
         Slot shapeSlot = glyph.getSlots().get(ShapeGlyphSlots.SHAPE);
-        if (shapeSlot == null) return null;
+        if (shapeSlot == null)
+            return null;
         String linkedId = shapeSlot.getFirstLink();
-        if (linkedId == null) return null;
+        if (linkedId == null)
+            return null;
         Glyph linked = hexContext.getGlyph(linkedId);
-        if (linked == null) return null;
+        if (linked == null)
+            return null;
         return GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
     }
 }

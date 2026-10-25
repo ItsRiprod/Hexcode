@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.ColorVar;
@@ -14,7 +14,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.hexes.component.HexColors;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
-public class StyleGlyph implements GlyphHandler {
+public class StyleGlyph extends GlyphAsset {
     public static final String ID = "Style";
 
     @Override

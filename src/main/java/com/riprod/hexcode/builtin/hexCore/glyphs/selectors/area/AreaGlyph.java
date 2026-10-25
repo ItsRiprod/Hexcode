@@ -17,7 +17,6 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
@@ -26,7 +25,7 @@ import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
-public class AreaGlyph implements GlyphHandler {
+public class AreaGlyph extends GlyphAsset {
 
     public static final String ID = "Area";
 
@@ -67,8 +66,7 @@ public class AreaGlyph implements GlyphHandler {
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        Vector3d anchorPos =
-                glyph.readSlot(AreaGlyphSlots.ANCHOR, hexContext).position(accessor);
+        Vector3d anchorPos = glyph.readSlot(AreaGlyphSlots.ANCHOR, hexContext).position(accessor);
         if (anchorPos == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Anchor is not a valid position");

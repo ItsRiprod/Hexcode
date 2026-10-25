@@ -28,7 +28,6 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
@@ -37,7 +36,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.utils.LogScopes;
 
-public class InteractionGlyph implements GlyphHandler {
+public class InteractionGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     public static final String ID = "Interaction";
@@ -129,7 +128,8 @@ public class InteractionGlyph implements GlyphHandler {
             targetHit = new Vector4d(pos.x, pos.y, pos.z, 1);
             var position = positionVar.position(accessor);
             if (position != null) {
-                Vector3i b = new Vector3i(MathUtil.floor(position.x()), MathUtil.floor(position.y()), MathUtil.floor(position.z()));
+                Vector3i b = new Vector3i(MathUtil.floor(position.x()), MathUtil.floor(position.y()),
+                        MathUtil.floor(position.z()));
                 targetBlock = new BlockPosition(b.x, b.y, b.z);
             }
             resultVar = target;

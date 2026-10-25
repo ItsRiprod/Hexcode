@@ -10,18 +10,20 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.swap.style.SwapStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.BlockUtils;
 
-public class SwapGlyph implements GlyphHandler {
+public class SwapGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    @Override
-public String getId() { return ID; };
 
-public static final String ID = "Swap";
+    @Override
+    public String getId() {
+        return ID;
+    };
+
+    public static final String ID = "Swap";
 
     @Override
     public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
@@ -32,9 +34,11 @@ public static final String ID = "Swap";
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         double distance = 0.0;
         HexVar varsA = glyph.readSlot(SwapGlyphSlots.A, hexContext);
-        if (varsA == null) varsA = hexContext.getDefaultVariable();
+        if (varsA == null)
+            varsA = hexContext.getDefaultVariable();
         HexVar varsB = glyph.readSlot(SwapGlyphSlots.B, hexContext);
-        if (varsB == null) varsB = hexContext.getDefaultVariable();
+        if (varsB == null)
+            varsB = hexContext.getDefaultVariable();
         if (varsA != null && varsB != null) {
             Vector3d posA = varsA.position(hexContext.getAccessor());
             Vector3d posB = varsB.position(hexContext.getAccessor());
@@ -47,16 +51,19 @@ public static final String ID = "Swap";
         }
 
         Impact impact = asset == null || asset.getConfig() == null
-                ? null : asset.getConfig().getVolatilityImpact();
+                ? null
+                : asset.getConfig().getVolatilityImpact();
         return glyph.computeBaseCost(asset) * Impact.scale(impact, distance);
     }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar varsA = glyph.readSlot(SwapGlyphSlots.A, hexContext);
-        if (varsA == null) varsA = hexContext.getDefaultVariable();
+        if (varsA == null)
+            varsA = hexContext.getDefaultVariable();
         HexVar varsB = glyph.readSlot(SwapGlyphSlots.B, hexContext);
-        if (varsB == null) varsB = hexContext.getDefaultVariable();
+        if (varsB == null)
+            varsB = hexContext.getDefaultVariable();
 
         if (varsA == null || varsB == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,

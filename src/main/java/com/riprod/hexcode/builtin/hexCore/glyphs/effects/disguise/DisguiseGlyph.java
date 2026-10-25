@@ -6,6 +6,7 @@ import org.joml.Vector3d;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.protocol.PlayerSkin;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
 import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
@@ -13,7 +14,6 @@ import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.protocol.PlayerSkin;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.components.DisguiseState;
@@ -24,18 +24,17 @@ import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.protection.HexProtection;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.utils.VfxUtil;
-import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.utils.HexRefs;
+import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
-public class DisguiseGlyph implements GlyphHandler {
+public class DisguiseGlyph extends GlyphAsset {
 
     public static final String ID = "Disguise";
 
@@ -154,7 +153,7 @@ public class DisguiseGlyph implements GlyphHandler {
         if (!(referenceVar instanceof EntityVar entityVar)) {
             return null;
         }
-    
+
         return resolveEntityDisguise(entityVar, accessor);
     }
 

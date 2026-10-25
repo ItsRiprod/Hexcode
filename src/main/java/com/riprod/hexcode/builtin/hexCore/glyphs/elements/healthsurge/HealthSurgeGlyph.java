@@ -4,17 +4,15 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 
-public class HealthSurgeGlyph implements GlyphHandler {
+public class HealthSurgeGlyph extends GlyphAsset {
 
     public static final String ID = "HealthSurge";
 
@@ -28,7 +26,6 @@ public class HealthSurgeGlyph implements GlyphHandler {
         return ConfigBinding.of(HealthSurgeConfig.class, HealthSurgeConfig.CODEC);
     }
 
-
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         Ref<EntityStore> target = ElementSupport.resolveTarget(glyph, hexContext);
@@ -40,12 +37,14 @@ public class HealthSurgeGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         HealthSurgeConfig config = getConfig(HealthSurgeConfig.class, asset);
-        if (config == null) config = HealthSurgeConfig.DEFAULTS;
+        if (config == null)
+            config = HealthSurgeConfig.DEFAULTS;
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
-        float heal = ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit) * config.getEfficiency() * affinity;
+        float heal = ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit)
+                * config.getEfficiency() * affinity;
 
         EntityStatMap statMap = hexContext.getAccessor().getComponent(
                 target, EntityStatMap.getComponentType());

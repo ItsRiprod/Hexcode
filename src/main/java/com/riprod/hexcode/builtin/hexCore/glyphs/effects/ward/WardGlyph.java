@@ -13,12 +13,11 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ward.style.WardStyle;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.redirect.EntityRedirectSpawner;
 
-public class WardGlyph implements GlyphHandler {
+public class WardGlyph extends GlyphAsset {
 
     public static final String ID = "Ward";
 

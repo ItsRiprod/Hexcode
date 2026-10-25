@@ -12,10 +12,9 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
@@ -24,7 +23,7 @@ import com.riprod.hexcode.core.common.utilities.resource.DebugMessageQueue;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.LogScopes;
 
-public class DebugGlyph implements GlyphHandler {
+public class DebugGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
     public static final String ID = "Debug";
 
@@ -219,8 +218,10 @@ public class DebugGlyph implements GlyphHandler {
             return "-";
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, Float> entry : resources.entrySet()) {
-            if (entry.getValue() <= 0f) continue;
-            if (sb.length() > 0) sb.append(' ');
+            if (entry.getValue() <= 0f)
+                continue;
+            if (sb.length() > 0)
+                sb.append(' ');
             sb.append(entry.getKey()).append('=').append(String.format("%.1f", entry.getValue()));
         }
         return sb.length() == 0 ? "-" : sb.toString();

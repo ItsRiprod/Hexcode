@@ -2,42 +2,115 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration;
 
 import javax.annotation.Nullable;
 
+import org.joml.Vector3f;
+
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
-
-import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.MountController;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
-import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
-import com.riprod.hexcode.core.common.protection.HexcodeComponent;
-import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
-import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
+import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
-import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
+import com.riprod.hexcode.core.common.protection.HexcodeComponent;
+import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
 import com.riprod.hexcode.utils.HexVarUtil;
 
-public class ConcentrationGlyph implements GlyphHandler {
+public class ConcentrationGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    public static final float DEFAULT_SUSTAIN_PER_SECOND = 3.0f;
+
+    @Nullable
+    private Impact sustainImpact;
+    @Nullable
+    private Impact manaImpact;
+    @Nullable
+    private Impact staminaImpact;
+    @Nullable
+    private Impact healthImpact;
+    private double secondaryIntervalSeconds = 1.0;
+    private String healthDamageCauseId = "Arcane";
+
+    public ConcentrationGlyph get() {
+        var glyph = GlyphAsset.getAssetMap().getAsset(ID);
+        if (glyph instanceof ConcentrationGlyph cGlyph) {
+            return cGlyph;
+        }
+        return null;
+    }
+
+    public String getHealthDamageCauseId() {
+        return healthDamageCauseId;
+    }
+
+    @Nullable
+    public Impact getSustainImpact() {
+        return sustainImpact;
+    }
+
+    @Nullable
+    public Impact getManaImpact() {
+        return manaImpact;
+    }
+
+    @Nullable
+    public Impact getStaminaImpact() {
+        return staminaImpact;
+    }
+
+    @Nullable
+    public Impact getHealthImpact() {
+        return healthImpact;
+    }
+
+    public double getSecondaryIntervalSeconds() {
+        return secondaryIntervalSeconds;
+    }
+
+    public static final BuilderCodec<ConcentrationGlyph> CODEC = BuilderCodec
+            .builder(ConcentrationGlyph.class, ConcentrationGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("SustainImpact", Impact.CODEC, true),
+                    (c, v) -> c.sustainImpact = v, c -> c.sustainImpact)
+            .add()
+            .append(new KeyedCodec<>("ManaImpact", Impact.CODEC, true),
+                    (c, v) -> c.manaImpact = v, c -> c.manaImpact)
+            .add()
+            .append(new KeyedCodec<>("StaminaImpact", Impact.CODEC, true),
+                    (c, v) -> c.staminaImpact = v, c -> c.staminaImpact)
+            .add()
+            .append(new KeyedCodec<>("HealthImpact", Impact.CODEC, true),
+                    (c, v) -> c.healthImpact = v, c -> c.healthImpact)
+            .add()
+            .append(new KeyedCodec<>("SecondaryIntervalSeconds", Codec.DOUBLE, true),
+                    (c, v) -> c.secondaryIntervalSeconds = v, c -> c.secondaryIntervalSeconds)
+            .add()
+            .append(new KeyedCodec<>("HealthDamageCause", DamageCause.CHILD_ASSET_CODEC, true),
+                    (c, v) -> c.healthDamageCauseId = v, c -> c.healthDamageCauseId)
+            .addValidatorLate(() -> DamageCause.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .build();
 
     @Override
     public String getId() {
@@ -47,11 +120,6 @@ public class ConcentrationGlyph implements GlyphHandler {
     public static final String ID = "Concentration";
 
     private static final Vector3f MOUNT_OFFSET = new Vector3f(0f, 1.4f, 1.2f);
-
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(ConcentrationConfig.class, ConcentrationConfig.CODEC);
-    }
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
@@ -76,9 +144,6 @@ public class ConcentrationGlyph implements GlyphHandler {
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        ConcentrationConfig config = getConfig(ConcentrationConfig.class, asset);
-        if (config == null)
-            config = ConcentrationConfig.DEFAULTS;
         Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
         if (casterRef == null || !casterRef.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -126,9 +191,9 @@ public class ConcentrationGlyph implements GlyphHandler {
         state.setStaminaRate(staminaRate);
         state.setHealthRate(healthRate);
         state.setBonusVolatilityPerSecond(
-                convert(manaRate, config.getManaImpact())
-                        + convert(staminaRate, config.getStaminaImpact())
-                        + convert(healthRate, config.getHealthImpact()));
+                convert(manaRate, getManaImpact())
+                        + convert(staminaRate, getStaminaImpact())
+                        + convert(healthRate, getHealthImpact()));
         HexConstructSpawner.applyWithState(
                 accessor, casterRef, hexContext.branch(), glyph, ConcentrationGlyph.ID, state);
 

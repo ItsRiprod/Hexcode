@@ -8,11 +8,11 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
-public class IsHoldingValue implements GlyphHandler {
+public class IsHoldingValue extends GlyphAsset {
 
     public static final String ID = "IsHolding";
 
@@ -30,7 +30,8 @@ public class IsHoldingValue implements GlyphHandler {
         EntityStatMap statMap = hexContext.getAccessor().getComponent(
                 casterRef, EntityStatMap.getComponentType());
         EntityStatValue stat = statMap != null
-                ? statMap.get(HexcodeEntityStatTypes.getIsHolding()) : null;
+                ? statMap.get(HexcodeEntityStatTypes.getIsHolding())
+                : null;
         boolean holding = stat != null && stat.get() >= 1f;
         return new NumberVar(holding ? 1.0 : 0.0);
     }

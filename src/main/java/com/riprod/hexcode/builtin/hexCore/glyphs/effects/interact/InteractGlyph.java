@@ -24,7 +24,6 @@ import com.riprod.hexcode.api.imbuement.ImbuedBlockActivator;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact.style.InteractStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -32,7 +31,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.LogScopes;
 
-public class InteractGlyph implements GlyphHandler {
+public class InteractGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     public static final String ID = "Interact";
@@ -65,7 +64,6 @@ public class InteractGlyph implements GlyphHandler {
             return;
         }
 
-        
         if (target instanceof BlockVar blockVar) {
             handleBlockTarget(glyph, hexContext, blockVar, accessor, world);
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);

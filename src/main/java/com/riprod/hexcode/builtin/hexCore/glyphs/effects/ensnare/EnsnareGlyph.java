@@ -31,7 +31,6 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
@@ -39,7 +38,7 @@ import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.HexVarUtil;
 
-public class EnsnareGlyph implements GlyphHandler {
+public class EnsnareGlyph extends GlyphAsset {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 

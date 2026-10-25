@@ -13,11 +13,11 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.triggers.component.TriggerListenerComponent;
@@ -27,7 +27,7 @@ import com.riprod.hexcode.core.common.triggers.handler.TriggerConstructHandler;
 import com.riprod.hexcode.core.common.triggers.registry.TriggerListenerRegistry;
 import com.riprod.hexcode.core.common.triggers.state.TriggerState;
 
-public abstract class AbstractTriggerGlyph implements GlyphHandler {
+public abstract class AbstractTriggerGlyph extends GlyphAsset {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
@@ -44,7 +44,8 @@ public abstract class AbstractTriggerGlyph implements GlyphHandler {
         HexVar slotZero = hexContext.getDefaultVariable();
         if (slotZero instanceof EntityVar ev) {
             Ref<EntityStore> r = ev.getRef(accessor);
-            if (r != null && r.isValid()) return r;
+            if (r != null && r.isValid())
+                return r;
         }
         return caster;
     }
@@ -71,7 +72,8 @@ public abstract class AbstractTriggerGlyph implements GlyphHandler {
         UUID subjectUuid = subjectUuidComp.getUuid();
 
         List<String> nextLinks = new ArrayList<>(glyph.getNextLinks());
-        if (nextLinks.isEmpty()) return;
+        if (nextLinks.isEmpty())
+            return;
 
         UUID subscriptionId = UUID.randomUUID();
         TriggerState state = new TriggerState(triggerKey(), subscriptionId, nextLinks);

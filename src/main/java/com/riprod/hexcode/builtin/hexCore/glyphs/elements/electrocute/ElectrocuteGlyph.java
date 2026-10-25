@@ -1,9 +1,10 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.elements.electrocute;
 
+import java.util.Arrays;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
@@ -11,15 +12,11 @@ import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
-import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 
-import java.util.Arrays;
-
-public class ElectrocuteGlyph implements GlyphHandler {
+public class ElectrocuteGlyph extends GlyphAsset {
 
     public static final String ID = "Electrocute";
 
@@ -33,7 +30,6 @@ public class ElectrocuteGlyph implements GlyphHandler {
         return ConfigBinding.of(ElectrocuteConfig.class, ElectrocuteConfig.CODEC);
     }
 
-
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         Ref<EntityStore> target = ElementSupport.resolveTarget(glyph, hexContext);
@@ -45,12 +41,14 @@ public class ElectrocuteGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         ElectrocuteConfig config = getConfig(ElectrocuteConfig.class, asset);
-        if (config == null) config = ElectrocuteConfig.DEFAULTS;
+        if (config == null)
+            config = ElectrocuteConfig.DEFAULTS;
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
-        float seconds = ElementSupport.scaledDuration(ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit),
+        float seconds = ElementSupport.scaledDuration(
+                ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit),
                 config.getEfficiency(), config.getDurationPerComplexity(),
                 affinity);
 

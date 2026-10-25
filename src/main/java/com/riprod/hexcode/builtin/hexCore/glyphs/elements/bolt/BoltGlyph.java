@@ -5,17 +5,15 @@ import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 
-public class BoltGlyph implements GlyphHandler {
+public class BoltGlyph extends GlyphAsset {
 
     public static final String ID = "Bolt";
 
@@ -29,7 +27,6 @@ public class BoltGlyph implements GlyphHandler {
         return ConfigBinding.of(BoltConfig.class, BoltConfig.CODEC);
     }
 
-
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         Ref<EntityStore> target = ElementSupport.resolveTarget(glyph, hexContext);
@@ -41,12 +38,14 @@ public class BoltGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         BoltConfig config = getConfig(BoltConfig.class, asset);
-        if (config == null) config = BoltConfig.DEFAULTS;
+        if (config == null)
+            config = BoltConfig.DEFAULTS;
 
         float affinity = ElementSupport.affinityFactor(
                 hexContext, config.getAffinityStat(), config.getAffinityScale());
         float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
-        float amount = ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit) * config.getEfficiency() * affinity;
+        float amount = ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit)
+                * config.getEfficiency() * affinity;
 
         DamageCause cause = DamageCause.getAssetMap().getAsset(config.getDamageCause());
         if (cause != null) {

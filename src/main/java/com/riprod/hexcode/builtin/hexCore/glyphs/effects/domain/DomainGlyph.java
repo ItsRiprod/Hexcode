@@ -24,7 +24,6 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -33,11 +32,13 @@ import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
-public class DomainGlyph implements GlyphHandler {
+public class DomainGlyph extends GlyphAsset {
     @Override
-public String getId() { return ID; };
+    public String getId() {
+        return ID;
+    };
 
-public static final String ID = "Domain";
+    public static final String ID = "Domain";
     public static final String AURA_ID = "Domain_Aura";
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -54,7 +55,8 @@ public static final String ID = "Domain";
     }
 
     private static Impact slotImpact(GlyphAsset asset, String key) {
-        if (asset == null) return null;
+        if (asset == null)
+            return null;
         SlotConfig slot = asset.getSlot(key);
         return slot == null ? null : slot.getImpact();
     }
@@ -68,7 +70,8 @@ public static final String ID = "Domain";
         double radius = HexVarUtil.numberOrDefault(
                 glyph.readSlot(DomainGlyphSlots.MAGNITUDE, hexContext), DEFAULT_RADIUS);
         Impact impact = asset == null || asset.getConfig() == null
-                ? null : asset.getConfig().getVolatilityImpact();
+                ? null
+                : asset.getConfig().getVolatilityImpact();
         return glyph.computeBaseCost(asset) * Impact.scale(impact, radius);
     }
 

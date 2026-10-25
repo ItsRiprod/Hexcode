@@ -1,11 +1,15 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.beam;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.util.TrigMathUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Transform;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -16,22 +20,17 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.beam.style.BeamStyle;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
-import com.riprod.hexcode.core.common.glyphs.utils.BlockResolution;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.core.common.glyphs.utils.BlockResolution;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
-import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-
+import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.TargetFilter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class BeamGlyph implements GlyphHandler {
+public class BeamGlyph extends GlyphAsset {
     @Override
     public String getId() {
         return ID;

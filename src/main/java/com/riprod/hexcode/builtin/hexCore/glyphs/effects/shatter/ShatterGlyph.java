@@ -6,12 +6,12 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Rotation3f;
-
-import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.modules.entity.DespawnComponent;
@@ -31,16 +31,14 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style.ShatterSt
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
-
 import com.riprod.hexcode.utils.HexVarUtil;
 
-public class ShatterGlyph implements GlyphHandler {
+public class ShatterGlyph extends GlyphAsset {
 
     @Override
     public String getId() {
@@ -60,16 +58,20 @@ public class ShatterGlyph implements GlyphHandler {
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        if (asset == null) return 0f;
+        if (asset == null)
+            return 0f;
         ShatterConfig config = getConfig(ShatterConfig.class, asset);
-        if (config == null) config = ShatterConfig.DEFAULTS;
+        if (config == null)
+            config = ShatterConfig.DEFAULTS;
 
         int count = HexVarUtil.numberOrDefault(
                 glyph.readSlot(ShatterGlyphSlots.COUNT, hexContext),
                 (double) config.getDefaultCount()).intValue();
-        if (count < 1) count = 1;
+        if (count < 1)
+            count = 1;
 
-        // shards are priced per projectile, discounted from a full projectile; draw quality
+        // shards are priced per projectile, discounted from a full projectile; draw
+        // quality
         // reduction is carried through computeBaseCost / InstantCost
         float instantCost = asset.getVolatility().getInstantCost();
         float drawFactor = instantCost > 0f ? glyph.computeBaseCost(asset) / instantCost : 1f;
@@ -124,14 +126,17 @@ public class ShatterGlyph implements GlyphHandler {
 
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         ShatterConfig config = getConfig(ShatterConfig.class, asset);
-        if (config == null) config = ShatterConfig.DEFAULTS;
+        if (config == null)
+            config = ShatterConfig.DEFAULTS;
 
         int count = HexVarUtil.numberOrDefault(countVar, (double) config.getDefaultCount()).intValue();
-        if (count < 1) count = 1;
+        if (count < 1)
+            count = 1;
 
         double spread = HexVarUtil.numberOrDefault(spreadVar, config.getDefaultSpread());
         double speed = HexVarUtil.numberOrDefault(speedVar, config.getDefaultSpeed());
-        if (speed <= 0) speed = config.getDefaultSpeed();
+        if (speed <= 0)
+            speed = config.getDefaultSpeed();
         double gravity = HexVarUtil.numberOrDefault(gravityVar, config.getDefaultGravity());
 
         Duration shardTtl = Duration.ofMillis((long) (config.getShardTtlSeconds() * 1000));
@@ -202,7 +207,8 @@ public class ShatterGlyph implements GlyphHandler {
         Vector3d forward = new Vector3d(center).normalize();
 
         Vector3d arbitrary = (Math.abs(forward.y) < 0.9)
-                ? new Vector3d(0, 1, 0) : new Vector3d(1, 0, 0);
+                ? new Vector3d(0, 1, 0)
+                : new Vector3d(1, 0, 0);
 
         Vector3d right = cross(arbitrary, forward).normalize();
         Vector3d up = cross(forward, right).normalize();
@@ -237,8 +243,7 @@ public class ShatterGlyph implements GlyphHandler {
         return new Vector3d(
                 a.y * b.z - a.z * b.y,
                 a.z * b.x - a.x * b.z,
-                a.x * b.y - a.y * b.x
-        );
+                a.x * b.y - a.y * b.x);
     }
 
     private static Map<InteractionType, String> buildInteractionsMap() {

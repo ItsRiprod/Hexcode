@@ -25,7 +25,7 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -36,7 +36,7 @@ import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.utils.BlockUtils;
 import com.riprod.hexcode.utils.VelocityUtil;
 
-public class RotationValue implements GlyphHandler {
+public class RotationValue extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     public static final String ID = "Rotation";
 

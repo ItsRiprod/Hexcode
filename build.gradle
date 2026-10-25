@@ -30,9 +30,13 @@ configurations {
     testRuntimeOnly.extendsFrom(compileOnly)
 }
 
+def lombokVersion = "1.18.40"
 dependencies {
     compileOnly libs.jetbrains.annotations
     compileOnly libs.jspecify
+    compileOnly("org.projectlombok:lombok:$lombokVersion")
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
+
     // shadowBundle(files('lib/Patchly-3.6.1.jar'))
     shadowBundle('com.riprod:patchly:3.+')
     // shadowBundle(files('lib/Configly-1.0.1.jar'))

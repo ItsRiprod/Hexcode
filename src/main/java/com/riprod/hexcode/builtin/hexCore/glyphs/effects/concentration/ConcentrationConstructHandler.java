@@ -14,33 +14,21 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
-import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
-import com.riprod.hexcode.core.common.execution.context.HexContext;
-import com.riprod.hexcode.core.common.execution.root.HexRoot;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
-import com.riprod.hexcode.core.common.execution.impact.Impact;
-import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
 import com.riprod.hexcode.utils.LogScopes;
 
 public class ConcentrationConstructHandler implements ConstructHandler<ConcentrationState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
-
-
-    private ConcentrationConfig resolveConfig(HexStatus<ConcentrationState> status) {
-        Glyph trigger = status.getTriggeringGlyph();
-        GlyphAsset asset = trigger != null
-                ? GlyphAsset.getAssetMap().getAsset(trigger.getGlyphId()) : null;
-        GlyphConfig raw = asset != null ? asset.getConfig() : null;
-        return raw instanceof ConcentrationConfig cc ? cc : ConcentrationConfig.DEFAULTS;
-    }
 
     @Override
     public boolean onTick(float dt, HexStatus<ConcentrationState> status, ConstructTickContext ctx) {
@@ -52,7 +40,8 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         EntityStatMap statMap = buffer.getComponent(
                 casterRef, EntityStatMap.getComponentType());
         EntityStatValue holdStat = statMap != null
-                ? statMap.get(HexcodeEntityStatTypes.getIsHolding()) : null;
+                ? statMap.get(HexcodeEntityStatTypes.getIsHolding())
+                : null;
         if (holdStat == null)
             return true;
 
@@ -81,8 +70,8 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         float elapsed = state.getElapsedSeconds() + dt;
         state.setElapsedSeconds(elapsed);
 
-        Impact impact = resolveConfig(status).getSustainImpact();
-        float basePerSecond = impact != null ? impact.compute(elapsed) : ConcentrationConfig.DEFAULT_SUSTAIN_PER_SECOND;
+        var glyph = GlyphAsset.getAssetMap().getAsset(status.getHandlerId());
+        float basePerSecond = glyph != null ? glyph.getVolatilityImpact().compute(elapsed) : 1.3f;
         tracker.add((basePerSecond + state.getBonusVolatilityPerSecond()) * dt);
     }
 
@@ -90,11 +79,11 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
         ConcentrationState state = status.getState();
         HexContext ctx = status.getHexContext();
-        
+
         if (state == null || ctx == null || !ctx.policy().isConsumeMana())
             return true;
 
-        HexRoot root = ctx.getHexRoot();
+        var root = ctx.getHexRoot();
         float mana = state.getManaRate() * dt;
         float stamina = state.getStaminaRate() * dt;
 
@@ -110,7 +99,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         if (stamina > 0)
             statMap.subtractStatValue(DefaultEntityStatTypes.getStamina(), stamina);
 
-        payHealthUpkeep(dt, state, resolveConfig(status), buffer, casterRef);
+        payHealthUpkeep(dt, state, status.getHandlerId(), buffer, casterRef);
         return true;
     }
 
@@ -121,7 +110,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         return stat != null && stat.get() >= cost;
     }
 
-    private void payHealthUpkeep(float dt, ConcentrationState state, ConcentrationConfig config,
+    private void payHealthUpkeep(float dt, ConcentrationState state, String glyphId,
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
         if (state.getHealthRate() <= 0f)
             return;
@@ -132,7 +121,9 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         if (points <= 0)
             return;
 
-        DamageCause cause = DamageCause.getAssetMap().getAsset(config.getHealthDamageCauseId());
+        var glyph = GlyphAsset.getAssetMap().getAsset(glyphId);
+
+        DamageCause cause = DamageCause.getAssetMap().getAsset(glyph.getHealthDamageCauseId());
         if (cause == null) {
             LOGGER.atWarning().atMostEvery(5, TimeUnit.SECONDS)
                     .log("concentration: damage cause '%s' not found, health upkeep skipped",

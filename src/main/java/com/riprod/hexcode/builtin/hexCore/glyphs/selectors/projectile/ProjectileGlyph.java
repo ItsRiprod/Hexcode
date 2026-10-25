@@ -31,14 +31,13 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.Proj
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
-public class ProjectileGlyph implements GlyphHandler {
+public class ProjectileGlyph extends GlyphAsset {
 
     @Override
     public String getId() {

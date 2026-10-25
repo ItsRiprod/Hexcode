@@ -3,11 +3,11 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.cos;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
-public class CosGlyph implements GlyphHandler {
+public class CosGlyph extends GlyphAsset {
     public static final String ID = "Cos";
 
     @Override

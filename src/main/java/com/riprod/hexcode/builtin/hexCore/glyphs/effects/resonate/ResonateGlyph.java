@@ -3,32 +3,34 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.resonate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector3d;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
-import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.resonate.style.ResonateStyle;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utils.ConstructSplicer;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
-import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.resonate.style.ResonateStyle;
-import com.riprod.hexcode.builtin.hexCore.glyphs.utils.ConstructSplicer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
-public class ResonateGlyph implements GlyphHandler {
+public class ResonateGlyph extends GlyphAsset {
     public static final String ID = "Resonate";
 
     @Override
-    public String getId() { return ID; }
+    public String getId() {
+        return ID;
+    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -63,7 +65,8 @@ public class ResonateGlyph implements GlyphHandler {
         List<HexStatus<?>> targets = new ArrayList<>(construct.getEffects().values());
         if (targets.isEmpty()) {
             Vector3d pos = resolvePosition(ref, accessor);
-            if (pos != null) ResonateStyle.renderNoSignal(pos, hexContext, accessor);
+            if (pos != null)
+                ResonateStyle.renderNoSignal(pos, hexContext, accessor);
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target has no active effects");
             return;
@@ -71,7 +74,8 @@ public class ResonateGlyph implements GlyphHandler {
 
         for (HexStatus<?> target : targets) {
             ConstructHandler<?> handler = ConstructRegistry.get(target.getHandlerId());
-            if (handler == null) continue;
+            if (handler == null)
+                continue;
 
             ConstructSplicer.splice(target, handler, hexContext, glyph,
                     ConstructSplicer.ChainMode.APPEND_TAIL,
@@ -80,7 +84,8 @@ public class ResonateGlyph implements GlyphHandler {
         }
 
         Vector3d pos = resolvePosition(ref, accessor);
-        if (pos != null) ResonateStyle.renderResonate(pos, hexContext, accessor);
+        if (pos != null)
+            ResonateStyle.renderResonate(pos, hexContext, accessor);
     }
 
     private void resonateEntity(Glyph glyph, HexContext hexContext,
@@ -89,14 +94,16 @@ public class ResonateGlyph implements GlyphHandler {
         EntityStatMap targetStats = accessor.getComponent(ref, EntityStatMap.getComponentType());
         if (targetStats == null) {
             Vector3d pos = resolvePosition(ref, accessor);
-            if (pos != null) ResonateStyle.renderNoSignal(pos, hexContext, accessor);
+            if (pos != null)
+                ResonateStyle.renderNoSignal(pos, hexContext, accessor);
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Resonate: target has no mana pool");
             return;
         }
 
         Vector3d pos = resolvePosition(ref, accessor);
-        if (pos != null) ResonateStyle.renderResonate(pos, hexContext, accessor);
+        if (pos != null)
+            ResonateStyle.renderResonate(pos, hexContext, accessor);
     }
 
     private Vector3d resolvePosition(Ref<EntityStore> ref, CommandBuffer<EntityStore> accessor) {

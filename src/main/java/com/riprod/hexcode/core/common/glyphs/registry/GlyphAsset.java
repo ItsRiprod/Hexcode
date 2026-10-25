@@ -7,16 +7,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.hypixel.hytale.assetstore.AssetExtraInfo;
 import com.hypixel.hytale.assetstore.AssetKeyValidator;
 import com.hypixel.hytale.assetstore.AssetRegistry;
 import com.hypixel.hytale.assetstore.AssetStore;
-import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec;
+import com.hypixel.hytale.assetstore.codec.AssetCodecMapCodec;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIButton;
@@ -28,19 +33,26 @@ import com.hypixel.hytale.codec.schema.metadata.ui.UIEditorSectionStart;
 import com.hypixel.hytale.codec.schema.metadata.ui.UISidebarButtons;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
-import javax.annotation.Nullable;
-
-import com.riprod.hexcode.core.common.node.NodeConfig;
-
+import com.riprod.hexcode.api.event.GlyphFizzleEvent;
+import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolComponent;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
+import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconEditorButton;
 import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconStore;
+import com.riprod.hexcode.core.common.glyphs.utils.GlyphCostUtil;
+import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
+import com.riprod.hexcode.core.common.node.NodeConfig;
 
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import lombok.Getter;
 
-public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<String, GlyphAsset>> {
-    public static final AssetBuilderCodec<String, GlyphAsset> CODEC;
+public abstract class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<String, GlyphAsset>> {
+    public static final AssetCodecMapCodec<String, GlyphAsset> CODEC;
+    public static final BuilderCodec<GlyphAsset> ABSTRACT_CODEC;
     private static AssetStore<String, GlyphAsset, DefaultAssetMap<String, GlyphAsset>> ASSET_STORE;
     public static final ValidatorCache<String> VALIDATOR_CACHE;
 
@@ -57,13 +69,16 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     protected boolean isEnabled = true;
     protected boolean isDeprecated = false;
     protected VolatilityAsset volatility = new VolatilityAsset();
-    protected GlyphConfig config;
+    @Getter
+    protected Impact volatilityImpact = new Impact() {
+        @Override
+        public float compute(double input) {
+            return 1.3f;
+        }
+    };
     protected ArrayList<String> shapes = new ArrayList<>();
     protected LinkedHashMap<String, String> slots = new LinkedHashMap<>();
     protected String styleId;
-    protected String handlerId = id;
-
-    private transient Object2IntOpenHashMap<String> slotIndexCache;
 
     public static AssetStore<String, GlyphAsset, DefaultAssetMap<String, GlyphAsset>> getAssetStore() {
         if (ASSET_STORE == null) {
@@ -77,12 +92,26 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
         return (DefaultAssetMap<String, GlyphAsset>) getAssetStore().getAssetMap();
     }
 
-    private GlyphAsset() {
+    public GlyphAsset() {
     }
 
-    @Override
-    public String getId() {
-        return this.id;
+    /*
+     * Invoked when the glyph is executed by another glyph or as the first glyph in
+     * a chain
+     */
+    public abstract void execute(Glyph glyph, HexContext hexContext);
+
+    /** Invoked whenever the value of the glyph is read */
+    public HexVar readValue(Glyph glyph, HexContext hexContext) {
+        return hexContext.getOwnVariable(glyph.getId());
+    }
+
+    public <T extends GlyphAsset> T get(String glyphId, Class<T> glyphClass) {
+        var glyph = GlyphAsset.getAssetMap().getAsset(glyphId);
+        if (glyph instanceof glyphClass glyphObj) {
+            return glyphObj;
+        }
+        return null;
     }
 
     public boolean isEnabled() {
@@ -118,18 +147,6 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
 
     public VolatilityAsset getVolatility() {
         return this.volatility;
-    }
-
-    @Nullable
-    public GlyphConfig getConfig() {
-        return this.config;
-    }
-
-    public String getHandler() {
-        if (this.handlerId == null) {
-            return this.id;
-        }
-        return this.handlerId;
     }
 
     public List<ShapeAsset> getShapes() {
@@ -181,23 +198,6 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
         return this.slots.size();
     }
 
-    public int getSlotIndex(String key) {
-        if (this.slotIndexCache == null) {
-            this.slotIndexCache = buildSlotIndexCache();
-        }
-        return this.slotIndexCache.getOrDefault(key, -1);
-    }
-
-    private Object2IntOpenHashMap<String> buildSlotIndexCache() {
-        Object2IntOpenHashMap<String> cache = new Object2IntOpenHashMap<>(this.slots.size());
-        cache.defaultReturnValue(-1);
-        int i = 0;
-        for (String key : this.slots.keySet()) {
-            cache.put(key, i++);
-        }
-        return cache;
-    }
-
     public String getTitle() {
         return this.title;
     }
@@ -210,25 +210,72 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
         return this.verboseDescription;
     }
 
-    static {
-        CODEC = buildCodec();
-        VALIDATOR_CACHE = new ValidatorCache<>(new AssetKeyValidator<>(GlyphAsset::getAssetStore));
+    public float collectMana(Glyph glyph, GlyphAsset asset) {
+        if (asset == null)
+            return 0f;
+        return asset.getManaConsumption()
+                * ((1 - glyph.getEfficiency()) * 0.25f + 0.75f);
     }
 
-    @SuppressWarnings("unchecked")
-    private static AssetBuilderCodec<String, GlyphAsset> buildCodec() {
-        Codec<Map<String, String>> slotMapCodec = (Codec<Map<String, String>>) (Codec<?>) new MapCodec<>(
-                NodeConfig.CHILD_ASSET_CODEC, LinkedHashMap::new, false);
-        return AssetBuilderCodec
-                .builder(GlyphAsset.class, GlyphAsset::new, Codec.STRING, (glyphAsset, s) -> {
-                    glyphAsset.id = s;
-                }, (glyphAsset) -> {
-                    return glyphAsset.id;
-                }, (asset, data) -> {
-                    asset.data = data;
-                }, (asset) -> {
-                    return asset.data;
-                })
+    public void execute0(Glyph glyph, HexContext hexContext) {
+        HexCast cast = hexContext.cast();
+        if (cast == null) {
+            execute(glyph, hexContext);
+            return;
+        }
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+
+        float volatilityCost = getVolatilityCost(glyph, hexContext, asset);
+        float currentVolatility = cast.volatility().consume(volatilityCost);
+        if (!hexContext.policy().isBypassVolatilityDepletion() && currentVolatility <= 0f) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.VOLATILITY_DEPLETED);
+            return;
+        }
+
+        if (asset != null) {
+            String source = glyph.getGlyphId();
+            for (ShapeAsset shape : asset.getShapes()) {
+                String resource = shape.getStatResource();
+                if (resource == null)
+                    continue;
+                float raw = Impact.scale(shape.getStatResourceImpact(), shape.getStatContribution());
+                if (raw <= 0f)
+                    continue;
+                ResourcePoolComponent pools = cast.mutableResources();
+                float effectiveness = GlyphCostUtil.contributionEffectiveness(
+                        pools.getBasis(resource, source));
+                pools.addResource(resource, source, raw * effectiveness);
+            }
+        }
+
+        execute(glyph, hexContext);
+    }
+
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        return GlyphCostUtil.volatilityCost(glyph, hexContext, asset);
+    }
+
+    /** Builds a generic glyph with no config / custom codec */
+    final public static <T extends GlyphAsset> void register(Class<T> glyph, @Nonnull String glyphId,
+            Supplier<T> glyphSupplier) {
+        CODEC.register(glyphId, glyph, BuilderCodec.builder(glyph, glyphSupplier, ABSTRACT_CODEC).build());
+    }
+
+    /** Builds a custom glyph with it's own codec */
+    final public static <T extends GlyphAsset> void register(Class<T> glyph, @Nonnull String glyphId,
+            BuilderCodec<T> glyphCodec) {
+        CODEC.register(glyphId, glyph, glyphCodec);
+    }
+
+    static {
+        CODEC = new AssetCodecMapCodec<>("Type", Codec.STRING,
+                (a, s) -> a.id = s,
+                a -> a.id,
+                (a, data) -> a.data = data,
+                a -> a.data);
+
+        VALIDATOR_CACHE = new ValidatorCache<>(new AssetKeyValidator<>(GlyphAsset::getAssetStore));
+        ABSTRACT_CODEC = BuilderCodec.abstractBuilder(GlyphAsset.class)
                 .metadata(new UIEditorPreview(UIEditorPreview.PreviewType.MODEL))
                 .metadata(new UISidebarButtons(
                         new UIButton(GlyphIconEditorButton.BUTTON_TEXT_ID,
@@ -242,7 +289,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                                 "HexcodeSpawnGlyph")))
 
                 // documentation
-                .<String>appendInherited(new KeyedCodec<>("Title", Codec.STRING),
+                .appendInherited(new KeyedCodec<>("Title", Codec.STRING),
                         (a, v) -> a.title = v, a -> a.title,
                         (a, p) -> a.title = p.title)
                 .documentation("The human-readable name of the glyph")
@@ -265,14 +312,6 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                 .documentation("Custom Icon Override")
                 .add()
 
-                // config
-                .appendInherited(new KeyedCodec<>("Config", GlyphConfig.CODEC),
-                        (a, v) -> a.config = v, a -> a.config,
-                        (a, p) -> a.config = p.config)
-                .documentation("Asset-defined tuning config for the glyph")
-                .metadata(new UIEditorSectionStart("Configuration"))
-                .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
-                .add()
                 .appendInherited(new KeyedCodec<>("IsEnabled", Codec.BOOLEAN),
                         (a, v) -> a.isEnabled = v, a -> a.isEnabled,
                         (a, p) -> a.isEnabled = p.isEnabled)
@@ -283,20 +322,11 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, p) -> a.isDeprecated = p.isDeprecated)
                 .documentation("Whether or not the glyph is deprecated")
                 .add()
-                .<String>appendInherited(new KeyedCodec<>("Handler", Codec.STRING),
-                        (a, v) -> a.handlerId = v,
-                        a -> a.handlerId,
-                        (a, p) -> a.handlerId = p.handlerId)
-                .metadata(new UIEditor(new UIEditor.Dropdown("HexcodeGlyphHandlers")))
-                .addValidatorLate(() -> GlyphHandlerKeyValidator.INSTANCE.late())
-                .documentation(
-                        "The registered glyph handler that executes this glyph - multiple glyph assets can reference one handler")
-                .add()
-                .<Float>appendInherited(new KeyedCodec<>("BasePower", Codec.FLOAT),
+                .appendInherited(new KeyedCodec<>("BasePower", Codec.FLOAT),
                         (a, v) -> a.basePower = v, a -> a.basePower,
                         (a, p) -> a.basePower = p.basePower)
                 .add()
-                .<Float>appendInherited(new KeyedCodec<>("ManaConsumption", Codec.FLOAT),
+                .appendInherited(new KeyedCodec<>("ManaConsumption", Codec.FLOAT),
                         (a, v) -> a.manaConsumption = v, a -> a.manaConsumption,
                         (a, p) -> a.manaConsumption = p.manaConsumption)
                 .documentation("How much mana the glyph consumes when cast")
@@ -306,18 +336,20 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, p) -> a.volatility = p.volatility)
                 .documentation("The volatility config for the glyph")
                 .add()
+                .append(new KeyedCodec<>("VolatilityImpact", Impact.CODEC),
+                        (c, v) -> c.volatilityImpact = v, c -> c.volatilityImpact)
+                .add()
 
                 // slots
                 .appendInherited(
-                        new KeyedCodec<>("Slots", slotMapCodec),
+                        new KeyedCodec<>("Slots", new MapCodec<>(
+                                NodeConfig.CHILD_ASSET_CODEC, LinkedHashMap::new, false)),
                         (a, v) -> {
                             a.slots = v != null ? new LinkedHashMap<>(v) : new LinkedHashMap<>();
-                            a.slotIndexCache = null;
                         },
                         a -> a.slots,
                         (a, p) -> {
                             a.slots = new LinkedHashMap<>(p.slots);
-                            a.slotIndexCache = null;
                         })
                 .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
                 .metadata(new UIEditorSectionStart("Slots"))
@@ -346,7 +378,7 @@ public class GlyphAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, p) -> a.isReversable = p.isReversable)
                 .documentation("Whether or not the shape is reversable (drawn in any order)")
                 .add()
-                .<String>appendInherited(new KeyedCodec<>("ModelPath", Codec.STRING),
+                .appendInherited(new KeyedCodec<>("ModelPath", Codec.STRING),
                         (a, v) -> a.modelPath = v, a -> a.modelPath,
                         (a, p) -> a.modelPath = p.modelPath)
                 .addValidatorLate(() -> ModelAsset.VALIDATOR_CACHE.getValidator().late())
