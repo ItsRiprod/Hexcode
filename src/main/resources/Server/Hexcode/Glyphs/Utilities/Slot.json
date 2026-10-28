@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Slot",
+  "Type": "Slot",
   "Title": "hexcode.glyphs.Slot.name",
   "Description": "hexcode.glyphs.Slot.description",
   "BasePower": 0,

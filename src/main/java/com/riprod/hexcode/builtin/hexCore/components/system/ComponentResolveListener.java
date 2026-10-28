@@ -66,7 +66,7 @@ public class ComponentResolveListener extends EntityEventSystem<EntityStore, Gly
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(ComponentGlyph.ID);
+        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(ComponentGlyph.TYPE);
         if (asset == null) {
             return;
         }

@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Bolt",
+  "Type": "Bolt",
   "Style": "Essence_Lightning",
   "Title": "hexcode.glyphs.Bolt.name",
   "Description": "hexcode.glyphs.Bolt.description",
@@ -48,13 +48,10 @@
       "Description": "hexcode.glyphs.Bolt.target.description"
     }
   },
-  "Config": {
-    "Type": "Bolt",
-    "Resource": "Lightning",
-    "DamageCause": "Lightning",
-    "Efficiency": 0.85,
-    "AffinityStat": "Affinity_Lightning"
-  },
+  "Resource": "Lightning",
+  "DamageCause": "Lightning",
+  "Efficiency": 0.85,
+  "AffinityStat": "Affinity_Lightning",
   "Volatility": {
     "InstantCost": 6,
     "DrainPerSecond": 0.0

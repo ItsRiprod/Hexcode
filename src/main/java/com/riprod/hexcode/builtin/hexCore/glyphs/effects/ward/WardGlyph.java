@@ -2,6 +2,10 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.ward;
 
 import java.util.Objects;
 
+import javax.annotation.Nullable;
+
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.entity.reference.PersistentRef;
@@ -12,24 +16,30 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ward.style.WardStyle;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.redirect.EntityRedirectSpawner;
 
+import lombok.Getter;
+
 public class WardGlyph extends GlyphAsset {
 
-    public static final String ID = "Ward";
+    public static final String TYPE = "Ward";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final float DEFAULT_SUSTAIN_PER_SECOND = -4.0f;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(WardConfig.class, WardConfig.CODEC);
-    }
+    @Nullable
+    @Getter
+    private Impact sustainImpact;
+
+    public static final BuilderCodec<WardGlyph> CODEC = BuilderCodec
+            .builder(WardGlyph.class, WardGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("SustainImpact", Impact.CODEC, true),
+                    (c, v) -> c.sustainImpact = v, c -> c.sustainImpact)
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -74,12 +84,12 @@ public class WardGlyph extends GlyphAsset {
         EntityRedirectSpawner.stamp(accessor, targetRef, casterRef, deferralRef);
 
         WardState state = new WardState(target, deferral, glyph.getNextLinks());
-        HexConstructSpawner.applyWithState(accessor, casterRef, hexContext, glyph, WardGlyph.ID, state);
+        HexConstructSpawner.applyWithState(accessor, casterRef, hexContext, glyph, WardGlyph.TYPE, state);
 
         TransformComponent casterTransform = accessor.getComponent(
                 casterRef, TransformComponent.getComponentType());
         if (casterTransform != null) {
-            WardStyle.renderSpawn(casterTransform.getPosition(), hexContext, accessor);
+            WardStyle.renderSpawn(this, casterTransform.getPosition(), hexContext, accessor);
         }
     }
 }

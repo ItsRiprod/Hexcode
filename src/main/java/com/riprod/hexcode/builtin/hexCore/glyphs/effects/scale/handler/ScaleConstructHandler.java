@@ -14,7 +14,9 @@ import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.ScaleGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.components.ScaleState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.style.ScaleStyle;
 import com.riprod.hexcode.utils.LogScopes;
@@ -76,7 +78,8 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
                 TransformComponent tc = buffer.getComponent(
                         targetRef, TransformComponent.getComponentType());
                 if (tc != null) {
-                    ScaleStyle.renderRestore(tc.getPosition(), status.getHexContext(), buffer);
+                    var asset = GlyphAsset.of(status.getTriggeringGlyph(), ScaleGlyph.class);
+                    ScaleStyle.renderRestore(asset, tc.getPosition(), status.getHexContext(), buffer);
                 }
             }
 

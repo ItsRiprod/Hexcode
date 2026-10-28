@@ -10,12 +10,7 @@ public class OutputGlyph extends GlyphAsset {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
-    public static final String ID = "Output";
-
-    @Override
-    public String getId() {
-        return ID;
-    };
+    public static final String TYPE = "Output";
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

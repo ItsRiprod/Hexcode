@@ -2,12 +2,18 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze;
 
 import java.util.Arrays;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementGlyphAsset;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.style.FreezeStyle;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
@@ -15,23 +21,26 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.protection.HexProtection;
 
-public class FreezeGlyph extends GlyphAsset {
+public class FreezeGlyph extends ElementGlyphAsset {
 
-    public static final String ID = "Freeze";
+    public static final String TYPE = "Freeze";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    private String statusEffect = "Ice";
+    private float durationPerComplexity = 1.0f;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(FreezeConfig.class, FreezeConfig.CODEC);
-    }
+    public static final BuilderCodec<FreezeGlyph> CODEC = BuilderCodec
+            .builder(FreezeGlyph.class, FreezeGlyph::new, ElementGlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("StatusEffect", Codec.STRING, true),
+                    (c, v) -> c.statusEffect = v, c -> c.statusEffect)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .append(new KeyedCodec<>("DurationPerComplexity", Codec.FLOAT, true),
+                    (c, v) -> c.durationPerComplexity = v, c -> c.durationPerComplexity)
+            .addValidator(Validators.greaterThanOrEqual(0.0f))
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -50,19 +59,13 @@ public class FreezeGlyph extends GlyphAsset {
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        FreezeConfig config = getConfig(FreezeConfig.class, asset);
-        if (config == null)
-            config = FreezeConfig.DEFAULTS;
-
-        float affinity = ElementSupport.affinityFactor(
-                hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
+        float affinity = ElementSupport.affinityFactor(hexContext, affinityStat, affinityScale);
+        float limit = ElementSupport.resourceLimit(glyph, this, hexContext);
         float seconds = ElementSupport.scaledDuration(
-                ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit),
-                config.getEfficiency(), config.getDurationPerComplexity(), affinity);
+                ElementSupport.consumeResource(hexContext, glyph, resource, limit),
+                efficiency, durationPerComplexity, affinity);
 
-        String effectId = config.getStatusEffect();
+        String effectId = statusEffect;
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         if (!ElementSupport.applyStatus(hexContext, target, glyph, effectId, seconds)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -72,17 +75,17 @@ public class FreezeGlyph extends GlyphAsset {
 
         TransformComponent tc = accessor.getComponent(target, TransformComponent.getComponentType());
         if (tc != null) {
-            FreezeStyle.renderFreeze(tc.getPosition(), hexContext, accessor);
+            FreezeStyle.renderFreeze(this, tc.getPosition(), hexContext, accessor);
         }
 
         FreezeState existing = ConstructStateUtil.findState(
-                accessor, target, FreezeGlyph.ID, FreezeState.class);
+                accessor, target, FreezeGlyph.TYPE, FreezeState.class);
         if (existing != null) {
             existing.refresh(seconds, glyph.getNextLinks());
         } else {
             FreezeState state = new FreezeState(effectId, seconds, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
-                    accessor, target, hexContext, glyph, FreezeGlyph.ID, state);
+                    accessor, target, hexContext, glyph, FreezeGlyph.TYPE, state);
         }
 
         Slot immediate = glyph.getSlot(FreezeGlyphSlots.IMMEDIATE);

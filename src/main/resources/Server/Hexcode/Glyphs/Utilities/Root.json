@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Root",
+  "Type": "Root",
   "Title": "hexcode.glyphs.Root.name",
   "Description": "hexcode.glyphs.Root.description",
   "BasePower": 0,

@@ -11,12 +11,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
 public class CompareGlyph extends GlyphAsset {
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    public static final String ID = "Compare";
+    public static final String TYPE = "Compare";
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

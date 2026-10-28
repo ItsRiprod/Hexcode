@@ -4,6 +4,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -16,9 +17,16 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.blocktype.component.BlockPhysics;
+import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
+import com.hypixel.hytale.server.core.event.events.ecs.DamageBlockEvent;
+import com.hypixel.hytale.server.core.event.events.ecs.EnvironmentBreakBlockEvent;
 import com.hypixel.hytale.server.core.modules.block.BlockEntity;
+import com.hypixel.hytale.server.core.modules.blockhealth.BlockHealth;
+import com.hypixel.hytale.server.core.modules.blockhealth.BlockHealthSection;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
+import com.hypixel.hytale.server.core.modules.interaction.BlockHarvestUtils;
+import com.hypixel.hytale.server.core.modules.time.TimeResource;
 import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -342,5 +350,43 @@ public class BlockUtils {
         selB.setPosition(blockA.x, blockA.y, blockA.z);
         selA.placeNoReturn(world, new Vector3i(), accessor);
         selB.placeNoReturn(world, new Vector3i(), accessor);
+    }
+
+    public static boolean damageBlock(BlockAccess.Cursor cursor, Ref<EntityStore> caster,
+            ComponentAccessor<EntityStore> accessor,
+            float damage) {
+        return damageBlock(cursor, caster, null, accessor, damage);
+    }
+
+    public static boolean damageBlock(BlockAccess.Cursor cursor, Ref<EntityStore> caster, Ref<EntityStore> vessel,
+            ComponentAccessor<EntityStore> accessor,
+            float damage) {
+        // perform damage
+        var store = cursor.chunkStore();
+        var chunkStore = store.getStore();
+        var blockHealthSection = chunkStore.getComponent(cursor.sectionRef(),
+                BlockHealthSection.getComponentType());
+        var health = blockHealthSection.getHealth(cursor.get().x, cursor.get().y, cursor.get().z);
+        final var timeResource = accessor.getResource(TimeResource.getResourceType());
+
+        final var blockType = cursor.blockType();
+
+        final var event = new DamageBlockEvent(null, cursor.get(), blockType, health, damage);
+        accessor.invoke(event);
+
+        final float remainingHealth = blockHealthSection.damage(cursor.get().x, cursor.get().y, cursor.get().z,
+                event.getDamage(), timeResource.getNow());
+
+        // actually break if destroyed
+        if (BlockHealth.isDestroyed(remainingHealth)) {
+            var gathering = blockType.getGathering();
+            final var breaking = gathering.getBreaking();
+            final var dropList = breaking.getDropListId();
+            final var itemId = breaking.getItemId();
+            var dropQuantity = breaking.getQuantity();
+            BlockHarvestUtils.performBlockBreak(cursor.get(), blockType, null, dropQuantity, itemId, dropList,
+                    SetBlockSettings.NONE, caster, vessel, cursor.sectionRef(), accessor, chunkStore);
+        }
+        return true;
     }
 }

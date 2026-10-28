@@ -35,7 +35,8 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
 
         Vector3d origin = originPosition(ctx);
         if (origin != null) {
-            ArcStyle.renderCast(ctx.getBuffer(), origin, status.getHexContext());
+            var asset = GlyphAsset.of(status.getTriggeringGlyph(), ArcGlyph.class);
+            ArcStyle.renderCast(asset, ctx.getBuffer(), origin, status.getHexContext());
         }
     }
 
@@ -96,10 +97,11 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         if (targetUuid != null) state.getVisited().add(targetUuid.getUuid());
 
         World world = buffer.getExternalData().getWorld();
-        ArcStyle.renderArc(buffer, origin, targetPos, hexContext);
-        ArcStyle.renderHit(buffer, targetPos, hexContext);
-
         Glyph triggeringGlyph = status.getTriggeringGlyph();
+        var asset = GlyphAsset.of(triggeringGlyph, ArcGlyph.class);
+        ArcStyle.renderArc(asset, buffer, origin, targetPos, hexContext);
+        ArcStyle.renderHit(asset, buffer, targetPos, hexContext);
+
         if (triggeringGlyph != null && targetUuid != null) {
             HexContext branchContext = hexContext.branch();
             branchContext.updateRuntimeAccessors(buffer);
@@ -114,16 +116,15 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         Glyph arcGlyph = state.getArcGlyph();
         if (arcGlyph == null) return true;
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(arcGlyph.getGlyphId());
+        var asset = GlyphAsset.of(arcGlyph, ArcGlyph.class);
         if (asset == null) return true;
 
         VolatilityComponent tracker = hexContext.volatility();
         if (tracker == null) return false;
         if (hexContext.getHexRoot() == null) return true;
 
-        ArcConfig config = asset.getConfig() instanceof ArcConfig arcConfig ? arcConfig : ArcConfig.DEFAULTS;
-        Impact impact = asset.getConfig() == null ? null : asset.getConfig().getVolatilityImpact();
-        float intervalFactor = (float) (config.getReferenceInterval()
+        var impact = asset.getVolatilityImpact();
+        float intervalFactor = (float) (asset.getReferenceInterval()
                 / Math.max(0.01f, state.getInterval()));
         float cost = arcGlyph.computeBaseCost(asset) * Impact.scale(impact, distance) * intervalFactor;
 

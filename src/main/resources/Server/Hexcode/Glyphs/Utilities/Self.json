@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Self",
+  "Type": "Self",
   "Style": {
     "Parent": "Element_Identity"
   },

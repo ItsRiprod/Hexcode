@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Number",
+  "Type": "Number",
   "Title": "hexcode.glyphs.Number_11.name",
   "Description": "hexcode.glyphs.Number_11.description",
   "ShapeStructure": [
@@ -22,10 +22,7 @@
       "Description": "hexcode.glyphs.Number_11.Next.description"
     }
   },
-  "Config": {
-    "Type": "Number",
-    "Value": 11
-  },
+  "Value": 11,
   "ManaConsumption": 0,
   "Volatility": {
     "InstantCost": 0.1,

@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Dot",
+  "Type": "Dot",
   "Title": "hexcode.glyphs.Dot.name",
   "Description": "hexcode.glyphs.Dot.description",
   "ShapeStructure": [

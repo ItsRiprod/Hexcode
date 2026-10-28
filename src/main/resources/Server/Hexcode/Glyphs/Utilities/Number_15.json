@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Number",
+  "Type": "Number",
   "Title": "hexcode.glyphs.Number_15.name",
   "Description": "hexcode.glyphs.Number_15.description",
   "ShapeStructure": [
@@ -15,10 +15,7 @@
       "Description": "hexcode.glyphs.Number_15.Next.description"
     }
   },
-  "Config": {
-    "Type": "Number",
-    "Value": 15
-  },
+  "Value": 15,
   "ManaConsumption": 0,
   "Volatility": {
     "InstantCost": 0.1,

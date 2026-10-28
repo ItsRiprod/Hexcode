@@ -1,14 +1,20 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact;
 
+import javax.annotation.Nullable;
+
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
+import com.hypixel.hytale.assetstore.codec.ContainedAssetCodec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.entity.InteractionChain;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.InteractionManager;
@@ -24,7 +30,7 @@ import com.riprod.hexcode.api.imbuement.ImbuedBlockActivator;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact.style.InteractStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -34,17 +40,19 @@ import com.riprod.hexcode.utils.LogScopes;
 public class InteractGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
-    public static final String ID = "Interact";
+    public static final String TYPE = "Interact";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    @Nullable
+    private String reachProxyItem;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(InteractConfig.class, InteractConfig.CODEC);
-    }
+    public static final BuilderCodec<InteractGlyph> CODEC = BuilderCodec
+            .builder(InteractGlyph.class, InteractGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("ReachProxyItem",
+                    new ContainedAssetCodec<>(Item.class, Item.CODEC), true),
+                    (c, v) -> c.reachProxyItem = v, c -> c.reachProxyItem)
+            .addValidatorLate(() -> Item.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -90,7 +98,7 @@ public class InteractGlyph extends GlyphAsset {
             return;
         }
 
-        InteractStyle.renderImpact(accessor, targetTc.getPosition(), hexContext);
+        InteractStyle.renderImpact(this, accessor, targetTc.getPosition(), hexContext);
     }
 
     private void handleBlockTarget(Glyph glyph, HexContext hexContext, BlockVar blockVar,
@@ -103,7 +111,7 @@ public class InteractGlyph extends GlyphAsset {
         }
 
         Vector3d targetPos = new Vector3d(blockPos.x + 0.5, blockPos.y + 0.5, blockPos.z + 0.5);
-        InteractStyle.renderImpact(accessor, targetPos, hexContext);
+        InteractStyle.renderImpact(this, accessor, targetPos, hexContext);
 
         ImbuedBlockActivator.ActivationOutcome outcome = ImbuedBlockActivator.tryConsume(world, blockPos);
         if (!outcome.isReady()) {

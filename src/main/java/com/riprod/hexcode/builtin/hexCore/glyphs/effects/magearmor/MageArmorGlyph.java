@@ -2,8 +2,12 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor;
 
 import java.util.Arrays;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
@@ -15,23 +19,22 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class MageArmorGlyph extends GlyphAsset {
 
-    public static final String ID = "MageArmor";
+    public static final String TYPE = "MageArmor";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    private String statusEffect = "Hexcode_Mage_Armor";
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(MageArmorConfig.class, MageArmorConfig.CODEC);
-    }
+    public static final BuilderCodec<MageArmorGlyph> CODEC = BuilderCodec
+            .builder(MageArmorGlyph.class, MageArmorGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("StatusEffect", Codec.STRING, true),
+                    (c, v) -> c.statusEffect = v, c -> c.statusEffect)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -42,30 +45,25 @@ public class MageArmorGlyph extends GlyphAsset {
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        MageArmorConfig config = getConfig(MageArmorConfig.class, asset);
-        if (config == null)
-            config = MageArmorConfig.DEFAULTS;
-
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         HexVar durationVar = glyph.readSlot(MageArmorGlyphSlots.DURATION, hexContext);
         float duration = HexVarUtil.numberOrSlotDefault(
-                durationVar, asset.getSlot(MageArmorGlyphSlots.DURATION)).floatValue();
+                durationVar, getSlot(MageArmorGlyphSlots.DURATION)).floatValue();
 
-        String effectId = config.getStatusEffect();
+        String effectId = statusEffect;
         accessor.putComponent(target, MagicHealthComponent.getComponentType(),
                 new MagicHealthComponent());
         ElementSupport.applyStatus(hexContext, target, glyph, effectId, duration);
 
         MageArmorState existing = ConstructStateUtil.findState(
-                accessor, target, MageArmorGlyph.ID, MageArmorState.class);
+                accessor, target, MageArmorGlyph.TYPE, MageArmorState.class);
         if (existing != null) {
             existing.refresh(duration, glyph.getNextLinks());
         } else {
             MageArmorState state = new MageArmorState(effectId, duration, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
-                    accessor, target, hexContext, glyph, MageArmorGlyph.ID, state);
+                    accessor, target, hexContext, glyph, MageArmorGlyph.TYPE, state);
         }
 
         Slot immediate = glyph.getSlot(MageArmorGlyphSlots.IMMEDIATE);

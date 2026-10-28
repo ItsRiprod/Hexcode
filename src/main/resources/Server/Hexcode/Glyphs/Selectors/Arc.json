@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Arc",
+  "Type": "Arc",
   "Style": {
     "PrimaryColor": "#99E6FF",
     "SecondaryColor": "#D6F2FF",
@@ -65,15 +65,12 @@
     "InstantCost": 2,
     "DrainPerSecond": 0.0
   },
-  "Config": {
-    "Type": "Arc",
-    "VolatilityImpact": {
-      "Type": "SphereVolume",
-      "DefaultMagnitude": 523.0,
-      "Exponent": 0.6667,
-      "Multiplier": 1.0
-    },
-    "Model": "Conjured_Anchor",
-    "ReferenceInterval": 0.75
-  }
+  "VolatilityImpact": {
+    "Type": "SphereVolume",
+    "DefaultMagnitude": 523.0,
+    "Exponent": 0.6667,
+    "Multiplier": 1.0
+  },
+  "Model": "Conjured_Anchor",
+  "ReferenceInterval": 0.75
 }

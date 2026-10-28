@@ -2,8 +2,12 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.erode;
 
 import java.util.Arrays;
 
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3i;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -13,6 +17,7 @@ import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffec
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool;
+import com.hypixel.hytale.server.core.entity.ExplosionConfig;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.BlockHarvestUtils;
 import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
@@ -28,12 +33,12 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.protection.BlockAction;
 import com.riprod.hexcode.core.common.protection.HexProtection;
 import com.riprod.hexcode.utils.BlockAccess;
+import com.riprod.hexcode.utils.BlockUtils;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VfxUtil;
@@ -41,17 +46,42 @@ import com.riprod.hexcode.utils.VfxUtil;
 public class ErodeGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
-    @Override
-    public String getId() {
-        return ID;
-    };
+    public static final String TYPE = "Erode";
 
-    public static final String ID = "Erode";
+    private boolean impactEntities = true;
+    private int minTier = 1;
+    private int maxTier = 6;
+    private float blockDamageScale = 0.05f;
+    private String effectId = "Hexcode_Erode";
+    @Nullable 
+    protected ExplosionConfig explosionConfig;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(ErodeConfig.class, ErodeConfig.CODEC);
-    }
+    public static final BuilderCodec<ErodeGlyph> CODEC = BuilderCodec
+            .builder(ErodeGlyph.class, ErodeGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("ImpactEntities", Codec.BOOLEAN, true),
+                    (c, v) -> c.impactEntities = v, c -> c.impactEntities)
+            .add()
+            .append(new KeyedCodec<>("MinTier", Codec.INTEGER, true),
+                    (c, v) -> c.minTier = v, c -> c.minTier)
+            .add()
+            .append(new KeyedCodec<>("MaxTier", Codec.INTEGER, true),
+                    (c, v) -> c.maxTier = v, c -> c.maxTier)
+            .add()
+            .append(new KeyedCodec<>("BlockDamageScale", Codec.FLOAT, true),
+                    (c, v) -> c.blockDamageScale = v, c -> c.blockDamageScale)
+            .add()
+            .append(new KeyedCodec<>("Effect", EntityEffect.CHILD_ASSET_CODEC, true),
+                    (c, v) -> c.effectId = v, c -> c.effectId)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .appendInherited(
+                    new KeyedCodec<>("ExplosionConfig", ExplosionConfig.CODEC),
+                    (blockType, s) -> blockType.explosionConfig = s,
+                    blockType -> blockType.explosionConfig,
+                    (blockType, parent) -> blockType.explosionConfig = parent.explosionConfig)
+            .documentation("The explosion config associated with the block damage")
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -62,21 +92,16 @@ public class ErodeGlyph extends GlyphAsset {
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        ErodeConfig config = getConfig(ErodeConfig.class, asset);
-        if (config == null)
-            config = ErodeConfig.DEFAULTS;
-
         double duration = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(ErodeGlyphSlots.DURATION, hexContext),
-                asset.getSlot(ErodeGlyphSlots.DURATION));
+                getSlot(ErodeGlyphSlots.DURATION));
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         if (targets instanceof EntityVar entityVar) {
             // sustained entity vulnerability defers continuation to the construct's onEnd
-            if (config.canImpactEntities()
-                    && applyToEntities(glyph, entityVar, (float) duration, config, hexContext, accessor)) {
+            if (impactEntities
+                    && applyToEntities(glyph, entityVar, (float) duration, hexContext, accessor)) {
                 Slot immediate = glyph.getSlot(ErodeGlyphSlots.IMMEDIATE);
                 if (immediate != null && immediate.getLinks().length > 0) {
                     HexContext immediateCtx = hexContext.branch();
@@ -90,8 +115,8 @@ public class ErodeGlyph extends GlyphAsset {
             if (pos != null) {
                 double amount = HexVarUtil.numberOrSlotDefault(
                         glyph.readSlot(ErodeGlyphSlots.AMOUNT, hexContext),
-                        asset.getSlot(ErodeGlyphSlots.AMOUNT));
-                applyToBlocks(pos, amount, config, hexContext, accessor);
+                        getSlot(ErodeGlyphSlots.AMOUNT));
+                applyToBlocks(pos, amount, hexContext, accessor);
             }
         }
 
@@ -99,7 +124,7 @@ public class ErodeGlyph extends GlyphAsset {
     }
 
     private boolean applyToEntities(Glyph glyph, EntityVar entityVar, float durationSeconds,
-            ErodeConfig config, HexContext hexContext, CommandBuffer<EntityStore> accessor) {
+            HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         Ref<EntityStore> ref = entityVar.getRef(accessor);
         if (ref == null || !ref.isValid())
             return false;
@@ -111,8 +136,7 @@ public class ErodeGlyph extends GlyphAsset {
             return false;
         }
 
-        String effectId = config.getEffectId();
-        EntityEffect erodeEffect = EntityEffect.getAssetMap().getAsset(effectId);
+        var erodeEffect = EntityEffect.getAssetMap().getAsset(effectId);
         if (erodeEffect == null) {
             LOGGER.atWarning().log("erode: %s effect asset not found", effectId);
             return false;
@@ -122,26 +146,26 @@ public class ErodeGlyph extends GlyphAsset {
                 OverlapBehavior.OVERWRITE);
 
         ErodeState existing = ConstructStateUtil.findState(
-                accessor, ref, ErodeGlyph.ID, ErodeState.class);
+                accessor, ref, ErodeGlyph.TYPE, ErodeState.class);
         if (existing != null) {
             existing.setRemainingDuration(durationSeconds);
             existing.setNextGlyphIds(glyph.getNextLinks());
         } else {
             ErodeState state = new ErodeState(durationSeconds, effectId, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
-                    accessor, ref, hexContext, glyph, ErodeGlyph.ID, state);
+                    accessor, ref, hexContext, glyph, ErodeGlyph.TYPE, state);
         }
 
         TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
         if (tc != null) {
-            ErodeStyle.renderEntityHit(tc.getPosition(), hexContext, accessor);
+            ErodeStyle.renderEntityHit(this, tc.getPosition(), hexContext, accessor);
         }
 
         LOGGER.atFine().log("erode: applied vulnerability effect for %.1fs to entity", durationSeconds);
         return true;
     }
 
-    private void applyToBlocks(Vector3i pos, double amount, ErodeConfig config,
+    private void applyToBlocks(Vector3i pos, double amount,
             HexContext hexContext, CommandBuffer<EntityStore> accessor) {
 
         if (pos == null)
@@ -164,39 +188,10 @@ public class ErodeGlyph extends GlyphAsset {
         if (chunkSection == null || !chunkSection.isValid())
             return;
 
-        int tier = amountToTier(amount, config);
-        String toolId = config.getToolAssetPrefix() + tier;
-        Item toolItem = Item.getAssetMap().getAsset(toolId);
-        ItemTool tool = toolItem != null ? toolItem.getTool() : null;
-        if (tool == null) {
-            LOGGER.atWarning().log("erode: missing tool asset %s; block path no-op", toolId);
-            return;
-        }
+        float damageScale = (float) (amount * blockDamageScale);
 
-        Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
-        float damageScale = (float) (amount * config.getBlockDamageScale());
-
-        BlockHarvestUtils.performBlockDamage(
-                casterRef,
-                null,
-                pos,
-                null,
-                tool,
-                null,
-                false,
-                damageScale,
-                SetBlockSettings.NONE,
-                false,
-                chunkSection,
-                accessor,
-                chunkStore.getStore());
-
-        LOGGER.atFine().log("erode: routed block hit at %s through harvest pipeline (tier=%d, scale=%.2f)",
-                pos, tier, damageScale);
-    }
-
-    private static int amountToTier(double amount, ErodeConfig config) {
-        int t = (int) Math.floor((amount - 1) / config.getTierBucketWidth()) + 1;
-        return Math.max(config.getMinTier(), Math.min(config.getMaxTier(), t));
+        var cursor = new BlockAccess.Cursor(world);
+        cursor.set(pos);
+        BlockUtils.damageBlock(cursor, hexContext.getCasterRef(accessor), accessor, damageScale);
     }
 }

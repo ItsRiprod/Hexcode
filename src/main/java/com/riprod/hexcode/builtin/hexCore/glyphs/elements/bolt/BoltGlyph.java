@@ -1,5 +1,8 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.elements.bolt;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
@@ -7,25 +10,24 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementGlyphAsset;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 
-public class BoltGlyph extends GlyphAsset {
+public class BoltGlyph extends ElementGlyphAsset {
 
-    public static final String ID = "Bolt";
+    public static final String TYPE = "Bolt";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    private String damageCause = "Lightning";
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(BoltConfig.class, BoltConfig.CODEC);
-    }
+    public static final BuilderCodec<BoltGlyph> CODEC = BuilderCodec
+            .builder(BoltGlyph.class, BoltGlyph::new, ElementGlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("DamageCause", Codec.STRING, true),
+                    (c, v) -> c.damageCause = v, c -> c.damageCause)
+            .addValidatorLate(() -> DamageCause.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -36,18 +38,12 @@ public class BoltGlyph extends GlyphAsset {
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        BoltConfig config = getConfig(BoltConfig.class, asset);
-        if (config == null)
-            config = BoltConfig.DEFAULTS;
+        float affinity = ElementSupport.affinityFactor(hexContext, affinityStat, affinityScale);
+        float limit = ElementSupport.resourceLimit(glyph, this, hexContext);
+        float amount = ElementSupport.consumeResource(hexContext, glyph, resource, limit)
+                * efficiency * affinity;
 
-        float affinity = ElementSupport.affinityFactor(
-                hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
-        float amount = ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit)
-                * config.getEfficiency() * affinity;
-
-        DamageCause cause = DamageCause.getAssetMap().getAsset(config.getDamageCause());
+        DamageCause cause = DamageCause.getAssetMap().getAsset(damageCause);
         if (cause != null) {
             Ref<EntityStore> caster = hexContext.getCasterRef(hexContext.getAccessor());
             Damage.Source source = caster != null && caster.isValid()

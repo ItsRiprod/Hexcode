@@ -11,12 +11,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.utils.HexCompareUtil;
 
 public class GreaterGlyph extends GlyphAsset {
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    public static final String ID = "Greater";
+    public static final String TYPE = "Greater";
 
     public HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(GreaterGlyphSlots.A, hexContext);

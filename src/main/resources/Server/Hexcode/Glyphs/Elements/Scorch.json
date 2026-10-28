@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Scorch",
+  "Type": "Scorch",
   "Style": "Element_Chaos",
   "Title": "hexcode.glyphs.Scorch.name",
   "Description": "hexcode.glyphs.Scorch.description",
@@ -48,13 +48,10 @@
       "Description": "hexcode.glyphs.Scorch.target.description"
     }
   },
-  "Config": {
-    "Type": "Scorch",
-    "Resource": "Fire",
-    "DamageCause": "Fire",
-    "Efficiency": 0.95,
-    "AffinityStat": "Affinity_Fire"
-  },
+  "Resource": "Fire",
+  "DamageCause": "Fire",
+  "Efficiency": 0.95,
+  "AffinityStat": "Affinity_Fire",
   "Volatility": {
     "InstantCost": 6,
     "DrainPerSecond": 0.0

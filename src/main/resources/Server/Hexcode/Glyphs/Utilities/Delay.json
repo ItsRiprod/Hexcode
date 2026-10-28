@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Delay",
+  "Type": "Delay",
   "Style": {
     "Parent": "Element_Time",
     "PrimaryParticle": {
@@ -51,8 +51,5 @@
     "InstantCost": 0.25,
     "DrainPerSecond": 0.1
   },
-  "Config": {
-    "Type": "Delay",
-    "Gravity": 0.0
-  }
+  "Gravity": 0.0
 }

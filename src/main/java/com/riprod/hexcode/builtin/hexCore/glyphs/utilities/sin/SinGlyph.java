@@ -8,12 +8,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
 public class SinGlyph extends GlyphAsset {
-    public static final String ID = "Sin";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Sin";
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(SinGlyphSlots.A, hexContext);

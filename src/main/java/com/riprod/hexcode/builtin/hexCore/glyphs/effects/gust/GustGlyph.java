@@ -2,6 +2,9 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.gust;
 
 import org.joml.Vector3d;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.entity.ExplosionConfig;
@@ -15,24 +18,35 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class GustGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
-    @Override
-    public String getId() {
-        return ID;
-    };
+    public static final String TYPE = "Gust";
 
-    public static final String ID = "Gust";
+    // purposefully a random number to avoid intentional offsets causing the divide-by-zero bug (obtained by keyboard spam)
+    private double minKnockbackOffset = 0.15792347;
+    private float entityDamage = 0.0f;
+    private float entityDamageFalloff = 1.0f;
+    private double verticalKnockbackScale = 0.3;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(GustConfig.class, GustConfig.CODEC);
-    }
+    public static final BuilderCodec<GustGlyph> CODEC = BuilderCodec
+            .builder(GustGlyph.class, GustGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("MinKnockbackOffset", Codec.DOUBLE, true),
+                    (c, v) -> c.minKnockbackOffset = v, c -> c.minKnockbackOffset)
+            .add()
+            .append(new KeyedCodec<>("EntityDamage", Codec.FLOAT, true),
+                    (c, v) -> c.entityDamage = v, c -> c.entityDamage)
+            .add()
+            .append(new KeyedCodec<>("EntityDamageFalloff", Codec.FLOAT, true),
+                    (c, v) -> c.entityDamageFalloff = v, c -> c.entityDamageFalloff)
+            .add()
+            .append(new KeyedCodec<>("VerticalKnockbackScale", Codec.DOUBLE, true),
+                    (c, v) -> c.verticalKnockbackScale = v, c -> c.verticalKnockbackScale)
+            .add()
+            .build();
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
@@ -44,9 +58,9 @@ public class GustGlyph extends GlyphAsset {
                 asset != null ? asset.getSlot(GustGlyphSlots.MAGNITUDE) : null));
         double effective = mag * radius * radius;
 
-        Impact impact = asset == null || asset.getConfig() == null
+        Impact impact = asset == null
                 ? null
-                : asset.getConfig().getVolatilityImpact();
+                : asset.getVolatilityImpact();
         return glyph.computeBaseCost(asset) * Impact.scale(impact, effective);
     }
 
@@ -54,15 +68,10 @@ public class GustGlyph extends GlyphAsset {
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar centerVar = glyph.readSlot(GustGlyphSlots.CENTER, hexContext);
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        GustConfig config = getConfig(GustConfig.class, asset);
-        if (config == null)
-            config = GustConfig.DEFAULTS;
-
         double radius = HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(GustGlyphSlots.RADIUS, hexContext), asset.getSlot(GustGlyphSlots.RADIUS));
+                glyph.readSlot(GustGlyphSlots.RADIUS, hexContext), getSlot(GustGlyphSlots.RADIUS));
         double mag = HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(GustGlyphSlots.MAGNITUDE, hexContext), asset.getSlot(GustGlyphSlots.MAGNITUDE));
+                glyph.readSlot(GustGlyphSlots.MAGNITUDE, hexContext), getSlot(GustGlyphSlots.MAGNITUDE));
 
         if (centerVar == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -82,20 +91,19 @@ public class GustGlyph extends GlyphAsset {
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        Vector3d explosionCenter = new Vector3d(center).add(0, config.getMinKnockbackOffset(), 0);
+        Vector3d explosionCenter = new Vector3d(center).add(0, minKnockbackOffset, 0);
 
-        final GustConfig gustConfig = config;
         ExplosionConfig explosionConfig = new ExplosionConfig() {
             {
                 damageEntities = true;
                 damageBlocks = false;
                 entityDamageRadius = (float) radius;
-                entityDamage = gustConfig.getEntityDamage();
-                entityDamageFalloff = gustConfig.getEntityDamageFalloff();
+                entityDamage = GustGlyph.this.entityDamage;
+                entityDamageFalloff = GustGlyph.this.entityDamageFalloff;
                 knockback = new PointKnockback() {
                     {
                         force = (float) mag;
-                        velocityY = (float) (mag * gustConfig.getVerticalKnockbackScale());
+                        velocityY = (float) (mag * verticalKnockbackScale);
                         duration = 0;
                     }
                 };
@@ -111,7 +119,7 @@ public class GustGlyph extends GlyphAsset {
                 accessor,
                 accessor.getExternalData().getWorld().getChunkStore().getStore());
 
-        GustGlyphStyle.render(center, radius, hexContext, accessor);
+        GustGlyphStyle.render(this, center, radius, hexContext, accessor);
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }

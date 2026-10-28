@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Illuminate",
+  "Type": "Illuminate",
   "Title": "hexcode.glyphs.Illuminate.name",
   "Description": "hexcode.glyphs.Illuminate.description",
   "BasePower": 0,
@@ -47,11 +47,8 @@
       "Description": "hexcode.glyphs.Illuminate.Next.description"
     }
   },
-  "Config": {
-    "Type": "Illuminate",
-    "LightRadius": 12,
-    "DefaultColor": "#00CCCC"
-  },
+  "LightRadius": 12,
+  "DefaultColor": "#00CCCC",
   "Volatility": {
     "InstantCost": 5,
     "DrainPerSecond": 0.0

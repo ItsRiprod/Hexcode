@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.joml.Vector3d;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
@@ -27,7 +30,6 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -39,31 +41,24 @@ import com.riprod.hexcode.utils.HexVarUtil;
 public class DelayGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    public static final String ID = "Delay";
+    public static final String TYPE = "Delay";
 
     private static final Box FALLBACK_BOX = Box.horizontallyCentered(0.5, 0.5, 0.5);
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(DelayConfig.class, DelayConfig.CODEC);
-    }
+    private double gravity = 0.0;
+
+    public static final BuilderCodec<DelayGlyph> CODEC = BuilderCodec
+            .builder(DelayGlyph.class, DelayGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("Gravity", Codec.DOUBLE, true),
+                    (c, v) -> c.gravity = v, c -> c.gravity)
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        if (asset == null) {
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "delay glyph asset not found");
-            return;
-        }
         float seconds = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(DelayGlyphSlots.DURATION, hexContext),
-                asset.getSlot(DelayGlyphSlots.DURATION)).floatValue();
+                getSlot(DelayGlyphSlots.DURATION)).floatValue();
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
@@ -106,9 +101,9 @@ public class DelayGlyph extends GlyphAsset {
             TransformComponent targetTransform = accessor.getComponent(
                     targetRef, TransformComponent.getComponentType());
             if (targetTransform != null) {
-                DelayStyle.renderAt(targetTransform.getPosition(), hexContext);
+                DelayStyle.renderAt(this, targetTransform.getPosition(), hexContext);
             }
-            HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, ID, state);
+            HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, TYPE, state);
             return;
         }
 
@@ -143,31 +138,27 @@ public class DelayGlyph extends GlyphAsset {
             }
         }
 
-        DelayStyle.renderAt(spawnPos, hexContext);
+        DelayStyle.renderAt(this, spawnPos, hexContext);
 
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
-                accessor, hexContext, glyph, DelayGlyph.ID, spawnPos, state);
+                accessor, hexContext, glyph, DelayGlyph.TYPE, spawnPos, state);
 
         if (rot != null) {
             holder.putComponent(TransformComponent.getComponentType(),
                     new TransformComponent(spawnPos, rot));
         }
 
-        Model model = HexConstructSpawner.attachModel(holder, hexContext, asset, 1.0f);
+        Model model = HexConstructSpawner.attachModel(holder, hexContext, this, 1.0f);
         Box box = model != null ? model.getBoundingBox() : FALLBACK_BOX;
         if (model == null) {
             LOGGER.atWarning().log("delay: no model resolved for construct");
         }
 
-        DelayConfig config = getConfig(DelayConfig.class, asset);
-        if (config == null)
-            config = DelayConfig.DEFAULTS;
-
         holder.addComponent(BoundingBox.getComponentType(), new BoundingBox(box));
         holder.addComponent(Velocity.getComponentType(), new Velocity());
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(HeadRotation.getComponentType());
-        new DelayPhysicsConfig(config.getGravity()).apply(holder,
+        new DelayPhysicsConfig(gravity).apply(holder,
                 hexContext.getCasterRef(accessor), new Vector3d(), accessor, false);
 
         Ref<EntityStore> delayRef = accessor.addEntity(holder, AddReason.SPAWN);

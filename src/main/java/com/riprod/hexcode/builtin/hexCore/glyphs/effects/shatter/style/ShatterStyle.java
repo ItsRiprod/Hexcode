@@ -11,7 +11,6 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class ShatterStyle {
 
-    private static final String GLYPH_ID = "Shatter";
     private static final float LINE_THICKNESS = 0.06f;
     private static final float LINE_DURATION = 0.25f;
     private static final float HIT_LINE_THICKNESS = 0.1f;
@@ -20,31 +19,21 @@ public class ShatterStyle {
     private ShatterStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void renderLaunch(Vector3d position, Vector3d direction, HexContext ctx,
+    public static void renderLaunch(GlyphAsset asset, Vector3d position, Vector3d direction, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnPrimary(overrides, asset(), position, accessor);
-        VfxUtil.spawnStyleParticleDirected(overrides, asset(), position, accessor, direction);
+        VfxUtil.spawnPrimary(overrides, asset, position, accessor);
+        VfxUtil.spawnStyleParticleDirected(overrides, asset, position, accessor, direction);
     }
 
-    public static void renderShardHit(Vector3d hitPos, HexContext ctx,
+    public static void renderShardHit(GlyphAsset asset, Vector3d hitPos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), hitPos, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, hitPos, accessor);
 
-        Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset());
+        Vector3f color = VfxUtil.resolvePrimaryColor(ctx, asset);
         Vector3d lineEnd = new Vector3d(hitPos).add(0, 0.5, 0);
         VfxUtil.line(accessor, hitPos, lineEnd, color, HIT_LINE_THICKNESS, HIT_LINE_DURATION, 0,
-                VfxUtil.resolveAlpha(ctx, asset()));
-    }
-
-    public static void renderMiss(Vector3d endPos, HexContext ctx,
-            ComponentAccessor<EntityStore> accessor) {
-        HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnTertiary(overrides, asset(), endPos, accessor);
+                VfxUtil.resolveAlpha(ctx, asset));
     }
 }

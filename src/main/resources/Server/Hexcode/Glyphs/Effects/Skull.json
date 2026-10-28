@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Interaction",
+  "Type": "Interaction",
   "Title": "hexcode.glyphs.Skull.name",
   "Description": "hexcode.glyphs.Skull.description",
   "ShapeStructure": [
@@ -21,10 +21,7 @@
       "Description": "hexcode.glyphs.Skull.Next.description"
     }
   },
-  "Config": {
-    "Type": "Interaction",
-    "RootInteraction": "Flamethrower_Goblin_Primary"
-  },
+  "RootInteraction": "Flamethrower_Goblin_Primary",
   "ManaConsumption": 80,
   "Volatility": {
     "InstantCost": 0.1,

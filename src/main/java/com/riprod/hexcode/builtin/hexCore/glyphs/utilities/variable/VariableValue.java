@@ -12,12 +12,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
 public class VariableValue extends GlyphAsset {
 
-    @Override
-    public String getId() {
-        return ID;
-    };
-
-    public static final String ID = "Variable";
+    public static final String TYPE = "Variable";
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {

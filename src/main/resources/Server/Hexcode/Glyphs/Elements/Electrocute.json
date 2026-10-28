@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Electrocute",
+  "Type": "Electrocute",
   "Style": "Essence_Lightning",
   "Title": "hexcode.glyphs.Electrocute.name",
   "Description": "hexcode.glyphs.Electrocute.description",
@@ -54,14 +54,11 @@
       "Description": "hexcode.glyphs.Electrocute.target.description"
     }
   },
-  "Config": {
-    "Type": "Electrocute",
-    "Resource": "Lightning",
-    "StatusEffect": "Lightning",
-    "Efficiency": 0.8,
-    "DurationPerComplexity": 1.0,
-    "AffinityStat": "Affinity_Lightning"
-  },
+  "Resource": "Lightning",
+  "StatusEffect": "Lightning",
+  "Efficiency": 0.8,
+  "DurationPerComplexity": 1.0,
+  "AffinityStat": "Affinity_Lightning",
   "Volatility": {
     "InstantCost": 6,
     "DrainPerSecond": 0.2

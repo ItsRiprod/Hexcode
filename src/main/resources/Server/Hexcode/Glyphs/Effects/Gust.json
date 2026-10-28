@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Gust",
+  "Type": "Gust",
   "Style": {
     "PrimaryColor": "#B3E5FC",
     "SecondaryColor": "#E1F5FE",
@@ -67,16 +67,13 @@
     "InstantCost": 3,
     "DrainPerSecond": 0.0
   },
-  "Config": {
-    "Type": "Gust",
-    "VolatilityImpact": {
-      "Type": "PowerLaw",
-      "DefaultMagnitude": 375.0,
-      "Exponent": 1.0
-    },
-    "MinKnockbackOffset": 0.1,
-    "EntityDamage": 0.0,
-    "EntityDamageFalloff": 1.0,
-    "VerticalKnockbackScale": 0.3
-  }
+  "VolatilityImpact": {
+    "Type": "PowerLaw",
+    "DefaultMagnitude": 375.0,
+    "Exponent": 1.0
+  },
+  "MinKnockbackOffset": 0.1,
+  "EntityDamage": 0.0,
+  "EntityDamageFalloff": 1.0,
+  "VerticalKnockbackScale": 0.3
 }

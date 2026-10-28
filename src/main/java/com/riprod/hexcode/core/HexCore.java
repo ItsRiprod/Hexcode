@@ -78,7 +78,6 @@ import com.riprod.hexcode.core.common.glyphs.icon.GlyphEditorPreview;
 import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconEditorButton;
 import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconStore;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -481,8 +480,5 @@ public class HexCore {
         events.register(AssetEditorRequestDataSetEvent.class, "HexcodeCastingStyles",
                 (Consumer<AssetEditorRequestDataSetEvent>) e -> e
                         .setResults(CastingStyleRegistry.keys().toArray(String[]::new)));
-        events.register(AssetEditorRequestDataSetEvent.class, "HexcodeGlyphHandlers",
-                (Consumer<AssetEditorRequestDataSetEvent>) e -> e
-                        .setResults(GlyphRegistry.getAll().keySet().toArray(String[]::new)));
     }
 }

@@ -16,7 +16,6 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.utils.HexSlot;
@@ -55,12 +54,6 @@ public class GlyphsLearnCommand extends AbstractPlayerCommand {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyphId);
         if (asset == null) {
             playerRef.sendMessage(Message.raw("Unknown glyph: " + glyphId));
-            return;
-        }
-
-        GlyphHandler handler = GlyphRegistry.get(asset.getHandler());
-        if (handler == null) {
-            playerRef.sendMessage(Message.raw("No handler registered for glyph: " + glyphId));
             return;
         }
 

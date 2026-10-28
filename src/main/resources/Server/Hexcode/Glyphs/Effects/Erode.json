@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Erode",
+  "Type": "Erode",
   "Style": {
     "PrimaryColor": "#8D6E63",
     "SecondaryColor": "#D7CCC8",
@@ -73,14 +73,11 @@
     "InstantCost": 2,
     "DrainPerSecond": 2
   },
-  "Config": {
-    "Type": "Erode",
-    "MinTier": 1,
-    "MaxTier": 20,
-    "BlockDamageScale": 0.05,
-    "TierBucketWidth": 4,
-    "Effect": "Hexcode_Erode",
-    "ToolAssetPrefix": "Hexcode_Erode_Tool_T",
-    "ImpactEntities": true
-  }
+  "MinTier": 1,
+  "MaxTier": 20,
+  "BlockDamageScale": 0.05,
+  "TierBucketWidth": 4,
+  "Effect": "Hexcode_Erode",
+  "ToolAssetPrefix": "Hexcode_Erode_Tool_T",
+  "ImpactEntities": true
 }

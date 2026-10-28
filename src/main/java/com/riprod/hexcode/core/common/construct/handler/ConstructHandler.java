@@ -6,7 +6,6 @@ import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
-import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
 public interface ConstructHandler<S extends ConstructState> {
@@ -51,9 +50,7 @@ public interface ConstructHandler<S extends ConstructState> {
     }
 
     static float resolveDrainRate(HexStatus<?> status) {
-        Glyph trigger = status.getTriggeringGlyph();
-        if (trigger == null) return 0f;
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(trigger.getGlyphId());
+        var asset = GlyphAsset.of(status.getTriggeringGlyph(), GlyphAsset.class);
         if (asset == null) return 0f;
         return asset.getVolatility().getDrainPerSecond();
     }

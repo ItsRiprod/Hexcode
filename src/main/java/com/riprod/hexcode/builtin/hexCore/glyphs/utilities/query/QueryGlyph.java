@@ -28,12 +28,7 @@ import com.riprod.hexcode.utils.HexVarUtil;
 
 public class QueryGlyph extends GlyphAsset {
 
-    public static final String ID = "Query";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Query";
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {

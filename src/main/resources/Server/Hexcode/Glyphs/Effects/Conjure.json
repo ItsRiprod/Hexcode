@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Conjure",
+  "Type": "Conjure",
   "Style": {
     "PrimaryColor": "#3399FF",
     "SecondaryColor": "#A3CCFF",
@@ -91,18 +91,15 @@
     "InstantCost": 1.5,
     "DrainPerSecond": 0.25
   },
-  "Config": {
-    "Type": "Conjure",
-    "VolatilityImpact": {
-      "Type": "PowerLaw",
-      "DefaultMagnitude": 125.0,
-      "Exponent": 1.0
-    },
-    "BoxHalfExtent": 0.5,
-    "MinAxisSize": 1.0,
-    "SpatialQueryInterval": 0.2,
-    "HardCollision": "Hexcode_Conjure_HardCollision",
-    "SoftCollision": "Hexcode_Conjure_SoftCollision",
-    "AnchorModel": "Conjured_Anchor"
-  }
+  "VolatilityImpact": {
+    "Type": "PowerLaw",
+    "DefaultMagnitude": 125.0,
+    "Exponent": 1.0
+  },
+  "BoxHalfExtent": 0.5,
+  "MinAxisSize": 1.0,
+  "SpatialQueryInterval": 0.2,
+  "HardCollision": "Hexcode_Conjure_HardCollision",
+  "SoftCollision": "Hexcode_Conjure_SoftCollision",
+  "AnchorModel": "Conjured_Anchor"
 }

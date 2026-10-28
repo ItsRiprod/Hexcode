@@ -63,7 +63,7 @@ public class MagicHealthDamageSystem extends DamageEventSystem {
     @Nullable
     private VolatilityComponent findMageArmorVolatility(CommandBuffer<EntityStore> buffer, Ref<EntityStore> ref) {
         AtomicReference<VolatilityComponent> found = new AtomicReference<>();
-        ConstructStateUtil.forEachStatus(buffer, ref, MageArmorGlyph.ID, (id, status) -> {
+        ConstructStateUtil.forEachStatus(buffer, ref, MageArmorGlyph.TYPE, (id, status) -> {
             if (found.get() == null) found.set(status.getHexContext().volatility());
         });
         return found.get();

@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Phase",
+  "Type": "Phase",
   "Style": {
     "PrimaryColor": "#3F51B5",
     "SecondaryColor": "#9FA8DA",
@@ -79,14 +79,11 @@
     "DrainPerSecond": 0.1
   },
   "IsReversable": false,
-  "Config": {
-    "Type": "Phase",
-    "CrushDamageImpact": {
-      "Type": "Linear",
-      "Slope": 2.0,
-      "Offset": 4.0,
-      "OutputMax": 25.0
-    },
-    "DamageCause": "Environment"
-  }
+  "CrushDamageImpact": {
+    "Type": "Linear",
+    "Slope": 2.0,
+    "Offset": 4.0,
+    "OutputMax": 25.0
+  },
+  "DamageCause": "Environment"
 }

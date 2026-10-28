@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Freeze",
+  "Type": "Freeze",
   "Style": {
     "Parent": "Element_Drain",
     "PrimaryParticle": {
@@ -65,14 +65,11 @@
       "Description": "hexcode.glyphs.Freeze.target.description"
     }
   },
-  "Config": {
-    "Type": "Freeze",
-    "Resource": "Ice",
-    "StatusEffect": "Ice",
-    "Efficiency": 0.75,
-    "DurationPerComplexity": 1.0,
-    "AffinityStat": "Affinity_Ice"
-  },
+  "Resource": "Ice",
+  "StatusEffect": "Ice",
+  "Efficiency": 0.75,
+  "DurationPerComplexity": 1.0,
+  "AffinityStat": "Affinity_Ice",
   "Volatility": {
     "InstantCost": 6,
     "DrainPerSecond": 0.2

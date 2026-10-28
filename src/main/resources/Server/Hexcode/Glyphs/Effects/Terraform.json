@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Terraform",
+  "Type": "Terraform",
   "Title": "hexcode.glyphs.Terraform.name",
   "Description": "hexcode.glyphs.Terraform.description",
   "BasePower": 1.0,

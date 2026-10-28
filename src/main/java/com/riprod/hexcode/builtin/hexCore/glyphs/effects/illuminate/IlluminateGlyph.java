@@ -7,6 +7,9 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
@@ -15,6 +18,7 @@ import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.protocol.Color;
 import com.hypixel.hytale.protocol.ColorLight;
 import com.hypixel.hytale.protocol.MountController;
+import com.hypixel.hytale.server.core.codec.ProtocolCodecs;
 import com.hypixel.hytale.server.core.modules.entity.component.DynamicLight;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -26,46 +30,47 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
+import lombok.Getter;
+
 public class IlluminateGlyph extends GlyphAsset {
 
-    public static final String ID = "Illuminate";
+    public static final String TYPE = "Illuminate";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    private int lightRadius = 8;
+    @Getter
+    private Color defaultColor = new Color((byte) 0, (byte) 204, (byte) 204);
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(IlluminateConfig.class, IlluminateConfig.CODEC);
-    }
+    public static final BuilderCodec<IlluminateGlyph> CODEC = BuilderCodec
+            .builder(IlluminateGlyph.class, IlluminateGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("LightRadius", Codec.INTEGER, true),
+                    (c, v) -> c.lightRadius = v, c -> c.lightRadius)
+            .add()
+            .append(new KeyedCodec<>("DefaultColor", ProtocolCodecs.COLOR, true),
+                    (c, v) -> c.defaultColor = v, c -> c.defaultColor)
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        IlluminateConfig config = getConfig(IlluminateConfig.class, asset);
-        if (config == null)
-            config = IlluminateConfig.DEFAULTS;
 
         double mode = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(IlluminateGlyphSlots.MODE, hexContext),
-                asset != null ? asset.getSlot(IlluminateGlyphSlots.MODE) : null).doubleValue();
+                getSlot(IlluminateGlyphSlots.MODE)).doubleValue();
         float seconds = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(IlluminateGlyphSlots.DURATION, hexContext),
-                asset != null ? asset.getSlot(IlluminateGlyphSlots.DURATION) : null).floatValue();
+                getSlot(IlluminateGlyphSlots.DURATION)).floatValue();
         if (seconds <= 0f) {
             finish(glyph, hexContext);
             return;
         }
 
-        Color color = IlluminateStyle.resolveColor(hexContext, asset, config);
-        ColorLight light = IlluminateStyle.toColorLight(color, config.getLightRadius());
+        Color color = IlluminateStyle.resolveColor(hexContext, this);
+        ColorLight light = IlluminateStyle.toColorLight(color, lightRadius);
         Vector3f boxColor = IlluminateStyle.toVector3f(color);
         boolean showBox = mode == 0;
 
@@ -77,7 +82,7 @@ public class IlluminateGlyph extends GlyphAsset {
             var state = new IlluminateState(seconds, showBox, false,
                     GlowUtil.nextVolumeId(), boxColor, glyph.getNextLinks());
             accessor.putComponent(targetRef, DynamicLight.getComponentType(), new DynamicLight(light));
-            HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, ID, state);
+            HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, TYPE, state);
         } else {
             // blocks can't be lit, and mode -1 wants a separate entity: spawn a light
             // holder that owns the effect
@@ -107,7 +112,7 @@ public class IlluminateGlyph extends GlyphAsset {
             // createWithState bakes the construct into the holder so a fresh
             // (not-yet-valid) ref is never used
             Holder<EntityStore> holder = HexConstructSpawner.createWithState(
-                    accessor, hexContext, glyph, ID, spawnPos, state);
+                    accessor, hexContext, glyph, TYPE, spawnPos, state);
             holder.addComponent(DynamicLight.getComponentType(), new DynamicLight(light));
             if (mountTo != null) {
                 holder.addComponent(MountedComponent.getComponentType(),

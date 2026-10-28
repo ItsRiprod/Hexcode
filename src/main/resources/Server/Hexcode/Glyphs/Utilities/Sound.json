@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Sound",
+  "Type": "Sound",
   "Title": "hexcode.glyphs.Sound.name",
   "Description": "hexcode.glyphs.Sound.description",
   "ModelPath": "Glyph_Template",

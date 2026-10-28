@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Modulo",
+  "Type": "Modulo",
   "Title": "hexcode.glyphs.Modulo.name",
   "Description": "hexcode.glyphs.Modulo.description",
   "ModelPath": "Modulo",

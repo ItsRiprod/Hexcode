@@ -17,7 +17,6 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.utilities.resource.DebugMessageQueue;
 import com.riprod.hexcode.utils.HexVarUtil;
@@ -25,12 +24,7 @@ import com.riprod.hexcode.utils.LogScopes;
 
 public class DebugGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
-    public static final String ID = "Debug";
-
-    @Override
-    public String getId() {
-        return ID;
-    };
+    public static final String TYPE = "Debug";
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
@@ -187,13 +181,12 @@ public class DebugGlyph extends GlyphAsset {
     }
 
     private static HexVar resolveLink(Glyph linked, HexContext hexContext) {
-        GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
-        GlyphHandler handler = linkedAsset != null ? GlyphRegistry.get(linkedAsset.getHandler()) : null;
-        if (handler == null || hexContext.isResolving(linked.getId()))
+        var linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
+        if (linkedAsset == null || hexContext.isResolving(linked.getId()))
             return null;
         hexContext.pushResolving(linked.getId());
         try {
-            return handler.readValue(linked, hexContext);
+            return linkedAsset.readValue(linked, hexContext);
         } finally {
             hexContext.popResolving();
         }

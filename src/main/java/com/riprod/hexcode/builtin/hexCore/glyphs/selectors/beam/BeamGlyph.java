@@ -6,6 +6,9 @@ import java.util.List;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.util.TrigMathUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
@@ -22,7 +25,6 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.utils.BlockResolution;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -31,17 +33,16 @@ import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.TargetFilter;
 
 public class BeamGlyph extends GlyphAsset {
-    @Override
-    public String getId() {
-        return ID;
-    };
+    public static final String TYPE = "Beam";
 
-    public static final String ID = "Beam";
+    private double originOffset = 1.5;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(BeamConfig.class, BeamConfig.CODEC);
-    }
+    public static final BuilderCodec<BeamGlyph> CODEC = BuilderCodec
+            .builder(BeamGlyph.class, BeamGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("OriginOffset", Codec.DOUBLE, true),
+                    (c, v) -> c.originOffset = v, c -> c.originOffset)
+            .add()
+            .build();
 
     private static final float PASSIVE_FLOOR = 0.1f;
 
@@ -51,21 +52,17 @@ public class BeamGlyph extends GlyphAsset {
 
     @Override
     public float collectMana(Glyph glyph, GlyphAsset asset) {
-        return isPassive(glyph) ? PASSIVE_FLOOR : GlyphHandler.super.collectMana(glyph, asset);
+        return isPassive(glyph) ? PASSIVE_FLOOR : super.collectMana(glyph, asset);
     }
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         return isPassive(glyph) ? PASSIVE_FLOOR
-                : GlyphHandler.super.getVolatilityCost(glyph, hexContext, asset);
+                : super.getVolatilityCost(glyph, hexContext, asset);
     }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        BeamConfig config = getConfig(BeamConfig.class, asset);
-        if (config == null)
-            config = BeamConfig.DEFAULTS;
         boolean passive = isPassive(glyph);
 
         HexVar posVar = glyph.readSlot(BeamGlyphSlots.SOURCE, hexContext);
@@ -94,7 +91,7 @@ public class BeamGlyph extends GlyphAsset {
         }
 
         double requestedRange = HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(BeamGlyphSlots.RANGE, hexContext), asset.getSlot(BeamGlyphSlots.RANGE)).doubleValue();
+                glyph.readSlot(BeamGlyphSlots.RANGE, hexContext), getSlot(BeamGlyphSlots.RANGE)).doubleValue();
 
         int beamLength = (int) Math.abs(requestedRange);
         if (requestedRange < 0)
@@ -137,7 +134,7 @@ public class BeamGlyph extends GlyphAsset {
             }
         }
 
-        Vector3d beamOrigin = new Vector3d(origin).add(new Vector3d(direction).mul(config.getOriginOffset()));
+        Vector3d beamOrigin = new Vector3d(origin).add(new Vector3d(direction).mul(originOffset));
 
         Vector3d endPoint;
         BeamStyle.HitType hitType;
@@ -169,23 +166,18 @@ public class BeamGlyph extends GlyphAsset {
         }
 
         if (!passive)
-            chargeReach(asset, hexContext, new Vector3d(origin).sub(endPoint).length());
+            chargeReach(hexContext, new Vector3d(origin).sub(endPoint).length());
 
-        BeamStyle.render(beamOrigin, endPoint, new Vector3f(rotation.x, rotation.y, rotation.z), hitType, hexContext,
+        BeamStyle.render(this, beamOrigin, endPoint, new Vector3f(rotation.x, rotation.y, rotation.z), hitType, hexContext,
                 hexContext.getAccessor());
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 
-    private void chargeReach(GlyphAsset asset, HexContext hexContext, double reach) {
-        Impact impact = asset == null || asset.getConfig() == null
-                ? null
-                : asset.getConfig().getVolatilityImpact();
-        if (impact == null)
-            return;
+    private void chargeReach(HexContext hexContext, double reach) {
         VolatilityComponent volatility = hexContext.volatility();
         if (volatility == null)
             return;
-        volatility.consume(Impact.scale(impact, reach));
+        volatility.consume(Impact.scale(volatilityImpact, reach));
     }
 }

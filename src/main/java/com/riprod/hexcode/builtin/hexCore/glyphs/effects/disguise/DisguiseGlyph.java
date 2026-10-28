@@ -4,9 +4,13 @@ import java.util.Arrays;
 
 import org.joml.Vector3d;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.protocol.PlayerSkin;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.nameplate.Nameplate;
 import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
@@ -26,7 +30,6 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.protection.HexProtection;
@@ -36,27 +39,27 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class DisguiseGlyph extends GlyphAsset {
 
-    public static final String ID = "Disguise";
+    public static final String TYPE = "Disguise";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+     private boolean disguiseNametag = true;
+    private String disguiseEffectId;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(DisguiseConfig.class, DisguiseConfig.CODEC);
-    }
+    public static final BuilderCodec<DisguiseGlyph> CODEC = BuilderCodec
+            .builder(DisguiseGlyph.class, DisguiseGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("DisguiseNametag", Codec.BOOLEAN, true),
+                    (c, v) -> c.disguiseNametag = v, c -> c.disguiseNametag)
+            .add()
+            .append(new KeyedCodec<>("DisguiseEffect", Codec.STRING, true),
+                    (c, v) -> c.disguiseEffectId = v, c -> c.disguiseEffectId)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar targetVar = glyph.readSlot(DisguiseGlyphSlots.TARGET, hexContext);
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-
-        DisguiseConfig config = getConfig(DisguiseConfig.class, asset);
-        if (config == null)
-            config = DisguiseConfig.DEFAULTS;
 
         AppearanceLayer disguise = resolveDisguise(glyph, hexContext, accessor);
         if (disguise == null) {
@@ -76,11 +79,11 @@ public class DisguiseGlyph extends GlyphAsset {
 
         }
 
-        applyToEntity(glyph, hexContext, accessor, entityVar, disguise, durationSeconds, config);
+        applyToEntity(glyph, hexContext, accessor, entityVar, disguise, durationSeconds);
     }
 
     private void applyToEntity(Glyph glyph, HexContext hexContext, CommandBuffer<EntityStore> accessor,
-            EntityVar targetEntity, AppearanceLayer disguise, float durationSeconds, DisguiseConfig config) {
+            EntityVar targetEntity, AppearanceLayer disguise, float durationSeconds) {
         Ref<EntityStore> targetRef = targetEntity.getRef(accessor);
         if (targetRef == null || !targetRef.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -90,12 +93,12 @@ public class DisguiseGlyph extends GlyphAsset {
 
         Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
         if (!HexProtection.canAffectEntity(accessor.getExternalData().getWorld(), caster, accessor, targetRef)) {
-            HexProtection.notifyBlocked(caster, accessor, ID);
+            HexProtection.notifyBlocked(caster, accessor, TYPE);
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
         }
 
-        if (!config.disguiseNametag()) {
+        if (!disguiseNametag) {
             Nameplate targetNameplate = accessor.getComponent(targetRef, Nameplate.getComponentType());
             disguise = AppearanceLayer.ofModel(disguise.modelAssetId(), disguise.skin(),
                     targetNameplate != null ? targetNameplate.getText() : AppearanceLayer.NAMEPLATE_HIDDEN,
@@ -103,7 +106,7 @@ public class DisguiseGlyph extends GlyphAsset {
         }
 
         DisguiseState state = ConstructStateUtil.findState(
-                accessor, targetRef, ID, DisguiseState.class);
+                accessor, targetRef, TYPE, DisguiseState.class);
         boolean isNew = state == null;
         if (isNew) {
             state = new DisguiseState();
@@ -119,13 +122,12 @@ public class DisguiseGlyph extends GlyphAsset {
             return;
         }
 
-        String effectId = config.getDisguiseEffectId();
-        boolean effectApplied = VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, effectId,
+        boolean effectApplied = VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, disguiseEffectId,
                 durationSeconds, OverlapBehavior.OVERWRITE);
-        state.setEffectId(effectApplied ? effectId : null);
+        state.setEffectId(effectApplied ? disguiseEffectId : null);
 
         if (isNew) {
-            HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, ID, state);
+            HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, TYPE, state);
         }
 
         fireImmediate(glyph, hexContext, targetEntity);
@@ -135,7 +137,7 @@ public class DisguiseGlyph extends GlyphAsset {
         Vector3d spawnPos = targetTransform != null
                 ? new Vector3d(targetTransform.getPosition())
                 : new Vector3d();
-        DisguiseStyle.renderApply(spawnPos, hexContext, accessor);
+        DisguiseStyle.renderApply(this, spawnPos, hexContext, accessor);
     }
 
     private void fireImmediate(Glyph glyph, HexContext hexContext, HexVar defaultVar) {

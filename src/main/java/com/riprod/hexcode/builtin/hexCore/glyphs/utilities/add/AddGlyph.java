@@ -13,12 +13,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class AddGlyph extends GlyphAsset {
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    public static final String ID = "Add";
+    public static final String TYPE = "Add";
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(AddGlyphSlots.A, hexContext);

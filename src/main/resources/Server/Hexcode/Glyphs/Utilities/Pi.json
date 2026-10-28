@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Pi",
+  "Type": "Pi",
   "Title": "hexcode.glyphs.Pi.name",
   "Description": "hexcode.glyphs.Pi.description",
   "ShapeStructure": [

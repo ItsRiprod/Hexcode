@@ -18,12 +18,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class CeilingGlyph extends GlyphAsset {
-    public static final String ID = "Ceiling";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Ceiling";
 
     private static double op(double v) {
         return Math.ceil(v);

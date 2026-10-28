@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "MageArmor",
+  "Type": "MageArmor",
   "Style": "Essence_Life",
   "Title": "hexcode.glyphs.MageArmor.name",
   "Description": "hexcode.glyphs.MageArmor.description",
@@ -49,8 +49,5 @@
     "InstantCost": 6,
     "DrainPerSecond": 0.1
   },
-  "Config": {
-    "Type": "MageArmor",
-    "StatusEffect": "Hexcode_Mage_Armor"
-  }
+  "StatusEffect": "Hexcode_Mage_Armor"
 }

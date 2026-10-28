@@ -10,24 +10,18 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class GustGlyphStyle {
 
-    private static final String GLYPH_ID = "Gust";
-
     private GustGlyphStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void render(Vector3d center, double radius, HexContext ctx,
+    public static void render(GlyphAsset asset, Vector3d center, double radius, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
         if (radius <= 3.0) {
-            VfxUtil.spawnPrimary(overrides, asset(), center, accessor);
+            VfxUtil.spawnPrimary(overrides, asset, center, accessor);
         } else if (radius <= 7.0) {
-            VfxUtil.spawnSecondary(overrides, asset(), center, accessor);
+            VfxUtil.spawnSecondary(overrides, asset, center, accessor);
         } else {
-            VfxUtil.spawnTertiary(overrides, asset(), center, accessor);
+            VfxUtil.spawnTertiary(overrides, asset, center, accessor);
         }
     }
 }

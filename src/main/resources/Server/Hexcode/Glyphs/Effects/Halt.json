@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Halt",
+  "Type": "Halt",
   "Style": {
     "Parent": "Element_Void",
     "PrimaryParticle": {
@@ -47,8 +47,5 @@
     "InstantCost": 1.0,
     "DrainPerSecond": 0.4
   },
-  "Config": {
-    "Type": "Halt",
-    "Effect": "Hexcode_Halt"
-  }
+  "Effect": "Hexcode_Halt"
 }

@@ -10,24 +10,18 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class DrainStyle {
 
-    private static final String GLYPH_ID = "Drain";
-
     private DrainStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void renderTick(Vector3d pos, HexContext ctx,
+    public static void renderTick(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnPrimary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnPrimary(overrides, asset, pos, accessor);
     }
 
-    public static void renderComplete(Vector3d pos, HexContext ctx,
+    public static void renderComplete(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, pos, accessor);
     }
 }

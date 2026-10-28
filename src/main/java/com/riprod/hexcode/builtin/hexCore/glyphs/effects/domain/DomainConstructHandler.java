@@ -83,12 +83,13 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
             return true;
 
         Vector3d center = transform.getPosition();
+        var asset = GlyphAsset.of(status.getTriggeringGlyph(), DomainGlyph.class);
 
         zone.setSpatialQueryTimer(zone.getSpatialQueryTimer() - dt);
         if (zone.getSpatialQueryTimer() <= 0f) {
             zone.setSpatialQueryTimer(SPATIAL_INTERVAL_SECONDS);
 
-            updateContestation(zone, center, ctx.getEntityRef(), status, ctx.getBuffer());
+            updateContestation(asset, zone, center, ctx.getEntityRef(), status, ctx.getBuffer());
 
             List<Ref<EntityStore>> found = new ObjectArrayList<>(TargetUtil.getAllEntitiesInSphere(
                     center, zone.getRadius(), ctx.getBuffer()));
@@ -128,7 +129,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
                     TransformComponent entityTransform = ctx.getBuffer().getComponent(
                             ref, TransformComponent.getComponentType());
                     if (entityTransform != null) {
-                        DomainStyle.renderTrigger(entityTransform.getPosition(),
+                        DomainStyle.renderTrigger(asset, entityTransform.getPosition(),
                                 status.getHexContext(), ctx.getBuffer());
                     }
 
@@ -149,7 +150,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         zone.setAmbientTimer(zone.getAmbientTimer() - dt);
         if (zone.getAmbientTimer() <= 0) {
             zone.setAmbientTimer(AMBIENT_INTERVAL);
-            DomainStyle.renderAmbient(center, status.getHexContext(), ctx.getBuffer());
+            DomainStyle.renderAmbient(asset, center, status.getHexContext(), ctx.getBuffer());
         }
 
         return !drainSustain(dt, status);
@@ -176,7 +177,8 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
                 ctx.getEntityRef(), TransformComponent.getComponentType());
         if (transform != null) {
             float radius = zone != null ? zone.getRadius() : 5.0f;
-            DomainStyle.renderDespawn(transform.getPosition(), radius,
+            var asset = GlyphAsset.of(status.getTriggeringGlyph(), DomainGlyph.class);
+            DomainStyle.renderDespawn(asset, transform.getPosition(), radius,
                     status.getHexContext(), ctx.getBuffer());
         }
 
@@ -206,7 +208,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         }
     }
 
-    private void updateContestation(DomainZoneComponent self, Vector3d selfCenter,
+    private void updateContestation(DomainGlyph asset, DomainZoneComponent self, Vector3d selfCenter,
             Ref<EntityStore> selfRef, HexStatus<NoState> status, CommandBuffer<EntityStore> buffer) {
         Store<EntityStore> store = buffer.getExternalData().getWorld().getEntityStore().getStore();
         boolean wasContested = self.isContested();
@@ -244,7 +246,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         self.setContested(nowContested[0]);
 
         if (nowContested[0] && !wasContested) {
-            DomainStyle.renderContested(selfCenter, status.getHexContext(), buffer);
+            DomainStyle.renderContested(asset, selfCenter, status.getHexContext(), buffer);
 
             DebugComponent debug = buffer.getComponent(selfRef, DebugComponent.getComponentType());
             if (debug != null) {
@@ -253,7 +255,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         } else if (!nowContested[0] && wasContested) {
             DebugComponent debug = buffer.getComponent(selfRef, DebugComponent.getComponentType());
             if (debug != null) {
-                debug.setColor(VfxUtil.resolvePrimaryColor(null, GlyphAsset.getAssetMap().getAsset(DomainGlyph.ID)));
+                debug.setColor(VfxUtil.resolvePrimaryColor(null, asset));
             }
         }
     }

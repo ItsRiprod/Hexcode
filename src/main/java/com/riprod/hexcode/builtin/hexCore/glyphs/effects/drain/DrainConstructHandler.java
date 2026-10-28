@@ -15,6 +15,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.drain.style.DrainStyle;
 import com.riprod.hexcode.utils.LogScopes;
@@ -85,7 +86,8 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
 
         TransformComponent tc = buffer.getComponent(target, TransformComponent.getComponentType());
         if (tc != null) {
-            DrainStyle.renderTick(tc.getPosition(), status.getHexContext(), buffer);
+            var asset = GlyphAsset.of(status.getTriggeringGlyph(), DrainGlyph.class);
+            DrainStyle.renderTick(asset, tc.getPosition(), status.getHexContext(), buffer);
         }
 
         return false;
@@ -101,7 +103,8 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
         TransformComponent tc = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), TransformComponent.getComponentType());
         if (tc != null) {
-            DrainStyle.renderComplete(tc.getPosition(), status.getHexContext(), ctx.getBuffer());
+            var asset = GlyphAsset.of(status.getTriggeringGlyph(), DrainGlyph.class);
+            DrainStyle.renderComplete(asset, tc.getPosition(), status.getHexContext(), ctx.getBuffer());
         }
 
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());

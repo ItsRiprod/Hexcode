@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "OnUse",
+  "Type": "OnUse",
   "Style": {
     "Parent": "Element_Time",
     "PrimaryModel": "OnUse"

@@ -3,10 +3,9 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.style;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.Color;
 import com.hypixel.hytale.protocol.ColorLight;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.IlluminateConfig;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.IlluminateGlyph;
 import com.riprod.hexcode.core.common.hexes.component.HexColors;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 public final class IlluminateStyle {
@@ -14,15 +13,15 @@ public final class IlluminateStyle {
     private IlluminateStyle() {
     }
 
-    public static Color resolveColor(HexContext hexContext, GlyphAsset asset, IlluminateConfig config) {
+    public static Color resolveColor(HexContext hexContext, IlluminateGlyph asset) {
         HexStyleAsset override = hexContext != null ? hexContext.getStyle() : null;
         Color color = override != null ? override.getPrimaryColor() : null;
         if (color == null) {
-            HexStyleAsset glyphStyle = asset != null ? asset.getStyle() : null;
+            HexStyleAsset glyphStyle = asset.getStyle();
             color = glyphStyle != null ? glyphStyle.getPrimaryColor() : null;
         }
         if (color == null) {
-            color = config.getDefaultColor();
+            color = asset.getDefaultColor();
         }
         return color;
     }

@@ -8,6 +8,9 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 import com.hypixel.hytale.builtin.adventure.farming.states.FarmingBlock;
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -38,7 +41,6 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -51,17 +53,62 @@ import com.riprod.hexcode.utils.LogScopes;
 public class GrowthGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
-    @Override
-    public String getId() {
-        return ID;
+    public static final String TYPE = "Growth";
+
+    private double minAmount = 1.0;
+    private double maxAmount = 20.0;
+    private double stagesReferenceAmount = 5.0;
+    private int bonemealRadius = 2;
+    private float bonemealChance = 0.35f;
+    private int attemptsFloor = 3;
+    private double attemptsPerAmount = 1.5;
+    private String growthEffectId = "Hexcode_Growth";
+    private String[] vegetationBlocks = {
+            "Plant_Grass_Lush_Short",
+            "Plant_Grass_Lush",
+            "Plant_Grass_Lush_Tall",
+            "Plant_Flower_Common_Lime",
+            "Plant_Fern",
+            "Plant_Flower_Common_Blue",
+            "Plant_Flower_Common_Pink"
     };
+    private String[] grassDirtPrefixes = { "Soil_Grass", "Soil_Dirt" };
 
-    public static final String ID = "Growth";
-
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(GrowthConfig.class, GrowthConfig.CODEC);
-    }
+    public static final BuilderCodec<GrowthGlyph> CODEC = BuilderCodec
+            .builder(GrowthGlyph.class, GrowthGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("MinAmount", Codec.DOUBLE, true),
+                    (c, v) -> c.minAmount = v, c -> c.minAmount)
+            .add()
+            .append(new KeyedCodec<>("MaxAmount", Codec.DOUBLE, true),
+                    (c, v) -> c.maxAmount = v, c -> c.maxAmount)
+            .add()
+            .append(new KeyedCodec<>("StagesReferenceAmount", Codec.DOUBLE, true),
+                    (c, v) -> c.stagesReferenceAmount = v, c -> c.stagesReferenceAmount)
+            .add()
+            .append(new KeyedCodec<>("BonemealRadius", Codec.INTEGER, true),
+                    (c, v) -> c.bonemealRadius = v, c -> c.bonemealRadius)
+            .add()
+            .append(new KeyedCodec<>("BonemealChance", Codec.FLOAT, true),
+                    (c, v) -> c.bonemealChance = v, c -> c.bonemealChance)
+            .add()
+            .append(new KeyedCodec<>("AttemptsFloor", Codec.INTEGER, true),
+                    (c, v) -> c.attemptsFloor = v, c -> c.attemptsFloor)
+            .add()
+            .append(new KeyedCodec<>("AttemptsPerAmount", Codec.DOUBLE, true),
+                    (c, v) -> c.attemptsPerAmount = v, c -> c.attemptsPerAmount)
+            .add()
+            .append(new KeyedCodec<>("GrowthEffect", Codec.STRING, true),
+                    (c, v) -> c.growthEffectId = v, c -> c.growthEffectId)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .append(new KeyedCodec<>("VegetationBlocks", Codec.STRING_ARRAY, true),
+                    (c, v) -> c.vegetationBlocks = v, c -> c.vegetationBlocks)
+            .addValidatorLate(() -> BlockType.VALIDATOR_CACHE.getArrayValidator().late())
+            .add()
+            .append(new KeyedCodec<>("GrassDirtPrefixes", Codec.STRING_ARRAY, true),
+                    (c, v) -> c.grassDirtPrefixes = v, c -> c.grassDirtPrefixes)
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -71,26 +118,21 @@ public class GrowthGlyph extends GlyphAsset {
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        GrowthConfig config = getConfig(GrowthConfig.class, asset);
-        if (config == null)
-            config = GrowthConfig.DEFAULTS;
-
-        double amount = Math.max(config.getMinAmount(), Math.min(config.getMaxAmount(),
+        double amount = Math.max(minAmount, Math.min(maxAmount,
                 HexVarUtil.numberOrSlotDefault(
                         glyph.readSlot(GrowthGlyphSlots.AMOUNT, hexContext),
-                        asset.getSlot(GrowthGlyphSlots.AMOUNT))));
+                        getSlot(GrowthGlyphSlots.AMOUNT))));
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         if (targets instanceof EntityVar entityVar) {
 
-            applyToEntity(entityVar, amount, glyph, hexContext, asset, config, accessor);
+            applyToEntity(entityVar, amount, glyph, hexContext, accessor);
             return;
         }
 
         if (targets instanceof BlockVar blockVar) {
-            applyToBlock(blockVar, amount, config, hexContext, accessor);
+            applyToBlock(blockVar, amount, hexContext, accessor);
 
         }
 
@@ -98,7 +140,7 @@ public class GrowthGlyph extends GlyphAsset {
     }
 
     private void applyToEntity(EntityVar entityVar, double amount,
-            Glyph glyph, HexContext hexContext, GlyphAsset asset, GrowthConfig config,
+            Glyph glyph, HexContext hexContext,
             CommandBuffer<EntityStore> accessor) {
         Ref<EntityStore> ref = entityVar.getRef(accessor);
         if (ref == null || !ref.isValid()) {
@@ -106,7 +148,7 @@ public class GrowthGlyph extends GlyphAsset {
             return;
         }
 
-        String effectId = config.getGrowthEffectId();
+        String effectId = growthEffectId;
         EntityEffect growthEffect = EntityEffect.getAssetMap().getAsset(effectId);
         if (growthEffect == null) {
             LOGGER.atWarning().log("growth: %s effect asset not found", effectId);
@@ -116,7 +158,7 @@ public class GrowthGlyph extends GlyphAsset {
 
         double duration = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(GrowthGlyphSlots.DURATION, hexContext),
-                asset.getSlot(GrowthGlyphSlots.DURATION));
+                getSlot(GrowthGlyphSlots.DURATION));
         float durationSeconds = (float) duration;
 
         EffectControllerComponent controller = accessor.getComponent(
@@ -128,18 +170,18 @@ public class GrowthGlyph extends GlyphAsset {
 
         TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
         if (tc != null) {
-            GrowthStyle.renderEntityHit(tc.getPosition(), hexContext, accessor);
+            GrowthStyle.renderEntityHit(this, tc.getPosition(), hexContext, accessor);
         }
 
         GrowthState existing = ConstructStateUtil.findState(
-                accessor, ref, GrowthGlyph.ID, GrowthState.class);
+                accessor, ref, GrowthGlyph.TYPE, GrowthState.class);
         if (existing != null) {
             existing.setRemainingDuration(durationSeconds);
             existing.setNextGlyphIds(glyph.getNextLinks());
         } else {
             GrowthState state = new GrowthState(durationSeconds, effectId, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
-                    accessor, ref, hexContext, glyph, GrowthGlyph.ID, state);
+                    accessor, ref, hexContext, glyph, GrowthGlyph.TYPE, state);
         }
 
         Slot immediate = glyph.getSlot(GrowthGlyphSlots.IMMEDIATE);
@@ -152,7 +194,7 @@ public class GrowthGlyph extends GlyphAsset {
         LOGGER.atFine().log("growth: applied regen buff for %.1fs to entity", durationSeconds);
     }
 
-    private void applyToBlock(BlockVar blockVar, double amount, GrowthConfig config,
+    private void applyToBlock(BlockVar blockVar, double amount,
             HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         Vector3i pos = blockVar.getValue();
         if (pos == null)
@@ -163,17 +205,17 @@ public class GrowthGlyph extends GlyphAsset {
         if (blockType == null)
             return;
 
-        if (tryAdvanceGrowth(world, pos, blockType, amount, config, hexContext, accessor)) {
+        if (tryAdvanceGrowth(world, pos, blockType, amount, hexContext, accessor)) {
             return;
         }
 
-        if (isGrassDirtBlock(blockType, config)) {
-            applyBonemeal(world, pos, amount, config, hexContext, accessor);
+        if (isGrassDirtBlock(blockType)) {
+            applyBonemeal(world, pos, amount, hexContext, accessor);
         }
     }
 
     private boolean tryAdvanceGrowth(World world, Vector3i pos, BlockType blockType,
-            double amount, GrowthConfig config, HexContext hexContext, CommandBuffer<EntityStore> accessor) {
+            double amount, HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         FarmingData farmingConfig = blockType.getFarming();
         if (farmingConfig == null || farmingConfig.getStages() == null)
             return false;
@@ -212,7 +254,7 @@ public class GrowthGlyph extends GlyphAsset {
         if (currentStage >= stages.length)
             currentStage = stages.length - 1;
 
-        int stagesToAdvance = Math.max(1, (int) (amount / config.getStagesReferenceAmount()));
+        int stagesToAdvance = Math.max(1, (int) (amount / stagesReferenceAmount));
         int newStage = Math.min(currentStage + stagesToAdvance, stages.length - 1);
 
         if (newStage <= currentStage)
@@ -239,28 +281,27 @@ public class GrowthGlyph extends GlyphAsset {
         blockSection.setTicking(pos.x, pos.y, pos.z, true);
 
         Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
-        GrowthStyle.renderBlockHit(blockCenter, hexContext, accessor);
+        GrowthStyle.renderBlockHit(this, blockCenter, hexContext, accessor);
 
         LOGGER.atFine().log("growth: advanced crop at %s from stage %d to %d", pos, currentStage, newStage);
         return true;
     }
 
-    private boolean isGrassDirtBlock(BlockType blockType, GrowthConfig config) {
+    private boolean isGrassDirtBlock(BlockType blockType) {
         String id = blockType.getId();
         if (id == null)
             return false;
-        for (String prefix : config.getGrassDirtPrefixes()) {
+        for (String prefix : grassDirtPrefixes) {
             if (id.startsWith(prefix))
                 return true;
         }
         return false;
     }
 
-    private void applyBonemeal(World world, Vector3i pos, double amount, GrowthConfig config,
+    private void applyBonemeal(World world, Vector3i pos, double amount,
             HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         ThreadLocalRandom rng = ThreadLocalRandom.current();
-        int attempts = Math.max(config.getAttemptsFloor(), (int) (amount * config.getAttemptsPerAmount()));
-        int bonemealRadius = config.getBonemealRadius();
+        int attempts = Math.max(attemptsFloor, (int) (amount * attemptsPerAmount));
 
         Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
         boolean blocked = false;
@@ -269,7 +310,6 @@ public class GrowthGlyph extends GlyphAsset {
         var base = new Vector3i();
         var block = new Vector3i();
         var blockPos = new Vector3d(0.5);
-        String[] vegetationBlocks = config.getVegetationBlocks();
 
         for (int a = 0; a < attempts; a++) {
             int dx = rng.nextInt(-bonemealRadius, bonemealRadius + 1);
@@ -283,7 +323,7 @@ public class GrowthGlyph extends GlyphAsset {
             if (cursor.blockId(block) != BlockType.EMPTY_ID)
                 continue;
 
-            if (rng.nextFloat() > config.getBonemealChance())
+            if (rng.nextFloat() > bonemealChance)
                 continue;
 
             if (!HexProtection.canModifyBlock(world, caster, accessor,
@@ -310,7 +350,7 @@ public class GrowthGlyph extends GlyphAsset {
                     RotationTuple.NONE_INDEX, SetBlockSettings.PERFORM_BLOCK_UPDATE);
 
             var effectPos = blockPos.set(0.5).add(block.x, block.y, block.z);
-            GrowthStyle.renderBlockHit(effectPos, hexContext, accessor);
+            GrowthStyle.renderBlockHit(this, effectPos, hexContext, accessor);
         }
 
         if (blocked) {

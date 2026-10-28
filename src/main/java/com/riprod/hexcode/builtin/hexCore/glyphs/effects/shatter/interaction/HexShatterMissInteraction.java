@@ -22,7 +22,9 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.dat
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.ShatterGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style.ShatterStyle;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 
@@ -87,7 +89,7 @@ public class HexShatterMissInteraction extends SimpleInteraction {
                             hexContext);
                 }
 
-                ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
+                ShatterStyle.renderShardHit(GlyphAsset.of(triggering, ShatterGlyph.class), hitPos, hexContext, buffer);
             }
 
             HexExecuter.continueExecution(state.getNextLinks(), hexContext);

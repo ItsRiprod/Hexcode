@@ -18,8 +18,10 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Int
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInteraction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.Collector;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.ProjectileGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -72,6 +74,7 @@ public class HexProjectileHitInteraction extends SimpleInteraction {
                     ? new Vector3i(rawHitBlock.x, rawHitBlock.y, rawHitBlock.z)
                     : null;
             var triggering = state.getTriggeringGlyph();
+            var asset = GlyphAsset.of(triggering, ProjectileGlyph.class);
             HexVar resultVar = null;
             if (targetRef != null && targetRef.isValid()) {
                 UUIDComponent uuid = buffer.getComponent(targetRef, UUIDComponent.getComponentType());
@@ -79,7 +82,7 @@ public class HexProjectileHitInteraction extends SimpleInteraction {
                     resultVar = new EntityVar(uuid.getUuid(), targetRef);
                 }
                 if (hitPos != null) {
-                    ProjectileStyle.renderEntityHit(hitPos, hitPos, hexContext, buffer);
+                    ProjectileStyle.renderEntityHit(asset, hitPos, hitPos, hexContext, buffer);
                 }
             } else if (hitPos != null) {
                 if (triggering != null) {
@@ -90,7 +93,7 @@ public class HexProjectileHitInteraction extends SimpleInteraction {
                             hexContext);
                 }
 
-                ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
+                ProjectileStyle.renderBlockHit(asset, hitPos, hexContext, buffer);
             }
 
             if (triggering != null && resultVar != null) {

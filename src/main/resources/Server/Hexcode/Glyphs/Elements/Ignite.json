@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Ignite",
+  "Type": "Ignite",
   "Style": {
     "Parent": "Element_Chaos",
     "PrimaryParticle": {
@@ -60,14 +60,11 @@
       "Description": "hexcode.glyphs.Ignite.target.description"
     }
   },
-  "Config": {
-    "Type": "Ignite",
-    "Resource": "Fire",
-    "StatusEffect": "Fire",
-    "Efficiency": 0.95,
-    "DurationPerComplexity": 0.5,
-    "AffinityStat": "Affinity_Fire"
-  },
+  "Resource": "Fire",
+  "StatusEffect": "Fire",
+  "Efficiency": 0.95,
+  "DurationPerComplexity": 0.5,
+  "AffinityStat": "Affinity_Fire",
   "Volatility": {
     "InstantCost": 6,
     "DrainPerSecond": 0.2

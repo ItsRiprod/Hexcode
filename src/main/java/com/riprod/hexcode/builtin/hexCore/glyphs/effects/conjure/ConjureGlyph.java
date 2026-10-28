@@ -43,17 +43,23 @@ import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
+import lombok.Getter;
+
 public class ConjureGlyph extends GlyphAsset {
         private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-        public static final String ID = "Conjure";
+        public static final String TYPE = "Conjure";
 
+        @Getter 
         private double boxHalfExtent = 0.5;
         private double minAxisSize = 1.0;
+        @Getter 
         private float spatialQueryInterval = 0.2f;
         private String hardCollisionId = "Hexcode_Conjure_HardCollision";
         private String softCollisionId = "Hexcode_Conjure_SoftCollision";
         private String anchorModelId = "Conjured_Anchor";
+        @Getter 
         private double maxCorrectionPerTick = 0.35;
+        @Getter 
         private double correctionEpsilon = 0.02;
         private double defaultEntityHalfExtent = 0.5;
 
@@ -217,14 +223,13 @@ public class ConjureGlyph extends GlyphAsset {
                                 : null;
 
                 var holder = HexConstructSpawner.create(
-                                hexContext.getAccessor(), hexContext, glyph, ConjureGlyph.ID, new Vector3d(center));
+                                hexContext.getAccessor(), hexContext, glyph, ConjureGlyph.TYPE, new Vector3d(center));
 
                 holder.ensureComponent(PropComponent.getComponentType());
                 holder.ensureComponent(EffectControllerComponent.getComponentType());
-                float debugAlpha = VfxUtil.resolveAlpha(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+                float debugAlpha = VfxUtil.resolveAlpha(hexContext, this);
                 if (debugAlpha > 0f) {
-                        Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext,
-                                        GlyphAsset.getAssetMap().getAsset(ID));
+                        Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext, this);
                         DebugComponent debugComp = new DebugComponent(DebugShape.Cube, debugColor,
                                         zoneComp.getDebugSize(), 0.1f);
                         debugComp.setOpacity(debugAlpha * 0.5f);
@@ -275,7 +280,7 @@ public class ConjureGlyph extends GlyphAsset {
                 var zoneRef = hexContext.getAccessor().addEntity(holder, AddReason.SPAWN);
                 zoneComp.setZoneRef(zoneRef);
 
-                ConjureStyle.renderSpawn(center, hexContext, hexContext.getAccessor());
+                ConjureStyle.renderSpawn(this, center, hexContext, hexContext.getAccessor());
 
                 UUIDComponent zoneUuidComp = holder.getComponent(UUIDComponent.getComponentType());
                 UUID zoneUuid = zoneUuidComp != null ? zoneUuidComp.getUuid() : UUID.randomUUID();

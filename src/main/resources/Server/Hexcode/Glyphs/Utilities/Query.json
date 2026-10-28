@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Query",
+  "Type": "Query",
   "Title": "hexcode.glyphs.Query.name",
   "Description": "hexcode.glyphs.Query.description",
   "ShapeStructure": [

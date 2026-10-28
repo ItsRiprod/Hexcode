@@ -11,12 +11,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.utils.HexCompareUtil;
 
 public class LessGlyph extends GlyphAsset {
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    public static final String ID = "Less";
+    public static final String TYPE = "Less";
 
     public HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(LessGlyphSlots.A, hexContext);

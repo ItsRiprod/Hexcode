@@ -44,7 +44,7 @@ public class InvisibilityDamageSystem extends DamageEventSystem {
 
             Ref<EntityStore> ref = chunk.getReferenceTo(index);
             InvisibilityState state = ConstructStateUtil.findState(
-                    buffer, ref, InvisibilityGlyph.ID, InvisibilityState.class);
+                    buffer, ref, InvisibilityGlyph.TYPE, InvisibilityState.class);
             if (state == null) return;
 
             String effectId = state.getEffectId();

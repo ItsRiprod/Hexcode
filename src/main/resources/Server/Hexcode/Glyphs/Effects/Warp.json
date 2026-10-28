@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Warp",
+  "Type": "Warp",
   "Style": {
     "PrimaryColor": "#804DE6",
     "SecondaryColor": "#C2A6F2",
@@ -54,13 +54,10 @@
     "InstantCost": 3,
     "DrainPerSecond": 0.0
   },
-  "Config": {
-    "Type": "Warp",
-    "Effect": "Teleportation",
-    "VolatilityImpact": {
-      "Type": "PowerLaw",
-      "DefaultMagnitude": 10.0,
-      "Exponent": 1.0
-    }
+  "Effect": "Teleportation",
+  "VolatilityImpact": {
+    "Type": "PowerLaw",
+    "DefaultMagnitude": 10.0,
+    "Exponent": 1.0
   }
 }

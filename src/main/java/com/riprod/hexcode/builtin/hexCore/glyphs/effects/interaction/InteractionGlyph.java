@@ -3,10 +3,17 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.interaction;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import org.joml.Vector4d;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.codecs.EnumCodec;
+import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -29,7 +36,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -39,40 +45,67 @@ import com.riprod.hexcode.utils.LogScopes;
 public class InteractionGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
-    public static final String ID = "Interaction";
+    public static final String TYPE = "Interaction";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    @Nullable
+    private String rootInteractionId;
+    private InteractionType interactionType = InteractionType.Use;
+    private InteractionAnchor anchor = InteractionAnchor.SOURCE;
+    private boolean useRules = false;
+    private boolean awaitCompletion = false;
+    private boolean writeResult = true;
+    private Map<String, String> interactionVars = new HashMap<>();
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(InteractionConfig.class, InteractionConfig.CODEC);
+    public static final BuilderCodec<InteractionGlyph> CODEC = BuilderCodec
+            .builder(InteractionGlyph.class, InteractionGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("RootInteraction", RootInteraction.CHILD_ASSET_CODEC, true),
+                    (c, v) -> c.rootInteractionId = v, c -> c.rootInteractionId)
+            .addValidatorLate(() -> RootInteraction.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .append(new KeyedCodec<>("InteractionType", new EnumCodec<>(InteractionType.class), true),
+                    (c, v) -> c.interactionType = v, c -> c.interactionType)
+            .add()
+            .append(new KeyedCodec<>("RunOn", new EnumCodec<>(InteractionAnchor.class), true),
+                    (c, v) -> c.anchor = v, c -> c.anchor)
+            .add()
+            .append(new KeyedCodec<>("UseRules", Codec.BOOLEAN, true),
+                    (c, v) -> c.useRules = v, c -> c.useRules)
+            .add()
+            .append(new KeyedCodec<>("AwaitCompletion", Codec.BOOLEAN, true),
+                    (c, v) -> c.awaitCompletion = v, c -> c.awaitCompletion)
+            .add()
+            .append(new KeyedCodec<>("WriteResult", Codec.BOOLEAN, true),
+                    (c, v) -> c.writeResult = v, c -> c.writeResult)
+            .add()
+            .append(new KeyedCodec<>("InteractionVars",
+                    new MapCodec<>(RootInteraction.CHILD_ASSET_CODEC, HashMap::new), true),
+                    (c, v) -> c.interactionVars = v, c -> c.interactionVars)
+            .add()
+            .build();
+
+    @Nullable
+    private RootInteraction resolveRootInteraction() {
+        if (rootInteractionId == null) {
+            return null;
+        }
+        return RootInteraction.getAssetMap().getAsset(rootInteractionId);
     }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-
-        InteractionConfig config = getConfig(InteractionConfig.class, asset);
-        if (config == null) {
-            config = InteractionConfig.DEFAULTS;
-        }
-
-        RootInteraction root = config.resolveRootInteraction();
+        RootInteraction root = resolveRootInteraction();
         if (root == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "interaction: root interaction missing or unresolvable: " + config.getRootInteractionId());
+                    "interaction: root interaction missing or unresolvable: " + rootInteractionId);
             return;
         }
 
         Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
 
         Ref<EntityStore> sourceRef = null;
-        if (config.getAnchor() != InteractionAnchor.CASTER
-                && hasSlot(asset, InteractionGlyphSlots.SOURCE)) {
+        if (anchor != InteractionAnchor.CASTER
+                && hasSlot(InteractionGlyphSlots.SOURCE)) {
             HexVar source = glyph.readSlot(InteractionGlyphSlots.SOURCE, hexContext);
             if (source instanceof EntityVar sourceEntity) {
                 Ref<EntityStore> ref = sourceEntity.getRef(accessor);
@@ -98,7 +131,7 @@ public class InteractionGlyph extends GlyphAsset {
             return;
         }
 
-        HexVar target = hasSlot(asset, InteractionGlyphSlots.TARGET)
+        HexVar target = hasSlot(InteractionGlyphSlots.TARGET)
                 ? glyph.readSlot(InteractionGlyphSlots.TARGET, hexContext)
                 : null;
         Ref<EntityStore> targetRef = null;
@@ -135,12 +168,12 @@ public class InteractionGlyph extends GlyphAsset {
             resultVar = target;
         }
 
-        InteractionType type = config.getInteractionType();
+        InteractionType type = interactionType;
         InteractionContext interactionContext;
-        if (config.getAnchor() == InteractionAnchor.TARGET && targetRef != null) {
+        if (anchor == InteractionAnchor.TARGET && targetRef != null) {
             interactionContext = InteractionContext.forProxyEntity(manager, sourceRef, targetRef, accessor);
         } else {
-            if (config.getAnchor() == InteractionAnchor.TARGET) {
+            if (anchor == InteractionAnchor.TARGET) {
                 LOGGER.atFine().log(
                         "interaction: RunOn=TARGET needs an entity target, falling back to source anchoring");
             }
@@ -158,17 +191,17 @@ public class InteractionGlyph extends GlyphAsset {
             interactionContext.getMetaStore().putMetaObject(Interaction.HIT_LOCATION, targetHit);
         }
 
-        if (!config.getInteractionVars().isEmpty()) {
+        if (!interactionVars.isEmpty()) {
             Map<String, String> merged = new HashMap<>(interactionContext.getInteractionVars());
-            merged.putAll(config.getInteractionVars());
+            merged.putAll(interactionVars);
             interactionContext.setInteractionVarsGetter(c -> merged);
         }
 
-        boolean writeResult = config.isWriteResult() && resultVar != null;
+        boolean writeResult = this.writeResult && resultVar != null;
         HexVar output = writeResult ? resultVar : null;
 
         InteractionChain chain;
-        if (config.isAwaitCompletion()) {
+        if (awaitCompletion) {
             InteractionChainData data = new InteractionChainData(targetNetworkId,
                     UUIDUtil.EMPTY_UUID, null, null, targetBlock, Integer.MIN_VALUE, null);
             Runnable onCompletion = () -> {
@@ -189,24 +222,20 @@ public class InteractionGlyph extends GlyphAsset {
             chain = manager.initChain(type, interactionContext, root, targetNetworkId, targetBlock, false);
         }
 
-        if (config.isUseRules()
+        if (useRules
                 && !manager.applyRules(interactionContext, chain.getChainData(), type, root)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "interaction: rules rejected chain for " + config.getRootInteractionId());
+                    "interaction: rules rejected chain for " + rootInteractionId);
             return;
         }
 
         manager.queueExecuteChain(chain);
 
-        if (!config.isAwaitCompletion()) {
+        if (!awaitCompletion) {
             if (output != null) {
                 glyph.writeOutput(output, hexContext);
             }
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
         }
-    }
-
-    private static boolean hasSlot(GlyphAsset asset, String key) {
-        return asset != null && asset.getSlot(key) != null;
     }
 }

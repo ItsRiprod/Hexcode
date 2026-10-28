@@ -16,12 +16,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class DivideGlyph extends GlyphAsset {
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    public static final String ID = "Divide";
+    public static final String TYPE = "Divide";
 
     private Double op(Double A, Double B) {
         return B != 0 ? A / B : A;

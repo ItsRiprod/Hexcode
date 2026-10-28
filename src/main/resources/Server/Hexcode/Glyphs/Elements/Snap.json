@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Snap",
+  "Type": "Snap",
   "Style": "Essence_Ice",
   "Title": "hexcode.glyphs.Snap.name",
   "Description": "hexcode.glyphs.Snap.description",
@@ -49,15 +49,12 @@
       "Description": "hexcode.glyphs.Snap.target.description"
     }
   },
-  "Config": {
-    "Type": "Snap",
-    "Resource": "Ice",
-    "DamageCause": "Ice",
-    "Efficiency": 0.75,
-    "OnHitEffect": "Ice",
-    "OnHitDuration": 1.5,
-    "AffinityStat": "Affinity_Ice"
-  },
+  "Resource": "Ice",
+  "DamageCause": "Ice",
+  "Efficiency": 0.75,
+  "OnHitEffect": "Ice",
+  "OnHitDuration": 1.5,
+  "AffinityStat": "Affinity_Ice",
   "Volatility": {
     "InstantCost": 6,
     "DrainPerSecond": 0.0

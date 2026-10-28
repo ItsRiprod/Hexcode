@@ -8,12 +8,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
 public class PiValue extends GlyphAsset {
-    public static final String ID = "Pi";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Pi";
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {

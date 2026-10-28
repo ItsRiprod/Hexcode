@@ -3,8 +3,13 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.area;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.joml.Vector3d;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
@@ -19,7 +24,6 @@ import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.utils.HexVarUtil;
@@ -27,19 +31,31 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class AreaGlyph extends GlyphAsset {
 
-    public static final String ID = "Area";
+    public static final String TYPE = "Area";
 
     private static final float PASSIVE_FLOOR = 0.1f;
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    private double minAxisSize = 1.0;
+    private double perBlockPrice = 0.002;
+    private double displayPriceMultiplier = 0.1;
+    @Nullable
+    private Impact ratePriceImpact;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(AreaConfig.class, AreaConfig.CODEC);
-    }
+    public static final BuilderCodec<AreaGlyph> CODEC = BuilderCodec
+            .builder(AreaGlyph.class, AreaGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("MinAxisSize", Codec.DOUBLE, true),
+                    (c, v) -> c.minAxisSize = v, c -> c.minAxisSize)
+            .add()
+            .append(new KeyedCodec<>("PerBlockPrice", Codec.DOUBLE, true),
+                    (c, v) -> c.perBlockPrice = v, c -> c.perBlockPrice)
+            .add()
+            .append(new KeyedCodec<>("DisplayPriceMultiplier", Codec.DOUBLE, true),
+                    (c, v) -> c.displayPriceMultiplier = v, c -> c.displayPriceMultiplier)
+            .add()
+            .append(new KeyedCodec<>("RatePriceImpact", Impact.CODEC, true),
+                    (c, v) -> c.ratePriceImpact = v, c -> c.ratePriceImpact)
+            .add()
+            .build();
 
     private static List<String> linksOf(Glyph glyph, String slotKey) {
         Slot slot = glyph.getSlot(slotKey);
@@ -59,11 +75,6 @@ public class AreaGlyph extends GlyphAsset {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        AreaConfig config = getConfig(AreaConfig.class, asset);
-        if (config == null)
-            config = AreaConfig.DEFAULTS;
-
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         Vector3d anchorPos = glyph.readSlot(AreaGlyphSlots.ANCHOR, hexContext).position(accessor);
@@ -86,7 +97,7 @@ public class AreaGlyph extends GlyphAsset {
         var cornerA = coordsA.add(anchorPos);
         var cornerB = coordsB.add(anchorPos);
 
-        double minAxis = config.getMinAxisSize();
+        double minAxis = minAxisSize;
         Vector3d center = new Vector3d(
                 (cornerA.x + cornerB.x) * 0.5,
                 (cornerA.y + cornerB.y) * 0.5,
@@ -98,11 +109,11 @@ public class AreaGlyph extends GlyphAsset {
 
         AreaShape shape = AreaShape.fromSlotValue(HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(AreaGlyphSlots.AREA_SHAPE, hexContext),
-                asset != null ? asset.getSlot(AreaGlyphSlots.AREA_SHAPE) : null));
+                getSlot(AreaGlyphSlots.AREA_SHAPE)));
 
         double blocksPerSecond = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(AreaGlyphSlots.BLOCKS_PER_SECOND, hexContext),
-                asset != null ? asset.getSlot(AreaGlyphSlots.BLOCKS_PER_SECOND) : null);
+                getSlot(AreaGlyphSlots.BLOCKS_PER_SECOND));
         if (!(blocksPerSecond > 0)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "BlocksPerSecond must be greater than zero");
@@ -116,23 +127,23 @@ public class AreaGlyph extends GlyphAsset {
             return;
         }
 
-        double price = config.getPerBlockPrice()
-                * Impact.scale(config.getRatePriceImpact(), blocksPerSecond)
+        double price = perBlockPrice
+                * Impact.scale(ratePriceImpact, blocksPerSecond)
                 * glyph.computeDrawQuality();
         if (isDisplayOnly(glyph))
-            price *= config.getDisplayPriceMultiplier();
+            price *= displayPriceMultiplier;
 
         AreaState state = new AreaState(center, half, shape, blocksPerSecond, totalBlocks,
                 (float) price, linksOf(glyph, AreaGlyphSlots.ENTITIES),
                 linksOf(glyph, AreaGlyphSlots.BLOCKS));
 
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
-                accessor, hexContext, glyph, ID, new Vector3d(center), state);
+                accessor, hexContext, glyph, TYPE, new Vector3d(center), state);
 
-        float alpha = VfxUtil.resolveAlpha(hexContext, asset);
+        float alpha = VfxUtil.resolveAlpha(hexContext, this);
         if (alpha > 0f) {
             DebugComponent debug = new DebugComponent(shape.debugShape(),
-                    VfxUtil.resolvePrimaryColor(hexContext, asset), new Vector3d(), 0.1f);
+                    VfxUtil.resolvePrimaryColor(hexContext, this), new Vector3d(), 0.1f);
             debug.setOpacity(alpha * 0.15f);
             debug.setIntervalMultiplier(0.01f);
             debug.setFadeMultiplier(2.0f);
@@ -142,6 +153,6 @@ public class AreaGlyph extends GlyphAsset {
 
         accessor.addEntity(holder, AddReason.SPAWN);
 
-        AreaStyle.renderSpawn(new Vector3d(center), hexContext, accessor);
+        AreaStyle.renderSpawn(this, new Vector3d(center), hexContext, accessor);
     }
 }

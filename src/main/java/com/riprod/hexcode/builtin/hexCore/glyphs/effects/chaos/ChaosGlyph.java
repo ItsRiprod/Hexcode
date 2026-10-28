@@ -2,7 +2,7 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.chaos;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.hypixel.hytale.codec.builder.BuilderCodec;
+
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -12,14 +12,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ChaosGlyph extends GlyphAsset {
-    public static final BuilderCodec<ChaosGlyph> CODEC = BuilderCodec.builder(ChaosGlyph.class, ChaosGlyph::new)
-            .build();
-    public static final String ID = "Chaos";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Chaos";
 
     private double roll(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());

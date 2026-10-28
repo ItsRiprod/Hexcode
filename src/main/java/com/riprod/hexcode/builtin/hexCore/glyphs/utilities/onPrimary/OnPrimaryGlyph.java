@@ -5,12 +5,7 @@ import com.riprod.hexcode.builtin.imbued.triggers.TriggerKey;
 
 public class OnPrimaryGlyph extends AbstractTriggerGlyph {
 
-    public static final String ID = "OnPrimary";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "OnPrimary";
 
     @Override
     public String triggerKey() {

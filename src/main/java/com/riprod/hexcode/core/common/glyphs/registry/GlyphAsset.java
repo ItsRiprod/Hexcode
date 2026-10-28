@@ -73,7 +73,7 @@ public abstract class GlyphAsset implements JsonAssetWithMap<String, DefaultAsse
     protected Impact volatilityImpact = new Impact() {
         @Override
         public float compute(double input) {
-            return 1.3f;
+            return 1.0f;
         }
     };
     protected ArrayList<String> shapes = new ArrayList<>();
@@ -106,12 +106,23 @@ public abstract class GlyphAsset implements JsonAssetWithMap<String, DefaultAsse
         return hexContext.getOwnVariable(glyph.getId());
     }
 
-    public <T extends GlyphAsset> T get(String glyphId, Class<T> glyphClass) {
+    @Nullable
+    public static <T extends GlyphAsset> T get(String glyphId, Class<T> glyphClass) {
         var glyph = GlyphAsset.getAssetMap().getAsset(glyphId);
-        if (glyph instanceof glyphClass glyphObj) {
-            return glyphObj;
+        if (glyphClass.isInstance(glyph)) {
+            return glyphClass.cast(glyph);
         }
         return null;
+    }
+
+    @Nullable
+    public static <T extends GlyphAsset> T of(@Nullable Glyph glyph, Class<T> glyphClass) {
+        return glyph == null ? null : get(glyph.getGlyphId(), glyphClass);
+    }
+
+    @Override
+    public final String getId() {
+        return this.id;
     }
 
     public boolean isEnabled() {

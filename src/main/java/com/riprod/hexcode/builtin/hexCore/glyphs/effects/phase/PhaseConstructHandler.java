@@ -24,6 +24,7 @@ import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.utils.BlockAccess;
 import com.riprod.hexcode.utils.BlockUtils;
 import com.riprod.hexcode.utils.LogScopes;
@@ -81,6 +82,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
         PhaseComponent phase = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), PhaseComponent.getComponentType());
         if (phase != null) {
+            var asset = GlyphAsset.of(status.getTriggeringGlyph(), PhaseGlyph.class);
             World world = ctx.getBuffer().getExternalData().getWorld();
             float elapsedSeconds = phase.getElapsedSeconds();
             var scratch = new Vector3d();
@@ -100,9 +102,9 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
                 BlockAccess.putBlockEntity(world, pos, blockType,
                         block.getRotationIndex(), block.getBlockEntity());
 
-                applyCrushDamage(pos, blockCenter, elapsedSeconds, world, status, ctx.getBuffer());
+                applyCrushDamage(asset, pos, blockCenter, elapsedSeconds, world, status, ctx.getBuffer());
 
-                PhaseStyle.renderPhaseIn(blockCenter, status.getHexContext(), ctx.getBuffer());
+                PhaseStyle.renderPhaseIn(asset, blockCenter, status.getHexContext(), ctx.getBuffer());
             }
 
             LOGGER.atFine().log("phase: restored %d blocks", phase.getPhasedBlocks().size());
@@ -111,7 +113,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
         ctx.getBuffer().tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
     }
 
-    private void applyCrushDamage(Vector3i pos, Vector3d blockCenter, float elapsedSeconds, World world,
+    private void applyCrushDamage(PhaseGlyph asset, Vector3i pos, Vector3d blockCenter, float elapsedSeconds, World world,
             HexStatus<PhaseState> status, CommandBuffer<EntityStore> buffer) {
         Box box = BlockUtils.resolveBlockDisplayBox(world, pos);
         Vector3d min;
@@ -153,7 +155,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
                 }
             }
 
-            PhaseStyle.renderCrush(blockCenter, status.getHexContext(), buffer);
+            PhaseStyle.renderCrush(asset, blockCenter, status.getHexContext(), buffer);
         }
     }
 }

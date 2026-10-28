@@ -152,6 +152,7 @@ public class BlockAccess {
         private int sectionY = Integer.MIN_VALUE;
         private int sectionZ = Integer.MIN_VALUE;
         private Ref<ChunkStore> ref;
+        private Vector3i pos;
 
         public Cursor(@Nonnull World world) {
             this.world = world;
@@ -160,6 +161,7 @@ public class BlockAccess {
 
         /** Sets the cursor to a different coordinate */
         public void set(Vector3i pos) {
+            this.pos = pos;
             int cx = ChunkUtil.chunkCoordinate(pos.x);
             int cy = ChunkUtil.chunkCoordinate(pos.y);
             int cz = ChunkUtil.chunkCoordinate(pos.z);
@@ -174,16 +176,24 @@ public class BlockAccess {
             }
         }
 
+        public Vector3i get() { return pos; }
+
         public int blockId(Vector3i pos) {
             if (pos.y < ChunkUtil.MIN_Y)
                 return BlockType.EMPTY_ID;
             set(pos);
             return section == null ? BlockType.EMPTY_ID : section.get(pos.x, pos.y, pos.z);
         }
+        public int blockId() {
+            return section == null ? BlockType.EMPTY_ID : section.get(pos.x, pos.y, pos.z);
+        }
 
         public BlockType blockType(Vector3i pos) {
             int id = blockId(pos);
             return id == BlockType.EMPTY_ID ? null : BlockType.getAssetMap().getAsset(id);
+        }
+        public BlockType blockType() {
+            return blockId() == BlockType.EMPTY_ID ? null : BlockType.getAssetMap().getAsset(blockId());
         }
 
         public BlockSection section(Vector3i pos) {
@@ -193,6 +203,9 @@ public class BlockAccess {
 
         public Ref<ChunkStore> sectionRef(Vector3i pos) {
             set(pos);
+            return ref;
+        }
+        public Ref<ChunkStore> sectionRef() {
             return ref;
         }
 

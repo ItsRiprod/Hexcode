@@ -57,7 +57,7 @@ public class InvisibilityConstructHandler implements ConstructHandler<Invisibili
         Ref<EntityStore> target = ctx.getEntityRef();
         if (target == null || !target.isValid()) return;
 
-        HexAppearanceService.removeLayer(buffer, target, InvisibilityGlyph.ID);
+        HexAppearanceService.removeLayer(buffer, target, InvisibilityGlyph.TYPE);
 
         if (effectId == null) return;
 

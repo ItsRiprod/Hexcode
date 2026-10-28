@@ -10,30 +10,24 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class ConjureStyle {
 
-    private static final String GLYPH_ID = "Conjure";
-
     private ConjureStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void renderSpawn(Vector3d center, HexContext ctx,
+    public static void renderSpawn(GlyphAsset asset, Vector3d center, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnPrimary(overrides, asset(), center, accessor);
+        VfxUtil.spawnPrimary(overrides, asset, center, accessor);
     }
 
-    public static void renderTrigger(Vector3d center, HexContext ctx,
+    public static void renderTrigger(GlyphAsset asset, Vector3d center, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), center, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, center, accessor);
     }
 
-    public static void renderDespawn(Vector3d center, HexContext ctx,
+    public static void renderDespawn(GlyphAsset asset, Vector3d center, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnTertiary(overrides, asset(), center, accessor);
+        VfxUtil.spawnTertiary(overrides, asset, center, accessor);
     }
 }

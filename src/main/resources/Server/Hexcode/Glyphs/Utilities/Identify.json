@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Identify",
+  "Type": "Identify",
   "Title": "hexcode.glyphs.Identify.name",
   "Description": "hexcode.glyphs.Identify.description",
   "BasePower": 0,

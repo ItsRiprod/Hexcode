@@ -5,16 +5,12 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
 public class TerraformGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
-    public static final String ID = "Terraform";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Terraform";
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

@@ -14,12 +14,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public class OnDeathGlyph extends AbstractTriggerGlyph {
 
-    public static final String ID = "OnDeath";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "OnDeath";
 
     @Override
     public String triggerKey() {

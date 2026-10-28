@@ -22,10 +22,12 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Sim
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.Collector;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.ProjectileGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 
@@ -80,6 +82,7 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
             hexContext.updateRuntimeAccessors(buffer);
 
             Glyph triggering = state.getTriggeringGlyph();
+            var asset = GlyphAsset.of(triggering, ProjectileGlyph.class);
             if (hitPos != null) {
                 if (triggering != null) {
                     triggering.writeOutput(
@@ -89,7 +92,7 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
                             hexContext);
                 }
 
-                ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
+                ProjectileStyle.renderBlockHit(asset, hitPos, hexContext, buffer);
             }
 
             HexExecuter.continueExecution(state.getNextLinks(), hexContext);

@@ -14,12 +14,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class SubtractGlyph extends GlyphAsset {
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    public static final String ID = "Subtract";
+    public static final String TYPE = "Subtract";
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(PowerGlyphSlots.A, hexContext);

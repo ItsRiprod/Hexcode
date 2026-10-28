@@ -16,12 +16,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class FloorGlyph extends GlyphAsset {
-    public static final String ID = "Floor";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Floor";
 
     private static double op(double v) {
         return Math.floor(v);

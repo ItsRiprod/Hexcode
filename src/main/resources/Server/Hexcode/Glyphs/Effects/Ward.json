@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Ward",
+  "Type": "Ward",
   "Title": "hexcode.glyphs.Ward.name",
   "Description": "hexcode.glyphs.Ward.description",
   "BasePower": 0,
@@ -51,11 +51,8 @@
     "PrimarySound": "SFX_Portal_Neutral_Open",
     "TertiarySound": "SFX_Concentrate_Fail"
   },
-  "Config": {
-    "Type": "Ward",
-    "SustainImpact": {
-      "Type": "Constant",
-      "Value": -4.0
-    }
+  "SustainImpact": {
+    "Type": "Constant",
+    "Value": -4.0
   }
 }

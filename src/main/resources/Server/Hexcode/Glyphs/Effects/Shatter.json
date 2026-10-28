@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Shatter",
+  "Type": "Shatter",
   "Style": {
     "PrimaryColor": "#99E6FF",
     "SecondaryColor": "#D6F2FF",
@@ -90,13 +90,10 @@
     "InstantCost": 3,
     "DrainPerSecond": 0.1
   },
-  "Config": {
-    "Type": "Shatter",
-    "DefaultCount": 5,
-    "DefaultSpread": 0.5235987755982988,
-    "DefaultSpeed": 20.0,
-    "DefaultGravity": 10.0,
-    "PerShardPrice": 0.5,
-    "ShardTtlSeconds": 600
-  }
+  "DefaultCount": 5,
+  "DefaultSpread": 0.5235987755982988,
+  "DefaultSpeed": 20.0,
+  "DefaultGravity": 10.0,
+  "PerShardPrice": 0.5,
+  "ShardTtlSeconds": 600
 }

@@ -12,6 +12,7 @@ import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.utils.LogScopes;
@@ -86,7 +87,7 @@ public final class ConstructSplicer {
     }
 
     private static boolean isContinuationMarker(Glyph g) {
-        if (OutputGlyph.ID.equals(g.getGlyphId())) return true;
+        if (GlyphAsset.of(g, OutputGlyph.class) != null) return true;
         return !g.isBoundaryOrigin()
                 && SlotGlyph.isSlotGlyph(g)
                 && SlotGlyph.mode(g) == SlotGlyph.MODE_NEXT;

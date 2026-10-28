@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Fortify",
+  "Type": "Fortify",
   "Style": {
     "PrimaryColor": "#607D8B",
     "SecondaryColor": "#B0BEC5",
@@ -69,13 +69,10 @@
     "InstantCost": 6,
     "DrainPerSecond": 0.2
   },
-  "Config": {
-    "Type": "Fortify",
-    "Resource": "Life",
-    "Effect": "Hexcode_Fortify",
-    "Efficiency": 1.0,
-    "DurationPerResource": 1.0,
-    "AffinityStat": "Affinity_Life",
-    "AffinityScale": 1.0
-  }
+  "Resource": "Life",
+  "Effect": "Hexcode_Fortify",
+  "Efficiency": 1.0,
+  "DurationPerResource": 1.0,
+  "AffinityStat": "Affinity_Life",
+  "AffinityScale": 1.0
 }

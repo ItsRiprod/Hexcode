@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import org.joml.Vector3d;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
@@ -30,23 +33,56 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
+import lombok.Getter;
+
 public class GlaciateGlyph extends GlyphAsset {
-        @Override
-        public String getId() {
-                return ID;
-        };
+        public static final String TYPE = "Glaciate";
 
-        public static final String ID = "Glaciate";
+        private float iceScale = 2.0f;
+        @Getter
+        private double minDamageSpeed = 0.1;
+        @Getter
+        private double knockbackScale = 0.3;
+        @Getter
+        private double minVerticalKnockback = 2.0;
+        private float damageRadius = 1.2f;
+        private float damageMultiplier = 1.0f;
+        private String iceModelId = "Glaciate_Ice";
+        private String hardCollisionConfigId = "Hexcode_Glaciate_HardCollision";
 
-        @Override
-        public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-                return ConfigBinding.of(GlaciateConfig.class, GlaciateConfig.CODEC);
-        }
+        public static final BuilderCodec<GlaciateGlyph> CODEC = BuilderCodec
+                        .builder(GlaciateGlyph.class, GlaciateGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+                        .append(new KeyedCodec<>("IceScale", Codec.FLOAT, true),
+                                        (c, v) -> c.iceScale = v, c -> c.iceScale)
+                        .add()
+                        .append(new KeyedCodec<>("MinDamageSpeed", Codec.DOUBLE, true),
+                                        (c, v) -> c.minDamageSpeed = v, c -> c.minDamageSpeed)
+                        .add()
+                        .append(new KeyedCodec<>("KnockbackScale", Codec.DOUBLE, true),
+                                        (c, v) -> c.knockbackScale = v, c -> c.knockbackScale)
+                        .add()
+                        .append(new KeyedCodec<>("MinVerticalKnockback", Codec.DOUBLE, true),
+                                        (c, v) -> c.minVerticalKnockback = v, c -> c.minVerticalKnockback)
+                        .add()
+                        .append(new KeyedCodec<>("DamageRadius", Codec.FLOAT, true),
+                                        (c, v) -> c.damageRadius = v, c -> c.damageRadius)
+                        .add()
+                        .append(new KeyedCodec<>("DamageMultiplier", Codec.FLOAT, true),
+                                        (c, v) -> c.damageMultiplier = v, c -> c.damageMultiplier)
+                        .add()
+                        .append(new KeyedCodec<>("IceModel", Codec.STRING, true),
+                                        (c, v) -> c.iceModelId = v, c -> c.iceModelId)
+                        .addValidatorLate(() -> ModelAsset.VALIDATOR_CACHE.getValidator().late())
+                        .add()
+                        .append(new KeyedCodec<>("HardCollisionConfig", Codec.STRING, true),
+                                        (c, v) -> c.hardCollisionConfigId = v, c -> c.hardCollisionConfigId)
+                        .addValidatorLate(() -> HitboxCollisionConfig.VALIDATOR_CACHE.getValidator().late())
+                        .add()
+                        .build();
 
         @Override
         public void execute(Glyph glyph, HexContext hexContext) {
@@ -64,47 +100,42 @@ public class GlaciateGlyph extends GlyphAsset {
                         return;
                 }
 
-                GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-                GlaciateConfig config = getConfig(GlaciateConfig.class, asset);
-                if (config == null)
-                        config = GlaciateConfig.DEFAULTS;
-
                 HexVar offsetVar = glyph.readSlot(GlaciateGlyphSlots.OFFSET, hexContext);
                 double defaultHeight = HexVarUtil.numberOrSlotDefault(
-                                null, asset.getSlot(GlaciateGlyphSlots.OFFSET));
+                                null, getSlot(GlaciateGlyphSlots.OFFSET));
                 double duration = HexVarUtil.numberOrSlotDefault(
                                 glyph.readSlot(GlaciateGlyphSlots.DURATION, hexContext),
-                                asset.getSlot(GlaciateGlyphSlots.DURATION));
+                                getSlot(GlaciateGlyphSlots.DURATION));
                 if (duration <= 0) {
                         duration = HexVarUtil.numberOrSlotDefault(
-                                        null, asset.getSlot(GlaciateGlyphSlots.DURATION));
+                                        null, getSlot(GlaciateGlyphSlots.DURATION));
                 }
 
-                ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(config.getIceModelId());
+                ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(iceModelId);
                 if (modelAsset == null) {
                         HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                                        "Model asset not found: " + config.getIceModelId());
+                                        "Model asset not found: " + iceModelId);
                         return;
                 }
 
                 HitboxCollisionConfig collisionConfig = HitboxCollisionConfig.getAssetMap()
-                                .getAsset(config.getHardCollisionConfigId());
+                                .getAsset(hardCollisionConfigId);
 
                 var spawnPos = new Vector3d(targetPos)
                                 .add(new Vector3d(0, HexVarUtil.numberOrDefault(offsetVar, defaultHeight), 0));
                 spawnIceBlock(glyph, hexContext, spawnPos, (float) duration,
-                                modelAsset, collisionConfig, config);
+                                modelAsset, collisionConfig);
         }
 
         private void spawnIceBlock(Glyph glyph, HexContext hexContext, Vector3d spawnPos,
                         float duration,
-                        ModelAsset modelAsset, HitboxCollisionConfig collisionConfig, GlaciateConfig config) {
-                Model model = Model.createScaledModel(modelAsset, config.getIceScale());
+                        ModelAsset modelAsset, HitboxCollisionConfig collisionConfig) {
+                Model model = Model.createScaledModel(modelAsset, iceScale);
 
                 var accessor = hexContext.getAccessor();
 
                 Holder<EntityStore> holder = HexConstructSpawner.createWithState(
-                                accessor, hexContext, glyph, GlaciateGlyph.ID, new Vector3d(spawnPos),
+                                accessor, hexContext, glyph, GlaciateGlyph.TYPE, new Vector3d(spawnPos),
                                 new GlaciateState(glyph.getNextLinks()));
 
                 Rotation3f rotation = new Rotation3f();
@@ -126,7 +157,7 @@ public class GlaciateGlyph extends GlyphAsset {
                 }
 
                 holder.addComponent(GlaciateComponent.getComponentType(),
-                                new GlaciateComponent(config.getDamageRadius(), config.getDamageMultiplier(),
+                                new GlaciateComponent(damageRadius, damageMultiplier,
                                                 duration));
 
                 GlaciatePhysicsConfig.INSTANCE.apply(holder, hexContext.getCasterRef(accessor),
@@ -140,6 +171,6 @@ public class GlaciateGlyph extends GlyphAsset {
 
                 hexContext.addDependency(iceRef);
 
-                GlaciateStyle.renderSpawn(spawnPos, hexContext, accessor);
+                GlaciateStyle.renderSpawn(this, spawnPos, hexContext, accessor);
         }
 }

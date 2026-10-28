@@ -24,12 +24,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public class InterfereGlyph extends GlyphAsset {
-    public static final String ID = "Interfere";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Interfere";
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -58,7 +53,7 @@ public class InterfereGlyph extends GlyphAsset {
         if (construct != null) {
             int hijacked = hijackConstruct(construct, ref, glyph, hexContext, accessor);
             if (hijacked > 0 && pos != null) {
-                InterfereStyle.renderHijack(pos, hexContext, accessor);
+                InterfereStyle.renderHijack(this, pos, hexContext, accessor);
             }
         }
     }

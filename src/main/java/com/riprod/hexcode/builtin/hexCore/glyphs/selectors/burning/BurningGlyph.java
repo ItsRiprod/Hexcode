@@ -10,12 +10,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 public class BurningGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
-    public static final String ID = "Burning";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Burning";
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

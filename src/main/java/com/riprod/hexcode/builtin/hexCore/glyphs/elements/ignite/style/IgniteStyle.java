@@ -10,19 +10,13 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class IgniteStyle {
 
-    private static final String GLYPH_ID = "Ignite";
-
     private IgniteStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void render(Vector3d pos, HexContext ctx,
+    public static void render(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnPrimary(overrides, asset(), pos, accessor);
-        VfxUtil.spawnSecondary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnPrimary(overrides, asset, pos, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, pos, accessor);
     }
 }

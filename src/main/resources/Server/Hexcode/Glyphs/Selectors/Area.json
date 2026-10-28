@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Area",
+  "Type": "Area",
   "Style": {
     "PrimaryParticle": {
       "SystemId": "Area_Pulse"
@@ -81,16 +81,13 @@
     "InstantCost": 1.0,
     "DrainPerSecond": 0.0
   },
-  "Config": {
-    "Type": "Area",
-    "MinAxisSize": 1.0,
-    "PerBlockPrice": 0.002,
-    "DisplayPriceMultiplier": 0.1,
-    "RatePriceImpact": {
-      "Type": "Linear",
-      "Slope": 0.125,
-      "Offset": 0.25,
-      "OutputMin": 0.25
-    }
+  "MinAxisSize": 1.0,
+  "PerBlockPrice": 0.002,
+  "DisplayPriceMultiplier": 0.1,
+  "RatePriceImpact": {
+    "Type": "Linear",
+    "Slope": 0.125,
+    "Offset": 0.25,
+    "OutputMin": 0.25
   }
 }

@@ -10,24 +10,18 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class GrowthStyle {
 
-    private static final String GLYPH_ID = "Growth";
-
     private GrowthStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void renderEntityHit(Vector3d pos, HexContext ctx,
+    public static void renderEntityHit(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnPrimary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnPrimary(overrides, asset, pos, accessor);
     }
 
-    public static void renderBlockHit(Vector3d pos, HexContext ctx,
+    public static void renderBlockHit(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, pos, accessor);
     }
 }

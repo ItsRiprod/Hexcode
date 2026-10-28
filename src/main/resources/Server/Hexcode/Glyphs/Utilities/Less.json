@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Less",
+  "Type": "Less",
   "Title": "hexcode.glyphs.Less.name",
   "Description": "hexcode.glyphs.Less.description",
   "BasePower": 0,

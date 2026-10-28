@@ -12,12 +12,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexCompareUtil;
 
 public class EqualGlyph extends GlyphAsset {
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    public static final String ID = "Equal";
+    public static final String TYPE = "Equal";
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

@@ -10,16 +10,11 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public class SlotGlyph extends GlyphAsset {
 
-    public static final String ID = "Slot";
+    public static final String TYPE = "Slot";
 
     public static final int MODE_NEXT = -1;
     public static final int MODE_TRILEAN = 0;
     public static final int MODE_INPUT = 1;
-
-    @Override
-    public String getId() {
-        return ID;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -46,7 +41,6 @@ public class SlotGlyph extends GlyphAsset {
     }
 
     public static boolean isSlotGlyph(Glyph glyph) {
-        var asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        return asset != null && ID.equals(asset.getHandler());
+        return GlyphAsset.of(glyph, SlotGlyph.class) != null;
     }
 }

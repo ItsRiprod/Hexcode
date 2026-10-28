@@ -13,12 +13,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class SelfGlyph extends GlyphAsset {
-    @Override
-    public String getId() {
-        return ID;
-    };
-
-    public static final String ID = "Self";
+    public static final String TYPE = "Self";
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         Ref<EntityStore> playerRef = hexContext.getCasterRef(hexContext.getAccessor());

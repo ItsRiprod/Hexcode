@@ -8,12 +8,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
 public class ComponentGlyph extends GlyphAsset {
 
-    public static final String ID = "Component";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Component";
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

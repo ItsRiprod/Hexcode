@@ -17,10 +17,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.LevitateStyle;
-import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VelocityUtil;
 
@@ -38,28 +37,21 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
             return true;
         state.tick(dt);
 
-        LevitateConfig config = resolveConfig(status);
-
-        applyRise(dt, state, config, ctx);
-        emitTickVfx(dt, state, config, status, ctx);
+        var asset = GlyphAsset.of(status.getTriggeringGlyph(), LevitateGlyph.class);
+        if (asset != null) {
+            applyRise(dt, state, asset, ctx);
+            emitTickVfx(dt, state, asset, status, ctx);
+        }
 
         return !drainSustain(dt, status);
     }
 
-    private LevitateConfig resolveConfig(HexStatus<LevitateState> status) {
-        Glyph glyph = status.getTriggeringGlyph();
-        GlyphAsset asset = glyph != null ? GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId()) : null;
-        return asset != null && asset.getConfig() instanceof LevitateConfig config
-                ? config
-                : LevitateConfig.DEFAULTS;
-    }
-
-    private void applyRise(float dt, LevitateState state, LevitateConfig config, ConstructTickContext ctx) {
+    private void applyRise(float dt, LevitateState state, LevitateGlyph asset, ConstructTickContext ctx) {
         Ref<EntityStore> target = ctx.getEntityRef();
         if (target == null || !target.isValid())
             return;
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
-        double targetVy = Math.min(config.getRiseSpeedPerIntensity() * state.getAppliedIntensity(),
+        double targetVy = Math.min(asset.getRiseSpeedPerIntensity() * state.getAppliedIntensity(),
                 TERMINAL_VELOCITY);
         if (targetVy <= 0)
             return;
@@ -71,7 +63,7 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
             double currentVy = VelocityUtil.currentVelocity(target, buffer).y;
             if (currentVy >= targetVy)
                 return;
-            double delta = Math.min(targetVy - currentVy, config.getMaxCatchAccel() * dt);
+            double delta = Math.min(targetVy - currentVy, asset.getMaxCatchAccel() * dt);
             if (delta <= 0)
                 return;
             vel.addInstruction(new Vector3d(0, delta, 0), null, ChangeVelocityType.Add);
@@ -81,13 +73,13 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
         }
     }
 
-    private void emitTickVfx(float dt, LevitateState state, LevitateConfig config,
+    private void emitTickVfx(float dt, LevitateState state, LevitateGlyph asset,
             HexStatus<LevitateState> status, ConstructTickContext ctx) {
         Ref<EntityStore> target = ctx.getEntityRef();
         if (target == null || !target.isValid())
             return;
 
-        float tickInterval = config.getTickInterval();
+        float tickInterval = asset.getTickInterval();
         float accum = state.getTickAccum() + dt;
         while (accum >= tickInterval) {
             accum -= tickInterval;
@@ -95,7 +87,7 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
                     target, TransformComponent.getComponentType());
             if (transform == null)
                 break;
-            LevitateStyle.renderTick(transform.getPosition(), status.getHexContext(), ctx.getBuffer());
+            LevitateStyle.renderTick(asset, transform.getPosition(), status.getHexContext(), ctx.getBuffer());
         }
         state.setTickAccum(accum);
     }

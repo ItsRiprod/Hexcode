@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Rotation",
+  "Type": "Rotation",
   "Title": "hexcode.glyphs.Rotation.name",
   "Description": "hexcode.glyphs.Rotation.description",
   "ShapeStructure": [
@@ -47,9 +47,6 @@
     "InstantCost": 0.1,
     "DrainPerSecond": 0.0
   },
-  "Config": {
-    "Type": "Rotation",
-    "RollHoldSeconds": 10.0,
-    "PlayerVolatilityCost": 5
-  }
+  "RollHoldSeconds": 10.0,
+  "PlayerVolatilityCost": 5
 }

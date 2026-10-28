@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Levitate",
+  "Type": "Levitate",
   "Style": {
     "PrimaryColor": "#B39DDB",
     "SecondaryColor": "#EDE7F6",
@@ -69,11 +69,8 @@
     "InstantCost": 2,
     "DrainPerSecond": 0.15
   },
-  "Config": {
-    "Type": "Levitate",
-    "DurationFloor": 1.0,
-    "TickInterval": 0.5,
-    "RiseSpeedPerIntensity": 1.5,
-    "Effect": "Hexcode_Levitate"
-  }
+  "DurationFloor": 1.0,
+  "TickInterval": 0.5,
+  "RiseSpeedPerIntensity": 1.5,
+  "Effect": "Hexcode_Levitate"
 }

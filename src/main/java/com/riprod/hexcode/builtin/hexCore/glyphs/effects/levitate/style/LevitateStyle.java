@@ -10,24 +10,18 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class LevitateStyle {
 
-    private static final String GLYPH_ID = "Levitate";
-
     private LevitateStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void renderActivation(Vector3d pos, HexContext ctx,
+    public static void renderActivation(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnPrimary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnPrimary(overrides, asset, pos, accessor);
     }
 
-    public static void renderTick(Vector3d pos, HexContext ctx,
+    public static void renderTick(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, pos, accessor);
     }
 }

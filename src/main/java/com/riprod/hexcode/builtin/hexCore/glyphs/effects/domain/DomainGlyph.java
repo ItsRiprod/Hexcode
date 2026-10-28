@@ -2,14 +2,20 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain;
 
 import java.util.UUID;
 
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.DebugShape;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
+import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
@@ -25,20 +31,16 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
 
-public class DomainGlyph extends GlyphAsset {
-    @Override
-    public String getId() {
-        return ID;
-    };
+import lombok.Getter;
 
-    public static final String ID = "Domain";
+public class DomainGlyph extends GlyphAsset {
+    public static final String TYPE = "Domain";
     public static final String AURA_ID = "Domain_Aura";
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -49,29 +51,56 @@ public class DomainGlyph extends GlyphAsset {
     private static final double DEFAULT_DURATION = 10.0;
     private static final double DEFAULT_POWER = 1.0;
 
-    @Override
-    public ConfigBinding<DomainConfig> getConfigBinding() {
-        return ConfigBinding.of(DomainConfig.class, DomainConfig.CODEC);
-    }
+    @Nullable
+    private Impact triggerImpact;
+    @Nullable
+    @Getter 
+    private ModelParticle despawnParticle;
+    @Getter 
+    @Nullable
+    private String despawnSound;
+    @Getter 
+    @Nullable
+    private ModelParticle contestedParticle;
+    @Getter 
+    @Nullable
+    private String contestedSound;
+
+    public static final BuilderCodec<DomainGlyph> CODEC = BuilderCodec
+            .builder(DomainGlyph.class, DomainGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("TriggerImpact", Impact.CODEC),
+                    (c, v) -> c.triggerImpact = v, c -> c.triggerImpact)
+            .add()
+            .append(new KeyedCodec<>("DespawnParticle", ModelParticle.CODEC),
+                    (c, v) -> c.despawnParticle = v, c -> c.despawnParticle)
+            .add()
+            .append(new KeyedCodec<>("DespawnSound", Codec.STRING),
+                    (c, v) -> c.despawnSound = v, c -> c.despawnSound)
+            .addValidatorLate(() -> SoundEvent.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .append(new KeyedCodec<>("ContestedParticle", ModelParticle.CODEC),
+                    (c, v) -> c.contestedParticle = v, c -> c.contestedParticle)
+            .add()
+            .append(new KeyedCodec<>("ContestedSound", Codec.STRING),
+                    (c, v) -> c.contestedSound = v, c -> c.contestedSound)
+            .addValidatorLate(() -> SoundEvent.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .build();
 
     private static Impact slotImpact(GlyphAsset asset, String key) {
         if (asset == null)
             return null;
-        SlotConfig slot = asset.getSlot(key);
+        var slot = asset.getSlot(key);
         return slot == null ? null : slot.getImpact();
-    }
-
-    private static Impact triggerImpact(GlyphAsset asset) {
-        return asset != null && asset.getConfig() instanceof DomainConfig dc ? dc.getTriggerImpact() : null;
     }
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         double radius = HexVarUtil.numberOrDefault(
                 glyph.readSlot(DomainGlyphSlots.MAGNITUDE, hexContext), DEFAULT_RADIUS);
-        Impact impact = asset == null || asset.getConfig() == null
+        var impact = asset == null
                 ? null
-                : asset.getConfig().getVolatilityImpact();
+                : asset.getVolatilityImpact();
         return glyph.computeBaseCost(asset) * Impact.scale(impact, radius);
     }
 
@@ -117,7 +146,7 @@ public class DomainGlyph extends GlyphAsset {
         }
 
         float baseDrainPerSecond = Impact.scale(slotImpact(asset, DomainGlyphSlots.MAGNITUDE), radius);
-        float triggerCost = Impact.scale(triggerImpact(asset), 0);
+        float triggerCost = Impact.scale(triggerImpact, 0);
 
         UUIDComponent casterUuidComp = hexContext.getAccessor().getComponent(
                 casterRef, UUIDComponent.getComponentType());
@@ -127,7 +156,7 @@ public class DomainGlyph extends GlyphAsset {
         glyph.writeSelfOutput(zoneEntityVar, hexContext);
 
         Holder<EntityStore> holder = HexConstructSpawner.create(
-                hexContext.getAccessor(), hexContext, glyph, DomainGlyph.ID, new Vector3d(anchorPos));
+                hexContext.getAccessor(), hexContext, glyph, DomainGlyph.TYPE, new Vector3d(anchorPos));
 
         DomainZoneComponent zoneComp = new DomainZoneComponent(
                 (float) radius, durationSeconds, baseDrainPerSecond, triggerCost, power, casterUuid, casterRef);
@@ -136,9 +165,9 @@ public class DomainGlyph extends GlyphAsset {
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());
 
-        float debugAlpha = VfxUtil.resolveAlpha(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+        float debugAlpha = VfxUtil.resolveAlpha(hexContext, this);
         if (debugAlpha > 0f) {
-            Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext, GlyphAsset.getAssetMap().getAsset(ID));
+            Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext, this);
             Vector3d debugScale = new Vector3d(radius * 2, radius * 2, radius * 2);
             DebugComponent debugComp = new DebugComponent(DebugShape.Sphere, debugColor, debugScale, 0.1f);
             debugComp.setOpacity(debugAlpha * 0.15f);
@@ -158,7 +187,7 @@ public class DomainGlyph extends GlyphAsset {
             glyph.writeSelfOutput(zoneEntityVar, hexContext);
         }
 
-        DomainStyle.renderSpawn(anchorPos, (float) radius, hexContext, hexContext.getAccessor());
+        DomainStyle.renderSpawn(this, anchorPos, (float) radius, hexContext, hexContext.getAccessor());
 
         hexContext.addDependency(zoneRef);
     }

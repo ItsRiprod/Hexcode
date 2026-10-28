@@ -10,30 +10,24 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class InterfereStyle {
 
-    private static final String GLYPH_ID = "Interfere";
-
     private InterfereStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void renderHijack(Vector3d pos, HexContext ctx,
+    public static void renderHijack(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnPrimary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnPrimary(overrides, asset, pos, accessor);
     }
 
-    public static void renderStrip(Vector3d pos, HexContext ctx,
+    public static void renderStrip(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, pos, accessor);
     }
 
-    public static void renderBlockStrip(Vector3d pos, HexContext ctx,
+    public static void renderBlockStrip(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnTertiary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnTertiary(overrides, asset, pos, accessor);
     }
 }

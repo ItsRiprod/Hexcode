@@ -50,7 +50,7 @@ public class FortifyWardDamageSystem extends DamageEventSystem {
 
             Ref<EntityStore> target = chunk.getReferenceTo(index);
             FortifyState state = ConstructStateUtil.findState(
-                    buffer, target, FortifyGlyph.ID, FortifyState.class);
+                    buffer, target, FortifyGlyph.TYPE, FortifyState.class);
             if (state == null || state.isConsumed()) return;
 
             state.consume(resolveAttacker(damage, buffer));

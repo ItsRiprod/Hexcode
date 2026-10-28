@@ -22,12 +22,14 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Sim
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.Collector;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.ProjectileGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.ProjectileGlyphSlots;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -90,7 +92,8 @@ public class HexProjectileBounceInteraction extends SimpleInteraction {
 
             hexContext.updateRuntimeAccessors(buffer);
 
-            ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
+            var asset = GlyphAsset.of(triggering, ProjectileGlyph.class);
+            ProjectileStyle.renderBlockHit(asset, hitPos, hexContext, buffer);
 
             triggering.writeOutput(resultVar, hexContext);
 

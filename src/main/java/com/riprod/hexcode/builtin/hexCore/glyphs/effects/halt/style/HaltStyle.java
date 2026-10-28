@@ -10,19 +10,13 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class HaltStyle {
 
-    private static final String GLYPH_ID = "Halt";
-
     private HaltStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void render(Vector3d targetPos, HexContext ctx,
+    public static void render(GlyphAsset asset, Vector3d targetPos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnPrimary(overrides, asset(), targetPos, accessor);
-        VfxUtil.spawnSecondary(overrides, asset(), targetPos, accessor);
+        VfxUtil.spawnPrimary(overrides, asset, targetPos, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, targetPos, accessor);
     }
 }

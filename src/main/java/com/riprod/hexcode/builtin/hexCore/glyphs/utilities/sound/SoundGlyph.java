@@ -9,17 +9,12 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 public class SoundGlyph extends GlyphAsset {
-    public static final String ID = "Sound";
+    public static final String TYPE = "Sound";
 
     // authored on the same 0-512 axis as Color's channels, where unity is half
     // scale
     private static final double VOLUME_UNITY = 256.0;
     private static final double VOLUME_INPUT_MAX = 512.0;
-
-    @Override
-    public String getId() {
-        return ID;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

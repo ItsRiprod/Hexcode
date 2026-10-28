@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
@@ -15,6 +19,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockGathering;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -23,6 +28,7 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -38,17 +44,22 @@ public class PhaseGlyph extends GlyphAsset {
 
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
-    @Override
-    public String getId() {
-        return ID;
-    };
+    public static final String TYPE = "Phase";
 
-    public static final String ID = "Phase";
+    @Nullable
+    private Impact crushDamageImpact;
+    private String damageCauseId = "Environment";
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(PhaseConfig.class, PhaseConfig.CODEC);
-    }
+    public static final BuilderCodec<PhaseGlyph> CODEC = BuilderCodec
+            .builder(PhaseGlyph.class, PhaseGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("CrushDamageImpact", Impact.CODEC),
+                    (c, v) -> c.crushDamageImpact = v, c -> c.crushDamageImpact)
+            .add()
+            .append(new KeyedCodec<>("DamageCause", DamageCause.CHILD_ASSET_CODEC, true),
+                    (c, v) -> c.damageCauseId = v, c -> c.damageCauseId)
+            .addValidatorLate(() -> DamageCause.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -60,22 +71,12 @@ public class PhaseGlyph extends GlyphAsset {
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(getId());
-        if (asset == null) {
-            LOGGER.atWarning().log("Phase: missing asset, cannot compute volatility cost");
-            return;
-        }
-
         double duration = HexVarUtil.numberOrDefault(
                 glyph.readSlot(PhaseGlyphSlots.DURATION, hexContext),
-                asset.getSlot(PhaseGlyphSlots.DURATION).getDefaultValue());
+                getSlot(PhaseGlyphSlots.DURATION).getDefaultValue());
         double intensity = HexVarUtil.numberOrDefault(
                 glyph.readSlot(PhaseGlyphSlots.INTENSITY, hexContext),
-                asset.getSlot(PhaseGlyphSlots.INTENSITY).getDefaultValue());
-
-        PhaseConfig config = getConfig(PhaseConfig.class, asset);
-        if (config == null)
-            config = PhaseConfig.DEFAULTS;
+                getSlot(PhaseGlyphSlots.INTENSITY).getDefaultValue());
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         World world = accessor.getExternalData().getWorld();
@@ -142,14 +143,14 @@ public class PhaseGlyph extends GlyphAsset {
         phasedBlocks.add(new PhasedBlock(pos, typeId, rotationIndex, blockEntity));
 
         Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
-        PhaseStyle.renderPhaseOut(blockCenter, hexContext, accessor);
+        PhaseStyle.renderPhaseOut(this, blockCenter, hexContext, accessor);
 
         glyph.writeOutput(new BlockVar(pos), hexContext);
 
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
-                accessor, hexContext, glyph, PhaseGlyph.ID, blockCenter,
-                new PhaseState(glyph.getNextLinks(), config.getCrushDamageImpact(),
-                        config.getDamageCauseId()));
+                accessor, hexContext, glyph, PhaseGlyph.TYPE, blockCenter,
+                new PhaseState(glyph.getNextLinks(), crushDamageImpact,
+                        damageCauseId));
 
         holder.addComponent(PhaseComponent.getComponentType(),
                 new PhaseComponent(phasedBlocks, (float) duration));

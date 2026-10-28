@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Drown",
+  "Type": "Drown",
   "Style": "Essence_Water",
   "Title": "hexcode.glyphs.Drown.name",
   "Description": "hexcode.glyphs.Drown.description",
@@ -48,13 +48,10 @@
       "Description": "hexcode.glyphs.Drown.target.description"
     }
   },
-  "Config": {
-    "Type": "Drown",
-    "Resource": "Water",
-    "DamageCause": "Water",
-    "Efficiency": 0.9,
-    "AffinityStat": "Affinity_Water"
-  },
+  "Resource": "Water",
+  "DamageCause": "Water",
+  "Efficiency": 0.9,
+  "AffinityStat": "Affinity_Water",
   "Volatility": {
     "InstantCost": 6,
     "DrainPerSecond": 0.0

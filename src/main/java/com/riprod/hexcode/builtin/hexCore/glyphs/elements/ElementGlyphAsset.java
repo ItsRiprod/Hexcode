@@ -8,12 +8,12 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
-public abstract class ElementGlyphConfig extends GlyphConfig {
+public abstract class ElementGlyphAsset extends GlyphAsset {
 
-    public static final BuilderCodec<ElementGlyphConfig> BASE_CODEC = BuilderCodec
-            .abstractBuilder(ElementGlyphConfig.class, GlyphConfig.BASE_CODEC)
+    public static final BuilderCodec<ElementGlyphAsset> ABSTRACT_CODEC = BuilderCodec
+            .abstractBuilder(ElementGlyphAsset.class, GlyphAsset.ABSTRACT_CODEC)
             .append(new KeyedCodec<>("Efficiency", Codec.FLOAT, true),
                     (c, v) -> c.efficiency = v, c -> c.efficiency)
             .addValidator(Validators.greaterThanOrEqual(0.0f))

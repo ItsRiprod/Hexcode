@@ -2,33 +2,42 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.elements.electrocute;
 
 import java.util.Arrays;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementGlyphAsset;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 
-public class ElectrocuteGlyph extends GlyphAsset {
+public class ElectrocuteGlyph extends ElementGlyphAsset {
 
-    public static final String ID = "Electrocute";
+    public static final String TYPE = "Electrocute";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    private String statusEffect = "Lightning";
+    private float durationPerComplexity = 1.0f;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(ElectrocuteConfig.class, ElectrocuteConfig.CODEC);
-    }
+    public static final BuilderCodec<ElectrocuteGlyph> CODEC = BuilderCodec
+            .builder(ElectrocuteGlyph.class, ElectrocuteGlyph::new, ElementGlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("StatusEffect", Codec.STRING, true),
+                    (c, v) -> c.statusEffect = v, c -> c.statusEffect)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .append(new KeyedCodec<>("DurationPerComplexity", Codec.FLOAT, true),
+                    (c, v) -> c.durationPerComplexity = v, c -> c.durationPerComplexity)
+            .addValidator(Validators.greaterThanOrEqual(0.0f))
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -39,20 +48,14 @@ public class ElectrocuteGlyph extends GlyphAsset {
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        ElectrocuteConfig config = getConfig(ElectrocuteConfig.class, asset);
-        if (config == null)
-            config = ElectrocuteConfig.DEFAULTS;
-
-        float affinity = ElementSupport.affinityFactor(
-                hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
+        float affinity = ElementSupport.affinityFactor(hexContext, affinityStat, affinityScale);
+        float limit = ElementSupport.resourceLimit(glyph, this, hexContext);
         float seconds = ElementSupport.scaledDuration(
-                ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit),
-                config.getEfficiency(), config.getDurationPerComplexity(),
+                ElementSupport.consumeResource(hexContext, glyph, resource, limit),
+                efficiency, durationPerComplexity,
                 affinity);
 
-        String effectId = config.getStatusEffect();
+        String effectId = statusEffect;
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         if (!ElementSupport.applyStatus(hexContext, target, glyph, effectId, seconds)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -61,13 +64,13 @@ public class ElectrocuteGlyph extends GlyphAsset {
         }
 
         ElectrocuteState existing = ConstructStateUtil.findState(
-                accessor, target, ElectrocuteGlyph.ID, ElectrocuteState.class);
+                accessor, target, ElectrocuteGlyph.TYPE, ElectrocuteState.class);
         if (existing != null) {
             existing.refresh(seconds, glyph.getNextLinks());
         } else {
             ElectrocuteState state = new ElectrocuteState(effectId, seconds, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
-                    accessor, target, hexContext, glyph, ElectrocuteGlyph.ID, state);
+                    accessor, target, hexContext, glyph, ElectrocuteGlyph.TYPE, state);
         }
 
         Slot immediate = glyph.getSlot(ElectrocuteGlyphSlots.IMMEDIATE);

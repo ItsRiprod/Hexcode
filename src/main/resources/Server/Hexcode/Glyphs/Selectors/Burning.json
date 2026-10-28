@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Burning",
+  "Type": "Burning",
   "Style": "Element_Chaos",
   "Title": "hexcode.glyphs.Burning.name",
   "Description": "hexcode.glyphs.Burning.description",

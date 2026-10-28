@@ -4,10 +4,13 @@ import java.util.Arrays;
 
 import org.joml.Vector3d;
 
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
@@ -21,7 +24,6 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.protection.HexProtection;
@@ -32,17 +34,17 @@ import com.riprod.hexcode.utils.VfxUtil;
 public class HaltGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
-    @Override
-    public String getId() {
-        return ID;
-    };
+    public static final String TYPE = "Halt";
 
-    public static final String ID = "Halt";
+    private String effectId = "Hexcode_Halt";
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(HaltConfig.class, HaltConfig.CODEC);
-    }
+    public static final BuilderCodec<HaltGlyph> CODEC = BuilderCodec
+            .builder(HaltGlyph.class, HaltGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("Effect", EntityEffect.CHILD_ASSET_CODEC, true),
+                    (c, v) -> c.effectId = v, c -> c.effectId)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -68,14 +70,9 @@ public class HaltGlyph extends GlyphAsset {
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        HaltConfig config = getConfig(HaltConfig.class, asset);
-        if (config == null)
-            config = HaltConfig.DEFAULTS;
-
         double duration = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(HaltGlyphSlots.DURATION, hexContext),
-                asset.getSlot(HaltGlyphSlots.DURATION));
+                getSlot(HaltGlyphSlots.DURATION));
 
         try {
             if (VelocityUtil.isPhysicsTicked(ref, accessor)) {
@@ -94,8 +91,8 @@ public class HaltGlyph extends GlyphAsset {
             }
 
             if (duration > 0) {
-                HexConstructSpawner.applyWithState(accessor, ref, hexContext, glyph, HaltGlyph.ID,
-                        new HaltState((float) duration, config.getEffectId(), glyph.getNextLinks()));
+                HexConstructSpawner.applyWithState(accessor, ref, hexContext, glyph, HaltGlyph.TYPE,
+                        new HaltState((float) duration, effectId, glyph.getNextLinks()));
 
                 Slot immediate = glyph.getSlot(HaltGlyphSlots.IMMEDIATE);
                 if (immediate != null && immediate.getLinks().length > 0) {
@@ -106,13 +103,13 @@ public class HaltGlyph extends GlyphAsset {
             }
 
             if (duration > 0) {
-                VfxUtil.applyBoundedEffect(hexContext, ref, glyph, config.getEffectId(),
+                VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId,
                         (float) duration, OverlapBehavior.OVERWRITE);
             }
 
             TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
             if (tc != null) {
-                HaltStyle.render(tc.getPosition(), hexContext, accessor);
+                HaltStyle.render(this, tc.getPosition(), hexContext, accessor);
             }
         } catch (Exception e) {
             LOGGER.atWarning().log("halt: could not halt entity: %s", e.getMessage());

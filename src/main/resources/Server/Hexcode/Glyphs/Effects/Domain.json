@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Domain",
+  "Type": "Domain",
   "Title": "hexcode.glyphs.Domain.name",
   "Description": "hexcode.glyphs.Domain.description",
   "BasePower": 1.0,
@@ -75,28 +75,25 @@
     "InstantCost": 4,
     "DrainPerSecond": 0.5
   },
-  "Config": {
-    "Type": "Domain",
-    "VolatilityImpact": {
-      "Type": "SphereVolume",
-      "DefaultMagnitude": 1500.0,
-      "Exponent": 0.6667,
-      "ClampMin": 1.0,
-      "ClampMax": 15.0
-    },
-    "TriggerImpact": {
-      "Type": "Constant",
-      "Value": 5.0
-    },
-    "DespawnParticle": {
-      "SystemId": "Conjure_Despawn"
-    },
-    "DespawnSound": "SFX_Fireball_Miss",
-    "ContestedParticle": {
-      "SystemId": "Halt_Crystallize"
-    },
-    "ContestedSound": "SFX_Ice_Break"
+  "VolatilityImpact": {
+    "Type": "SphereVolume",
+    "DefaultMagnitude": 1500.0,
+    "Exponent": 0.6667,
+    "ClampMin": 1.0,
+    "ClampMax": 15.0
   },
+  "TriggerImpact": {
+    "Type": "Constant",
+    "Value": 5.0
+  },
+  "DespawnParticle": {
+    "SystemId": "Conjure_Despawn"
+  },
+  "DespawnSound": "SFX_Fireball_Miss",
+  "ContestedParticle": {
+    "SystemId": "Halt_Crystallize"
+  },
+  "ContestedSound": "SFX_Ice_Break",
   "Style": {
     "PrimaryColor": "#8033CC",
     "SecondaryColor": "#C499E6",

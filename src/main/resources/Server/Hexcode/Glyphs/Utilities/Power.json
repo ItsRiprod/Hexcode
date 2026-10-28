@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Power",
+  "Type": "Power",
   "Title": "hexcode.glyphs.Power.name",
   "Description": "hexcode.glyphs.Power.description",
   "BasePower": 0,

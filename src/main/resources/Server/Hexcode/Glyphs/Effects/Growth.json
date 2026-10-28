@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Growth",
+  "Type": "Growth",
   "Style": {
     "Parent": "Essence_Life",
     "PrimaryParticle": {
@@ -66,28 +66,25 @@
     "InstantCost": 2,
     "DrainPerSecond": 0.0
   },
-  "Config": {
-    "Type": "Growth",
-    "MinAmount": 1.0,
-    "MaxAmount": 20.0,
-    "StagesReferenceAmount": 5.0,
-    "BonemealRadius": 2,
-    "BonemealChance": 0.35,
-    "AttemptsFloor": 3,
-    "AttemptsPerAmount": 1.5,
-    "GrowthEffect": "Hexcode_Growth",
-    "VegetationBlocks": [
-      "Plant_Grass_Lush_Short",
-      "Plant_Grass_Lush",
-      "Plant_Grass_Lush_Tall",
-      "Plant_Flower_Common_Lime",
-      "Plant_Fern",
-      "Plant_Flower_Common_Blue",
-      "Plant_Flower_Common_Pink"
-    ],
-    "GrassDirtPrefixes": [
-      "Soil_Grass",
-      "Soil_Dirt"
-    ]
-  }
+  "MinAmount": 1.0,
+  "MaxAmount": 20.0,
+  "StagesReferenceAmount": 5.0,
+  "BonemealRadius": 2,
+  "BonemealChance": 0.35,
+  "AttemptsFloor": 3,
+  "AttemptsPerAmount": 1.5,
+  "GrowthEffect": "Hexcode_Growth",
+  "VegetationBlocks": [
+    "Plant_Grass_Lush_Short",
+    "Plant_Grass_Lush",
+    "Plant_Grass_Lush_Tall",
+    "Plant_Flower_Common_Lime",
+    "Plant_Fern",
+    "Plant_Flower_Common_Blue",
+    "Plant_Flower_Common_Pink"
+  ],
+  "GrassDirtPrefixes": [
+    "Soil_Grass",
+    "Soil_Dirt"
+  ]
 }

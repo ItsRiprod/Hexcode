@@ -10,12 +10,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 
 public class PositionValue extends GlyphAsset {
-    public static final String ID = "Position";
-
-    @Override
-    public String getId() {
-        return ID;
-    };
+    public static final String TYPE = "Position";
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar xVar = glyph.readSlot(PositionValueSlots.X, hexContext);

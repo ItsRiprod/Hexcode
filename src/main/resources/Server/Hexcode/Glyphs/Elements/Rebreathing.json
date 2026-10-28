@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Rebreathing",
+  "Type": "Rebreathing",
   "Style": "Essence_Water",
   "Title": "hexcode.glyphs.Rebreathing.name",
   "Description": "hexcode.glyphs.Rebreathing.description",
@@ -54,14 +54,11 @@
       "Description": "hexcode.glyphs.Rebreathing.target.description"
     }
   },
-  "Config": {
-    "Type": "Rebreathing",
-    "Resource": "Water",
-    "StatusEffect": "Water",
-    "Efficiency": 0.6,
-    "DurationPerComplexity": 1.0,
-    "AffinityStat": "Affinity_Water"
-  },
+  "Resource": "Water",
+  "StatusEffect": "Water",
+  "Efficiency": 0.6,
+  "DurationPerComplexity": 1.0,
+  "AffinityStat": "Affinity_Water",
   "Volatility": {
     "InstantCost": 6,
     "DrainPerSecond": 0.2

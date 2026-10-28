@@ -14,12 +14,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
 public class IsHoldingValue extends GlyphAsset {
 
-    public static final String ID = "IsHolding";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "IsHolding";
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {

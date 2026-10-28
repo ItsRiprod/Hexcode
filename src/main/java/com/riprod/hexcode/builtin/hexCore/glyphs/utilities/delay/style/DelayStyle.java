@@ -13,27 +13,21 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class DelayStyle {
 
-    private static final String GLYPH_ID = "Delay";
-
     private DelayStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void renderAt(Vector3d pos, HexContext hexContext) {
+    public static void renderAt(GlyphAsset asset, Vector3d pos, HexContext hexContext) {
         if (pos == null) return;
-        VfxUtil.spawnPrimary(hexContext.getStyle(), asset(), pos, hexContext.getAccessor());
+        VfxUtil.spawnPrimary(hexContext.getStyle(), asset, pos, hexContext.getAccessor());
     }
 
     public static ColorLight resolveLight(HexContext ctx) {
         return ctx.getStyle().getPrimaryLight();
     }
 
-    public static void renderExpiry(Vector3d pos, @Nullable HexContext ctx,
+    public static void renderExpiry(GlyphAsset asset, Vector3d pos, @Nullable HexContext ctx,
             ComponentAccessor<EntityStore> buffer) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), pos, buffer);
+        VfxUtil.spawnSecondary(overrides, asset, pos, buffer);
     }
 }

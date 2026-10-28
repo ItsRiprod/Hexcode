@@ -6,6 +6,9 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
@@ -13,6 +16,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.MountController;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
@@ -31,7 +35,6 @@ import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
@@ -43,17 +46,33 @@ import com.riprod.hexcode.utils.VfxUtil;
 public class ScaleGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Scale";
 
-    public static final String ID = "Scale";
+    private double minMagnitude = 0.01;
+    private double maxMagnitude = 32.0;
+    private double minDuration = 0.1;
+    private float mountOffsetY = 2.5f;
+    private String scaleEffectId;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(ScaleConfig.class, ScaleConfig.CODEC);
-    }
+    public static final BuilderCodec<ScaleGlyph> CODEC = BuilderCodec
+            .builder(ScaleGlyph.class, ScaleGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("MinMagnitude", Codec.DOUBLE, true),
+                    (c, v) -> c.minMagnitude = v, c -> c.minMagnitude)
+            .add()
+            .append(new KeyedCodec<>("MaxMagnitude", Codec.DOUBLE, true),
+                    (c, v) -> c.maxMagnitude = v, c -> c.maxMagnitude)
+            .add()
+            .append(new KeyedCodec<>("MinDuration", Codec.DOUBLE, true),
+                    (c, v) -> c.minDuration = v, c -> c.minDuration)
+            .add()
+            .append(new KeyedCodec<>("MountOffsetY", Codec.FLOAT, true),
+                    (c, v) -> c.mountOffsetY = v, c -> c.mountOffsetY)
+            .add()
+            .append(new KeyedCodec<>("ScaleEffect", Codec.STRING, true),
+                    (c, v) -> c.scaleEffectId = v, c -> c.scaleEffectId)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .build();
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
@@ -61,21 +80,17 @@ public class ScaleGlyph extends GlyphAsset {
         if (baseCost <= 0)
             return 0f;
 
-        ScaleConfig config = getConfig(ScaleConfig.class, asset);
-        if (config == null)
-            config = ScaleConfig.DEFAULTS;
-
         double magnitude = clamp(HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(ScaleGlyphSlots.MAGNITUDE, hexContext),
                 asset != null ? asset.getSlot(ScaleGlyphSlots.MAGNITUDE) : null),
-                config.getMinMagnitude(), config.getMaxMagnitude());
+                minMagnitude, maxMagnitude);
 
         float currentScale = readCurrentScale(glyph, hexContext);
-        double resultScale = clamp(currentScale * magnitude, config.getMinMagnitude(), config.getMaxMagnitude());
+        double resultScale = clamp(currentScale * magnitude, minMagnitude, maxMagnitude);
 
-        Impact impact = asset == null || asset.getConfig() == null
+        var impact = asset == null
                 ? null
-                : asset.getConfig().getVolatilityImpact();
+                : asset.getVolatilityImpact();
         return baseCost * Impact.scale(impact, resultScale);
     }
 
@@ -141,27 +156,22 @@ public class ScaleGlyph extends GlyphAsset {
 
         Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
         if (!HexProtection.canAffectEntity(accessor.getExternalData().getWorld(), caster, accessor, targetRef)) {
-            HexProtection.notifyBlocked(caster, accessor, ID);
+            HexProtection.notifyBlocked(caster, accessor, TYPE);
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        ScaleConfig config = getConfig(ScaleConfig.class, asset);
-        if (config == null)
-            config = ScaleConfig.DEFAULTS;
-
         double magnitude = clamp(HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(ScaleGlyphSlots.MAGNITUDE, hexContext), asset.getSlot(ScaleGlyphSlots.MAGNITUDE)),
-                config.getMinMagnitude(), config.getMaxMagnitude());
+                glyph.readSlot(ScaleGlyphSlots.MAGNITUDE, hexContext), getSlot(ScaleGlyphSlots.MAGNITUDE)),
+                minMagnitude, maxMagnitude);
 
-        float durationSeconds = (float) Math.max(config.getMinDuration(), HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(ScaleGlyphSlots.DURATION, hexContext), asset.getSlot(ScaleGlyphSlots.DURATION)));
+        float durationSeconds = (float) Math.max(minDuration, HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ScaleGlyphSlots.DURATION, hexContext), getSlot(ScaleGlyphSlots.DURATION)));
 
         try {
             float currentScale = readRenderedScale(accessor, targetRef);
             double desiredScale = clamp(currentScale * magnitude,
-                    config.getMinMagnitude(), config.getMaxMagnitude());
+                    minMagnitude, maxMagnitude);
             float contribution = currentScale > 0
                     ? (float) (desiredScale / currentScale)
                     : (float) magnitude;
@@ -179,10 +189,9 @@ public class ScaleGlyph extends GlyphAsset {
                 return;
             }
 
-            String effectId = config.getScaleEffectId();
-            VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, effectId, durationSeconds,
+            VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, scaleEffectId, durationSeconds,
                     OverlapBehavior.OVERWRITE);
-            state.setEffectId(effectId);
+            state.setEffectId(scaleEffectId);
 
             Vector3d spawnPos;
             TransformComponent targetTransform = accessor.getComponent(
@@ -194,12 +203,12 @@ public class ScaleGlyph extends GlyphAsset {
             }
 
             Ref<EntityStore> visualRef = magnitude >= 1.0
-                    ? spawnVisual(accessor, spawnPos, targetRef, hexContext, config)
+                    ? spawnVisual(accessor, spawnPos, targetRef, hexContext)
                     : null;
             state.setVisualRef(visualRef);
 
             HexConstructSpawner.applyWithState(
-                    accessor, targetRef, hexContext, glyph, ScaleGlyph.ID, state);
+                    accessor, targetRef, hexContext, glyph, ScaleGlyph.TYPE, state);
 
             Slot immediate = glyph.getSlot(ScaleGlyphSlots.IMMEDIATE);
             if (immediate != null && immediate.getLinks().length > 0) {
@@ -208,7 +217,7 @@ public class ScaleGlyph extends GlyphAsset {
                 HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
             }
 
-            ScaleStyle.renderApply(spawnPos, hexContext, accessor);
+            ScaleStyle.renderApply(this, spawnPos, hexContext, accessor);
         } catch (Exception e) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Cannot apply scale", e);
@@ -216,7 +225,7 @@ public class ScaleGlyph extends GlyphAsset {
     }
 
     private Ref<EntityStore> spawnVisual(CommandBuffer<EntityStore> accessor,
-            Vector3d spawnPos, Ref<EntityStore> targetRef, HexContext hexContext, ScaleConfig config) {
+            Vector3d spawnPos, Ref<EntityStore> targetRef, HexContext hexContext) {
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
         holder.addComponent(HexcodeComponent.getComponentType(), new HexcodeComponent());
         holder.addComponent(TransformComponent.getComponentType(),
@@ -227,11 +236,10 @@ public class ScaleGlyph extends GlyphAsset {
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
         holder.addComponent(MountedComponent.getComponentType(),
                 new MountedComponent(targetRef,
-                        new Vector3f(0f, config.getMountOffsetY(), 0f),
+                        new Vector3f(0f, mountOffsetY, 0f),
                         MountController.Minecart));
 
-        HexConstructSpawner.attachModel(holder, hexContext,
-                GlyphAsset.getAssetMap().getAsset(ID), 1.0f);
+        HexConstructSpawner.attachModel(holder, hexContext, this, 1.0f);
 
         return accessor.addEntity(holder, AddReason.SPAWN);
     }

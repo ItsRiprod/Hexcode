@@ -26,7 +26,6 @@ import com.hypixel.hytale.math.vector.Rotation3fc;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphRegistry;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
@@ -291,16 +290,13 @@ public class Glyph {
         if (linkedAsset == null)
             return resolveAssetDefault(key, hexContext, defaultSupplier);
 
-        GlyphHandler handler = GlyphRegistry.get(linkedAsset.getHandler());
-        if (handler == null)
-            return resolveAssetDefault(key, hexContext, defaultSupplier);
 
         if (hexContext.isResolving(linked.getId()))
             return null;
 
         hexContext.pushResolving(linked.getId());
         try {
-            HexVar v = handler.readValue(linked, hexContext);
+            HexVar v = linkedAsset.readValue(linked, hexContext);
             return v != null ? v : resolveAssetDefault(key, hexContext, defaultSupplier);
         } finally {
             hexContext.popResolving();
@@ -397,9 +393,6 @@ public class Glyph {
             GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
             if (linkedAsset == null)
                 continue;
-            GlyphHandler handler = GlyphRegistry.get(linkedAsset.getHandler());
-            if (handler == null)
-                continue;
 
             if (hexContext.isResolving(linked.getId())) {
                 resolved.add(new NumberVar(0.0));
@@ -408,7 +401,7 @@ public class Glyph {
 
             hexContext.pushResolving(linked.getId());
             try {
-                HexVar value = handler.readValue(linked, hexContext);
+                HexVar value = linkedAsset.readValue(linked, hexContext);
                 if (value != null)
                     resolved.add(value);
             } finally {

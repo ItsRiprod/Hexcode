@@ -10,30 +10,24 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class GlaciateStyle {
 
-    private static final String GLYPH_ID = "Glaciate";
-
     private GlaciateStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void renderSpawn(Vector3d pos, HexContext ctx,
+    public static void renderSpawn(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnPrimary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnPrimary(overrides, asset, pos, accessor);
     }
 
-    public static void renderImpact(Vector3d pos, HexContext ctx,
+    public static void renderImpact(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, pos, accessor);
     }
 
-    public static void renderMelt(Vector3d pos, HexContext ctx,
+    public static void renderMelt(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnTertiary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnTertiary(overrides, asset, pos, accessor);
     }
 }

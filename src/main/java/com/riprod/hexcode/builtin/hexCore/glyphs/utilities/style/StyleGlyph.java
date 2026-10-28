@@ -15,12 +15,7 @@ import com.riprod.hexcode.core.common.hexes.component.HexColors;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 public class StyleGlyph extends GlyphAsset {
-    public static final String ID = "Style";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Style";
 
     private double[] resolveRgba(Glyph glyph, HexContext hexContext) {
         var buf = hexContext.getAccessor();

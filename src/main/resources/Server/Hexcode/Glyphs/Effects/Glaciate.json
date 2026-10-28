@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Glaciate",
+  "Type": "Glaciate",
   "Style": {
     "Parent": "Element_Drain",
     "PrimaryParticle": {
@@ -72,15 +72,12 @@
     "InstantCost": 4,
     "DrainPerSecond": 0.5
   },
-  "Config": {
-    "Type": "Glaciate",
-    "IceScale": 2.0,
-    "MinDamageSpeed": 0.1,
-    "KnockbackScale": 0.3,
-    "MinVerticalKnockback": 2.0,
-    "DamageRadius": 1.2,
-    "DamageMultiplier": 1.0,
-    "IceModel": "Glaciate_Ice",
-    "HardCollisionConfig": "Hexcode_Glaciate_HardCollision"
-  }
+  "IceScale": 2.0,
+  "MinDamageSpeed": 0.1,
+  "KnockbackScale": 0.3,
+  "MinVerticalKnockback": 2.0,
+  "DamageRadius": 1.2,
+  "DamageMultiplier": 1.0,
+  "IceModel": "Glaciate_Ice",
+  "HardCollisionConfig": "Hexcode_Glaciate_HardCollision"
 }

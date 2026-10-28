@@ -17,12 +17,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class RootGlyph extends GlyphAsset {
-    public static final String ID = "Root";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Root";
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(PowerGlyphSlots.A, hexContext);

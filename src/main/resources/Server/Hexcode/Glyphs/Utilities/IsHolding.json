@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "IsHolding",
+  "Type": "IsHolding",
   "Title": "hexcode.glyphs.IsHolding.name",
   "Description": "hexcode.glyphs.IsHolding.description",
   "BasePower": 0,

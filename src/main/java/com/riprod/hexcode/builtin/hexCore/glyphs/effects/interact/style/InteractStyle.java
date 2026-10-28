@@ -10,17 +10,11 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class InteractStyle {
 
-    private static final String GLYPH_ID = "Interact";
-
     private InteractStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void renderImpact(ComponentAccessor<EntityStore> accessor, Vector3d position, HexContext ctx) {
+    public static void renderImpact(GlyphAsset asset, ComponentAccessor<EntityStore> accessor, Vector3d position, HexContext ctx) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnSecondary(overrides, asset(), position, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, position, accessor);
     }
 }

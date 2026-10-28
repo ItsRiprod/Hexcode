@@ -16,12 +16,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class RoundGlyph extends GlyphAsset {
-    public static final String ID = "Round";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Round";
 
     private static double op(double v) {
         return (double) Math.round(v);

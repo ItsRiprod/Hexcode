@@ -12,12 +12,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
 public class DotGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    public static final String ID = "Dot";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Dot";
 
     @Nullable
     private HexVar compute(Glyph glyph, HexContext hexContext) {

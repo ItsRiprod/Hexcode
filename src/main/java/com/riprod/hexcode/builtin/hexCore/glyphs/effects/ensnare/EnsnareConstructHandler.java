@@ -52,17 +52,10 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
         return !drainSustain(dt, status);
     }
 
-    private static EnsnareConfig resolveConfig(Glyph triggeringGlyph) {
-        if (triggeringGlyph == null) return EnsnareConfig.DEFAULTS;
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(triggeringGlyph.getGlyphId());
-        if (asset == null) return EnsnareConfig.DEFAULTS;
-        return asset.getConfig() instanceof EnsnareConfig ec ? ec : EnsnareConfig.DEFAULTS;
-    }
-
     @Override
     public void onCleanup(HexStatus<NoState> status, ConstructTickContext ctx) {
         status.getHexContext().endBranch();
-        EnsnareComponent ensnare = ctx.getChunk().getComponent(
+        var ensnare = ctx.getChunk().getComponent(
                 ctx.getIndex(), EnsnareComponent.getComponentType());
         if (ensnare != null) {
             removeSpikes(ensnare, status, ctx.getBuffer());
@@ -75,13 +68,14 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
 
     private void processDamage(EnsnareComponent ensnare, HexStatus<NoState> status,
             ConstructTickContext ctx, Ref<EntityStore> casterRef) {
-        EnsnareConfig config = resolveConfig(status.getTriggeringGlyph());
+        var glyph = GlyphAsset.of(status.getTriggeringGlyph(), EnsnareGlyph.class);
+        if (glyph == null) return;
 
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Vector3d center = ensnare.getCenter();
-        double radius = ensnare.getRadius() + config.getBoxPaddingXZ();
-        Vector3d min = new Vector3d(center.x - radius, center.y - config.getBoxPaddingYMin(), center.z - radius);
-        Vector3d max = new Vector3d(center.x + radius, center.y + config.getBoxPaddingYMax(), center.z + radius);
+        double radius = ensnare.getRadius() + glyph.getBoxPaddingXZ();
+        Vector3d min = new Vector3d(center.x - radius, center.y - glyph.getBoxPaddingYMin(), center.z - radius);
+        Vector3d max = new Vector3d(center.x + radius, center.y + glyph.getBoxPaddingYMax(), center.z + radius);
 
         List<Ref<EntityStore>> nearbyEntities = new ObjectArrayList<>(TargetUtil.getAllEntitiesInBox(min, max, buffer));
         if (nearbyEntities.isEmpty()) return;
@@ -99,12 +93,12 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
             if (tc == null) continue;
 
             Vector3d entityPos = tc.getPosition();
-            SpikeEntry nearestSpike = ensnare.findNearestSpike(entityPos, config.getSpikeHitRadiusSq());
+            SpikeEntry nearestSpike = ensnare.findNearestSpike(entityPos, glyph.getSpikeHitRadiusSq());
             if (nearestSpike == null) continue;
 
             applyDamage(buffer, targetRef, ensnare.getSpikeDamage(), casterRef);
             ensnare.recordDamage(targetId);
-            EnsnareStyle.renderSpikeDamage(nearestSpike.getPosition(), status.getHexContext(), buffer);
+            EnsnareStyle.renderSpikeDamage(glyph, nearestSpike.getPosition(), status.getHexContext(), buffer);
 
             fireOnHit(status, ctx, targetRef, targetId);
         }
@@ -138,11 +132,12 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
     private void removeSpikes(EnsnareComponent ensnare, HexStatus<NoState> status, CommandBuffer<EntityStore> buffer) {
         List<Ref<EntityStore>> particleRecipients = VfxUtil.collectParticleRecipients(
                 ensnare.getCenter(), ensnare.getRadius() + 25.0, buffer);
+        var asset = GlyphAsset.of(status.getTriggeringGlyph(), EnsnareGlyph.class);
         for (SpikeEntry spike : ensnare.getSpikes()) {
             Ref<EntityStore> spikeRef = spike.getEntityRef();
             if (spikeRef != null && spikeRef.isValid()) {
                 EnsnareStyle.renderSpikeDespawn(
-                        spike.getPosition(), status.getHexContext(), buffer, particleRecipients);
+                        asset, spike.getPosition(), status.getHexContext(), buffer, particleRecipients);
                 Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
                 holder.addComponent(HexcodeComponent.getComponentType(), new HexcodeComponent());
                 buffer.removeEntity(spikeRef, holder, RemoveReason.REMOVE);

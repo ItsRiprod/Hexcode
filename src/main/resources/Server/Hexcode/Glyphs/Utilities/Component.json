@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Component",
+  "Type": "Component",
   "Title": "hexcode.glyphs.Component.name",
   "Description": "hexcode.glyphs.Component.description",
   "BasePower": 0,

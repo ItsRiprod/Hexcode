@@ -2,12 +2,18 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.elements.ignite;
 
 import java.util.Arrays;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementGlyphAsset;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ignite.style.IgniteStyle;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
@@ -15,23 +21,26 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.protection.HexProtection;
 
-public class IgniteGlyph extends GlyphAsset {
+public class IgniteGlyph extends ElementGlyphAsset {
 
-    public static final String ID = "Ignite";
+    public static final String TYPE = "Ignite";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    private String statusEffect = "Fire";
+    private float durationPerComplexity = 0.5f;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(IgniteConfig.class, IgniteConfig.CODEC);
-    }
+    public static final BuilderCodec<IgniteGlyph> CODEC = BuilderCodec
+            .builder(IgniteGlyph.class, IgniteGlyph::new, ElementGlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("StatusEffect", Codec.STRING, true),
+                    (c, v) -> c.statusEffect = v, c -> c.statusEffect)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .append(new KeyedCodec<>("DurationPerComplexity", Codec.FLOAT, true),
+                    (c, v) -> c.durationPerComplexity = v, c -> c.durationPerComplexity)
+            .addValidator(Validators.greaterThanOrEqual(0.0f))
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -50,20 +59,14 @@ public class IgniteGlyph extends GlyphAsset {
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        IgniteConfig config = getConfig(IgniteConfig.class, asset);
-        if (config == null)
-            config = IgniteConfig.DEFAULTS;
-
-        float affinity = ElementSupport.affinityFactor(
-                hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
+        float affinity = ElementSupport.affinityFactor(hexContext, affinityStat, affinityScale);
+        float limit = ElementSupport.resourceLimit(glyph, this, hexContext);
         float seconds = ElementSupport.scaledDuration(
-                ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit),
-                config.getEfficiency(), config.getDurationPerComplexity(),
+                ElementSupport.consumeResource(hexContext, glyph, resource, limit),
+                efficiency, durationPerComplexity,
                 affinity);
 
-        String effectId = config.getStatusEffect();
+        String effectId = statusEffect;
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         if (!ElementSupport.applyStatus(hexContext, target, glyph, effectId, seconds)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -73,18 +76,18 @@ public class IgniteGlyph extends GlyphAsset {
 
         TransformComponent tc = accessor.getComponent(target, TransformComponent.getComponentType());
         if (tc != null) {
-            IgniteStyle.render(tc.getPosition(), hexContext, accessor);
+            IgniteStyle.render(this, tc.getPosition(), hexContext, accessor);
         }
 
         IgniteState existing = ConstructStateUtil.findState(
-                accessor, target, IgniteGlyph.ID, IgniteState.class);
+                accessor, target, IgniteGlyph.TYPE, IgniteState.class);
         if (existing != null) {
             existing.setRemainingDuration(seconds);
             existing.setNextGlyphIds(glyph.getNextLinks());
         } else {
             IgniteState state = new IgniteState(seconds, effectId, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
-                    accessor, target, hexContext, glyph, IgniteGlyph.ID, state);
+                    accessor, target, hexContext, glyph, IgniteGlyph.TYPE, state);
         }
 
         Slot immediate = glyph.getSlot(IgniteGlyphSlots.IMMEDIATE);

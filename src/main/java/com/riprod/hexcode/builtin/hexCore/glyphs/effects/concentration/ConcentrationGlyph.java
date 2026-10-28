@@ -38,56 +38,28 @@ import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
 import com.riprod.hexcode.utils.HexVarUtil;
 
+import lombok.Getter;
+
 public class ConcentrationGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     public static final float DEFAULT_SUSTAIN_PER_SECOND = 3.0f;
 
     @Nullable
+    @Getter
     private Impact sustainImpact;
     @Nullable
+    @Getter
     private Impact manaImpact;
     @Nullable
+    @Getter
     private Impact staminaImpact;
     @Nullable
+    @Getter
     private Impact healthImpact;
+    @Getter
     private double secondaryIntervalSeconds = 1.0;
+    @Getter
     private String healthDamageCauseId = "Arcane";
-
-    public ConcentrationGlyph get() {
-        var glyph = GlyphAsset.getAssetMap().getAsset(ID);
-        if (glyph instanceof ConcentrationGlyph cGlyph) {
-            return cGlyph;
-        }
-        return null;
-    }
-
-    public String getHealthDamageCauseId() {
-        return healthDamageCauseId;
-    }
-
-    @Nullable
-    public Impact getSustainImpact() {
-        return sustainImpact;
-    }
-
-    @Nullable
-    public Impact getManaImpact() {
-        return manaImpact;
-    }
-
-    @Nullable
-    public Impact getStaminaImpact() {
-        return staminaImpact;
-    }
-
-    @Nullable
-    public Impact getHealthImpact() {
-        return healthImpact;
-    }
-
-    public double getSecondaryIntervalSeconds() {
-        return secondaryIntervalSeconds;
-    }
 
     public static final BuilderCodec<ConcentrationGlyph> CODEC = BuilderCodec
             .builder(ConcentrationGlyph.class, ConcentrationGlyph::new, GlyphAsset.ABSTRACT_CODEC)
@@ -112,12 +84,7 @@ public class ConcentrationGlyph extends GlyphAsset {
             .add()
             .build();
 
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    public static final String ID = "Concentration";
+    public static final String TYPE = "Concentration";
 
     private static final Vector3f MOUNT_OFFSET = new Vector3f(0f, 1.4f, 1.2f);
 
@@ -154,8 +121,8 @@ public class ConcentrationGlyph extends GlyphAsset {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         ConcentrationState existing = ConstructStateUtil.findState(
-                accessor, casterRef, ConcentrationGlyph.ID, ConcentrationState.class);
-        boolean pending = HexConstructSpawner.hasPendingApply(accessor, casterRef, ConcentrationGlyph.ID);
+                accessor, casterRef, ConcentrationGlyph.TYPE, ConcentrationState.class);
+        boolean pending = HexConstructSpawner.hasPendingApply(accessor, casterRef, ConcentrationGlyph.TYPE);
         if (existing != null || pending) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Already concentrating");
@@ -179,7 +146,7 @@ public class ConcentrationGlyph extends GlyphAsset {
 
         if (casterTransform != null) {
             visualRef = spawnVisual(accessor, casterTransform, casterRef, hexContext);
-            ConcentrationStyle.renderSpawn(casterTransform.getPosition(), hexContext, accessor);
+            ConcentrationStyle.renderSpawn(this, casterTransform.getPosition(), hexContext, accessor);
         }
 
         float manaRate = readRate(glyph, asset, hexContext, ConcentrationGlyphSlots.MANA_PER_SECOND);
@@ -195,7 +162,7 @@ public class ConcentrationGlyph extends GlyphAsset {
                         + convert(staminaRate, getStaminaImpact())
                         + convert(healthRate, getHealthImpact()));
         HexConstructSpawner.applyWithState(
-                accessor, casterRef, hexContext.branch(), glyph, ConcentrationGlyph.ID, state);
+                accessor, casterRef, hexContext.branch(), glyph, ConcentrationGlyph.TYPE, state);
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
@@ -226,8 +193,7 @@ public class ConcentrationGlyph extends GlyphAsset {
                         new Vector3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z),
                         MountController.Minecart));
 
-        Model model = HexConstructSpawner.attachModel(holder, hexContext,
-                GlyphAsset.getAssetMap().getAsset(ID), 1.0f);
+        Model model = HexConstructSpawner.attachModel(holder, hexContext, this, 1.0f);
         if (model == null) {
             LOGGER.atWarning().log("concentration: primary model not found");
         }

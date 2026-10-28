@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Invisibility",
+  "Type": "Invisibility",
   "Style": {
     "PrimaryColor": "#8ea1aa",
     "SecondaryColor": "#a7e8ff",
@@ -60,8 +60,5 @@
     "InstantCost": 5,
     "DrainPerSecond": 2
   },
-  "Config": {
-    "Type": "Invisibility",
-    "Effect": "Hexcode_Invisibility"
-  }
+  "Effect": "Hexcode_Invisibility"
 }

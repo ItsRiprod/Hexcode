@@ -10,35 +10,26 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class ProjectileStyle {
 
-    private static final String GLYPH_ID = "Projectile";
-
     private ProjectileStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void renderLaunch(Vector3d position, Vector3d direction, HexContext ctx,
+    public static void renderLaunch(GlyphAsset asset, Vector3d position, Vector3d direction, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        GlyphAsset projectile = asset();
-        VfxUtil.spawnPrimary(overrides, projectile, position, accessor);
-        VfxUtil.spawnStyleParticleDirected(overrides, projectile, position, accessor, direction);
+        VfxUtil.spawnPrimary(overrides, asset, position, accessor);
+        VfxUtil.spawnStyleParticleDirected(overrides, asset, position, accessor, direction);
     }
 
-    public static void renderEntityHit(Vector3d projectilePos, Vector3d hitPos, HexContext ctx,
+    public static void renderEntityHit(GlyphAsset asset, Vector3d projectilePos, Vector3d hitPos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        GlyphAsset projectile = asset();
-        VfxUtil.spawnSecondary(overrides, projectile, hitPos, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, hitPos, accessor);
     }
 
-    public static void renderBlockHit(Vector3d hitPos, HexContext ctx,
+    public static void renderBlockHit(GlyphAsset asset, Vector3d hitPos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        GlyphAsset projectile = asset();
-        VfxUtil.spawnSecondary(overrides, projectile, hitPos, accessor);
+        VfxUtil.spawnSecondary(overrides, asset, hitPos, accessor);
     }
 
     public static void renderMiss(Vector3d endPos, HexContext ctx,

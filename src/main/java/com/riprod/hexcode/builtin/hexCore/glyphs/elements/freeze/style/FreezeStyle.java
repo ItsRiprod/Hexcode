@@ -10,18 +10,12 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class FreezeStyle {
 
-    private static final String GLYPH_ID = "Freeze";
-
     private FreezeStyle() {
     }
 
-    private static GlyphAsset asset() {
-        return GlyphAsset.getAssetMap().getAsset(GLYPH_ID);
-    }
-
-    public static void renderFreeze(Vector3d pos, HexContext ctx,
+    public static void renderFreeze(GlyphAsset asset, Vector3d pos, HexContext ctx,
             ComponentAccessor<EntityStore> accessor) {
         HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-        VfxUtil.spawnPrimary(overrides, asset(), pos, accessor);
+        VfxUtil.spawnPrimary(overrides, asset, pos, accessor);
     }
 }

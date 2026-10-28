@@ -22,14 +22,9 @@ import com.riprod.hexcode.utils.VelocityUtil;
 
 public class ForceGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    public static final String ID = "Force";
+    public static final String TYPE = "Force";
 
     private static final double MAX_Y_VELOCITY = 130.0;
-
-    @Override
-    public String getId() {
-        return ID;
-    };
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
@@ -96,7 +91,7 @@ public class ForceGlyph extends GlyphAsset {
                 VelocityUtil.applyVelocity(ref, new Vector3d(force.x, 0, force.z), ChangeVelocityType.Add,
                         horizontal, hexContext.getAccessor());
 
-                ForceGlyphStyle.render(targetPos, force, hexContext, hexContext.getAccessor());
+                ForceGlyphStyle.render(this, targetPos, force, hexContext, hexContext.getAccessor());
             }
         } catch (Exception e) {
             LOGGER.atWarning().log("force glyph: could not apply force to entity: %s", e.getMessage());

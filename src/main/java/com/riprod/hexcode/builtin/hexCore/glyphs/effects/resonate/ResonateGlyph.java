@@ -25,12 +25,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public class ResonateGlyph extends GlyphAsset {
-    public static final String ID = "Resonate";
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Resonate";
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -66,7 +61,7 @@ public class ResonateGlyph extends GlyphAsset {
         if (targets.isEmpty()) {
             Vector3d pos = resolvePosition(ref, accessor);
             if (pos != null)
-                ResonateStyle.renderNoSignal(pos, hexContext, accessor);
+                ResonateStyle.renderNoSignal(this, pos, hexContext, accessor);
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Target has no active effects");
             return;
@@ -85,7 +80,7 @@ public class ResonateGlyph extends GlyphAsset {
 
         Vector3d pos = resolvePosition(ref, accessor);
         if (pos != null)
-            ResonateStyle.renderResonate(pos, hexContext, accessor);
+            ResonateStyle.renderResonate(this, pos, hexContext, accessor);
     }
 
     private void resonateEntity(Glyph glyph, HexContext hexContext,
@@ -95,7 +90,7 @@ public class ResonateGlyph extends GlyphAsset {
         if (targetStats == null) {
             Vector3d pos = resolvePosition(ref, accessor);
             if (pos != null)
-                ResonateStyle.renderNoSignal(pos, hexContext, accessor);
+                ResonateStyle.renderNoSignal(this, pos, hexContext, accessor);
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Resonate: target has no mana pool");
             return;
@@ -103,7 +98,7 @@ public class ResonateGlyph extends GlyphAsset {
 
         Vector3d pos = resolvePosition(ref, accessor);
         if (pos != null)
-            ResonateStyle.renderResonate(pos, hexContext, accessor);
+            ResonateStyle.renderResonate(this, pos, hexContext, accessor);
     }
 
     private Vector3d resolvePosition(Ref<EntityStore> ref, CommandBuffer<EntityStore> accessor) {

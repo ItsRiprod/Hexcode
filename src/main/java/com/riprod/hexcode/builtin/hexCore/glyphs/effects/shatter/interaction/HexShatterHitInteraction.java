@@ -23,11 +23,12 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Sim
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.Collector;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.ShatterGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style.ShatterStyle;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -87,9 +88,6 @@ public class HexShatterHitInteraction extends SimpleInteraction {
                 if (uuid != null) {
                     resultVar = new EntityVar(uuid.getUuid(), targetRef);
                 }
-                if (hitPos != null) {
-                    ProjectileStyle.renderEntityHit(hitPos, hitPos, hexContext, buffer);
-                }
             } else if (hitPos != null) {
                 if (triggering != null) {
                     triggering.writeOutput(
@@ -98,12 +96,10 @@ public class HexShatterHitInteraction extends SimpleInteraction {
                                     : new PositionVar(hitPos),
                             hexContext);
                 }
-
-                ProjectileStyle.renderBlockHit(hitPos, hexContext, buffer);
             }
 
             if (hitPos != null) {
-                ShatterStyle.renderShardHit(hitPos, hexContext, buffer);
+                ShatterStyle.renderShardHit(GlyphAsset.of(triggering, ShatterGlyph.class), hitPos, hexContext, buffer);
             }
 
             if (triggering != null && resultVar != null) {

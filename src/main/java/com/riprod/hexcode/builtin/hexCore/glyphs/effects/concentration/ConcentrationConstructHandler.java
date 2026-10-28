@@ -36,6 +36,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         if (casterRef == null || !casterRef.isValid())
             return true;
 
+        var glyph = GlyphAsset.of(status.getTriggeringGlyph(), ConcentrationGlyph.class);
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         EntityStatMap statMap = buffer.getComponent(
                 casterRef, EntityStatMap.getComponentType());
@@ -46,22 +47,22 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             return true;
 
         if (holdStat.get() < 1f) {
-            fireRelease(status, buffer, casterRef);
+            fireRelease(glyph, status, buffer, casterRef);
             return true;
         }
 
-        if (!payUpkeep(dt, status, statMap, buffer, casterRef)) {
-            fireRelease(status, buffer, casterRef);
+        if (!payUpkeep(dt, glyph, status, statMap, buffer, casterRef)) {
+            fireRelease(glyph, status, buffer, casterRef);
             return true;
         }
 
-        accrueVolatility(dt, status);
-        emitSecondary(dt, status, buffer, casterRef);
+        accrueVolatility(dt, glyph, status);
+        emitSecondary(dt, glyph, status, buffer, casterRef);
 
         return !drainSustain(dt, status);
     }
 
-    private void accrueVolatility(float dt, HexStatus<ConcentrationState> status) {
+    private void accrueVolatility(float dt, GlyphAsset glyph, HexStatus<ConcentrationState> status) {
         ConcentrationState state = status.getState();
         VolatilityComponent tracker = status.getHexContext().volatility();
         if (state == null || tracker == null)
@@ -70,13 +71,12 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         float elapsed = state.getElapsedSeconds() + dt;
         state.setElapsedSeconds(elapsed);
 
-        var glyph = GlyphAsset.getAssetMap().getAsset(status.getHandlerId());
-        float basePerSecond = glyph != null ? glyph.getVolatilityImpact().compute(elapsed) : 1.3f;
+        float basePerSecond = glyph != null ? glyph.getVolatilityImpact().compute(elapsed) : 1.0f;
         tracker.add((basePerSecond + state.getBonusVolatilityPerSecond()) * dt);
     }
 
-    private boolean payUpkeep(float dt, HexStatus<ConcentrationState> status, EntityStatMap statMap,
-            CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
+    private boolean payUpkeep(float dt, ConcentrationGlyph glyph, HexStatus<ConcentrationState> status,
+            EntityStatMap statMap, CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
         ConcentrationState state = status.getState();
         HexContext ctx = status.getHexContext();
 
@@ -99,7 +99,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         if (stamina > 0)
             statMap.subtractStatValue(DefaultEntityStatTypes.getStamina(), stamina);
 
-        payHealthUpkeep(dt, state, status.getHandlerId(), buffer, casterRef);
+        payHealthUpkeep(dt, glyph, state, buffer, casterRef);
         return true;
     }
 
@@ -110,7 +110,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         return stat != null && stat.get() >= cost;
     }
 
-    private void payHealthUpkeep(float dt, ConcentrationState state, String glyphId,
+    private void payHealthUpkeep(float dt, ConcentrationGlyph glyph, ConcentrationState state,
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
         if (state.getHealthRate() <= 0f)
             return;
@@ -118,16 +118,14 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         float accum = state.getHealthDamageAccum() + state.getHealthRate() * dt;
         int points = (int) accum;
         state.setHealthDamageAccum(accum - points);
-        if (points <= 0)
+        if (points <= 0 || glyph == null)
             return;
-
-        var glyph = GlyphAsset.getAssetMap().getAsset(glyphId);
 
         DamageCause cause = DamageCause.getAssetMap().getAsset(glyph.getHealthDamageCauseId());
         if (cause == null) {
             LOGGER.atWarning().atMostEvery(5, TimeUnit.SECONDS)
                     .log("concentration: damage cause '%s' not found, health upkeep skipped",
-                            config.getHealthDamageCauseId());
+                            glyph.getHealthDamageCauseId());
             return;
         }
 
@@ -140,7 +138,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         }
     }
 
-    private void fireRelease(HexStatus<ConcentrationState> status,
+    private void fireRelease(ConcentrationGlyph glyph, HexStatus<ConcentrationState> status,
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
         Glyph trigger = status.getTriggeringGlyph();
         HexContext heldCtx = status.getHexContext();
@@ -162,17 +160,17 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         TransformComponent casterTransform = buffer.getComponent(
                 casterRef, TransformComponent.getComponentType());
         if (casterTransform != null) {
-            ConcentrationStyle.renderEnd(casterTransform.getPosition(), heldCtx, buffer);
+            ConcentrationStyle.renderEnd(glyph, casterTransform.getPosition(), heldCtx, buffer);
         }
     }
 
-    private void emitSecondary(float dt, HexStatus<ConcentrationState> status,
+    private void emitSecondary(float dt, ConcentrationGlyph glyph, HexStatus<ConcentrationState> status,
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
         ConcentrationState state = status.getState();
-        if (state == null)
+        if (state == null || glyph == null)
             return;
 
-        float interval = (float) resolveConfig(status).getSecondaryIntervalSeconds();
+        float interval = (float) glyph.getSecondaryIntervalSeconds();
         float accum = state.getTickAccum() + dt;
         while (accum >= interval) {
             accum -= interval;
@@ -180,7 +178,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
                     casterRef, TransformComponent.getComponentType());
             if (transform == null)
                 break;
-            ConcentrationStyle.renderTick(transform.getPosition(), status.getHexContext(), buffer);
+            ConcentrationStyle.renderTick(glyph, transform.getPosition(), status.getHexContext(), buffer);
         }
         state.setTickAccum(accum);
     }

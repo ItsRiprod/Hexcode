@@ -11,14 +11,9 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 
 public class ColorGlyph extends GlyphAsset {
-    public static final String ID = "Color";
+    public static final String TYPE = "Color";
 
     private static final double CHANNEL_MAX = 255.0;
-
-    @Override
-    public String getId() {
-        return ID;
-    }
 
     private double[] resolveRgba(Glyph glyph, HexContext hexContext) {
         var buf = hexContext.getAccessor();

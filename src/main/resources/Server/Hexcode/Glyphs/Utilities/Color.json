@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Color",
+  "Type": "Color",
   "Title": "hexcode.glyphs.Color.name",
   "Description": "hexcode.glyphs.Color.description",
   "ModelPath": "Glyph_Template",

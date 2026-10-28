@@ -2,6 +2,10 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify;
 
 import java.util.Arrays;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -12,6 +16,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.InvisibilityGlyphSlots;
+import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementGlyphAsset;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.component.FortifyWardComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.style.FortifyStyle;
@@ -20,27 +25,30 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VfxUtil;
 
-public class FortifyGlyph extends GlyphAsset {
+public class FortifyGlyph extends ElementGlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Fortify";
 
-    public static final String ID = "Fortify";
+    private String effectId = "Hexcode_Fortify";
+    private float durationPerResource = 1.0f;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(FortifyConfig.class, FortifyConfig.CODEC);
-    }
+    public static final BuilderCodec<FortifyGlyph> CODEC = BuilderCodec
+            .builder(FortifyGlyph.class, FortifyGlyph::new, ElementGlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("Effect", EntityEffect.CHILD_ASSET_CODEC, true),
+                    (c, v) -> c.effectId = v, c -> c.effectId)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .append(new KeyedCodec<>("DurationPerResource", Codec.FLOAT, true),
+                    (c, v) -> c.durationPerResource = v, c -> c.durationPerResource)
+            .addValidator(Validators.greaterThanOrEqual(0.0f))
+            .add()
+            .build();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -51,11 +59,6 @@ public class FortifyGlyph extends GlyphAsset {
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        FortifyConfig config = getConfig(FortifyConfig.class, asset);
-        if (config == null)
-            config = FortifyConfig.DEFAULTS;
-
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
         if (!(targets instanceof EntityVar entityVar)) {
@@ -64,7 +67,7 @@ public class FortifyGlyph extends GlyphAsset {
         }
 
         boolean sustained = entityVar != null
-                && applyToEntities(glyph, entityVar, config, hexContext, accessor, asset);
+                && applyToEntities(glyph, entityVar, hexContext, accessor);
 
         // sustained cast defers continuation to the construct's onEnd; otherwise pass
         // through
@@ -80,13 +83,12 @@ public class FortifyGlyph extends GlyphAsset {
         }
     }
 
-    private boolean applyToEntities(Glyph glyph, EntityVar entityVar, FortifyConfig config,
-            HexContext hexContext, CommandBuffer<EntityStore> accessor, GlyphAsset asset) {
+    private boolean applyToEntities(Glyph glyph, EntityVar entityVar,
+            HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         Ref<EntityStore> ref = entityVar.getRef(accessor);
         if (ref == null || !ref.isValid())
             return false;
 
-        String effectId = config.getEffectId();
         EntityEffect fortifyEffect = EntityEffect.getAssetMap().getAsset(effectId);
         if (fortifyEffect == null) {
             LOGGER.atWarning().log("fortify: %s effect asset not found", effectId);
@@ -95,11 +97,10 @@ public class FortifyGlyph extends GlyphAsset {
 
         // resource consumed 100% at cast regardless of when the ward is spent - the
         // stacking gate
-        float affinity = ElementSupport.affinityFactor(
-                hexContext, config.getAffinityStat(), config.getAffinityScale());
-        float limit = ElementSupport.resourceLimit(glyph, asset, hexContext);
-        float spent = ElementSupport.consumeResource(hexContext, glyph, config.getResource(), limit);
-        float durationSeconds = spent * config.getEfficiency() * affinity * config.getDurationPerResource();
+        float affinity = ElementSupport.affinityFactor(hexContext, affinityStat, affinityScale);
+        float limit = ElementSupport.resourceLimit(glyph, this, hexContext);
+        float spent = ElementSupport.consumeResource(hexContext, glyph, resource, limit);
+        float durationSeconds = spent * efficiency * affinity * durationPerResource;
 
         VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId, durationSeconds,
                 OverlapBehavior.OVERWRITE);
@@ -107,18 +108,18 @@ public class FortifyGlyph extends GlyphAsset {
         accessor.putComponent(ref, FortifyWardComponent.getComponentType(), FortifyWardComponent.INSTANCE);
 
         FortifyState existing = ConstructStateUtil.findState(
-                accessor, ref, FortifyGlyph.ID, FortifyState.class);
+                accessor, ref, FortifyGlyph.TYPE, FortifyState.class);
         if (existing != null) {
             existing.refresh(durationSeconds, glyph.getNextLinks());
         } else {
             FortifyState state = new FortifyState(durationSeconds, effectId, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
-                    accessor, ref, hexContext, glyph, FortifyGlyph.ID, state);
+                    accessor, ref, hexContext, glyph, FortifyGlyph.TYPE, state);
         }
 
         TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
         if (tc != null) {
-            FortifyStyle.renderEntityHit(tc.getPosition(), hexContext, accessor);
+            FortifyStyle.renderEntityHit(this, tc.getPosition(), hexContext, accessor);
         }
 
         LOGGER.atFine().log("fortify: applied resistance effect for %.1fs to entity", durationSeconds);

@@ -22,15 +22,10 @@ import com.riprod.hexcode.utils.BlockAccess;
 
 public class IdentifyGlyph extends GlyphAsset {
 
-    public static final String ID = "Identify";
+    public static final String TYPE = "Identify";
 
     private static final int PLAYER_KIND = Integer.MAX_VALUE;
     private static final int UNKNOWN_KIND = Integer.MIN_VALUE;
-
-    @Override
-    public String getId() {
-        return ID;
-    }
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {

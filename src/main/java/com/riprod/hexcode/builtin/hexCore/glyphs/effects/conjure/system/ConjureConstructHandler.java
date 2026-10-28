@@ -36,6 +36,7 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.state.NoState;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.ConjureGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.ConjureGlyphSlots;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.component.ConjureZoneComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.style.ConjureStyle;
@@ -45,17 +46,8 @@ import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.ConjureConfig;
 
 public class ConjureConstructHandler implements ConstructHandler<NoState> {
-
-    private ConjureConfig resolveConfig(HexStatus<NoState> status) {
-        Glyph glyph = status.getTriggeringGlyph();
-        GlyphAsset asset = glyph != null ? GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId()) : null;
-        return asset != null && asset.getConfig() instanceof ConjureConfig config
-                ? config
-                : ConjureConfig.DEFAULTS;
-    }
 
     @Override
     public void onFirstTick(HexStatus<NoState> status, ConstructTickContext ctx) {
@@ -121,7 +113,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
             }
         }
 
-        ConjureConfig config = resolveConfig(status);
+        var config = GlyphAsset.of(triggering, ConjureGlyph.class);
         boolean barrier = ctx.getChunk().getComponent(
                 ctx.getIndex(), HitboxCollision.getComponentType()) != null;
 
@@ -130,7 +122,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
 
         zone.setSpatialQueryTimer(zone.getSpatialQueryTimer() - dt);
         boolean queryDue = zone.getSpatialQueryTimer() <= 0f;
-        if (queryDue) {
+        if (queryDue && config != null) {
             zone.setSpatialQueryTimer(config.getSpatialQueryInterval());
         }
 
@@ -138,10 +130,10 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
             zone.setIntervalTimer(zone.getIntervalTimer() - dt);
         }
 
-        if (barrier || (hasChildren && queryDue)) {
+        if (config != null && (barrier || (hasChildren && queryDue))) {
             Vector3d pos = transform.getPosition();
             Vector3d half = zone.getAabbHalfExtents();
-            double margin = config.getDefaultEntityHalfExtent();
+            double margin = config.getBoxHalfExtent();
             Vector3d min = new Vector3d(
                     pos.x - half.x - margin, pos.y - half.y - margin, pos.z - half.z - margin);
             Vector3d max = new Vector3d(
@@ -180,7 +172,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
                     currentOccupants.add(entityId);
 
                     if (!previousOccupants.contains(entityId)) {
-                        fireOnEntity(status, ctx, ref, uuid, candidate);
+                        fireOnEntity(config, status, ctx, ref, uuid, candidate);
                     }
                 }
 
@@ -196,7 +188,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
                             continue;
                         TransformComponent candidate = ctx.getBuffer().getComponent(
                                 ref, TransformComponent.getComponentType());
-                        fireOnEntity(status, ctx, ref, uuid, candidate);
+                        fireOnEntity(config, status, ctx, ref, uuid, candidate);
                     }
                 }
             }
@@ -206,9 +198,9 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
     }
 
     private void containEntities(ConjureZoneComponent zone, Vector3d center,
-            List<Ref<EntityStore>> found, ConjureConfig config, ConstructTickContext ctx) {
+            List<Ref<EntityStore>> found, ConjureGlyph glyph, ConstructTickContext ctx) {
         World world = ctx.getBuffer().getExternalData().getWorld();
-        double fallback = config.getDefaultEntityHalfExtent();
+        double fallback = glyph.getBoxHalfExtent();
         Vector3d halfExtents = new Vector3d();
         Vector3d boxCenter = new Vector3d();
         Vector3d direction = new Vector3d();
@@ -249,8 +241,8 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
                 if (depth <= 0) {
                     break;
                 }
-                double step = Math.min(depth + config.getCorrectionEpsilon(),
-                        config.getMaxCorrectionPerTick());
+                double step = Math.min(depth + glyph.getCorrectionEpsilon(),
+                        glyph.getMaxCorrectionPerTick());
                 scratch.set(
                         position.x + direction.x * step,
                         position.y + direction.y * step,
@@ -274,16 +266,17 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
     @Override
     public void onCleanup(HexStatus<NoState> status, ConstructTickContext ctx) {
         status.getHexContext().endBranch();
+        var asset = GlyphAsset.of(status.getTriggeringGlyph(), ConjureGlyph.class);
         TransformComponent transform = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), TransformComponent.getComponentType());
         if (transform != null) {
-            ConjureStyle.renderDespawn(transform.getPosition(),
+            ConjureStyle.renderDespawn(asset, transform.getPosition(),
                     status.getHexContext(), ctx.getBuffer());
         }
         ctx.getBuffer().tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
     }
 
-    private void fireOnEntity(HexStatus<NoState> status, ConstructTickContext ctx,
+    private void fireOnEntity(ConjureGlyph config, HexStatus<NoState> status, ConstructTickContext ctx,
             Ref<EntityStore> entityRef, UUIDComponent entityUuid,
             TransformComponent entityTransform) {
         Glyph triggering = status.getTriggeringGlyph();
@@ -291,7 +284,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
             HexContext hexCtx = status.getHexContext().branch();
             hexCtx.updateRuntimeAccessors(ctx.getBuffer());
             if (entityTransform != null) {
-                ConjureStyle.renderTrigger(entityTransform.getPosition(),
+                ConjureStyle.renderTrigger(config, entityTransform.getPosition(),
                         hexCtx, ctx.getBuffer());
             }
             triggering.writeDefaultOutput(

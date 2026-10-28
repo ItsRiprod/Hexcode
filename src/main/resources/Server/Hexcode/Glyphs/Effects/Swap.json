@@ -49,14 +49,11 @@
     "InstantCost": 1.5,
     "DrainPerSecond": 0.0
   },
-  "Config": {
-    "Type": "Swap",
-    "Effect": "Teleportation",
-    "VolatilityImpact": {
-      "Type": "PowerLaw",
-      "DefaultMagnitude": 5.0,
-      "Exponent": 1.0
-    }
+  "Effect": "Teleportation",
+  "VolatilityImpact": {
+    "Type": "PowerLaw",
+    "DefaultMagnitude": 5.0,
+    "Exponent": 1.0
   },
-  "Handler": "Swap"
+  "Type": "Swap"
 }

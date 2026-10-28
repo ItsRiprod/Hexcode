@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Disguise",
+  "Type": "Disguise",
   "Style": {
     "PrimaryParticle": {
       "SystemId": "Disguise_Apply"
@@ -66,9 +66,6 @@
     "InstantCost": 3,
     "DrainPerSecond": 0.15
   },
-  "Config": {
-    "Type": "Disguise",
-    "DisguiseNametag": true,
-    "DisguiseEffect": "Hexcode_Disguise"
-  }
+  "DisguiseNametag": true,
+  "DisguiseEffect": "Hexcode_Disguise"
 }

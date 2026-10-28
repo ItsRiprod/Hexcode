@@ -16,12 +16,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.glyphs.variables.TransformVar;
 
 public class ModuloGlyph extends GlyphAsset {
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    public static final String ID = "Modulo";
+    public static final String TYPE = "Modulo";
 
     private Double op(Double A, Double B) {
         return B != 0 ? A % B : A;

@@ -3,6 +3,9 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -26,8 +29,6 @@ import com.riprod.hexcode.core.common.execution.cast.component.VolatilityCompone
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
@@ -38,17 +39,20 @@ import com.riprod.hexcode.utils.VelocityUtil;
 
 public class RotationValue extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    public static final String ID = "Rotation";
+    public static final String TYPE = "Rotation";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    private float rollHoldSeconds = 10.0f;
+    private float playerVolatilityCost = 2.0f;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(RotationConfig.class, RotationConfig.CODEC);
-    }
+    public static final BuilderCodec<RotationValue> CODEC = BuilderCodec
+            .builder(RotationValue.class, RotationValue::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("RollHoldSeconds", Codec.FLOAT, true),
+                    (c, v) -> c.rollHoldSeconds = v, c -> c.rollHoldSeconds)
+            .add()
+            .append(new KeyedCodec<>("PlayerVolatilityCost", Codec.FLOAT, true),
+                    (c, v) -> c.playerVolatilityCost = v, c -> c.playerVolatilityCost)
+            .add()
+            .build();
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar xVar = glyph.readSlot(RotationValueSlots.X, hexContext, new NumberVar(0));
@@ -120,27 +124,21 @@ public class RotationValue extends GlyphAsset {
             if (!RotationUtils.applyExact(ref, rotation, accessor))
                 return;
 
-            chargePlayerCost(ref, glyph, hexContext);
+            chargePlayerCost(ref, hexContext);
             trackRollRestore(ref, rotation, priorRoll, glyph, hexContext);
         } catch (Exception e) {
             LOGGER.atWarning().log("rotation glyph: could not rotate entity: %s", e.getMessage());
         }
     }
 
-    private void chargePlayerCost(Ref<EntityStore> ref, Glyph glyph, HexContext hexContext) {
+    private void chargePlayerCost(Ref<EntityStore> ref, HexContext hexContext) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         if (accessor.getComponent(ref, Player.getComponentType()) == null)
             return;
         VolatilityComponent volatility = hexContext.volatility();
         if (volatility == null)
             return;
-        volatility.consume(resolveConfig(glyph).getPlayerVolatilityCost());
-    }
-
-    private RotationConfig resolveConfig(Glyph glyph) {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        RotationConfig config = getConfig(RotationConfig.class, asset);
-        return config == null ? RotationConfig.DEFAULTS : config;
+        volatility.consume(playerVolatilityCost);
     }
 
     private void trackRollRestore(Ref<EntityStore> ref, Rotation3f applied, float priorRoll,
@@ -151,19 +149,17 @@ public class RotationValue extends GlyphAsset {
         if (Math.abs(applied.roll()) <= RotationUtils.EPSILON_RADIANS)
             return;
 
-        RotationConfig config = resolveConfig(glyph);
-
         RotationState existing = findRollRestore(ref, accessor);
         if (existing != null) {
-            existing.setRemainingSeconds(config.getRollHoldSeconds());
+            existing.setRemainingSeconds(rollHoldSeconds);
             return;
         }
 
-        if (HexConstructSpawner.hasPendingApply(accessor, ref, ID))
+        if (HexConstructSpawner.hasPendingApply(accessor, ref, TYPE))
             return;
 
-        HexConstructSpawner.applyWithState(accessor, ref, hexContext.branch(), glyph, ID,
-                new RotationState(priorRoll, config.getRollHoldSeconds()));
+        HexConstructSpawner.applyWithState(accessor, ref, hexContext.branch(), glyph, TYPE,
+                new RotationState(priorRoll, rollHoldSeconds));
     }
 
     private static RotationState findRollRestore(Ref<EntityStore> ref,
@@ -174,7 +170,7 @@ public class RotationValue extends GlyphAsset {
             return null;
 
         for (HexStatus<?> status : effects.getEffects().values()) {
-            if (status != null && ID.equals(status.getHandlerId())
+            if (status != null && TYPE.equals(status.getHandlerId())
                     && status.getState() instanceof RotationState rotationState) {
                 return rotationState;
             }

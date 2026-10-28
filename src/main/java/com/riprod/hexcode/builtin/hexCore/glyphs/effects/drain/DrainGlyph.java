@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
@@ -19,7 +23,6 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
@@ -29,33 +32,53 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class DrainGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    public static final String TYPE = "Drain";
 
-    @Override
-    public String getId() {
-        return ID;
-    };
+    private float hpToManaRate = 1.5f;
+    private float staminaToManaRate = 0.6f;
+    private float defaultConversionRate = 1.0f;
+    private float defaultDrainPercent = 15.0f;
+    private float hpFloor = 1.0f;
+    private float durationFloor = 0.01f;
+    private String drainEffectId;
 
-    public static final String ID = "Drain";
+    public static final BuilderCodec<DrainGlyph> CODEC = BuilderCodec
+            .builder(DrainGlyph.class, DrainGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("HpToManaRate", Codec.FLOAT, true),
+                    (c, v) -> c.hpToManaRate = v, c -> c.hpToManaRate)
+            .add()
+            .append(new KeyedCodec<>("StaminaToManaRate", Codec.FLOAT, true),
+                    (c, v) -> c.staminaToManaRate = v, c -> c.staminaToManaRate)
+            .add()
+            .append(new KeyedCodec<>("DefaultConversionRate", Codec.FLOAT, true),
+                    (c, v) -> c.defaultConversionRate = v, c -> c.defaultConversionRate)
+            .add()
+            .append(new KeyedCodec<>("DefaultDrainPercent", Codec.FLOAT, true),
+                    (c, v) -> c.defaultDrainPercent = v, c -> c.defaultDrainPercent)
+            .add()
+            .append(new KeyedCodec<>("HpFloor", Codec.FLOAT, true),
+                    (c, v) -> c.hpFloor = v, c -> c.hpFloor)
+            .add()
+            .append(new KeyedCodec<>("DurationFloor", Codec.FLOAT, true),
+                    (c, v) -> c.durationFloor = v, c -> c.durationFloor)
+            .add()
+            .append(new KeyedCodec<>("DrainEffect", Codec.STRING, true),
+                    (c, v) -> c.drainEffectId = v, c -> c.drainEffectId)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .build();
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(DrainConfig.class, DrainConfig.CODEC);
-    }
-
-    private static float conversionRate(int sourceStat, DrainConfig config) {
+    private float conversionRate(int sourceStat) {
         if (sourceStat == DefaultEntityStatTypes.getHealth())
-            return config.getHpToManaRate();
+            return hpToManaRate;
         if (sourceStat == DefaultEntityStatTypes.getStamina())
-            return config.getStaminaToManaRate();
-        return config.getDefaultConversionRate();
+            return staminaToManaRate;
+        return defaultConversionRate;
     }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        DrainConfig config = getConfig(DrainConfig.class, asset);
-        if (config == null)
-            config = DrainConfig.DEFAULTS;
 
         HexVar targetVar = glyph.readSlot(DrainGlyphSlots.TARGET, hexContext);
         if (!(targetVar instanceof EntityVar entityVar)) {
@@ -96,7 +119,7 @@ public class DrainGlyph extends GlyphAsset {
             drainPercent = HexVarUtil.numberOrDefault(staminaInput, 0.0);
         } else {
             sourceStatIndex = DefaultEntityStatTypes.getHealth();
-            drainPercent = config.getDefaultDrainPercent();
+            drainPercent = defaultDrainPercent;
         }
 
         if (sourceStatIndex == DefaultEntityStatTypes.getHealth()) {
@@ -119,7 +142,7 @@ public class DrainGlyph extends GlyphAsset {
                 destRef = resolved;
         }
 
-        float rate = conversionRate(sourceStatIndex, config);
+        float rate = conversionRate(sourceStatIndex);
 
         if (drainPercent <= 0) {
             HexExecuter.fail(glyph, hexContext,
@@ -147,7 +170,7 @@ public class DrainGlyph extends GlyphAsset {
         float totalDrainAmount = (float) (drainPercent / 100.0) * sourceStat.getMax();
 
         if (sourceStatIndex == DefaultEntityStatTypes.getHealth()) {
-            float maxDrainable = sourceStat.get() - config.getHpFloor();
+            float maxDrainable = sourceStat.get() - hpFloor;
             if (maxDrainable <= 0) {
                 HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
                 return;
@@ -167,7 +190,7 @@ public class DrainGlyph extends GlyphAsset {
         HexVar durationVar = glyph.readSlot(DrainGlyphSlots.DURATION, hexContext);
         float duration = HexVarUtil.numberOrSlotDefault(null, asset.getSlot(DrainGlyphSlots.DURATION)).floatValue();
         if (durationVar != null) {
-            duration = Math.max(config.getDurationFloor(),
+            duration = Math.max(durationFloor,
                     HexVarUtil.numberOrSlotDefault(durationVar, asset.getSlot(DrainGlyphSlots.DURATION)).floatValue());
         }
 
@@ -176,16 +199,15 @@ public class DrainGlyph extends GlyphAsset {
                 ? new ArrayList<>(Arrays.asList(nextSlot.getLinks()))
                 : new ArrayList<>();
 
-        String effectId = config.getDrainEffectId();
-        VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, effectId, duration,
+        VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, drainEffectId, duration,
                 OverlapBehavior.OVERWRITE);
 
         DrainState state = new DrainState(
                 sourceStatIndex, destRef, rate, totalDrainAmount, duration, nextGlyphIds,
-                config.getHpFloor(), effectId);
+                hpFloor, drainEffectId);
 
         HexConstructSpawner.applyWithState(
-                hexContext.getAccessor(), targetRef, hexContext, glyph, DrainGlyph.ID, state);
+                hexContext.getAccessor(), targetRef, hexContext, glyph, DrainGlyph.TYPE, state);
 
         Slot immediate = glyph.getSlot(DrainGlyphSlots.IMMEDIATE);
         if (immediate != null && immediate.getLinks().length > 0) {

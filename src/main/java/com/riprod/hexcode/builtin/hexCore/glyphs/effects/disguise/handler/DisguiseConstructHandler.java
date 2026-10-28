@@ -10,12 +10,14 @@ import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.DisguiseGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.components.DisguiseState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.style.DisguiseStyle;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.utils.LogScopes;
 
 public class DisguiseConstructHandler implements ConstructHandler<DisguiseState> {
@@ -74,7 +76,8 @@ public class DisguiseConstructHandler implements ConstructHandler<DisguiseState>
 
             TransformComponent tc = buffer.getComponent(targetRef, TransformComponent.getComponentType());
             if (tc != null) {
-                DisguiseStyle.renderRestore(tc.getPosition(), status.getHexContext(), buffer);
+                var asset = GlyphAsset.of(status.getTriggeringGlyph(), DisguiseGlyph.class);
+                DisguiseStyle.renderRestore(asset, tc.getPosition(), status.getHexContext(), buffer);
             }
         } catch (Exception e) {
             LOGGER.atSevere().log("DisguiseConstructHandler cleanup failed: %s", e.getMessage());

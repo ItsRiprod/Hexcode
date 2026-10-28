@@ -8,6 +8,9 @@ import java.util.Map;
 
 import org.joml.Vector3d;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
@@ -32,7 +35,6 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
@@ -40,33 +42,49 @@ import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ShatterGlyph extends GlyphAsset {
 
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    public static final String ID = "Shatter";
+    public static final String TYPE = "Shatter";
 
     private static final String HIT_ROOT_INTERACTION = "Hex_Shatter_Hit";
     private static final String MISS_ROOT_INTERACTION = "Hex_Shatter_Miss";
     private static final String BOUNCE_ROOT_INTERACTION = "Hex_Shatter_Bounce";
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(ShatterConfig.class, ShatterConfig.CODEC);
-    }
+    private int defaultCount = 5;
+    private double defaultSpread = Math.PI / 6;
+    private double defaultSpeed = 20.0;
+    private double defaultGravity = 10.0;
+    private double perShardPrice = 0.5;
+    private double shardTtlSeconds = 600.0;
+
+    public static final BuilderCodec<ShatterGlyph> CODEC = BuilderCodec
+            .builder(ShatterGlyph.class, ShatterGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("DefaultCount", Codec.INTEGER, true),
+                    (c, v) -> c.defaultCount = v, c -> c.defaultCount)
+            .add()
+            .append(new KeyedCodec<>("DefaultSpread", Codec.DOUBLE, true),
+                    (c, v) -> c.defaultSpread = v, c -> c.defaultSpread)
+            .add()
+            .append(new KeyedCodec<>("DefaultSpeed", Codec.DOUBLE, true),
+                    (c, v) -> c.defaultSpeed = v, c -> c.defaultSpeed)
+            .add()
+            .append(new KeyedCodec<>("DefaultGravity", Codec.DOUBLE, true),
+                    (c, v) -> c.defaultGravity = v, c -> c.defaultGravity)
+            .add()
+            .append(new KeyedCodec<>("PerShardPrice", Codec.DOUBLE, true),
+                    (c, v) -> c.perShardPrice = v, c -> c.perShardPrice)
+            .add()
+            .append(new KeyedCodec<>("ShardTtlSeconds", Codec.DOUBLE, true),
+                    (c, v) -> c.shardTtlSeconds = v, c -> c.shardTtlSeconds)
+            .add()
+            .build();
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
         if (asset == null)
             return 0f;
-        ShatterConfig config = getConfig(ShatterConfig.class, asset);
-        if (config == null)
-            config = ShatterConfig.DEFAULTS;
 
         int count = HexVarUtil.numberOrDefault(
                 glyph.readSlot(ShatterGlyphSlots.COUNT, hexContext),
-                (double) config.getDefaultCount()).intValue();
+                (double) defaultCount).intValue();
         if (count < 1)
             count = 1;
 
@@ -75,7 +93,7 @@ public class ShatterGlyph extends GlyphAsset {
         // reduction is carried through computeBaseCost / InstantCost
         float instantCost = asset.getVolatility().getInstantCost();
         float drawFactor = instantCost > 0f ? glyph.computeBaseCost(asset) / instantCost : 1f;
-        return (float) (count * config.getPerShardPrice() * drawFactor);
+        return (float) (count * perShardPrice * drawFactor);
     }
 
     @Override
@@ -124,26 +142,21 @@ public class ShatterGlyph extends GlyphAsset {
                 ? var.getRef(accessor)
                 : hexContext.getCasterRef(accessor);
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        ShatterConfig config = getConfig(ShatterConfig.class, asset);
-        if (config == null)
-            config = ShatterConfig.DEFAULTS;
-
-        int count = HexVarUtil.numberOrDefault(countVar, (double) config.getDefaultCount()).intValue();
+        int count = HexVarUtil.numberOrDefault(countVar, (double) defaultCount).intValue();
         if (count < 1)
             count = 1;
 
-        double spread = HexVarUtil.numberOrDefault(spreadVar, config.getDefaultSpread());
-        double speed = HexVarUtil.numberOrDefault(speedVar, config.getDefaultSpeed());
+        double spread = HexVarUtil.numberOrDefault(spreadVar, defaultSpread);
+        double speed = HexVarUtil.numberOrDefault(speedVar, defaultSpeed);
         if (speed <= 0)
-            speed = config.getDefaultSpeed();
-        double gravity = HexVarUtil.numberOrDefault(gravityVar, config.getDefaultGravity());
+            speed = defaultSpeed;
+        double gravity = HexVarUtil.numberOrDefault(gravityVar, defaultGravity);
 
-        Duration shardTtl = Duration.ofMillis((long) (config.getShardTtlSeconds() * 1000));
+        Duration shardTtl = Duration.ofMillis((long) (shardTtlSeconds * 1000));
 
         List<Vector3d> shardDirections = computeConeDirections(centralDir, count, spread);
 
-        Model model = HexConstructSpawner.resolveModel(hexContext, asset, 1.0f);
+        Model model = HexConstructSpawner.resolveModel(hexContext, this, 1.0f);
         if (model == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "model asset not found");
@@ -156,7 +169,7 @@ public class ShatterGlyph extends GlyphAsset {
                     shardTtl);
         }
 
-        ShatterStyle.renderLaunch(spawnPos, centralDir, hexContext, hexContext.getAccessor());
+        ShatterStyle.renderLaunch(this, spawnPos, centralDir, hexContext, hexContext.getAccessor());
 
         hexContext.endBranch();
     }

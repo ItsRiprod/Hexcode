@@ -17,22 +17,11 @@ import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
-import com.riprod.hexcode.core.common.execution.impact.Impact;
-import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.redirect.EntityRedirectSpawner;
 import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
 
 public class WardConstructHandler implements ConstructHandler<WardState> {
-
-    private WardConfig resolveConfig(HexStatus<WardState> status) {
-        Glyph trigger = status.getTriggeringGlyph();
-        GlyphAsset asset = trigger != null
-                ? GlyphAsset.getAssetMap().getAsset(trigger.getGlyphId()) : null;
-        GlyphConfig raw = asset != null ? asset.getConfig() : null;
-        return raw instanceof WardConfig wc ? wc : WardConfig.DEFAULTS;
-    }
 
     @Override
     public boolean onTick(float dt, HexStatus<WardState> status, ConstructTickContext ctx) {
@@ -54,16 +43,17 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
         float elapsed = state.getElapsedSeconds() + dt;
         state.setElapsedSeconds(elapsed);
 
-        Impact impact = resolveConfig(status).getSustainImpact();
-        float perSecond = impact != null ? impact.compute(elapsed) : WardConfig.DEFAULT_SUSTAIN_PER_SECOND;
+        var asset = GlyphAsset.of(status.getTriggeringGlyph(), WardGlyph.class);
+        var impact = asset != null ? asset.getSustainImpact() : null;
+        float perSecond = impact != null ? impact.compute(elapsed) : WardGlyph.DEFAULT_SUSTAIN_PER_SECOND;
         tracker.add(perSecond * dt);
 
-        renderWardLine(state, buffer, status);
+        renderWardLine(asset, state, buffer, status);
 
         return tracker.getCurrent() <= 0f;
     }
 
-    private void renderWardLine(WardState state, CommandBuffer<EntityStore> buffer,
+    private void renderWardLine(WardGlyph asset, WardState state, CommandBuffer<EntityStore> buffer,
             HexStatus<WardState> status) {
         Ref<EntityStore> targetRef = state.getTargetRef() != null
                 ? state.getTargetRef().getEntity(buffer) : null;
@@ -75,7 +65,7 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
         TransformComponent deferralTransform = buffer.getComponent(deferralRef, TransformComponent.getComponentType());
         if (targetTransform == null || deferralTransform == null)
             return;
-        WardStyle.renderWardLine(new Vector3d(targetTransform.getPosition()),
+        WardStyle.renderWardLine(asset, new Vector3d(targetTransform.getPosition()),
                 new Vector3d(deferralTransform.getPosition()), status.getHexContext(), buffer);
     }
 
@@ -91,7 +81,8 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
         TransformComponent casterTransform = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), TransformComponent.getComponentType());
         if (casterTransform != null) {
-            WardStyle.renderEnd(casterTransform.getPosition(), status.getHexContext(), ctx.getBuffer());
+            var asset = GlyphAsset.of(status.getTriggeringGlyph(), WardGlyph.class);
+            WardStyle.renderEnd(asset, casterTransform.getPosition(), status.getHexContext(), ctx.getBuffer());
         }
     }
 

@@ -2,6 +2,8 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility;
 
 import java.util.Arrays;
 
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -20,7 +22,6 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
@@ -31,17 +32,17 @@ import com.riprod.hexcode.utils.VfxUtil;
 public class InvisibilityGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    public static final String TYPE = "Invisibility";
 
-    public static final String ID = "Invisibility";
+    private String effectId = "Hexcode_Invisibility";
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(InvisibilityConfig.class, InvisibilityConfig.CODEC);
-    }
+    public static final BuilderCodec<InvisibilityGlyph> CODEC = BuilderCodec
+            .builder(InvisibilityGlyph.class, InvisibilityGlyph::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("Effect", EntityEffect.CHILD_ASSET_CODEC, true),
+                    (c, v) -> c.effectId = v, c -> c.effectId)
+            .addValidatorLate(() -> EntityEffect.VALIDATOR_CACHE.getValidator().late())
+            .add()
+            .build();
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
@@ -56,7 +57,7 @@ public class InvisibilityGlyph extends GlyphAsset {
             return new NumberVar(0);
 
         InvisibilityState state = ConstructStateUtil.findState(
-                accessor, ref, InvisibilityGlyph.ID, InvisibilityState.class);
+                accessor, ref, InvisibilityGlyph.TYPE, InvisibilityState.class);
 
         return new NumberVar(state != null ? state.getRemainingDuration() : 0);
     }
@@ -70,14 +71,9 @@ public class InvisibilityGlyph extends GlyphAsset {
             return;
         }
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        InvisibilityConfig config = getConfig(InvisibilityConfig.class, asset);
-        if (config == null)
-            config = InvisibilityConfig.DEFAULTS;
-
         double duration = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(InvisibilityGlyphSlots.DURATION, hexContext),
-                asset.getSlot(InvisibilityGlyphSlots.DURATION));
+                getSlot(InvisibilityGlyphSlots.DURATION));
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
@@ -87,7 +83,7 @@ public class InvisibilityGlyph extends GlyphAsset {
         }
 
         boolean sustained = entityVar != null
-                && applyToEntities(glyph, entityVar, (float) duration, config, hexContext, accessor);
+                && applyToEntities(glyph, entityVar, (float) duration, hexContext, accessor);
 
         // sustained cast defers continuation to the construct's onEnd; otherwise pass
         // through
@@ -104,12 +100,11 @@ public class InvisibilityGlyph extends GlyphAsset {
     }
 
     private boolean applyToEntities(Glyph glyph, EntityVar entityVar, float durationSeconds,
-            InvisibilityConfig config, HexContext hexContext, CommandBuffer<EntityStore> accessor) {
+            HexContext hexContext, CommandBuffer<EntityStore> accessor) {
         Ref<EntityStore> ref = entityVar.getRef(accessor);
         if (ref == null || !ref.isValid())
             return false;
 
-        String effectId = config.getEffectId();
         EntityEffect invisibilityEffect = EntityEffect.getAssetMap().getAsset(effectId);
         if (invisibilityEffect == null) {
             LOGGER.atWarning().log("invisibility: %s effect asset not found", effectId);
@@ -120,22 +115,22 @@ public class InvisibilityGlyph extends GlyphAsset {
                 OverlapBehavior.OVERWRITE);
 
         InvisibilityState existing = ConstructStateUtil.findState(
-                accessor, ref, InvisibilityGlyph.ID, InvisibilityState.class);
+                accessor, ref, InvisibilityGlyph.TYPE, InvisibilityState.class);
         if (existing != null) {
             existing.setRemainingDuration(durationSeconds);
             existing.setNextGlyphIds(glyph.getNextLinks());
         } else {
             InvisibilityState state = new InvisibilityState(durationSeconds, effectId, glyph.getNextLinks());
             HexConstructSpawner.applyWithState(
-                    accessor, ref, hexContext, glyph, InvisibilityGlyph.ID, state);
+                    accessor, ref, hexContext, glyph, InvisibilityGlyph.TYPE, state);
         }
 
-        HexAppearanceService.addLayer(accessor, ref, InvisibilityGlyph.ID,
+        HexAppearanceService.addLayer(accessor, ref, InvisibilityGlyph.TYPE,
                 AppearanceLayer.ofNameplateHidden());
 
         TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
         if (tc != null) {
-            InvisibilityStyle.renderEntityHit(tc.getPosition(), hexContext, accessor);
+            InvisibilityStyle.renderEntityHit(this, tc.getPosition(), hexContext, accessor);
         }
 
         LOGGER.atFine().log("invisibility: applied effect for %.1fs to entity", durationSeconds);

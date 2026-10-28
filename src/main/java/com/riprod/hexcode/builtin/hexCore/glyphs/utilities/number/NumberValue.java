@@ -4,48 +4,38 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphConfig;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 
 public class NumberValue extends GlyphAsset {
 
-    public static final String ID = "Number";
+    public static final String TYPE = "Number";
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+    private double value = 0.0;
 
-    @Override
-    public ConfigBinding<? extends GlyphConfig> getConfigBinding() {
-        return ConfigBinding.of(NumberConfig.class, NumberConfig.CODEC);
-    }
+    public static final BuilderCodec<NumberValue> CODEC = BuilderCodec
+            .builder(NumberValue.class, NumberValue::new, GlyphAsset.ABSTRACT_CODEC)
+            .append(new KeyedCodec<>("Value", Codec.DOUBLE, true),
+                    (c, v) -> c.value = v, c -> c.value)
+            .add()
+            .build();
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        NumberConfig config = getConfig(NumberConfig.class, asset);
-        if (config == null) {
-            config = NumberConfig.DEFAULTS;
-        }
-        return new NumberVar(config.getValue());
+        return new NumberVar(value);
     }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        NumberConfig config = getConfig(NumberConfig.class, asset);
-        if (config == null) {
-            config = NumberConfig.DEFAULTS;
-        }
-        hexContext.setDefaultVariable(new NumberVar(config.getValue()));
+        hexContext.setDefaultVariable(new NumberVar(value));
         HexExecuter.continueExecution(collectLikeNumberedLinks(glyph, hexContext), hexContext);
     }
 

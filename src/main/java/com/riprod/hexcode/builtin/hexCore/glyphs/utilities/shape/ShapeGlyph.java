@@ -15,17 +15,12 @@ import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ShapeGlyph extends GlyphAsset {
-    public static final String ID = "Shape";
+    public static final String TYPE = "Shape";
 
     public static final float MIN_MODEL_SCALE = 0.1f;
     public static final float MAX_MODEL_SCALE = 4.0f;
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-
-    @Override
-    public String getId() {
-        return ID;
-    }
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {

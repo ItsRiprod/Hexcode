@@ -1,6 +1,6 @@
 {
   "Parent": "Glyph_Template",
-  "Handler": "Greater",
+  "Type": "Greater",
   "Title": "hexcode.glyphs.Greater.name",
   "Description": "hexcode.glyphs.Greater.description",
   "BasePower": 0,
