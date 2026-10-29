@@ -15,11 +15,10 @@ public class ChaosGlyph extends GlyphAsset {
     public static final String TYPE = "Chaos";
 
     private double roll(Glyph glyph, HexContext hexContext) {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         HexVar minVar = glyph.readSlot(ChaosGlyphSlots.MIN, hexContext);
         HexVar maxVar = glyph.readSlot(ChaosGlyphSlots.MAX, hexContext);
-        double min = HexVarUtil.numberOrSlotDefault(minVar, asset.getSlot(ChaosGlyphSlots.MIN));
-        double max = HexVarUtil.numberOrSlotDefault(maxVar, asset.getSlot(ChaosGlyphSlots.MAX));
+        double min = HexVarUtil.numberOrSlotDefault(minVar, getSlot(ChaosGlyphSlots.MIN));
+        double max = HexVarUtil.numberOrSlotDefault(maxVar, getSlot(ChaosGlyphSlots.MAX));
         if (min == max)
             return min;
         if (min > max) {

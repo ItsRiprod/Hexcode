@@ -57,7 +57,7 @@ public class HexProjectileBounceInteraction extends SimpleInteraction {
 
             CommandBuffer<EntityStore> buffer = ctx.getCommandBuffer();
             Ref<EntityStore> projectileRef = ctx.getEntity();
-            if (buffer == null || !projectileRef.isValid()) {
+            if (buffer == null || projectileRef == null || !projectileRef.isValid()) {
                 ctx.getState().state = InteractionState.Finished;
                 return;
             }
@@ -82,8 +82,10 @@ public class HexProjectileBounceInteraction extends SimpleInteraction {
                 return;
             }
             Slot immediate = triggering.getSlot(ProjectileGlyphSlots.BOUNCE);
-            if (immediate == null)
+            if (immediate == null) {
+                ctx.getState().state = InteractionState.Finished;
                 return;
+            }
             String[] links = immediate.getLinks();
             if (links == null || links.length == 0) {
                 ctx.getState().state = InteractionState.Finished;
@@ -95,9 +97,10 @@ public class HexProjectileBounceInteraction extends SimpleInteraction {
             var asset = GlyphAsset.of(triggering, ProjectileGlyph.class);
             ProjectileStyle.renderBlockHit(asset, hitPos, hexContext, buffer);
 
-            triggering.writeOutput(resultVar, hexContext);
+            var bounceCtx = hexContext.branch();
+            triggering.writeOutput(resultVar, bounceCtx);
 
-            HexExecuter.continueExecution(Arrays.asList(links), hexContext);
+            HexExecuter.continueExecution(Arrays.asList(links), bounceCtx);
 
             ctx.getState().state = InteractionState.Finished;
         } catch (Exception e) {

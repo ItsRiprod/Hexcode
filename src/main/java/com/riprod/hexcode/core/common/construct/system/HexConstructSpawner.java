@@ -1,5 +1,7 @@
 package com.riprod.hexcode.core.common.construct.system;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
@@ -27,7 +29,9 @@ import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.utils.VfxUtil;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
+import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
+import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
@@ -191,6 +195,48 @@ public class HexConstructSpawner {
         }
         pending.addEffect(constructId, construct);
         return constructId;
+    }
+
+    public static int abortExisting(@Nonnull CommandBuffer<EntityStore> buffer,
+            @Nonnull Ref<EntityStore> targetRef, @Nonnull String handlerId) {
+        var aborted = detachExisting(buffer, targetRef, handlerId);
+        if (aborted.isEmpty()) return 0;
+
+        var handler = ConstructRegistry.get(handlerId);
+        var ctx = new ConstructTickContext(buffer, targetRef);
+        for (var status : aborted) {
+            HexConstructSystem.abort(handler, status, ctx);
+        }
+        return aborted.size();
+    }
+
+    @Nonnull
+    public static List<HexStatus<?>> detachExisting(@Nonnull ComponentAccessor<EntityStore> accessor,
+            @Nonnull Ref<EntityStore> targetRef, @Nonnull String handlerId) {
+        var detached = new ArrayList<HexStatus<?>>();
+        detach(accessor.getComponent(targetRef, HexEffectsComponent.getComponentType()), handlerId, detached);
+        var uuidComponent = accessor.getComponent(targetRef, UUIDComponent.getComponentType());
+        if (uuidComponent != null) {
+            HexEffectsComponent pending;
+            synchronized (PENDING_APPLIES) {
+                pending = PENDING_APPLIES.get(uuidComponent.getUuid());
+            }
+            detach(pending, handlerId, detached);
+        }
+        return detached;
+    }
+
+    private static void detach(@Nullable HexEffectsComponent effects, @Nonnull String handlerId,
+            @Nonnull List<HexStatus<?>> into) {
+        if (effects == null) return;
+        var it = effects.getEffects().values().iterator();
+        while (it.hasNext()) {
+            var status = it.next();
+            if (handlerId.equals(status.getHandlerId()) && !into.contains(status)) {
+                into.add(status);
+                it.remove();
+            }
+        }
     }
 
     public static void clearPendingApply(@Nonnull ComponentAccessor<EntityStore> accessor,

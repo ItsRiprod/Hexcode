@@ -1,5 +1,4 @@
 {
-  "Parent": "Glyph_Template",
   "Type": "Halt",
   "Style": {
     "Parent": "Element_Void",

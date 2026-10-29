@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.component.FortifyWardComponent;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
@@ -15,6 +13,7 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
 
@@ -23,16 +22,20 @@ public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
         FortifyState state = status.getState();
         if (state == null) return true;
         if (state.isConsumed()) return true;
-        if (effectRemoved(ctx, state.getEffectId())) return true;
+        if (VfxUtil.isEffectRemoved(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId())) return true;
         if (state.isExpired()) return true;
         state.tick(dt);
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override
     public void onEnd(HexStatus<FortifyState> status, ConstructTickContext ctx) {
         FortifyState state = status.getState();
-        if (state == null) return;
+        if (state == null) {
+            status.getHexContext().endBranch();
+            return;
+        }
         cleanup(ctx, state.getEffectId());
         HexContext hexContext = status.getHexContext();
         hexContext.updateRuntimeAccessors(ctx.getBuffer());
@@ -76,25 +79,6 @@ public class FortifyConstructHandler implements ConstructHandler<FortifyState> {
         buffer.tryRemoveComponent(target, FortifyWardComponent.getComponentType());
 
         if (effectId == null) return;
-        EffectControllerComponent controller = buffer.getComponent(
-                target, EffectControllerComponent.getComponentType());
-        if (controller != null) {
-            int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-            if (effectIndex != Integer.MIN_VALUE) {
-                controller.removeEffect(target, effectIndex, buffer);
-            }
-        }
-    }
-
-    private static boolean effectRemoved(ConstructTickContext ctx, String effectId) {
-        if (effectId == null) return false;
-        Ref<EntityStore> target = ctx.getEntityRef();
-        if (target == null || !target.isValid()) return false;
-        int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-        if (effectIndex == Integer.MIN_VALUE) return false;
-        EffectControllerComponent controller = ctx.getBuffer().getComponent(
-                target, EffectControllerComponent.getComponentType());
-        if (controller == null) return false;
-        return !controller.hasEffect(effectIndex);
+        VfxUtil.removeEffect(buffer, target, effectId);
     }
 }

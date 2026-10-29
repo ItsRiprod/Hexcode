@@ -434,6 +434,29 @@ public class VfxUtil {
         volatilityBoundedDuration(hexContext, glyph, requestedDuration), overlap);
   }
 
+  public static boolean isEffectRemoved(ComponentAccessor<EntityStore> accessor, @Nullable Ref<EntityStore> target,
+      @Nullable String effectId) {
+    if (effectId == null || target == null || !target.isValid())
+      return false;
+    var effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
+    if (effectIndex == Integer.MIN_VALUE)
+      return false;
+    var controller = accessor.getComponent(target, EffectControllerComponent.getComponentType());
+    return controller != null && !controller.hasEffect(effectIndex);
+  }
+
+  public static void removeEffect(ComponentAccessor<EntityStore> accessor, @Nullable Ref<EntityStore> target,
+      @Nullable String effectId) {
+    if (effectId == null || target == null || !target.isValid())
+      return;
+    var effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
+    if (effectIndex == Integer.MIN_VALUE)
+      return;
+    var controller = accessor.getComponent(target, EffectControllerComponent.getComponentType());
+    if (controller != null)
+      controller.removeEffect(target, effectIndex, accessor);
+  }
+
   public static float volatilityBoundedDuration(@Nullable HexContext hexContext, @Nullable Glyph glyph,
       float requestedDuration) {
     float rate = drainRate(glyph);

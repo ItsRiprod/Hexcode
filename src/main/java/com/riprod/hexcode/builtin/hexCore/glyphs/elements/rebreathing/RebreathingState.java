@@ -52,13 +52,6 @@ public class RebreathingState implements ConstructState {
         this.cleanedUp = true;
     }
 
-    public void refresh(float durationSeconds, List<String> nextGlyphIds) {
-        this.durationSeconds = durationSeconds;
-        this.elapsedSeconds = 0f;
-        this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
-        this.cleanedUp = false;
-    }
-
     @Override
     public RebreathingState copy() {
         RebreathingState c = new RebreathingState(effectId, durationSeconds, new ArrayList<>(nextGlyphIds));

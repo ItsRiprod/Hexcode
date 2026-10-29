@@ -51,6 +51,10 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             return true;
         }
 
+        var tracker = status.getHexContext().volatility();
+        if (tracker != null && tracker.getCurrent() <= 0f)
+            return false;
+
         if (!payUpkeep(dt, glyph, status, statMap, buffer, casterRef)) {
             fireRelease(glyph, status, buffer, casterRef);
             return true;
@@ -59,7 +63,8 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         accrueVolatility(dt, glyph, status);
         emitSecondary(dt, glyph, status, buffer, casterRef);
 
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     private void accrueVolatility(float dt, GlyphAsset glyph, HexStatus<ConcentrationState> status) {
@@ -193,6 +198,6 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             }
         }
 
-        HexExecuter.fail(status.getHexContext());
+        status.getHexContext().endBranch();
     }
 }

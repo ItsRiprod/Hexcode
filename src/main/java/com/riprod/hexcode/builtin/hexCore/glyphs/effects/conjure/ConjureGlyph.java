@@ -145,8 +145,6 @@ public class ConjureGlyph extends GlyphAsset {
 
         @Override
         public void execute(Glyph glyph, HexContext hexContext) {
-                GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-
                 HexVar coordsAVar = glyph.readSlot(ConjureGlyphSlots.COORDS_A, hexContext,
                                 new PositionVar(new Vector3d(boxHalfExtent, boxHalfExtent, boxHalfExtent)));
                 HexVar coordsBVar = glyph.readSlot(ConjureGlyphSlots.COORDS_B, hexContext,
@@ -206,15 +204,15 @@ public class ConjureGlyph extends GlyphAsset {
                                 (max.z - min.z) / 2);
 
                 float durationSeconds = HexVarUtil.numberOrSlotDefault(
-                                durationVar, asset.getSlot(ConjureGlyphSlots.DURATION)).floatValue();
+                                durationVar, getSlot(ConjureGlyphSlots.DURATION)).floatValue();
                 float interval = HexVarUtil.numberOrSlotDefault(
-                                intervalVar, asset.getSlot(ConjureGlyphSlots.INTERVAL)).floatValue();
+                                intervalVar, getSlot(ConjureGlyphSlots.INTERVAL)).floatValue();
 
                 var zoneComp = new ConjureZoneComponent(halfExtents, interval, durationSeconds);
 
                 double hitboxMode = HexVarUtil.numberOrSlotDefault(
                                 glyph.readSlot(ConjureGlyphSlots.HITBOX, hexContext),
-                                asset.getSlot(ConjureGlyphSlots.HITBOX)).doubleValue();
+                                getSlot(ConjureGlyphSlots.HITBOX)).doubleValue();
                 var collisionId = hitboxMode > 0 ? hardCollisionId
                                 : hitboxMode < 0 ? softCollisionId
                                                 : null;

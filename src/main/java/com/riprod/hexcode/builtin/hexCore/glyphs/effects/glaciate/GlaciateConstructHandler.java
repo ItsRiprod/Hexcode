@@ -2,7 +2,6 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
@@ -46,13 +45,14 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         String[] links = immediate.getLinks();
         if (links == null || links.length == 0)
             return;
+        UUIDComponent uuidComponent = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType());
+        if (uuidComponent == null)
+            return;
         HexContext hexContext = status.getHexContext();
         hexContext.updateRuntimeAccessors(ctx.getBuffer());
-        UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
-                .getUuid();
 
         HexContext immediateCtx = hexContext.branch();
-        immediateCtx.setDefaultVariable(new EntityVar(entityId, ctx.getEntityRef()));
+        immediateCtx.setDefaultVariable(new EntityVar(uuidComponent.getUuid(), ctx.getEntityRef()));
         HexExecuter.continueExecution(Arrays.asList(links), immediateCtx);
     }
 
@@ -120,14 +120,18 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
             }
         }
 
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override
     public void onEnd(HexStatus<GlaciateState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
         GlaciateState state = status.getState();
-        if (state == null) return;
+        if (state == null) {
+            status.getHexContext().endBranch();
+            return;
+        }
         HexContext hexContext = status.getHexContext();
         hexContext.updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), hexContext);

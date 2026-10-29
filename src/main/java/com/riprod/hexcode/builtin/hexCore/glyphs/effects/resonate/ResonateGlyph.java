@@ -81,6 +81,7 @@ public class ResonateGlyph extends GlyphAsset {
         Vector3d pos = resolvePosition(ref, accessor);
         if (pos != null)
             ResonateStyle.renderResonate(this, pos, hexContext, accessor);
+        hexContext.endBranch();
     }
 
     private void resonateEntity(Glyph glyph, HexContext hexContext,
@@ -99,6 +100,7 @@ public class ResonateGlyph extends GlyphAsset {
         Vector3d pos = resolvePosition(ref, accessor);
         if (pos != null)
             ResonateStyle.renderResonate(this, pos, hexContext, accessor);
+        hexContext.endBranch();
     }
 
     private Vector3d resolvePosition(Ref<EntityStore> ref, CommandBuffer<EntityStore> accessor) {

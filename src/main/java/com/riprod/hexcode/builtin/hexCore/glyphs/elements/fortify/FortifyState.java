@@ -67,13 +67,6 @@ public class FortifyState implements ConstructState {
         this.nextGlyphIds = ids != null ? ids : new ArrayList<>();
     }
 
-    public void refresh(float remainingDuration, List<String> nextGlyphIds) {
-        this.remainingDuration = remainingDuration;
-        this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
-        this.consumed = false;
-        this.attacker = null;
-    }
-
     @Override
     public FortifyState copy() {
         FortifyState c = new FortifyState(remainingDuration, effectId, new ArrayList<>(nextGlyphIds));

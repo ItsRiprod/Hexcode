@@ -81,10 +81,12 @@ public class WardGlyph extends GlyphAsset {
             return;
         }
 
-        EntityRedirectSpawner.stamp(accessor, targetRef, casterRef, deferralRef);
+        var state = new WardState(target, deferral, glyph.getNextLinks());
+        var constructId = HexConstructSpawner.applyWithState(
+                accessor, casterRef, hexContext, glyph, WardGlyph.TYPE, state);
+        if (constructId == null) return;
 
-        WardState state = new WardState(target, deferral, glyph.getNextLinks());
-        HexConstructSpawner.applyWithState(accessor, casterRef, hexContext, glyph, WardGlyph.TYPE, state);
+        EntityRedirectSpawner.stamp(accessor, targetRef, casterRef, deferralRef, constructId);
 
         TransformComponent casterTransform = accessor.getComponent(
                 casterRef, TransformComponent.getComponentType());

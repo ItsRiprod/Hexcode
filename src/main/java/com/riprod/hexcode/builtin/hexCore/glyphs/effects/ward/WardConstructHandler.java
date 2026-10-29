@@ -1,12 +1,12 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.ward;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.joml.Vector3d;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.entity.reference.PersistentRef;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
@@ -32,6 +32,8 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
         if (casterRef == null || !casterRef.isValid()) return true;
 
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
+        if (!resolves(state.getTargetRef(), buffer) || !resolves(state.getDeferralRef(), buffer)) return true;
+
         EntityStatMap statMap = buffer.getComponent(casterRef, EntityStatMap.getComponentType());
         EntityStatValue holdStat = statMap != null
                 ? statMap.get(HexcodeEntityStatTypes.getIsHolding()) : null;
@@ -50,7 +52,13 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
 
         renderWardLine(asset, state, buffer, status);
 
-        return tracker.getCurrent() <= 0f;
+        return false;
+    }
+
+    private static boolean resolves(PersistentRef ref, CommandBuffer<EntityStore> buffer) {
+        if (ref == null) return false;
+        var entity = ref.getEntity(buffer);
+        return entity != null && entity.isValid();
     }
 
     private void renderWardLine(WardGlyph asset, WardState state, CommandBuffer<EntityStore> buffer,
@@ -72,8 +80,11 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
     @Override
     public void onEnd(HexStatus<WardState> status, ConstructTickContext ctx) {
         WardState state = status.getState();
-        cleanup(state, ctx);
-        if (state == null) return;
+        cleanup(status, ctx);
+        if (state == null) {
+            status.getHexContext().endBranch();
+            return;
+        }
 
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
@@ -88,7 +99,7 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
 
     @Override
     public void onAbort(HexStatus<WardState> status, ConstructTickContext ctx) {
-        cleanup(status.getState(), ctx);
+        cleanup(status, ctx);
     }
 
     @Override
@@ -103,11 +114,11 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
         if (state != null) state.setNextGlyphIds(ids);
     }
 
-    private void cleanup(WardState state, ConstructTickContext ctx) {
+    private void cleanup(HexStatus<WardState> status, ConstructTickContext ctx) {
+        WardState state = status.getState();
         if (state == null) return;
         Ref<EntityStore> targetRef = state.getTargetRef() != null
                 ? state.getTargetRef().getEntity(ctx.getBuffer()) : null;
-        UUID deferralUuid = state.getDeferralRef() != null ? state.getDeferralRef().getUuid() : null;
-        EntityRedirectSpawner.unstamp(ctx.getBuffer(), targetRef, deferralUuid);
+        EntityRedirectSpawner.unstamp(ctx.getBuffer(), targetRef, status.getConstructId());
     }
 }

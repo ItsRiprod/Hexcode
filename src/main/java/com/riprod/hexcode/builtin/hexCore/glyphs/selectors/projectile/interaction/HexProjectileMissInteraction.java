@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.interaction;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import org.joml.Vector3d;
@@ -25,6 +27,8 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.ProjectileGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
+import com.riprod.hexcode.core.common.construct.component.HexStatus;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -45,6 +49,7 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
     @Override
     protected void tick0(boolean firstRun, float time, @Nonnull InteractionType type,
             @Nonnull InteractionContext ctx, @Nonnull CooldownHandler cooldown) {
+        List<HexStatus<?>> detached = List.of();
         try {
             if (!firstRun) {
                 ctx.getState().state = InteractionState.Finished;
@@ -60,6 +65,13 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
 
             ProjectileState state = buffer.getComponent(projectileRef, ProjectileState.getComponentType());
             if (state == null || state.getHexContext() == null) {
+                ctx.getState().state = InteractionState.Finished;
+                return;
+            }
+
+            detached = HexConstructSpawner.detachExisting(buffer, projectileRef, ProjectileGlyph.TYPE);
+            if (detached.isEmpty()) {
+                buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);
                 ctx.getState().state = InteractionState.Finished;
                 return;
             }
@@ -95,6 +107,7 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
                 ProjectileStyle.renderBlockHit(asset, hitPos, hexContext, buffer);
             }
 
+            detached = List.of();
             HexExecuter.continueExecution(state.getNextLinks(), hexContext);
 
             buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);
@@ -102,7 +115,23 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
             ctx.getState().state = InteractionState.Finished;
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("[hexcode] HexProjectileMissInteraction failed: %s", e.getMessage());
+            abandon(detached, ctx);
             ctx.getState().state = InteractionState.Failed;
+        }
+    }
+
+    private static void abandon(List<HexStatus<?>> detached, InteractionContext ctx) {
+        if (detached.isEmpty()) return;
+        for (var status : detached) {
+            var hexContext = status.getHexContext();
+            if (hexContext != null) {
+                hexContext.endBranch();
+            }
+        }
+        var buffer = ctx.getCommandBuffer();
+        var projectileRef = ctx.getEntity();
+        if (buffer != null && projectileRef != null && projectileRef.isValid()) {
+            buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);
         }
     }
 

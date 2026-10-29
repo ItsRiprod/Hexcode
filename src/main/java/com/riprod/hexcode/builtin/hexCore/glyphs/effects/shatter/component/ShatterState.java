@@ -26,6 +26,7 @@ public class ShatterState implements Component<EntityStore> {
     private HexContext hexContext;
     private String triggeringGlyphId;
     private List<String> nextLinks;
+    private boolean consumed;
 
     public ShatterState() {
     }
@@ -52,6 +53,12 @@ public class ShatterState implements Component<EntityStore> {
         return nextLinks != null ? nextLinks : List.of();
     }
 
+    public boolean tryConsume() {
+        if (consumed) return false;
+        consumed = true;
+        return true;
+    }
+
     @Nonnull
     @Override
     public ShatterState clone() {
@@ -59,6 +66,7 @@ public class ShatterState implements Component<EntityStore> {
         copy.hexContext = this.hexContext;
         copy.triggeringGlyphId = this.triggeringGlyphId;
         copy.nextLinks = this.nextLinks;
+        copy.consumed = this.consumed;
         return copy;
     }
 }

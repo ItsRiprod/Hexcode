@@ -18,7 +18,8 @@ public interface ConstructHandler<S extends ConstructState> {
     }
 
     default boolean onTick(float dt, HexStatus<S> status, ConstructTickContext ctx) {
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     default void onCleanup(HexStatus<S> status, ConstructTickContext ctx) {

@@ -5,8 +5,6 @@ import java.util.List;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
@@ -19,6 +17,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.drain.style.DrainStyle;
 import com.riprod.hexcode.utils.LogScopes;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class DrainConstructHandler implements ConstructHandler<DrainState> {
 
@@ -32,7 +31,7 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
         CommandBuffer<EntityStore> buffer = ctx.getBuffer();
         Ref<EntityStore> target = ctx.getEntityRef();
 
-        if (effectRemoved(buffer, target, state.getEffectId())) return true;
+        if (VfxUtil.isEffectRemoved(buffer, target, state.getEffectId())) return true;
 
         EntityStatMap statMap = buffer.getComponent(target, EntityStatMap.getComponentType());
         if (statMap == null) return true;
@@ -82,7 +81,7 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
 
         state.addDrained(drainAmount);
         state.tick(dt);
-        if (!drainSustain(dt, status)) return true;
+        if (!drainSustain(dt, status)) return false;
 
         TransformComponent tc = buffer.getComponent(target, TransformComponent.getComponentType());
         if (tc != null) {
@@ -96,9 +95,12 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
     @Override
     public void onEnd(HexStatus<DrainState> status, ConstructTickContext ctx) {
         DrainState state = status.getState();
-        if (state == null) return;
+        if (state == null) {
+            status.getHexContext().endBranch();
+            return;
+        }
 
-        cleanup(ctx, state.getEffectId());
+        VfxUtil.removeEffect(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId());
 
         TransformComponent tc = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), TransformComponent.getComponentType());
@@ -116,36 +118,9 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
     @Override
     public void onAbort(HexStatus<DrainState> status, ConstructTickContext ctx) {
         DrainState state = status.getState();
-        cleanup(ctx, state != null ? state.getEffectId() : null);
+        VfxUtil.removeEffect(ctx.getBuffer(), ctx.getEntityRef(), state != null ? state.getEffectId() : null);
         LOGGER.atFine().log("drain: terminated early (%.2f drained); chain suppressed",
                 state != null ? state.getDrainedSoFar() : 0f);
-    }
-
-    private static boolean effectRemoved(CommandBuffer<EntityStore> buffer,
-            Ref<EntityStore> target, String effectId) {
-        if (effectId == null) return false;
-        int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-        if (effectIndex == Integer.MIN_VALUE) return false;
-        EffectControllerComponent controller = buffer.getComponent(
-                target, EffectControllerComponent.getComponentType());
-        return controller == null || !controller.hasEffect(effectIndex);
-    }
-
-    private void cleanup(ConstructTickContext ctx, String effectId) {
-        if (effectId == null) return;
-
-        CommandBuffer<EntityStore> buffer = ctx.getBuffer();
-        Ref<EntityStore> target = ctx.getEntityRef();
-        if (target == null || !target.isValid()) return;
-
-        EffectControllerComponent controller = buffer.getComponent(
-                target, EffectControllerComponent.getComponentType());
-        if (controller != null) {
-            int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-            if (effectIndex != Integer.MIN_VALUE) {
-                controller.removeEffect(target, effectIndex, buffer);
-            }
-        }
     }
 
     @Override

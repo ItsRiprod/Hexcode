@@ -1,5 +1,4 @@
 {
-  "Parent": "Glyph_Template",
   "Type": "OnSecondary",
   "Style": {
     "Parent": "Element_Time",

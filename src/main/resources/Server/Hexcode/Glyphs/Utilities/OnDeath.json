@@ -1,5 +1,4 @@
 {
-  "Parent": "Glyph_Template",
   "Type": "OnDeath",
   "Style": {
     "Parent": "Element_Time",

@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.joml.Vector3f;
 import org.joml.Vector3i;
+
+import com.hypixel.hytale.protocol.ColorLight;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
 
 public class IlluminateState implements ConstructState {
@@ -16,14 +18,11 @@ public class IlluminateState implements ConstructState {
     private List<String> nextGlyphIds;
     private final Vector3i blockPos;
     private float remainingSeconds;
+    private final ColorLight previousLight;
 
     public IlluminateState(float remainingSeconds, boolean showBox, boolean spawnedOwner,
-            String volumeId, Vector3f boxColor, List<String> nextGlyphIds) {
-        this(remainingSeconds, showBox, spawnedOwner, volumeId, boxColor, nextGlyphIds, null);
-    }
-
-    public IlluminateState(float remainingSeconds, boolean showBox, boolean spawnedOwner,
-            String volumeId, Vector3f boxColor, List<String> nextGlyphIds, Vector3i blockPos) {
+            String volumeId, Vector3f boxColor, List<String> nextGlyphIds, Vector3i blockPos,
+            ColorLight previousLight) {
         this.remainingSeconds = remainingSeconds;
         this.showBox = showBox;
         this.spawnedOwner = spawnedOwner;
@@ -31,6 +30,7 @@ public class IlluminateState implements ConstructState {
         this.boxColor = boxColor;
         this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
         this.blockPos = blockPos;
+        this.previousLight = previousLight;
     }
 
     public boolean isShowBox() {
@@ -61,6 +61,10 @@ public class IlluminateState implements ConstructState {
         return blockPos;
     }
 
+    public ColorLight getPreviousLight() {
+        return previousLight;
+    }
+
     public void tick(float dt) {
         remainingSeconds -= dt;
     }
@@ -73,6 +77,7 @@ public class IlluminateState implements ConstructState {
     public IlluminateState copy() {
         return new IlluminateState(remainingSeconds, showBox, spawnedOwner, volumeId,
                 new Vector3f(boxColor), new ArrayList<>(nextGlyphIds),
-                blockPos != null ? new Vector3i(blockPos) : null);
+                blockPos != null ? new Vector3i(blockPos) : null,
+                previousLight != null ? new ColorLight(previousLight) : null);
     }
 }

@@ -55,7 +55,8 @@ public class DelayConstructHandler implements ConstructHandler<DelayState> {
         if (state == null) return true;
         if (state.isExpired()) return true;
         state.tick(dt);
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override
@@ -72,6 +73,8 @@ public class DelayConstructHandler implements ConstructHandler<DelayState> {
             }
             status.getHexContext().updateRuntimeAccessors(buffer);
             HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
+        } else {
+            status.getHexContext().endBranch();
         }
 
         onCleanup(status, ctx);

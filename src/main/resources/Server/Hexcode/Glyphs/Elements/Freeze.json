@@ -1,5 +1,4 @@
 {
-  "Parent": "Glyph_Template",
   "Type": "Freeze",
   "Style": {
     "Parent": "Element_Drain",

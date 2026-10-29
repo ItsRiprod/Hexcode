@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
@@ -28,8 +27,6 @@ import com.riprod.hexcode.core.common.triggers.registry.TriggerListenerRegistry;
 import com.riprod.hexcode.core.common.triggers.state.TriggerState;
 
 public abstract class AbstractTriggerGlyph extends GlyphAsset {
-
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     public abstract String triggerKey();
 
@@ -72,8 +69,17 @@ public abstract class AbstractTriggerGlyph extends GlyphAsset {
         UUID subjectUuid = subjectUuidComp.getUuid();
 
         List<String> nextLinks = new ArrayList<>(glyph.getNextLinks());
-        if (nextLinks.isEmpty())
+        if (nextLinks.isEmpty()) {
+            HexExecuter.continueExecution(nextLinks, hexContext);
             return;
+        }
+
+        TriggerListenerRegistry registry = accessor.getResource(TriggerListenerRegistry.getResourceType());
+        if (registry == null) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "trigger registry resource missing for key " + triggerKey());
+            return;
+        }
 
         UUID subscriptionId = UUID.randomUUID();
         TriggerState state = new TriggerState(triggerKey(), subscriptionId, nextLinks);
@@ -84,13 +90,7 @@ public abstract class AbstractTriggerGlyph extends GlyphAsset {
             return;
         }
 
-        TriggerListenerRegistry registry = accessor.getResource(TriggerListenerRegistry.getResourceType());
-        if (registry == null) {
-            LOGGER.atSevere().log("trigger registry resource missing for key %s", triggerKey());
-            return;
-        }
-        TriggerCallback callback = HexResumeCallback.build(
-                hexContext, nextLinks, caster, effectId, payloadProjection());
+        TriggerCallback callback = HexResumeCallback.build(hexContext, nextLinks, state, payloadProjection());
         TriggerSubscription sub = new TriggerSubscription(
                 subscriptionId, triggerKey(), subjectUuid, subject, caster, null, callback, true);
         registry.subscribe(sub);

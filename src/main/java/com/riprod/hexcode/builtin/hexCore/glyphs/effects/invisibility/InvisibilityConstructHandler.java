@@ -4,14 +4,13 @@ import java.util.List;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class InvisibilityConstructHandler implements ConstructHandler<InvisibilityState> {
 
@@ -19,16 +18,21 @@ public class InvisibilityConstructHandler implements ConstructHandler<Invisibili
     public boolean onTick(float dt, HexStatus<InvisibilityState> status, ConstructTickContext ctx) {
         InvisibilityState state = status.getState();
         if (state == null) return true;
-        if (effectRemoved(ctx, state.getEffectId())) return true;
+        if (VfxUtil.isEffectRemoved(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId())) return true;
         if (state.isExpired()) return true;
         state.tick(dt);
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override
     public void onEnd(HexStatus<InvisibilityState> status, ConstructTickContext ctx) {
         InvisibilityState state = status.getState();
-        if (state == null) return;
+        if (state == null) {
+            cleanup(ctx, null);
+            status.getHexContext().endBranch();
+            return;
+        }
         cleanup(ctx, state.getEffectId());
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
@@ -61,24 +65,6 @@ public class InvisibilityConstructHandler implements ConstructHandler<Invisibili
 
         if (effectId == null) return;
 
-        EffectControllerComponent controller = buffer.getComponent(
-                target, EffectControllerComponent.getComponentType());
-        if (controller != null) {
-            int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-            if (effectIndex != Integer.MIN_VALUE) {
-                controller.removeEffect(target, effectIndex, buffer);
-            }
-        }
-    }
-
-    private static boolean effectRemoved(ConstructTickContext ctx, String effectId) {
-        if (effectId == null) return false;
-        Ref<EntityStore> target = ctx.getEntityRef();
-        if (target == null || !target.isValid()) return false;
-        int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-        if (effectIndex == Integer.MIN_VALUE) return false;
-        EffectControllerComponent controller = ctx.getBuffer().getComponent(
-                target, EffectControllerComponent.getComponentType());
-        return controller == null || !controller.hasEffect(effectIndex);
+        VfxUtil.removeEffect(buffer, target, effectId);
     }
 }

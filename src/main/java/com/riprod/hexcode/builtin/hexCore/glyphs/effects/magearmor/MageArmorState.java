@@ -12,6 +12,7 @@ public class MageArmorState implements ConstructState {
     private float elapsedSeconds;
     private List<String> nextGlyphIds;
     private boolean cleanedUp;
+    private boolean poolBroken;
 
     public MageArmorState() {
         this.nextGlyphIds = new ArrayList<>();
@@ -52,11 +53,12 @@ public class MageArmorState implements ConstructState {
         this.nextGlyphIds = ids != null ? ids : new ArrayList<>();
     }
 
-    public void refresh(float durationSeconds, List<String> nextGlyphIds) {
-        this.durationSeconds = durationSeconds;
-        this.elapsedSeconds = 0f;
-        this.nextGlyphIds = nextGlyphIds != null ? nextGlyphIds : new ArrayList<>();
-        this.cleanedUp = false;
+    public boolean isPoolBroken() {
+        return poolBroken;
+    }
+
+    public void markPoolBroken() {
+        this.poolBroken = true;
     }
 
     @Override
@@ -64,6 +66,7 @@ public class MageArmorState implements ConstructState {
         MageArmorState c = new MageArmorState(effectId, durationSeconds, new ArrayList<>(nextGlyphIds));
         c.elapsedSeconds = this.elapsedSeconds;
         c.cleanedUp = this.cleanedUp;
+        c.poolBroken = this.poolBroken;
         return c;
     }
 }

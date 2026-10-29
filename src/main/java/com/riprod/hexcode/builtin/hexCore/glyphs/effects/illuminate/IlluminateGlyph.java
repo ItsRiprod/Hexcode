@@ -25,6 +25,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.style.IlluminateStyle;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.utils.GlowUtil;
+import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -75,12 +76,22 @@ public class IlluminateGlyph extends GlyphAsset {
         boolean showBox = mode == 0;
 
         HexVar targetSlot = glyph.readSlot(IlluminateGlyphSlots.TARGET, hexContext);
+        if (targetSlot == null) {
+            finish(glyph, hexContext);
+            return;
+        }
 
         if (targetSlot instanceof EntityVar entityVar && mode >= 0) {
             var targetRef = entityVar.getRef(accessor);
+            if (targetRef == null || !targetRef.isValid()) {
+                finish(glyph, hexContext);
+                return;
+            }
             // glow the target entity in place; it owns the effect
+            var previousLight = resolvePreviousLight(accessor, targetRef);
+            HexConstructSpawner.abortExisting(accessor, targetRef, TYPE);
             var state = new IlluminateState(seconds, showBox, false,
-                    GlowUtil.nextVolumeId(), boxColor, glyph.getNextLinks());
+                    GlowUtil.nextVolumeId(), boxColor, glyph.getNextLinks(), null, previousLight);
             accessor.putComponent(targetRef, DynamicLight.getComponentType(), new DynamicLight(light));
             HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, TYPE, state);
         } else {
@@ -91,6 +102,10 @@ public class IlluminateGlyph extends GlyphAsset {
             Vector3i blockPos = null;
             if (targetSlot instanceof EntityVar entityVar) {
                 var targetRef = entityVar.getRef(accessor);
+                if (targetRef == null || !targetRef.isValid()) {
+                    finish(glyph, hexContext);
+                    return;
+                }
 
                 TransformComponent tc = accessor.getComponent(targetRef, TransformComponent.getComponentType());
                 spawnPos = tc != null ? new Vector3d(tc.getPosition()) : new Vector3d();
@@ -108,7 +123,7 @@ public class IlluminateGlyph extends GlyphAsset {
             }
 
             IlluminateState state = new IlluminateState(seconds, showBox, true,
-                    GlowUtil.nextVolumeId(), boxColor, glyph.getNextLinks(), blockPos);
+                    GlowUtil.nextVolumeId(), boxColor, glyph.getNextLinks(), blockPos, null);
             // createWithState bakes the construct into the holder so a fresh
             // (not-yet-valid) ref is never used
             Holder<EntityStore> holder = HexConstructSpawner.createWithState(
@@ -123,6 +138,15 @@ public class IlluminateGlyph extends GlyphAsset {
 
         fireImmediate(glyph, hexContext);
         // Next is deferred to the construct's onEnd
+    }
+
+    private static ColorLight resolvePreviousLight(CommandBuffer<EntityStore> accessor, Ref<EntityStore> targetRef) {
+        var existing = ConstructStateUtil.findState(accessor, targetRef, TYPE, IlluminateState.class);
+        if (existing != null) {
+            return existing.getPreviousLight();
+        }
+        var current = accessor.getComponent(targetRef, DynamicLight.getComponentType());
+        return current != null ? new ColorLight(current.getColorLight()) : null;
     }
 
     // no glow to attach; still fire Immediate and continue the main chain

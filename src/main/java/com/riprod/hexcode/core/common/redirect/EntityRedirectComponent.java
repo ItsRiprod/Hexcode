@@ -26,13 +26,20 @@ public class EntityRedirectComponent implements Component<EntityStore> {
 
     private PersistentRef owner;
     private PersistentRef deferral;
+    private UUID stampId;
 
     public EntityRedirectComponent() {
     }
 
-    public EntityRedirectComponent(PersistentRef owner, PersistentRef deferral) {
+    public EntityRedirectComponent(PersistentRef owner, PersistentRef deferral, UUID stampId) {
         this.owner = owner;
         this.deferral = deferral;
+        this.stampId = stampId;
+    }
+
+    @Nullable
+    public UUID getStampId() {
+        return stampId;
     }
 
     @Nullable
@@ -53,6 +60,6 @@ public class EntityRedirectComponent implements Component<EntityStore> {
     @Nonnull
     @Override
     public EntityRedirectComponent clone() {
-        return new EntityRedirectComponent(owner, deferral);
+        return new EntityRedirectComponent(owner, deferral, stampId);
     }
 }

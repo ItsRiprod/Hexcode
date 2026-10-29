@@ -47,14 +47,18 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
             return true;
         }
 
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override
     public void onEnd(HexStatus<PhaseState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
         PhaseState state = status.getState();
-        if (state == null) return;
+        if (state == null) {
+            status.getHexContext().endBranch();
+            return;
+        }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
         LOGGER.atFine().log("phase: ended, firing %d next glyphs", state.getNextGlyphIds().size());

@@ -3,6 +3,7 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate;
 import java.util.List;
 
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.protocol.ColorLight;
 import com.hypixel.hytale.server.core.modules.entity.component.DynamicLight;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
@@ -30,14 +31,18 @@ public class IlluminateConstructHandler implements ConstructHandler<IlluminateSt
         state.tick(dt);
         if (state.isExpired()) return true;
 
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override
     public void onEnd(HexStatus<IlluminateState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
         IlluminateState state = status.getState();
-        if (state == null) return;
+        if (state == null) {
+            status.getHexContext().endBranch();
+            return;
+        }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
     }
@@ -68,10 +73,17 @@ public class IlluminateConstructHandler implements ConstructHandler<IlluminateSt
             GlowUtil.removeBox(buffer, state.getVolumeId());
         }
 
+        var target = ctx.getEntityRef();
         if (state.isSpawnedOwner()) {
-            CleanupUtils.safeRemoveEntity(buffer, ctx.getEntityRef());
-        } else {
-            buffer.tryRemoveComponent(ctx.getEntityRef(), DynamicLight.getComponentType());
+            CleanupUtils.safeRemoveEntity(buffer, target);
+        } else if (target != null && target.isValid()) {
+            var previousLight = state.getPreviousLight();
+            if (previousLight != null) {
+                buffer.putComponent(target, DynamicLight.getComponentType(),
+                        new DynamicLight(new ColorLight(previousLight)));
+            } else {
+                buffer.tryRemoveComponent(target, DynamicLight.getComponentType());
+            }
         }
     }
 }

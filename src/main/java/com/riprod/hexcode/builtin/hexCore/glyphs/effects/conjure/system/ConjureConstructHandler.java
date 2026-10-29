@@ -60,13 +60,14 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
         String[] links = immediate.getLinks();
         if (links == null || links.length == 0)
             return;
+        UUIDComponent uuidComponent = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType());
+        if (uuidComponent == null)
+            return;
         HexContext hexContext = status.getHexContext();
         hexContext.updateRuntimeAccessors(ctx.getBuffer());
-        UUID entityId = ctx.getBuffer().getComponent(ctx.getEntityRef(), UUIDComponent.getComponentType())
-                .getUuid();
 
         HexContext immediateCtx = hexContext.branch();
-        immediateCtx.setDefaultVariable(new EntityVar(entityId, ctx.getEntityRef()));
+        immediateCtx.setDefaultVariable(new EntityVar(uuidComponent.getUuid(), ctx.getEntityRef()));
         HexExecuter.continueExecution(Arrays.asList(links), immediateCtx);
     }
 
@@ -78,7 +79,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
         TransformComponent transform = ctx.getChunk().getComponent(
                 ctx.getIndex(), TransformComponent.getComponentType());
         if (zone == null || transform == null)
-            return false;
+            return true;
 
         Velocity vel = ctx.getChunk().getComponent(ctx.getIndex(), Velocity.getComponentType());
         if (vel != null) {
@@ -117,7 +118,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
         boolean barrier = ctx.getChunk().getComponent(
                 ctx.getIndex(), HitboxCollision.getComponentType()) != null;
 
-        List<String> nextLinks = triggering.getNextLinks();
+        List<String> nextLinks = triggering != null ? triggering.getNextLinks() : null;
         boolean hasChildren = nextLinks != null && !nextLinks.isEmpty();
 
         zone.setSpatialQueryTimer(zone.getSpatialQueryTimer() - dt);
@@ -194,7 +195,8 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
             }
         }
 
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     private void containEntities(ConjureZoneComponent zone, Vector3d center,

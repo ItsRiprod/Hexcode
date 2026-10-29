@@ -1,5 +1,4 @@
 {
-  "Parent": "Glyph_Template",
   "Type": "Self",
   "Style": {
     "Parent": "Element_Identity"

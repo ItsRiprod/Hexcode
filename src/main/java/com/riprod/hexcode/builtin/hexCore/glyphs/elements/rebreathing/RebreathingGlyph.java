@@ -14,7 +14,6 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementGlyphAsset;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -57,21 +56,16 @@ public class RebreathingGlyph extends ElementGlyphAsset {
 
         String effectId = statusEffect;
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        HexConstructSpawner.abortExisting(accessor, target, RebreathingGlyph.TYPE);
         if (!ElementSupport.applyStatus(hexContext, target, glyph, effectId, seconds)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Rebreathing could not apply " + effectId);
             return;
         }
 
-        RebreathingState existing = ConstructStateUtil.findState(
-                accessor, target, RebreathingGlyph.TYPE, RebreathingState.class);
-        if (existing != null) {
-            existing.refresh(seconds, glyph.getNextLinks());
-        } else {
-            RebreathingState state = new RebreathingState(effectId, seconds, glyph.getNextLinks());
-            HexConstructSpawner.applyWithState(
-                    accessor, target, hexContext, glyph, RebreathingGlyph.TYPE, state);
-        }
+        var state = new RebreathingState(effectId, seconds, glyph.getNextLinks());
+        HexConstructSpawner.applyWithState(
+                accessor, target, hexContext, glyph, RebreathingGlyph.TYPE, state);
 
         Slot immediate = glyph.getSlot(RebreathingGlyphSlots.IMMEDIATE);
         if (immediate != null && immediate.getLinks().length > 0) {

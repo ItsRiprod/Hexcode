@@ -111,19 +111,14 @@ public class InvisibilityGlyph extends GlyphAsset {
             return false;
         }
 
-        VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId, durationSeconds,
+        HexConstructSpawner.abortExisting(accessor, ref, InvisibilityGlyph.TYPE);
+
+        var applied = VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId, durationSeconds,
                 OverlapBehavior.OVERWRITE);
 
-        InvisibilityState existing = ConstructStateUtil.findState(
-                accessor, ref, InvisibilityGlyph.TYPE, InvisibilityState.class);
-        if (existing != null) {
-            existing.setRemainingDuration(durationSeconds);
-            existing.setNextGlyphIds(glyph.getNextLinks());
-        } else {
-            InvisibilityState state = new InvisibilityState(durationSeconds, effectId, glyph.getNextLinks());
-            HexConstructSpawner.applyWithState(
-                    accessor, ref, hexContext, glyph, InvisibilityGlyph.TYPE, state);
-        }
+        var state = new InvisibilityState(durationSeconds, applied ? effectId : null, glyph.getNextLinks());
+        HexConstructSpawner.applyWithState(
+                accessor, ref, hexContext, glyph, InvisibilityGlyph.TYPE, state);
 
         HexAppearanceService.addLayer(accessor, ref, InvisibilityGlyph.TYPE,
                 AppearanceLayer.ofNameplateHidden());

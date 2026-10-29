@@ -42,6 +42,7 @@ public class HexShatterMissInteraction extends SimpleInteraction {
     @Override
     protected void tick0(boolean firstRun, float time, @Nonnull InteractionType type,
             @Nonnull InteractionContext ctx, @Nonnull CooldownHandler cooldown) {
+        ShatterState consumed = null;
         try {
             if (!firstRun) {
                 ctx.getState().state = InteractionState.Finished;
@@ -56,10 +57,11 @@ public class HexShatterMissInteraction extends SimpleInteraction {
             }
 
             ShatterState state = buffer.getComponent(shardRef, ShatterState.getComponentType());
-            if (state == null || state.getHexContext() == null) {
+            if (state == null || state.getHexContext() == null || !state.tryConsume()) {
                 ctx.getState().state = InteractionState.Finished;
                 return;
             }
+            consumed = state;
 
             BlockPosition rawHitBlock = ctx.getMetaStore().getMetaObject(Interaction.TARGET_BLOCK_RAW);
 
@@ -92,6 +94,7 @@ public class HexShatterMissInteraction extends SimpleInteraction {
                 ShatterStyle.renderShardHit(GlyphAsset.of(triggering, ShatterGlyph.class), hitPos, hexContext, buffer);
             }
 
+            consumed = null;
             HexExecuter.continueExecution(state.getNextLinks(), hexContext);
 
             buffer.tryRemoveEntity(shardRef, RemoveReason.REMOVE);
@@ -99,7 +102,21 @@ public class HexShatterMissInteraction extends SimpleInteraction {
             ctx.getState().state = InteractionState.Finished;
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("[hexcode] HexShatterMissInteraction failed: %s", e.getMessage());
+            abandon(consumed, ctx);
             ctx.getState().state = InteractionState.Failed;
+        }
+    }
+
+    private static void abandon(ShatterState consumed, InteractionContext ctx) {
+        if (consumed == null) return;
+        var hexContext = consumed.getHexContext();
+        if (hexContext != null) {
+            hexContext.endBranch();
+        }
+        var buffer = ctx.getCommandBuffer();
+        var shardRef = ctx.getEntity();
+        if (buffer != null && shardRef != null && shardRef.isValid()) {
+            buffer.tryRemoveEntity(shardRef, RemoveReason.REMOVE);
         }
     }
 

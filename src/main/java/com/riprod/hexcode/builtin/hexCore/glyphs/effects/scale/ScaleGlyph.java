@@ -13,6 +13,7 @@ import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.MountController;
@@ -26,6 +27,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.components.ScaleState;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.handler.ScaleConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.style.ScaleStyle;
 import com.riprod.hexcode.core.common.appearance.AppearanceLayer;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
@@ -168,6 +170,9 @@ public class ScaleGlyph extends GlyphAsset {
         float durationSeconds = (float) Math.max(minDuration, HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(ScaleGlyphSlots.DURATION, hexContext), getSlot(ScaleGlyphSlots.DURATION)));
 
+        ScaleState state = null;
+        var layerApplied = false;
+        var spawned = false;
         try {
             float currentScale = readRenderedScale(accessor, targetRef);
             double desiredScale = clamp(currentScale * magnitude,
@@ -176,22 +181,23 @@ public class ScaleGlyph extends GlyphAsset {
                     ? (float) (desiredScale / currentScale)
                     : (float) magnitude;
 
-            ScaleState state = new ScaleState();
+            state = new ScaleState();
             state.setAppliedMagnitude((float) magnitude);
             state.setRemainingSeconds(durationSeconds);
             state.setNextGlyphIds(glyph.getNextLinks());
 
-            boolean applied = HexAppearanceService.addLayer(accessor, targetRef,
+            layerApplied = HexAppearanceService.addLayer(accessor, targetRef,
                     state.getConstructId().toString(), AppearanceLayer.ofScale(contribution));
-            if (!applied) {
+            if (!layerApplied) {
                 HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                         "Cannot resolve target model");
                 return;
             }
 
-            VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, scaleEffectId, durationSeconds,
-                    OverlapBehavior.OVERWRITE);
-            state.setEffectId(scaleEffectId);
+            if (VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, scaleEffectId, durationSeconds,
+                    OverlapBehavior.OVERWRITE)) {
+                state.setEffectId(scaleEffectId);
+            }
 
             Vector3d spawnPos;
             TransformComponent targetTransform = accessor.getComponent(
@@ -207,8 +213,12 @@ public class ScaleGlyph extends GlyphAsset {
                     : null;
             state.setVisualRef(visualRef);
 
-            HexConstructSpawner.applyWithState(
-                    accessor, targetRef, hexContext, glyph, ScaleGlyph.TYPE, state);
+            spawned = HexConstructSpawner.applyWithState(
+                    accessor, targetRef, hexContext, glyph, ScaleGlyph.TYPE, state) != null;
+            if (!spawned) {
+                undo(accessor, targetRef, state);
+                return;
+            }
 
             Slot immediate = glyph.getSlot(ScaleGlyphSlots.IMMEDIATE);
             if (immediate != null && immediate.getLinks().length > 0) {
@@ -219,8 +229,25 @@ public class ScaleGlyph extends GlyphAsset {
 
             ScaleStyle.renderApply(this, spawnPos, hexContext, accessor);
         } catch (Exception e) {
+            if (spawned) {
+                LOGGER.atWarning().withCause(e).log("scale: post-spawn step failed");
+                return;
+            }
+            if (layerApplied) {
+                undo(accessor, targetRef, state);
+            }
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Cannot apply scale", e);
+        }
+    }
+
+    private static void undo(CommandBuffer<EntityStore> accessor, Ref<EntityStore> targetRef, ScaleState state) {
+        if (!targetRef.isValid()) return;
+        HexAppearanceService.removeLayer(accessor, targetRef, state.getConstructId().toString());
+        ScaleConstructHandler.releaseEffect(accessor, targetRef, state.getEffectId(), null);
+        var visualRef = state.getVisualRef();
+        if (visualRef != null && visualRef.isValid()) {
+            accessor.tryRemoveEntity(visualRef, RemoveReason.REMOVE);
         }
     }
 

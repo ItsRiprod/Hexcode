@@ -124,6 +124,12 @@ public class ProjectileGlyph extends GlyphAsset {
             return;
         }
 
+        if (directionVar == null) {
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "Cannot determine direction");
+            return;
+        }
+
         Vector3d direction = directionVar.direction(hexContext.getAccessor());
         if (direction == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,

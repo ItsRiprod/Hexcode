@@ -112,19 +112,19 @@ public class DelayGlyph extends GlyphAsset {
         switch (sourceVar) {
             case RotationVar r -> {
                 rot = r.rotation(accessor);
-                spawnPos = positionalDefault.position(accessor);
+                spawnPos = positionalDefault != null ? positionalDefault.position(accessor) : null;
             }
             case PositionVar p -> {
                 spawnPos = p.position(accessor);
-                rot = incomingDefault.rotation(accessor);
+                rot = incomingDefault != null ? incomingDefault.rotation(accessor) : null;
             }
             case BlockVar b -> {
                 spawnPos = b.position(accessor);
                 rot = b.rotation(accessor);
             }
             case null, default -> {
-                spawnPos = positionalDefault.position(accessor);
-                rot = incomingDefault.rotation(accessor);
+                spawnPos = positionalDefault != null ? positionalDefault.position(accessor) : null;
+                rot = incomingDefault != null ? incomingDefault.rotation(accessor) : null;
             }
         }
         if (spawnPos == null) {

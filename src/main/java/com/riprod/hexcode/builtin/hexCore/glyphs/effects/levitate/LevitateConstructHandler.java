@@ -7,12 +7,9 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
-import com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
@@ -22,6 +19,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.LevitateStyle;
 import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VelocityUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class LevitateConstructHandler implements ConstructHandler<LevitateState> {
 
@@ -33,6 +31,8 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
         LevitateState state = status.getState();
         if (state == null)
             return true;
+        if (VfxUtil.isEffectRemoved(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId()))
+            return true;
         if (state.isExpired())
             return true;
         state.tick(dt);
@@ -43,7 +43,8 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
             emitTickVfx(dt, state, asset, status, ctx);
         }
 
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     private void applyRise(float dt, LevitateState state, LevitateGlyph asset, ConstructTickContext ctx) {
@@ -94,9 +95,12 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
 
     @Override
     public void onEnd(HexStatus<LevitateState> status, ConstructTickContext ctx) {
-        cleanup(status, ctx);
+        removeEffect(status, ctx);
         LevitateState state = status.getState();
-        if (state == null) return;
+        if (state == null) {
+            status.getHexContext().endBranch();
+            return;
+        }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
         LOGGER.atFine().log("levitate: ended, firing %d next glyphs", state.getNextGlyphIds().size());
@@ -104,7 +108,7 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
 
     @Override
     public void onAbort(HexStatus<LevitateState> status, ConstructTickContext ctx) {
-        cleanup(status, ctx);
+        removeEffect(status, ctx);
         LOGGER.atFine().log("levitate: terminated early; chain suppressed");
     }
 
@@ -120,26 +124,8 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
         if (state != null) state.setNextGlyphIds(ids);
     }
 
-    private void cleanup(HexStatus<LevitateState> status, ConstructTickContext ctx) {
-        try {
-            CommandBuffer<EntityStore> buffer = ctx.getBuffer();
-            Ref<EntityStore> target = ctx.getEntityRef();
-            if (target == null || !target.isValid()) return;
-
-            LevitateState state = status.getState();
-            String effectId = state != null ? state.getEffectId() : null;
-            if (effectId == null) return;
-
-            EffectControllerComponent controller = buffer.getComponent(
-                    target, EffectControllerComponent.getComponentType());
-            if (controller != null) {
-                int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-                if (effectIndex != Integer.MIN_VALUE) {
-                    controller.removeEffect(target, effectIndex, buffer);
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.atSevere().log("levitate cleanup failed: %s", e.getMessage());
-        }
+    private void removeEffect(HexStatus<LevitateState> status, ConstructTickContext ctx) {
+        var state = status.getState();
+        VfxUtil.removeEffect(ctx.getBuffer(), ctx.getEntityRef(), state != null ? state.getEffectId() : null);
     }
 }

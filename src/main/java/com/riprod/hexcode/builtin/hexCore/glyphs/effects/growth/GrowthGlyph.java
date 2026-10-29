@@ -35,7 +35,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.growth.style.GrowthStyle;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -161,6 +160,8 @@ public class GrowthGlyph extends GlyphAsset {
                 getSlot(GrowthGlyphSlots.DURATION));
         float durationSeconds = (float) duration;
 
+        HexConstructSpawner.abortExisting(accessor, ref, GrowthGlyph.TYPE);
+
         EffectControllerComponent controller = accessor.getComponent(
                 ref, EffectControllerComponent.getComponentType());
         if (controller != null) {
@@ -173,16 +174,9 @@ public class GrowthGlyph extends GlyphAsset {
             GrowthStyle.renderEntityHit(this, tc.getPosition(), hexContext, accessor);
         }
 
-        GrowthState existing = ConstructStateUtil.findState(
-                accessor, ref, GrowthGlyph.TYPE, GrowthState.class);
-        if (existing != null) {
-            existing.setRemainingDuration(durationSeconds);
-            existing.setNextGlyphIds(glyph.getNextLinks());
-        } else {
-            GrowthState state = new GrowthState(durationSeconds, effectId, glyph.getNextLinks());
-            HexConstructSpawner.applyWithState(
-                    accessor, ref, hexContext, glyph, GrowthGlyph.TYPE, state);
-        }
+        var state = new GrowthState(durationSeconds, effectId, glyph.getNextLinks());
+        HexConstructSpawner.applyWithState(
+                accessor, ref, hexContext, glyph, GrowthGlyph.TYPE, state);
 
         Slot immediate = glyph.getSlot(GrowthGlyphSlots.IMMEDIATE);
         if (immediate != null && immediate.getLinks().length > 0) {

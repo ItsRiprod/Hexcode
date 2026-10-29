@@ -5,16 +5,14 @@ import java.util.List;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
-import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor.component.MagicHealthComponent;
 import com.riprod.hexcode.utils.LogScopes;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class MageArmorConstructHandler implements ConstructHandler<MageArmorState> {
 
@@ -24,22 +22,22 @@ public class MageArmorConstructHandler implements ConstructHandler<MageArmorStat
     public boolean onTick(float dt, HexStatus<MageArmorState> status, ConstructTickContext ctx) {
         MageArmorState state = status.getState();
         if (state == null) return true;
+        if (state.isPoolBroken()) return true;
+        if (VfxUtil.isEffectRemoved(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId())) return true;
         state.tick(dt);
-        if (!drainSustain(dt, status)) return true;
-        if (isPoolDepleted(status)) return true;
-        return state.isExpired();
-    }
-
-    private boolean isPoolDepleted(HexStatus<MageArmorState> status) {
-        VolatilityComponent stats = status.getHexContext().volatility();
-        return stats == null || stats.getCurrent() <= 0f;
+        if (state.isExpired()) return true;
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override
     public void onEnd(HexStatus<MageArmorState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
         MageArmorState state = status.getState();
-        if (state == null) return;
+        if (state == null) {
+            status.getHexContext().endBranch();
+            return;
+        }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
         LOGGER.atFine().log("magearmor: ended, firing %d next glyphs", state.getNextGlyphIds().size());
@@ -74,14 +72,7 @@ public class MageArmorConstructHandler implements ConstructHandler<MageArmorStat
 
         String effectId = state.getEffectId();
         if (effectId != null) {
-            EffectControllerComponent controller = buffer.getComponent(
-                    targetRef, EffectControllerComponent.getComponentType());
-            if (controller != null) {
-                int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-                if (effectIndex != Integer.MIN_VALUE) {
-                    controller.removeEffect(targetRef, effectIndex, buffer);
-                }
-            }
+            VfxUtil.removeEffect(buffer, targetRef, effectId);
         }
 
         buffer.tryRemoveComponent(targetRef, MagicHealthComponent.getComponentType());

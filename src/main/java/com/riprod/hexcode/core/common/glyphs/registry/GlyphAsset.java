@@ -58,7 +58,7 @@ public abstract class GlyphAsset implements JsonAssetWithMap<String, DefaultAsse
 
     protected AssetExtraInfo.Data data;
     protected String id;
-    protected String modelPath;
+    protected String modelPath = "Glyph_Template";
     protected String icon;
     protected String title;
     protected String description;

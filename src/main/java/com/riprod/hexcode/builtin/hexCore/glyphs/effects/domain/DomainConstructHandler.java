@@ -20,9 +20,7 @@ import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.state.NoState;
-import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.component.DomainZoneComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.style.DomainStyle;
@@ -38,7 +36,6 @@ import com.riprod.hexcode.utils.VfxUtil;
 public class DomainConstructHandler implements ConstructHandler<NoState> {
 
     private static final float AMBIENT_INTERVAL = 1.0f;
-    private static final float DOMAIN_VOLATILITY_BOOST = 0.67f;
     private static final float SPATIAL_INTERVAL_SECONDS = 0.2f;
     private static final Vector3f CONTESTED_COLOR = new Vector3f(0.5f, 0.5f, 0.5f);
 
@@ -100,8 +97,6 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
             zone.setLastOccupants(previousOccupants);
             zone.setNewOccupants(currentOccupants);
 
-            boolean casterInside = false;
-
             for (Ref<EntityStore> ref : found) {
                 if (ref == null || !ref.isValid())
                     continue;
@@ -116,7 +111,6 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
                 currentOccupants.add(entityId);
 
                 if (entityId.equals(zone.getCasterUuid())) {
-                    casterInside = true;
                     continue;
                 }
 
@@ -143,8 +137,6 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
                     }
                 }
             }
-
-            updateCasterAura(zone, casterInside, ctx.getEntityRef(), ctx.getBuffer(), status);
         }
 
         zone.setAmbientTimer(zone.getAmbientTimer() - dt);
@@ -153,7 +145,8 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
             DomainStyle.renderAmbient(asset, center, status.getHexContext(), ctx.getBuffer());
         }
 
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override
@@ -161,17 +154,6 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         status.getHexContext().endBranch();
         DomainZoneComponent zone = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), DomainZoneComponent.getComponentType());
-
-        var accessor = ctx.getBuffer();
-
-        if (zone != null && zone.getCasterRef(accessor) != null && zone.getCasterRef(accessor).isValid()) {
-            DomainAuraState aura = ConstructStateUtil.findState(
-                    ctx.getBuffer(), zone.getCasterRef(accessor), DomainGlyph.AURA_ID, DomainAuraState.class);
-            if (aura != null && ctx.getEntityRef().equals(aura.getZoneRef())) {
-                ConstructStateUtil.requestKillByHandlerId(
-                        ctx.getBuffer(), zone.getCasterRef(accessor), DomainGlyph.AURA_ID);
-            }
-        }
 
         TransformComponent transform = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), TransformComponent.getComponentType());
@@ -183,29 +165,6 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         }
 
         ctx.getBuffer().tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
-    }
-
-    private void updateCasterAura(DomainZoneComponent zone, boolean casterInside,
-            Ref<EntityStore> zoneEntityRef, CommandBuffer<EntityStore> buffer,
-            HexStatus<NoState> status) {
-        Ref<EntityStore> casterRef = zone.getCasterRef(buffer);
-        if (casterRef == null || !casterRef.isValid())
-            return;
-
-        DomainAuraState existing = ConstructStateUtil.findState(
-                buffer, casterRef, DomainGlyph.AURA_ID, DomainAuraState.class);
-        boolean shouldHaveAura = casterInside && !zone.isContested();
-
-        if (shouldHaveAura && existing != null) {
-            if (!zoneEntityRef.equals(existing.getZoneRef())) {
-                ConstructStateUtil.requestKillByHandlerId(buffer, casterRef, DomainGlyph.AURA_ID);
-                HexConstructSpawner.applyWithState(
-                        buffer, casterRef, status.getHexContext(), status.getTriggeringGlyph(),
-                        DomainGlyph.AURA_ID, new DomainAuraState(zoneEntityRef, DOMAIN_VOLATILITY_BOOST));
-            }
-        } else if (!shouldHaveAura && existing != null && zoneEntityRef.equals(existing.getZoneRef())) {
-            ConstructStateUtil.requestKillByHandlerId(buffer, casterRef, DomainGlyph.AURA_ID);
-        }
     }
 
     private void updateContestation(DomainGlyph asset, DomainZoneComponent self, Vector3d selfCenter,

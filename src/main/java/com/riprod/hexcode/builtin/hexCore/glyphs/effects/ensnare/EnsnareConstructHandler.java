@@ -6,7 +6,6 @@ import java.util.UUID;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -19,7 +18,6 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
-import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.state.NoState;
@@ -41,22 +39,23 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
 
     @Override
     public boolean onTick(float dt, HexStatus<NoState> status, ConstructTickContext ctx) {
-        EnsnareComponent ensnare = ctx.getChunk().getComponent(
-                ctx.getIndex(), EnsnareComponent.getComponentType());
+        EnsnareComponent ensnare = ctx.getBuffer().getComponent(
+                ctx.getEntityRef(), EnsnareComponent.getComponentType());
         if (ensnare == null) return true;
 
         ensnare.incrementElapsed(dt);
         if (ensnare.getElapsedSeconds() >= ensnare.getDurationSeconds()) return true;
 
         processDamage(ensnare, status, ctx, status.getHexContext().getCasterRef(ctx.getBuffer()));
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override
     public void onCleanup(HexStatus<NoState> status, ConstructTickContext ctx) {
         status.getHexContext().endBranch();
-        var ensnare = ctx.getChunk().getComponent(
-                ctx.getIndex(), EnsnareComponent.getComponentType());
+        var ensnare = ctx.getBuffer().getComponent(
+                ctx.getEntityRef(), EnsnareComponent.getComponentType());
         if (ensnare != null) {
             removeSpikes(ensnare, status, ctx.getBuffer());
             LOGGER.atFine().log("ensnare: expired after %.1fs, removed %d spikes",
@@ -138,9 +137,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
             if (spikeRef != null && spikeRef.isValid()) {
                 EnsnareStyle.renderSpikeDespawn(
                         asset, spike.getPosition(), status.getHexContext(), buffer, particleRecipients);
-                Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
-                holder.addComponent(HexcodeComponent.getComponentType(), new HexcodeComponent());
-                buffer.removeEntity(spikeRef, holder, RemoveReason.REMOVE);
+                buffer.tryRemoveEntity(spikeRef, RemoveReason.REMOVE);
             }
         }
     }

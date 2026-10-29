@@ -186,6 +186,7 @@ public class EnsnareGlyph extends GlyphAsset {
                         spikePos, rotation, spikeModel, hexContext, accessor);
                 if (spikeRef != null) {
                     spikes.add(new SpikeEntry(spikePos, spikeRef));
+                    hexContext.addDependency(spikeRef);
                 }
             }
         }

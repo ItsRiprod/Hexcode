@@ -16,7 +16,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementGlyphAsset;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.style.FreezeStyle;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -67,6 +66,7 @@ public class FreezeGlyph extends ElementGlyphAsset {
 
         String effectId = statusEffect;
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        HexConstructSpawner.abortExisting(accessor, target, FreezeGlyph.TYPE);
         if (!ElementSupport.applyStatus(hexContext, target, glyph, effectId, seconds)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Freeze could not apply " + effectId);
@@ -78,15 +78,9 @@ public class FreezeGlyph extends ElementGlyphAsset {
             FreezeStyle.renderFreeze(this, tc.getPosition(), hexContext, accessor);
         }
 
-        FreezeState existing = ConstructStateUtil.findState(
-                accessor, target, FreezeGlyph.TYPE, FreezeState.class);
-        if (existing != null) {
-            existing.refresh(seconds, glyph.getNextLinks());
-        } else {
-            FreezeState state = new FreezeState(effectId, seconds, glyph.getNextLinks());
-            HexConstructSpawner.applyWithState(
-                    accessor, target, hexContext, glyph, FreezeGlyph.TYPE, state);
-        }
+        var state = new FreezeState(effectId, seconds, glyph.getNextLinks());
+        HexConstructSpawner.applyWithState(
+                accessor, target, hexContext, glyph, FreezeGlyph.TYPE, state);
 
         Slot immediate = glyph.getSlot(FreezeGlyphSlots.IMMEDIATE);
         if (immediate != null && immediate.getLinks().length > 0) {

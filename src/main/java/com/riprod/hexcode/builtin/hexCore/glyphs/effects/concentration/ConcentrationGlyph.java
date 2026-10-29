@@ -110,7 +110,6 @@ public class ConcentrationGlyph extends GlyphAsset {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
         Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
         if (casterRef == null || !casterRef.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -149,9 +148,9 @@ public class ConcentrationGlyph extends GlyphAsset {
             ConcentrationStyle.renderSpawn(this, casterTransform.getPosition(), hexContext, accessor);
         }
 
-        float manaRate = readRate(glyph, asset, hexContext, ConcentrationGlyphSlots.MANA_PER_SECOND);
-        float staminaRate = readRate(glyph, asset, hexContext, ConcentrationGlyphSlots.STAMINA_PER_SECOND);
-        float healthRate = readRate(glyph, asset, hexContext, ConcentrationGlyphSlots.HEALTH_PER_SECOND);
+        float manaRate = readRate(glyph, hexContext, ConcentrationGlyphSlots.MANA_PER_SECOND);
+        float staminaRate = readRate(glyph, hexContext, ConcentrationGlyphSlots.STAMINA_PER_SECOND);
+        float healthRate = readRate(glyph, hexContext, ConcentrationGlyphSlots.HEALTH_PER_SECOND);
 
         ConcentrationState state = new ConcentrationState(visualRef);
         state.setManaRate(manaRate);
@@ -167,10 +166,9 @@ public class ConcentrationGlyph extends GlyphAsset {
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 
-    private static float readRate(Glyph glyph, GlyphAsset asset, HexContext hexContext, String slotKey) {
+    private float readRate(Glyph glyph, HexContext hexContext, String slotKey) {
         double rate = HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(slotKey, hexContext),
-                asset != null ? asset.getSlot(slotKey) : null).doubleValue();
+                glyph.readSlot(slotKey, hexContext), getSlot(slotKey)).doubleValue();
         return (float) Math.max(0.0, rate);
     }
 

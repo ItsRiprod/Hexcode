@@ -28,7 +28,8 @@ public class RotationConstructHandler implements ConstructHandler<RotationState>
         }
 
         state.tick(dt);
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override

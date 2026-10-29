@@ -7,7 +7,6 @@ import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.utils.GlyphModelUtil;
@@ -41,11 +40,10 @@ public class ShapeGlyph extends GlyphAsset {
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 
-    private static float resolveScale(Glyph glyph, HexContext hexContext) {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+    private float resolveScale(Glyph glyph, HexContext hexContext) {
         float scale = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(ShapeGlyphSlots.SCALE, hexContext),
-                asset != null ? asset.getSlot(ShapeGlyphSlots.SCALE) : null).floatValue();
+                getSlot(ShapeGlyphSlots.SCALE)).floatValue();
         return Math.clamp(scale, MIN_MODEL_SCALE, MAX_MODEL_SCALE);
     }
 

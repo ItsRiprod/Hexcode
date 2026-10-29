@@ -41,7 +41,6 @@ import lombok.Getter;
 
 public class DomainGlyph extends GlyphAsset {
     public static final String TYPE = "Domain";
-    public static final String AURA_ID = "Domain_Aura";
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
@@ -87,10 +86,8 @@ public class DomainGlyph extends GlyphAsset {
             .add()
             .build();
 
-    private static Impact slotImpact(GlyphAsset asset, String key) {
-        if (asset == null)
-            return null;
-        var slot = asset.getSlot(key);
+    private Impact slotImpact(String key) {
+        var slot = getSlot(key);
         return slot == null ? null : slot.getImpact();
     }
 
@@ -138,14 +135,13 @@ public class DomainGlyph extends GlyphAsset {
                 glyph.readSlot(DomainGlyphSlots.POWER, hexContext), DEFAULT_POWER).floatValue();
         power = Math.max(0.1f, power);
 
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-        float upfrontCost = Impact.scale(slotImpact(asset, DomainGlyphSlots.POWER), power);
+        float upfrontCost = Impact.scale(slotImpact(DomainGlyphSlots.POWER), power);
         if (!hexContext.getHexRoot().tryConsumeMana(upfrontCost, hexContext.getAccessor())) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.INSUFFICIENT_MANA);
             return;
         }
 
-        float baseDrainPerSecond = Impact.scale(slotImpact(asset, DomainGlyphSlots.MAGNITUDE), radius);
+        float baseDrainPerSecond = Impact.scale(slotImpact(DomainGlyphSlots.MAGNITUDE), radius);
         float triggerCost = Impact.scale(triggerImpact, 0);
 
         UUIDComponent casterUuidComp = hexContext.getAccessor().getComponent(
@@ -159,7 +155,7 @@ public class DomainGlyph extends GlyphAsset {
                 hexContext.getAccessor(), hexContext, glyph, DomainGlyph.TYPE, new Vector3d(anchorPos));
 
         DomainZoneComponent zoneComp = new DomainZoneComponent(
-                (float) radius, durationSeconds, baseDrainPerSecond, triggerCost, power, casterUuid, casterRef);
+                (float) radius, durationSeconds, baseDrainPerSecond, triggerCost, power, casterUuid);
 
         holder.ensureComponent(PropComponent.getComponentType());
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());

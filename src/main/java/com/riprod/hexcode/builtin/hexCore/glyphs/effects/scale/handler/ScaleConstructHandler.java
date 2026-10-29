@@ -1,25 +1,27 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.handler;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.ScaleGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.components.ScaleState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.style.ScaleStyle;
 import com.riprod.hexcode.utils.LogScopes;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
 
@@ -29,17 +31,21 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
     public boolean onTick(float dt, HexStatus<ScaleState> status, ConstructTickContext ctx) {
         ScaleState state = status.getState();
         if (state == null) return true;
-        if (effectRemoved(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId())) return true;
+        if (VfxUtil.isEffectRemoved(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId())) return true;
         if (state.isExpired()) return true;
         state.tick(dt);
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override
     public void onEnd(HexStatus<ScaleState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
         ScaleState state = status.getState();
-        if (state == null) return;
+        if (state == null) {
+            status.getHexContext().endBranch();
+            return;
+        }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
         LOGGER.atFine().log("scale: ended, firing %d next glyphs", state.getNextGlyphIds().size());
@@ -73,7 +79,7 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
 
             if (targetRef != null && targetRef.isValid()) {
                 HexAppearanceService.removeLayer(buffer, targetRef, state.getConstructId().toString());
-                removeEffect(buffer, targetRef, state.getEffectId());
+                releaseEffect(buffer, targetRef, state.getEffectId(), status.getConstructId());
 
                 TransformComponent tc = buffer.getComponent(
                         targetRef, TransformComponent.getComponentType());
@@ -92,26 +98,18 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
         }
     }
 
-    private static boolean effectRemoved(CommandBuffer<EntityStore> buffer,
-            Ref<EntityStore> target, String effectId) {
-        if (effectId == null || target == null || !target.isValid()) return false;
-        int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-        if (effectIndex == Integer.MIN_VALUE) return false;
-        EffectControllerComponent controller = buffer.getComponent(
-                target, EffectControllerComponent.getComponentType());
-        return controller != null && !controller.hasEffect(effectIndex);
+    public static void releaseEffect(CommandBuffer<EntityStore> buffer, Ref<EntityStore> target,
+            String effectId, UUID excludeConstructId) {
+        if (effectId == null || othersRemain(buffer, target, excludeConstructId)) return;
+        VfxUtil.removeEffect(buffer, target, effectId);
     }
 
-    private static void removeEffect(CommandBuffer<EntityStore> buffer,
-            Ref<EntityStore> target, String effectId) {
-        if (effectId == null) return;
-        EffectControllerComponent controller = buffer.getComponent(
-                target, EffectControllerComponent.getComponentType());
-        if (controller != null) {
-            int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-            if (effectIndex != Integer.MIN_VALUE) {
-                controller.removeEffect(target, effectIndex, buffer);
-            }
-        }
+    private static boolean othersRemain(CommandBuffer<EntityStore> buffer, Ref<EntityStore> target,
+            UUID excludeConstructId) {
+        var found = new boolean[1];
+        ConstructStateUtil.forEachStatus(buffer, target, ScaleGlyph.TYPE, (id, other) -> {
+            if (!id.equals(excludeConstructId)) found[0] = true;
+        });
+        return found[0] || HexConstructSpawner.hasPendingApply(buffer, target, ScaleGlyph.TYPE);
     }
 }

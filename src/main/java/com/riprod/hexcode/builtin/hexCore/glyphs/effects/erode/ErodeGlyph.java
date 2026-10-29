@@ -15,19 +15,14 @@ import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Vector3dUtil;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
-import com.hypixel.hytale.server.core.asset.type.item.config.Item;
-import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool;
 import com.hypixel.hytale.server.core.entity.ExplosionConfig;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.modules.interaction.BlockHarvestUtils;
-import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.erode.style.ErodeStyle;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -142,19 +137,14 @@ public class ErodeGlyph extends GlyphAsset {
             return false;
         }
 
+        HexConstructSpawner.abortExisting(accessor, ref, ErodeGlyph.TYPE);
+
         VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId, durationSeconds,
                 OverlapBehavior.OVERWRITE);
 
-        ErodeState existing = ConstructStateUtil.findState(
-                accessor, ref, ErodeGlyph.TYPE, ErodeState.class);
-        if (existing != null) {
-            existing.setRemainingDuration(durationSeconds);
-            existing.setNextGlyphIds(glyph.getNextLinks());
-        } else {
-            ErodeState state = new ErodeState(durationSeconds, effectId, glyph.getNextLinks());
-            HexConstructSpawner.applyWithState(
-                    accessor, ref, hexContext, glyph, ErodeGlyph.TYPE, state);
-        }
+        var state = new ErodeState(durationSeconds, effectId, glyph.getNextLinks());
+        HexConstructSpawner.applyWithState(
+                accessor, ref, hexContext, glyph, ErodeGlyph.TYPE, state);
 
         TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
         if (tc != null) {

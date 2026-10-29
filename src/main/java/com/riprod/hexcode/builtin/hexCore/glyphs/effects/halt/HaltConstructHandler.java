@@ -7,8 +7,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
-import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
-import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -17,6 +15,7 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.utils.LogScopes;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class HaltConstructHandler implements ConstructHandler<HaltState> {
 
@@ -26,10 +25,12 @@ public class HaltConstructHandler implements ConstructHandler<HaltState> {
     public boolean onTick(float dt, HexStatus<HaltState> status, ConstructTickContext ctx) {
         HaltState state = status.getState();
         if (state == null) return true;
+        if (VfxUtil.isEffectRemoved(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId())) return true;
         if (state.isExpired()) return true;
         state.tick(dt);
         clampVelocity(ctx);
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     private void clampVelocity(ConstructTickContext ctx) {
@@ -45,7 +46,10 @@ public class HaltConstructHandler implements ConstructHandler<HaltState> {
     public void onEnd(HexStatus<HaltState> status, ConstructTickContext ctx) {
         cleanup(status, ctx);
         HaltState state = status.getState();
-        if (state == null) return;
+        if (state == null) {
+            status.getHexContext().endBranch();
+            return;
+        }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
         HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
         LOGGER.atFine().log("halt: ended, firing %d next glyphs", state.getNextGlyphIds().size());
@@ -70,8 +74,11 @@ public class HaltConstructHandler implements ConstructHandler<HaltState> {
     }
 
     private void cleanup(HexStatus<HaltState> status, ConstructTickContext ctx) {
-        CommandBuffer<EntityStore> buffer = ctx.getBuffer();
-        Ref<EntityStore> target = ctx.getEntityRef();
+        HaltState state = status.getState();
+        release(ctx.getBuffer(), ctx.getEntityRef(), state != null ? state.getEffectId() : null);
+    }
+
+    public static void release(CommandBuffer<EntityStore> buffer, Ref<EntityStore> target, String effectId) {
         if (target == null || !target.isValid()) return;
 
         StandardPhysicsProvider physics = buffer.getComponent(
@@ -80,17 +87,8 @@ public class HaltConstructHandler implements ConstructHandler<HaltState> {
             physics.setState(StandardPhysicsProvider.STATE.ACTIVE);
         }
 
-        HaltState state = status.getState();
-        String effectId = state != null ? state.getEffectId() : null;
         if (effectId == null) return;
 
-        EffectControllerComponent controller = buffer.getComponent(
-                target, EffectControllerComponent.getComponentType());
-        if (controller != null) {
-            int effectIndex = EntityEffect.getAssetMap().getIndex(effectId);
-            if (effectIndex != Integer.MIN_VALUE) {
-                controller.removeEffect(target, effectIndex, buffer);
-            }
-        }
+        VfxUtil.removeEffect(buffer, target, effectId);
     }
 }

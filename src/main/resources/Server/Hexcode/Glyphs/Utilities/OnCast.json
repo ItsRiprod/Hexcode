@@ -1,5 +1,4 @@
 {
-  "Parent": "Glyph_Template",
   "Type": "OnCast",
   "Style": {
     "Parent": "Element_Time",

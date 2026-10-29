@@ -15,12 +15,10 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.invisibility.InvisibilityGlyphSlots;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementGlyphAsset;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.component.FortifyWardComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.style.FortifyStyle;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -72,7 +70,7 @@ public class FortifyGlyph extends ElementGlyphAsset {
         // sustained cast defers continuation to the construct's onEnd; otherwise pass
         // through
         if (sustained) {
-            Slot immediate = glyph.getSlot(InvisibilityGlyphSlots.IMMEDIATE);
+            Slot immediate = glyph.getSlot(FortifyGlyphSlots.IMMEDIATE);
             if (immediate != null && immediate.getLinks().length > 0) {
                 HexContext immediateCtx = hexContext.branch();
                 immediateCtx.setDefaultVariable(entityVar);
@@ -102,20 +100,16 @@ public class FortifyGlyph extends ElementGlyphAsset {
         float spent = ElementSupport.consumeResource(hexContext, glyph, resource, limit);
         float durationSeconds = spent * efficiency * affinity * durationPerResource;
 
-        VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId, durationSeconds,
+        HexConstructSpawner.abortExisting(accessor, ref, FortifyGlyph.TYPE);
+
+        var applied = VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId, durationSeconds,
                 OverlapBehavior.OVERWRITE);
 
         accessor.putComponent(ref, FortifyWardComponent.getComponentType(), FortifyWardComponent.INSTANCE);
 
-        FortifyState existing = ConstructStateUtil.findState(
-                accessor, ref, FortifyGlyph.TYPE, FortifyState.class);
-        if (existing != null) {
-            existing.refresh(durationSeconds, glyph.getNextLinks());
-        } else {
-            FortifyState state = new FortifyState(durationSeconds, effectId, glyph.getNextLinks());
-            HexConstructSpawner.applyWithState(
-                    accessor, ref, hexContext, glyph, FortifyGlyph.TYPE, state);
-        }
+        var state = new FortifyState(durationSeconds, applied ? effectId : null, glyph.getNextLinks());
+        HexConstructSpawner.applyWithState(
+                accessor, ref, hexContext, glyph, FortifyGlyph.TYPE, state);
 
         TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
         if (tc != null) {

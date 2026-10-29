@@ -77,7 +77,8 @@ public class AreaGlyph extends GlyphAsset {
     public void execute(Glyph glyph, HexContext hexContext) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        Vector3d anchorPos = glyph.readSlot(AreaGlyphSlots.ANCHOR, hexContext).position(accessor);
+        HexVar anchorVar = glyph.readSlot(AreaGlyphSlots.ANCHOR, hexContext);
+        Vector3d anchorPos = anchorVar != null ? anchorVar.position(accessor) : null;
         if (anchorPos == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Anchor is not a valid position");
@@ -86,8 +87,8 @@ public class AreaGlyph extends GlyphAsset {
 
         HexVar coordsAVar = glyph.readSlot(AreaGlyphSlots.COORDS_A, hexContext);
         HexVar coordsBVar = glyph.readSlot(AreaGlyphSlots.COORDS_B, hexContext);
-        Vector3d coordsA = coordsAVar.position(accessor);
-        Vector3d coordsB = coordsBVar.position(accessor);
+        Vector3d coordsA = coordsAVar != null ? coordsAVar.position(accessor) : null;
+        Vector3d coordsB = coordsBVar != null ? coordsBVar.position(accessor) : null;
         if (coordsA == null || coordsB == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Corner coordinates must be valid positions");

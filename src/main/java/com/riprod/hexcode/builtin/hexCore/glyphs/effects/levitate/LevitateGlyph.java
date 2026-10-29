@@ -1,6 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -15,11 +16,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.LevitateStyle;
-import com.riprod.hexcode.builtin.hexCore.glyphs.utils.ConstructSplicer;
-import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
-import com.riprod.hexcode.core.common.construct.component.HexStatus;
-import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
-import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -99,32 +95,23 @@ public class LevitateGlyph extends GlyphAsset {
                         glyph.readSlot(LevitateGlyphSlots.DURATION, hexContext),
                         getSlot(LevitateGlyphSlots.DURATION)));
 
+        UUID constructId = null;
         try {
+            HexConstructSpawner.abortExisting(accessor, ref, LevitateGlyph.TYPE);
+
             VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId, durationSeconds,
                     OverlapBehavior.OVERWRITE);
 
-            HexEffectsComponent construct = accessor.getComponent(
-                    ref, HexEffectsComponent.getComponentType());
-            HexStatus<?> active = construct != null ? findActiveLevitate(construct) : null;
-
-            if (active != null && active.getState() instanceof LevitateState existing) {
-                existing.setAppliedIntensity(intensity);
-                existing.setRemainingDuration(durationSeconds);
-                existing.setEffectId(effectId);
-                ConstructHandler<?> handler = ConstructRegistry.get(active.getHandlerId());
-                if (handler != null) {
-                    ConstructSplicer.splice(active, handler, hexContext, glyph,
-                            ConstructSplicer.ChainMode.APPEND_TAIL,
-                            ConstructSplicer.VariablePolicy.PREFER_TARGET, 0f);
-                }
-            } else {
-                LevitateState state = new LevitateState();
-                state.setAppliedIntensity(intensity);
-                state.setRemainingDuration(durationSeconds);
-                state.setNextGlyphIds(glyph.getNextLinks());
-                state.setEffectId(effectId);
-                HexConstructSpawner.applyWithState(
-                        accessor, ref, hexContext, glyph, LevitateGlyph.TYPE, state);
+            var state = new LevitateState();
+            state.setAppliedIntensity(intensity);
+            state.setRemainingDuration(durationSeconds);
+            state.setNextGlyphIds(glyph.getNextLinks());
+            state.setEffectId(effectId);
+            constructId = HexConstructSpawner.applyWithState(
+                    accessor, ref, hexContext, glyph, LevitateGlyph.TYPE, state);
+            if (constructId == null) {
+                VfxUtil.removeEffect(accessor, ref, effectId);
+                return;
             }
 
             Slot immediate = glyph.getSlot(LevitateGlyphSlots.IMMEDIATE);
@@ -139,17 +126,13 @@ public class LevitateGlyph extends GlyphAsset {
                 LevitateStyle.renderActivation(this, tc.getPosition(), hexContext, accessor);
             }
         } catch (Exception e) {
+            if (constructId != null) {
+                LOGGER.atWarning().withCause(e).log("levitate: post-spawn step failed");
+                return;
+            }
+            VfxUtil.removeEffect(accessor, ref, effectId);
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Cannot apply levitate", e);
         }
-    }
-
-    private static HexStatus<?> findActiveLevitate(HexEffectsComponent construct) {
-        for (HexStatus<?> status : construct.getEffects().values()) {
-            if (status != null && TYPE.equals(status.getHandlerId())) {
-                return status;
-            }
-        }
-        return null;
     }
 }

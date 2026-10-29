@@ -14,7 +14,6 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementGlyphAsset;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -57,21 +56,16 @@ public class ElectrocuteGlyph extends ElementGlyphAsset {
 
         String effectId = statusEffect;
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        HexConstructSpawner.abortExisting(accessor, target, ElectrocuteGlyph.TYPE);
         if (!ElementSupport.applyStatus(hexContext, target, glyph, effectId, seconds)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Electrocute could not apply " + effectId);
             return;
         }
 
-        ElectrocuteState existing = ConstructStateUtil.findState(
-                accessor, target, ElectrocuteGlyph.TYPE, ElectrocuteState.class);
-        if (existing != null) {
-            existing.refresh(seconds, glyph.getNextLinks());
-        } else {
-            ElectrocuteState state = new ElectrocuteState(effectId, seconds, glyph.getNextLinks());
-            HexConstructSpawner.applyWithState(
-                    accessor, target, hexContext, glyph, ElectrocuteGlyph.TYPE, state);
-        }
+        var state = new ElectrocuteState(effectId, seconds, glyph.getNextLinks());
+        HexConstructSpawner.applyWithState(
+                accessor, target, hexContext, glyph, ElectrocuteGlyph.TYPE, state);
 
         Slot immediate = glyph.getSlot(ElectrocuteGlyphSlots.IMMEDIATE);
         if (immediate != null && immediate.getLinks().length > 0) {

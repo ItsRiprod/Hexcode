@@ -16,7 +16,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementGlyphAsset;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ignite.style.IgniteStyle;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -68,6 +67,7 @@ public class IgniteGlyph extends ElementGlyphAsset {
 
         String effectId = statusEffect;
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
+        HexConstructSpawner.abortExisting(accessor, target, IgniteGlyph.TYPE);
         if (!ElementSupport.applyStatus(hexContext, target, glyph, effectId, seconds)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Ignite could not apply " + effectId);
@@ -79,16 +79,9 @@ public class IgniteGlyph extends ElementGlyphAsset {
             IgniteStyle.render(this, tc.getPosition(), hexContext, accessor);
         }
 
-        IgniteState existing = ConstructStateUtil.findState(
-                accessor, target, IgniteGlyph.TYPE, IgniteState.class);
-        if (existing != null) {
-            existing.setRemainingDuration(seconds);
-            existing.setNextGlyphIds(glyph.getNextLinks());
-        } else {
-            IgniteState state = new IgniteState(seconds, effectId, glyph.getNextLinks());
-            HexConstructSpawner.applyWithState(
-                    accessor, target, hexContext, glyph, IgniteGlyph.TYPE, state);
-        }
+        var state = new IgniteState(seconds, effectId, glyph.getNextLinks());
+        HexConstructSpawner.applyWithState(
+                accessor, target, hexContext, glyph, IgniteGlyph.TYPE, state);
 
         Slot immediate = glyph.getSlot(IgniteGlyphSlots.IMMEDIATE);
         if (immediate != null && immediate.getLinks().length > 0) {

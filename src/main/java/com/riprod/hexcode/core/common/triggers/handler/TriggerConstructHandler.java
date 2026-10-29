@@ -20,7 +20,8 @@ public class TriggerConstructHandler implements ConstructHandler<TriggerState> {
         TriggerState state = status.getState();
         if (state == null) return true;
         if (state.isFired()) return true;
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     @Override

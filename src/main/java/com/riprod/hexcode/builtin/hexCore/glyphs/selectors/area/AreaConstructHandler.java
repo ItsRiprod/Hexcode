@@ -43,6 +43,8 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
         VolatilityComponent volatility = status.getHexContext().volatility();
         if (volatility != null && newBlocks > 0)
             volatility.consume((float) (newBlocks * state.getCostPerBlock()));
+        if (volatility != null && volatility.getCurrent() <= 0f)
+            return false;
 
         DebugComponent debug = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), DebugComponent.getComponentType());
@@ -56,7 +58,8 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
 
         if (state.isComplete())
             return true;
-        return !drainSustain(dt, status);
+        drainSustain(dt, status);
+        return false;
     }
 
     private void sweepEntities(AreaState state, HexStatus<AreaState> status,

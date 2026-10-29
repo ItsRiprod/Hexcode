@@ -78,8 +78,6 @@ public class DrainGlyph extends GlyphAsset {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-
         HexVar targetVar = glyph.readSlot(DrainGlyphSlots.TARGET, hexContext);
         if (!(targetVar instanceof EntityVar entityVar)) {
             HexExecuter.fail(glyph, hexContext,
@@ -188,16 +186,18 @@ public class DrainGlyph extends GlyphAsset {
         }
 
         HexVar durationVar = glyph.readSlot(DrainGlyphSlots.DURATION, hexContext);
-        float duration = HexVarUtil.numberOrSlotDefault(null, asset.getSlot(DrainGlyphSlots.DURATION)).floatValue();
+        float duration = HexVarUtil.numberOrSlotDefault(null, getSlot(DrainGlyphSlots.DURATION)).floatValue();
         if (durationVar != null) {
             duration = Math.max(durationFloor,
-                    HexVarUtil.numberOrSlotDefault(durationVar, asset.getSlot(DrainGlyphSlots.DURATION)).floatValue());
+                    HexVarUtil.numberOrSlotDefault(durationVar, getSlot(DrainGlyphSlots.DURATION)).floatValue());
         }
 
         Slot nextSlot = glyph.getSlot(Glyph.NEXT_SLOT);
         List<String> nextGlyphIds = nextSlot != null
                 ? new ArrayList<>(Arrays.asList(nextSlot.getLinks()))
                 : new ArrayList<>();
+
+        HexConstructSpawner.abortExisting(accessor, targetRef, DrainGlyph.TYPE);
 
         VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, drainEffectId, duration,
                 OverlapBehavior.OVERWRITE);

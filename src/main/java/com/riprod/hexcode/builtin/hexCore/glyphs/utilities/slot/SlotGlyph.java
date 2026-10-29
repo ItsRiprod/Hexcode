@@ -5,7 +5,6 @@ import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.trilean.T
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public class SlotGlyph extends GlyphAsset {
@@ -34,7 +33,7 @@ public class SlotGlyph extends GlyphAsset {
         if (glyph.getSlot(SlotGlyphSlots.MODE) instanceof TrileanSlot bool && bool.getState() != null) {
             return bool.getState().value();
         }
-        var asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
+        var asset = GlyphAsset.of(glyph, SlotGlyph.class);
         var config = asset != null ? asset.getSlot(SlotGlyphSlots.MODE) : null;
         var fallback = config != null ? config.getDefaultValue() : null;
         return fallback != null ? (int) Math.round(fallback) : MODE_NEXT;

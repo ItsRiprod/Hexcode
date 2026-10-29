@@ -24,7 +24,6 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.components.Dis
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.style.DisguiseStyle;
 import com.riprod.hexcode.core.common.appearance.AppearanceLayer;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -59,7 +58,6 @@ public class DisguiseGlyph extends GlyphAsset {
     public void execute(Glyph glyph, HexContext hexContext) {
         HexVar targetVar = glyph.readSlot(DisguiseGlyphSlots.TARGET, hexContext);
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
 
         AppearanceLayer disguise = resolveDisguise(glyph, hexContext, accessor);
         if (disguise == null) {
@@ -70,7 +68,7 @@ public class DisguiseGlyph extends GlyphAsset {
 
         float durationSeconds = (float) Math.max(0.0, HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(DisguiseGlyphSlots.DURATION, hexContext),
-                asset.getSlot(DisguiseGlyphSlots.DURATION)));
+                getSlot(DisguiseGlyphSlots.DURATION)));
 
         if (!(targetVar instanceof EntityVar entityVar)) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -98,6 +96,8 @@ public class DisguiseGlyph extends GlyphAsset {
             return;
         }
 
+        HexConstructSpawner.abortExisting(accessor, targetRef, TYPE);
+
         if (!disguiseNametag) {
             Nameplate targetNameplate = accessor.getComponent(targetRef, Nameplate.getComponentType());
             disguise = AppearanceLayer.ofModel(disguise.modelAssetId(), disguise.skin(),
@@ -105,16 +105,8 @@ public class DisguiseGlyph extends GlyphAsset {
                     disguise.baseScale());
         }
 
-        DisguiseState state = ConstructStateUtil.findState(
-                accessor, targetRef, TYPE, DisguiseState.class);
-        boolean isNew = state == null;
-        if (isNew) {
-            state = new DisguiseState();
-        }
-        state.setRemainingSeconds(durationSeconds);
-        state.setNextGlyphIds(glyph.getNextLinks());
-
-        boolean applied = HexAppearanceService.addLayer(accessor, targetRef,
+        var state = new DisguiseState();
+        var applied = HexAppearanceService.addLayer(accessor, targetRef,
                 state.getConstructId().toString(), disguise);
         if (!applied) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -122,13 +114,13 @@ public class DisguiseGlyph extends GlyphAsset {
             return;
         }
 
-        boolean effectApplied = VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, disguiseEffectId,
+        state.setRemainingSeconds(durationSeconds);
+        state.setNextGlyphIds(glyph.getNextLinks());
+        var effectApplied = VfxUtil.applyBoundedEffect(hexContext, targetRef, glyph, disguiseEffectId,
                 durationSeconds, OverlapBehavior.OVERWRITE);
         state.setEffectId(effectApplied ? disguiseEffectId : null);
 
-        if (isNew) {
-            HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, TYPE, state);
-        }
+        HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, TYPE, state);
 
         fireImmediate(glyph, hexContext, targetEntity);
 

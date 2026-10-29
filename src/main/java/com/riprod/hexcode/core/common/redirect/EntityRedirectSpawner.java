@@ -16,23 +16,23 @@ public final class EntityRedirectSpawner {
     }
 
     public static void stamp(@Nonnull CommandBuffer<EntityStore> buffer, @Nonnull Ref<EntityStore> targetRef,
-            @Nonnull Ref<EntityStore> ownerRef, @Nonnull Ref<EntityStore> deferralRef) {
+            @Nonnull Ref<EntityStore> ownerRef, @Nonnull Ref<EntityStore> deferralRef, @Nonnull UUID stampId) {
         PersistentRef owner = new PersistentRef();
         owner.setEntity(ownerRef, buffer);
         PersistentRef deferral = new PersistentRef();
         deferral.setEntity(deferralRef, buffer);
         buffer.putComponent(targetRef, EntityRedirectComponent.getComponentType(),
-                new EntityRedirectComponent(owner, deferral));
+                new EntityRedirectComponent(owner, deferral, stampId));
     }
 
-    // removes the marker only when the ward still points at deferralUuid; a mismatch means
-    // a later concentration overwrote it and now owns the teardown.
+    // removes the marker only when it still carries stampId; a mismatch means a later stamp
+    // overwrote it and now owns the teardown
     public static void unstamp(@Nonnull CommandBuffer<EntityStore> buffer, @Nullable Ref<EntityStore> targetRef,
-            @Nullable UUID deferralUuid) {
-        if (targetRef == null || deferralUuid == null || !targetRef.isValid()) return;
+            @Nullable UUID stampId) {
+        if (targetRef == null || stampId == null || !targetRef.isValid()) return;
         EntityRedirectComponent comp = buffer.getComponent(targetRef, EntityRedirectComponent.getComponentType());
         if (comp == null) return;
-        if (deferralUuid.equals(comp.getDeferralUuid())) {
+        if (stampId.equals(comp.getStampId())) {
             buffer.tryRemoveComponent(targetRef, EntityRedirectComponent.getComponentType());
         }
     }

@@ -36,12 +36,7 @@ public class CastChargesSystem extends WorldEventSystem<EntityStore, HexCastEven
         HexCast cast = context.cast();
         if (cast == null) return;
 
-        CasterStateComponent casterState = buffer.getComponent(casterRef,
-                CasterStateComponent.getComponentType());
-        if (casterState == null) {
-            buffer.ensureComponent(casterRef, CasterStateComponent.getComponentType());
-            return;
-        }
+        var casterState = buffer.ensureAndGetComponent(casterRef, CasterStateComponent.getComponentType());
 
         HexCastStore casts = store.getResource(HexCastStore.getResourceType());
         String slotKey = context.getCastSlotKey();

@@ -75,7 +75,6 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.component.Conju
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.system.ConjureConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.DisguiseGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.handler.DisguiseConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.DomainAuraConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.DomainConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.DomainGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.component.DomainZoneComponent;
@@ -117,6 +116,7 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.ScaleGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.handler.ScaleConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.ShatterGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
+import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.system.ShatterTeardownSystem;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.interaction.HexShatterBounceInteraction;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.interaction.HexShatterHitInteraction;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.interaction.HexShatterMissInteraction;
@@ -541,6 +541,7 @@ public class HexCorePlugin {
                 entityStoreRegistry.registerSystem(new FortifyWardDamageSystem());
 
                 entityStoreRegistry.registerSystem(new InvisibilityDamageSystem());
+                entityStoreRegistry.registerSystem(new ShatterTeardownSystem());
 
                 entityStoreRegistry.registerSystem(new ContextForceExitSystem.OnDeath());
                 entityStoreRegistry.registerSystem(new ContextForceExitSystem.OnUnload());
@@ -593,7 +594,6 @@ public class HexCorePlugin {
                 ConstructRegistry.register(ConcentrationGlyph.TYPE, new ConcentrationConstructHandler());
                 ConstructRegistry.register(WardGlyph.TYPE, new WardConstructHandler());
                 ConstructRegistry.register(DomainGlyph.TYPE, new DomainConstructHandler());
-                ConstructRegistry.register(DomainGlyph.AURA_ID, new DomainAuraConstructHandler());
                 ConstructRegistry.register(GlaciateGlyph.TYPE, new GlaciateConstructHandler());
                 ConstructRegistry.register(ArcGlyph.TYPE, new ArcConstructHandler());
                 ConstructRegistry.register(AreaGlyph.TYPE, new AreaConstructHandler());

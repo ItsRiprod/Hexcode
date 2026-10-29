@@ -42,8 +42,8 @@ public final class HexAppearanceService {
         if (appearance == null) {
             appearance = capture(buffer, ref);
             if (appearance == null) return false;
-            buffer.putComponent(ref, HexAppearanceComponent.getComponentType(), appearance);
         }
+        buffer.putComponent(ref, HexAppearanceComponent.getComponentType(), appearance);
 
         appearance.putLayer(layerId, layer.withSequence(SEQUENCE.incrementAndGet()));
         return apply(buffer, ref, appearance);

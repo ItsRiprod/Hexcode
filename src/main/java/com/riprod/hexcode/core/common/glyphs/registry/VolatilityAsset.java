@@ -6,7 +6,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 
 public class VolatilityAsset {
 
-    private float instantCost = 0.0f;
+    private float instantCost = 1.0f;
     // legacy default matching the old hardcoded dt*0.15f used in every construct handler
     private float drainPerSecond = 0.15f;
 

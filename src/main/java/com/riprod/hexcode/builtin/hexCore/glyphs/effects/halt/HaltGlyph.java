@@ -74,6 +74,11 @@ public class HaltGlyph extends GlyphAsset {
                 glyph.readSlot(HaltGlyphSlots.DURATION, hexContext),
                 getSlot(HaltGlyphSlots.DURATION));
 
+        if (duration > 0) {
+            HexConstructSpawner.abortExisting(accessor, ref, HaltGlyph.TYPE);
+        }
+
+        var spawned = false;
         try {
             if (VelocityUtil.isPhysicsTicked(ref, accessor)) {
                 StandardPhysicsProvider physics = accessor.getComponent(ref,
@@ -91,8 +96,15 @@ public class HaltGlyph extends GlyphAsset {
             }
 
             if (duration > 0) {
-                HexConstructSpawner.applyWithState(accessor, ref, hexContext, glyph, HaltGlyph.TYPE,
-                        new HaltState((float) duration, effectId, glyph.getNextLinks()));
+                var applied = VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId,
+                        (float) duration, OverlapBehavior.OVERWRITE);
+
+                spawned = HexConstructSpawner.applyWithState(accessor, ref, hexContext, glyph, HaltGlyph.TYPE,
+                        new HaltState((float) duration, applied ? effectId : null, glyph.getNextLinks())) != null;
+                if (!spawned) {
+                    HaltConstructHandler.release(accessor, ref, applied ? effectId : null);
+                    return;
+                }
 
                 Slot immediate = glyph.getSlot(HaltGlyphSlots.IMMEDIATE);
                 if (immediate != null && immediate.getLinks().length > 0) {
@@ -102,17 +114,21 @@ public class HaltGlyph extends GlyphAsset {
                 }
             }
 
-            if (duration > 0) {
-                VfxUtil.applyBoundedEffect(hexContext, ref, glyph, effectId,
-                        (float) duration, OverlapBehavior.OVERWRITE);
-            }
-
             TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
             if (tc != null) {
                 HaltStyle.render(this, tc.getPosition(), hexContext, accessor);
             }
         } catch (Exception e) {
-            LOGGER.atWarning().log("halt: could not halt entity: %s", e.getMessage());
+            if (spawned) {
+                LOGGER.atWarning().log("halt: post-spawn step failed: %s", e.getMessage());
+                return;
+            }
+            if (duration > 0) {
+                HaltConstructHandler.release(accessor, ref, effectId);
+            }
+            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
+                    "Could not halt entity", e);
+            return;
         }
 
         if (duration <= 0) {

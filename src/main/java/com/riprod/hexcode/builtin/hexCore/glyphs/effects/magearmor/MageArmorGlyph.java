@@ -13,7 +13,6 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.magearmor.component.MagicHealthComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ElementSupport;
-import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -51,19 +50,16 @@ public class MageArmorGlyph extends GlyphAsset {
         float duration = HexVarUtil.numberOrSlotDefault(
                 durationVar, getSlot(MageArmorGlyphSlots.DURATION)).floatValue();
 
-        String effectId = statusEffect;
+        HexConstructSpawner.abortExisting(accessor, target, MageArmorGlyph.TYPE);
+
         accessor.putComponent(target, MagicHealthComponent.getComponentType(),
                 new MagicHealthComponent());
-        ElementSupport.applyStatus(hexContext, target, glyph, effectId, duration);
+        var applied = ElementSupport.applyStatus(hexContext, target, glyph, statusEffect, duration);
 
-        MageArmorState existing = ConstructStateUtil.findState(
-                accessor, target, MageArmorGlyph.TYPE, MageArmorState.class);
-        if (existing != null) {
-            existing.refresh(duration, glyph.getNextLinks());
-        } else {
-            MageArmorState state = new MageArmorState(effectId, duration, glyph.getNextLinks());
-            HexConstructSpawner.applyWithState(
-                    accessor, target, hexContext, glyph, MageArmorGlyph.TYPE, state);
+        var state = new MageArmorState(applied ? statusEffect : null, duration, glyph.getNextLinks());
+        if (HexConstructSpawner.applyWithState(
+                accessor, target, hexContext, glyph, MageArmorGlyph.TYPE, state) == null) {
+            return;
         }
 
         Slot immediate = glyph.getSlot(MageArmorGlyphSlots.IMMEDIATE);

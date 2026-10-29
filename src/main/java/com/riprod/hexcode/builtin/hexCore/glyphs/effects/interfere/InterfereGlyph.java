@@ -7,6 +7,7 @@ import org.joml.Vector3d;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
@@ -25,6 +26,8 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public class InterfereGlyph extends GlyphAsset {
     public static final String TYPE = "Interfere";
+
+    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -56,6 +59,7 @@ public class InterfereGlyph extends GlyphAsset {
                 InterfereStyle.renderHijack(this, pos, hexContext, accessor);
             }
         }
+        hexContext.endBranch();
     }
 
     private int hijackConstruct(HexEffectsComponent construct, Ref<EntityStore> ref,
@@ -78,12 +82,13 @@ public class InterfereGlyph extends GlyphAsset {
                     ConstructSplicer.VariablePolicy.PREFER_CASTER,
                     0f);
 
+            construct.removeEffect(target.getConstructId());
             try {
                 invokeOnEnd(handler, target, ctx);
             } catch (Exception e) {
+                LOGGER.atWarning().log("interfere: hijacked construct onEnd failed: %s", e.getMessage());
+                target.getHexContext().endBranch();
             }
-
-            construct.removeEffect(target.getConstructId());
             hijacked++;
         }
 
