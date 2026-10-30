@@ -19,6 +19,27 @@ Add.b.description=Second operand
 Add.Next.name=Next
 Add.Next.description=The next glyph in the execution chain
 
+Arccos.name=Arccos
+Arccos.description=Arccosine of A (radians)
+Arccos.a.name=A
+Arccos.a.description=Value from -1 to 1
+Arccos.Next.name=Next
+Arccos.Next.description=The next glyph in the execution chain
+
+Arcsin.name=Arcsin
+Arcsin.description=Arcsine of A (radians)
+Arcsin.a.name=A
+Arcsin.a.description=Value from -1 to 1
+Arcsin.Next.name=Next
+Arcsin.Next.description=The next glyph in the execution chain
+
+Arctan.name=Arctan
+Arctan.description=Arctangent of A (radians)
+Arctan.a.name=A
+Arctan.a.description=Value to take the arctangent of
+Arctan.Next.name=Next
+Arctan.Next.description=The next glyph in the execution chain
+
 Ceiling.name=Ceiling
 Ceiling.description=Rounds A up to the nearest whole number.
 Ceiling.a.name=A

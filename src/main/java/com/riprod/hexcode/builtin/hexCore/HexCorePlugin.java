@@ -156,6 +156,9 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.interactio
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.system.ProjectileConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.absolute.AbsoluteGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.add.AddGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.arccos.ArccosGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.arcsin.ArcsinGlyph;
+import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.arctan.ArctanGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utils.BaseGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.ceiling.CeilingGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.color.ColorGlyph;
@@ -291,6 +294,9 @@ public class HexCorePlugin {
                 GlyphAsset.register(SinGlyph.class, SinGlyph.TYPE, SinGlyph::new);
                 GlyphAsset.register(CosGlyph.class, CosGlyph.TYPE, CosGlyph::new);
                 GlyphAsset.register(TanGlyph.class, TanGlyph.TYPE, TanGlyph::new);
+                GlyphAsset.register(ArcsinGlyph.class, ArcsinGlyph.TYPE, ArcsinGlyph::new);
+                GlyphAsset.register(ArccosGlyph.class, ArccosGlyph.TYPE, ArccosGlyph::new);
+                GlyphAsset.register(ArctanGlyph.class, ArctanGlyph.TYPE, ArctanGlyph::new);
                 GlyphAsset.register(AbsoluteGlyph.class, AbsoluteGlyph.TYPE, AbsoluteGlyph::new);
                 GlyphAsset.register(FloorGlyph.class, FloorGlyph.TYPE, FloorGlyph::new);
                 GlyphAsset.register(CeilingGlyph.class, CeilingGlyph.TYPE, CeilingGlyph::new);

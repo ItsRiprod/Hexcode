@@ -1,0 +1,30 @@
+{
+  "Type": "Arcsin",
+  "Title": "hexcode.glyphs.Arcsin.name",
+  "Description": "hexcode.glyphs.Arcsin.description",
+  "BasePower": 0,
+  "ManaConsumption": 0,
+  "ShapeStructure": [
+    { "Parent": "Triangle", "StatContribution": 0 },
+    { "Parent": "Less", "RelativeSize": 0.8, "StatContribution": 0 },
+    { "Parent": "Antiline", "RelativeSize": 0.6, "StatContribution": 0 }
+  ],
+  "Slots": {
+    "A": {
+      "Type": "Input",
+      "Parent": "Input",
+      "Label": "hexcode.glyphs.Arcsin.a.name",
+      "Description": "hexcode.glyphs.Arcsin.a.description",
+      "DefaultValue": 0
+    },
+    "Next": {
+      "Type": "Next",
+      "Parent": "Next",
+      "Label": "hexcode.glyphs.Arcsin.Next.name",
+      "Description": "hexcode.glyphs.Arcsin.Next.description"
+    }
+  },
+  "Volatility": {
+    "InstantCost": 0.1,
+    "DrainPerSecond": 0.0}
+}
