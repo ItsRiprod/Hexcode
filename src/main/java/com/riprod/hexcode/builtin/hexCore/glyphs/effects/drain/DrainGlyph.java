@@ -96,7 +96,7 @@ public class DrainGlyph extends GlyphAsset {
             return;
         }
 
-        Ref<EntityStore> drainCaster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> drainCaster = hexContext.getRootRef();
         if (!HexProtection.canAffectEntity(accessor.getExternalData().getWorld(), drainCaster, accessor, targetRef)) {
             HexProtection.notifyBlocked(drainCaster, accessor, getId());
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
@@ -124,7 +124,7 @@ public class DrainGlyph extends GlyphAsset {
             UUIDComponent srcUuid = hexContext.getAccessor().getComponent(
                     targetRef, UUIDComponent.getComponentType());
             UUIDComponent casterUuid = hexContext.getAccessor().getComponent(
-                    hexContext.getCasterRef(accessor), UUIDComponent.getComponentType());
+                    hexContext.getRootRef(), UUIDComponent.getComponentType());
             if (srcUuid == null || casterUuid == null
                     || !srcUuid.getUuid().equals(casterUuid.getUuid())) {
                 HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
@@ -133,7 +133,7 @@ public class DrainGlyph extends GlyphAsset {
         }
 
         HexVar destVar = glyph.readSlot(DrainGlyphSlots.DESTINATION, hexContext);
-        Ref<EntityStore> destRef = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> destRef = hexContext.getRootRef();
         if (destVar instanceof EntityVar destEntityVar) {
             Ref<EntityStore> resolved = destEntityVar.getRef(hexContext.getAccessor());
             if (resolved != null && resolved.isValid())

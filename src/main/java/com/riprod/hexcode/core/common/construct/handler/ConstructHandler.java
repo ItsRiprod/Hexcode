@@ -42,7 +42,6 @@ public interface ConstructHandler<S extends ConstructState> {
 
     default boolean drainSustain(float dt, HexStatus<S> status) {
         VolatilityComponent tracker = status.getHexContext().volatility();
-        if (tracker == null) return true;
         float rate = resolveDrainRate(status);
         if (rate > 0f) {
             if (tracker.consume(dt * rate) <= 0f) return false;

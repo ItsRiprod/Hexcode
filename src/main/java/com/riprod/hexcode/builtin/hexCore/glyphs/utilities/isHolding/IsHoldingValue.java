@@ -18,7 +18,7 @@ public class IsHoldingValue extends GlyphAsset {
 
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
-        Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
+        Ref<EntityStore> casterRef = hexContext.getRootRef();
         if (casterRef == null || !casterRef.isValid() || hexContext.getAccessor() == null) {
             return new NumberVar(0.0);
         }

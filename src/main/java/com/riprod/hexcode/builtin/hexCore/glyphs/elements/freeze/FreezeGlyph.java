@@ -50,7 +50,7 @@ public class FreezeGlyph extends ElementGlyphAsset {
             return;
         }
 
-        Ref<EntityStore> caster = hexContext.getCasterRef(hexContext.getAccessor());
+        Ref<EntityStore> caster = hexContext.getRootRef();
         if (!HexProtection.canAffectEntity(hexContext.getAccessor().getExternalData().getWorld(),
                 caster, hexContext.getAccessor(), target)) {
             HexProtection.notifyBlocked(caster, hexContext.getAccessor(), getId());

@@ -46,7 +46,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
         ensnare.incrementElapsed(dt);
         if (ensnare.getElapsedSeconds() >= ensnare.getDurationSeconds()) return true;
 
-        processDamage(ensnare, status, ctx, status.getHexContext().getCasterRef(ctx.getBuffer()));
+        processDamage(ensnare, status, ctx, status.getHexContext().getRootRef());
         drainSustain(dt, status);
         return false;
     }

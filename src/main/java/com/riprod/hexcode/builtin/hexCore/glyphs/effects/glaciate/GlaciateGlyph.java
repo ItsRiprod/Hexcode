@@ -160,7 +160,7 @@ public class GlaciateGlyph extends GlyphAsset {
                                 new GlaciateComponent(damageRadius, damageMultiplier,
                                                 duration));
 
-                GlaciatePhysicsConfig.INSTANCE.apply(holder, hexContext.getCasterRef(accessor),
+                GlaciatePhysicsConfig.INSTANCE.apply(holder, hexContext.getRootRef(),
                                 new Vector3d(), accessor, false);
 
                 Ref<EntityStore> iceRef = accessor.addEntity(holder, AddReason.SPAWN);

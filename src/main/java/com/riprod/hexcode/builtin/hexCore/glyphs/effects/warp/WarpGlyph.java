@@ -45,7 +45,7 @@ public class WarpGlyph extends GlyphAsset {
         if (destInput == null)
             destInput = hexContext.getDefaultVariable();
         var accessor = hexContext.getAccessor();
-        Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> casterRef = hexContext.getRootRef();
         if (destInput != null && casterRef != null && casterRef.isValid()) {
             Vector3d destination = destInput.position(accessor);
             TransformComponent tc = accessor.getComponent(

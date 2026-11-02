@@ -58,7 +58,7 @@ public final class ConstructSplicer {
         mergeVariables(targetCtx, caster.getVariables(), varPolicy);
 
         VolatilityComponent targetTracker = targetCtx.volatility();
-        if (targetTracker != null && donationAmount > 0f) {
+        if (donationAmount > 0f) {
             targetTracker.add(donationAmount);
         }
 

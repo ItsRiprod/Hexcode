@@ -1,18 +1,27 @@
 package com.riprod.hexcode.api.imbuement;
 
 import com.hypixel.hytale.logger.HytaleLogger;
+import org.joml.Vector3d;
 import org.joml.Vector3i;
+import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.modules.block.BlockModule;
 import com.riprod.hexcode.utils.BlockAccess;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.core.common.execution.cast.HexCast;
-import com.riprod.hexcode.core.common.execution.root.BlockHexRoot;
+import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastOriginComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastStyleComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.DefaultVariableComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.ManaSourceComponent;
 import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
-import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastHolder;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
@@ -45,7 +54,10 @@ public final class ImbuedBlockActivator {
     }
 
     @Nonnull
-    public static ActivationOutcome tryConsume(@Nonnull World world, @Nonnull Vector3i blockPos) {
+    public static ActivationOutcome tryConsume(@Nonnull World world, @Nonnull Vector3i blockPos,
+            @Nullable Ref<EntityStore> root, @Nonnull CommandBuffer<EntityStore> buffer) {
+        if (root == null || !root.isValid()) return ActivationOutcome.noHex();
+
         ImbuedBlockComponent comp = BlockModule.getComponent(
                 ImbuedBlockComponent.getComponentType(), world,
                 blockPos.x, blockPos.y, blockPos.z);
@@ -77,36 +89,49 @@ public final class ImbuedBlockActivator {
         }
 
         ImbuementData baseSnapshot = base.copy();
-        BlockHexRoot hexRoot = new BlockHexRoot(blockPos, capacity);
-        HexCast tracker = new HexCast();
-        tracker.volatility().init(hexRoot.resolveVolatility(), 1.0f, 1.0f);
-        HexContext context = new HexContext(hex, 0f, hexRoot, null, tracker);
+        var holder = new CastHolder(root);
 
         ImbuementProfileAsset profile = resolveProfile(blockType);
         HexConfigAsset profileDefaults = profile != null ? profile.getDefaults() : null;
-        if (profileDefaults != null) profileDefaults.applyTo(context);
-        if (essence != null) applyEssence(context, essence);
-        HexConfigAsset overrides = base.getOverrides();
-        if (overrides != null) overrides.applyTo(context);
-        if (context.getStyle() == null) context.setStyle(HexStyleAsset.empty());
-        context.setDefaultVariable(new BlockVar(blockPos));
+        if (profileDefaults != null) profileDefaults.queueOnto(holder, buffer);
 
-        try {
-            world.execute(() -> {
-                try {
-                    HexExecuter.cast(context, world.getEntityStore().getStore());
-                } catch (Exception e) {
-                    LOGGER.atSevere().log(
-                            "[hexcode] deferred block hex fire failed at %s: %s",
-                            blockPos, e.getMessage());
-                }
-            });
-        } catch (RuntimeException shuttingDown) {
-            LOGGER.atWarning().log(
-                    "[hexcode] block hex at %s dropped: world not accepting tasks",
-                    blockPos);
-            return new ActivationOutcome(ActivationStatus.EXECUTION_FAILED, baseSnapshot);
+        var stats = new VolatilityComponent();
+        stats.setInitial((float) capacity.getSlots() * capacity.getVolatilityPerSlot());
+        holder.overlay(VolatilityComponent.TYPE, stats);
+
+        if (essence != null) {
+            float vm = essence.getVolatilityMultiplier();
+            if (vm != 1.0f) {
+                holder.overlay(VolatilityComponent.TYPE, target ->
+                        target.setVolatilityMultiplier(target.getVolatilityMultiplier() * vm));
+            }
+            HexStyleAsset colors = essence.getColors();
+            if (colors != null) {
+                holder.overlay(CastStyleComponent.TYPE, target -> {
+                    HexStyleAsset style = target.mutable();
+                    if (colors.getPrimaryColor() != null) style.setPrimaryColor(colors.getPrimaryColor().clone());
+                    if (colors.getSecondaryColor() != null) style.setSecondaryColor(colors.getSecondaryColor().clone());
+                    style.setAlpha(colors.getAlphaOrDefault());
+                });
+            }
         }
+
+        HexConfigAsset overrides = base.getOverrides();
+        if (overrides != null) overrides.queueOnto(holder, buffer);
+
+        holder.put(CastHexComponent.TYPE, new CastHexComponent(hex));
+        holder.put(ManaSourceComponent.TYPE, ManaSourceComponent.free());
+        holder.put(CastOriginComponent.TYPE, new CastOriginComponent(
+                new Vector3d(blockPos.x + 0.5, blockPos.y + 0.5, blockPos.z + 0.5),
+                new Rotation3f(), new BlockVar(blockPos)));
+        holder.put(DefaultVariableComponent.TYPE, new DefaultVariableComponent(new BlockVar(blockPos)));
+
+        holder.overlay(CastPolicyComponent.TYPE, target -> {
+            target.setRequireMagicCharges(false);
+            target.setApplyVolatilityDecay(false);
+        });
+
+        HexExecuter.cast(holder, buffer);
 
         return new ActivationOutcome(status, baseSnapshot);
     }
@@ -123,21 +148,6 @@ public final class ImbuedBlockActivator {
         Item item = blockType.getItem();
         if (item == null) return null;
         return ImbuementProfileUtils.first(item.getCategories());
-    }
-
-    private static void applyEssence(@Nonnull HexContext ctx, @Nonnull EssenceAsset essence) {
-        float vm = essence.getVolatilityMultiplier();
-        VolatilityComponent tracker = ctx.volatility();
-        if (vm != 1.0f && tracker != null) {
-            tracker.setVolatilityMultiplier(tracker.getVolatilityMultiplier() * vm);
-        }
-        HexStyleAsset overlay = essence.getColors();
-        if (overlay != null) {
-            HexStyleAsset target = ctx.mutableStyle();
-            if (overlay.getPrimaryColor() != null) target.setPrimaryColor(overlay.getPrimaryColor().clone());
-            if (overlay.getSecondaryColor() != null) target.setSecondaryColor(overlay.getSecondaryColor().clone());
-            target.setAlpha(overlay.getAlphaOrDefault());
-        }
     }
 
     public static final class ActivationOutcome {

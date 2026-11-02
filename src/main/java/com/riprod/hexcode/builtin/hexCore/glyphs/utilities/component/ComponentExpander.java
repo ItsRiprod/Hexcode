@@ -1,23 +1,25 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.component;
 
 import java.util.HashSet;
+import java.util.function.Consumer;
 
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.api.execution.CastTransform;
+import com.riprod.hexcode.api.event.CastEvent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.slot.SlotGlyphSlots;
-import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 
-public class ComponentExpander implements CastTransform {
+public class ComponentExpander implements Consumer<CastEvent> {
 
     private static final int MAX_PASSES = 256;
 
     @Override
-    public void apply(HexContext context, ComponentAccessor<EntityStore> accessor) {
+    public void accept(CastEvent event) {
+        var context = event.getContext();
+        var accessor = context.getAccessor();
         var hex = context.getHex();
         if (hex == null) return;
 

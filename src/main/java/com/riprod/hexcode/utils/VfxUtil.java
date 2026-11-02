@@ -11,6 +11,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.modules.entity.EntityModule;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -127,6 +128,18 @@ public class VfxUtil {
     return primary ? glyphStyle.getPrimaryColor() : glyphStyle.getSecondaryColor();
   }
 
+  public static boolean playersInRange(Vector3d pos, ComponentAccessor<EntityStore> accessor) {
+    var playerSpatialResource = accessor.getResource(EntityModule.get().getPlayerSpatialResourceType());
+    var closest = playerSpatialResource.getSpatialStructure().closest(pos);
+    if (closest == null)
+      return false;
+    var transform = accessor.getComponent(closest, TransformComponent.getComponentType());
+    if (transform == null)
+      return false;
+    var range = ParticleUtil.DEFAULT_PARTICLE_DISTANCE;
+    return transform.getPosition().distanceSquared(pos) <= range * range;
+  }
+
   public static void particle(String systemId, Vector3d pos, ComponentAccessor<EntityStore> accessor) {
     ParticleUtil.spawnParticleEffect(systemId, pos, accessor);
   }
@@ -156,7 +169,7 @@ public class VfxUtil {
     if (glyphStyle == null)
       return;
     Color tint = resolveColor(overrides != null ? overrides.getPrimaryColor() : null, glyphStyle.getPrimaryColor());
-    if (resolveAlpha(overrides, glyphStyle) > 0f)
+    if (resolveAlpha(overrides, glyphStyle) > 0f && playersInRange(pos, accessor))
       spawnConfigured(glyphStyle.getPrimaryParticle(), pos, tint, PARTICLE_SCALE, accessor);
     if (glyphStyle.getPrimarySound() != null)
       sound(glyphStyle.getPrimarySound(), pos, resolveVolume(overrides, glyphStyle), accessor);
@@ -168,7 +181,7 @@ public class VfxUtil {
     if (glyphStyle == null)
       return;
     Color tint = resolveColor(overrides != null ? overrides.getPrimaryColor() : null, glyphStyle.getPrimaryColor());
-    if (resolveAlpha(overrides, glyphStyle) > 0f)
+    if (resolveAlpha(overrides, glyphStyle) > 0f && playersInRange(pos, accessor))
       spawnConfiguredDirected(glyphStyle.getPrimaryParticle(), pos, rotation, tint,
           PARTICLE_SCALE, accessor);
     if (glyphStyle.getPrimarySound() != null)
@@ -186,7 +199,7 @@ public class VfxUtil {
     if (glyphStyle == null)
       return;
     Color tint = resolveColor(overrides != null ? overrides.getSecondaryColor() : null, glyphStyle.getSecondaryColor());
-    if (resolveAlpha(overrides, glyphStyle) > 0f)
+    if (resolveAlpha(overrides, glyphStyle) > 0f && playersInRange(pos, accessor))
       spawnConfigured(glyphStyle.getSecondaryParticle(), pos, tint, PARTICLE_SCALE,
           accessor, recipients);
     if (glyphStyle.getSecondarySound() != null)
@@ -204,7 +217,7 @@ public class VfxUtil {
     if (glyphStyle == null)
       return;
     Color tint = resolveColor(overrides != null ? overrides.getSecondaryColor() : null, glyphStyle.getSecondaryColor());
-    if (resolveAlpha(overrides, glyphStyle) > 0f)
+    if (resolveAlpha(overrides, glyphStyle) > 0f && playersInRange(pos, accessor))
       spawnConfigured(glyphStyle.getTertiaryParticle(), pos, tint, PARTICLE_SCALE,
           accessor, recipients);
     if (glyphStyle.getTertiarySound() != null)
@@ -215,7 +228,7 @@ public class VfxUtil {
       @Nullable ModelParticle particle, @Nullable String soundId, Vector3d pos,
       ComponentAccessor<EntityStore> accessor) {
     HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
-    if (particle != null && resolveAlpha(overrides, glyphStyle) > 0f) {
+    if (particle != null && resolveAlpha(overrides, glyphStyle) > 0f && playersInRange(pos, accessor)) {
       Color tint = resolveColor(overrides != null ? overrides.getPrimaryColor() : null,
           glyphStyle != null ? glyphStyle.getPrimaryColor() : null);
       spawnConfigured(particle, pos, tint, PARTICLE_SCALE, accessor);
@@ -243,7 +256,7 @@ public class VfxUtil {
         : (glyphStyle != null ? glyphStyle.getStyleParticle() : null);
     if (particle == null)
       return;
-    if (resolveAlpha(overrides, glyphStyle) <= 0f)
+    if (resolveAlpha(overrides, glyphStyle) <= 0f || !playersInRange(pos, accessor))
       return;
     Color tint = resolveColor(
         overrides != null ? overrides.getPrimaryColor() : null,
@@ -320,6 +333,8 @@ public class VfxUtil {
 
   public static void particleAlongPath(String systemId, Vector3d source, Vector3d target,
       int count, ComponentAccessor<EntityStore> accessor) {
+    if (!playersInRange(source, accessor) && !playersInRange(target, accessor))
+      return;
     if (count < 1)
       count = 1;
     double phaseOffset = (double) flowPhase / (count * 4);
@@ -338,6 +353,8 @@ public class VfxUtil {
   public static void particleAlongPath(String systemId, Vector3d source, Vector3d target,
       int count, Color color, @Nullable Ref<EntityStore> playerRef,
       ComponentAccessor<EntityStore> accessor) {
+    if (!playersInRange(source, accessor) && !playersInRange(target, accessor))
+      return;
     if (count < 1)
       count = 1;
     double phaseOffset = (double) flowPhase / (count * 4);

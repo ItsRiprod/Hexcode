@@ -41,9 +41,9 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
         Vector3d halfCurrent = state.scaledExtents(state.getScale());
 
         VolatilityComponent volatility = status.getHexContext().volatility();
-        if (volatility != null && newBlocks > 0)
+        if (newBlocks > 0)
             volatility.consume((float) (newBlocks * state.getCostPerBlock()));
-        if (volatility != null && volatility.getCurrent() <= 0f)
+        if (volatility.getCurrent() <= 0f)
             return false;
 
         DebugComponent debug = ctx.getBuffer().getComponent(

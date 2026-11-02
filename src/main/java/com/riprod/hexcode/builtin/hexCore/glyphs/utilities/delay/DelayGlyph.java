@@ -128,7 +128,7 @@ public class DelayGlyph extends GlyphAsset {
             }
         }
         if (spawnPos == null) {
-            Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
+            Ref<EntityStore> casterRef = hexContext.getRootRef();
             if (casterRef != null && casterRef.isValid()) {
                 TransformComponent tc = accessor.getComponent(
                         casterRef, TransformComponent.getComponentType());
@@ -159,12 +159,10 @@ public class DelayGlyph extends GlyphAsset {
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(HeadRotation.getComponentType());
         new DelayPhysicsConfig(gravity).apply(holder,
-                hexContext.getCasterRef(accessor), new Vector3d(), accessor, false);
+                hexContext.getRootRef(), new Vector3d(), accessor, false);
 
         Ref<EntityStore> delayRef = accessor.addEntity(holder, AddReason.SPAWN);
 
-        if (hexContext.getHexRoot() != null) {
-            hexContext.addDependency(delayRef);
-        }
+        hexContext.addDependency(delayRef);
     }
 }

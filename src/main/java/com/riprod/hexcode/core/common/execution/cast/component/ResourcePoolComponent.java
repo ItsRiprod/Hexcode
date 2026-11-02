@@ -11,9 +11,10 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
-import com.riprod.hexcode.core.common.execution.cast.CastComponent;
-import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
 import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -21,16 +22,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 public final class ResourcePoolComponent implements CastComponent {
 
     public static final String SEED_SOURCE = "@initial";
-
-    private static CastComponentType<ResourcePoolComponent> componentType;
-
-    public static CastComponentType<ResourcePoolComponent> getComponentType() {
-        return componentType;
-    }
-
-    public static void setComponentType(CastComponentType<ResourcePoolComponent> type) {
-        componentType = type;
-    }
 
     static final class SourcePool {
         float pooled;
@@ -193,6 +184,12 @@ public final class ResourcePoolComponent implements CastComponent {
         return copy;
     }
 
+    @Nonnull
+    @Override
+    public ResourcePoolComponent branch() {
+        return this;
+    }
+
     public static final class Seeds implements CastOverlay<ResourcePoolComponent> {
 
         @Nullable
@@ -216,4 +213,7 @@ public final class ResourcePoolComponent implements CastComponent {
                 .add()
                 .build();
     }
+
+    public static final CastComponentType<ResourcePoolComponent> TYPE = HexComponentRegistry.register(
+            ResourcePoolComponent.class, "Resources", Seeds.CODEC, a -> new ResourcePoolComponent());
 }

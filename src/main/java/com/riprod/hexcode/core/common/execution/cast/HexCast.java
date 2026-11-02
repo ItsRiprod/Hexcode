@@ -1,124 +1,53 @@
 package com.riprod.hexcode.core.common.execution.cast;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
-import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolComponent;
-import com.riprod.hexcode.core.common.execution.root.HexRoot;
-import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 
 public final class HexCast {
 
-    public static final CastComponentRegistry REGISTRY = new CastComponentRegistry();
-
-    private static final CastComponent[] EMPTY = new CastComponent[0];
-
     private UUID executionId = UUID.randomUUID();
-    @Nullable
-    private Hex hex;
-    @Nullable
-    private HexRoot root;
+    private final Ref<EntityStore> rootRef;
     private final LongOpenHashSet activeBranches = new LongOpenHashSet();
     private long branchIdSeq = 0L;
-    @Nullable
-    private String slotKey;
     private boolean fizzleNotified;
-    private CastComponent[] components = EMPTY;
+    private final CastComponent[] components;
 
-    public HexCast() {
+    public HexCast(@Nonnull Ref<EntityStore> rootRef, @Nonnull CastComponent[] components) {
+        this.rootRef = rootRef;
+        this.components = components;
+    }
+
+    @Nonnull
+    public Ref<EntityStore> getRootRef() {
+        return rootRef;
     }
 
     @Nullable
     @SuppressWarnings("unchecked")
     public <T extends CastComponent> T get(@Nonnull CastComponentType<T> type) {
-        int index = type.getIndex();
-        return index < components.length ? (T) components[index] : null;
-    }
-
-    @Nonnull
-    @SuppressWarnings("unchecked")
-    public <T extends CastComponent> T getOrCreate(@Nonnull CastComponentType<T> type) {
-        int index = type.getIndex();
-        if (index >= components.length) {
-            components = Arrays.copyOf(components, index + 1);
-        }
-        CastComponent existing = components[index];
-        if (existing == null) {
-            existing = type.getRegistry().create(index);
-            components[index] = existing;
-        }
-        return (T) existing;
-    }
-
-    public void applyOverlay(@Nonnull CastComponentType<?> type, @Nonnull CastOverlay<?> overlay) {
-        CastComponent component = getOrCreate((CastComponentType) type);
-        ((CastOverlay) overlay).applyTo(component);
+        return (T) components[type.getIndex()];
     }
 
     public <T extends CastComponent> void put(@Nonnull CastComponentType<T> type, @Nonnull T component) {
-        int index = type.getIndex();
-        if (index >= components.length) {
-            components = Arrays.copyOf(components, index + 1);
+        var index = type.getIndex();
+        if (components[index] != null) {
+            throw new IllegalStateException("cast component " + type.getId()
+                    + " is already set; mutate the existing instance");
         }
         components[index] = component;
     }
 
-    @Nonnull
-    public VolatilityComponent volatility() {
-        return getOrCreate(VolatilityComponent.getComponentType());
-    }
-
-    @Nonnull
-    public CastPolicyComponent policy() {
-        return getOrCreate(CastPolicyComponent.getComponentType());
-    }
-
-    @Nullable
-    public ResourcePoolComponent resources() {
-        return get(ResourcePoolComponent.getComponentType());
-    }
-
-    @Nonnull
-    public ResourcePoolComponent mutableResources() {
-        return getOrCreate(ResourcePoolComponent.getComponentType());
-    }
-
     public UUID getExecutionId() {
         return executionId;
-    }
-
-    @Nullable
-    public Hex getHex() {
-        return hex;
-    }
-
-    public void setHex(@Nullable Hex hex) {
-        this.hex = hex;
-    }
-
-    @Nullable
-    public HexRoot getRoot() {
-        return root;
-    }
-
-    public void setRoot(@Nullable HexRoot root) {
-        this.root = root;
-    }
-
-    @Nullable
-    public String getSlotKey() {
-        return slotKey;
-    }
-
-    public void setSlotKey(@Nullable String slotKey) {
-        this.slotKey = slotKey;
     }
 
     public long openBranch() {
@@ -145,17 +74,14 @@ public final class HexCast {
 
     @Nonnull
     public HexCast copy() {
-        HexCast copy = new HexCast();
-        copy.executionId = this.executionId;
-        copy.hex = this.hex != null ? this.hex.clone() : null;
-        copy.root = this.root != null ? this.root.copy() : null;
-        copy.slotKey = this.slotKey;
-        copy.fizzleNotified = this.fizzleNotified;
-        copy.components = new CastComponent[this.components.length];
-        for (int i = 0; i < this.components.length; i++) {
-            CastComponent component = this.components[i];
-            copy.components[i] = component != null ? component.copy() : null;
+        var copiedComponents = new CastComponent[components.length];
+        for (int i = 0; i < components.length; i++) {
+            var component = components[i];
+            copiedComponents[i] = component != null ? component.copy() : null;
         }
+        var copy = new HexCast(rootRef, copiedComponents);
+        copy.executionId = this.executionId;
+        copy.fizzleNotified = this.fizzleNotified;
         return copy;
     }
 }

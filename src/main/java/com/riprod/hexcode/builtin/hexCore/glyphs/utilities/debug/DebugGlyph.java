@@ -40,7 +40,7 @@ public class DebugGlyph extends GlyphAsset {
     }
 
     private void dump(Glyph glyph, HexContext hexContext) {
-        Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
+        Ref<EntityStore> casterRef = hexContext.getRootRef();
         if (casterRef == null || !casterRef.isValid())
             return;
         if (hexContext.getAccessor() == null)
@@ -96,8 +96,6 @@ public class DebugGlyph extends GlyphAsset {
     private void notify(@Nullable Slot slot, boolean wired, PlayerRef pr, HexContext hexContext) {
         if (!wired) {
             VolatilityComponent tracker = hexContext.volatility();
-            if (tracker == null)
-                return;
             send(pr, Message.translation("hexcode.debugGlyph.notification.volatility")
                     .param("volatility", String.format("%.1f", tracker.getCurrent())), null);
             return;
@@ -198,8 +196,6 @@ public class DebugGlyph extends GlyphAsset {
     }
 
     private static String volatilityText(VolatilityComponent tracker) {
-        if (tracker == null)
-            return "-";
         return String.format("%.1f / %.1f", tracker.getCurrent(), tracker.getInitial());
     }
 

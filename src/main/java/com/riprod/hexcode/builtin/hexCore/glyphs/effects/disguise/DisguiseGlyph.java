@@ -89,7 +89,7 @@ public class DisguiseGlyph extends GlyphAsset {
             return;
         }
 
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> caster = hexContext.getRootRef();
         if (!HexProtection.canAffectEntity(accessor.getExternalData().getWorld(), caster, accessor, targetRef)) {
             HexProtection.notifyBlocked(caster, accessor, TYPE);
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);

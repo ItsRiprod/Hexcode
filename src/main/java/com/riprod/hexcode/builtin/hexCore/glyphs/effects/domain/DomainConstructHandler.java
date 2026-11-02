@@ -25,7 +25,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.component.DomainZoneComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.style.DomainStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
-import com.riprod.hexcode.core.common.execution.root.HexRoot;
+import com.riprod.hexcode.core.common.execution.cast.component.ManaSourceComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -72,11 +72,8 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
             return true;
         }
 
-        HexRoot root = status.getHexContext().getHexRoot();
-        if (root == null || !root.isAlive())
-            return true;
-        Ref<EntityStore> rootRef = root.getSourceRef(ctx.getBuffer());
-        if (rootRef == null || !rootRef.isValid())
+        var rootRef = status.getHexContext().getRootRef();
+        if (!rootRef.isValid())
             return true;
 
         Vector3d center = transform.getPosition();
@@ -115,7 +112,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
                 }
 
                 if (!previousOccupants.contains(entityId)) {
-                    if (!root.tryConsumeMana(zone.getTriggerDrainCost(), ctx.getBuffer()))
+                    if (!status.getHexContext().get(ManaSourceComponent.TYPE).tryConsume(zone.getTriggerDrainCost(), ctx.getBuffer()))
                         return true;
 
                     zone.incrementTriggerCount();

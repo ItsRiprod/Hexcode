@@ -16,7 +16,7 @@ public class SelfGlyph extends GlyphAsset {
     public static final String TYPE = "Self";
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
-        Ref<EntityStore> playerRef = hexContext.getCasterRef(hexContext.getAccessor());
+        Ref<EntityStore> playerRef = hexContext.getRootRef();
         if (playerRef == null || !playerRef.isValid())
             return null;
 

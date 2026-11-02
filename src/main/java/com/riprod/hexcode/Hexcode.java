@@ -41,7 +41,6 @@ public class Hexcode extends JavaPlugin {
     @Override
     protected void shutdown() {
         patchManager.shutdown();
-        HexCore.shutdown(this);
 
     }
 

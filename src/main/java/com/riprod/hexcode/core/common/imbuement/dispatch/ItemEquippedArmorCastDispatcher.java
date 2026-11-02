@@ -10,11 +10,13 @@ import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastSlotComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.DefaultVariableComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastHolder;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
-import com.riprod.hexcode.core.common.execution.context.HexContext;
-import com.riprod.hexcode.core.common.execution.root.PlayerHexRoot;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
@@ -24,7 +26,6 @@ import com.riprod.hexcode.core.common.imbuement.utils.ImbuementProfileUtils;
 import com.riprod.hexcode.core.common.imbuement.utils.ImbuementUtils;
 import com.riprod.hexcode.core.common.triggers.component.TriggerEvent;
 import com.riprod.hexcode.core.common.triggers.registry.Trigger;
-import com.riprod.hexcode.utils.SpellMana;
 
 public final class ItemEquippedArmorCastDispatcher implements CastRootDispatcher {
 
@@ -64,26 +65,25 @@ public final class ItemEquippedArmorCastDispatcher implements CastRootDispatcher
     private void fireOne(Trigger trigger, TriggerEvent event,
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> player, ItemStack stack,
             Hex hex, ImbuementData data, ImbuementProfileAsset profile) {
-        PlayerHexRoot hexRoot = new PlayerHexRoot(player, buffer);
-        float volatilityMax = ItemStatExtractor.extractVolatility(stack);
-        float baseMana = SpellMana.computeTotalMana(hex, buffer);
-        float resolvedPower = 1.0f + ItemStatExtractor.extractPower(stack);
-        HexCast tracker = new HexCast();
-        tracker.volatility().init(volatilityMax, 1.0f, resolvedPower);
-
-        HexContext context = new HexContext(hex, baseMana, hexRoot, null, tracker);
-
+        var holder = new CastHolder(player);
         HexConfigAsset profileDefaults = profile != null ? profile.getDefaults() : null;
-        if (profileDefaults != null) profileDefaults.applyTo(context);
-        HexConfigAsset overrides = data.getOverrides();
-        if (overrides != null) overrides.applyTo(context);
+        if (profileDefaults != null) profileDefaults.queueOnto(holder, buffer);
 
+        float volatilityMax = ItemStatExtractor.extractVolatility(stack);
+        var stats = new VolatilityComponent();
+        stats.setInitial(volatilityMax > 0f ? volatilityMax : -1f);
+        holder.overlay(VolatilityComponent.TYPE, stats);
+
+        HexConfigAsset overrides = data.getOverrides();
+        if (overrides != null) overrides.queueOnto(holder, buffer);
+
+        holder.put(CastHexComponent.TYPE, new CastHexComponent(hex));
         HexVar defaultVar = trigger.resolveDefaultVariable(event);
-        if (defaultVar != null) context.setDefaultVariable(defaultVar);
-        context.setCastSlotKey(trigger.getId());
+        if (defaultVar != null) holder.put(DefaultVariableComponent.TYPE, new DefaultVariableComponent(defaultVar));
+        holder.put(CastSlotComponent.TYPE, new CastSlotComponent(trigger.getId()));
 
         try {
-            HexExecuter.cast(context, buffer);
+            HexExecuter.cast(holder, buffer);
         } catch (Exception e) {
             LOGGER.atSevere().log("%s armor imbuement dispatch failed: %s", trigger.getId(), e.getMessage());
         }

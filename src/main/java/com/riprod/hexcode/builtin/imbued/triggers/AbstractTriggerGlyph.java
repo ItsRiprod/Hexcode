@@ -37,7 +37,7 @@ public abstract class AbstractTriggerGlyph extends GlyphAsset {
 
     protected Ref<EntityStore> resolveSubject(Glyph glyph, HexContext hexContext) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> caster = hexContext.getRootRef();
         HexVar slotZero = hexContext.getDefaultVariable();
         if (slotZero instanceof EntityVar ev) {
             Ref<EntityStore> r = ev.getRef(accessor);
@@ -50,7 +50,7 @@ public abstract class AbstractTriggerGlyph extends GlyphAsset {
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> caster = hexContext.getRootRef();
         if (caster == null || !caster.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED, "trigger has no caster");
             return;

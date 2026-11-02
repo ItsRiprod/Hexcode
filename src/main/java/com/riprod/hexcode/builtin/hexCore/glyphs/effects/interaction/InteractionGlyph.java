@@ -101,7 +101,7 @@ public class InteractionGlyph extends GlyphAsset {
             return;
         }
 
-        Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> casterRef = hexContext.getRootRef();
 
         Ref<EntityStore> sourceRef = null;
         if (anchor != InteractionAnchor.CASTER

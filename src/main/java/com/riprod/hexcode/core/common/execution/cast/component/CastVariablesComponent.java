@@ -6,21 +6,12 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.riprod.hexcode.core.common.execution.cast.CastComponent;
-import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public final class CastVariablesComponent implements CastComponent {
-
-    private static CastComponentType<CastVariablesComponent> componentType;
-
-    public static CastComponentType<CastVariablesComponent> getComponentType() {
-        return componentType;
-    }
-
-    public static void setComponentType(CastComponentType<CastVariablesComponent> type) {
-        componentType = type;
-    }
 
     private Map<String, HexVar> variables = new HashMap<>();
 
@@ -48,4 +39,13 @@ public final class CastVariablesComponent implements CastComponent {
         copy.variables = new HashMap<>(this.variables);
         return copy;
     }
+
+    @Nonnull
+    @Override
+    public CastVariablesComponent branch() {
+        return this;
+    }
+
+    public static final CastComponentType<CastVariablesComponent> TYPE = HexComponentRegistry.register(
+            CastVariablesComponent.class, "Variables", a -> new CastVariablesComponent());
 }

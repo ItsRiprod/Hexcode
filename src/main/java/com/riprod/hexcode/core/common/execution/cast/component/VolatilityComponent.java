@@ -5,35 +5,24 @@ import javax.annotation.Nonnull;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.riprod.hexcode.core.common.execution.cast.CastComponent;
-import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
 import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 
 public final class VolatilityComponent implements CastComponent, CastOverlay<VolatilityComponent> {
-
-    private static CastComponentType<VolatilityComponent> componentType;
-
-    public static CastComponentType<VolatilityComponent> getComponentType() {
-        return componentType;
-    }
-
-    public static void setComponentType(CastComponentType<VolatilityComponent> type) {
-        componentType = type;
-    }
 
     private float initial = -1f;
     private float current;
     private float volatilityMultiplier = 1.0f;
-    private float complexityMultiplier = 1.0f;
 
     public VolatilityComponent() {
     }
 
-    public void init(float initial, float volatilityMultiplier, float complexityMultiplier) {
+    public void init(float initial, float volatilityMultiplier) {
         this.initial = initial;
         this.current = initial;
         this.volatilityMultiplier = volatilityMultiplier;
-        this.complexityMultiplier = complexityMultiplier;
     }
 
     @Override
@@ -43,7 +32,6 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
             target.setCurrent(this.initial);
         }
         target.setVolatilityMultiplier(target.getVolatilityMultiplier() * this.volatilityMultiplier);
-        target.setComplexityMultiplier(target.getComplexityMultiplier() * this.complexityMultiplier);
     }
 
     public float getInitial() {
@@ -79,14 +67,6 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
         this.volatilityMultiplier = volatilityMultiplier;
     }
 
-    public float getComplexityMultiplier() {
-        return complexityMultiplier;
-    }
-
-    public void setComplexityMultiplier(float complexityMultiplier) {
-        this.complexityMultiplier = complexityMultiplier;
-    }
-
     @Nonnull
     @Override
     public VolatilityComponent copy() {
@@ -94,8 +74,13 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
         copy.initial = this.initial;
         copy.current = this.current;
         copy.volatilityMultiplier = this.volatilityMultiplier;
-        copy.complexityMultiplier = this.complexityMultiplier;
         return copy;
+    }
+
+    @Nonnull
+    @Override
+    public VolatilityComponent branch() {
+        return this;
     }
 
     public static final BuilderCodec<VolatilityComponent> CODEC = BuilderCodec
@@ -110,10 +95,8 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
                     c -> c.volatilityMultiplier)
             .documentation("Scales volatility consumed per glyph. Compounds with earlier layers.")
             .add()
-            .append(new KeyedCodec<>("ComplexityMultiplier", Codec.FLOAT),
-                    (c, v) -> c.complexityMultiplier = v,
-                    c -> c.complexityMultiplier)
-            .documentation("Scales spell power. Compounds with earlier layers.")
-            .add()
             .build();
+
+    public static final CastComponentType<VolatilityComponent> TYPE = HexComponentRegistry.register(
+            VolatilityComponent.class, "Volatility", CODEC, a -> new VolatilityComponent());
 }

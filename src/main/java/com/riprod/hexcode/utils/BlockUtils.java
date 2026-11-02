@@ -267,7 +267,7 @@ public class BlockUtils {
     public static void moveToDestination(HexVar var, Vector3d dest, World world, HexContext hexContext,
             String glyphName) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> caster = hexContext.getRootRef();
         if (var instanceof EntityVar entityVar) {
             Ref<EntityStore> entityRef = entityVar.getRef(accessor);
             if (entityRef == null || !entityRef.isValid())
@@ -305,7 +305,7 @@ public class BlockUtils {
 
     public static void swapPair(HexVar a, HexVar b, World world, HexContext hexContext, String glyphName) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> caster = hexContext.getRootRef();
         var posA = a.position(accessor);
         var posB = b.position(accessor);
         if (posA == null || posB == null)

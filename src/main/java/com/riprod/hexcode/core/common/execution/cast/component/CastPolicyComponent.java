@@ -6,21 +6,12 @@ import javax.annotation.Nullable;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.riprod.hexcode.core.common.execution.cast.CastComponent;
-import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
 import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 
 public final class CastPolicyComponent implements CastComponent {
-
-    private static CastComponentType<CastPolicyComponent> componentType;
-
-    public static CastComponentType<CastPolicyComponent> getComponentType() {
-        return componentType;
-    }
-
-    public static void setComponentType(CastComponentType<CastPolicyComponent> type) {
-        componentType = type;
-    }
 
     private boolean requireMagicCharges = true;
     private boolean consumeMana = true;
@@ -83,6 +74,12 @@ public final class CastPolicyComponent implements CastComponent {
         return copy;
     }
 
+    @Nonnull
+    @Override
+    public CastPolicyComponent branch() {
+        return this;
+    }
+
     public static final class Overlay implements CastOverlay<CastPolicyComponent> {
 
         @Nullable private Boolean requireMagicCharges;
@@ -130,4 +127,7 @@ public final class CastPolicyComponent implements CastComponent {
                 .add()
                 .build();
     }
+
+    public static final CastComponentType<CastPolicyComponent> TYPE = HexComponentRegistry.register(
+            CastPolicyComponent.class, "Policy", Overlay.CODEC, a -> new CastPolicyComponent());
 }

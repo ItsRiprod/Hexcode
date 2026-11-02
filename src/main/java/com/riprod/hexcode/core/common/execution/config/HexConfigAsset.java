@@ -2,6 +2,7 @@ package com.riprod.hexcode.core.common.execution.config;
 
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.assetstore.AssetExtraInfo;
@@ -17,12 +18,15 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
 import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
-import com.riprod.hexcode.core.common.execution.cast.HexCast;
-import com.riprod.hexcode.core.common.execution.context.HexContext;
-import com.riprod.hexcode.core.common.execution.root.HexRoot;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastStyleComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastHolder;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
@@ -41,7 +45,7 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
     @Nullable protected String styleId;
 
     @Nullable
-    public Hex getHex(ComponentAccessor<EntityStore> accessor, HexRoot hexRoot) {
+    protected Hex resolveHex(@Nonnull Ref<EntityStore> root, @Nonnull ComponentAccessor<EntityStore> accessor) {
         return null;
     }
 
@@ -51,21 +55,30 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
         return HexStyleAsset.getAssetMap().getAsset(this.styleId);
     }
 
-    public void applyTo(HexContext context) {
-        if (context == null) return;
+    public void queueOnto(@Nonnull CastHolder holder, @Nonnull ComponentAccessor<EntityStore> accessor) {
+        var hex = resolveHex(holder.getRoot(), accessor);
+        if (hex != null) holder.put(CastHexComponent.TYPE, new CastHexComponent(hex));
 
-        HexStyleAsset style = getStyle();
-        if (style != null) context.setStyle(style.clone());
+        if (styleId != null) holder.overlay(CastStyleComponent.TYPE, styleOverlay());
 
-        applyCastOverlays(context.cast());
+        if (hexStats == null || hexStats.isEmpty()) return;
+        for (var entry : hexStats.entrySet()) {
+            var type = HexComponentRegistry.getType(entry.getKey());
+            if (type != null) queue(holder, type, entry.getValue());
+        }
     }
 
-    private void applyCastOverlays(@Nullable HexCast cast) {
-        if (cast == null || hexStats == null || hexStats.isEmpty()) return;
-        for (Map.Entry<String, CastOverlay<?>> entry : hexStats.entrySet()) {
-            CastComponentType<?> type = HexCast.REGISTRY.getType(entry.getKey());
-            if (type != null) cast.applyOverlay(type, entry.getValue());
-        }
+    private CastOverlay<CastStyleComponent> styleOverlay() {
+        return target -> {
+            var style = getStyle();
+            if (style != null) target.set(style.clone());
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends CastComponent> void queue(CastHolder holder, CastComponentType<T> type,
+            CastOverlay<?> overlay) {
+        holder.overlay(type, (CastOverlay<T>) overlay);
     }
 
     public static AssetStore<String, HexConfigAsset, DefaultAssetMap<String, HexConfigAsset>> getAssetStore() {
@@ -93,7 +106,7 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
                 true);
 
         BASE_CODEC = BuilderCodec.abstractBuilder(HexConfigAsset.class)
-                .appendInherited(new KeyedCodec<>("HexStats", new CastOverlayMapCodec(HexCast.REGISTRY)),
+                .appendInherited(new KeyedCodec<>("HexStats", new CastOverlayMapCodec()),
                         (c, v) -> c.hexStats = v,
                         c -> c.hexStats,
                         (c, p) -> c.hexStats = p.hexStats)

@@ -55,7 +55,7 @@ public class SnapGlyph extends ElementGlyphAsset {
 
         DamageCause cause = DamageCause.getAssetMap().getAsset(damageCause);
         if (cause != null) {
-            Ref<EntityStore> caster = hexContext.getCasterRef(hexContext.getAccessor());
+            Ref<EntityStore> caster = hexContext.getRootRef();
             Damage.Source source = caster != null && caster.isValid()
                     ? new Damage.EntitySource(caster)
                     : new Damage.EnvironmentSource("Magic");

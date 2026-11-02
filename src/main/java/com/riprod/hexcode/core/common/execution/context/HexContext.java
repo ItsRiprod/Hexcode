@@ -2,7 +2,6 @@ package com.riprod.hexcode.core.common.execution.context;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -10,17 +9,22 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.cast.component.BranchVariablesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastDependenciesComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastManaComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastSlotComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastStyleComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastVariablesComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.DefaultVariableComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
-import com.riprod.hexcode.core.common.execution.root.HexRoot;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
@@ -30,30 +34,28 @@ import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 public class HexContext {
 
     @Nonnull private final HexCast cast;
-    @Nullable private HexStyleAsset style;
-    @Nullable private HexVar defaultVariable;
+    private final CastComponent[] components;
 
     private transient CommandBuffer<EntityStore> accessor;
-    @Nullable private transient Map<String, HexVar> localVariables;
     @Nullable private transient Deque<String> resolutionStack;
     private final transient long branchId;
 
-    public HexContext(Hex hex, float manaCost, HexRoot hexRoot, @Nullable HexStyleAsset style,
-            @Nonnull HexCast cast) {
+    public HexContext(@Nonnull HexCast cast, @Nonnull CastComponent[] components,
+            CommandBuffer<EntityStore> accessor) {
         this.cast = cast;
-        this.style = style;
-        cast.setHex(hex);
-        cast.setRoot(hexRoot);
-        cast.getOrCreate(CastManaComponent.getComponentType()).setCost(manaCost);
+        this.components = components;
+        this.accessor = accessor;
         this.branchId = cast.openBranch();
     }
 
     private HexContext(@Nonnull HexContext parent) {
         this.cast = parent.cast;
-        this.style = parent.style;
-        this.defaultVariable = parent.defaultVariable;
         this.accessor = parent.accessor;
-        this.localVariables = parent.localVariables;
+        this.components = new CastComponent[parent.components.length];
+        for (int i = 0; i < components.length; i++) {
+            var component = parent.components[i];
+            components[i] = component != null ? component.branch() : null;
+        }
         this.branchId = parent.cast.openBranch();
     }
 
@@ -77,6 +79,22 @@ public class HexContext {
     @Nullable
     public UUID getExecutionId() {
         return cast.getExecutionId();
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public <T extends CastComponent> T get(@Nonnull CastComponentType<T> type) {
+        var own = (T) components[type.getIndex()];
+        return own != null ? own : cast.get(type);
+    }
+
+    public <T extends CastComponent> void put(@Nonnull CastComponentType<T> type, @Nonnull T component) {
+        components[type.getIndex()] = component;
+    }
+
+    @Nonnull
+    public Ref<EntityStore> getRootRef() {
+        return cast.getRootRef();
     }
 
     public CommandBuffer<EntityStore> getAccessor() {
@@ -110,37 +128,26 @@ public class HexContext {
 
     @Nonnull
     public CastPolicyComponent policy() {
-        return cast.policy();
+        return get(CastPolicyComponent.TYPE);
     }
 
     public void addDependency(Ref<EntityStore> dependent) {
         if (dependent == null) return;
-        cast.getOrCreate(CastDependenciesComponent.getComponentType()).add(dependent);
-    }
-
-    @Nullable
-    public HexRoot getHexRoot() {
-        return cast.getRoot();
-    }
-
-    @Nullable
-    public Ref<EntityStore> getCasterRef(ComponentAccessor<EntityStore> accessor) {
-        HexRoot root = cast.getRoot();
-        return root != null ? root.getSourceRef(accessor) : null;
+        get(CastDependenciesComponent.TYPE).add(dependent);
     }
 
     @Nullable
     public Hex getHex() {
-        return cast.getHex();
+        return get(CastHexComponent.TYPE).getHex();
     }
 
     public Glyph getGlyph(String id) {
-        return cast.getHex().get(id);
+        return getHex().get(id);
     }
 
     @Nonnull
     public Map<String, HexVar> getVariables() {
-        return cast.getOrCreate(CastVariablesComponent.getComponentType()).all();
+        return get(CastVariablesComponent.TYPE).all();
     }
 
     public HexVar getVariable(String slot) {
@@ -148,62 +155,55 @@ public class HexContext {
     }
 
     public void setVariable(String slot, HexVar value) {
-        cast.getOrCreate(CastVariablesComponent.getComponentType()).put(slot, value);
+        get(CastVariablesComponent.TYPE).put(slot, value);
     }
 
     public void enterLocalScope() {
-        this.localVariables = this.localVariables == null
-                ? new HashMap<>(4)
-                : new HashMap<>(this.localVariables);
+        get(BranchVariablesComponent.TYPE).enterScope();
     }
 
     @Nullable
     public HexVar getOwnVariable(String glyphId) {
-        if (this.localVariables != null) {
-            HexVar local = this.localVariables.get(glyphId);
-            if (local != null) return local;
-        }
+        var local = get(BranchVariablesComponent.TYPE).get(glyphId);
+        if (local != null) return local;
         return getVariables().get(glyphId);
     }
 
     public void setOwnVariable(String glyphId, HexVar value) {
         HexVar stored = value == null ? null : value.copy();
-        if (this.localVariables != null) this.localVariables.put(glyphId, stored);
-        cast.getOrCreate(CastVariablesComponent.getComponentType()).put(glyphId, stored);
+        get(BranchVariablesComponent.TYPE).put(glyphId, stored);
+        get(CastVariablesComponent.TYPE).put(glyphId, stored);
     }
 
     @Nonnull
     public VolatilityComponent volatility() {
-        return cast.volatility();
+        return get(VolatilityComponent.TYPE);
     }
 
-    @Nullable
+    @Nonnull
     public ResourcePoolComponent resources() {
-        return cast.resources();
+        return get(ResourcePoolComponent.TYPE);
     }
 
     public float getResource(String id) {
-        ResourcePoolComponent pools = resources();
-        return pools != null ? pools.getResource(id) : 0f;
+        return resources().getResource(id);
     }
 
     public void addResource(String id, String source, float amount) {
-        cast.mutableResources().addResource(id, source, amount);
+        resources().addResource(id, source, amount);
     }
 
     public float consumeResource(String id, String spender, float cap) {
-        ResourcePoolComponent pools = resources();
-        return pools != null ? pools.consumeResource(id, spender, cap) : 0f;
+        return resources().consumeResource(id, spender, cap);
     }
 
     public Map<String, Float> getResources() {
-        ResourcePoolComponent pools = resources();
-        return pools != null ? pools.getResources() : Map.of();
+        return resources().getResources();
     }
 
     @Nonnull
     private CastManaComponent mana() {
-        return cast.getOrCreate(CastManaComponent.getComponentType());
+        return get(CastManaComponent.TYPE);
     }
 
     public float getManaMultiplier() {
@@ -222,27 +222,25 @@ public class HexContext {
         mana().setCost(manaCost);
     }
 
-    @Nullable
+    @Nonnull
     public HexStyleAsset getStyle() {
-        return style;
+        return get(CastStyleComponent.TYPE).get();
     }
 
-    public void setStyle(@Nullable HexStyleAsset style) {
-        this.style = style;
+    public void setStyle(@Nonnull HexStyleAsset style) {
+        get(CastStyleComponent.TYPE).set(style);
     }
 
     public HexStyleAsset mutableStyle() {
-        style = style == null ? HexStyleAsset.empty() : style.clone();
-        return style;
+        return get(CastStyleComponent.TYPE).mutable();
     }
 
     public HexColors getColors() {
         HexColors c = new HexColors();
-        if (style != null) {
-            if (style.getPrimaryColor() != null) c.setPrimaryColor(style.getPrimaryColor().clone());
-            if (style.getSecondaryColor() != null) c.setSecondaryColor(style.getSecondaryColor().clone());
-            c.setPrimaryAlpha(style.getAlpha());
-        }
+        var style = getStyle();
+        if (style.getPrimaryColor() != null) c.setPrimaryColor(style.getPrimaryColor().clone());
+        if (style.getSecondaryColor() != null) c.setSecondaryColor(style.getSecondaryColor().clone());
+        c.setPrimaryAlpha(style.getAlpha());
         return c;
     }
 
@@ -256,19 +254,16 @@ public class HexContext {
 
     @Nullable
     public HexVar getDefaultVariable() {
-        return defaultVariable;
+        return get(DefaultVariableComponent.TYPE).get();
     }
 
     public void setDefaultVariable(@Nullable HexVar defaultVariable) {
-        this.defaultVariable = defaultVariable == null ? null : defaultVariable.copy();
+        get(DefaultVariableComponent.TYPE).set(defaultVariable);
     }
 
     @Nullable
     public String getCastSlotKey() {
-        return cast.getSlotKey();
-    }
-
-    public void setCastSlotKey(@Nullable String castSlotKey) {
-        cast.setSlotKey(castSlotKey);
+        var slot = get(CastSlotComponent.TYPE);
+        return slot != null ? slot.get() : null;
     }
 }

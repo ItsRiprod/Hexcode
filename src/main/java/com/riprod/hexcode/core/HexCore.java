@@ -28,6 +28,22 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.utils.CraftingGlyphEditorSpawn;
 import com.riprod.hexcode.command.HexcodeCommand;
+import com.riprod.hexcode.api.event.CastEvent;
+import com.riprod.hexcode.api.event.GlyphEvent;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.component.BranchVariablesComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastOriginComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastSlotComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastStyleComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.DefaultVariableComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.ManaSourceComponent;
+import com.riprod.hexcode.core.common.execution.listener.CastBookTintListener;
+import com.riprod.hexcode.core.common.execution.listener.CastChargesApplyListener;
+import com.riprod.hexcode.core.common.execution.listener.CastChargesCheckListener;
+import com.riprod.hexcode.core.common.execution.listener.CastDecayListener;
+import com.riprod.hexcode.core.common.execution.listener.CastManaListener;
+import com.riprod.hexcode.core.common.execution.listener.GlyphCostListener;
 import com.riprod.hexcode.core.common.casting.registry.CastingStyleRegistry;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.construct.system.HexConstructTeardownSystem;
@@ -44,8 +60,6 @@ import com.riprod.hexcode.core.common.drawing.interactions.HexDrawMode;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.drawing.registry.TemplateAsset;
 import com.riprod.hexcode.core.common.effect.GlyphEffectSystem;
-import com.riprod.hexcode.core.common.execution.cast.CastRegistryProxy;
-import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.core.common.execution.cast.component.CastDependenciesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastManaComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
@@ -62,15 +76,7 @@ import com.riprod.hexcode.core.common.execution.interactions.HexDispel;
 import com.riprod.hexcode.core.common.execution.interactions.HexExecuteInteraction;
 import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
 import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
-import com.riprod.hexcode.core.common.execution.root.BlockHexRoot;
-import com.riprod.hexcode.core.common.execution.root.HexRoot;
-import com.riprod.hexcode.core.common.execution.root.PlayerHexRoot;
-import com.riprod.hexcode.core.common.execution.system.CastBookStyleSystem;
-import com.riprod.hexcode.core.common.execution.system.CastChargesSystem;
-import com.riprod.hexcode.core.common.execution.system.CastDecaySystem;
-import com.riprod.hexcode.core.common.execution.system.CastSpellPowerSystem;
 import com.riprod.hexcode.core.common.execution.system.CasterSpellTeardownSystem;
-import com.riprod.hexcode.core.common.execution.system.HexCastEventSystem;
 import com.riprod.hexcode.core.common.execution.system.HexExecutionTickSystem;
 import com.riprod.hexcode.core.common.execution.system.HexQueueDrainEventSystem;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
@@ -122,8 +128,6 @@ import com.riprod.hexcode.core.common.utilities.system.DebugTickSystem;
 import com.riprod.hexcode.interaction.PedestalInteraction;
 
 public class HexCore {
-    private static final CastRegistryProxy castRegistry = new CastRegistryProxy(HexCast.REGISTRY);
-
     public static void setup(JavaPlugin plugin) {
 
         registerCastComponents(plugin);
@@ -137,30 +141,22 @@ public class HexCore {
         registerCommands(plugin);
     }
 
-    public static void shutdown(JavaPlugin plugin) {
-        castRegistry.unregisterAll();
-
-    }
-
     private static void registerCastComponents(JavaPlugin plugin) {
-        VolatilityComponent.setComponentType(castRegistry.registerComponent(
-                VolatilityComponent.class, "Volatility",
-                VolatilityComponent::new, VolatilityComponent.CODEC));
-        ResourcePoolComponent.setComponentType(castRegistry.registerComponent(
-                ResourcePoolComponent.class, "Resources",
-                ResourcePoolComponent::new, ResourcePoolComponent.Seeds.CODEC));
-        CastPolicyComponent.setComponentType(castRegistry.registerComponent(
-                CastPolicyComponent.class, "Policy",
-                CastPolicyComponent::new, CastPolicyComponent.Overlay.CODEC));
-        GlyphBudgetComponent.setComponentType(castRegistry.registerComponent(
-                GlyphBudgetComponent.class, GlyphBudgetComponent::new));
-        CastDependenciesComponent.setComponentType(castRegistry.registerComponent(
-                CastDependenciesComponent.class, CastDependenciesComponent::new));
-        CastVariablesComponent.setComponentType(castRegistry.registerComponent(
-                CastVariablesComponent.class, CastVariablesComponent::new));
-        CastManaComponent.setComponentType(castRegistry.registerComponent(
-                CastManaComponent.class, "Mana",
-                CastManaComponent::new, CastManaComponent.CODEC));
+        HexComponentRegistry.requireLoaded(
+                VolatilityComponent.TYPE,
+                ResourcePoolComponent.TYPE,
+                CastPolicyComponent.TYPE,
+                CastManaComponent.TYPE,
+                GlyphBudgetComponent.TYPE,
+                CastDependenciesComponent.TYPE,
+                CastVariablesComponent.TYPE,
+                CastHexComponent.TYPE,
+                CastOriginComponent.TYPE,
+                ManaSourceComponent.TYPE,
+                CastStyleComponent.TYPE,
+                DefaultVariableComponent.TYPE,
+                BranchVariablesComponent.TYPE,
+                CastSlotComponent.TYPE);
     }
 
     @SuppressWarnings("null")
@@ -337,11 +333,6 @@ public class HexCore {
         entityStoreRegistry.registerSystem(new ObeliskBreakEvent());
         entityStoreRegistry.registerSystem(new DebugTickSystem());
         entityStoreRegistry.registerSystem(new GlyphEffectSystem());
-        entityStoreRegistry.registerSystem(new CastChargesSystem());
-        entityStoreRegistry.registerSystem(new CastDecaySystem());
-        entityStoreRegistry.registerSystem(new CastBookStyleSystem());
-        entityStoreRegistry.registerSystem(new CastSpellPowerSystem());
-        entityStoreRegistry.registerSystem(new HexCastEventSystem());
         entityStoreRegistry.registerSystem(new FireTriggerSystem());
         entityStoreRegistry.registerSystem(new SessionTickSystem());
         entityStoreRegistry.registerSystem(new SessionRecoverySystem());
@@ -418,9 +409,6 @@ public class HexCore {
         HexVar.CODEC.register("Position", PositionVar.class, PositionVar.CODEC);
         HexVar.CODEC.register("Number", NumberVar.class, NumberVar.CODEC);
 
-        HexRoot.CODEC.register("Player", PlayerHexRoot.class, PlayerHexRoot.CODEC);
-        HexRoot.CODEC.register("Block", BlockHexRoot.class, BlockHexRoot.CODEC);
-
         if (MemoriesPlugin.get() != null) {
             Memory.CODEC.register(GlyphMemory.ID, GlyphMemory.class, GlyphMemory.CODEC);
             MemoriesPlugin.get().registerMemoryProvider(new GlyphMemoryProvider());
@@ -446,6 +434,13 @@ public class HexCore {
     }
 
     private static void registerEvents(JavaPlugin plugin) {
+        var registry = plugin.getEventRegistry();
+        CastEvent.register(registry, (short) (EventPriority.EARLY.getValue() + 1), new CastChargesCheckListener());
+        CastEvent.register(registry, (short) (EventPriority.EARLY.getValue() + 2), new CastManaListener());
+        CastEvent.register(registry, EventPriority.NORMAL.getValue(), new CastDecayListener());
+        CastEvent.register(registry, (short) (EventPriority.NORMAL.getValue() + 1), new CastChargesApplyListener());
+        CastEvent.register(registry, EventPriority.LATE.getValue(), new CastBookTintListener());
+        GlyphEvent.registerAll(registry, EventPriority.NORMAL.getValue(), new GlyphCostListener());
     }
 
     private static void registerCommands(JavaPlugin plugin) {

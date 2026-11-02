@@ -10,7 +10,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.CraftingEvent;
 import com.riprod.hexcode.api.event.GlyphDrawnEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.api.execution.HexExecuter;
+import com.hypixel.hytale.event.EventPriority;
+import com.riprod.hexcode.api.event.CastEvent;
 import com.riprod.hexcode.builtin.hexCore.common.ContextForceExitSystem;
 import com.riprod.hexcode.builtin.hexCore.components.component.ComponentPasteCache;
 import com.riprod.hexcode.builtin.hexCore.components.system.ComponentCacheCleanupSystem;
@@ -319,7 +320,7 @@ public class HexCorePlugin {
                 GlyphAsset.register(OutputGlyph.class, OutputGlyph.TYPE, OutputGlyph::new);
                 GlyphAsset.register(SlotGlyph.class, SlotGlyph.TYPE, SlotGlyph::new);
                 GlyphAsset.register(ComponentGlyph.class, ComponentGlyph.TYPE, ComponentGlyph::new);
-                HexExecuter.registerCastTransform(new ComponentExpander());
+                CastEvent.register(plugin.getEventRegistry(), EventPriority.FIRST.getValue(), new ComponentExpander());
                 Glyph.registerPortSchemaSynthesizer(ComponentPorts::schema);
                 GlyphAsset.register(IsHoldingValue.class, IsHoldingValue.TYPE, IsHoldingValue::new);
                 GlyphAsset.register(OnPrimaryGlyph.class, OnPrimaryGlyph.TYPE, OnPrimaryGlyph::new);
@@ -586,7 +587,7 @@ public class HexCorePlugin {
                 ResourceType<EntityStore, GateStateResource> gateStateType = entityStoreRegistry
                                 .registerResource(GateStateResource.class, GateStateResource::new);
                 GateStateResource.setResourceType(gateStateType);
-                entityStoreRegistry.registerSystem(new CastGateListener());
+                CastEvent.register(plugin.getEventRegistry(), EventPriority.EARLY.getValue(), new CastGateListener());
                 entityStoreRegistry.registerSystem(new GlyphGateListener());
 
                 entityStoreRegistry.registerSystem(new ComponentCacheSystem());

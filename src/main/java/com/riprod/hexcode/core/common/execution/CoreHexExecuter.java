@@ -7,7 +7,7 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.api.event.GlyphExecuteEvent;
+import com.riprod.hexcode.api.event.GlyphEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
@@ -15,54 +15,11 @@ import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.core.common.hexes.component.Hex;
 
 public class CoreHexExecuter {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     private CoreHexExecuter() {
-    }
-
-    /**
-     * Handler for the post-gate execution after the ECS event is emitted and
-     * mutated.
-     * 
-     * Should not be called directly, but rather through the HexExecuter.
-     */
-    public static void runPostGate(HexContext context, CommandBuffer<EntityStore> buffer) {
-        context.updateRuntimeAccessors(buffer);
-
-        if (context.getHexRoot() == null) {
-            HexExecuter.fail(null, context, GlyphFizzleEvent.Reason.ERROR);
-            return;
-        }
-
-        if (context.policy().isConsumeMana() && !context.getHexRoot().tryConsumeMana(context.getManaCost(), buffer)) {
-            HexExecuter.fail(null, context, GlyphFizzleEvent.Reason.INSUFFICIENT_MANA);
-            return;
-        }
-
-        Hex hex = context.getHex();
-        if (hex == null) {
-            HexExecuter.fail(null, context, GlyphFizzleEvent.Reason.ERROR);
-            return;
-        }
-        String startingGlyph = hex.getFirstGlyphId();
-        if (startingGlyph == null) {
-            HexExecuter.fail(null, context, GlyphFizzleEvent.Reason.ERROR);
-            return;
-        }
-
-        HexVar defaultVar = context.getDefaultVariable();
-        if (defaultVar == null) {
-            defaultVar = context.getHexRoot().getRootVar(context);
-        }
-        if (defaultVar != null) {
-            context.setDefaultVariable(defaultVar);
-        }
-
-        continueExecution(List.of(startingGlyph), context);
     }
 
     /**
@@ -108,7 +65,7 @@ public class CoreHexExecuter {
             return false;
         }
 
-        HexExecutionQueue queue = accessor.getResource(HexExecutionQueue.getResourceType());
+        var queue = accessor.getResource(HexExecutionQueue.getResourceType());
         queue.enqueue(new HexExecutionQueue.PendingGlyph(nextGlyphs.get(0), hexContext));
         if (nextGlyphs.size() > 1) { // clones the ctx for each subsequent branch
             branchExecution(nextGlyphs.subList(1, nextGlyphs.size()), hexContext);
@@ -134,7 +91,7 @@ public class CoreHexExecuter {
         }
 
         HexExecutionQueue queue = accessor.getResource(HexExecutionQueue.getResourceType());
-        for (String nextNodeId : nextGlyphs) {
+        for (var nextNodeId : nextGlyphs) {
             queue.enqueue(new HexExecutionQueue.PendingGlyph(nextNodeId, hexContext.branch()));
         }
         return true;
@@ -147,19 +104,22 @@ public class CoreHexExecuter {
             HexExecuter.fail(null, hexContext, GlyphFizzleEvent.Reason.ERROR, "unresolved node: " + nodeId);
             return;
         }
-        HytaleServer.get().getEventBus().dispatchFor(GlyphExecuteEvent.class)
-                .dispatch(new GlyphExecuteEvent(nodeId, nextNode, hexContext));
         GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(nextNode.getGlyphId());
-        if (asset != null && !asset.isEnabled()) {
-            HexExecuter.fail(nextNode, hexContext, GlyphFizzleEvent.Reason.GLYPH_DISABLED);
-            return;
-        }
         if (asset == null) {
             HexExecuter.fail(nextNode, hexContext, GlyphFizzleEvent.Reason.NOT_IMPLEMENTED);
             return;
         }
+        if (!asset.isEnabled()) {
+            HexExecuter.fail(nextNode, hexContext, GlyphFizzleEvent.Reason.GLYPH_DISABLED);
+            return;
+        }
+        GlyphEvent event = new GlyphEvent(nextNode, asset, hexContext);
+        HytaleServer.get().getEventBus().dispatchFor(GlyphEvent.class).dispatch(event);
+        if (event.isCancelled()) {
+            return;
+        }
         try {
-            asset.execute0(nextNode, hexContext);
+            asset.execute(nextNode, hexContext);
         } catch (Exception e) {
             HexExecuter.fail(nextNode, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED, e);
         }

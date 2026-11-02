@@ -245,7 +245,7 @@ public class ConjureGlyph extends GlyphAsset {
                                         new HitboxCollision(collisionConfig));
                 }
 
-                ConjurePhysicsConfig.INSTANCE.apply(holder, hexContext.getCasterRef(hexContext.getAccessor()),
+                ConjurePhysicsConfig.INSTANCE.apply(holder, hexContext.getRootRef(),
                                 new Vector3d(0, 0, 0), hexContext.getAccessor(), false);
 
                 holder.addComponent(ConjureZoneComponent.getComponentType(), zoneComp);

@@ -1,66 +1,67 @@
 package com.riprod.hexcode.api.execution;
 
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.api.event.HexCastEvent;
+import com.riprod.hexcode.api.event.CastEvent;
 import com.riprod.hexcode.core.common.execution.CoreHexExecuter;
+import com.riprod.hexcode.core.common.execution.cast.CastAssembler;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastHolder;
 import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
+import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HexExecuter {
     private HexExecuter() {
     }
 
-    private static final List<CastTransform> CAST_TRANSFORMS = new CopyOnWriteArrayList<>();
+    public static void cast(CastHolder holder, CommandBuffer<EntityStore> buffer) {
+        HexComponentRegistry.freeze();
+        var root = holder.getRoot();
+        if (root == null || !root.isValid())
+            return;
 
-    public static void registerCastTransform(CastTransform transform) {
-        CAST_TRANSFORMS.add(transform);
-    }
+        var assembler = new CastAssembler(holder, buffer);
+        var hexComponent = assembler.get(CastHexComponent.TYPE);
+        if (assembler.isAborted() || hexComponent == null)
+            return;
+        var hex = hexComponent.getHex().clone();
+        hexComponent.setHex(hex);
+        HexUtils.validate(hex);
 
-    /**
-     * Casts a hex with the provided context and buffer. Invokes the hexCastEvent
-     * 
-     * 
-     * 
-     * @param context
-     * @param buffer
-     */
-    public static void cast(HexContext context, ComponentAccessor<EntityStore> buffer) {
-        if (buffer instanceof CommandBuffer<EntityStore> buff) {
-            context.updateRuntimeAccessors(buff);
+        var components = new CastComponent[HexComponentRegistry.size()];
+        for (var i = 0; i < components.length; i++) {
+            components[i] = assembler.get(HexComponentRegistry.getType(i));
+            if (assembler.isAborted())
+                return;
         }
 
-        if (context.getStyle() == null)
-            context.setStyle(HexStyleAsset.empty());
+        var cast = new HexCast(root, components);
+        var context = new HexContext(cast, components.clone(), buffer);
+        var casts = buffer.getResource(HexCastStore.getResourceType());
+        casts.register(cast);
 
-        HexCast cast = context.cast();
-        if (cast != null && cast.getHex() != null) {
-            cast.setHex(cast.getHex().clone());
-            for (CastTransform transform : CAST_TRANSFORMS) {
-                transform.apply(context, buffer);
-            }
-        }
-        HexCastStore casts = buffer.getResource(HexCastStore.getResourceType());
-        if (cast != null)
-            casts.register(cast);
-
-        HexCastEvent.Pre pre = new HexCastEvent.Pre(context);
-        buffer.invoke(pre);
-        if (pre.isCancelled()) {
-            if (cast != null)
-                casts.remove(cast.getExecutionId());
+        var event = new CastEvent(context);
+        HytaleServer.get().getEventBus().dispatchFor(CastEvent.class).dispatch(event);
+        if (event.isCancelled()) {
+            casts.remove(cast.getExecutionId());
             return;
         }
-        buffer.invoke(new HexCastEvent(context));
+
+        var first = context.getHex().getFirstGlyphId();
+        if (first == null) {
+            fail(null, context, GlyphFizzleEvent.Reason.ERROR);
+            return;
+        }
+        CoreHexExecuter.continueExecution(List.of(first), context);
     }
 
     public static void continueFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {

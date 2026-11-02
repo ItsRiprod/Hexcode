@@ -63,7 +63,7 @@ public class HaltGlyph extends GlyphAsset {
             return;
         }
 
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> caster = hexContext.getRootRef();
         if (!HexProtection.canAffectEntity(accessor.getExternalData().getWorld(), caster, accessor, ref)) {
             HexProtection.notifyBlocked(caster, accessor, getId());
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);

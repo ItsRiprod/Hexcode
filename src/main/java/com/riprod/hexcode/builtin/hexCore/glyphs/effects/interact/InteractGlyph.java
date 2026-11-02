@@ -113,9 +113,10 @@ public class InteractGlyph extends GlyphAsset {
         Vector3d targetPos = new Vector3d(blockPos.x + 0.5, blockPos.y + 0.5, blockPos.z + 0.5);
         InteractStyle.renderImpact(this, accessor, targetPos, hexContext);
 
-        ImbuedBlockActivator.ActivationOutcome outcome = ImbuedBlockActivator.tryConsume(world, blockPos);
+        ImbuedBlockActivator.ActivationOutcome outcome = ImbuedBlockActivator.tryConsume(world, blockPos,
+                hexContext.getRootRef(), accessor);
         if (!outcome.isReady()) {
-            triggerBlockInteraction(glyph, accessor, hexContext.getCasterRef(accessor), world, blockPos);
+            triggerBlockInteraction(glyph, accessor, hexContext.getRootRef(), world, blockPos);
         }
 
         glyph.writeOutput(new BlockVar(blockPos), hexContext);

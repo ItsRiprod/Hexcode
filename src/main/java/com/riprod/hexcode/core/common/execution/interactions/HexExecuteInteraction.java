@@ -14,15 +14,9 @@ import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInteraction;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastHolder;
 import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
-import com.riprod.hexcode.core.common.execution.context.HexContext;
-import com.riprod.hexcode.core.common.execution.root.PlayerHexRoot;
-import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
-import com.riprod.hexcode.core.common.hexes.utils.HexUtils;
-import com.riprod.hexcode.utils.SpellMana;
 
 public class HexExecuteInteraction extends SimpleInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -75,23 +69,9 @@ public class HexExecuteInteraction extends SimpleInteraction {
                 return;
             }
 
-            PlayerHexRoot hexRoot = new PlayerHexRoot(ref, buffer);
-            Hex hex = config.getHex(buffer, hexRoot);
-            if (hex == null) {
-                ctx.getState().state = InteractionState.Finished;
-                return;
-            }
-
-            Hex hexClone = hex.clone();
-            HexUtils.validate(hexClone);
-
-            float baseMana = SpellMana.computeTotalMana(hexClone, buffer);
-
-            HexContext context = new HexContext(hexClone, baseMana, hexRoot,
-                    HexStyleAsset.empty(), new HexCast());
-            config.applyTo(context);
-
-            HexExecuter.cast(context, buffer);
+            var holder = new CastHolder(ref);
+            config.queueOnto(holder, buffer);
+            HexExecuter.cast(holder, buffer);
             ctx.getState().state = InteractionState.Finished;
         } catch (Exception e) {
             LOGGER.atSevere().log("[hexcode] HexExecuteInteraction failed: %s", e.getMessage());

@@ -49,7 +49,6 @@ public class MagicHealthDamageSystem extends DamageEventSystem {
             HexStatus<?> armor = findMageArmor(buffer, ref);
             if (armor == null) return;
             VolatilityComponent stats = armor.getHexContext().volatility();
-            if (stats == null) return;
 
             float available = stats.getCurrent();
             if (available <= 0f) return;

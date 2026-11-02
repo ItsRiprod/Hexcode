@@ -122,7 +122,7 @@ public class PhaseGlyph extends GlyphAsset {
         String typeId = blockType.getId();
         int rotationIndex = BlockAccess.rotationIndex(world, pos);
 
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> caster = hexContext.getRootRef();
         if (!HexProtection.canModifyBlock(world, caster, accessor, pos, BlockAction.BREAK)) {
             HexProtection.notifyBlocked(caster, accessor, getId());
             HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);

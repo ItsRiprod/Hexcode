@@ -120,8 +120,6 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         if (asset == null) return true;
 
         VolatilityComponent tracker = hexContext.volatility();
-        if (tracker == null) return false;
-        if (hexContext.getHexRoot() == null) return true;
 
         var impact = asset.getVolatilityImpact();
         float intervalFactor = (float) (asset.getReferenceInterval()

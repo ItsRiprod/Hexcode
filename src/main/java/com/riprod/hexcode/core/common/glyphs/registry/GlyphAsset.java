@@ -33,11 +33,7 @@ import com.hypixel.hytale.codec.schema.metadata.ui.UIEditorSectionStart;
 import com.hypixel.hytale.codec.schema.metadata.ui.UISidebarButtons;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
-import com.riprod.hexcode.api.event.GlyphFizzleEvent;
-import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
-import com.riprod.hexcode.core.common.execution.cast.HexCast;
-import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolComponent;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -226,40 +222,6 @@ public abstract class GlyphAsset implements JsonAssetWithMap<String, DefaultAsse
             return 0f;
         return asset.getManaConsumption()
                 * ((1 - glyph.getEfficiency()) * 0.25f + 0.75f);
-    }
-
-    public void execute0(Glyph glyph, HexContext hexContext) {
-        HexCast cast = hexContext.cast();
-        if (cast == null) {
-            execute(glyph, hexContext);
-            return;
-        }
-        GlyphAsset asset = GlyphAsset.getAssetMap().getAsset(glyph.getGlyphId());
-
-        float volatilityCost = getVolatilityCost(glyph, hexContext, asset);
-        float currentVolatility = cast.volatility().consume(volatilityCost);
-        if (!hexContext.policy().isBypassVolatilityDepletion() && currentVolatility <= 0f) {
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.VOLATILITY_DEPLETED);
-            return;
-        }
-
-        if (asset != null) {
-            String source = glyph.getGlyphId();
-            for (ShapeAsset shape : asset.getShapes()) {
-                String resource = shape.getStatResource();
-                if (resource == null)
-                    continue;
-                float raw = Impact.scale(shape.getStatResourceImpact(), shape.getStatContribution());
-                if (raw <= 0f)
-                    continue;
-                ResourcePoolComponent pools = cast.mutableResources();
-                float effectiveness = GlyphCostUtil.contributionEffectiveness(
-                        pools.getBasis(resource, source));
-                pools.addResource(resource, source, raw * effectiveness);
-            }
-        }
-
-        execute(glyph, hexContext);
     }
 
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {

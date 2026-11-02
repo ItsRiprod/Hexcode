@@ -11,6 +11,7 @@ import com.hypixel.hytale.component.Resource;
 import com.hypixel.hytale.component.ResourceType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 
@@ -70,18 +71,21 @@ public final class HexCastStore implements Resource<EntityStore> {
         return tick;
     }
 
-    public int reclaimFinished() {
-        int removed = 0;
+    @Nonnull
+    public List<HexCast> reclaimFinished() {
+        List<HexCast> reclaimed = null;
         var it = entries.object2ObjectEntrySet()
                 .fastIterator();
         while (it.hasNext()) {
             HexCast cast = it.next().getValue().cast;
             if (isFinished(cast)) {
                 it.remove();
-                removed++;
+                if (reclaimed == null)
+                    reclaimed = new ArrayList<>(2);
+                reclaimed.add(cast);
             }
         }
-        return removed;
+        return reclaimed == null ? List.of() : reclaimed;
     }
 
     @Nonnull
@@ -115,13 +119,13 @@ public final class HexCastStore implements Resource<EntityStore> {
 
     @Nonnull
     private static HexCast end(@Nonnull HexCast cast) {
-        cast.volatility().setCurrent(0f);
+        cast.get(VolatilityComponent.TYPE).setCurrent(0f);
         return cast;
     }
 
     private static boolean isFinished(@Nullable HexCast cast) {
         return cast == null || cast.getActiveBranchCount() <= 0
-                || cast.volatility().getCurrent() <= 0f;
+                || cast.get(VolatilityComponent.TYPE).getCurrent() <= 0f;
     }
 
     @Nonnull

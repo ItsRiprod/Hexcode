@@ -140,7 +140,7 @@ public class ShatterGlyph extends GlyphAsset {
 
         Ref<EntityStore> parent = sourceVar instanceof EntityVar var
                 ? var.getRef(accessor)
-                : hexContext.getCasterRef(accessor);
+                : hexContext.getRootRef();
 
         int count = HexVarUtil.numberOrDefault(countVar, (double) defaultCount).intValue();
         if (count < 1)

@@ -125,7 +125,7 @@ public class ErodeGlyph extends GlyphAsset {
             return false;
 
         World world = accessor.getExternalData().getWorld();
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> caster = hexContext.getRootRef();
         if (!HexProtection.canAffectEntity(world, caster, accessor, ref)) {
             HexProtection.notifyBlocked(caster, accessor, getId());
             return false;
@@ -166,7 +166,7 @@ public class ErodeGlyph extends GlyphAsset {
         var blockType = BlockAccess.blockType(world, pos);
 
         if (!HexProtection.isBlockActionAllowed(world, BlockAction.BREAK, blockType)) {
-            HexProtection.notifyBlocked(hexContext.getCasterRef(accessor), accessor, getId());
+            HexProtection.notifyBlocked(hexContext.getRootRef(), accessor, getId());
             return;
         }
 
@@ -182,6 +182,6 @@ public class ErodeGlyph extends GlyphAsset {
 
         var cursor = new BlockAccess.Cursor(world);
         cursor.set(pos);
-        BlockUtils.damageBlock(cursor, hexContext.getCasterRef(accessor), accessor, damageScale);
+        BlockUtils.damageBlock(cursor, hexContext.getRootRef(), accessor, damageScale);
     }
 }

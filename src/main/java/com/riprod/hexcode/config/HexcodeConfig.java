@@ -43,6 +43,13 @@ public final class HexcodeConfig extends Config {
                     + "Work above this is deferred to a later tick, never dropped.")
             .addValidator(Validators.min(1))
             .add()
+            .append(new KeyedCodec<>("MaxGlyphNanosPerTick", Codec.LONG),
+                    (config, l) -> config.maxGlyphNanosPerTick = l,
+                    config -> config.maxGlyphNanosPerTick)
+            .documentation("Maximum wall-clock nanoseconds the glyph queue may spend in one tick. "
+                    + "Work past this budget is deferred to a later tick, never dropped.")
+            .addValidator(Validators.min(1L))
+            .add()
             .append(new KeyedCodec<>("MaxGlyphsPerCast", Codec.INTEGER),
                     (config, i) -> config.maxGlyphsPerCast = i,
                     config -> config.maxGlyphsPerCast)
@@ -70,7 +77,8 @@ public final class HexcodeConfig extends Config {
     private boolean respectPvp = true;
     private boolean respectClaims = true;
     private boolean allowNametagOverrides = true;
-    private int maxGlyphsPerTick = 512;
+    private int maxGlyphsPerTick = 1024;
+    private long maxGlyphNanosPerTick = 5_000_000L;
     private int maxGlyphsPerCast = 128;
     private int maxCastLifetimeTicks = 12000;
     private int maxActiveCastsPerWorld = 512;
@@ -97,6 +105,10 @@ public final class HexcodeConfig extends Config {
 
     public int getMaxGlyphsPerTick() {
         return maxGlyphsPerTick;
+    }
+
+    public long getMaxGlyphNanosPerTick() {
+        return maxGlyphNanosPerTick;
     }
 
     public int getMaxGlyphsPerCast() {

@@ -7,20 +7,11 @@ import javax.annotation.Nonnull;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.execution.cast.CastComponent;
-import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 
 public final class CastDependenciesComponent implements CastComponent {
-
-    private static CastComponentType<CastDependenciesComponent> componentType;
-
-    public static CastComponentType<CastDependenciesComponent> getComponentType() {
-        return componentType;
-    }
-
-    public static void setComponentType(CastComponentType<CastDependenciesComponent> type) {
-        componentType = type;
-    }
 
     private List<Ref<EntityStore>> dependents = new ArrayList<>();
 
@@ -47,4 +38,13 @@ public final class CastDependenciesComponent implements CastComponent {
         copy.dependents = new ArrayList<>(this.dependents);
         return copy;
     }
+
+    @Nonnull
+    @Override
+    public CastDependenciesComponent branch() {
+        return this;
+    }
+
+    public static final CastComponentType<CastDependenciesComponent> TYPE = HexComponentRegistry.register(
+            CastDependenciesComponent.class, "Dependencies", a -> new CastDependenciesComponent());
 }

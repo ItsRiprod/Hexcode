@@ -44,7 +44,7 @@ public class WardGlyph extends GlyphAsset {
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        Ref<EntityStore> casterRef = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> casterRef = hexContext.getRootRef();
         if (casterRef == null || !casterRef.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Caster not found");

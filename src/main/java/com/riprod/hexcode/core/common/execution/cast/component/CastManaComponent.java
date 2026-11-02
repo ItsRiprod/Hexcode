@@ -5,23 +5,15 @@ import javax.annotation.Nonnull;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.riprod.hexcode.core.common.execution.cast.CastComponent;
-import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
 import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
+import com.riprod.hexcode.utils.SpellMana;
 
 public final class CastManaComponent implements CastComponent, CastOverlay<CastManaComponent> {
 
     private static final float UNSET = -1f;
-
-    private static CastComponentType<CastManaComponent> componentType;
-
-    public static CastComponentType<CastManaComponent> getComponentType() {
-        return componentType;
-    }
-
-    public static void setComponentType(CastComponentType<CastManaComponent> type) {
-        componentType = type;
-    }
 
     private float cost = UNSET;
     private float multiplier = 1.0f;
@@ -66,6 +58,12 @@ public final class CastManaComponent implements CastComponent, CastOverlay<CastM
         return copy;
     }
 
+    @Nonnull
+    @Override
+    public CastManaComponent branch() {
+        return this;
+    }
+
     public static final BuilderCodec<CastManaComponent> CODEC = BuilderCodec
             .builder(CastManaComponent.class, CastManaComponent::new)
             .append(new KeyedCodec<>("Cost", Codec.FLOAT),
@@ -79,4 +77,11 @@ public final class CastManaComponent implements CastComponent, CastOverlay<CastM
             .documentation("Scales the mana cost. Compounds with earlier layers.")
             .add()
             .build();
+
+    public static final CastComponentType<CastManaComponent> TYPE = HexComponentRegistry.register(
+            CastManaComponent.class, "Mana", CODEC, a -> {
+                var mana = new CastManaComponent();
+                mana.setCost(SpellMana.computeTotalMana(a.get(CastHexComponent.TYPE).getHex(), a.accessor()));
+                return mana;
+            });
 }

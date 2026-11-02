@@ -20,6 +20,7 @@ import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.ManaSourceComponent;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -52,7 +53,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         }
 
         var tracker = status.getHexContext().volatility();
-        if (tracker != null && tracker.getCurrent() <= 0f)
+        if (tracker.getCurrent() <= 0f)
             return false;
 
         if (!payUpkeep(dt, glyph, status, statMap, buffer, casterRef)) {
@@ -70,7 +71,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
     private void accrueVolatility(float dt, GlyphAsset glyph, HexStatus<ConcentrationState> status) {
         ConcentrationState state = status.getState();
         VolatilityComponent tracker = status.getHexContext().volatility();
-        if (state == null || tracker == null)
+        if (state == null)
             return;
 
         float elapsed = state.getElapsedSeconds() + dt;
@@ -88,18 +89,16 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         if (state == null || ctx == null || !ctx.policy().isConsumeMana())
             return true;
 
-        var root = ctx.getHexRoot();
+        var manaSource = ctx.get(ManaSourceComponent.TYPE);
         float mana = state.getManaRate() * dt;
         float stamina = state.getStaminaRate() * dt;
 
-        if (mana > 0 && root == null)
-            return false;
-        if (mana > 0 && mana > root.getCurrentMana(buffer))
+        if (mana > 0 && mana > manaSource.getCurrent(buffer))
             return false;
         if (!canAfford(statMap, DefaultEntityStatTypes.getStamina(), stamina))
             return false;
 
-        if (mana > 0 && !root.tryConsumeMana(mana, buffer))
+        if (mana > 0 && !manaSource.tryConsume(mana, buffer))
             return false;
         if (stamina > 0)
             statMap.subtractStatValue(DefaultEntityStatTypes.getStamina(), stamina);
@@ -151,7 +150,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             return;
 
         VolatilityComponent heldTracker = heldCtx.volatility();
-        if (heldTracker != null && heldTracker.getCurrent() <= 0f)
+        if (heldTracker.getCurrent() <= 0f)
             return;
 
         heldCtx.updateRuntimeAccessors(buffer);

@@ -61,7 +61,7 @@ public class QueryGlyph extends GlyphAsset {
             String resource = resolveResourceId(glyph, hexContext);
             if (resource != null) {
                 ResourcePoolComponent pools = hexContext.resources();
-                return new NumberVar(pools != null ? (double) pools.getResource(resource) : 0.0);
+                return new NumberVar((double) pools.getResource(resource));
             }
             return new NumberVar(readSpellStat(readTrilean(glyph, hexContext), hexContext));
         }
@@ -122,8 +122,6 @@ public class QueryGlyph extends GlyphAsset {
 
     private static double readSpellStat(int trilean, HexContext hexContext) {
         VolatilityComponent stats = hexContext.volatility();
-        if (stats == null)
-            return 0.0;
 
         return switch (trilean) {
             case -1 -> stats.getInitial();
@@ -132,9 +130,7 @@ public class QueryGlyph extends GlyphAsset {
         };
     }
 
-    private static double totalResources(@Nullable ResourcePoolComponent pools) {
-        if (pools == null)
-            return 0.0;
+    private static double totalResources(ResourcePoolComponent pools) {
         Set<String> counted = new HashSet<>();
         double total = 0.0;
         for (ShapeAsset shape : ShapeAsset.getAssetMap().getAssetMap().values()) {

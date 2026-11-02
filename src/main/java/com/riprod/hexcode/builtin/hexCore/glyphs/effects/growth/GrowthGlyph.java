@@ -297,7 +297,7 @@ public class GrowthGlyph extends GlyphAsset {
         ThreadLocalRandom rng = ThreadLocalRandom.current();
         int attempts = Math.max(attemptsFloor, (int) (amount * attemptsPerAmount));
 
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> caster = hexContext.getRootRef();
         boolean blocked = false;
         BlockAccess.Cursor cursor = new BlockAccess.Cursor(world);
 

@@ -106,7 +106,7 @@ public class RotationValue extends GlyphAsset {
             return;
 
         World world = accessor.getExternalData().getWorld();
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> caster = hexContext.getRootRef();
         if (!HexProtection.canAffectEntity(world, caster, accessor, ref)) {
             HexProtection.notifyBlocked(caster, accessor, getId());
             return;
@@ -135,10 +135,7 @@ public class RotationValue extends GlyphAsset {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         if (accessor.getComponent(ref, Player.getComponentType()) == null)
             return;
-        VolatilityComponent volatility = hexContext.volatility();
-        if (volatility == null)
-            return;
-        volatility.consume(playerVolatilityCost);
+        hexContext.volatility().consume(playerVolatilityCost);
     }
 
     private void trackRollRestore(Ref<EntityStore> ref, Rotation3f applied, float priorRoll,
@@ -207,7 +204,7 @@ public class RotationValue extends GlyphAsset {
         try {
             CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
             World world = accessor.getExternalData().getWorld();
-            Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+            Ref<EntityStore> caster = hexContext.getRootRef();
             BlockUtils.rotateBlock(new Vector3i(pos), rotation, world, accessor, caster, getId());
         } catch (Exception e) {
             LOGGER.atWarning().log("rotation glyph: could not rotate block: %s", e.getMessage());

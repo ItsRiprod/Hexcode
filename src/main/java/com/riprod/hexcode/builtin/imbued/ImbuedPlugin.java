@@ -2,9 +2,11 @@ package com.riprod.hexcode.builtin.imbued;
 
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.event.EventPriority;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.event.CastEvent;
 import com.riprod.hexcode.builtin.imbued.triggers.Ability1Trigger;
 import com.riprod.hexcode.builtin.imbued.triggers.Ability2Trigger;
 import com.riprod.hexcode.builtin.imbued.triggers.Ability3Trigger;
@@ -62,7 +64,7 @@ public class ImbuedPlugin {
         var entityStoreRegistry = plugin.getEntityStoreRegistry();
 
         entityStoreRegistry.registerSystem(new DeathTriggerSource());
-        entityStoreRegistry.registerSystem(new CastTriggerSource());
+        CastEvent.register(plugin.getEventRegistry(), (short) (EventPriority.LATE.getValue() + 1), new CastTriggerSource());
         InteractionTriggerSource.register();
 
         entityStoreRegistry.registerSystem(new EntityHitEventSource.OnDamageDealtSystem());

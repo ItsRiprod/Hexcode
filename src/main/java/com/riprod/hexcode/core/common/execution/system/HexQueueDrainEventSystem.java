@@ -34,28 +34,32 @@ public class HexQueueDrainEventSystem extends WorldEventSystem<EntityStore, HexQ
         HexcodeConfig config = HexcodeConfig.get();
         int maxPerTick = config.getMaxGlyphsPerTick();
         int maxPerCast = config.getMaxGlyphsPerCast();
+        long deadline = System.nanoTime() + config.getMaxGlyphNanosPerTick();
         long tick = queue.getTick();
         int executed = 0;
         int index = 0;
         boolean truncated = false;
+        boolean timedOut = false;
 
         ObjectArrayList<PendingGlyph> work = queue.beginDrain();
         try {
             for (; index < work.size() && executed < maxPerTick; index++) {
+                if (executed > 0 && (executed & 15) == 0 && System.nanoTime() >= deadline) {
+                    timedOut = true;
+                    break;
+                }
                 PendingGlyph item = work.get(index);
                 HexContext ctx = item.ctx();
                 HexCast cast = ctx.cast();
-                if (cast != null) {
-                    GlyphBudgetComponent budget = cast.getOrCreate(GlyphBudgetComponent.getComponentType());
-                    if (!budget.trySpend(tick, maxPerCast)) {
-                        if (budget.getDenied() == 1) {
-                            LOGGER.atFine().log(
-                                    "cast %s reached its per-tick cap of %d glyph(s); deferring the remainder",
-                                    cast.getExecutionId(), maxPerCast);
-                        }
-                        queue.defer(item);
-                        continue;
+                GlyphBudgetComponent budget = ctx.get(GlyphBudgetComponent.TYPE);
+                if (!budget.trySpend(tick, maxPerCast)) {
+                    if (budget.getDenied() == 1) {
+                        LOGGER.atFine().log(
+                                "cast %s reached its per-tick cap of %d glyph(s); deferring the remainder",
+                                cast.getExecutionId(), maxPerCast);
                     }
+                    queue.defer(item);
+                    continue;
                 }
                 ctx.UpdateAccessor(buffer);
                 CoreHexExecuter.executeQueuedGlyph(item.glyphId(), ctx);
@@ -67,8 +71,8 @@ public class HexQueueDrainEventSystem extends WorldEventSystem<EntityStore, HexQ
         }
 
         if (truncated) {
-            LOGGER.atFine().log("world reached its per-tick cap of %d glyph(s); %d still queued",
-                    maxPerTick, queue.size());
+            LOGGER.atFine().log("world reached its per-tick %s cap (%d glyph(s), %d ns budget); %d still queued",
+                    timedOut ? "time" : "count", maxPerTick, config.getMaxGlyphNanosPerTick(), queue.size());
         }
     }
 }

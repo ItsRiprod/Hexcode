@@ -73,7 +73,7 @@ public final class ElementSupport {
         if (affinityStat == null || affinityStat.isEmpty() || scale == 0f)
             return 1.0f;
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
-        Ref<EntityStore> caster = hexContext.getCasterRef(accessor);
+        Ref<EntityStore> caster = hexContext.getRootRef();
         if (caster == null || !caster.isValid())
             return 1.0f;
         EntityStatMap stats = accessor.getComponent(caster, EntityStatMap.getComponentType());

@@ -154,7 +154,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
                 DamageCause cause = DamageCause.getAssetMap().getAsset(damageCauseIndex);
                 if (cause != null) {
                     Damage damage = new Damage(
-                            new Damage.EntitySource(status.getHexContext().getCasterRef(buffer)), cause, crushDamage);
+                            new Damage.EntitySource(status.getHexContext().getRootRef()), cause, crushDamage);
                     DamageSystems.executeDamage(ref, buffer, damage);
                 }
             }

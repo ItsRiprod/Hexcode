@@ -193,7 +193,7 @@ public class ProjectileGlyph extends GlyphAsset {
         var accessor = hexContext.getAccessor();
 
         Ref<EntityStore> parent = sourceVar instanceof EntityVar var ? var.getRef(accessor)
-                : hexContext.getCasterRef(accessor);
+                : hexContext.getRootRef();
 
         physicsConfig.apply(holder, parent,
                 launchVelocity, accessor, false);

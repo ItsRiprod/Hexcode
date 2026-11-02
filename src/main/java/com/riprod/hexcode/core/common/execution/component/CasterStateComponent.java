@@ -10,6 +10,8 @@ import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.cast.component.CastSlotComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
 
 public class CasterStateComponent implements Component<EntityStore> {
@@ -42,7 +44,10 @@ public class CasterStateComponent implements Component<EntityStore> {
         int n = 0;
         for (UUID id : activeCastIds) {
             HexCast cast = casts.get(id);
-            if (cast != null && cast.getSlotKey() == null) n++;
+            if (cast == null) continue;
+            var slot = cast.get(CastSlotComponent.TYPE);
+            var key = slot != null ? slot.get() : null;
+            if (key == null) n++;
         }
         return n;
     }
@@ -51,9 +56,12 @@ public class CasterStateComponent implements Component<EntityStore> {
         for (int i = 0; i < activeCastIds.size(); i++) {
             UUID id = activeCastIds.get(i);
             HexCast cast = casts.get(id);
-            if (cast != null && cast.getSlotKey() == null) {
+            if (cast == null) continue;
+            var slot = cast.get(CastSlotComponent.TYPE);
+            var key = slot != null ? slot.get() : null;
+            if (key == null) {
                 activeCastIds.remove(i);
-                cast.volatility().setCurrent(0f);
+                cast.get(VolatilityComponent.TYPE).setCurrent(0f);
                 casts.remove(id);
                 return;
             }
@@ -65,8 +73,10 @@ public class CasterStateComponent implements Component<EntityStore> {
         for (UUID id : activeCastIds) {
             HexCast cast = casts.get(id);
             if (cast == null) continue;
-            if (slotKey.equals(cast.getSlotKey()) && cast.volatility().getCurrent() > 0f) {
-                cast.volatility().setCurrent(0f);
+            var slot = cast.get(CastSlotComponent.TYPE);
+            var key = slot != null ? slot.get() : null;
+            if (slotKey.equals(key) && cast.get(VolatilityComponent.TYPE).getCurrent() > 0f) {
+                cast.get(VolatilityComponent.TYPE).setCurrent(0f);
                 casts.remove(id);
             }
         }
@@ -76,8 +86,8 @@ public class CasterStateComponent implements Component<EntityStore> {
         int cancelled = 0;
         for (UUID id : new ArrayList<>(activeCastIds)) {
             HexCast cast = casts.get(id);
-            if (cast == null || cast.volatility().getCurrent() <= 0f) continue;
-            cast.volatility().setCurrent(0f);
+            if (cast == null || cast.get(VolatilityComponent.TYPE).getCurrent() <= 0f) continue;
+            cast.get(VolatilityComponent.TYPE).setCurrent(0f);
             cancelled++;
         }
         return cancelled;

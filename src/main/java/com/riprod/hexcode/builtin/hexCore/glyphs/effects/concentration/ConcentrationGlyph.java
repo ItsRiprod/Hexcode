@@ -91,7 +91,7 @@ public class ConcentrationGlyph extends GlyphAsset {
     @Override
     public HexVar readValue(Glyph glyph, HexContext hexContext) {
 
-        Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
+        Ref<EntityStore> casterRef = hexContext.getRootRef();
         if (casterRef == null || !casterRef.isValid())
             return new NumberVar(0.0);
 
@@ -110,7 +110,7 @@ public class ConcentrationGlyph extends GlyphAsset {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
+        Ref<EntityStore> casterRef = hexContext.getRootRef();
         if (casterRef == null || !casterRef.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Caster not found");

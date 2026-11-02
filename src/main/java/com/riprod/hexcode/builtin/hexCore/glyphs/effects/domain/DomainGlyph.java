@@ -27,6 +27,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.component.DomainZoneComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.style.DomainStyle;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.execution.cast.component.ManaSourceComponent;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -103,7 +104,7 @@ public class DomainGlyph extends GlyphAsset {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        Ref<EntityStore> casterRef = hexContext.getCasterRef(hexContext.getAccessor());
+        Ref<EntityStore> casterRef = hexContext.getRootRef();
         if (casterRef == null || !casterRef.isValid()) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Caster not found");
@@ -136,7 +137,7 @@ public class DomainGlyph extends GlyphAsset {
         power = Math.max(0.1f, power);
 
         float upfrontCost = Impact.scale(slotImpact(DomainGlyphSlots.POWER), power);
-        if (!hexContext.getHexRoot().tryConsumeMana(upfrontCost, hexContext.getAccessor())) {
+        if (!hexContext.get(ManaSourceComponent.TYPE).tryConsume(upfrontCost, hexContext.getAccessor())) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.INSUFFICIENT_MANA);
             return;
         }

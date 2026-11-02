@@ -2,7 +2,9 @@ package com.riprod.hexcode.builtin.counterspell;
 
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.riprod.hexcode.api.event.GlyphDrawnEvent;
-import com.riprod.hexcode.api.event.GlyphExecuteEvent;
+import com.riprod.hexcode.api.event.CastEvent;
+import com.riprod.hexcode.api.event.GlyphEvent;
+import com.hypixel.hytale.event.EventPriority;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.GlyphDeprecatedNotificationListener;
 import com.riprod.hexcode.builtin.counterspell.eventListeners.GlyphExecuteDiagnosticListener;
@@ -26,14 +28,13 @@ public class CounterspellPlugin {
 
     private static void RegisterListeners(JavaPlugin plugin) {
         plugin.getEventRegistry().registerGlobal(GlyphFizzleEvent.class, new GlyphDiagnosticListener());
-        plugin.getEventRegistry().registerGlobal(GlyphExecuteEvent.class, new GlyphExecuteDiagnosticListener());
+        GlyphEvent.registerAllIncludingCancelled(plugin.getEventRegistry(), EventPriority.LAST.getValue(), new GlyphExecuteDiagnosticListener());
+        CastEvent.registerIncludingCancelled(plugin.getEventRegistry(), EventPriority.LAST.getValue(), new HexCastDiagnosticListener());
         plugin.getEventRegistry().registerGlobal(GlyphDrawnEvent.class, new GlyphDeprecatedNotificationListener());
     }
 
     private static void RegisterSystems(JavaPlugin plugin) {
         var entityStoreRegistry = plugin.getEntityStoreRegistry();
-        entityStoreRegistry.registerSystem(new HexCastDiagnosticListener());
-
         entityStoreRegistry.registerSystem(new DrawModeEnterDiagnosticListener());
         entityStoreRegistry.registerSystem(new DrawModeExitDiagnosticListener());
         entityStoreRegistry.registerSystem(new HexContextChangeDiagnosticListener());

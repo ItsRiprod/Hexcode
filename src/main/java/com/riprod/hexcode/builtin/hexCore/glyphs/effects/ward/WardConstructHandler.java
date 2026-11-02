@@ -40,7 +40,6 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
         if (holdStat == null || holdStat.get() < 1f) return true;
 
         VolatilityComponent tracker = status.getHexContext().volatility();
-        if (tracker == null) return true;
 
         float elapsed = state.getElapsedSeconds() + dt;
         state.setElapsedSeconds(elapsed);

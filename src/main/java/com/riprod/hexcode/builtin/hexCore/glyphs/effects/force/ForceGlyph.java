@@ -55,7 +55,7 @@ public class ForceGlyph extends GlyphAsset {
             return;
         }
 
-        Ref<EntityStore> caster = hexContext.getCasterRef(hexContext.getAccessor());
+        Ref<EntityStore> caster = hexContext.getRootRef();
         if (!HexProtection.canAffectEntity(hexContext.getAccessor().getExternalData().getWorld(),
                 caster, hexContext.getAccessor(), ref)) {
             HexProtection.notifyBlocked(caster, hexContext.getAccessor(), getId());

@@ -12,28 +12,25 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.ExtraInfo;
 import com.hypixel.hytale.codec.lookup.MapProvidedMapCodec;
 import com.hypixel.hytale.codec.util.RawJsonReader;
-import com.riprod.hexcode.core.common.execution.cast.CastComponentRegistry;
-import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
 import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 
 public final class CastOverlayMapCodec
         extends MapProvidedMapCodec<CastOverlay<?>, CastComponentType<?>> {
 
-    private final CastComponentRegistry registry;
-
     @SuppressWarnings("unchecked")
-    public CastOverlayMapCodec(@Nonnull CastComponentRegistry registry) {
-        super(registry.getIdView(),
-                type -> (Codec<CastOverlay<?>>) (Codec<?>) registry.getOverlayCodec(type),
+    public CastOverlayMapCodec() {
+        super(HexComponentRegistry.getOverlayIdView(),
+                type -> (Codec<CastOverlay<?>>) (Codec<?>) HexComponentRegistry.getOverlayCodec(type),
                 LinkedHashMap::new,
                 false);
-        this.registry = registry;
     }
 
     @Nullable
     @Override
     protected String getKeyForId(String id) {
-        return registry.getType(id) != null ? id : null;
+        return HexComponentRegistry.getOverlayIdView().containsKey(id) ? id : null;
     }
 
     @Override
@@ -50,6 +47,6 @@ public final class CastOverlayMapCodec
 
     private IllegalArgumentException unknown(String key) {
         return new IllegalArgumentException("unknown cast component '" + key
-                + "'; registered: " + registry.getIdView().keySet());
+                + "'; registered: " + HexComponentRegistry.getOverlayIdView().keySet());
     }
 }

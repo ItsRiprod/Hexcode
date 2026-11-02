@@ -175,9 +175,6 @@ public class BeamGlyph extends GlyphAsset {
     }
 
     private void chargeReach(HexContext hexContext, double reach) {
-        VolatilityComponent volatility = hexContext.volatility();
-        if (volatility == null)
-            return;
-        volatility.consume(Impact.scale(volatilityImpact, reach));
+        hexContext.volatility().consume(Impact.scale(volatilityImpact, reach));
     }
 }

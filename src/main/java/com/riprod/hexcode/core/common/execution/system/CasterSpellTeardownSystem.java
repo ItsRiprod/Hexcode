@@ -73,7 +73,7 @@ public class CasterSpellTeardownSystem extends RefSystem<EntityStore> {
                     continue;
                 }
                 CastDependenciesComponent dependencies =
-                        cast.get(CastDependenciesComponent.getComponentType());
+                        cast.get(CastDependenciesComponent.TYPE);
                 if (dependencies != null) {
                     for (Ref<EntityStore> dependent : dependencies.getDependents()) {
                         Ref<EntityStore> live = HexRefs.live(dependent, store);

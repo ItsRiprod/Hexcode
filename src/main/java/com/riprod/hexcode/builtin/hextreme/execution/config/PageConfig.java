@@ -7,7 +7,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
-import com.riprod.hexcode.core.common.execution.root.HexRoot;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
@@ -21,12 +20,9 @@ public class PageConfig extends HexConfigAsset {
 
     public static final String METADATA_KEY = "PageHex";
 
-    public Hex getHex(ComponentAccessor<EntityStore> accessor, HexRoot hexRoot) {
-        Ref<EntityStore> playerRef = hexRoot.getSourceRef(accessor);
-        if (playerRef == null || !playerRef.isValid()) {
-            return null;
-        }
-        return resolvePageHex(accessor, PlayerUtils.getHandItem(accessor, playerRef, HexSlot.MainHand));
+    @Override
+    protected Hex resolveHex(Ref<EntityStore> root, ComponentAccessor<EntityStore> accessor) {
+        return resolvePageHex(accessor, PlayerUtils.getHandItem(accessor, root, HexSlot.MainHand));
     }
 
     public static Hex resolvePageHex(ComponentAccessor<EntityStore> accessor, ItemStack page) {
