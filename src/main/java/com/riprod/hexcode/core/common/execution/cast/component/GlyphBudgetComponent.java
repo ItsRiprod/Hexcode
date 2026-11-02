@@ -2,20 +2,11 @@ package com.riprod.hexcode.core.common.execution.cast.component;
 
 import javax.annotation.Nonnull;
 
-import com.riprod.hexcode.core.common.execution.cast.CastComponent;
-import com.riprod.hexcode.core.common.execution.cast.CastComponentType;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
+import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 
 public final class GlyphBudgetComponent implements CastComponent {
-
-    private static CastComponentType<GlyphBudgetComponent> componentType;
-
-    public static CastComponentType<GlyphBudgetComponent> getComponentType() {
-        return componentType;
-    }
-
-    public static void setComponentType(CastComponentType<GlyphBudgetComponent> type) {
-        componentType = type;
-    }
 
     private long tick = -1L;
     private int spent;
@@ -51,4 +42,13 @@ public final class GlyphBudgetComponent implements CastComponent {
         copy.denied = this.denied;
         return copy;
     }
+
+    @Nonnull
+    @Override
+    public GlyphBudgetComponent branch() {
+        return this;
+    }
+
+    public static final CastComponentType<GlyphBudgetComponent> TYPE = HexComponentRegistry.register(
+            GlyphBudgetComponent.class, "GlyphBudget", a -> new GlyphBudgetComponent());
 }
