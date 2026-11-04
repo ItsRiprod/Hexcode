@@ -15,6 +15,7 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
     private float initial = -1f;
     private float current;
     private float volatilityMultiplier = 1.0f;
+    private float spent;
 
     public VolatilityComponent() {
     }
@@ -55,8 +56,14 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
     }
 
     public float consume(float cost) {
-        this.current = Math.max(0f, this.current - cost * volatilityMultiplier);
+        var remaining = Math.max(0f, this.current - cost * volatilityMultiplier);
+        this.spent += Math.max(0f, this.current - remaining);
+        this.current = remaining;
         return this.current;
+    }
+
+    public float getSpent() {
+        return spent;
     }
 
     public float getVolatilityMultiplier() {
@@ -74,6 +81,7 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
         copy.initial = this.initial;
         copy.current = this.current;
         copy.volatilityMultiplier = this.volatilityMultiplier;
+        copy.spent = this.spent;
         return copy;
     }
 
@@ -85,14 +93,16 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
 
     public static final BuilderCodec<VolatilityComponent> CODEC = BuilderCodec
             .builder(VolatilityComponent.class, VolatilityComponent::new)
-            .append(new KeyedCodec<>("Initial", Codec.FLOAT),
+            .<Float>appendInherited(new KeyedCodec<>("Initial", Codec.FLOAT),
                     (c, v) -> c.initial = v,
-                    c -> c.initial < 0f ? null : c.initial)
+                    c -> c.initial < 0f ? null : c.initial,
+                    (c, p) -> c.initial = p.initial)
             .documentation("Volatility budget the cast starts with. Assigns, replacing any earlier layer.")
             .add()
-            .append(new KeyedCodec<>("Multiplier", Codec.FLOAT),
+            .<Float>appendInherited(new KeyedCodec<>("Multiplier", Codec.FLOAT),
                     (c, v) -> c.volatilityMultiplier = v,
-                    c -> c.volatilityMultiplier)
+                    c -> c.volatilityMultiplier,
+                    (c, p) -> c.volatilityMultiplier = p.volatilityMultiplier)
             .documentation("Scales volatility consumed per glyph. Compounds with earlier layers.")
             .add()
             .build();

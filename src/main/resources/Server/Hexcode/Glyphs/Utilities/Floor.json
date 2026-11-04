@@ -6,9 +6,9 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    { "Parent": "Line", "StatContribution": 0 },
-    { "Parent": "Down", "StatContribution": 0 },
-    { "Parent": "Line", "StatContribution": 0 }
+    { "Parent": "Line" },
+    { "Parent": "Down" },
+    { "Parent": "Line" }
   ],
   "Slots": {
     "A": {

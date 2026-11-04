@@ -1,23 +1,14 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.query;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
-import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
@@ -58,11 +49,6 @@ public class QueryGlyph extends GlyphAsset {
         boolean referenceWired = reference != null && reference.getFirstLink() != null;
 
         if (!referenceWired) {
-            String resource = resolveResourceId(glyph, hexContext);
-            if (resource != null) {
-                ResourcePoolComponent pools = hexContext.resources();
-                return new NumberVar((double) pools.getResource(resource));
-            }
             return new NumberVar(readSpellStat(readTrilean(glyph, hexContext), hexContext));
         }
 
@@ -82,38 +68,6 @@ public class QueryGlyph extends GlyphAsset {
         return new NumberVar(HexVarUtil.axis(value.position(accessor), trilean + 1));
     }
 
-    /**
-     * A single-shape glyph wired into the trilean slot names its shape's resource
-     * instead of
-     * supplying a value. Resolved by inspecting the link rather than reading it,
-     * because reading
-     * would run the linked glyph's own value semantics.
-     */
-    @Nullable
-    private static String resolveResourceId(Glyph glyph, HexContext hexContext) {
-        Slot trilean = glyph.getSlot(QueryGlyphSlots.TRILEAN);
-        if (trilean == null)
-            return null;
-
-        String linkId = trilean.getFirstLink();
-        if (linkId == null)
-            return null;
-
-        Glyph linked = hexContext.getGlyph(linkId);
-        if (linked == null)
-            return null;
-
-        GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
-        if (linkedAsset == null)
-            return null;
-
-        List<ShapeAsset> shapes = linkedAsset.getShapes();
-        if (shapes.size() != 1)
-            return null;
-
-        return shapes.get(0).getStatResource();
-    }
-
     private static int readTrilean(Glyph glyph, HexContext hexContext) {
         HexVar value = glyph.readSlot(QueryGlyphSlots.TRILEAN, hexContext);
         long rounded = Math.round(HexVarUtil.numberOrDefault(value, 0.0));
@@ -125,21 +79,9 @@ public class QueryGlyph extends GlyphAsset {
 
         return switch (trilean) {
             case -1 -> stats.getInitial();
-            case 1 -> totalResources(hexContext.resources());
+            case 1 -> stats.getSpent();
             default -> stats.getCurrent();
         };
-    }
-
-    private static double totalResources(ResourcePoolComponent pools) {
-        Set<String> counted = new HashSet<>();
-        double total = 0.0;
-        for (ShapeAsset shape : ShapeAsset.getAssetMap().getAssetMap().values()) {
-            String resource = shape.getStatResource();
-            if (resource != null && counted.add(resource)) {
-                total += pools.getResource(resource);
-            }
-        }
-        return total;
     }
 
     private static double readEntityStat(EntityVar entityVar, int trilean, HexContext hexContext) {

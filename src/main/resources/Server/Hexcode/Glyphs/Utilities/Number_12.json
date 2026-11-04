@@ -3,8 +3,8 @@
   "Title": "hexcode.glyphs.Number_12.name",
   "Description": "hexcode.glyphs.Number_12.description",
   "ShapeStructure": [
-    { "Parent": "Down", "StatContribution": 0 },
-    { "Parent": "Square", "RelativeSize": 0.8, "StatContribution": 0 }
+    { "Parent": "Down" },
+    { "Parent": "Square", "RelativeSize": 0.8 }
   ],
   "Slots": {
     "Next": {

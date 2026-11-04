@@ -142,6 +142,9 @@ public class DelayGlyph extends GlyphAsset {
 
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                 accessor, hexContext, glyph, DelayGlyph.TYPE, spawnPos, state);
+        if (holder == null) {
+            return;
+        }
 
         if (rot != null) {
             holder.putComponent(TransformComponent.getComponentType(),

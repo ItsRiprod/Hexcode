@@ -41,3 +41,16 @@ hexcode.commands.timeout.world.desc=World to time out (defaults to your world; i
 hexcode.commands.resume.desc=Resume spellcasting for a player or the whole world
 hexcode.commands.resume.player.desc=Player to resume (omit to clear the world-wide gate)
 hexcode.commands.resume.world.desc=World to resume (defaults to your world; ignored when --player is given)
+
+hexcode.elementalism.fire.name=Fire
+hexcode.elementalism.fire.description=Charges fastest the moment it is struck, then settles into a steady burn
+hexcode.elementalism.fire.lore=Every flame is hungriest when it is young
+hexcode.elementalism.ignite.name=Ignite
+hexcode.elementalism.ignite.description=Sets the target burning. Lights flammable blocks, candles and torches
+hexcode.elementalism.ignite.lore=A spark that asks for nothing but something to hold on to
+hexcode.elementalism.scorch.name=Scorch
+hexcode.elementalism.scorch.description=Burns the target for immediate fire damage and sears away foliage
+hexcode.elementalism.scorch.lore=Heat with nowhere left to go
+hexcode.elementalism.explosion.name=Explosion
+hexcode.elementalism.explosion.description=Bursts at the target, burning and throwing back everything nearby and breaking the blocks around it
+hexcode.elementalism.explosion.lore=Patience, fed until it could no longer be contained

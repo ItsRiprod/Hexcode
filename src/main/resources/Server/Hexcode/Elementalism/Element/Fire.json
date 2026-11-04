@@ -1,0 +1,115 @@
+{
+  "Type": "Fire",
+  "Name": "server.hexcode.elementalism.fire.name",
+  "Description": "server.hexcode.elementalism.fire.description",
+  "Lore": "server.hexcode.elementalism.fire.lore",
+  "ReclaimEfficiency": 0.75,
+  "Start": 10,
+  "Slope": 1,
+  "Floor": 3,
+  "ConstructInterval": 0.5,
+  "Effects": {
+    "Default": {
+      "Particle": "Ignite_Fire",
+      "Color": "#FF6A1A"
+    },
+    "Launch": {
+      "Sound": "SFX_Staff_Fire_Shoot"
+    },
+    "Impact": {
+      "Sound": "SFX_Fireball_Death"
+    }
+  },
+  "Tiers": {
+    "20": {
+      "Type": "Ignite",
+      "Id": "Ignite",
+      "Name": "server.hexcode.elementalism.ignite.name",
+      "Description": "server.hexcode.elementalism.ignite.description",
+      "Lore": "server.hexcode.elementalism.ignite.lore",
+      "Status": "Burning",
+      "Duration": 5,
+      "Fluid": "Fire",
+      "FluidLevel": 1,
+      "UnlitState": "Off",
+      "Effects": {
+        "Impact": {
+          "Sound": "SFX_Arrow_Fire_Hit"
+        }
+      }
+    },
+    "50": {
+      "Type": "Scorch",
+      "Id": "Scorch",
+      "Name": "server.hexcode.elementalism.scorch.name",
+      "Description": "server.hexcode.elementalism.scorch.description",
+      "Lore": "server.hexcode.elementalism.scorch.lore",
+      "Damage": 16,
+      "DamageCause": "Fire",
+      "BlockDamage": 0.5,
+      "Effects": {
+        "Impact": {
+          "Sound": "SFX_Staff_Flame_Fireball_Impact"
+        }
+      }
+    },
+    "100": {
+      "Type": "Explosion",
+      "Id": "Explosion",
+      "Name": "server.hexcode.elementalism.explosion.name",
+      "Description": "server.hexcode.elementalism.explosion.description",
+      "Lore": "server.hexcode.elementalism.explosion.lore",
+      "Explosion": {
+        "DamageEntities": true,
+        "DamageBlocks": true,
+        "DetonateExplosiveBlocks": true,
+        "EntityDamage": 30,
+        "EntityDamageRadius": 4,
+        "EntityDamageCause": "Fire",
+        "EntityDamageFalloff": 1.0,
+        "BlockDamageRadius": 3,
+        "BlockDamageFalloff": 1.0,
+        "BlockDropChance": 0.4,
+        "Knockback": {
+          "Type": "Point",
+          "VelocityConfig": {
+            "AirResistance": 0.97,
+            "AirResistanceMax": 0.96,
+            "GroundResistance": 0.94,
+            "GroundResistanceMax": 0.3,
+            "Threshold": 3.0
+          },
+          "Force": 6,
+          "VelocityY": 4,
+          "VelocityType": "Set"
+        },
+        "ItemTool": {
+          "Specs": [
+            {
+              "Power": 2,
+              "GatherType": "SoftBlocks"
+            },
+            {
+              "Power": 2,
+              "GatherType": "Soils"
+            },
+            {
+              "Power": 1.5,
+              "GatherType": "Woods"
+            },
+            {
+              "Power": 1,
+              "GatherType": "Rocks"
+            }
+          ]
+        }
+      },
+      "Effects": {
+        "Impact": {
+          "Particle": "Explosion_Medium",
+          "Sound": "SFX_Goblin_Lobber_Bomb_Death"
+        }
+      }
+    }
+  }
+}

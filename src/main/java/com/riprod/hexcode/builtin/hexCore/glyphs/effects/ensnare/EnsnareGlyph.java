@@ -245,6 +245,9 @@ public class EnsnareGlyph extends GlyphAsset {
             Vector3d center, double radius, CommandBuffer<EntityStore> accessor) {
         Holder<EntityStore> holder = HexConstructSpawner.create(
                 accessor, hexContext, glyph, EnsnareGlyph.TYPE, new Vector3d(center));
+        if (holder == null) {
+            return;
+        }
 
         holder.addComponent(EnsnareComponent.getComponentType(),
                 new EnsnareComponent(spikes, durationSeconds, spikeDamage,

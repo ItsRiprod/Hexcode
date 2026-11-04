@@ -30,7 +30,7 @@ public class InvisibilityConstructHandler implements ConstructHandler<Invisibili
         InvisibilityState state = status.getState();
         if (state == null) {
             cleanup(ctx, null);
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
         cleanup(ctx, state.getEffectId());

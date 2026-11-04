@@ -35,7 +35,7 @@ public class MageArmorConstructHandler implements ConstructHandler<MageArmorStat
         cleanup(status, ctx);
         MageArmorState state = status.getState();
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());

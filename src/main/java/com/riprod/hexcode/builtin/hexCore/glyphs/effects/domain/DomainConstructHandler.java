@@ -148,7 +148,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
 
     @Override
     public void onCleanup(HexStatus<NoState> status, ConstructTickContext ctx) {
-        status.getHexContext().endBranch();
+        HexExecuter.endBranch(status.getHexContext());
         DomainZoneComponent zone = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), DomainZoneComponent.getComponentType());
 

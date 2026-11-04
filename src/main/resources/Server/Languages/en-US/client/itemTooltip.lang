@@ -3,10 +3,3 @@ stats.Stability={value}% Casting Stability
 stats.MagicCharges={value} Spell Slots
 
 stats.Flag_IsHolding=Can Charge
-
-stats.Affinity_Fire={value} Fire Elemental Bonus
-stats.Affinity_Ice={value} Ice Elemental Bonus
-stats.Affinity_Life={value} Life Elemental Bonus
-stats.Affinity_Lightning={value} Lightning Elemental Bonus
-stats.Affinity_Arcane={value} Arcane Elemental Bonus
-stats.Affinity_Void={value} Void Elemental Bonus

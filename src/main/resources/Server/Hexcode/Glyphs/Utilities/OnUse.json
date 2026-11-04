@@ -9,8 +9,8 @@
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    { "Parent": "Line", "StatContribution": 0 },
-    { "Parent": "Triangle", "RelativeSize": 0.6, "StatContribution": 0 }
+    { "Parent": "Line" },
+    { "Parent": "Triangle", "RelativeSize": 0.6 }
   ],
   "Slots": {
     "Next": {

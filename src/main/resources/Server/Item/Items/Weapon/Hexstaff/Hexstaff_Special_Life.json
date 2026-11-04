@@ -48,13 +48,6 @@
           "Amount": 18
         }
       ],
-      "Affinity_Life": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 15
-        }
-      ],
       "Volatility": [
         {
           "Target": "Max",
@@ -110,15 +103,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Special_Life",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 15,
-                  "Life": 15
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Life"
           }
         }
       ]
@@ -134,15 +119,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Special_Life",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 20,
-                  "Life": 20
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Life"
           }
         }
       ]
@@ -158,15 +135,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Special_Life",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 25,
-                  "Life": 25
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Life"
           }
         }
       ]
@@ -182,15 +151,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Special_Life",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 30,
-                  "Life": 30
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Life"
           }
         }
       ]

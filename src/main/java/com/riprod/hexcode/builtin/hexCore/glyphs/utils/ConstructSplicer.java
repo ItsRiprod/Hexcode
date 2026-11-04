@@ -7,8 +7,10 @@ import java.util.Map;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.output.OutputGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.slot.SlotGlyph;
+import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -25,6 +27,16 @@ public final class ConstructSplicer {
     public enum ChainMode { APPEND_TAIL, REPLACE }
 
     private ConstructSplicer() {
+    }
+
+    public static List<HexStatus<?>> spliceable(HexEffectsComponent effects) {
+        var targets = new ArrayList<HexStatus<?>>(effects.getEffects().size());
+        for (var status : effects.getEffects().values()) {
+            if (ConstructRegistry.get(status.getHandlerId()) != null) {
+                targets.add(status);
+            }
+        }
+        return targets;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

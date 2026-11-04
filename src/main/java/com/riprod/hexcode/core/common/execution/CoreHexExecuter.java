@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -53,15 +54,18 @@ public class CoreHexExecuter {
      * Ends branch if list is empty.
      */
     public static boolean continueExecution(List<String> nextGlyphs, HexContext hexContext) {
+        if (refuseHeld("continueExecution", nextGlyphs, hexContext)) {
+            return false;
+        }
         if (nextGlyphs.isEmpty()) {
-            hexContext.endBranch();
+            HexExecuter.endBranch(hexContext);
             return false;
         }
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         if (accessor == null) {
             LOGGER.atSevere().log("continueExecution with null accessor; dropping %d glyph(s)", nextGlyphs.size());
-            hexContext.endBranch();
+            HexExecuter.endBranch(hexContext);
             return false;
         }
 
@@ -80,6 +84,9 @@ public class CoreHexExecuter {
      * false otherwise.
      */
     public static boolean branchExecution(List<String> nextGlyphs, HexContext hexContext) {
+        if (refuseHeld("branchExecution", nextGlyphs, hexContext)) {
+            return false;
+        }
         if (nextGlyphs.isEmpty()) {
             return false;
         }
@@ -94,6 +101,16 @@ public class CoreHexExecuter {
         for (var nextNodeId : nextGlyphs) {
             queue.enqueue(new HexExecutionQueue.PendingGlyph(nextNodeId, hexContext.branch()));
         }
+        return true;
+    }
+
+    private static boolean refuseHeld(String operation, List<String> nextGlyphs, HexContext hexContext) {
+        if (!hexContext.isHeld()) {
+            return false;
+        }
+        LOGGER.atSevere().log("%s refused: branch %d of cast %s is held by construct %s; dropping %d glyph(s)",
+                operation, hexContext.getBranchId(), hexContext.getExecutionId(), hexContext.getHolder(),
+                nextGlyphs.size());
         return true;
     }
 
@@ -116,6 +133,9 @@ public class CoreHexExecuter {
         GlyphEvent event = new GlyphEvent(nextNode, asset, hexContext);
         HytaleServer.get().getEventBus().dispatchFor(GlyphEvent.class).dispatch(event);
         if (event.isCancelled()) {
+            return;
+        }
+        if (!HexComponentRegistry.dispatchGlyph(nextNode, hexContext, hexContext.getAccessor())) {
             return;
         }
         try {

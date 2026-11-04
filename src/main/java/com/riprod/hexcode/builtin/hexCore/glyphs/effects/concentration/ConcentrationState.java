@@ -25,6 +25,8 @@ public class ConcentrationState implements ConstructState {
 
     private float bonusVolatilityPerSecond;
 
+    private boolean releasing;
+
     public ConcentrationState() {
     }
 
@@ -93,6 +95,14 @@ public class ConcentrationState implements ConstructState {
         this.bonusVolatilityPerSecond = bonusVolatilityPerSecond;
     }
 
+    public boolean isReleasing() {
+        return releasing;
+    }
+
+    public void markReleasing() {
+        this.releasing = true;
+    }
+
     @Override
     public ConcentrationState copy() {
         ConcentrationState c = new ConcentrationState(visualRef);
@@ -103,6 +113,7 @@ public class ConcentrationState implements ConstructState {
         c.healthRate = this.healthRate;
         c.healthDamageAccum = this.healthDamageAccum;
         c.bonusVolatilityPerSecond = this.bonusVolatilityPerSecond;
+        c.releasing = this.releasing;
         return c;
     }
 }

@@ -1,18 +1,14 @@
 package com.riprod.hexcode.core.common.execution.system;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.system.tick.TickingSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.api.event.CastEndEvent;
+import com.riprod.hexcode.api.event.HexCastSweepEvent;
 import com.riprod.hexcode.api.event.HexQueueDrainEvent;
 import com.riprod.hexcode.config.HexcodeConfig;
-import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
 import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
 import com.riprod.hexcode.utils.LogScopes;
@@ -35,29 +31,19 @@ public class HexExecutionTickSystem extends TickingSystem<EntityStore> {
     }
 
     private static void sweepCasts(@Nonnull Store<EntityStore> store) {
-        HexCastStore casts = store.getResource(HexCastStore.getResourceType());
-        casts.nextTick();
-        List<HexCast> finished = casts.reclaimFinished();
+        var casts = store.getResource(HexCastStore.getResourceType());
+        var finished = casts.collectFinished();
 
-        HexcodeConfig config = HexcodeConfig.get();
-
-        int cap = config.getMaxActiveCastsPerWorld();
-        List<HexCast> overCap = casts.endOverCap(cap);
+        var cap = HexcodeConfig.get().getMaxActiveCastsPerWorld();
+        var overCap = casts.collectOverCap(cap);
         if (!overCap.isEmpty()) {
-            LOGGER.atWarning().log("world exceeded its %d live spell cap; ended the %d oldest",
+            LOGGER.atWarning().log("world exceeded its %d live spell cap; ending the %d oldest",
                     cap, overCap.size());
         }
 
-        var dispatcher = HytaleServer.get().getEventBus().dispatchFor(CastEndEvent.class);
-        if (!dispatcher.hasListener()) {
+        if (finished.isEmpty() && overCap.isEmpty()) {
             return;
         }
-        var world = store.getExternalData().getWorld();
-        for (HexCast cast : finished) {
-            dispatcher.dispatch(new CastEndEvent(cast, world));
-        }
-        for (HexCast cast : overCap) {
-            dispatcher.dispatch(new CastEndEvent(cast, world));
-        }
+        store.invoke(new HexCastSweepEvent(finished, overCap));
     }
 }

@@ -5,18 +5,15 @@
   "ShapeStructure": [
     {
       "Parent": "Up",
-      "RelativeSize": 1.0,
-      "StatContribution": 0
+      "RelativeSize": 1.0
     },
     {
       "Parent": "Antiline",
-      "RelativeSize": 1.0,
-      "StatContribution": 0
+      "RelativeSize": 1.0
     },
     {
       "Parent": "Down",
-      "RelativeSize": 1.0,
-      "StatContribution": 0
+      "RelativeSize": 1.0
     }
   ],
   "Slots": {

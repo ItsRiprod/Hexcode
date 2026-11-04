@@ -3,8 +3,8 @@
   "Title": "hexcode.glyphs.Number_9.name",
   "Description": "hexcode.glyphs.Number_9.description",
   "ShapeStructure": [
-    { "Parent": "Down", "StatContribution": 0 },
-    { "Parent": "Circle", "RelativeSize": 0.8, "StatContribution": 0 }
+    { "Parent": "Down" },
+    { "Parent": "Circle", "RelativeSize": 0.8 }
   ],
   "Slots": {
     "Next": {

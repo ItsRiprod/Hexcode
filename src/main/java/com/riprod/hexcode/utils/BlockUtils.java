@@ -1,5 +1,7 @@
 package com.riprod.hexcode.utils;
 
+import javax.annotation.Nullable;
+
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
@@ -8,15 +10,20 @@ import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Vector3dUtil;
+import com.hypixel.hytale.protocol.BlockPosition;
+import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.asset.type.blockhitbox.BlockBoundingBoxes;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.blocktype.component.BlockPhysics;
+import com.hypixel.hytale.server.core.entity.InteractionContext;
+import com.hypixel.hytale.server.core.entity.InteractionManager;
 import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
 import com.hypixel.hytale.server.core.event.events.ecs.DamageBlockEvent;
 import com.hypixel.hytale.server.core.event.events.ecs.EnvironmentBreakBlockEvent;
@@ -26,6 +33,11 @@ import com.hypixel.hytale.server.core.modules.blockhealth.BlockHealthSection;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.modules.interaction.BlockHarvestUtils;
+import com.hypixel.hytale.server.core.modules.interaction.InteractionModule;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.client.ChangeStateInteraction;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.SingleCollector;
 import com.hypixel.hytale.server.core.modules.time.TimeResource;
 import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
@@ -45,6 +57,8 @@ import com.riprod.hexcode.core.common.protection.BlockAction;
 import com.riprod.hexcode.core.common.protection.HexProtection;
 
 public class BlockUtils {
+
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.GLYPH);
 
     public static Box resolveBlockDisplayBox(World world, Vector3i blockPos) {
         BlockSection blockSection = BlockAccess.section(world, blockPos);
@@ -262,6 +276,58 @@ public class BlockUtils {
 
         var section = BlockAccess.section(world, pos);
         return section == null ? true : section.get(pos.x, pos.y, pos.z) == BlockType.EMPTY_ID;
+    }
+
+    public static boolean useLeavesCurrentState(BlockType blockType) {
+        var state = blockType.getCurrentInteractionState();
+        var interactionId = blockType.getInteractions().get(InteractionType.Use);
+        var root = interactionId != null ? RootInteraction.getAssetMap().getAsset(interactionId) : null;
+        if (state == null || root == null) {
+            return false;
+        }
+        var collector = new SingleCollector<Boolean>((tag, context, interaction) -> {
+            if (!(interaction instanceof ChangeStateInteraction)
+                    || !(interaction.toPacket() instanceof com.hypixel.hytale.protocol.ChangeStateInteraction packet)
+                    || packet.stateChanges == null) {
+                return null;
+            }
+            var next = packet.stateChanges.get(state);
+            return next != null && !next.equals(state) ? Boolean.TRUE : null;
+        });
+        InteractionManager.walkChain(collector, InteractionType.Use, InteractionContext.withoutEntity(), root);
+        return collector.getResult() != null;
+    }
+
+    public static boolean triggerUseInteraction(CommandBuffer<EntityStore> accessor, Ref<EntityStore> casterRef,
+            World world, Vector3i blockPos, @Nullable Runnable onCompletion) {
+        if (casterRef == null || !casterRef.isValid()) {
+            return false;
+        }
+        var manager = accessor.getComponent(casterRef, InteractionModule.get().getInteractionManagerComponent());
+        if (manager == null) {
+            LOGGER.atFine().log("no interaction manager on caster, skipping block interaction");
+            return false;
+        }
+        var blockType = BlockAccess.blockType(world, blockPos);
+        if (blockType == null || blockType.isUnknown()) {
+            return false;
+        }
+        var interactionId = blockType.getInteractions().get(InteractionType.Use);
+        if (interactionId == null) {
+            return false;
+        }
+        var rootInteraction = RootInteraction.getAssetMap().getAsset(interactionId);
+        if (rootInteraction == null) {
+            return false;
+        }
+        var ctx = InteractionContext.forInteraction(manager, casterRef, InteractionType.Use, accessor);
+        var blockPosition = new BlockPosition(blockPos.x, blockPos.y, blockPos.z);
+        ctx.getMetaStore().putMetaObject(Interaction.TARGET_BLOCK, blockPosition);
+        ctx.getMetaStore().putMetaObject(Interaction.TARGET_BLOCK_RAW, blockPosition);
+        var chain = manager.initChain(InteractionType.Use, ctx, rootInteraction, false);
+        chain.setOnCompletion(onCompletion);
+        manager.queueExecuteChain(chain);
+        return true;
     }
 
     public static void moveToDestination(HexVar var, Vector3d dest, World world, HexContext hexContext,

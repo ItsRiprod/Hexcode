@@ -7,10 +7,10 @@
   "ManaConsumption": 0,
   "IsDeprecated": true,
   "ShapeStructure": [
-    { "Parent": "Slash", "StatContribution": 0 },
-    { "Parent": "Less", "RelativeSize": 0.4, "StatContribution": 0 },
-    { "Parent": "Square", "RelativeSize": 0.8, "StatContribution": 0 },
-    { "Parent": "Greater", "RelativeSize": 0.4, "StatContribution": 0 }
+    { "Parent": "Slash" },
+    { "Parent": "Less", "RelativeSize": 0.4 },
+    { "Parent": "Square", "RelativeSize": 0.8 },
+    { "Parent": "Greater", "RelativeSize": 0.4 }
   ],
   "Slots": {
     "Style": {

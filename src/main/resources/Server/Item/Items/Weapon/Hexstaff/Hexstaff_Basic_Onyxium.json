@@ -75,14 +75,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Basic_Onyxium",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 31.5
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Onyxium"
           }
         }
       ]
@@ -98,14 +91,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Basic_Onyxium",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 36
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Onyxium"
           }
         }
       ]
@@ -121,14 +107,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Basic_Onyxium",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 41
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Onyxium"
           }
         }
       ]
@@ -144,14 +123,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Basic_Onyxium",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 45.5
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Onyxium"
           }
         }
       ]

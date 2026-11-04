@@ -49,13 +49,6 @@
           "Amount": 18
         }
       ],
-      "Affinity_Ice": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 15
-        }
-      ],
       "Volatility": [
         {
           "Target": "Max",
@@ -112,15 +105,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Special_Ice",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 15,
-                  "Ice": 15
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Ice"
           }
         }
       ]
@@ -136,15 +121,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Special_Ice",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 20,
-                  "Ice": 20
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Ice"
           }
         }
       ]
@@ -160,15 +137,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Special_Ice",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 25,
-                  "Ice": 25
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Ice"
           }
         }
       ]
@@ -184,15 +153,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Special_Ice",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 30,
-                  "Ice": 30
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Ice"
           }
         }
       ]

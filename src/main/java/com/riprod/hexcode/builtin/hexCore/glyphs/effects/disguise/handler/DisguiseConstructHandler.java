@@ -39,7 +39,7 @@ public class DisguiseConstructHandler implements ConstructHandler<DisguiseState>
         cleanup(status, ctx);
         DisguiseState state = status.getState();
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());

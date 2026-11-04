@@ -3,7 +3,7 @@
   "Title": "hexcode.glyphs.Variable.name",
   "Description": "hexcode.glyphs.Variable.description",
   "ShapeStructure": [
-    { "Parent": "Down", "StatContribution": 0 }
+    { "Parent": "Down" }
   ],
   "Slots": {
     "Target": {

@@ -1,13 +1,10 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.shape;
 
-import javax.annotation.Nullable;
-
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.utils.GlyphModelUtil;
 import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
@@ -23,7 +20,7 @@ public class ShapeGlyph extends GlyphAsset {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        GlyphAsset linked = resolveLinkedGlyph(glyph, hexContext);
+        var linked = GlyphAsset.of(glyph.linkedGlyph(ShapeGlyphSlots.SHAPE, hexContext), GlyphAsset.class);
         if (linked != null) {
             HexStyleAsset linkedStyle = linked.getStyle();
             if (linkedStyle != null)
@@ -45,18 +42,5 @@ public class ShapeGlyph extends GlyphAsset {
                 glyph.readSlot(ShapeGlyphSlots.SCALE, hexContext),
                 getSlot(ShapeGlyphSlots.SCALE)).floatValue();
         return Math.clamp(scale, MIN_MODEL_SCALE, MAX_MODEL_SCALE);
-    }
-
-    private static @Nullable GlyphAsset resolveLinkedGlyph(Glyph glyph, HexContext hexContext) {
-        Slot shapeSlot = glyph.getSlots().get(ShapeGlyphSlots.SHAPE);
-        if (shapeSlot == null)
-            return null;
-        String linkedId = shapeSlot.getFirstLink();
-        if (linkedId == null)
-            return null;
-        Glyph linked = hexContext.getGlyph(linkedId);
-        if (linked == null)
-            return null;
-        return GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
     }
 }

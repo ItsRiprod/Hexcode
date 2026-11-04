@@ -3,10 +3,10 @@
   "Title": "hexcode.glyphs.Cross.name",
   "Description": "hexcode.glyphs.Cross.description",
   "ShapeStructure": [
-    { "Parent": "Less", "StatContribution": 0 },
-    { "Parent": "Greater", "StatContribution": 0 },
-    { "Parent": "Antislash", "RelativeSize": 0.8, "StatContribution": 0 },
-    { "Parent": "Slash", "RelativeSize": 0.8, "StatContribution": 0 }
+    { "Parent": "Less" },
+    { "Parent": "Greater" },
+    { "Parent": "Antislash", "RelativeSize": 0.8 },
+    { "Parent": "Slash", "RelativeSize": 0.8 }
   ],
   "Slots": {
     "V": {

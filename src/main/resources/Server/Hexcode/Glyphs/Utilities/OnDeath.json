@@ -10,8 +10,8 @@
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    { "Parent": "Line", "StatContribution": 0 },
-    { "Parent": "Anticircle", "StatContribution": 0 }
+    { "Parent": "Line" },
+    { "Parent": "Anticircle" }
   ],
   "Slots": {
     "Next": {

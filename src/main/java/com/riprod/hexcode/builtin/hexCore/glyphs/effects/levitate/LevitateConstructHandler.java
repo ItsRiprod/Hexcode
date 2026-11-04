@@ -98,7 +98,7 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
         removeEffect(status, ctx);
         LevitateState state = status.getState();
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());

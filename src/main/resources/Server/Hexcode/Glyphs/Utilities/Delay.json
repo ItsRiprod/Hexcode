@@ -15,7 +15,7 @@
   "BasePower": 1.0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    { "Parent": "Triangle", "StatContribution": 0 }
+    { "Parent": "Triangle" }
   ],
   "Slots": {
     "Duration": {

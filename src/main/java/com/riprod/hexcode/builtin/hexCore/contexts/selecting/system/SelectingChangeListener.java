@@ -8,7 +8,6 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.system.WorldEventSystem;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -30,7 +29,6 @@ import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 
 public class SelectingChangeListener extends WorldEventSystem<EntityStore, HexContextChangeEvent> {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     public SelectingChangeListener() {
         super(HexContextChangeEvent.class);

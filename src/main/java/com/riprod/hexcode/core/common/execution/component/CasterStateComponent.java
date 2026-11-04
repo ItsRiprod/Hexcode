@@ -6,9 +6,12 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.event.CastEndEvent;
+import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.core.common.execution.cast.component.CastSlotComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
@@ -52,7 +55,7 @@ public class CasterStateComponent implements Component<EntityStore> {
         return n;
     }
 
-    public void evictOldest(@Nonnull HexCastStore casts) {
+    public void evictOldest(@Nonnull HexCastStore casts, @Nonnull CommandBuffer<EntityStore> buffer) {
         for (int i = 0; i < activeCastIds.size(); i++) {
             UUID id = activeCastIds.get(i);
             HexCast cast = casts.get(id);
@@ -61,14 +64,14 @@ public class CasterStateComponent implements Component<EntityStore> {
             var key = slot != null ? slot.get() : null;
             if (key == null) {
                 activeCastIds.remove(i);
-                cast.get(VolatilityComponent.TYPE).setCurrent(0f);
-                casts.remove(id);
+                HexExecuter.endCast(cast, CastEndEvent.Reason.EVICTED, buffer);
                 return;
             }
         }
     }
 
-    public void fizzleSlot(@Nonnull HexCastStore casts, @Nonnull String slotKey) {
+    public void fizzleSlot(@Nonnull HexCastStore casts, @Nonnull String slotKey,
+            @Nonnull CommandBuffer<EntityStore> buffer) {
         pruneCompleted(casts);
         for (UUID id : activeCastIds) {
             HexCast cast = casts.get(id);
@@ -76,20 +79,20 @@ public class CasterStateComponent implements Component<EntityStore> {
             var slot = cast.get(CastSlotComponent.TYPE);
             var key = slot != null ? slot.get() : null;
             if (slotKey.equals(key) && cast.get(VolatilityComponent.TYPE).getCurrent() > 0f) {
-                cast.get(VolatilityComponent.TYPE).setCurrent(0f);
-                casts.remove(id);
+                HexExecuter.endCast(cast, CastEndEvent.Reason.EVICTED, buffer);
             }
         }
     }
 
-    public int cancelAll(@Nonnull HexCastStore casts) {
+    public int cancelAll(@Nonnull HexCastStore casts, @Nonnull CommandBuffer<EntityStore> buffer) {
         int cancelled = 0;
         for (UUID id : new ArrayList<>(activeCastIds)) {
             HexCast cast = casts.get(id);
             if (cast == null || cast.get(VolatilityComponent.TYPE).getCurrent() <= 0f) continue;
-            cast.get(VolatilityComponent.TYPE).setCurrent(0f);
+            HexExecuter.endCast(cast, CastEndEvent.Reason.DISPELLED, buffer);
             cancelled++;
         }
+        pruneCompleted(casts);
         return cancelled;
     }
 

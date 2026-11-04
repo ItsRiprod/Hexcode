@@ -1,9 +1,6 @@
 package com.riprod.hexcode.core.common.execution.system;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -19,13 +16,11 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.event.CastEndEvent;
+import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.construct.system.HexConstructTeardownSystem;
-import com.riprod.hexcode.core.common.execution.cast.HexCast;
-import com.riprod.hexcode.core.common.execution.cast.component.CastDependenciesComponent;
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
-import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
-import com.riprod.hexcode.utils.HexRefs;
 import com.riprod.hexcode.utils.LogScopes;
 
 public class CasterSpellTeardownSystem extends RefSystem<EntityStore> {
@@ -56,56 +51,20 @@ public class CasterSpellTeardownSystem extends RefSystem<EntityStore> {
     public void onEntityRemove(@Nonnull Ref<EntityStore> ref, @Nonnull RemoveReason reason,
             @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> buffer) {
         try {
-            CasterStateComponent casterState = store.getComponent(ref, CasterStateComponent.getComponentType());
+            var casterState = store.getComponent(ref, CasterStateComponent.getComponentType());
             if (casterState == null) {
                 return;
             }
 
-            HexCastStore casts = store.getResource(HexCastStore.getResourceType());
-
-            // trackers are the same VolatilityComponent instances the caster's remote constructs hold, so
-            // zeroing here makes each one abort through its own handler on its next tick
-            casterState.cancelAll(casts);
-
-            for (UUID castId : casterState.getActiveCastIds()) {
-                HexCast cast = casts.get(castId);
-                if (cast == null) {
-                    continue;
+            var casts = store.getResource(HexCastStore.getResourceType());
+            for (var castId : casterState.getActiveCastIds()) {
+                var cast = casts.get(castId);
+                if (cast != null) {
+                    HexExecuter.endCast(cast, CastEndEvent.Reason.CASTER_REMOVED, buffer);
                 }
-                CastDependenciesComponent dependencies =
-                        cast.get(CastDependenciesComponent.TYPE);
-                if (dependencies != null) {
-                    for (Ref<EntityStore> dependent : dependencies.getDependents()) {
-                        Ref<EntityStore> live = HexRefs.live(dependent, store);
-                        if (live == null) {
-                            continue;
-                        }
-                        buffer.tryRemoveEntity(live, RemoveReason.REMOVE);
-                    }
-                    dependencies.clear();
-                }
-                casts.remove(castId);
             }
-
-            purgeQueuedGlyphs(store, casterState.getActiveCastIds());
-            casterState.getActiveCastIds().clear();
         } catch (Exception e) {
             LOGGER.atSevere().log("CasterSpellTeardownSystem.onEntityRemove failed: %s", e.getMessage());
-        }
-    }
-
-    private void purgeQueuedGlyphs(Store<EntityStore> store, List<UUID> castIds) {
-        if (castIds.isEmpty()) {
-            return;
-        }
-        HexExecutionQueue queue = store.getResource(HexExecutionQueue.getResourceType());
-        if (queue == null) {
-            return;
-        }
-        Set<UUID> departing = new HashSet<>(castIds);
-        int purged = queue.removeIf(item -> departing.contains(item.ctx().getExecutionId()));
-        if (purged > 0) {
-            LOGGER.atFine().log("dropped %d queued glyph(s) for a departing caster", purged);
         }
     }
 }

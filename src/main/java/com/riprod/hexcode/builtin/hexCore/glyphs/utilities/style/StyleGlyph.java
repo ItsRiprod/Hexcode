@@ -6,8 +6,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.component.Slot;
-import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.ColorVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
@@ -53,16 +51,7 @@ public class StyleGlyph extends GlyphAsset {
     }
 
     private static @Nullable HexStyleAsset resolveLinkedGlyphStyle(Glyph glyph, HexContext hexContext) {
-        Slot styleSlot = glyph.getSlots().get(StyleGlyphSlots.STYLE);
-        if (styleSlot == null)
-            return null;
-        String linkedId = styleSlot.getFirstLink();
-        if (linkedId == null)
-            return null;
-        Glyph linked = hexContext.getGlyph(linkedId);
-        if (linked == null)
-            return null;
-        GlyphAsset linkedAsset = GlyphAsset.getAssetMap().getAsset(linked.getGlyphId());
+        var linkedAsset = GlyphAsset.of(glyph.linkedGlyph(StyleGlyphSlots.STYLE, hexContext), GlyphAsset.class);
         return linkedAsset != null ? linkedAsset.getStyle() : null;
     }
 

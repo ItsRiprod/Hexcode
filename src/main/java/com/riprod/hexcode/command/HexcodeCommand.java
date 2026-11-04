@@ -22,6 +22,7 @@ import com.riprod.hexcode.command.hex.HexSaveCommand;
 import com.riprod.hexcode.command.hex.HexSerializeCommand;
 import com.riprod.hexcode.command.hex.HexTestRoundtripCommand;
 import com.riprod.hexcode.builtin.hextreme.command.HexPageCommand;
+import com.riprod.hexcode.builtin.elementalism.command.CompositeCommand;
 
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.utils.LogScopes;
@@ -51,6 +52,7 @@ public class HexcodeCommand extends AbstractPlayerCommand {
         addSubCommand(new HexResumeCommand());
         addSubCommand(new HexTimeoutCommand());
         addSubCommand(new HexLogCommand());
+        addSubCommand(new CompositeCommand());
     }
 
     @Override
@@ -78,5 +80,6 @@ public class HexcodeCommand extends AbstractPlayerCommand {
         ctx.sendMessage(Message.raw("/hexcode reset - Force reset hexcode state"));
         ctx.sendMessage(Message.raw("/hexcode testvisual --radius=<r> - Send a trigger-volume sphere at your position"));
         ctx.sendMessage(Message.raw("/hexcode log <scope|all|list> --level=<level> - Read or set hexcode log scope levels"));
+        ctx.sendMessage(Message.raw("/hexcode composite <compositeId> --tier=<tierId> - Play a composite's effects on the entity or block you are looking at"));
     }
 }

@@ -140,6 +140,9 @@ public class AreaGlyph extends GlyphAsset {
 
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                 accessor, hexContext, glyph, TYPE, new Vector3d(center), state);
+        if (holder == null) {
+            return;
+        }
 
         float alpha = VfxUtil.resolveAlpha(hexContext, this);
         if (alpha > 0f) {

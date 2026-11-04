@@ -47,7 +47,7 @@ public class HaltConstructHandler implements ConstructHandler<HaltState> {
         cleanup(status, ctx);
         HaltState state = status.getState();
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());

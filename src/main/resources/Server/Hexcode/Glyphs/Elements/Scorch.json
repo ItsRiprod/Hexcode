@@ -1,58 +1,22 @@
 {
-  "Type": "Scorch",
-  "Style": "Element_Chaos",
+  "Type": "Deprecated",
   "Title": "hexcode.glyphs.Scorch.name",
   "Description": "hexcode.glyphs.Scorch.description",
-  "BasePower": 1.0,
-  "ManaConsumption": 10,
   "ShapeStructure": [
     {
-      "Parent": "Circle",
-      "StatContribution": 2.0
+      "Parent": "Circle"
     },
     {
       "Parent": "Antisquare",
-      "RelativeSize": 0.8,
-      "StatContribution": 2.0
+      "RelativeSize": 0.8
     },
     {
       "Parent": "Antisquare",
-      "RelativeSize": 0.6,
-      "StatContribution": 2.0
+      "RelativeSize": 0.6
     },
     {
       "Parent": "Antisquare",
-      "RelativeSize": 0.4,
-      "StatContribution": 2.0
+      "RelativeSize": 0.4
     }
-  ],
-  "Slots": {
-    "Next": {
-      "Type": "Next",
-      "Parent": "Next",
-      "Label": "hexcode.glyphs.Scorch.Next.name",
-      "Description": "hexcode.glyphs.Scorch.Next.description"
-    },
-    "ResourceLimit": {
-      "Type": "Input",
-      "Parent": "Input",
-      "Label": "hexcode.glyphs.Scorch.ResourceLimit.name",
-      "Description": "hexcode.glyphs.Scorch.ResourceLimit.description",
-      "DefaultValue": -1
-    },
-    "Target": {
-      "Type": "Input",
-      "Parent": "Input",
-      "Label": "hexcode.glyphs.Scorch.target.name",
-      "Description": "hexcode.glyphs.Scorch.target.description"
-    }
-  },
-  "Resource": "Fire",
-  "DamageCause": "Fire",
-  "Efficiency": 0.95,
-  "AffinityStat": "Affinity_Fire",
-  "Volatility": {
-    "InstantCost": 6,
-    "DrainPerSecond": 0.0
-  }
+  ]
 }

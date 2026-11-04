@@ -3,8 +3,8 @@
   "Title": "hexcode.glyphs.Position.name",
   "Description": "hexcode.glyphs.Position.description",
   "ShapeStructure": [
-    { "Parent": "Less", "StatContribution": 0 },
-    { "Parent": "Greater", "StatContribution": 0 }
+    { "Parent": "Less" },
+    { "Parent": "Greater" }
   ],
   "Slots": {
     "X": {

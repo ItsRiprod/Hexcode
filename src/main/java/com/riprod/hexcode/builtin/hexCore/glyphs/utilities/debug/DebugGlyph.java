@@ -60,14 +60,12 @@ public class DebugGlyph extends GlyphAsset {
         }
 
         String volatility = volatilityText(hexContext.volatility());
-        String complexity = complexityText(hexContext);
 
         Message msg;
         if (mode < 0) {
             if (!wired) {
                 msg = markup(Message.translation("hexcode.debugGlyph.stats")
-                        .param("volatility", volatility)
-                        .param("complexity", complexity));
+                        .param("volatility", volatility));
             } else {
                 Message lines = buildSlotLines(slot, hexContext);
                 if (lines == null)
@@ -81,11 +79,9 @@ public class DebugGlyph extends GlyphAsset {
             msg = wired
                     ? markup(Message.translation("hexcode.debugGlyph.slots")
                             .param("volatility", volatility)
-                            .param("complexity", complexity)
                             .param("slots", lines))
                     : markup(Message.translation("hexcode.debugGlyph.gis")
                             .param("volatility", volatility)
-                            .param("complexity", complexity)
                             .param("gis", lines));
         }
 
@@ -197,23 +193,6 @@ public class DebugGlyph extends GlyphAsset {
 
     private static String volatilityText(VolatilityComponent tracker) {
         return String.format("%.1f / %.1f", tracker.getCurrent(), tracker.getInitial());
-    }
-
-    private static String complexityText(HexContext hexContext) {
-        if (hexContext == null)
-            return "-";
-        Map<String, Float> resources = hexContext.getResources();
-        if (resources.isEmpty())
-            return "-";
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, Float> entry : resources.entrySet()) {
-            if (entry.getValue() <= 0f)
-                continue;
-            if (sb.length() > 0)
-                sb.append(' ');
-            sb.append(entry.getKey()).append('=').append(String.format("%.1f", entry.getValue()));
-        }
-        return sb.length() == 0 ? "-" : sb.toString();
     }
 
     private static String valueText(HexVar value) {

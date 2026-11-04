@@ -103,14 +103,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Basic_Thorium",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 15.5
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Thorium"
           }
         }
       ]
@@ -126,14 +119,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Basic_Thorium",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 18
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Thorium"
           }
         }
       ]
@@ -149,14 +135,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Basic_Thorium",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 20
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Thorium"
           }
         }
       ]
@@ -172,14 +151,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Basic_Thorium",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 22.5
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Thorium"
           }
         }
       ]

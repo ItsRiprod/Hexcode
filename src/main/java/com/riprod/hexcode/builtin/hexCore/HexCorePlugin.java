@@ -68,6 +68,7 @@ import com.riprod.hexcode.builtin.hexCore.eventListeners.GlyphMemoryListener;
 import com.riprod.hexcode.builtin.hexCore.execution.config.EncodedConfig;
 import com.riprod.hexcode.builtin.hexCore.execution.config.ExecutionConfig;
 import com.riprod.hexcode.builtin.hexCore.execution.config.OverlayConfig;
+import com.riprod.hexcode.builtin.hexCore.glyphs.deprecated.DeprecatedGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.chaos.ChaosGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.ConcentrationConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.ConcentrationGlyph;
@@ -126,29 +127,11 @@ import com.riprod.hexcode.builtin.hexCore.glyphs.effects.terraform.TerraformGlyp
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ward.WardConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ward.WardGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.warp.WarpGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.bolt.BoltGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.drown.DrownGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.electrocute.ElectrocuteConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.electrocute.ElectrocuteGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.FortifyConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.FortifyGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.FortifyWardDamageSystem;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.fortify.component.FortifyWardComponent;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.FreezeConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.freeze.FreezeGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.healthsurge.HealthSurgeGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ignite.IgniteConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.ignite.IgniteGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.rebreathing.RebreathingConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.rebreathing.RebreathingGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.scorch.ScorchGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.elements.snap.SnapGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc.ArcConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc.ArcGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.area.AreaConstructHandler;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.area.AreaGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.beam.BeamGlyph;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.burning.BurningGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.ProjectileGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.interaction.HexProjectileBounceInteraction;
@@ -281,6 +264,7 @@ public class HexCorePlugin {
         private static void RegisterGlyphs(JavaPlugin plugin) {
 
                 GlyphAsset.register(BaseGlyph.class, BaseGlyph.TYPE, BaseGlyph::new);
+                GlyphAsset.register(DeprecatedGlyph.class, DeprecatedGlyph.TYPE, DeprecatedGlyph::new);
 
                 // utilities
                 GlyphAsset.register(MultiplyGlyph.class, MultiplyGlyph.TYPE, MultiplyGlyph::new);
@@ -341,7 +325,6 @@ public class HexCorePlugin {
                 GlyphAsset.register(BeamGlyph.class, BeamGlyph.TYPE, BeamGlyph.CODEC);
                 GlyphAsset.register(AreaGlyph.class, AreaGlyph.TYPE, AreaGlyph.CODEC);
                 GlyphAsset.register(ProjectileGlyph.class, ProjectileGlyph.TYPE, ProjectileGlyph.CODEC);
-                GlyphAsset.register(BurningGlyph.class, BurningGlyph.TYPE, BurningGlyph::new);
                 GlyphAsset.register(ArcGlyph.class, ArcGlyph.TYPE, ArcGlyph.CODEC);
 
                 // tier 3 glyphs
@@ -350,7 +333,6 @@ public class HexCorePlugin {
                 GlyphAsset.register(GustGlyph.class, GustGlyph.TYPE, GustGlyph.CODEC);
                 GlyphAsset.register(ConjureGlyph.class, ConjureGlyph.TYPE, ConjureGlyph.CODEC);
                 GlyphAsset.register(GrowthGlyph.class, GrowthGlyph.TYPE, GrowthGlyph.CODEC);
-                GlyphAsset.register(FortifyGlyph.class, FortifyGlyph.TYPE, FortifyGlyph.CODEC);
                 GlyphAsset.register(ErodeGlyph.class, ErodeGlyph.TYPE, ErodeGlyph.CODEC);
                 GlyphAsset.register(LevitateGlyph.class, LevitateGlyph.TYPE, LevitateGlyph.CODEC);
                 GlyphAsset.register(InvisibilityGlyph.class, InvisibilityGlyph.TYPE, InvisibilityGlyph.CODEC);
@@ -370,15 +352,6 @@ public class HexCorePlugin {
                 GlyphAsset.register(WardGlyph.class, WardGlyph.TYPE, WardGlyph.CODEC);
 
                 // tier 4 glyphs
-                GlyphAsset.register(FreezeGlyph.class, FreezeGlyph.TYPE, FreezeGlyph.CODEC);
-                GlyphAsset.register(IgniteGlyph.class, IgniteGlyph.TYPE, IgniteGlyph.CODEC);
-                GlyphAsset.register(ScorchGlyph.class, ScorchGlyph.TYPE, ScorchGlyph.CODEC);
-                GlyphAsset.register(SnapGlyph.class, SnapGlyph.TYPE, SnapGlyph.CODEC);
-                GlyphAsset.register(BoltGlyph.class, BoltGlyph.TYPE, BoltGlyph.CODEC);
-                GlyphAsset.register(ElectrocuteGlyph.class, ElectrocuteGlyph.TYPE, ElectrocuteGlyph.CODEC);
-                GlyphAsset.register(DrownGlyph.class, DrownGlyph.TYPE, DrownGlyph.CODEC);
-                GlyphAsset.register(RebreathingGlyph.class, RebreathingGlyph.TYPE, RebreathingGlyph.CODEC);
-                GlyphAsset.register(HealthSurgeGlyph.class, HealthSurgeGlyph.TYPE, HealthSurgeGlyph.CODEC);
                 GlyphAsset.register(MageArmorGlyph.class, MageArmorGlyph.TYPE, MageArmorGlyph.CODEC);
                 GlyphAsset.register(IdentifyGlyph.class, IdentifyGlyph.TYPE, IdentifyGlyph::new);
                 GlyphAsset.register(IlluminateGlyph.class, IlluminateGlyph.TYPE, IlluminateGlyph.CODEC);
@@ -514,10 +487,6 @@ public class HexCorePlugin {
                                 .registerComponent(MagicHealthComponent.class, MagicHealthComponent::new);
                 MagicHealthComponent.setComponentType(magicHealthComponentType);
 
-                var fortifyWardComponentType = entityStoreRegistry
-                                .registerComponent(FortifyWardComponent.class, () -> FortifyWardComponent.INSTANCE);
-                FortifyWardComponent.setComponentType(fortifyWardComponentType);
-
                 var flycastingStateType = entityStoreRegistry
                                 .registerComponent(FlycastingState.class, FlycastingState::new);
                 FlycastingState.setComponentType(flycastingStateType);
@@ -545,7 +514,6 @@ public class HexCorePlugin {
                 entityStoreRegistry.registerSystem(new HexAppearanceRevertSystem());
 
                 entityStoreRegistry.registerSystem(new MagicHealthDamageSystem());
-                entityStoreRegistry.registerSystem(new FortifyWardDamageSystem());
 
                 entityStoreRegistry.registerSystem(new InvisibilityDamageSystem());
                 entityStoreRegistry.registerSystem(new ShatterTeardownSystem());
@@ -607,19 +575,14 @@ public class HexCorePlugin {
                 ConstructRegistry.register(PhaseGlyph.TYPE, new PhaseConstructHandler());
                 ConstructRegistry.register(ConjureGlyph.TYPE, new ConjureConstructHandler());
                 ConstructRegistry.register(ErodeGlyph.TYPE, new ErodeConstructHandler());
-                ConstructRegistry.register(FortifyGlyph.TYPE, new FortifyConstructHandler());
                 ConstructRegistry.register(InvisibilityGlyph.TYPE, new InvisibilityConstructHandler());
                 ConstructRegistry.register(LevitateGlyph.TYPE, new LevitateConstructHandler());
                 ConstructRegistry.register(HaltGlyph.TYPE, new HaltConstructHandler());
                 ConstructRegistry.register(DrainGlyph.TYPE, new DrainConstructHandler());
                 ConstructRegistry.register(DelayGlyph.TYPE, new DelayConstructHandler());
                 ConstructRegistry.register(EnsnareGlyph.TYPE, new EnsnareConstructHandler());
-                ConstructRegistry.register(FreezeGlyph.TYPE, new FreezeConstructHandler());
-                ConstructRegistry.register(ElectrocuteGlyph.TYPE, new ElectrocuteConstructHandler());
                 ConstructRegistry.register(MageArmorGlyph.TYPE, new MageArmorConstructHandler());
-                ConstructRegistry.register(RebreathingGlyph.TYPE, new RebreathingConstructHandler());
                 ConstructRegistry.register(ProjectileGlyph.TYPE, new ProjectileConstructHandler());
-                ConstructRegistry.register(IgniteGlyph.TYPE, new IgniteConstructHandler());
                 ConstructRegistry.register(GrowthGlyph.TYPE, new GrowthConstructHandler());
                 ConstructRegistry.register(IlluminateGlyph.TYPE, new IlluminateConstructHandler());
                 ConstructRegistry.register(RotationValue.TYPE, new RotationConstructHandler());

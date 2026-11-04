@@ -5,9 +5,9 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    { "Parent": "Triangle", "StatContribution": 0 },
-    { "Parent": "Greater", "RelativeSize": 0.8, "StatContribution": 0 },
-    { "Parent": "Antiline", "RelativeSize": 0.6, "StatContribution": 0 }
+    { "Parent": "Triangle" },
+    { "Parent": "Greater", "RelativeSize": 0.8 },
+    { "Parent": "Antiline", "RelativeSize": 0.6 }
   ],
   "Slots": {
     "A": {

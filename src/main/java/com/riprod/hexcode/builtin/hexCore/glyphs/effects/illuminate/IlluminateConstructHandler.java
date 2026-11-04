@@ -40,7 +40,7 @@ public class IlluminateConstructHandler implements ConstructHandler<IlluminateSt
         cleanup(status, ctx);
         IlluminateState state = status.getState();
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());

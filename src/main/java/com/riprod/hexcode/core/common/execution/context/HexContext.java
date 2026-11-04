@@ -21,7 +21,6 @@ import com.riprod.hexcode.core.common.execution.cast.component.CastSlotComponent
 import com.riprod.hexcode.core.common.execution.cast.component.CastStyleComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastVariablesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.DefaultVariableComponent;
-import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
@@ -39,13 +38,15 @@ public class HexContext {
     private transient CommandBuffer<EntityStore> accessor;
     @Nullable private transient Deque<String> resolutionStack;
     private final transient long branchId;
+    @Nullable private transient UUID holder;
+    @Nullable private transient Ref<EntityStore> host;
 
     public HexContext(@Nonnull HexCast cast, @Nonnull CastComponent[] components,
             CommandBuffer<EntityStore> accessor) {
         this.cast = cast;
         this.components = components;
         this.accessor = accessor;
-        this.branchId = cast.openBranch();
+        this.branchId = cast.openBranch(this);
     }
 
     private HexContext(@Nonnull HexContext parent) {
@@ -56,7 +57,7 @@ public class HexContext {
             var component = parent.components[i];
             components[i] = component != null ? component.branch() : null;
         }
-        this.branchId = parent.cast.openBranch();
+        this.branchId = parent.cast.openBranch(this);
     }
 
     public HexContext branch() {
@@ -67,8 +68,45 @@ public class HexContext {
         return branchId;
     }
 
-    public void endBranch() {
-        cast.closeBranch(branchId);
+    public boolean isLive() {
+        return cast.isBranchLive(branchId);
+    }
+
+    @Nullable
+    public UUID getHolder() {
+        return holder;
+    }
+
+    public boolean isHeld() {
+        return holder != null;
+    }
+
+    public boolean hold(@Nonnull UUID constructId) {
+        if (holder != null) {
+            return false;
+        }
+        holder = constructId;
+        return true;
+    }
+
+    public boolean attach(@Nonnull UUID constructId, @Nonnull Ref<EntityStore> hostRef) {
+        if (!constructId.equals(holder) || host != null || !isLive()) {
+            return false;
+        }
+        host = hostRef;
+        return true;
+    }
+
+    public boolean isAttachedTo(@Nonnull UUID constructId) {
+        return host != null && constructId.equals(holder);
+    }
+
+    @Nullable
+    public Ref<EntityStore> release() {
+        var attached = host;
+        holder = null;
+        host = null;
+        return attached;
     }
 
     @Nonnull
@@ -178,27 +216,6 @@ public class HexContext {
     @Nonnull
     public VolatilityComponent volatility() {
         return get(VolatilityComponent.TYPE);
-    }
-
-    @Nonnull
-    public ResourcePoolComponent resources() {
-        return get(ResourcePoolComponent.TYPE);
-    }
-
-    public float getResource(String id) {
-        return resources().getResource(id);
-    }
-
-    public void addResource(String id, String source, float amount) {
-        resources().addResource(id, source, amount);
-    }
-
-    public float consumeResource(String id, String spender, float cap) {
-        return resources().consumeResource(id, spender, cap);
-    }
-
-    public Map<String, Float> getResources() {
-        return resources().getResources();
     }
 
     @Nonnull

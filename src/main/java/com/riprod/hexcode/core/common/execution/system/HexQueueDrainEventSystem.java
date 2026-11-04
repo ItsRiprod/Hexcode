@@ -51,6 +51,9 @@ public class HexQueueDrainEventSystem extends WorldEventSystem<EntityStore, HexQ
                 PendingGlyph item = work.get(index);
                 HexContext ctx = item.ctx();
                 HexCast cast = ctx.cast();
+                if (cast.isEnded()) {
+                    continue;
+                }
                 GlyphBudgetComponent budget = ctx.get(GlyphBudgetComponent.TYPE);
                 if (!budget.trySpend(tick, maxPerCast)) {
                     if (budget.getDenied() == 1) {

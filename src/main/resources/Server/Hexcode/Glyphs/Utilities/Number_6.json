@@ -3,8 +3,8 @@
   "Title": "hexcode.glyphs.Number_6.name",
   "Description": "hexcode.glyphs.Number_6.description",
   "ShapeStructure": [
-    { "Parent": "Greater", "StatContribution": 0 },
-    { "Parent": "Line", "RelativeSize": 0.8, "StatContribution": 0 }
+    { "Parent": "Greater" },
+    { "Parent": "Line", "RelativeSize": 0.8 }
   ],
   "Slots": {
     "Next": {

@@ -5,8 +5,8 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    { "Parent": "Circle", "StatContribution": 0 },
-    { "Parent": "Line", "RelativeSize": 0.5, "StatContribution": 0 }
+    { "Parent": "Circle" },
+    { "Parent": "Line", "RelativeSize": 0.5 }
   ],
   "Slots": {
     "Mode": {

@@ -53,13 +53,6 @@
           "Amount": 20
         }
       ],
-      "Affinity_Arcane": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 15
-        }
-      ],
       "Volatility": [
         {
           "Target": "Max",
@@ -124,11 +117,6 @@
             "HexStats": {
               "Volatility": {
                 "Multiplier": 0.75
-              },
-              "Resources": {
-                "Initial": {
-                  "Arcane": 30
-                }
               }
             }
           }
@@ -150,11 +138,6 @@
             "HexStats": {
               "Volatility": {
                 "Multiplier": 0.75
-              },
-              "Resources": {
-                "Initial": {
-                  "Arcane": 40
-                }
               }
             }
           }
@@ -176,11 +159,6 @@
             "HexStats": {
               "Volatility": {
                 "Multiplier": 0.75
-              },
-              "Resources": {
-                "Initial": {
-                  "Arcane": 50
-                }
               }
             }
           }
@@ -202,11 +180,6 @@
             "HexStats": {
               "Volatility": {
                 "Multiplier": 0.75
-              },
-              "Resources": {
-                "Initial": {
-                  "Arcane": 60
-                }
               }
             }
           }

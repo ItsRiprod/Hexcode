@@ -5,7 +5,7 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    { "Parent": "Slash", "StatContribution": 0 }
+    { "Parent": "Slash" }
   ],
   "Slots": {
     "A": {

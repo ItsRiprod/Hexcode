@@ -6,8 +6,8 @@
   "ManaConsumption": 0,
   "IsDeprecated": true,
   "ShapeStructure": [
-    { "Parent": "Slash", "StatContribution": 0 },
-    { "Parent": "Greater", "StatContribution": 0 }
+    { "Parent": "Slash" },
+    { "Parent": "Greater" }
   ],
   "Slots": {
     "A": {

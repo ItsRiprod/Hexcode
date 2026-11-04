@@ -81,7 +81,7 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
         WardState state = status.getState();
         cleanup(status, ctx);
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
 

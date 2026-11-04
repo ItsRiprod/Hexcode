@@ -12,14 +12,7 @@ import com.riprod.hexcode.utils.HexVarUtil;
 
 public final class GlyphCostUtil {
 
-    private static final float SOURCE_SCALE = 25.0f;
-
     private GlyphCostUtil() {
-    }
-
-    public static float contributionEffectiveness(float basis) {
-        if (basis <= 0f) return 1.0f;
-        return (float) Math.pow(10.0, -basis / SOURCE_SCALE);
     }
 
     public static float slotScale(Glyph glyph, HexContext hexContext, String slotKey, SlotConfig slotAsset) {

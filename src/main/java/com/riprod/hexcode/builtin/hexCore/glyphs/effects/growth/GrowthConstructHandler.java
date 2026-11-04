@@ -30,7 +30,7 @@ public class GrowthConstructHandler implements ConstructHandler<GrowthState> {
         GrowthState state = status.getState();
         VfxUtil.removeEffect(ctx.getBuffer(), ctx.getEntityRef(), state != null ? state.getEffectId() : null);
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());

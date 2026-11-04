@@ -11,6 +11,7 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
 
 public class ShatterTeardownSystem extends RefSystem<EntityStore> {
@@ -36,7 +37,8 @@ public class ShatterTeardownSystem extends RefSystem<EntityStore> {
             if (state == null || !state.tryConsume()) return;
             var hexContext = state.getHexContext();
             if (hexContext != null) {
-                hexContext.endBranch();
+                hexContext.updateRuntimeAccessors(buffer);
+                HexExecuter.endBranch(hexContext);
             }
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("ShatterTeardownSystem failed: %s", e);

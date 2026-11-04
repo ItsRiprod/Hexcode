@@ -9,16 +9,18 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
+import com.riprod.hexcode.core.common.execution.context.HexContext;
 
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 
 public final class HexCast {
 
     private UUID executionId = UUID.randomUUID();
     private final Ref<EntityStore> rootRef;
-    private final LongOpenHashSet activeBranches = new LongOpenHashSet();
+    private final Long2ObjectLinkedOpenHashMap<HexContext> liveBranches = new Long2ObjectLinkedOpenHashMap<>();
     private long branchIdSeq = 0L;
     private boolean fizzleNotified;
+    private boolean ended;
     private final CastComponent[] components;
 
     public HexCast(@Nonnull Ref<EntityStore> rootRef, @Nonnull CastComponent[] components) {
@@ -50,18 +52,41 @@ public final class HexCast {
         return executionId;
     }
 
-    public long openBranch() {
-        long id = ++branchIdSeq;
-        activeBranches.add(id);
+    public long openBranch(@Nonnull HexContext branch) {
+        var id = ++branchIdSeq;
+        if (!ended) {
+            liveBranches.put(id, branch);
+        }
         return id;
     }
 
-    public void closeBranch(long id) {
-        activeBranches.remove(id);
+    public boolean closeBranch(long id) {
+        return liveBranches.remove(id) != null;
+    }
+
+    public boolean isBranchLive(long id) {
+        return liveBranches.containsKey(id);
     }
 
     public int getActiveBranchCount() {
-        return activeBranches.size();
+        return liveBranches.size();
+    }
+
+    @Nullable
+    public HexContext firstLiveBranch() {
+        return liveBranches.isEmpty() ? null : liveBranches.get(liveBranches.firstLongKey());
+    }
+
+    public boolean markEnded() {
+        if (ended) {
+            return false;
+        }
+        ended = true;
+        return true;
+    }
+
+    public boolean isEnded() {
+        return ended;
     }
 
     public boolean claimFizzleNotice() {
@@ -82,6 +107,7 @@ public final class HexCast {
         var copy = new HexCast(rootRef, copiedComponents);
         copy.executionId = this.executionId;
         copy.fizzleNotified = this.fizzleNotified;
+        copy.ended = this.ended;
         return copy;
     }
 }

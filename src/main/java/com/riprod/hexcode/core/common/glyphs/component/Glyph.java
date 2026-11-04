@@ -263,6 +263,13 @@ public class Glyph {
     }
 
     @Nullable
+    public Glyph linkedGlyph(String key, HexContext hexContext) {
+        var slot = slots.get(key);
+        var firstLink = slot != null ? slot.getFirstLink() : null;
+        return firstLink != null ? hexContext.getGlyph(firstLink) : null;
+    }
+
+    @Nullable
     public HexVar readSlot(String key, HexContext hexContext) {
         return readSlot(key, hexContext, () -> null);
     }
@@ -277,12 +284,7 @@ public class Glyph {
         if (hexContext.resolutionDepth() >= MAX_RESOLVE_DEPTH)
             return null;
 
-        Slot slot = slots.get(key);
-        String firstLink = slot != null ? slot.getFirstLink() : null;
-        if (firstLink == null)
-            return resolveAssetDefault(key, hexContext, defaultSupplier);
-
-        Glyph linked = hexContext.getGlyph(firstLink);
+        Glyph linked = linkedGlyph(key, hexContext);
         if (linked == null)
             return resolveAssetDefault(key, hexContext, defaultSupplier);
 

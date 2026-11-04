@@ -12,7 +12,6 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.selecting.component.SelectingState;
 import com.riprod.hexcode.builtin.hexCore.pedestals.PedestalSceneHover;
 import com.riprod.hexcode.core.common.context.CasterComponent;

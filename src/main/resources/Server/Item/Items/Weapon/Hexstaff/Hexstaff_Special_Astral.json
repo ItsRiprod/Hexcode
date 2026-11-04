@@ -49,13 +49,6 @@
           "Amount": 18
         }
       ],
-      "Affinity_Void": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 15
-        }
-      ],
       "Volatility": [
         {
           "Target": "Max",
@@ -115,15 +108,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Special_Astral",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 15,
-                  "Void": 15
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Astral"
           }
         }
       ]
@@ -139,15 +124,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Special_Astral",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 20,
-                  "Void": 20
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Astral"
           }
         }
       ]
@@ -163,15 +140,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Special_Astral",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 25,
-                  "Void": 25
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Astral"
           }
         }
       ]
@@ -187,15 +156,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Special_Astral",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 30,
-                  "Void": 30
-                }
-              }
-            }
+            "Style": "Hexstaff_Special_Astral"
           }
         }
       ]

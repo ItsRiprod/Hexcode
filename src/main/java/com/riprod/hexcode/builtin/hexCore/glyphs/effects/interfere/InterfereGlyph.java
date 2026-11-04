@@ -1,13 +1,11 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.interfere;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector3d;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
@@ -18,6 +16,7 @@ import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
+import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -26,8 +25,6 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 
 public class InterfereGlyph extends GlyphAsset {
     public static final String TYPE = "Interfere";
-
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
@@ -59,13 +56,13 @@ public class InterfereGlyph extends GlyphAsset {
                 InterfereStyle.renderHijack(this, pos, hexContext, accessor);
             }
         }
-        hexContext.endBranch();
+        HexExecuter.endBranch(hexContext);
     }
 
     private int hijackConstruct(HexEffectsComponent construct, Ref<EntityStore> ref,
             Glyph glyph, HexContext hexContext, CommandBuffer<EntityStore> accessor) {
 
-        List<HexStatus<?>> targets = new ArrayList<>(construct.getEffects().values());
+        List<HexStatus<?>> targets = ConstructSplicer.spliceable(construct);
         if (targets.isEmpty())
             return 0;
 
@@ -74,8 +71,6 @@ public class InterfereGlyph extends GlyphAsset {
         int hijacked = 0;
         for (HexStatus<?> target : targets) {
             ConstructHandler<?> handler = ConstructRegistry.get(target.getHandlerId());
-            if (handler == null)
-                continue;
 
             ConstructSplicer.splice(target, handler, hexContext, glyph,
                     ConstructSplicer.ChainMode.REPLACE,
@@ -83,12 +78,7 @@ public class InterfereGlyph extends GlyphAsset {
                     0f);
 
             construct.removeEffect(target.getConstructId());
-            try {
-                invokeOnEnd(handler, target, ctx);
-            } catch (Exception e) {
-                LOGGER.atWarning().log("interfere: hijacked construct onEnd failed: %s", e.getMessage());
-                target.getHexContext().endBranch();
-            }
+            HexConstructSystem.end(handler, target, ctx);
             hijacked++;
         }
 
@@ -98,12 +88,5 @@ public class InterfereGlyph extends GlyphAsset {
     private Vector3d resolvePosition(Ref<EntityStore> ref, CommandBuffer<EntityStore> accessor) {
         TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
         return tc != null ? tc.getPosition() : null;
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private void invokeOnEnd(ConstructHandler<?> handler, HexStatus<?> status, ConstructTickContext ctx) {
-        ConstructHandler raw = handler;
-        HexStatus rawStatus = status;
-        raw.onEnd(rawStatus, ctx);
     }
 }

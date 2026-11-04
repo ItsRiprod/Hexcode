@@ -6,9 +6,9 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    { "Parent": "Circle", "StatContribution": 0 },
-    { "Parent": "Slash", "StatContribution": 0 },
-    { "Parent": "Circle", "StatContribution": 0 }
+    { "Parent": "Circle" },
+    { "Parent": "Slash" },
+    { "Parent": "Circle" }
   ],
   "Slots": {
     "A": {

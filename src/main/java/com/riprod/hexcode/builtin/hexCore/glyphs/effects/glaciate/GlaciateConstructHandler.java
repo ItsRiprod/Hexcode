@@ -129,7 +129,7 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         cleanup(status, ctx);
         GlaciateState state = status.getState();
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
         HexContext hexContext = status.getHexContext();

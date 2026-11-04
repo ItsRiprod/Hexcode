@@ -104,25 +104,30 @@ public final class CastPolicyComponent implements CastComponent {
 
         public static final BuilderCodec<Overlay> CODEC = BuilderCodec
                 .builder(Overlay.class, Overlay::new)
-                .append(new KeyedCodec<>("RequireMagicCharges", Codec.BOOLEAN),
+                .<Boolean>appendInherited(new KeyedCodec<>("RequireMagicCharges", Codec.BOOLEAN),
                         (c, v) -> c.requireMagicCharges = v,
-                        c -> c.requireMagicCharges)
+                        c -> c.requireMagicCharges,
+                        (c, p) -> c.requireMagicCharges = p.requireMagicCharges)
                 .add()
-                .append(new KeyedCodec<>("ConsumeMana", Codec.BOOLEAN),
+                .<Boolean>appendInherited(new KeyedCodec<>("ConsumeMana", Codec.BOOLEAN),
                         (c, v) -> c.consumeMana = v,
-                        c -> c.consumeMana)
+                        c -> c.consumeMana,
+                        (c, p) -> c.consumeMana = p.consumeMana)
                 .add()
-                .append(new KeyedCodec<>("ApplyVolatilityDecay", Codec.BOOLEAN),
+                .<Boolean>appendInherited(new KeyedCodec<>("ApplyVolatilityDecay", Codec.BOOLEAN),
                         (c, v) -> c.applyVolatilityDecay = v,
-                        c -> c.applyVolatilityDecay)
+                        c -> c.applyVolatilityDecay,
+                        (c, p) -> c.applyVolatilityDecay = p.applyVolatilityDecay)
                 .add()
-                .append(new KeyedCodec<>("BypassVolatilityDepletion", Codec.BOOLEAN),
+                .<Boolean>appendInherited(new KeyedCodec<>("BypassVolatilityDepletion", Codec.BOOLEAN),
                         (c, v) -> c.bypassVolatilityDepletion = v,
-                        c -> c.bypassVolatilityDepletion)
+                        c -> c.bypassVolatilityDepletion,
+                        (c, p) -> c.bypassVolatilityDepletion = p.bypassVolatilityDepletion)
                 .add()
-                .append(new KeyedCodec<>("TierScale", Codec.FLOAT),
+                .<Float>appendInherited(new KeyedCodec<>("TierScale", Codec.FLOAT),
                         (c, v) -> c.tierScale = v,
-                        c -> c.tierScale)
+                        c -> c.tierScale,
+                        (c, p) -> c.tierScale = p.tierScale)
                 .documentation("Scales the volatility budget granted by the caster's stats.")
                 .add()
                 .build();

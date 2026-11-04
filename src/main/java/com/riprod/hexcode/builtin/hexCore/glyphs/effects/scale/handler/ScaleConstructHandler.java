@@ -43,7 +43,7 @@ public class ScaleConstructHandler implements ConstructHandler<ScaleState> {
         cleanup(status, ctx);
         ScaleState state = status.getState();
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());

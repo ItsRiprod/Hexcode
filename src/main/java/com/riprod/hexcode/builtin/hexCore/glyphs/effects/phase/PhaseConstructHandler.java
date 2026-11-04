@@ -56,7 +56,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
         cleanup(status, ctx);
         PhaseState state = status.getState();
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());

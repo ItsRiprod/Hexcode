@@ -25,7 +25,7 @@ public class ErodeConstructHandler implements ConstructHandler<ErodeState> {
     public void onEnd(HexStatus<ErodeState> status, ConstructTickContext ctx) {
         ErodeState state = status.getState();
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
         VfxUtil.removeEffect(ctx.getBuffer(), ctx.getEntityRef(), state.getEffectId());

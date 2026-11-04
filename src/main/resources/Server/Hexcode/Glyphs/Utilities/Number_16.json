@@ -3,8 +3,8 @@
   "Title": "hexcode.glyphs.Number_16.name",
   "Description": "hexcode.glyphs.Number_16.description",
   "ShapeStructure": [
-    { "Parent": "Less", "StatContribution": 0 },
-    { "Parent": "Square", "RelativeSize": 0.8, "StatContribution": 0 }
+    { "Parent": "Less" },
+    { "Parent": "Square", "RelativeSize": 0.8 }
   ],
   "Slots": {
     "Next": {

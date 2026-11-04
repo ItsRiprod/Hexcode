@@ -128,6 +128,9 @@ public class IlluminateGlyph extends GlyphAsset {
             // (not-yet-valid) ref is never used
             Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                     accessor, hexContext, glyph, TYPE, spawnPos, state);
+            if (holder == null) {
+                return;
+            }
             holder.addComponent(DynamicLight.getComponentType(), new DynamicLight(light));
             if (mountTo != null) {
                 holder.addComponent(MountedComponent.getComponentType(),

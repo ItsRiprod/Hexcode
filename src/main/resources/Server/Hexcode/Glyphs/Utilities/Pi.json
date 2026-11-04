@@ -3,8 +3,8 @@
   "Title": "hexcode.glyphs.Pi.name",
   "Description": "hexcode.glyphs.Pi.description",
   "ShapeStructure": [
-    { "Parent": "Triangle", "StatContribution": 0 },
-    { "Parent": "Down", "RelativeSize": 0.4, "StatContribution": 0 }
+    { "Parent": "Triangle" },
+    { "Parent": "Down", "RelativeSize": 0.4 }
   ],
   "Slots": {
     "Next": {

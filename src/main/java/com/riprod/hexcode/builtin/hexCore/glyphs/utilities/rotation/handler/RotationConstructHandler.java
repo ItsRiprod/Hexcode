@@ -6,6 +6,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation.components.RotationState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.rotation.utils.RotationUtils;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
@@ -34,7 +35,7 @@ public class RotationConstructHandler implements ConstructHandler<RotationState>
 
     @Override
     public void onCleanup(HexStatus<RotationState> status, ConstructTickContext ctx) {
-        status.getHexContext().endBranch();
+        HexExecuter.endBranch(status.getHexContext());
         try {
             RotationState state = status.getState();
             if (state == null) return;

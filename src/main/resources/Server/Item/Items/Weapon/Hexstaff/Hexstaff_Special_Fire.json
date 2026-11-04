@@ -49,13 +49,6 @@
           "Amount": 18
         }
       ],
-      "Affinity_Fire": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount": 15
-        }
-      ],
       "Volatility": [
         {
           "Target": "Max",
@@ -118,11 +111,9 @@
             "Parent": "CastConfig_Tier1",
             "Style": "Hexstaff_Special_Fire",
             "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 15,
-                  "Fire": 15
-                }
+              "Elemental": {
+                "Element": "Fire",
+                "Charge": 5
               }
             }
           }
@@ -142,11 +133,9 @@
             "Parent": "CastConfig_Tier2",
             "Style": "Hexstaff_Special_Fire",
             "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 20,
-                  "Fire": 20
-                }
+              "Elemental": {
+                "Element": "Fire",
+                "Charge": 5
               }
             }
           }
@@ -166,11 +155,9 @@
             "Parent": "CastConfig_Tier3",
             "Style": "Hexstaff_Special_Fire",
             "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 25,
-                  "Fire": 25
-                }
+              "Elemental": {
+                "Element": "Fire",
+                "Charge": 5
               }
             }
           }
@@ -190,11 +177,9 @@
             "Parent": "CastConfig_Tier4",
             "Style": "Hexstaff_Special_Fire",
             "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 30,
-                  "Fire": 30
-                }
+              "Elemental": {
+                "Element": "Fire",
+                "Charge": 5
               }
             }
           }

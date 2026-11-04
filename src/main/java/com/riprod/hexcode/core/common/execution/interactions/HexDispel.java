@@ -47,7 +47,7 @@ public class HexDispel extends SimpleInteraction {
             CasterStateComponent casterState = buffer.getComponent(player,
                     CasterStateComponent.getComponentType());
             HexCastStore casts = buffer.getResource(HexCastStore.getResourceType());
-            int count = casterState != null ? casterState.cancelAll(casts) : 0;
+            int count = casterState != null ? casterState.cancelAll(casts, buffer) : 0;
             PlayerRef pr = buffer.getComponent(player, PlayerRef.getComponentType());
             if (pr != null && count > 0) {
                 pr.sendMessage(Message.raw("dispelled " + count + " active spell(s)"));

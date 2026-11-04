@@ -5,8 +5,8 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    { "Parent": "Triangle", "StatContribution": 0 },
-    { "Parent": "Triangle", "RelativeSize": 0.5, "StatContribution": 0 }
+    { "Parent": "Triangle" },
+    { "Parent": "Triangle", "RelativeSize": 0.5 }
   ],
   "Slots": {
     "Slot": {

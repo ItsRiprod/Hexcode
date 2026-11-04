@@ -137,6 +137,9 @@ public class GlaciateGlyph extends GlyphAsset {
                 Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                                 accessor, hexContext, glyph, GlaciateGlyph.TYPE, new Vector3d(spawnPos),
                                 new GlaciateState(glyph.getNextLinks()));
+                if (holder == null) {
+                        return;
+                }
 
                 Rotation3f rotation = new Rotation3f();
                 holder.getComponent(TransformComponent.getComponentType())

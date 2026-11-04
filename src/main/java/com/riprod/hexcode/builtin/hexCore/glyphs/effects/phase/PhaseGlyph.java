@@ -129,6 +129,15 @@ public class PhaseGlyph extends GlyphAsset {
             return;
         }
 
+        Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
+        Holder<EntityStore> holder = HexConstructSpawner.createWithState(
+                accessor, hexContext, glyph, PhaseGlyph.TYPE, blockCenter,
+                new PhaseState(glyph.getNextLinks(), crushDamageImpact,
+                        damageCauseId));
+        if (holder == null) {
+            return;
+        }
+
         Holder<ChunkStore> blockEntity = BlockAccess.takeBlockEntity(world, pos);
 
         if (!BlockAccess.clearBlock(world, pos, SetBlockSettings.NO_SEND_PARTICLES)) {
@@ -142,15 +151,9 @@ public class PhaseGlyph extends GlyphAsset {
         List<PhasedBlock> phasedBlocks = new ArrayList<>();
         phasedBlocks.add(new PhasedBlock(pos, typeId, rotationIndex, blockEntity));
 
-        Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
         PhaseStyle.renderPhaseOut(this, blockCenter, hexContext, accessor);
 
         glyph.writeOutput(new BlockVar(pos), hexContext);
-
-        Holder<EntityStore> holder = HexConstructSpawner.createWithState(
-                accessor, hexContext, glyph, PhaseGlyph.TYPE, blockCenter,
-                new PhaseState(glyph.getNextLinks(), crushDamageImpact,
-                        damageCauseId));
 
         holder.addComponent(PhaseComponent.getComponentType(),
                 new PhaseComponent(phasedBlocks, (float) duration));

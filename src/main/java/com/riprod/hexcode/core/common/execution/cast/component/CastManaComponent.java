@@ -66,14 +66,16 @@ public final class CastManaComponent implements CastComponent, CastOverlay<CastM
 
     public static final BuilderCodec<CastManaComponent> CODEC = BuilderCodec
             .builder(CastManaComponent.class, CastManaComponent::new)
-            .append(new KeyedCodec<>("Cost", Codec.FLOAT),
+            .<Float>appendInherited(new KeyedCodec<>("Cost", Codec.FLOAT),
                     (c, v) -> c.cost = v,
-                    c -> c.cost < 0f ? null : c.cost)
+                    c -> c.cost < 0f ? null : c.cost,
+                    (c, p) -> c.cost = p.cost)
             .documentation("Replaces the mana cost computed from the hex.")
             .add()
-            .append(new KeyedCodec<>("Multiplier", Codec.FLOAT),
+            .<Float>appendInherited(new KeyedCodec<>("Multiplier", Codec.FLOAT),
                     (c, v) -> c.multiplier = v,
-                    c -> c.multiplier)
+                    c -> c.multiplier,
+                    (c, p) -> c.multiplier = p.multiplier)
             .documentation("Scales the mana cost. Compounds with earlier layers.")
             .add()
             .build();

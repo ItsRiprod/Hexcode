@@ -8,7 +8,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.dispatch.SlotSelectedEvent;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.component.CraftingState;
@@ -18,7 +17,6 @@ import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 
 public class SelectingSlotSelectSystem extends EntityEventSystem<EntityStore, SlotSelectedEvent> {
-    private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     public SelectingSlotSelectSystem() {
         super(SlotSelectedEvent.class);

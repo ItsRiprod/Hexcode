@@ -74,7 +74,7 @@ public class DelayConstructHandler implements ConstructHandler<DelayState> {
             status.getHexContext().updateRuntimeAccessors(buffer);
             HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());
         } else {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
         }
 
         onCleanup(status, ctx);

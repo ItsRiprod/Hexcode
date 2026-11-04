@@ -122,13 +122,14 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
 
     private static void abandon(List<HexStatus<?>> detached, InteractionContext ctx) {
         if (detached.isEmpty()) return;
+        var buffer = ctx.getCommandBuffer();
         for (var status : detached) {
             var hexContext = status.getHexContext();
             if (hexContext != null) {
-                hexContext.endBranch();
+                hexContext.updateRuntimeAccessors(buffer);
+                HexExecuter.endBranch(hexContext);
             }
         }
-        var buffer = ctx.getCommandBuffer();
         var projectileRef = ctx.getEntity();
         if (buffer != null && projectileRef != null && projectileRef.isValid()) {
             buffer.tryRemoveEntity(projectileRef, RemoveReason.REMOVE);

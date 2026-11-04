@@ -65,7 +65,6 @@ import com.riprod.hexcode.core.common.execution.cast.component.CastManaComponent
 import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastVariablesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.GlyphBudgetComponent;
-import com.riprod.hexcode.core.common.execution.cast.component.ResourcePoolComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.component.CasterStateComponent;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
@@ -77,6 +76,7 @@ import com.riprod.hexcode.core.common.execution.interactions.HexExecuteInteracti
 import com.riprod.hexcode.core.common.execution.resource.HexCastStore;
 import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
 import com.riprod.hexcode.core.common.execution.system.CasterSpellTeardownSystem;
+import com.riprod.hexcode.core.common.execution.system.HexCastSweepEventSystem;
 import com.riprod.hexcode.core.common.execution.system.HexExecutionTickSystem;
 import com.riprod.hexcode.core.common.execution.system.HexQueueDrainEventSystem;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
@@ -144,7 +144,6 @@ public class HexCore {
     private static void registerCastComponents(JavaPlugin plugin) {
         HexComponentRegistry.requireLoaded(
                 VolatilityComponent.TYPE,
-                ResourcePoolComponent.TYPE,
                 CastPolicyComponent.TYPE,
                 CastManaComponent.TYPE,
                 GlyphBudgetComponent.TYPE,
@@ -366,6 +365,7 @@ public class HexCore {
                 .registerResource(HexExecutionQueue.class, HexExecutionQueue::new);
         HexExecutionQueue.setResourceType(hexExecutionQueueType);
         entityStoreRegistry.registerSystem(new HexExecutionTickSystem());
+        entityStoreRegistry.registerSystem(new HexCastSweepEventSystem());
         entityStoreRegistry.registerSystem(new HexQueueDrainEventSystem());
 
         var debugMessageQueueType = entityStoreRegistry

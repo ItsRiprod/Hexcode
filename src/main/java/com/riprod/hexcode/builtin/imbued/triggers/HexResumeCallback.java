@@ -1,6 +1,7 @@
 package com.riprod.hexcode.builtin.imbued.triggers;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.BiFunction;
 
 import javax.annotation.Nonnull;
@@ -23,6 +24,7 @@ public final class HexResumeCallback {
     }
 
     public static TriggerCallback build(@Nonnull HexContext hexContext,
+                                        @Nonnull UUID constructId,
                                         @Nonnull List<String> nextGlyphIds,
                                         @Nonnull TriggerState state,
                                         @Nullable BiFunction<CommandBuffer<EntityStore>, Object, HexVar> projection) {
@@ -38,6 +40,7 @@ public final class HexResumeCallback {
                 }
 
                 state.markFired();
+                HexExecuter.release(hexContext, constructId, buffer);
 
                 HexExecuter.continueExecution(nextGlyphIds, hexContext);
             } catch (Exception e) {

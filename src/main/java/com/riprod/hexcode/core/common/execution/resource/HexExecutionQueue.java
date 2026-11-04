@@ -1,13 +1,12 @@
 package com.riprod.hexcode.core.common.execution.resource;
 
-import java.util.function.Predicate;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.Resource;
 import com.hypixel.hytale.component.ResourceType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -88,12 +87,9 @@ public final class HexExecutionQueue implements Resource<EntityStore> {
         deferred.clear();
     }
 
-    public int removeIf(@Nonnull Predicate<PendingGlyph> filter) {
-        int before = pending.size() + snapshot.size() + deferred.size();
-        pending.removeIf(filter);
-        snapshot.removeIf(filter);
-        deferred.removeIf(filter);
-        return before - pending.size() - snapshot.size() - deferred.size();
+    public void purge(@Nonnull HexCast cast) {
+        pending.removeIf(item -> item.ctx().cast() == cast);
+        deferred.removeIf(item -> item.ctx().cast() == cast);
     }
 
     @Nullable

@@ -222,6 +222,9 @@ public class ConjureGlyph extends GlyphAsset {
 
                 var holder = HexConstructSpawner.create(
                                 hexContext.getAccessor(), hexContext, glyph, ConjureGlyph.TYPE, new Vector3d(center));
+                if (holder == null) {
+                        return;
+                }
 
                 holder.ensureComponent(PropComponent.getComponentType());
                 holder.ensureComponent(EffectControllerComponent.getComponentType());

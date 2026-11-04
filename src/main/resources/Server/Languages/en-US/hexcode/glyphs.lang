@@ -40,6 +40,13 @@ Arctan.a.description=Value to take the arctangent of
 Arctan.Next.name=Next
 Arctan.Next.description=The next glyph in the execution chain
 
+Catalyst.name=Catalyst
+Catalyst.description=Charges the element of the linked shape. Reads as that element's current charge
+Catalyst.Next.name=Next
+Catalyst.Next.description=The next glyph in the execution chain
+Catalyst.Element.name=Element
+Catalyst.Element.description=A glyph of one shape
+
 Ceiling.name=Ceiling
 Ceiling.description=Rounds A up to the nearest whole number.
 Ceiling.a.name=A
@@ -374,7 +381,7 @@ Query.trilean.negative.description=Stamina, X, Pitch, Red, or max volatility
 Query.trilean.neutral=Mid
 Query.trilean.neutral.description=Mana, Y, Yaw, Green, or remaining volatility
 Query.trilean.positive=High
-Query.trilean.positive.description=Health, Z, Roll, Blue, or accrued resources
+Query.trilean.positive.description=Health, Z, Roll, Blue, or spent volatility
 Query.reference.name=Reference
 Query.reference.description=The value to read from
 Query.Next.name=Next
@@ -528,14 +535,6 @@ Beam.Next.description=The next glyph in the execution chain
 
 Burning.name=Burning
 Burning.description=Emit a beam of fire in front of you, selecting everyone in your path
-Burning.center.name=Center
-Burning.center.description=Position to center the explosion. Defaults to caster position
-Burning.radius.name=Radius
-Burning.radius.description=Radius of the fire explosion
-Burning.magnitude.name=Magnitude
-Burning.magnitude.description=Strength of the explosion force and damage
-Burning.Next.name=Next
-Burning.Next.description=The next glyph in the execution chain
 
 Projectile.name=Projectile
 Projectile.description=Launches a projectile that triggers child glyphs on collision
@@ -671,14 +670,6 @@ Force.Next.description=The next glyph in the execution chain
 
 Fortify.name=Fortify
 Fortify.description=Nullifies the full force of the damage from the next attack
-Fortify.target.name=Target
-Fortify.target.description=Variable containing the targets to affect
-Fortify.ResourceLimit.name=Resource Limit
-Fortify.ResourceLimit.description=Caps how much Life is spent fueling the ward
-Fortify.immediate.name=Immediate
-Fortify.immediate.description=Fires immediately when the effect is applied
-Fortify.Next.name=Next
-Fortify.Next.description=Fires when the ward breaks or expires, carrying the attacker that broke it
 
 Glaciate.name=Glaciate
 Glaciate.description=Conjures a solid ice block at a target with gravity and speed-based impact damage
@@ -896,81 +887,27 @@ Ward.Next.description=Fires when the ward ends, either on release or Volatility 
 
 Scorch.name=Scorch
 Scorch.description=Discharges accumulated complexity as a burst of fire damage
-Scorch.Next.name=Next
-Scorch.Next.description=The next glyph in the execution chain
-Scorch.ResourceLimit.name=Complexity Limit
-Scorch.ResourceLimit.description=Caps how much Resource is used
-Scorch.target.name=Target
-Scorch.target.description=Variable containing the target to affect
 
 Ignite.name=Ignite
 Ignite.description=Sets the target ablaze, dealing fire damage over time
-Ignite.immediate.name=Immediate
-Ignite.immediate.description=Fires immediately when the status is applied
-Ignite.Next.name=Next
-Ignite.Next.description=The next glyph in the execution chain
-Ignite.ResourceLimit.name=Complexity Limit
-Ignite.ResourceLimit.description=Caps how much Resource is used
-Ignite.target.name=Target
-Ignite.target.description=Variable containing the target to affect
 
 Snap.name=Snap
 Snap.description=Discharges accumulated complexity as a brittle burst of ice damage
-Snap.Next.name=Next
-Snap.Next.description=The next glyph in the execution chain
-Snap.ResourceLimit.name=Complexity Limit
-Snap.ResourceLimit.description=Caps how much Resource is used
-Snap.target.name=Target
-Snap.target.description=Variable containing the target to affect
 
 Freeze.name=Freeze
 Freeze.description=Freezes the target, slowing its movement
-Freeze.immediate.name=Immediate
-Freeze.immediate.description=Fires immediately when the status is applied
-Freeze.Next.name=Next
-Freeze.Next.description=The next glyph in the execution chain
-Freeze.ResourceLimit.name=Complexity Limit
-Freeze.ResourceLimit.description=Caps how much Resource is used
-Freeze.target.name=Target
-Freeze.target.description=Variable containing the target to affect
 
 Bolt.name=Bolt
 Bolt.description=Discharges accumulated complexity as an instant burst of lightning damage
-Bolt.Next.name=Next
-Bolt.Next.description=The next glyph in the execution chain
-Bolt.ResourceLimit.name=Complexity Limit
-Bolt.ResourceLimit.description=Caps how much Resource is used
-Bolt.target.name=Target
-Bolt.target.description=Variable containing the target to affect
 
 Electrocute.name=Electrocute
 Electrocute.description=Electrocutes the target, making it faster
-Electrocute.immediate.name=Immediate
-Electrocute.immediate.description=Fires immediately when the status is applied
-Electrocute.Next.name=Next
-Electrocute.Next.description=The next glyph in the execution chain
-Electrocute.ResourceLimit.name=Complexity Limit
-Electrocute.ResourceLimit.description=Caps how much Resource is used
-Electrocute.target.name=Target
-Electrocute.target.description=Variable containing the target to affect
 
 Drown.name=Drown
 Drown.description=Discharges accumulated complexity as a crushing surge of water damage
-Drown.Next.name=Next
-Drown.Next.description=The next glyph in the execution chain
-Drown.ResourceLimit.name=Complexity Limit
-Drown.ResourceLimit.description=Caps how much Resource is used
-Drown.target.name=Target
-Drown.target.description=Variable containing the target to affect
 
 HealthSurge.name=Health Surge
 HealthSurge.description=Converts accumulated complexity into healing, restoring the target's health
-HealthSurge.Next.name=Next
-HealthSurge.Next.description=The next glyph in the execution chain
-HealthSurge.ResourceLimit.name=Complexity Limit
-HealthSurge.ResourceLimit.description=Caps how much Resource is used
-HealthSurge.target.name=Target
-HealthSurge.target.description=Variable containing the target to affect
 
 MageArmor.name=Mage Armor
 MageArmor.description=Grants the target temporary hitpoints that absorb incoming damage for a duration
@@ -985,11 +922,3 @@ MageArmor.duration.description=How long the status lasts in seconds
 
 Rebreathing.name=Rebreathing
 Rebreathing.description=Fills the target's lungs with air, letting it breathe underwater for a duration
-Rebreathing.immediate.name=Immediate
-Rebreathing.immediate.description=Fires immediately when the status is applied
-Rebreathing.Next.name=Next
-Rebreathing.Next.description=The next glyph in the execution chain
-Rebreathing.ResourceLimit.name=Complexity Limit
-Rebreathing.ResourceLimit.description=Caps how much Resource is used
-Rebreathing.target.name=Target
-Rebreathing.target.description=Variable containing the target to affect

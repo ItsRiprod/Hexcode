@@ -12,13 +12,6 @@
           "Amount#": "round($Mithril.Volatility * $Armor.Spread_Head * $Armor.Mult_Volatility * 2) / 2",
           "CalculationType": "Additive"
         }
-      ],
-      "Affinity_Lightning": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount#": "round($Mithril.Affinity * $Armor.Spread_Head * $Armor.Mult_Affinity)"
-        }
       ]
     }
   }

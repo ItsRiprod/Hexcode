@@ -12,13 +12,6 @@
           "Amount#": "round($Prisma.Volatility * $Armor.Spread_Chest * $Armor.Mult_Volatility * 2) / 2",
           "CalculationType": "Additive"
         }
-      ],
-      "Affinity_Arcane": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount#": "round($Prisma.Affinity * $Armor.Spread_Chest * $Armor.Mult_Affinity)"
-        }
       ]
     }
   }

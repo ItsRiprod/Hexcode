@@ -48,8 +48,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             return true;
 
         if (holdStat.get() < 1f) {
-            fireRelease(glyph, status, buffer, casterRef);
-            return true;
+            return requestRelease(status);
         }
 
         var tracker = status.getHexContext().volatility();
@@ -57,8 +56,7 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             return false;
 
         if (!payUpkeep(dt, glyph, status, statMap, buffer, casterRef)) {
-            fireRelease(glyph, status, buffer, casterRef);
-            return true;
+            return requestRelease(status);
         }
 
         accrueVolatility(dt, glyph, status);
@@ -66,6 +64,14 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
 
         drainSustain(dt, status);
         return false;
+    }
+
+    private static boolean requestRelease(HexStatus<ConcentrationState> status) {
+        var state = status.getState();
+        if (state != null) {
+            state.markReleasing();
+        }
+        return true;
     }
 
     private void accrueVolatility(float dt, GlyphAsset glyph, HexStatus<ConcentrationState> status) {
@@ -188,6 +194,17 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
     }
 
     @Override
+    public void onEnd(HexStatus<ConcentrationState> status, ConstructTickContext ctx) {
+        var state = status.getState();
+        var casterRef = ctx.getEntityRef();
+        if (state != null && state.isReleasing() && casterRef != null && casterRef.isValid()) {
+            fireRelease(GlyphAsset.of(status.getTriggeringGlyph(), ConcentrationGlyph.class), status,
+                    ctx.getBuffer(), casterRef);
+        }
+        onCleanup(status, ctx);
+    }
+
+    @Override
     public void onCleanup(HexStatus<ConcentrationState> status, ConstructTickContext ctx) {
         ConcentrationState state = status.getState();
         if (state != null) {
@@ -197,6 +214,6 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
             }
         }
 
-        status.getHexContext().endBranch();
+        HexExecuter.endBranch(status.getHexContext());
     }
 }

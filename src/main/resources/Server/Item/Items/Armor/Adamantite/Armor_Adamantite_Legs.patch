@@ -12,13 +12,6 @@
           "Amount#": "round($Adamantite.Volatility * $Armor.Spread_Legs * $Armor.Mult_Volatility * 2) / 2",
           "CalculationType": "Additive"
         }
-      ],
-      "Affinity_Fire": [
-        {
-          "Target": "Max",
-          "CalculationType": "Additive",
-          "Amount#": "round($Adamantite.Affinity * $Armor.Spread_Legs * $Armor.Mult_Affinity)"
-        }
       ]
     }
   }

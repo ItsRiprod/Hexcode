@@ -12,10 +12,12 @@ public final class LogScopes {
     public static final String PROTECT = "Hexcode|Protect";
     public static final String STATE = "Hexcode|State";
     public static final String IMBUE = "Hexcode|Imbue";
+    public static final String ELEMENT = "Hexcode|Element";
 
     public static final String[] ALL = new String[] {
             GLYPH, DRAW, DIAG, CRAFT, CAST,
-            CMD, ASSETS, PROTECT, STATE, IMBUE
+            CMD, ASSETS, PROTECT, STATE, IMBUE,
+            ELEMENT
     };
 
     private LogScopes() {

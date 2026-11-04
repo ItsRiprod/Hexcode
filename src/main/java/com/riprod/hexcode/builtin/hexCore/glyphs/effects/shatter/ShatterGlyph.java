@@ -171,7 +171,7 @@ public class ShatterGlyph extends GlyphAsset {
 
         ShatterStyle.renderLaunch(this, spawnPos, centralDir, hexContext, hexContext.getAccessor());
 
-        hexContext.endBranch();
+        HexExecuter.endBranch(hexContext);
     }
 
     private void spawnShard(HexContext hexContext, Glyph glyph, Ref<EntityStore> parent,

@@ -161,6 +161,9 @@ public class ProjectileGlyph extends GlyphAsset {
 
         Holder<EntityStore> holder = HexConstructSpawner.create(hexContext.getAccessor(), hexContext, glyph,
                 ProjectileGlyph.TYPE, spawnPos);
+        if (holder == null) {
+            return;
+        }
 
         Rotation3f rotation = Rotation3f.lookAt(direction);
 

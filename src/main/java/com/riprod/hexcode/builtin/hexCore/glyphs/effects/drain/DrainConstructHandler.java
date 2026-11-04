@@ -96,7 +96,7 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
     public void onEnd(HexStatus<DrainState> status, ConstructTickContext ctx) {
         DrainState state = status.getState();
         if (state == null) {
-            status.getHexContext().endBranch();
+            HexExecuter.endBranch(status.getHexContext());
             return;
         }
 

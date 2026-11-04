@@ -27,115 +27,72 @@ public final class HexCastStore implements Resource<EntityStore> {
         resourceType = type;
     }
 
-    private static final class Entry {
-        private final HexCast cast;
-        private final long registeredTick;
-
-        private Entry(HexCast cast, long registeredTick) {
-            this.cast = cast;
-            this.registeredTick = registeredTick;
-        }
-    }
-
-    private final Object2ObjectLinkedOpenHashMap<UUID, Entry> entries = new Object2ObjectLinkedOpenHashMap<>();
-    private long tick;
+    private final Object2ObjectLinkedOpenHashMap<UUID, HexCast> casts = new Object2ObjectLinkedOpenHashMap<>();
 
     public HexCastStore() {
     }
 
     public void register(@Nonnull HexCast cast) {
-        entries.put(cast.getExecutionId(), new Entry(cast, tick));
+        casts.put(cast.getExecutionId(), cast);
     }
 
     @Nullable
     public HexCast get(@Nullable UUID executionId) {
-        if (executionId == null)
-            return null;
-        Entry entry = entries.get(executionId);
-        return entry != null ? entry.cast : null;
+        return executionId == null ? null : casts.get(executionId);
     }
 
     public boolean remove(@Nullable UUID executionId) {
-        return executionId != null && entries.remove(executionId) != null;
+        return executionId != null && casts.remove(executionId) != null;
     }
 
     public int size() {
-        return entries.size();
-    }
-
-    public long nextTick() {
-        return ++tick;
-    }
-
-    public long getTick() {
-        return tick;
+        return casts.size();
     }
 
     @Nonnull
-    public List<HexCast> reclaimFinished() {
-        List<HexCast> reclaimed = null;
-        var it = entries.object2ObjectEntrySet()
-                .fastIterator();
-        while (it.hasNext()) {
-            HexCast cast = it.next().getValue().cast;
+    public List<HexCast> collectFinished() {
+        List<HexCast> finished = null;
+        for (var cast : casts.values()) {
             if (isFinished(cast)) {
-                it.remove();
-                if (reclaimed == null)
-                    reclaimed = new ArrayList<>(2);
-                reclaimed.add(cast);
+                if (finished == null)
+                    finished = new ArrayList<>(2);
+                finished.add(cast);
             }
         }
-        return reclaimed == null ? List.of() : reclaimed;
+        return finished == null ? List.of() : finished;
     }
 
     @Nonnull
-    public List<HexCast> endExpired(long maxLifetimeTicks) {
-        List<HexCast> expired = null;
-        var it = entries.object2ObjectEntrySet().fastIterator();
-        while (it.hasNext()) {
-            Entry entry = it.next().getValue();
-            if (tick - entry.registeredTick < maxLifetimeTicks) {
-                break;
-            }
-            if (expired == null)
-                expired = new ArrayList<>(2);
-            expired.add(end(entry.cast));
-            it.remove();
+    public List<HexCast> collectOverCap(int maxActive) {
+        var excess = -maxActive;
+        for (var cast : casts.values()) {
+            if (!isFinished(cast))
+                excess++;
         }
-        return expired == null ? List.of() : expired;
-    }
-
-    @Nonnull
-    public List<HexCast> endOverCap(int maxActive) {
-        if (entries.size() <= maxActive) {
+        if (excess <= 0) {
             return List.of();
         }
-        List<HexCast> evicted = new ArrayList<>(entries.size() - maxActive);
-        while (entries.size() > maxActive) {
-            evicted.add(end(entries.removeFirst().cast));
+        List<HexCast> evicted = new ArrayList<>(excess);
+        for (var cast : casts.values()) {
+            if (evicted.size() == excess)
+                break;
+            if (!isFinished(cast))
+                evicted.add(cast);
         }
         return evicted;
     }
 
-    @Nonnull
-    private static HexCast end(@Nonnull HexCast cast) {
-        cast.get(VolatilityComponent.TYPE).setCurrent(0f);
-        return cast;
-    }
-
-    private static boolean isFinished(@Nullable HexCast cast) {
-        return cast == null || cast.getActiveBranchCount() <= 0
+    private static boolean isFinished(@Nonnull HexCast cast) {
+        return cast.getActiveBranchCount() <= 0
                 || cast.get(VolatilityComponent.TYPE).getCurrent() <= 0f;
     }
 
     @Nonnull
     @Override
     public Resource<EntityStore> clone() {
-        HexCastStore copy = new HexCastStore();
-        copy.tick = this.tick;
-        for (var entry : this.entries.object2ObjectEntrySet()) {
-            Entry value = entry.getValue();
-            copy.entries.put(entry.getKey(), new Entry(value.cast.copy(), value.registeredTick));
+        var copy = new HexCastStore();
+        for (var entry : casts.object2ObjectEntrySet()) {
+            copy.casts.put(entry.getKey(), entry.getValue().copy());
         }
         return copy;
     }

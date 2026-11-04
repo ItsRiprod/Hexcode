@@ -5,8 +5,8 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    { "Parent": "Antiline", "StatContribution": 0 },
-    { "Parent": "Slash", "RelativeSize": 0.7, "StatContribution": 0 }
+    { "Parent": "Antiline" },
+    { "Parent": "Slash", "RelativeSize": 0.7 }
   ],
   "Slots": {
     "Next": {

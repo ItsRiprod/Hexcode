@@ -200,9 +200,9 @@ public class AnchorNodeHandler extends BaseNodeHandler {
         var config = NodeConfig.getAssetMap().getAsset(node.getConfigId());
         holder.addComponent(BeamComponent.getComponentType(),
                 new BeamComponent(firstGlyphBeams(hexComp, config).toArray(AttachedBeam[]::new)));
-
+        
         Ref<EntityStore> nodeGlyph = accessor.addEntity(holder, AddReason.SPAWN);
-
+        
         if (hexComp == null) {
             return nodeGlyph;
         }

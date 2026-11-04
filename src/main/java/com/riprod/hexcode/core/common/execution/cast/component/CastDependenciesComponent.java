@@ -5,13 +5,17 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.execution.cast.HexCast;
 import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
-import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
+import com.riprod.hexcode.core.common.execution.cast.ecs.LifecycleCastComponent;
+import com.riprod.hexcode.utils.HexRefs;
 
-public final class CastDependenciesComponent implements CastComponent {
+public final class CastDependenciesComponent implements LifecycleCastComponent {
 
     private List<Ref<EntityStore>> dependents = new ArrayList<>();
 
@@ -22,19 +26,21 @@ public final class CastDependenciesComponent implements CastComponent {
         dependents.add(dependent);
     }
 
-    @Nonnull
-    public List<Ref<EntityStore>> getDependents() {
-        return dependents;
-    }
-
-    public void clear() {
+    @Override
+    public void onCastEnd(@Nonnull HexCast cast, @Nonnull CommandBuffer<EntityStore> buffer) {
+        for (var dependent : dependents) {
+            var live = HexRefs.live(dependent, buffer);
+            if (live != null) {
+                buffer.tryRemoveEntity(live, RemoveReason.REMOVE);
+            }
+        }
         dependents.clear();
     }
 
     @Nonnull
     @Override
     public CastDependenciesComponent copy() {
-        CastDependenciesComponent copy = new CastDependenciesComponent();
+        var copy = new CastDependenciesComponent();
         copy.dependents = new ArrayList<>(this.dependents);
         return copy;
     }

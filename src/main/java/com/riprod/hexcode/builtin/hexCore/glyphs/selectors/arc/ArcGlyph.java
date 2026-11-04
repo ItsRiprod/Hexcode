@@ -81,7 +81,7 @@ public class ArcGlyph extends GlyphAsset {
                 glyph.readSlot(ArcGlyphSlots.RANGE, hexContext), getSlot(ArcGlyphSlots.RANGE)).floatValue();
 
         if (iterations <= 0) {
-            hexContext.endBranch();
+            HexExecuter.endBranch(hexContext);
             return;
         }
 
@@ -115,6 +115,9 @@ public class ArcGlyph extends GlyphAsset {
         ArcState state = new ArcState(glyph, outputLinks, exclusions, range, interval, iterations, true);
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                 accessor, hexContext, glyph, ArcGlyph.TYPE, new Vector3d(origin), state);
+        if (holder == null) {
+            return;
+        }
         holder.putComponent(UUIDComponent.getComponentType(), new UUIDComponent(markerUuid));
         applyMarkerModel(holder, modelId);
         accessor.addEntity(holder, AddReason.SPAWN);

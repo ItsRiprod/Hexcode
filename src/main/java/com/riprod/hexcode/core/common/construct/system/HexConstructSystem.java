@@ -14,12 +14,14 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
 import com.riprod.hexcode.utils.LogScopes;
 
 public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
@@ -55,8 +57,10 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
 
                 if (handler == null) {
                     LOGGER.atSevere().log("no construct handler for: %s", status.getHandlerId());
-                    cleanupWithoutHandler(status, ctx);
                     construct.removeEffect(effectId);
+                    final HexStatus<?> s = status;
+                    if (deferred == null) deferred = new ArrayList<>(2);
+                    deferred.add(() -> abort(null, s, ctx));
                     continue;
                 }
 
@@ -101,10 +105,15 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
     private boolean tickEffect(UUID effectId, ConstructHandler<?> handler, HexStatus<?> status,
             ConstructTickContext ctx, float dt) {
         try {
+            bindAccessor(status, ctx);
             ConstructHandler raw = handler;
             HexStatus rawStatus = status;
+            var hexContext = status.getHexContext();
 
             if (!status.hasFiredImmediate()) {
+                if (hexContext.attach(status.getConstructId(), ctx.getEntityRef())) {
+                    HexComponentRegistry.dispatchAttach(ctx.getEntityRef(), hexContext, ctx.getBuffer());
+                }
                 Object initial = raw.createInitialState(rawStatus, ctx);
                 if (initial instanceof ConstructState cs) {
                     rawStatus.setState(cs);
@@ -113,7 +122,11 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
                 status.markImmediateFired();
                 return false;
             }
-            return raw.onTick(dt, rawStatus, ctx);
+            var ended = raw.onTick(dt, rawStatus, ctx);
+            if (!ended && hexContext.isAttachedTo(status.getConstructId())) {
+                HexComponentRegistry.dispatchTick(dt, ctx.getEntityRef(), hexContext, ctx.getBuffer());
+            }
+            return ended;
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("error ticking construct effect %s: %s", effectId, e);
             return false;
@@ -121,20 +134,31 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void end(ConstructHandler<?> handler, HexStatus<?> status, ConstructTickContext ctx) {
+    public static void end(ConstructHandler<?> handler, HexStatus<?> status, ConstructTickContext ctx) {
         if (handler == null) return;
+        var hexContext = status.getHexContext();
+        var owned = status.getConstructId().equals(hexContext.getHolder());
         try {
+            bindAccessor(status, ctx);
+            release(status, ctx);
             ConstructHandler raw = handler;
             HexStatus rawStatus = status;
             raw.onEnd(rawStatus, ctx);
         } catch (Exception e) {
             LOGGER.atWarning().log("construct handler onEnd failed: %s", e.getMessage());
+            if (owned) {
+                HexExecuter.endBranch(hexContext);
+            }
         }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     static void abort(ConstructHandler<?> handler, HexStatus<?> status, ConstructTickContext ctx) {
+        var hexContext = status.getHexContext();
+        var owned = status.getConstructId().equals(hexContext.getHolder());
         try {
+            bindAccessor(status, ctx);
+            release(status, ctx);
             if (handler == null) return;
             ConstructHandler raw = handler;
             HexStatus rawStatus = status;
@@ -142,14 +166,17 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
         } catch (Exception e) {
             LOGGER.atWarning().log("construct handler onAbort failed: %s", e.getMessage());
         } finally {
-            var hexContext = status.getHexContext();
-            if (hexContext != null) {
-                hexContext.endBranch();
+            if (owned) {
+                HexExecuter.endBranch(hexContext);
             }
         }
     }
 
-    private void cleanupWithoutHandler(HexStatus<?> status, ConstructTickContext ctx) {
-        // nothing to invoke; caller removes the map entry
+    private static void release(HexStatus<?> status, ConstructTickContext ctx) {
+        HexExecuter.release(status.getHexContext(), status.getConstructId(), ctx.getBuffer());
+    }
+
+    private static void bindAccessor(HexStatus<?> status, ConstructTickContext ctx) {
+        status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());
     }
 }

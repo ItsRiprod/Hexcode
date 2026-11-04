@@ -123,11 +123,12 @@ public class HexShatterHitInteraction extends SimpleInteraction {
 
     private static void abandon(ShatterState consumed, InteractionContext ctx) {
         if (consumed == null) return;
+        var buffer = ctx.getCommandBuffer();
         var hexContext = consumed.getHexContext();
         if (hexContext != null) {
-            hexContext.endBranch();
+            hexContext.updateRuntimeAccessors(buffer);
+            HexExecuter.endBranch(hexContext);
         }
-        var buffer = ctx.getCommandBuffer();
         var shardRef = ctx.getEntity();
         if (buffer != null && shardRef != null && shardRef.isValid()) {
             buffer.tryRemoveEntity(shardRef, RemoveReason.REMOVE);

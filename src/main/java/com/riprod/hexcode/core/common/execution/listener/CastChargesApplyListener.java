@@ -22,10 +22,10 @@ public class CastChargesApplyListener implements Consumer<CastEvent> {
         if (slotKey == null) {
             int max = (int) CasterStats.maxMagicCharges(rootRef, accessor);
             while (casterState.getActiveCount(casts) >= max) {
-                casterState.evictOldest(casts);
+                casterState.evictOldest(casts, accessor);
             }
         } else {
-            casterState.fizzleSlot(casts, slotKey);
+            casterState.fizzleSlot(casts, slotKey, accessor);
         }
 
         casterState.registerActiveCast(ctx.cast());

@@ -18,22 +18,12 @@ import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.math.codec.Vector2dArrayCodec;
 import com.hypixel.hytale.server.core.asset.common.CommonAssetValidator;
-import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
-
-import com.riprod.hexcode.core.common.execution.impact.Impact;
 
 public class ShapeAsset implements JsonAssetWithMap<String, DefaultAssetMap<String, ShapeAsset>> {
     public static final AssetBuilderCodec<String, ShapeAsset> CODEC;
     public static final Codec<String> CHILD_ASSET_CODEC;
     private static AssetStore<String, ShapeAsset, DefaultAssetMap<String, ShapeAsset>> ASSET_STORE;
     public static final ValidatorCache<String> VALIDATOR_CACHE;
-
-    public static final Impact IDENTITY_IMPACT = new Impact() {
-        @Override
-        public float compute(double input) {
-            return (float) input;
-        }
-    };
 
     protected AssetExtraInfo.Data data;
     protected String id;
@@ -43,9 +33,7 @@ public class ShapeAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     protected long expectedSpeed;
     protected float relativeSize = 1.0f;
     protected Vector2d relativePosition = new Vector2d();
-    protected String statResource;
-    protected float statContribution = 8.0f;
-    protected Impact statResourceImpact = IDENTITY_IMPACT;
+    protected String element;
     protected String texture;
     protected String model;
 
@@ -99,16 +87,8 @@ public class ShapeAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
     }
 
     @Nullable
-    public String getStatResource() {
-        return this.statResource;
-    }
-
-    public float getStatContribution() {
-        return this.statContribution;
-    }
-
-    public Impact getStatResourceImpact() {
-        return this.statResourceImpact;
+    public String getElement() {
+        return this.element;
     }
 
     @Nullable
@@ -158,19 +138,9 @@ public class ShapeAsset implements JsonAssetWithMap<String, DefaultAssetMap<Stri
                         (a, v) -> a.relativePosition = v, a -> a.relativePosition,
                         (a, p) -> a.relativePosition = p.relativePosition)
                 .add()
-                .appendInherited(new KeyedCodec<>("StatResource", Codec.STRING, true),
-                        (a, v) -> a.statResource = v, a -> a.statResource,
-                        (a, p) -> a.statResource = p.statResource)
-                .addValidatorLate(() -> DamageCause.VALIDATOR_CACHE.getValidator().late())
-                .add()
-                .<Float>appendInherited(new KeyedCodec<>("StatContribution", Codec.FLOAT, true),
-                        (a, v) -> a.statContribution = v, a -> a.statContribution,
-                        (a, p) -> a.statContribution = p.statContribution)
-                .addValidator(Validators.greaterThanOrEqual(0.0f))
-                .add()
-                .appendInherited(new KeyedCodec<>("StatResourceImpact", Impact.CODEC, true),
-                        (a, v) -> a.statResourceImpact = v, a -> a.statResourceImpact,
-                        (a, p) -> a.statResourceImpact = p.statResourceImpact)
+                .appendInherited(new KeyedCodec<>("Element", Codec.STRING, true),
+                        (a, v) -> a.element = v, a -> a.element,
+                        (a, p) -> a.element = p.element)
                 .add()
                 .<String>appendInherited(new KeyedCodec<>("Texture", Codec.STRING, true),
                         (a, v) -> a.texture = v, a -> a.texture,

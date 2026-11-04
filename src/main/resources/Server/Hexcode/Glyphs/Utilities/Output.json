@@ -6,8 +6,8 @@
   "BasePower": 0,
   "ManaConsumption": 0,
   "ShapeStructure": [
-    { "Parent": "Square", "StatContribution": 0 },
-    { "Parent": "Antitriangle", "RelativeSize": 0.5, "StatContribution": 0 }
+    { "Parent": "Square" },
+    { "Parent": "Antitriangle", "RelativeSize": 0.5 }
   ],
   "Slots": {
     "Color": {

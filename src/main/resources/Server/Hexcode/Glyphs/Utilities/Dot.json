@@ -3,9 +3,9 @@
   "Title": "hexcode.glyphs.Dot.name",
   "Description": "hexcode.glyphs.Dot.description",
   "ShapeStructure": [
-    { "Parent": "Less", "StatContribution": 0 },
-    { "Parent": "Greater", "StatContribution": 0 },
-    { "Parent": "Circle", "RelativeSize": 0.8, "StatContribution": 0 }
+    { "Parent": "Less" },
+    { "Parent": "Greater" },
+    { "Parent": "Circle", "RelativeSize": 0.8 }
   ],
   "Slots": {
     "V": {

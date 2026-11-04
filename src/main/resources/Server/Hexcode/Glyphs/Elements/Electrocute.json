@@ -1,65 +1,22 @@
 {
-  "Type": "Electrocute",
-  "Style": "Essence_Lightning",
+  "Type": "Deprecated",
   "Title": "hexcode.glyphs.Electrocute.name",
   "Description": "hexcode.glyphs.Electrocute.description",
-  "BasePower": 1.0,
-  "ManaConsumption": 10,
   "ShapeStructure": [
     {
-      "Parent": "Square",
-      "StatContribution": 2.0
+      "Parent": "Square"
     },
     {
       "Parent": "Circle",
-      "RelativeSize": 0.8,
-      "StatContribution": 2.0
+      "RelativeSize": 0.8
     },
     {
       "Parent": "Circle",
-      "RelativeSize": 0.6,
-      "StatContribution": 2.0
+      "RelativeSize": 0.6
     },
     {
       "Parent": "Circle",
-      "RelativeSize": 0.4,
-      "StatContribution": 2.0
+      "RelativeSize": 0.4
     }
-  ],
-  "Slots": {
-    "Next": {
-      "Type": "Next",
-      "Parent": "Next",
-      "Label": "hexcode.glyphs.Electrocute.Next.name",
-      "Description": "hexcode.glyphs.Electrocute.Next.description"
-    },
-    "ResourceLimit": {
-      "Type": "Input",
-      "Parent": "Input",
-      "Label": "hexcode.glyphs.Electrocute.ResourceLimit.name",
-      "Description": "hexcode.glyphs.Electrocute.ResourceLimit.description",
-      "DefaultValue": -1
-    },
-    "Immediate": {
-      "Type": "Next",
-      "Parent": "Next",
-      "Label": "hexcode.glyphs.Electrocute.immediate.name",
-      "Description": "hexcode.glyphs.Electrocute.immediate.description"
-    },
-    "Target": {
-      "Type": "Input",
-      "Parent": "Input",
-      "Label": "hexcode.glyphs.Electrocute.target.name",
-      "Description": "hexcode.glyphs.Electrocute.target.description"
-    }
-  },
-  "Resource": "Lightning",
-  "StatusEffect": "Lightning",
-  "Efficiency": 0.8,
-  "DurationPerComplexity": 1.0,
-  "AffinityStat": "Affinity_Lightning",
-  "Volatility": {
-    "InstantCost": 6,
-    "DrainPerSecond": 0.2
-  }
+  ]
 }

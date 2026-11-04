@@ -1,71 +1,22 @@
 {
-  "Type": "Ignite",
-  "Style": {
-    "Parent": "Element_Chaos",
-    "PrimaryParticle": {
-      "SystemId": "Ignite_Fire"
-    },
-    "PrimarySound": "SFX_Staff_Flame_Fireball_Impact"
-  },
+  "Type": "Deprecated",
   "Title": "hexcode.glyphs.Ignite.name",
   "Description": "hexcode.glyphs.Ignite.description",
-  "BasePower": 1.0,
-  "ManaConsumption": 10,
   "ShapeStructure": [
     {
-      "Parent": "Square",
-      "StatContribution": 2.0
+      "Parent": "Square"
     },
     {
       "Parent": "Antisquare",
-      "RelativeSize": 0.8,
-      "StatContribution": 2.0
+      "RelativeSize": 0.8
     },
     {
       "Parent": "Antisquare",
-      "RelativeSize": 0.6,
-      "StatContribution": 2.0
+      "RelativeSize": 0.6
     },
     {
       "Parent": "Antisquare",
-      "RelativeSize": 0.4,
-      "StatContribution": 2.0
+      "RelativeSize": 0.4
     }
-  ],
-  "Slots": {
-    "Next": {
-      "Type": "Next",
-      "Parent": "Next",
-      "Label": "hexcode.glyphs.Ignite.Next.name",
-      "Description": "hexcode.glyphs.Ignite.Next.description"
-    },
-    "ResourceLimit": {
-      "Type": "Input",
-      "Parent": "Input",
-      "Label": "hexcode.glyphs.Ignite.ResourceLimit.name",
-      "Description": "hexcode.glyphs.Ignite.ResourceLimit.description",
-      "DefaultValue": -1
-    },
-    "Immediate": {
-      "Type": "Next",
-      "Parent": "Next",
-      "Label": "hexcode.glyphs.Ignite.immediate.name",
-      "Description": "hexcode.glyphs.Ignite.immediate.description"
-    },
-    "Target": {
-      "Type": "Input",
-      "Parent": "Input",
-      "Label": "hexcode.glyphs.Ignite.target.name",
-      "Description": "hexcode.glyphs.Ignite.target.description"
-    }
-  },
-  "Resource": "Fire",
-  "StatusEffect": "Fire",
-  "Efficiency": 0.95,
-  "DurationPerComplexity": 0.5,
-  "AffinityStat": "Affinity_Fire",
-  "Volatility": {
-    "InstantCost": 6,
-    "DrainPerSecond": 0.2
-  }
+  ]
 }

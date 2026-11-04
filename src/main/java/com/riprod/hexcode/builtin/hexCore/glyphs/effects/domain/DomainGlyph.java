@@ -154,6 +154,9 @@ public class DomainGlyph extends GlyphAsset {
 
         Holder<EntityStore> holder = HexConstructSpawner.create(
                 hexContext.getAccessor(), hexContext, glyph, DomainGlyph.TYPE, new Vector3d(anchorPos));
+        if (holder == null) {
+            return;
+        }
 
         DomainZoneComponent zoneComp = new DomainZoneComponent(
                 (float) radius, durationSeconds, baseDrainPerSecond, triggerCost, power, casterUuid);

@@ -288,12 +288,22 @@ public class VfxUtil {
       @Nullable List<Ref<EntityStore>> recipients) {
     if (particle == null || particle.getSystemId() == null)
       return;
-    Color effective = tint != null ? tint : particle.getColor();
+    particle(particle.getSystemId(), pos, tint != null ? tint : particle.getColor(), scale, accessor, recipients);
+  }
+
+  public static void particle(String systemId, Vector3d pos, @Nullable Color tint,
+      ComponentAccessor<EntityStore> accessor) {
+    particle(systemId, pos, tint, PARTICLE_SCALE, accessor, null);
+  }
+
+  private static void particle(String systemId, Vector3d pos, @Nullable Color tint, float scale,
+      ComponentAccessor<EntityStore> accessor, @Nullable List<Ref<EntityStore>> recipients) {
+    Color effective = tint;
     if (effective == null) {
       // untinted spawn reaches the engine default distance rather than the 25 block
       // recipient sweep, so only leave that path when scale actually needs the tinted overload
       if (scale == 1.0f) {
-        ParticleUtil.spawnParticleEffect(particle.getSystemId(), pos, accessor);
+        ParticleUtil.spawnParticleEffect(systemId, pos, accessor);
         return;
       }
       effective = WHITE;
@@ -301,8 +311,7 @@ public class VfxUtil {
     List<Ref<EntityStore>> playerRefs = recipients != null
         ? recipients
         : collectParticleRecipients(pos, 25.0, accessor);
-    ParticleUtil.spawnParticleEffect(particle.getSystemId(), pos, 0.0f, 0.0f, 0.0f, scale, effective, playerRefs,
-        accessor);
+    ParticleUtil.spawnParticleEffect(systemId, pos, 0.0f, 0.0f, 0.0f, scale, effective, playerRefs, accessor);
   }
 
   private static void spawnConfiguredDirected(@Nullable ModelParticle particle, Vector3d pos,
@@ -431,18 +440,21 @@ public class VfxUtil {
 
   public static boolean applyEffect(@Nullable HexContext hexContext, @Nullable Ref<EntityStore> target,
       @Nullable String effectId, float duration, OverlapBehavior overlap) {
-    if (hexContext == null || target == null || !target.isValid() || effectId == null)
+    return hexContext != null && applyEffect(hexContext.getAccessor(), target, effectId, duration, overlap, null);
+  }
+
+  public static boolean applyEffect(ComponentAccessor<EntityStore> accessor, @Nullable Ref<EntityStore> target,
+      @Nullable String effectId, float duration, OverlapBehavior overlap, @Nullable Ref<EntityStore> owner) {
+    if (target == null || !target.isValid() || effectId == null)
       return false;
     EntityEffect effect = EntityEffect.getAssetMap().getAsset(effectId);
     if (effect == null)
       return false;
-    ComponentAccessor<EntityStore> accessor = hexContext.getAccessor();
     EffectControllerComponent controller = accessor.getComponent(
         target, EffectControllerComponent.getComponentType());
     if (controller == null)
       return false;
-    controller.addEffect(target, effect, duration, overlap, accessor);
-    return true;
+    return controller.addEffect(target, effect, duration, overlap, accessor, owner);
   }
 
   public static boolean applyBoundedEffect(@Nullable HexContext hexContext, @Nullable Ref<EntityStore> target,

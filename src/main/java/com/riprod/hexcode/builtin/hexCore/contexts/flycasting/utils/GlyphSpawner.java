@@ -3,14 +3,9 @@ package com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils;
 import com.riprod.hexcode.builtin.hexCore.scene.GlyphStyler;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.ComponentAccessor;
-import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;

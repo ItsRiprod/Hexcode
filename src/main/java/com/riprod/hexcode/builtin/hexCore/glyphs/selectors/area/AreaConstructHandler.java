@@ -162,7 +162,7 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
 
     @Override
     public void onCleanup(HexStatus<AreaState> status, ConstructTickContext ctx) {
-        status.getHexContext().endBranch();
+        HexExecuter.endBranch(status.getHexContext());
         ctx.getBuffer().tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
     }
 }

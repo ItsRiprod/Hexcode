@@ -3,8 +3,8 @@
   "Title": "hexcode.glyphs.Number_4.name",
   "Description": "hexcode.glyphs.Number_4.description",
   "ShapeStructure": [
-    { "Parent": "Up", "StatContribution": 0 },
-    { "Parent": "Square", "RelativeSize": 0.8, "StatContribution": 0 }
+    { "Parent": "Up" },
+    { "Parent": "Square", "RelativeSize": 0.8 }
   ],
   "Slots": {
     "Next": {

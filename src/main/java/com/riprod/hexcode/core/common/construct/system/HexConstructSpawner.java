@@ -12,6 +12,7 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
@@ -37,14 +38,17 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.utils.HexRefs;
+import com.riprod.hexcode.utils.LogScopes;
 
 public class HexConstructSpawner {
 
+    private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CAST);
     private static final WeakHashMap<UUID, HexEffectsComponent> PENDING_APPLIES = new WeakHashMap<>();
 
     private HexConstructSpawner() {
     }
 
+    @Nullable
     public static Holder<EntityStore> create(
             @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull HexContext hexContext,
@@ -54,6 +58,7 @@ public class HexConstructSpawner {
         return createWithState(buffer, hexContext, triggeringGlyph, handlerId, position, null);
     }
 
+    @Nullable
     public static <S extends ConstructState> Holder<EntityStore> createWithState(
             @Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull HexContext hexContext,
@@ -63,6 +68,9 @@ public class HexConstructSpawner {
             @Nullable S initialState) {
 
         UUID constructId = UUID.randomUUID();
+        if (!claim(hexContext, constructId, handlerId)) {
+            return null;
+        }
         HexStatus<S> construct = new HexStatus<>(
                 handlerId, hexContext, constructId, triggeringGlyph, initialState);
 
@@ -156,6 +164,11 @@ public class HexConstructSpawner {
             @Nullable String handlerId,
             @Nullable S initialState) {
 
+        UUID constructId = UUID.randomUUID();
+        if (!claim(hexContext, constructId, handlerId)) {
+            return null;
+        }
+
         if (targetRef == null || !targetRef.isValid()) {
             HexExecuter.fail(triggeringGlyph, hexContext,
                     GlyphFizzleEvent.Reason.HANDLER_FAILED,
@@ -163,14 +176,17 @@ public class HexConstructSpawner {
             return null;
         }
 
-        UUID constructId = UUID.randomUUID();
-        HexStatus<S> construct = new HexStatus<>(
-                handlerId, hexContext, constructId, triggeringGlyph, initialState);
+        attach(buffer, targetRef, constructId, new HexStatus<>(
+                handlerId, hexContext, constructId, triggeringGlyph, initialState));
+        return constructId;
+    }
 
+    private static void attach(@Nonnull CommandBuffer<EntityStore> buffer, @Nonnull Ref<EntityStore> targetRef,
+            @Nonnull UUID constructId, @Nonnull HexStatus<?> construct) {
         HexEffectsComponent existing = buffer.getComponent(targetRef, HexEffectsComponent.getComponentType());
         if (existing != null) {
             existing.addEffect(constructId, construct);
-            return constructId;
+            return;
         }
 
         UUIDComponent uuidComponent = buffer.getComponent(targetRef, UUIDComponent.getComponentType());
@@ -179,7 +195,7 @@ public class HexConstructSpawner {
             HexEffectsComponent fresh = new HexEffectsComponent();
             fresh.addEffect(constructId, construct);
             buffer.addComponent(targetRef, HexEffectsComponent.getComponentType(), fresh);
-            return constructId;
+            return;
         }
 
         HexEffectsComponent pending;
@@ -190,11 +206,32 @@ public class HexConstructSpawner {
                 pending.addEffect(constructId, construct);
                 PENDING_APPLIES.put(targetUuid, pending);
                 buffer.addComponent(targetRef, HexEffectsComponent.getComponentType(), pending);
-                return constructId;
+                return;
             }
         }
         pending.addEffect(constructId, construct);
-        return constructId;
+    }
+
+    @Nullable
+    private static HexEffectsComponent pendingOf(@Nonnull ComponentAccessor<EntityStore> accessor,
+            @Nonnull Ref<EntityStore> targetRef) {
+        var uuidComponent = accessor.getComponent(targetRef, UUIDComponent.getComponentType());
+        if (uuidComponent == null) {
+            return null;
+        }
+        synchronized (PENDING_APPLIES) {
+            return PENDING_APPLIES.get(uuidComponent.getUuid());
+        }
+    }
+
+    private static boolean claim(@Nonnull HexContext hexContext, @Nonnull UUID constructId,
+            @Nullable String handlerId) {
+        if (hexContext.hold(constructId)) {
+            return true;
+        }
+        LOGGER.atSevere().log("construct '%s' refused: branch %d of cast %s is already held by construct %s",
+                handlerId, hexContext.getBranchId(), hexContext.getExecutionId(), hexContext.getHolder());
+        return false;
     }
 
     public static int abortExisting(@Nonnull CommandBuffer<EntityStore> buffer,
@@ -211,17 +248,15 @@ public class HexConstructSpawner {
     }
 
     @Nonnull
-    public static List<HexStatus<?>> detachExisting(@Nonnull ComponentAccessor<EntityStore> accessor,
+    public static List<HexStatus<?>> detachExisting(@Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull Ref<EntityStore> targetRef, @Nonnull String handlerId) {
         var detached = new ArrayList<HexStatus<?>>();
-        detach(accessor.getComponent(targetRef, HexEffectsComponent.getComponentType()), handlerId, detached);
-        var uuidComponent = accessor.getComponent(targetRef, UUIDComponent.getComponentType());
-        if (uuidComponent != null) {
-            HexEffectsComponent pending;
-            synchronized (PENDING_APPLIES) {
-                pending = PENDING_APPLIES.get(uuidComponent.getUuid());
-            }
-            detach(pending, handlerId, detached);
+        detach(buffer.getComponent(targetRef, HexEffectsComponent.getComponentType()), handlerId, detached);
+        detach(pendingOf(buffer, targetRef), handlerId, detached);
+        for (var status : detached) {
+            var hexContext = status.getHexContext();
+            hexContext.updateRuntimeAccessors(buffer);
+            HexExecuter.release(hexContext, status.getConstructId(), buffer);
         }
         return detached;
     }
@@ -252,14 +287,7 @@ public class HexConstructSpawner {
             @Nonnull Ref<EntityStore> ref, @Nonnull String handlerId) {
         if (!HexRefs.isLive(ref, accessor)) return false;
 
-        UUIDComponent uuidComponent = accessor.getComponent(ref, UUIDComponent.getComponentType());
-        if (uuidComponent == null) return false;
-        UUID targetUuid = uuidComponent.getUuid();
-
-        HexEffectsComponent pending;
-        synchronized (PENDING_APPLIES) {
-            pending = PENDING_APPLIES.get(targetUuid);
-        }
+        HexEffectsComponent pending = pendingOf(accessor, ref);
         if (pending == null) return false;
 
         for (HexStatus<?> status : pending.getEffects().values()) {

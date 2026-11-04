@@ -1,6 +1,5 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.resonate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector3d;
@@ -46,32 +45,20 @@ public class ResonateGlyph extends GlyphAsset {
         }
 
         HexEffectsComponent construct = accessor.getComponent(ref, HexEffectsComponent.getComponentType());
-        if (construct != null) {
-            resonateConstruct(glyph, hexContext, construct, ref, accessor);
+        List<HexStatus<?>> targets = construct != null ? ConstructSplicer.spliceable(construct) : List.of();
+        if (!targets.isEmpty()) {
+            resonateConstruct(glyph, hexContext, targets, ref, accessor);
         } else {
             resonateEntity(glyph, hexContext, ref, accessor);
         }
     }
 
     private void resonateConstruct(Glyph glyph, HexContext hexContext,
-            HexEffectsComponent construct, Ref<EntityStore> ref,
+            List<HexStatus<?>> targets, Ref<EntityStore> ref,
             CommandBuffer<EntityStore> accessor) {
-
-        List<HexStatus<?>> targets = new ArrayList<>(construct.getEffects().values());
-        if (targets.isEmpty()) {
-            Vector3d pos = resolvePosition(ref, accessor);
-            if (pos != null)
-                ResonateStyle.renderNoSignal(this, pos, hexContext, accessor);
-            HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
-                    "Target has no active effects");
-            return;
-        }
 
         for (HexStatus<?> target : targets) {
             ConstructHandler<?> handler = ConstructRegistry.get(target.getHandlerId());
-            if (handler == null)
-                continue;
-
             ConstructSplicer.splice(target, handler, hexContext, glyph,
                     ConstructSplicer.ChainMode.APPEND_TAIL,
                     ConstructSplicer.VariablePolicy.PREFER_TARGET,
@@ -81,7 +68,7 @@ public class ResonateGlyph extends GlyphAsset {
         Vector3d pos = resolvePosition(ref, accessor);
         if (pos != null)
             ResonateStyle.renderResonate(this, pos, hexContext, accessor);
-        hexContext.endBranch();
+        HexExecuter.endBranch(hexContext);
     }
 
     private void resonateEntity(Glyph glyph, HexContext hexContext,
@@ -100,7 +87,7 @@ public class ResonateGlyph extends GlyphAsset {
         Vector3d pos = resolvePosition(ref, accessor);
         if (pos != null)
             ResonateStyle.renderResonate(this, pos, hexContext, accessor);
-        hexContext.endBranch();
+        HexExecuter.endBranch(hexContext);
     }
 
     private Vector3d resolvePosition(Ref<EntityStore> ref, CommandBuffer<EntityStore> accessor) {

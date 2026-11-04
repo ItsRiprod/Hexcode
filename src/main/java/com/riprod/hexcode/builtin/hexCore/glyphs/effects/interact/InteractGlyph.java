@@ -11,17 +11,8 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.protocol.BlockPosition;
-import com.hypixel.hytale.protocol.InteractionType;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
-import com.hypixel.hytale.server.core.entity.InteractionChain;
-import com.hypixel.hytale.server.core.entity.InteractionContext;
-import com.hypixel.hytale.server.core.entity.InteractionManager;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.modules.interaction.InteractionModule;
-import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
-import com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
@@ -34,7 +25,7 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.utils.BlockAccess;
+import com.riprod.hexcode.utils.BlockUtils;
 import com.riprod.hexcode.utils.LogScopes;
 
 public class InteractGlyph extends GlyphAsset {
@@ -116,48 +107,12 @@ public class InteractGlyph extends GlyphAsset {
         ImbuedBlockActivator.ActivationOutcome outcome = ImbuedBlockActivator.tryConsume(world, blockPos,
                 hexContext.getRootRef(), accessor);
         if (!outcome.isReady()) {
-            triggerBlockInteraction(glyph, accessor, hexContext.getRootRef(), world, blockPos);
+            BlockUtils.triggerUseInteraction(accessor, hexContext.getRootRef(), world, blockPos, null);
         }
 
         glyph.writeOutput(new BlockVar(blockPos), hexContext);
 
         LOGGER.atFine().log("interact: hit block at %d %d %d (activation=%s)",
                 blockPos.x, blockPos.y, blockPos.z, outcome.getStatus());
-    }
-
-    private void triggerBlockInteraction(Glyph glyph, CommandBuffer<EntityStore> accessor,
-            Ref<EntityStore> casterRef, World world, Vector3i blockPos) {
-
-        InteractionManager manager = accessor.getComponent(casterRef,
-                InteractionModule.get().getInteractionManagerComponent());
-        if (manager == null) {
-            LOGGER.atFine().log("interact: no interaction manager on caster, skipping block interaction");
-            return;
-        }
-
-        BlockType blockType = BlockAccess.blockType(world, blockPos);
-        if (blockType == null || blockType.isUnknown()) {
-            return;
-        }
-
-        String interactionId = blockType.getInteractions().get(InteractionType.Use);
-        if (interactionId == null) {
-            return;
-        }
-
-        RootInteraction rootInteraction = RootInteraction.getAssetMap().getAsset(interactionId);
-        if (rootInteraction == null) {
-            return;
-        }
-
-        InteractionContext ctx = InteractionContext.forInteraction(
-                manager, casterRef, InteractionType.Use, accessor);
-
-        BlockPosition blockPosition = new BlockPosition(blockPos.x, blockPos.y, blockPos.z);
-        ctx.getMetaStore().putMetaObject(Interaction.TARGET_BLOCK, blockPosition);
-        ctx.getMetaStore().putMetaObject(Interaction.TARGET_BLOCK_RAW, blockPosition);
-
-        InteractionChain chain = manager.initChain(InteractionType.Use, ctx, rootInteraction, false);
-        manager.queueExecuteChain(chain);
     }
 }

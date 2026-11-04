@@ -71,7 +71,7 @@ public final class HexProtection {
         }
 
         if (action == BlockAction.BREAK) {
-            BreakBlockEvent event = new BreakBlockEvent(null, pos, blockType);
+            BreakBlockEvent event = new BreakBlockEvent(null, pos, blockType != null ? blockType : BlockType.EMPTY);
             accessor.invoke(casterRef, event);
             if (event.isCancelled()) {
                 return false;

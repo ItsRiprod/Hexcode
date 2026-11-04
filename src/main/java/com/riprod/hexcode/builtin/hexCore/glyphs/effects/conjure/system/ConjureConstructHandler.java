@@ -267,7 +267,7 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
 
     @Override
     public void onCleanup(HexStatus<NoState> status, ConstructTickContext ctx) {
-        status.getHexContext().endBranch();
+        HexExecuter.endBranch(status.getHexContext());
         var asset = GlyphAsset.of(status.getTriggeringGlyph(), ConjureGlyph.class);
         TransformComponent transform = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), TransformComponent.getComponentType());

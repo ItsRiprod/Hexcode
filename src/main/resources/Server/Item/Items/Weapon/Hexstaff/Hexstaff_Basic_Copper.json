@@ -106,14 +106,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Basic_Copper",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 7
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Copper"
           }
         }
       ]
@@ -129,14 +122,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Basic_Copper",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 9
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Copper"
           }
         }
       ]
@@ -152,14 +138,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Basic_Copper",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 11
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Copper"
           }
         }
       ]
@@ -175,14 +154,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Basic_Copper",
-            "HexStats": {
-              "Resources": {
-                "Initial": {
-                  "Arcane": 13
-                }
-              }
-            }
+            "Style": "Hexstaff_Basic_Copper"
           }
         }
       ]

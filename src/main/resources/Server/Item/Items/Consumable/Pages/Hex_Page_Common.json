@@ -14,11 +14,6 @@
                 "Initial": 40,
                 "Multiplier": 1.0
               },
-              "Resources": {
-                "Initial": {
-                  "Arcane": 8
-                }
-              },
               "Policy": {
                 "RequireMagicCharges": false,
                 "BypassVolatilityDepletion": false,

@@ -3,8 +3,8 @@
   "Title": "hexcode.glyphs.Number_3.name",
   "Description": "hexcode.glyphs.Number_3.description",
   "ShapeStructure": [
-    { "Parent": "Up", "StatContribution": 0 },
-    { "Parent": "Triangle", "StatContribution": 0 }
+    { "Parent": "Up" },
+    { "Parent": "Triangle" }
   ],
   "Slots": {
     "Next": {

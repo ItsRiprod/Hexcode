@@ -120,7 +120,6 @@ public class HexChatProbeCommand extends AbstractPlayerCommand {
         }
         return markup(Message.translation("hexcode.debugGlyph.slots")
                 .param("volatility", "1.0 / 1.0")
-                .param("complexity", "Arcane=1.0")
                 .param("slots", inner));
     }
 

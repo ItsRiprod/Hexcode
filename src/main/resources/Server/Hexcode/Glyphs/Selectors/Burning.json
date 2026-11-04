@@ -1,10 +1,7 @@
 {
-  "Type": "Burning",
-  "Style": "Element_Chaos",
+  "Type": "Deprecated",
   "Title": "hexcode.glyphs.Burning.name",
   "Description": "hexcode.glyphs.Burning.description",
-  "BasePower": 1.0,
-  "ManaConsumption": 1,
   "ShapeStructure": [
     "Square",
     {
@@ -15,40 +12,5 @@
       "Parent": "Antisquare",
       "RelativeSize": 0.55
     }
-  ],
-  "Slots": {
-    "Center": {
-      "Type": "Input",
-      "Parent": "Input",
-      "Label": "hexcode.glyphs.Burning.center.name",
-      "Description": "hexcode.glyphs.Burning.center.description",
-      "Unique": true
-    },
-    "Radius": {
-      "Type": "Input",
-      "Parent": "Input",
-      "Label": "hexcode.glyphs.Burning.radius.name",
-      "Description": "hexcode.glyphs.Burning.radius.description",
-      "DefaultValue": 2.1,
-      "Unique": true
-    },
-    "Magnitude": {
-      "Type": "Input",
-      "Parent": "Input",
-      "Label": "hexcode.glyphs.Burning.magnitude.name",
-      "Description": "hexcode.glyphs.Burning.magnitude.description",
-      "DefaultValue": 10,
-      "Unique": true
-    },
-    "Next": {
-      "Type": "Next",
-      "Parent": "Next",
-      "Label": "hexcode.glyphs.Burning.Next.name",
-      "Description": "hexcode.glyphs.Burning.Next.description"
-    }
-  },
-  "Volatility": {
-    "InstantCost": 1,
-    "DrainPerSecond": 0.0
-  }
+  ]
 }
