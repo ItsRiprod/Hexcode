@@ -5,19 +5,45 @@
   "Lore": "server.hexcode.elementalism.fire.lore",
   "ReclaimEfficiency": 0.75,
   "Start": 10,
-  "Slope": 1,
-  "Floor": 3,
-  "ConstructInterval": 0.5,
+  "Slope": 0.25,
+  "Floor": 9,
   "Effects": {
-    "Default": {
-      "Particle": "Ignite_Fire",
-      "Color": "#FF6A1A"
-    },
-    "Launch": {
+    "PrimaryColor": "#FF6A1A",
+    "SecondaryColor": "#FFD54F",
+    "Model": "Fire_Bolt",
+    "Start": {
       "Sound": "SFX_Staff_Fire_Shoot"
     },
-    "Impact": {
-      "Sound": "SFX_Fireball_Death"
+    "Sustain": {
+      "Particles": [
+        {
+          "SystemId": "Fire_Sustain"
+        }
+      ],
+      "Light": 2,
+      "Pulse": [
+        {
+          "SystemId": "Fire_Pulse"
+        }
+      ],
+      "Interval": 1.0
+    },
+    "Hit": {
+      "Particles": [
+        {
+          "SystemId": "Fire_Strike"
+        }
+      ],
+      "Sound": "SFX_Fireball_Death",
+      "Tint": "None"
+    },
+    "End": {
+      "Particles": [
+        {
+          "SystemId": "Fire_Fizzle"
+        }
+      ],
+      "Tint": "None"
     }
   },
   "Tiers": {
@@ -33,8 +59,37 @@
       "FluidLevel": 1,
       "UnlitState": "Off",
       "Effects": {
-        "Impact": {
-          "Sound": "SFX_Arrow_Fire_Hit"
+        "Start": {
+          "Particles": [
+            {
+              "SystemId": "Ignite_Start"
+            }
+          ],
+          "Sound": "SFX_Staff_Fire_Shoot",
+          "Tint": "None"
+        },
+        "Sustain": {
+          "Particles": [
+            {
+              "SystemId": "Ignite_Sustain"
+            }
+          ],
+          "Light": 4,
+          "Pulse": [
+            {
+              "SystemId": "Ignite_Pulse"
+            }
+          ],
+          "Interval": 0.6
+        },
+        "Hit": {
+          "Particles": [
+            {
+              "SystemId": "Ignite_Hit"
+            }
+          ],
+          "Sound": "SFX_Arrow_Fire_Hit",
+          "Tint": "None"
         }
       }
     },
@@ -48,8 +103,42 @@
       "DamageCause": "Fire",
       "BlockDamage": 0.5,
       "Effects": {
-        "Impact": {
-          "Sound": "SFX_Staff_Flame_Fireball_Impact"
+        "PrimaryColor": "#FFC23A",
+        "SecondaryColor": "#FFF1C9",
+        "Start": {
+          "Particles": [
+            {
+              "SystemId": "Scorch_Start"
+            }
+          ],
+          "Sound": "SFX_Staff_Flame_Fireball_Launch",
+          "Tint": "None"
+        },
+        "Sustain": {
+          "Particles": [
+            {
+              "SystemId": "Scorch_Sustain"
+            }
+          ],
+          "Trail": {
+            "TrailId": "Fire_Trail"
+          },
+          "Light": 7,
+          "Pulse": [
+            {
+              "SystemId": "Scorch_Pulse"
+            }
+          ],
+          "Interval": 0.4
+        },
+        "Hit": {
+          "Particles": [
+            {
+              "SystemId": "Scorch_Hit"
+            }
+          ],
+          "Sound": "SFX_Staff_Flame_Fireball_Impact",
+          "Tint": "None"
         }
       }
     },
@@ -105,9 +194,45 @@
         }
       },
       "Effects": {
-        "Impact": {
-          "Particle": "Explosion_Medium",
-          "Sound": "SFX_Goblin_Lobber_Bomb_Death"
+        "PrimaryColor": "#FF3A1F",
+        "SecondaryColor": "#FFE0B0",
+        "Start": {
+          "Particles": [
+            {
+              "SystemId": "Explosion_Start"
+            }
+          ],
+          "Sound": "SFX_Gobliterator_Flame_Quadrant_Fire",
+          "Tint": "None"
+        },
+        "Sustain": {
+          "Particles": [
+            {
+              "SystemId": "Explosion_Sustain"
+            }
+          ],
+          "Trail": {
+            "TrailId": "Large_Flame"
+          },
+          "Light": 10,
+          "Pulse": [
+            {
+              "SystemId": "Explosion_Pulse"
+            }
+          ],
+          "Interval": 0.3
+        },
+        "Hit": {
+          "Particles": [
+            {
+              "SystemId": "Explosion_Big"
+            },
+            {
+              "SystemId": "Explosion_Hit"
+            }
+          ],
+          "Sound": "SFX_Goblin_Lobber_Bomb_Death",
+          "Tint": "None"
         }
       }
     }

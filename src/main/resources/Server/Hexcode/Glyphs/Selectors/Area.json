@@ -1,12 +1,9 @@
 {
   "Type": "Area",
-  "Style": {
-    "PrimaryParticle": {
-      "SystemId": "Area_Pulse"
-    },
-    "PrimarySound": "SFX_Skeleton_Mage_Spellbook_Impact",
+  "Effects": {
     "PrimaryColor": "#4D99E6",
-    "SecondaryColor": "#B3D9F2"
+    "SecondaryColor": "#B3D9F2",
+    "Start": { "Particles": [{ "SystemId": "Area_Pulse" }], "Sound": "SFX_Skeleton_Mage_Spellbook_Impact" }
   },
   "Title": "hexcode.glyphs.Area.name",
   "Description": "hexcode.glyphs.Area.description",

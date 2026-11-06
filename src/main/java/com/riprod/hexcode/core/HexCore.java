@@ -35,7 +35,7 @@ import com.riprod.hexcode.core.common.execution.cast.component.BranchVariablesCo
 import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastOriginComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastSlotComponent;
-import com.riprod.hexcode.core.common.execution.cast.component.CastStyleComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastEffectsComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.DefaultVariableComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.ManaSourceComponent;
 import com.riprod.hexcode.core.common.execution.listener.CastBookTintListener;
@@ -93,7 +93,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
 import com.riprod.hexcode.core.common.hexbook.component.HexBookAsset;
 import com.riprod.hexcode.core.common.hexes.codec.HexCacheResource;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 import com.riprod.hexcode.core.common.hexes.saved.SavedHexAsset;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hover.system.HoverableSpatialSystem;
@@ -152,7 +152,7 @@ public class HexCore {
                 CastHexComponent.TYPE,
                 CastOriginComponent.TYPE,
                 ManaSourceComponent.TYPE,
-                CastStyleComponent.TYPE,
+                CastEffectsComponent.TYPE,
                 DefaultVariableComponent.TYPE,
                 BranchVariablesComponent.TYPE,
                 CastSlotComponent.TYPE);
@@ -171,14 +171,15 @@ public class HexCore {
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
-                        .builder(HexStyleAsset.class,
-                                new DefaultAssetMap<String, HexStyleAsset>())
-                        .setPath("Hexcode/HexStyles")
-                        .setCodec(HexStyleAsset.CODEC)
-                        .setKeyFunction(HexStyleAsset::getId)
+                        .builder(GlyphEffects.class,
+                                new DefaultAssetMap<String, GlyphEffects>())
+                        .setPath("Hexcode/Effects")
+                        .setCodec(GlyphEffects.CODEC)
+                        .setKeyFunction(GlyphEffects::getId)
                         .loadsAfter(ParticleSystem.class)
                         .loadsAfter(SoundEvent.class)
                         .loadsAfter(ModelAsset.class)
+                        .loadsBefore(Item.class, Interaction.class, RootInteraction.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
@@ -187,7 +188,7 @@ public class HexCore {
                         .setPath("Hexcode/Execution/HexConfig")
                         .setCodec(HexConfigAsset.CODEC)
                         .setKeyFunction(HexConfigAsset::getId)
-                        .loadsAfter(HexStyleAsset.class)
+                        .loadsAfter(GlyphEffects.class)
                         .loadsBefore(Item.class, Interaction.class, RootInteraction.class)
                         .build());
         AssetRegistry.register(
@@ -197,7 +198,7 @@ public class HexCore {
                         .setCodec(GlyphAsset.CODEC)
                         .setKeyFunction(GlyphAsset::getId)
                         .loadsAfter(NodeConfig.class)
-                        .loadsAfter(HexStyleAsset.class)
+                        .loadsAfter(GlyphEffects.class)
                         .loadsAfter(ParticleSystem.class)
                         .loadsAfter(SoundEvent.class)
                         .loadsAfter(ModelAsset.class)
@@ -228,7 +229,7 @@ public class HexCore {
                         .setKeyFunction(HexBookAsset::getId)
                         .loadsAfter(ParticleSystem.class)
                         .loadsAfter(Item.class)
-                        .loadsAfter(HexStyleAsset.class)
+                        .loadsAfter(GlyphEffects.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
@@ -256,7 +257,7 @@ public class HexCore {
                         .setPath("Hexcode/Imbuement/Essences")
                         .setCodec(EssenceAsset.CODEC)
                         .setKeyFunction(EssenceAsset::getId)
-                        .loadsAfter(HexStyleAsset.class)
+                        .loadsAfter(GlyphEffects.class)
                         .loadsAfter(Item.class)
                         .build());
 

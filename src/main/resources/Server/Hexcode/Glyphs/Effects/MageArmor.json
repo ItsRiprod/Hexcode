@@ -1,6 +1,6 @@
 {
   "Type": "MageArmor",
-  "Style": "Essence_Life",
+  "Effects": "Essence_Life",
   "Title": "hexcode.glyphs.MageArmor.name",
   "Description": "hexcode.glyphs.MageArmor.description",
   "BasePower": 1.0,

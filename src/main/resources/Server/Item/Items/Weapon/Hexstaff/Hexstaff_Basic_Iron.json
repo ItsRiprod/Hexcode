@@ -102,7 +102,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Basic_Iron"
+            "Effects": "Hexstaff_Basic_Iron"
           }
         }
       ]
@@ -118,7 +118,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Basic_Iron"
+            "Effects": "Hexstaff_Basic_Iron"
           }
         }
       ]
@@ -134,7 +134,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Basic_Iron"
+            "Effects": "Hexstaff_Basic_Iron"
           }
         }
       ]
@@ -150,7 +150,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Basic_Iron"
+            "Effects": "Hexstaff_Basic_Iron"
           }
         }
       ]
@@ -160,24 +160,28 @@
         {
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
-          "AuraParticles": [
-            {
-              "SystemId": "Hexstaff_Smoke_Wisp",
-              "PositionOffset": {
-                "Y": 1.0
-              },
-              "Color": "#D0D5DC",
-              "Scale": 1.1
-            },
-            {
-              "SystemId": "Hexstaff_Sparks_Fast",
-              "PositionOffset": {
-                "Y": -0.4
-              },
-              "Color": "#9FA6B2",
-              "Scale": 1.0
+          "Effects": {
+            "Sustain": {
+              "Particles": [
+                {
+                  "SystemId": "Hexstaff_Smoke_Wisp",
+                  "PositionOffset": {
+                    "Y": 1.0
+                  },
+                  "Color": "#D0D5DC",
+                  "Scale": 1.1
+                },
+                {
+                  "SystemId": "Hexstaff_Sparks_Fast",
+                  "PositionOffset": {
+                    "Y": -0.4
+                  },
+                  "Color": "#9FA6B2",
+                  "Scale": 1.0
+                }
+              ]
             }
-          ]
+          }
         }
       ]
     }

@@ -1,0 +1,3 @@
+@StatusStyle = LabelStyle(FontSize: 14, TextColor: #a0a0a0, Wrap: true);
+@WarningStatusStyle = LabelStyle(...@StatusStyle, TextColor: #e8a93b);
+@ErrorStatusStyle = LabelStyle(...@StatusStyle, TextColor: #e0605a);

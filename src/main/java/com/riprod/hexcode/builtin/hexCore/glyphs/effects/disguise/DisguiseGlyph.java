@@ -21,7 +21,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.components.DisguiseState;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.disguise.style.DisguiseStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.appearance.AppearanceLayer;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
@@ -129,7 +130,7 @@ public class DisguiseGlyph extends GlyphAsset {
         Vector3d spawnPos = targetTransform != null
                 ? new Vector3d(targetTransform.getPosition())
                 : new Vector3d();
-        DisguiseStyle.renderApply(this, spawnPos, hexContext, accessor);
+        EffectRenderer.render(EffectSlot.Start, this, hexContext, spawnPos, accessor);
     }
 
     private void fireImmediate(Glyph glyph, HexContext hexContext, HexVar defaultVar) {

@@ -1,0 +1,20 @@
+{
+  "LifeSpan": 1.5,
+  "CullDistance": 100.0,
+  "BoundingRadius": 4.0,
+  "IsImportant": true,
+  "Spawners": [
+    {
+      "SpawnerId": "Explosio_Medium_Flash_Glow",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Scorch_Start_Flare",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Scorch_Haze_Burst",
+      "FixedRotation": true
+    }
+  ]
+}

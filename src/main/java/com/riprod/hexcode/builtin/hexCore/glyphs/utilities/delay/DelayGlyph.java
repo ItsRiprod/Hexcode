@@ -25,7 +25,8 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.delay.style.DelayStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -101,7 +102,7 @@ public class DelayGlyph extends GlyphAsset {
             TransformComponent targetTransform = accessor.getComponent(
                     targetRef, TransformComponent.getComponentType());
             if (targetTransform != null) {
-                DelayStyle.renderAt(this, targetTransform.getPosition(), hexContext);
+                EffectRenderer.render(EffectSlot.Start, this, hexContext, targetTransform.getPosition(), accessor);
             }
             HexConstructSpawner.applyWithState(accessor, targetRef, hexContext, glyph, TYPE, state);
             return;
@@ -138,7 +139,7 @@ public class DelayGlyph extends GlyphAsset {
             }
         }
 
-        DelayStyle.renderAt(this, spawnPos, hexContext);
+        EffectRenderer.render(EffectSlot.Start, this, hexContext, spawnPos, accessor);
 
         Holder<EntityStore> holder = HexConstructSpawner.createWithState(
                 accessor, hexContext, glyph, DelayGlyph.TYPE, spawnPos, state);

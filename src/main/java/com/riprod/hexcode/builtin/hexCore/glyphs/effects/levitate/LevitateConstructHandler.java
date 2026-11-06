@@ -8,7 +8,6 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
@@ -16,7 +15,6 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.LevitateStyle;
 import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VelocityUtil;
 import com.riprod.hexcode.utils.VfxUtil;
@@ -40,7 +38,6 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
         var asset = GlyphAsset.of(status.getTriggeringGlyph(), LevitateGlyph.class);
         if (asset != null) {
             applyRise(dt, state, asset, ctx);
-            emitTickVfx(dt, state, asset, status, ctx);
         }
 
         drainSustain(dt, status);
@@ -72,25 +69,6 @@ public class LevitateConstructHandler implements ConstructHandler<LevitateState>
             VelocityUtil.applyVelocity(target, new Vector3d(0, targetVy, 0),
                     ChangeVelocityType.Set, null, buffer);
         }
-    }
-
-    private void emitTickVfx(float dt, LevitateState state, LevitateGlyph asset,
-            HexStatus<LevitateState> status, ConstructTickContext ctx) {
-        Ref<EntityStore> target = ctx.getEntityRef();
-        if (target == null || !target.isValid())
-            return;
-
-        float tickInterval = asset.getTickInterval();
-        float accum = state.getTickAccum() + dt;
-        while (accum >= tickInterval) {
-            accum -= tickInterval;
-            TransformComponent transform = ctx.getBuffer().getComponent(
-                    target, TransformComponent.getComponentType());
-            if (transform == null)
-                break;
-            LevitateStyle.renderTick(asset, transform.getPosition(), status.getHexContext(), ctx.getBuffer());
-        }
-        state.setTickAccum(accum);
     }
 
     @Override

@@ -10,6 +10,8 @@ import com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -91,7 +93,7 @@ public class ForceGlyph extends GlyphAsset {
                 VelocityUtil.applyVelocity(ref, new Vector3d(force.x, 0, force.z), ChangeVelocityType.Add,
                         horizontal, hexContext.getAccessor());
 
-                ForceGlyphStyle.render(this, targetPos, force, hexContext, hexContext.getAccessor());
+                EffectRenderer.render(EffectSlot.Hit, this, hexContext, targetPos, hexContext.getAccessor());
             }
         } catch (Exception e) {
             LOGGER.atWarning().log("force glyph: could not apply force to entity: %s", e.getMessage());

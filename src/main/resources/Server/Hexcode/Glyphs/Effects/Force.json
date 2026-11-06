@@ -1,11 +1,8 @@
 {
   "Type": "Force",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Energy",
-    "PrimaryParticle": {
-      "SystemId": "Force_Impact"
-    },
-    "PrimarySound": "SFX_Weapon_Charge_Swing"
+    "Hit": { "Particles": [{ "SystemId": "Force_Impact" }], "Sound": "SFX_Weapon_Charge_Swing" }
   },
   "Title": "hexcode.glyphs.Force.name",
   "Description": "hexcode.glyphs.Force.description",

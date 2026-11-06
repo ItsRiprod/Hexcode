@@ -1,0 +1,20 @@
+{
+  "LifeSpan": 1.5,
+  "CullDistance": 100.0,
+  "BoundingRadius": 3.0,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "Scorch_Pulse_Crackle",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Scorch_Haze_Burst",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Ignite_Pulse_Embers",
+      "FixedRotation": true
+    }
+  ]
+}

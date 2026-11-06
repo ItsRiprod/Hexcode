@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 import com.hypixel.hytale.builtin.adventure.farming.states.FarmingBlock;
@@ -34,7 +33,8 @@ import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.growth.style.GrowthStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -171,7 +171,7 @@ public class GrowthGlyph extends GlyphAsset {
 
         TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
         if (tc != null) {
-            GrowthStyle.renderEntityHit(this, tc.getPosition(), hexContext, accessor);
+            EffectRenderer.render(EffectSlot.Entity, this, hexContext, tc.getPosition(), accessor);
         }
 
         var state = new GrowthState(durationSeconds, effectId, glyph.getNextLinks());
@@ -274,8 +274,7 @@ public class GrowthGlyph extends GlyphAsset {
                 ChunkUtil.localCoordinate(pos.z), previousStage);
         blockSection.setTicking(pos.x, pos.y, pos.z, true);
 
-        Vector3d blockCenter = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
-        GrowthStyle.renderBlockHit(this, blockCenter, hexContext, accessor);
+        EffectRenderer.render(EffectSlot.Block, this, hexContext, EffectRenderer.blockCenter(pos), accessor);
 
         LOGGER.atFine().log("growth: advanced crop at %s from stage %d to %d", pos, currentStage, newStage);
         return true;
@@ -303,7 +302,6 @@ public class GrowthGlyph extends GlyphAsset {
 
         var base = new Vector3i();
         var block = new Vector3i();
-        var blockPos = new Vector3d(0.5);
 
         for (int a = 0; a < attempts; a++) {
             int dx = rng.nextInt(-bonemealRadius, bonemealRadius + 1);
@@ -343,8 +341,7 @@ public class GrowthGlyph extends GlyphAsset {
             BlockAccess.setBlock(cursor, block, vegetationType,
                     RotationTuple.NONE_INDEX, SetBlockSettings.PERFORM_BLOCK_UPDATE);
 
-            var effectPos = blockPos.set(0.5).add(block.x, block.y, block.z);
-            GrowthStyle.renderBlockHit(this, effectPos, hexContext, accessor);
+            EffectRenderer.render(EffectSlot.Block, this, hexContext, EffectRenderer.blockCenter(block), accessor);
         }
 
         if (blocked) {

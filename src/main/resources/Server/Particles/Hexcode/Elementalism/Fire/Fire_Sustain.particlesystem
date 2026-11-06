@@ -1,0 +1,15 @@
+{
+  "CullDistance": 100.0,
+  "BoundingRadius": 1.5,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "Ignite_Sustain_Embers",
+      "FixedRotation": true,
+      "SpawnRate": {
+        "Min": 4.0,
+        "Max": 6.0
+      }
+    }
+  ]
+}

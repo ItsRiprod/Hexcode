@@ -18,7 +18,8 @@ import com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsP
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.halt.style.HaltStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -116,7 +117,7 @@ public class HaltGlyph extends GlyphAsset {
 
             TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
             if (tc != null) {
-                HaltStyle.render(this, tc.getPosition(), hexContext, accessor);
+                EffectRenderer.render(EffectSlot.Hit, this, hexContext, tc.getPosition(), accessor);
             }
         } catch (Exception e) {
             if (spawned) {

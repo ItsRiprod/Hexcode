@@ -20,6 +20,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.cli
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.casting.registry.CastingStyleValidator;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 
 public class HexDrawMode extends ChargingInteraction {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
@@ -27,10 +28,11 @@ public class HexDrawMode extends ChargingInteraction {
     @Nonnull
     public static final BuilderCodec<HexDrawMode> CODEC = BuilderCodec
             .builder(HexDrawMode.class, HexDrawMode::new, ChargingInteraction.CODEC)
-            .appendInherited(new KeyedCodec<>("AuraParticles", ModelParticle.ARRAY_CODEC),
-                    (i, v) -> i.auraParticles = v,
-                    i -> i.auraParticles,
-                    (i, p) -> i.auraParticles = p.auraParticles)
+            .appendInherited(new KeyedCodec<>("GlyphEffects", GlyphEffects.CHILD_ASSET_CODEC),
+                    (i, v) -> i.effectsId = v,
+                    i -> i.effectsId,
+                    (i, p) -> i.effectsId = p.effectsId)
+            .addValidatorLate(() -> GlyphEffects.VALIDATOR_CACHE.getValidator().late())
             .add()
             .appendInherited(new KeyedCodec<>("CastStyleId", Codec.STRING),
                     (i, v) -> i.castStyleId = v,
@@ -42,7 +44,7 @@ public class HexDrawMode extends ChargingInteraction {
             .build();
 
     @Nullable
-    private ModelParticle[] auraParticles;
+    private String effectsId;
     @Nullable
     private String castStyleId;
 
@@ -69,7 +71,7 @@ public class HexDrawMode extends ChargingInteraction {
             if (firstRun && buffer.getComponent(player, DrawCaptureComponent.getComponentType()) == null) {
                 String castStyle = this.castStyleId != null ? this.castStyleId : "ring";
                 buffer.putComponent(player, DrawCaptureComponent.getComponentType(),
-                        new DrawCaptureComponent(this.auraParticles, castStyle));
+                        new DrawCaptureComponent(this.effectsId, castStyle));
             }
 
             super.tick0(firstRun, time, type, ctx, cooldown);

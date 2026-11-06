@@ -26,8 +26,11 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.utils.GlyphModelUtil;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
-import com.riprod.hexcode.utils.VfxUtil;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.component.SustainState;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
+import com.riprod.hexcode.core.common.execution.cast.component.CastEffectsComponent;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
@@ -72,7 +75,7 @@ public class HexConstructSpawner {
             return null;
         }
         HexStatus<S> construct = new HexStatus<>(
-                handlerId, hexContext, constructId, triggeringGlyph, initialState);
+                handlerId, hexContext, constructId, triggeringGlyph, initialState, true);
 
         HexEffectsComponent component = new HexEffectsComponent();
         component.addEffect(constructId, construct);
@@ -96,19 +99,47 @@ public class HexConstructSpawner {
             @Nullable GlyphAsset glyphAsset,
             float defaultScale) {
 
-        String modelId = VfxUtil.resolveModelId(hexContext, glyphAsset);
-        ModelAsset modelAsset = modelId != null ? ModelAsset.getAssetMap().getAsset(modelId) : null;
+        var own = ownBody(glyphAsset, defaultScale);
+        var body = swappedBody(EffectRenderer.resolve(glyphAsset, hexContext), glyphAsset, defaultScale);
+        return body != null ? GlyphModelUtil.withDefaultBox(body, own) : own;
+    }
 
-        Model shaped = shapedModel(hexContext);
-        if (shaped != null) {
-            return GlyphModelUtil.withDefaultBox(shaped, modelAsset);
+    @Nullable
+    private static Model swappedBody(@Nonnull GlyphEffects effects, @Nullable GlyphAsset glyphAsset, float scale) {
+        if (effects.getResolvedModel() != null) {
+            return effects.getResolvedModel();
         }
+        var id = effects.getModel();
+        var own = glyphAsset != null && glyphAsset.getEffects() != null ? glyphAsset.getEffects().getModel() : null;
+        var asset = id != null && !id.equals(own) ? ModelAsset.getAssetMap().getAsset(id) : null;
+        return asset != null ? Model.createScaledModel(asset, scale) : null;
+    }
 
-        if (modelAsset == null && glyphAsset != null) {
-            return GlyphModelUtil.assemble(glyphAsset, glyphAsset.getStyle(), defaultScale);
+    @Nullable
+    public static Model rebuildModel(
+            @Nonnull HexContext hexContext,
+            @Nullable GlyphAsset glyphAsset,
+            @Nonnull Model live,
+            @Nonnull SustainState sustain) {
+
+        var effects = EffectRenderer.resolve(glyphAsset, hexContext);
+        var body = swappedBody(effects, glyphAsset, live.getScale());
+        var own = ownBody(glyphAsset, live.getScale());
+        var installed = sustain.getBody() != null && sustain.getBody().equals(live.getModelAssetId());
+        var target = !installed ? null : body != null ? body : own;
+        var swap = target != null && !target.getModelAssetId().equals(live.getModelAssetId());
+        if (!swap && !sustain.hasInjected() && effects.get(EffectSlot.Sustain) == null) {
+            return null;
         }
+        var stripped = EffectRenderer.strip(live, sustain);
+        var base = !swap ? stripped : body != null ? GlyphModelUtil.withDefaultBox(body, own) : own;
+        sustain.setBody(base.getModelAssetId());
+        return EffectRenderer.inject(base, effects, sustain);
+    }
 
-        return modelAsset != null ? Model.createScaledModel(modelAsset, defaultScale) : null;
+    @Nullable
+    private static Model ownBody(@Nullable GlyphAsset glyphAsset, float scale) {
+        return glyphAsset != null ? GlyphModelUtil.assemble(glyphAsset, glyphAsset.getEffects(), scale) : null;
     }
 
     public static void applyModel(
@@ -120,7 +151,7 @@ public class HexConstructSpawner {
 
         // ModelReference cannot carry derived attachments, so persisting a shaped model would
         // let ModelSystems.ModelChange strip the shape on any later model swap
-        if (shapedModel(hexContext) == null) {
+        if (hexContext.getEffects().getResolvedModel() == null) {
             holder.addComponent(PersistentModel.getComponentType(), new PersistentModel(model.toReference()));
         }
     }
@@ -132,17 +163,23 @@ public class HexConstructSpawner {
             @Nullable GlyphAsset glyphAsset,
             float defaultScale) {
 
-        Model model = resolveModel(hexContext, glyphAsset, defaultScale);
-        if (model != null) {
-            applyModel(holder, hexContext, model);
+        var model = resolveModel(hexContext, glyphAsset, defaultScale);
+        if (model == null) {
+            return null;
         }
+        var owner = holder.getComponent(HexEffectsComponent.getComponentType());
+        if (owner != null) {
+            for (var status : owner.getEffects().values()) {
+                if (status.getHexContext() == hexContext) {
+                    model = EffectRenderer.inject(model, EffectRenderer.resolve(glyphAsset, hexContext),
+                            status.getSustain());
+                    status.getSustain().setVersion(hexContext.get(CastEffectsComponent.TYPE).getVersion());
+                    status.getSustain().setBody(model.getModelAssetId());
+                }
+            }
+        }
+        applyModel(holder, hexContext, model);
         return model;
-    }
-
-    @Nullable
-    private static Model shapedModel(@Nonnull HexContext hexContext) {
-        HexStyleAsset style = hexContext.getStyle();
-        return style != null ? style.getResolvedModel() : null;
     }
 
     @Nullable
@@ -177,7 +214,7 @@ public class HexConstructSpawner {
         }
 
         attach(buffer, targetRef, constructId, new HexStatus<>(
-                handlerId, hexContext, constructId, triggeringGlyph, initialState));
+                handlerId, hexContext, constructId, triggeringGlyph, initialState, false));
         return constructId;
     }
 

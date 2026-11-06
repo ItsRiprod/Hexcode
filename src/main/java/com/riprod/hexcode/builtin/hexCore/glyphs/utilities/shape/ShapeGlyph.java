@@ -7,7 +7,6 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.utils.GlyphModelUtil;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ShapeGlyph extends GlyphAsset {
@@ -22,13 +21,13 @@ public class ShapeGlyph extends GlyphAsset {
     public void execute(Glyph glyph, HexContext hexContext) {
         var linked = GlyphAsset.of(glyph.linkedGlyph(ShapeGlyphSlots.SHAPE, hexContext), GlyphAsset.class);
         if (linked != null) {
-            HexStyleAsset linkedStyle = linked.getStyle();
-            if (linkedStyle != null)
-                hexContext.mutableStyle().applyOverride(linkedStyle);
+            var linkedEffects = linked.getEffects();
+            if (linkedEffects != null)
+                hexContext.mutableEffects().compose(linkedEffects);
 
-            Model assembled = GlyphModelUtil.assemble(linked, linkedStyle, resolveScale(glyph, hexContext));
+            Model assembled = GlyphModelUtil.assemble(linked, linkedEffects, resolveScale(glyph, hexContext));
             if (assembled != null) {
-                hexContext.mutableStyle().setResolvedModel(assembled);
+                hexContext.mutableEffects().setResolvedModel(assembled);
             } else {
                 LOGGER.atWarning().log("shape: glyph '%s' produced no model attachments", linked.getId());
             }

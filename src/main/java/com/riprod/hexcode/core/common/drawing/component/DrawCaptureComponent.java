@@ -9,8 +9,8 @@ import javax.annotation.Nullable;
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 
@@ -47,14 +47,14 @@ public class DrawCaptureComponent implements Component<EntityStore> {
     private HexComponent draggingHex;
     private boolean dragReleaseRequested;
 
-    private ModelParticle[] auraParticles;
+    private String effectsId;
     private String castStyleId = "ring";
 
     public DrawCaptureComponent() {
     }
 
-    public DrawCaptureComponent(@Nullable ModelParticle[] auraParticles, @Nonnull String castStyleId) {
-        this.auraParticles = auraParticles;
+    public DrawCaptureComponent(@Nullable String effectsId, @Nonnull String castStyleId) {
+        this.effectsId = effectsId;
         this.castStyleId = castStyleId;
     }
 
@@ -165,8 +165,8 @@ public class DrawCaptureComponent implements Component<EntityStore> {
     }
 
     @Nullable
-    public ModelParticle[] getAuraParticles() {
-        return auraParticles;
+    public GlyphEffects getEffects() {
+        return effectsId != null ? GlyphEffects.getAssetMap().getAsset(effectsId) : null;
     }
 
     @Nonnull
@@ -192,7 +192,7 @@ public class DrawCaptureComponent implements Component<EntityStore> {
         copy.hoveredHex = this.hoveredHex;
         copy.draggingHex = this.draggingHex;
         copy.dragReleaseRequested = this.dragReleaseRequested;
-        copy.auraParticles = this.auraParticles;
+        copy.effectsId = this.effectsId;
         copy.castStyleId = this.castStyleId;
         return copy;
     }

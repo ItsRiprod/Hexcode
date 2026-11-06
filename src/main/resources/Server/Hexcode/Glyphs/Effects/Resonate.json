@@ -1,16 +1,10 @@
 {
   "Type": "Resonate",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#26C6DA",
     "SecondaryColor": "#B2EBF2",
-    "PrimaryParticle": {
-      "SystemId": "Link_Flow"
-    },
-    "PrimarySound": "SFX_Block_Break",
-    "SecondaryParticle": {
-      "SystemId": "Beam_Impact"
-    },
-    "SecondarySound": "SFX_Block_Break"
+    "Hit": { "Particles": [{ "SystemId": "Link_Flow" }], "Sound": "SFX_Block_Break" },
+    "Fizzle": { "Particles": [{ "SystemId": "Beam_Impact" }], "Sound": "SFX_Block_Break", "Tint": "Secondary" }
   },
   "Title": "hexcode.glyphs.Resonate.name",
   "Description": "hexcode.glyphs.Resonate.description",

@@ -1,14 +1,22 @@
 {
   "Type": "Disguise",
-  "Style": {
-    "PrimaryParticle": {
-      "SystemId": "Disguise_Apply"
+  "Effects": {
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Disguise_Apply"
+        }
+      ],
+      "Sound": "SFX_Portal_Neutral_Teleport_Local"
     },
-    "PrimarySound": "SFX_Portal_Neutral_Teleport_Local",
-    "SecondaryParticle": {
-      "SystemId": "Disguise_Restore"
-    },
-    "SecondarySound": "SFX_Divine_Respawn"
+    "End": {
+      "Particles": [
+        {
+          "SystemId": "Disguise_Restore"
+        }
+      ],
+      "Sound": "SFX_Divine_Respawn"
+    }
   },
   "Title": "hexcode.glyphs.Disguise.name",
   "Description": "hexcode.glyphs.Disguise.description",

@@ -11,10 +11,9 @@ import com.hypixel.hytale.codec.lookup.CodecMapCodec;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.builtin.elementalism.effects.ElementEffects;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 
 public abstract class ElementalTier {
@@ -25,8 +24,7 @@ public abstract class ElementalTier {
     protected String name;
     protected String description;
     protected String lore;
-    protected String model;
-    protected ElementEffects effects = new ElementEffects();
+    protected String effectsId;
 
     public String getId() {
         return this.id;
@@ -48,12 +46,8 @@ public abstract class ElementalTier {
     }
 
     @Nullable
-    public String getModel() {
-        return this.model;
-    }
-
-    public ElementEffects getEffects() {
-        return this.effects;
+    public GlyphEffects getEffects() {
+        return this.effectsId != null ? GlyphEffects.getAssetMap().getAsset(this.effectsId) : null;
     }
 
     public boolean supportsEntity() {
@@ -97,14 +91,10 @@ public abstract class ElementalTier {
                         (t, v) -> t.lore = v, t -> t.lore)
                 .documentation("Translation key for the in-world lore of the tier")
                 .add()
-                .append(new KeyedCodec<>("Model", Codec.STRING),
-                        (t, v) -> t.model = v, t -> t.model)
-                .addValidator(ModelAsset.VALIDATOR_CACHE.getValidator())
-                .documentation("Model used by constructs carrying this tier, such as a projectile")
-                .add()
-                .append(new KeyedCodec<>("Effects", ElementEffects.CODEC),
-                        (t, v) -> t.effects = v, t -> t.effects)
-                .documentation("Particles, sounds and colors per effect slot")
+                .append(new KeyedCodec<>("Effects", GlyphEffects.CHILD_ASSET_CODEC),
+                        (t, v) -> t.effectsId = v, t -> t.effectsId)
+                .addValidatorLate(() -> GlyphEffects.VALIDATOR_CACHE.getValidator().late())
+                .documentation("Effects composed over the element while this tier is reached; Hit is the landing at discharge")
                 .add()
                 .build();
     }

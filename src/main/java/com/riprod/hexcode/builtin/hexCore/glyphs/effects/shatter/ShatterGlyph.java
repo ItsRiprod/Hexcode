@@ -12,6 +12,7 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Rotation3f;
@@ -30,8 +31,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style.ShatterStyle;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -39,6 +41,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 import com.riprod.hexcode.utils.HexVarUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class ShatterGlyph extends GlyphAsset {
 
@@ -47,6 +50,8 @@ public class ShatterGlyph extends GlyphAsset {
     private static final String HIT_ROOT_INTERACTION = "Hex_Shatter_Hit";
     private static final String MISS_ROOT_INTERACTION = "Hex_Shatter_Miss";
     private static final String BOUNCE_ROOT_INTERACTION = "Hex_Shatter_Bounce";
+    private static final float HIT_LINE_THICKNESS = 0.1f;
+    private static final float HIT_LINE_DURATION = 0.3f;
 
     private int defaultCount = 5;
     private double defaultSpread = Math.PI / 6;
@@ -169,7 +174,7 @@ public class ShatterGlyph extends GlyphAsset {
                     shardTtl);
         }
 
-        ShatterStyle.renderLaunch(this, spawnPos, centralDir, hexContext, hexContext.getAccessor());
+        EffectRenderer.render(EffectSlot.Start, this, hexContext, spawnPos, centralDir, hexContext.getAccessor());
 
         HexExecuter.endBranch(hexContext);
     }
@@ -265,5 +270,13 @@ public class ShatterGlyph extends GlyphAsset {
         map.put(InteractionType.ProjectileMiss, MISS_ROOT_INTERACTION);
         map.put(InteractionType.ProjectileBounce, BOUNCE_ROOT_INTERACTION);
         return map;
+    }
+
+    public static void renderShardHit(ShatterGlyph asset, Vector3d hitPos, HexContext ctx,
+            ComponentAccessor<EntityStore> accessor) {
+        var effects = EffectRenderer.resolve(asset, ctx);
+        EffectRenderer.render(EffectSlot.Hit, effects, hitPos, null, 1.0f, null, accessor);
+        VfxUtil.line(accessor, hitPos, new Vector3d(hitPos).add(0, 0.5, 0), VfxUtil.resolvePrimaryColor(effects),
+                HIT_LINE_THICKNESS, HIT_LINE_DURATION, 0, VfxUtil.resolveAlpha(effects));
     }
 }

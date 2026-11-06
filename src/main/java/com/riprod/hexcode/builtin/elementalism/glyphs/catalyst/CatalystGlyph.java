@@ -24,7 +24,7 @@ public class CatalystGlyph extends GlyphAsset {
                     "Element must link a single-shape glyph whose shape names an existing element");
             return;
         }
-        hexContext.get(ElementalComponent.TYPE).activate(elementId);
+        hexContext.get(ElementalComponent.TYPE).activate(elementId, hexContext);
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }
 

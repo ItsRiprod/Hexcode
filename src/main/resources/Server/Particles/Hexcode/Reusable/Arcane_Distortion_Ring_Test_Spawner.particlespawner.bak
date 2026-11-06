@@ -1,0 +1,88 @@
+{
+  "RenderMode": "Distortion",
+  "ParticleRotationInfluence": "None",
+  "LinearFiltering": true,
+  "LightInfluence": 0,
+  "ParticleRotateWithSpawner": true,
+  "TrailSpawnerPositionMultiplier": 0,
+  "TrailSpawnerRotationMultiplier": 0,
+  "MaxConcurrentParticles": 3,
+  "ParticleLifeSpan": {
+    "Min": 1,
+    "Max": 3
+  },
+  "SpawnRate": {
+    "Min": 0,
+    "Max": 30
+  },
+  "$Comment": "Smol sparks for the circle portal",
+  "Particle": {
+    "Texture": "Particles/Textures/Circles/Portal_Wind.png",
+    "FrameSize": {
+      "Width": 128,
+      "Height": 128
+    },
+    "ScaleRatioConstraint": "OneToOne",
+    "UVOption": "RandomFlipU",
+    "Animation": {
+      "0": {
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Opacity": 0,
+        "Color": "#00dcfd",
+        "Scale": {
+          "X": {
+            "Min": 0.7,
+            "Max": 0.7
+          }
+        }
+      },
+      "50": {
+        "Color": "#ffffff",
+        "Opacity": 1
+      },
+      "100": {
+        "Opacity": 0,
+        "Color": "#001d5c"
+      }
+    },
+    "InitialAnimationFrame": {
+      "Rotation": {
+        "X": {
+          "Min": 90,
+          "Max": 90
+        },
+        "Y": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Z": {
+          "Min": 0,
+          "Max": 0
+        }
+      },
+      "Scale": {
+        "X": {
+          "Min": 0.7,
+          "Max": 0.8
+        }
+      },
+      "Opacity": 1,
+      "Color": "#ffffff",
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 0
+      }
+    }
+  },
+  "VelocityStretchMultiplier": 100.0,
+  "Attractors": [
+    {
+      "LinearAcceleration": {
+        "Y": 0.2
+      }
+    }
+  ]
+}

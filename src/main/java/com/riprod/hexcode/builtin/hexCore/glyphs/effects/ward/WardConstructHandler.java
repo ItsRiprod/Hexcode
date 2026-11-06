@@ -12,16 +12,22 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ward.style.WardStyle;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.redirect.EntityRedirectSpawner;
 import com.riprod.hexcode.core.common.stats.HexcodeEntityStatTypes;
+import com.riprod.hexcode.core.common.utilities.OrientedDebugUtil;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class WardConstructHandler implements ConstructHandler<WardState> {
+
+    private static final double WARD_LINE_THICKNESS = 0.03;
+    private static final float WARD_LINE_DURATION = 0.01f;
 
     @Override
     public boolean onTick(float dt, HexStatus<WardState> status, ConstructTickContext ctx) {
@@ -72,8 +78,10 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
         TransformComponent deferralTransform = buffer.getComponent(deferralRef, TransformComponent.getComponentType());
         if (targetTransform == null || deferralTransform == null)
             return;
-        WardStyle.renderWardLine(asset, new Vector3d(targetTransform.getPosition()),
-                new Vector3d(deferralTransform.getPosition()), status.getHexContext(), buffer);
+        var effects = EffectRenderer.resolve(asset, status.getHexContext());
+        OrientedDebugUtil.addCylinder(buffer, new Vector3d(targetTransform.getPosition()),
+                new Vector3d(deferralTransform.getPosition()), VfxUtil.resolvePrimaryColor(effects),
+                WARD_LINE_THICKNESS, WARD_LINE_DURATION, 0, VfxUtil.resolveAlpha(effects));
     }
 
     @Override
@@ -92,7 +100,8 @@ public class WardConstructHandler implements ConstructHandler<WardState> {
                 ctx.getEntityRef(), TransformComponent.getComponentType());
         if (casterTransform != null) {
             var asset = GlyphAsset.of(status.getTriggeringGlyph(), WardGlyph.class);
-            WardStyle.renderEnd(asset, casterTransform.getPosition(), status.getHexContext(), ctx.getBuffer());
+            EffectRenderer.render(EffectSlot.End, asset, status.getHexContext(), casterTransform.getPosition(),
+                    ctx.getBuffer());
         }
     }
 

@@ -17,13 +17,14 @@ import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.state.NoState;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.component.DomainZoneComponent;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.style.DomainStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.component.ManaSourceComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -35,7 +36,6 @@ import com.riprod.hexcode.utils.VfxUtil;
 
 public class DomainConstructHandler implements ConstructHandler<NoState> {
 
-    private static final float AMBIENT_INTERVAL = 1.0f;
     private static final float SPATIAL_INTERVAL_SECONDS = 0.2f;
     private static final Vector3f CONTESTED_COLOR = new Vector3f(0.5f, 0.5f, 0.5f);
 
@@ -120,8 +120,8 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
                     TransformComponent entityTransform = ctx.getBuffer().getComponent(
                             ref, TransformComponent.getComponentType());
                     if (entityTransform != null) {
-                        DomainStyle.renderTrigger(asset, entityTransform.getPosition(),
-                                status.getHexContext(), ctx.getBuffer());
+                        EffectRenderer.render(EffectSlot.Hit, asset, status.getHexContext(),
+                                entityTransform.getPosition(), ctx.getBuffer());
                     }
 
                     Glyph triggering = status.getTriggeringGlyph();
@@ -134,12 +134,6 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
                     }
                 }
             }
-        }
-
-        zone.setAmbientTimer(zone.getAmbientTimer() - dt);
-        if (zone.getAmbientTimer() <= 0) {
-            zone.setAmbientTimer(AMBIENT_INTERVAL);
-            DomainStyle.renderAmbient(asset, center, status.getHexContext(), ctx.getBuffer());
         }
 
         drainSustain(dt, status);
@@ -155,10 +149,8 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         TransformComponent transform = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), TransformComponent.getComponentType());
         if (transform != null) {
-            float radius = zone != null ? zone.getRadius() : 5.0f;
-            var asset = GlyphAsset.of(status.getTriggeringGlyph(), DomainGlyph.class);
-            DomainStyle.renderDespawn(asset, transform.getPosition(), radius,
-                    status.getHexContext(), ctx.getBuffer());
+            EffectRenderer.render(EffectSlot.End, GlyphAsset.of(status.getTriggeringGlyph(), DomainGlyph.class),
+                    status.getHexContext(), transform.getPosition(), ctx.getBuffer());
         }
 
         ctx.getBuffer().tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
@@ -202,7 +194,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         self.setContested(nowContested[0]);
 
         if (nowContested[0] && !wasContested) {
-            DomainStyle.renderContested(asset, selfCenter, status.getHexContext(), buffer);
+            EffectRenderer.render(EffectSlot.Fizzle, asset, status.getHexContext(), selfCenter, buffer);
 
             DebugComponent debug = buffer.getComponent(selfRef, DebugComponent.getComponentType());
             if (debug != null) {
@@ -211,7 +203,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
         } else if (!nowContested[0] && wasContested) {
             DebugComponent debug = buffer.getComponent(selfRef, DebugComponent.getComponentType());
             if (debug != null) {
-                debug.setColor(VfxUtil.resolvePrimaryColor(null, asset));
+                debug.setColor(VfxUtil.resolvePrimaryColor(EffectRenderer.resolve(asset, null)));
             }
         }
     }

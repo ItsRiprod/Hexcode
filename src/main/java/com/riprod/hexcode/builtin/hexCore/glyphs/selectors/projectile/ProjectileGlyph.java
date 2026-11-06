@@ -31,7 +31,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -218,7 +219,7 @@ public class ProjectileGlyph extends GlyphAsset {
             glyph.writeOutput(projectileVar, hexContext);
         }
 
-        ProjectileStyle.renderLaunch(this, spawnPos, direction, hexContext, hexContext.getAccessor());
+        EffectRenderer.render(EffectSlot.Start, this, hexContext, spawnPos, direction, hexContext.getAccessor());
     }
 
     private Map<InteractionType, String> buildInteractionsMap() {

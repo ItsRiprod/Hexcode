@@ -7,15 +7,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.hypixel.hytale.math.shape.Box;
+import com.hypixel.hytale.protocol.ColorLight;
+import com.hypixel.hytale.protocol.ModelTrail;
 import com.hypixel.hytale.server.core.asset.common.CommonAssetRegistry;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
 
 import com.riprod.hexcode.core.common.drawing.registry.ShapeAsset;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.component.EncodingStroke;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 public final class GlyphModelUtil {
 
@@ -36,7 +39,7 @@ public final class GlyphModelUtil {
     }
 
     @Nullable
-    public static Model assemble(@Nonnull GlyphAsset shapeSource, @Nullable HexStyleAsset shapeStyle,
+    public static Model assemble(@Nonnull GlyphAsset shapeSource, @Nullable GlyphEffects shapeStyle,
             float scale) {
         ModelAsset override = overrideModel(shapeStyle);
         if (override != null) {
@@ -59,15 +62,15 @@ public final class GlyphModelUtil {
     }
 
     @Nullable
-    private static ModelAsset overrideModel(@Nullable HexStyleAsset style) {
-        String id = style != null ? style.getPrimaryModel() : null;
+    private static ModelAsset overrideModel(@Nullable GlyphEffects style) {
+        String id = style != null ? style.getModel() : null;
         return id != null ? ModelAsset.getAssetMap().getAsset(id) : null;
     }
 
     @Nonnull
-    public static Model withDefaultBox(@Nonnull Model model, @Nullable ModelAsset defaultModel) {
-        Box box = defaultModel != null && defaultModel.getBoundingBox() != null
-                ? defaultModel.getBoundingBox().clone()
+    public static Model withDefaultBox(@Nonnull Model model, @Nullable Model own) {
+        var box = own != null && own.getBoundingBox() != null
+                ? own.getBoundingBox().clone()
                 : FALLBACK_BOX.clone();
         return rebuild(model, model.getAttachments(), box);
     }
@@ -75,12 +78,19 @@ public final class GlyphModelUtil {
     @Nonnull
     public static Model rebuild(@Nonnull Model scaled, @Nonnull ModelAttachment[] attachments,
             @Nullable Box box) {
+        return rebuild(scaled, attachments, box, scaled.getLight(), scaled.getParticles(), scaled.getTrails());
+    }
+
+    @Nonnull
+    public static Model rebuild(@Nonnull Model scaled, @Nonnull ModelAttachment[] attachments,
+            @Nullable Box box, @Nullable ColorLight light, @Nullable ModelParticle[] particles,
+            @Nullable ModelTrail[] trails) {
         return new Model(scaled.getModelAssetId(), scaled.getScale(), scaled.getRandomAttachmentIds(),
                 attachments, box, scaled.getModel(),
                 scaled.getTexture(), scaled.getGradientSet(), scaled.getGradientId(), scaled.getEyeHeight(),
                 scaled.getCrouchOffset(), scaled.getSittingOffset(), scaled.getSleepingOffset(),
-                scaled.getAnimationSetMap(), scaled.getCamera(), scaled.getLight(), scaled.getParticles(),
-                scaled.getTrails(), scaled.getPhysicsValues(), scaled.getDetailBoxes(), scaled.getPhobia(),
+                scaled.getAnimationSetMap(), scaled.getCamera(), light, particles,
+                trails, scaled.getPhysicsValues(), scaled.getDetailBoxes(), scaled.getPhobia(),
                 scaled.getPhobiaModelAssetId());
     }
 

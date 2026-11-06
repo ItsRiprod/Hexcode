@@ -19,7 +19,6 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.dat
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.ShatterGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.component.ShatterState;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.shatter.style.ShatterStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
@@ -57,7 +56,7 @@ public class HexShatterBounceInteraction extends SimpleInteraction {
             if (hitLocation != null && hexContext != null) {
                 Vector3d hitPos = new Vector3d(hitLocation.x, hitLocation.y, hitLocation.z);
                 var asset = GlyphAsset.of(state.getTriggeringGlyph(), ShatterGlyph.class);
-                ShatterStyle.renderShardHit(asset, hitPos, hexContext, buffer);
+                ShatterGlyph.renderShardHit(asset, hitPos, hexContext, buffer);
             }
 
             ctx.getState().state = InteractionState.Finished;

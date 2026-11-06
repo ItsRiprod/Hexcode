@@ -1,20 +1,9 @@
 {
   "Type": "Gust",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#B3E5FC",
     "SecondaryColor": "#E1F5FE",
-    "PrimaryParticle": {
-      "SystemId": "Gust_Small"
-    },
-    "PrimarySound": "SFX_Staff_Flame_Fireball_Impact",
-    "SecondaryParticle": {
-      "SystemId": "Gust_Medium"
-    },
-    "SecondarySound": "SFX_Staff_Flame_Fireball_Impact",
-    "TertiaryParticle": {
-      "SystemId": "Gust_Big"
-    },
-    "TertiarySound": "SFX_Fireball_Death"
+    "Start": { "Particles": [{ "SystemId": "Gust_Medium", "Scale": 0.2 }], "Sound": "SFX_Staff_Flame_Fireball_Impact" }
   },
   "Title": "hexcode.glyphs.Gust.name",
   "Description": "hexcode.glyphs.Gust.description",

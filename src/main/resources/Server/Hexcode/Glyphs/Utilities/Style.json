@@ -13,7 +13,7 @@
     { "Parent": "Greater", "RelativeSize": 0.4 }
   ],
   "Slots": {
-    "Style": {
+    "Effects": {
       "Type": "Input",
       "Parent": "Input",
       "Label": "hexcode.glyphs.Style.style.name",

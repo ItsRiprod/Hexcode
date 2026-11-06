@@ -1,8 +1,8 @@
 {
   "Type": "OnDeath",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Time",
-    "PrimaryModel": "OnDeath"
+    "Model": "OnDeath"
   },
   "Title": "hexcode.glyphs.OnDeath.name",
   "Description": "hexcode.glyphs.OnDeath.description",

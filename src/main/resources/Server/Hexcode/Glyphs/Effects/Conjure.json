@@ -1,20 +1,41 @@
 {
   "Type": "Conjure",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#3399FF",
     "SecondaryColor": "#A3CCFF",
-    "PrimaryParticle": {
-      "SystemId": "Conjure_Spawn"
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Conjure_Spawn"
+        }
+      ],
+      "Sound": "SFX_Ice_Build"
     },
-    "PrimarySound": "SFX_Ice_Build",
-    "SecondaryParticle": {
-      "SystemId": "Conjure_Trigger"
+    "Hit": {
+      "Particles": [
+        {
+          "SystemId": "Conjure_Trigger"
+        }
+      ],
+      "Sound": "SFX_Arrow_Frost_Hit",
+      "Tint": "Secondary"
     },
-    "SecondarySound": "SFX_Arrow_Frost_Hit",
-    "TertiaryParticle": {
-      "SystemId": "Conjure_Despawn"
+    "End": {
+      "Particles": [
+        {
+          "SystemId": "Conjure_Despawn"
+        }
+      ],
+      "Sound": "SFX_Fireball_Miss",
+      "Tint": "Secondary"
     },
-    "TertiarySound": "SFX_Fireball_Miss"
+    "Sustain": {
+      "Trail": {
+        "TrailId": "Hexcode_Conjure_Trail",
+        "TargetEntityPart": "Self",
+        "FixedRotation": true
+      }
+    }
   },
   "Title": "hexcode.glyphs.Conjure.name",
   "Description": "hexcode.glyphs.Conjure.description",

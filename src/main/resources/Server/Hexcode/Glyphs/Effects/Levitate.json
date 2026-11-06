@@ -1,12 +1,16 @@
 {
   "Type": "Levitate",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#B39DDB",
     "SecondaryColor": "#EDE7F6",
-    "PrimaryParticle": {
-      "SystemId": "Levitate_Activate"
-    },
-    "PrimarySound": "SFX_Weapon_Charge_Swing"
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Levitate_Activate"
+        }
+      ],
+      "Sound": "SFX_Weapon_Charge_Swing"
+    }
   },
   "Title": "hexcode.glyphs.Levitate.name",
   "Description": "hexcode.glyphs.Levitate.description",
@@ -69,7 +73,6 @@
     "DrainPerSecond": 0.15
   },
   "DurationFloor": 1.0,
-  "TickInterval": 0.5,
   "RiseSpeedPerIntensity": 1.5,
   "Effect": "Hexcode_Levitate"
 }

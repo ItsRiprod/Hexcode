@@ -1,14 +1,10 @@
 {
   "Type": "Delay",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Time",
-    "PrimaryParticle": {
-      "SystemId": "Delay_Shimmer"
-    },
-    "PrimarySound": "SFX_Hex_Tick",
-    "SecondaryParticle": {
-      "SystemId": "Delay_Shimmer"
-    }
+    "Start": { "Particles": [{ "SystemId": "Delay_Shimmer" }], "Sound": "SFX_Hex_Tick" },
+    "Sustain": { "Light": 8 },
+    "End": { "Particles": [{ "SystemId": "Delay_Shimmer" }], "Tint": "Secondary" }
   },
   "Title": "hexcode.glyphs.Delay.name",
   "Description": "hexcode.glyphs.Delay.description",

@@ -1,0 +1,14 @@
+{
+  "LifeSpan": 2.0,
+  "CullDistance": 100.0,
+  "BoundingRadius": 2.0,
+  "IsImportant": true,
+  "Spawners": [
+    {
+      "SpawnerId": "Fire_Fizzle_Smoke"
+    },
+    {
+      "SpawnerId": "Fire_Fizzle_Embers"
+    }
+  ]
+}

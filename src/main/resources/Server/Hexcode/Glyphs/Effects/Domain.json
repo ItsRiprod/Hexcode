@@ -85,19 +85,31 @@
     "Type": "Constant",
     "Value": 5.0
   },
-  "DespawnParticle": {
-    "SystemId": "Conjure_Despawn"
-  },
-  "DespawnSound": "SFX_Fireball_Miss",
-  "ContestedParticle": {
-    "SystemId": "Halt_Crystallize"
-  },
-  "ContestedSound": "SFX_Ice_Break",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#8033CC",
     "SecondaryColor": "#C499E6",
-    "PrimaryParticle": {
-      "SystemId": "Conjure_Spawn"
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Conjure_Spawn"
+        }
+      ]
+    },
+    "End": {
+      "Particles": [
+        {
+          "SystemId": "Conjure_Despawn"
+        }
+      ],
+      "Sound": "SFX_Fireball_Miss"
+    },
+    "Fizzle": {
+      "Particles": [
+        {
+          "SystemId": "Halt_Crystallize"
+        }
+      ],
+      "Sound": "SFX_Ice_Break"
     }
   }
 }

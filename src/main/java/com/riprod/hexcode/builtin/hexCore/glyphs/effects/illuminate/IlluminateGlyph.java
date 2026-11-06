@@ -15,18 +15,16 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.util.MathUtil;
-import com.hypixel.hytale.protocol.Color;
 import com.hypixel.hytale.protocol.ColorLight;
 import com.hypixel.hytale.protocol.MountController;
-import com.hypixel.hytale.server.core.codec.ProtocolCodecs;
 import com.hypixel.hytale.server.core.modules.entity.component.DynamicLight;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.style.IlluminateStyle;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.illuminate.utils.GlowUtil;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -34,24 +32,18 @@ import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
-
-import lombok.Getter;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class IlluminateGlyph extends GlyphAsset {
 
     public static final String TYPE = "Illuminate";
 
     private int lightRadius = 8;
-    @Getter
-    private Color defaultColor = new Color((byte) 0, (byte) 204, (byte) 204);
 
     public static final BuilderCodec<IlluminateGlyph> CODEC = BuilderCodec
             .builder(IlluminateGlyph.class, IlluminateGlyph::new, GlyphAsset.ABSTRACT_CODEC)
             .append(new KeyedCodec<>("LightRadius", Codec.INTEGER, true),
                     (c, v) -> c.lightRadius = v, c -> c.lightRadius)
-            .add()
-            .append(new KeyedCodec<>("DefaultColor", ProtocolCodecs.COLOR, true),
-                    (c, v) -> c.defaultColor = v, c -> c.defaultColor)
             .add()
             .build();
 
@@ -70,9 +62,9 @@ public class IlluminateGlyph extends GlyphAsset {
             return;
         }
 
-        Color color = IlluminateStyle.resolveColor(hexContext, this);
-        ColorLight light = IlluminateStyle.toColorLight(color, lightRadius);
-        Vector3f boxColor = IlluminateStyle.toVector3f(color);
+        var effects = EffectRenderer.resolve(this, hexContext);
+        ColorLight light = GlowUtil.toColorLight(VfxUtil.resolvePrimaryColorRaw(effects), lightRadius);
+        Vector3f boxColor = VfxUtil.resolvePrimaryColor(effects);
         boolean showBox = mode == 0;
 
         HexVar targetSlot = glyph.readSlot(IlluminateGlyphSlots.TARGET, hexContext);

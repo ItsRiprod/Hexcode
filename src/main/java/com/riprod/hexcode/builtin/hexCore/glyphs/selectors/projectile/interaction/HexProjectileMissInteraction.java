@@ -26,7 +26,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.ProjectileGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
@@ -104,7 +105,7 @@ public class HexProjectileMissInteraction extends SimpleInteraction {
                             hexContext);
                 }
 
-                ProjectileStyle.renderBlockHit(asset, hitPos, hexContext, buffer);
+                EffectRenderer.render(EffectSlot.Block, asset, hexContext, hitPos, buffer);
             }
 
             detached = List.of();

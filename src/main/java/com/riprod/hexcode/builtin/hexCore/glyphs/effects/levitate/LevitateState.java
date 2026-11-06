@@ -9,7 +9,6 @@ public class LevitateState implements ConstructState {
 
     private float appliedIntensity;
     private float remainingDuration;
-    private float tickAccum;
     private List<String> nextGlyphIds;
     private String effectId;
 
@@ -40,14 +39,6 @@ public class LevitateState implements ConstructState {
         this.remainingDuration = remainingDuration;
     }
 
-    public float getTickAccum() {
-        return tickAccum;
-    }
-
-    public void setTickAccum(float tickAccum) {
-        this.tickAccum = tickAccum;
-    }
-
     public String getEffectId() {
         return effectId;
     }
@@ -76,7 +67,6 @@ public class LevitateState implements ConstructState {
     public LevitateState copy() {
         LevitateState c = new LevitateState(appliedIntensity, remainingDuration,
                 new ArrayList<>(nextGlyphIds));
-        c.tickAccum = this.tickAccum;
         c.effectId = this.effectId;
         return c;
     }

@@ -1,6 +1,6 @@
 {
   "Type": "Ceiling",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#8D6E63",
     "SecondaryColor": "#BCAAA4"
   },

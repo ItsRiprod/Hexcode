@@ -9,13 +9,13 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc.style.ArcStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc.utils.ArcUtils;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
@@ -23,10 +23,14 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class ArcConstructHandler implements ConstructHandler<ArcState> {
 
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    private static final float BEAM_THICKNESS = 0.15f;
+    private static final float BEAM_DURATION = 0.5f;
+    private static final int PARTICLES_PER_ARC = 8;
 
     @Override
     public void onFirstTick(HexStatus<ArcState> status, ConstructTickContext ctx) {
@@ -36,7 +40,7 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         Vector3d origin = originPosition(ctx);
         if (origin != null) {
             var asset = GlyphAsset.of(status.getTriggeringGlyph(), ArcGlyph.class);
-            ArcStyle.renderCast(asset, ctx.getBuffer(), origin, status.getHexContext());
+            EffectRenderer.render(EffectSlot.Start, asset, status.getHexContext(), origin, ctx.getBuffer());
         }
     }
 
@@ -96,11 +100,16 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         UUIDComponent targetUuid = buffer.getComponent(target, UUIDComponent.getComponentType());
         if (targetUuid != null) state.getVisited().add(targetUuid.getUuid());
 
-        World world = buffer.getExternalData().getWorld();
         Glyph triggeringGlyph = status.getTriggeringGlyph();
         var asset = GlyphAsset.of(triggeringGlyph, ArcGlyph.class);
-        ArcStyle.renderArc(asset, buffer, origin, targetPos, hexContext);
-        ArcStyle.renderHit(asset, buffer, targetPos, hexContext);
+        var effects = EffectRenderer.resolve(asset, hexContext);
+        VfxUtil.line(buffer, origin, targetPos, VfxUtil.resolvePrimaryColor(effects), BEAM_THICKNESS, BEAM_DURATION, 0,
+                VfxUtil.resolveAlpha(effects));
+        for (var i = 0; i < PARTICLES_PER_ARC; i++) {
+            var point = new Vector3d(origin).lerp(targetPos, (double) i / PARTICLES_PER_ARC);
+            EffectRenderer.render(EffectSlot.Path, effects, point, null, 1.0f, null, buffer);
+        }
+        EffectRenderer.render(EffectSlot.Hit, effects, targetPos, null, 1.0f, null, buffer);
 
         if (triggeringGlyph != null && targetUuid != null) {
             HexContext branchContext = hexContext.branch();

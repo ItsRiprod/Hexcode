@@ -18,10 +18,11 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.builtin.elementalism.composite.CompositeAsset;
 import com.riprod.hexcode.builtin.elementalism.composite.CompositeIndex;
 import com.riprod.hexcode.builtin.elementalism.composite.CompositeResolver;
-import com.riprod.hexcode.builtin.elementalism.effects.EffectPlayer;
 import com.riprod.hexcode.builtin.elementalism.element.ElementTierIndex;
 
 public class CompositeCommand extends AbstractPlayerCommand {
@@ -65,8 +66,8 @@ public class CompositeCommand extends AbstractPlayerCommand {
         var entity = TargetUtil.getTargetEntity(ref, store);
         var isEntity = entity != null && entity.isValid();
         var block = isEntity ? null : TargetUtil.getTargetBlock(ref, BLOCK_REACH, store);
-        var position = isEntity ? EffectPlayer.entityCenter(entity, store)
-                : block != null ? EffectPlayer.blockCenter(block) : null;
+        var position = isEntity ? EffectRenderer.entityCenter(entity, store)
+                : block != null ? EffectRenderer.blockCenter(block) : null;
         if (position == null) {
             context.sendMessage(Message.raw("Look at an entity or block"));
             return;
@@ -79,7 +80,8 @@ public class CompositeCommand extends AbstractPlayerCommand {
         }
 
         var result = CompositeResolver.preview(composite, outcome);
-        EffectPlayer.playHit(result.effects(tier), position, isEntity, store);
+        EffectRenderer.render(isEntity ? EffectSlot.Entity : EffectSlot.Block, result.landing(tier), position, null,
+                1.0f, null, store);
         context.sendMessage(Message.raw("Played '" + composite.getId() + "' (" + composite.getExisting() + " + "
                 + tier.getId() + "), incoming " + (result.incomingApplies() ? "applies" : "is consumed")));
     }

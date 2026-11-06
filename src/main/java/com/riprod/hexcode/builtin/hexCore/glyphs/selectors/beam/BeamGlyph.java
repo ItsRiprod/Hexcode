@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -14,12 +13,14 @@ import com.hypixel.hytale.math.util.TrigMathUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.beam.style.BeamStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
@@ -31,6 +32,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.TargetFilter;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class BeamGlyph extends GlyphAsset {
     public static final String TYPE = "Beam";
@@ -45,6 +47,8 @@ public class BeamGlyph extends GlyphAsset {
             .build();
 
     private static final float PASSIVE_FLOOR = 0.1f;
+    private static final double LINE_THICKNESS = 0.02;
+    private static final float LINE_DURATION = 0.4f;
 
     private boolean isPassive(Glyph glyph) {
         return glyph.getNextLinks().isEmpty();
@@ -137,30 +141,30 @@ public class BeamGlyph extends GlyphAsset {
         Vector3d beamOrigin = new Vector3d(origin).add(new Vector3d(direction).mul(originOffset));
 
         Vector3d endPoint;
-        BeamStyle.HitType hitType;
+        EffectSlot hitSlot;
 
         if (entityHit != null && entityHitDist < blockHitDist) {
             UUIDComponent uuidComp = hexContext.getAccessor().getComponent(entityHit, UUIDComponent.getComponentType());
             if (uuidComp == null) {
                 endPoint = new Vector3d(origin).add(new Vector3d(direction).mul(beamLength));
-                hitType = BeamStyle.HitType.MISS;
+                hitSlot = null;
             } else {
                 EntityVar resultVar = new EntityVar(EntityVar.createRef(uuidComp.getUuid(), entityHit));
                 glyph.writeOutput(resultVar, hexContext);
                 endPoint = hexContext.getAccessor().getComponent(entityHit,
                         TransformComponent.getComponentType()).getPosition();
-                hitType = BeamStyle.HitType.ENTITY;
+                hitSlot = EffectSlot.Entity;
             }
         } else if (blockHitLocation != null) {
             endPoint = blockHitLocation;
-            hitType = BeamStyle.HitType.BLOCK;
+            hitSlot = EffectSlot.Block;
             if (!passive)
                 glyph.writeOutput(
                         new PositionVar(BlockResolution.nudgeIntoBlock(blockHitLocation, direction)),
                         hexContext);
         } else {
             endPoint = new Vector3d(origin).add(new Vector3d(direction).mul(beamLength));
-            hitType = BeamStyle.HitType.MISS;
+            hitSlot = null;
             if (!passive)
                 glyph.writeOutput(new PositionVar(endPoint), hexContext);
         }
@@ -168,8 +172,14 @@ public class BeamGlyph extends GlyphAsset {
         if (!passive)
             chargeReach(hexContext, new Vector3d(origin).sub(endPoint).length());
 
-        BeamStyle.render(this, beamOrigin, endPoint, new Vector3f(rotation.x, rotation.y, rotation.z), hitType, hexContext,
-                hexContext.getAccessor());
+        var accessor = hexContext.getAccessor();
+        var effects = EffectRenderer.resolve(this, hexContext);
+        EffectRenderer.render(EffectSlot.Start, effects, beamOrigin, direction, 1.0f, null, accessor);
+        VfxUtil.line(accessor, beamOrigin, endPoint, VfxUtil.resolvePrimaryColor(effects), LINE_THICKNESS,
+                LINE_DURATION, DebugUtils.FLAG_FADE, VfxUtil.resolveAlpha(effects));
+        if (hitSlot != null) {
+            EffectRenderer.render(hitSlot, effects, endPoint, null, 1.0f, null, accessor);
+        }
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }

@@ -1,0 +1,27 @@
+{
+  "LifeSpan": 3.5,
+  "CullDistance": 100.0,
+  "BoundingRadius": 6.0,
+  "IsImportant": true,
+  "Spawners": [
+    {
+      "SpawnerId": "Explosio_Medium_Flash_Glow"
+    },
+    {
+      "SpawnerId": "Scorch_Hit_Sear"
+    },
+    {
+      "SpawnerId": "Scorch_Hit_Flare"
+    },
+    {
+      "SpawnerId": "Scorch_Haze_Burst"
+    },
+    {
+      "SpawnerId": "Scorch_Hit_Char",
+      "StartDelay": 0.2
+    },
+    {
+      "SpawnerId": "Explosion_Medium_Sparks_Linger"
+    }
+  ]
+}

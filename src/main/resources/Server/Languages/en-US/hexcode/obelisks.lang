@@ -1,0 +1,22 @@
+name.title=Name Hex
+name.placeholder=unnamed hex
+name.confirm=Set Name
+name.status_hex=Naming the hex in slot {slot}
+name.status_port=Naming the hovered Slot port
+name.no_hex=No hex is being crafted
+name.slot_gone=That Slot is gone
+
+transfer.title=Import / Export Hex
+transfer.placeholder=paste hex data here...
+transfer.export=Export Hex
+transfer.import=Import Hex
+transfer.hint=Select a slot, then Export to copy its hex or paste data and Import to write it
+transfer.slot_active=Slot {slot} active
+transfer.export_empty=Slot {slot} is empty, nothing to export
+transfer.export_failed=Failed to serialize hex
+transfer.exported=Exported hex from slot {slot}
+transfer.import_empty=Paste hex data first
+transfer.import_failed=Import failed
+transfer.imported=Imported into {slot} in {ms}ms
+transfer.issue=• {issue}
+transfer.more_issues=({count} more)

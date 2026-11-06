@@ -1,20 +1,16 @@
 {
   "Type": "Interfere",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#7C4DFF",
     "SecondaryColor": "#D1C4E9",
-    "PrimaryParticle": {
-      "SystemId": "Phase_Out"
-    },
-    "PrimarySound": "SFX_Block_Break",
-    "SecondaryParticle": {
-      "SystemId": "Phase_In"
-    },
-    "SecondarySound": "SFX_Block_Break",
-    "TertiaryParticle": {
-      "SystemId": "Conjure_Trigger"
-    },
-    "TertiarySound": "SFX_Block_Break"
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Phase_Out"
+        }
+      ],
+      "Sound": "SFX_Block_Break"
+    }
   },
   "Title": "hexcode.glyphs.Interfere.name",
   "Description": "hexcode.glyphs.Interfere.description",

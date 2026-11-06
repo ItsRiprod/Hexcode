@@ -1,16 +1,16 @@
 {
   "Type": "Invisibility",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#8ea1aa",
     "SecondaryColor": "#a7e8ff",
-    "PrimaryParticle": {
-      "SystemId": "Conjure_Despawn"
-    },
-    "PrimarySound": "SFX_Avatar_Powers_Enable",
-    "SecondaryParticle": {
-      "SystemId": "Conjure_Despawn"
-    },
-    "SecondarySound": "SFX_Avatar_Powers_Enable"
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Conjure_Despawn"
+        }
+      ],
+      "Sound": "SFX_Avatar_Powers_Enable"
+    }
   },
   "Title": "hexcode.glyphs.Invisibility.name",
   "Description": "hexcode.glyphs.Invisibility.description",

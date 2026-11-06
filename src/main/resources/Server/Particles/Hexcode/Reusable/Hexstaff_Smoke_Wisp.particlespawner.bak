@@ -1,0 +1,125 @@
+{
+  "RenderMode": "BlendAdd",
+  "ParticleRotationInfluence": "BillboardVelocity",
+  "MaxConcurrentParticles": 6,
+  "ParticleLifeSpan": {
+    "Min": 2.0,
+    "Max": 4.0
+  },
+  "TrailSpawnerPositionMultiplier": 1,
+  "TrailSpawnerRotationMultiplier": 1,
+  "SpawnRate": {
+    "Min": 0.8,
+    "Max": 1.4
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Smoke/Smoke_Wind2.png",
+    "ScaleRatioConstraint": "None",
+    "Animation": {
+      "0": {
+        "Opacity": 0.0,
+        "Scale": {
+          "Y": {
+            "Min": 0.8,
+            "Max": 0.8
+          },
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        }
+      },
+      "20": {
+        "Opacity": 1.0,
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        }
+      },
+      "80": {
+        "Opacity": 1.0,
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Max": 1.0,
+            "Min": 1.0
+          }
+        }
+      },
+      "100": {
+        "Opacity": 0.0,
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Max": 0.8,
+            "Min": 0.8
+          }
+        }
+      }
+    },
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.8,
+          "Max": 0.8
+        },
+        "Y": {
+          "Min": 1.0,
+          "Max": 2.0
+        }
+      },
+      "Opacity": 0.692
+    },
+    "UVOption": "FlipV"
+  },
+  "LinearFiltering": true,
+  "UVMotion": {
+    "Texture": "Particles/Textures/UVMotion/FlowMapThorus.png",
+    "Scale": 1.0,
+    "SpeedY": -0.4,
+    "StrengthCurveType": "Constant",
+    "AddRandomUVOffset": true,
+    "Strength": 7.0,
+    "SpeedX": 0.08
+  },
+  "InitialVelocity": {
+    "Pitch": {
+      "Min": 90.0,
+      "Max": 90.0
+    },
+    "Speed": {
+      "Min": 1.5,
+      "Max": 0.5
+    }
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -1.0,
+      "Max": 1.0
+    },
+    "Y": {
+      "Min": 0.0,
+      "Max": 1.5
+    },
+    "Z": {
+      "Min": -1.0,
+      "Max": 1.0
+    }
+  },
+  "WaveDelay": {
+    "Min": 1.0,
+    "Max": 2.0
+  }
+}

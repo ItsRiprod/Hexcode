@@ -11,8 +11,6 @@ public class ConcentrationState implements ConstructState {
     @Nullable
     private Ref<EntityStore> visualRef;
 
-    private float tickAccum;
-
     private float elapsedSeconds;
 
     private float manaRate;
@@ -37,14 +35,6 @@ public class ConcentrationState implements ConstructState {
     @Nullable
     public Ref<EntityStore> getVisualRef() {
         return visualRef;
-    }
-
-    public float getTickAccum() {
-        return tickAccum;
-    }
-
-    public void setTickAccum(float tickAccum) {
-        this.tickAccum = tickAccum;
     }
 
     public float getElapsedSeconds() {
@@ -106,7 +96,6 @@ public class ConcentrationState implements ConstructState {
     @Override
     public ConcentrationState copy() {
         ConcentrationState c = new ConcentrationState(visualRef);
-        c.tickAccum = this.tickAccum;
         c.elapsedSeconds = this.elapsedSeconds;
         c.manaRate = this.manaRate;
         c.staminaRate = this.staminaRate;

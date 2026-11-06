@@ -1,16 +1,17 @@
 {
   "Type": "Interact",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#99E6FF",
     "SecondaryColor": "#D6F2FF",
-    "PrimaryParticle": {
-      "SystemId": "Shock_Spawner_Temporary"
-    },
-    "PrimarySound": "SFX_Staff_Fire_Shoot",
-    "SecondaryParticle": {
-      "SystemId": "Bolt_Hit"
-    },
-    "SecondarySound": "SFX_Staff_Fire_Shoot"
+    "Hit": {
+      "Particles": [
+        {
+          "SystemId": "Bolt_Hit"
+        }
+      ],
+      "Tint": "Secondary",
+      "Sound": "SFX_Staff_Fire_Shoot"
+    }
   },
   "Title": "hexcode.glyphs.Interact.name",
   "Description": "hexcode.glyphs.Interact.description",

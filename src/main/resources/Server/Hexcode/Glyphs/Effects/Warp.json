@@ -1,16 +1,25 @@
 {
   "Type": "Warp",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#804DE6",
     "SecondaryColor": "#C2A6F2",
-    "PrimaryParticle": {
-      "SystemId": "Warp_Departure"
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Warp_Departure"
+        }
+      ],
+      "Sound": "SFX_Portal_Neutral_Teleport_Local"
     },
-    "PrimarySound": "SFX_Portal_Neutral_Teleport_Local",
-    "SecondaryParticle": {
-      "SystemId": "Warp_Arrival"
-    },
-    "SecondarySound": "SFX_Divine_Respawn"
+    "End": {
+      "Particles": [
+        {
+          "SystemId": "Warp_Arrival"
+        }
+      ],
+      "Sound": "SFX_Divine_Respawn",
+      "Tint": "Secondary"
+    }
   },
   "Title": "hexcode.glyphs.Warp.name",
   "Description": "hexcode.glyphs.Warp.description",

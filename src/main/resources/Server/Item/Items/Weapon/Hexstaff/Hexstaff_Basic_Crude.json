@@ -97,7 +97,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Basic_Crude"
+            "Effects": "Hexstaff_Basic_Crude"
           }
         }
       ]
@@ -113,7 +113,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Basic_Crude"
+            "Effects": "Hexstaff_Basic_Crude"
           }
         }
       ]
@@ -129,7 +129,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Basic_Crude"
+            "Effects": "Hexstaff_Basic_Crude"
           }
         }
       ]
@@ -145,7 +145,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Basic_Crude"
+            "Effects": "Hexstaff_Basic_Crude"
           }
         }
       ]
@@ -155,24 +155,28 @@
         {
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
-          "AuraParticles": [
-            {
-              "SystemId": "Hexstaff_Generic_Mist",
-              "PositionOffset": {
-                "Y": -1.5
-              },
-              "Color": "#6B4423",
-              "Scale": 0.9
-            },
-            {
-              "SystemId": "Hexstaff_Sparks_Fast",
-              "PositionOffset": {
-                "Y": -0.8
-              },
-              "Color": "#8D6E5A",
-              "Scale": 0.7
+          "Effects": {
+            "Sustain": {
+              "Particles": [
+                {
+                  "SystemId": "Hexstaff_Generic_Mist",
+                  "PositionOffset": {
+                    "Y": -1.5
+                  },
+                  "Color": "#6B4423",
+                  "Scale": 0.9
+                },
+                {
+                  "SystemId": "Hexstaff_Sparks_Fast",
+                  "PositionOffset": {
+                    "Y": -0.8
+                  },
+                  "Color": "#8D6E5A",
+                  "Scale": 0.7
+                }
+              ]
             }
-          ]
+          }
         }
       ]
     }

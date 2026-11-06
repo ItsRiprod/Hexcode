@@ -18,6 +18,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -25,6 +26,7 @@ import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.builtin.hexCore.obelisks.ObeliskStatus;
 import com.riprod.hexcode.core.common.hexes.codec.DecodeIssue;
 import com.riprod.hexcode.core.common.hexes.codec.DecodeResult;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
@@ -38,7 +40,9 @@ public class ImportExportPage extends InteractiveCustomUIPage<ImportExportPage.P
 
     private static final int MAX_ISSUE_LINE = 80;
 
-    private String fieldValue = "";
+    private String exportedValue = "";
+    private ObeliskStatus statusTone;
+    private Message statusMessage;
 
     private Vector3i obeliskPosition;
 
@@ -52,13 +56,12 @@ public class ImportExportPage extends InteractiveCustomUIPage<ImportExportPage.P
             @Nonnull UIEventBuilder events, @Nonnull Store<EntityStore> store) {
 
         cmd.append("Hexcode/Obelisks/ImportExport.ui");
-        cmd.set("#StatusLabel.Text", initialStatus(ref, store));
-        cmd.set("#DataField.Value", fieldValue);
-
-        events.addEventBinding(
-                CustomUIEventBindingType.ValueChanged, "#DataField",
-                EventData.of("Action", "sync").append("@Data", "#DataField.Value"),
-                false);
+        cmd.set("#DataField.Value", exportedValue);
+        if (statusMessage != null) {
+            statusTone.write(cmd, statusMessage);
+        } else {
+            writeInitialStatus(cmd, ref, store);
+        }
 
         events.addEventBinding(
                 CustomUIEventBindingType.Activating, "#ExportButton",
@@ -66,51 +69,51 @@ public class ImportExportPage extends InteractiveCustomUIPage<ImportExportPage.P
 
         events.addEventBinding(
                 CustomUIEventBindingType.Activating, "#ImportButton",
-                EventData.of("Action", "import"));
+                EventData.of("Action", "import").append("@Data", "#DataField.Value"));
     }
 
     @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store,
             @Nonnull PageEventData data) {
 
-        if ("sync".equals(data.action)) {
-            // pasted codes pick up trailing/wrapping whitespace that breaks base64 decode; valid codes never contain interior whitespace
-            fieldValue = data.data != null ? data.data.replaceAll("\\s+", "") : "";
-        } else if ("export".equals(data.action)) {
+        if ("export".equals(data.action)) {
             handleExport(ref, store);
         } else if ("import".equals(data.action)) {
-            handleImport(ref, store);
+            handleImport(ref, store, data.data);
         }
     }
 
-    private String initialStatus(Ref<EntityStore> ref, Store<EntityStore> store) {
+    private void writeInitialStatus(UICommandBuilder cmd, Ref<EntityStore> ref, Store<EntityStore> store) {
         HexcodeSessionComponent session = SessionUtils.resolveSessionByPlayer(ref, store);
         if (session == null) {
-            return "No active crafting session.";
+            ObeliskStatus.ERROR.write(cmd, Message.translation("hexcode.pages.obelisk.not_crafting"));
+            return;
         }
         String slotKey = session.getActiveSlotKey();
         if (slotKey == null) {
-            return "Select a slot, then Export to copy its hex or paste data and Import to write it.";
+            ObeliskStatus.NORMAL.write(cmd, Message.translation("hexcode.obelisks.transfer.hint"));
+            return;
         }
-        return "Slot " + slotKey + " active.";
+        ObeliskStatus.NORMAL.write(cmd,
+                Message.translation("hexcode.obelisks.transfer.slot_active").param("slot", slotKey));
     }
 
     private void handleExport(Ref<EntityStore> ref, Store<EntityStore> store) {
         HexcodeSessionComponent session = SessionUtils.resolveSessionByPlayer(ref, store);
         if (session == null) {
-            updateStatus("No active crafting session.");
+            showStatus(ObeliskStatus.ERROR, Message.translation("hexcode.pages.obelisk.not_crafting"));
             return;
         }
 
         Ref<EntityStore> ownerRef = session.getOwnerRef();
         if (ownerRef == null || !ownerRef.isValid() || !ownerRef.equals(ref)) {
-            updateStatus("You don't have permission to export from this pedestal.");
+            showStatus(ObeliskStatus.ERROR, Message.translation("hexcode.pages.obelisk.not_owner"));
             return;
         }
 
         String slotKey = session.getActiveSlotKey();
         if (slotKey == null) {
-            updateStatus("Select a slot first.");
+            showStatus(ObeliskStatus.ERROR, Message.translation("hexcode.pages.obelisk.no_slot"));
             return;
         }
 
@@ -126,7 +129,8 @@ public class ImportExportPage extends InteractiveCustomUIPage<ImportExportPage.P
             hex = session.getHexAt(slotKey, store);
         }
         if (hex == null || hex.getGlyphs().isEmpty()) {
-            updateStatus("Slot " + slotKey + " is empty — nothing to export.");
+            showStatus(ObeliskStatus.ERROR,
+                    Message.translation("hexcode.obelisks.transfer.export_empty").param("slot", slotKey));
             return;
         }
 
@@ -134,31 +138,37 @@ public class ImportExportPage extends InteractiveCustomUIPage<ImportExportPage.P
         try {
             encoded = HexUtils.serialize(hex);
         } catch (Exception e) {
-            updateStatus("Failed to serialize hex: " + truncate(String.valueOf(e.getMessage()), MAX_ISSUE_LINE));
+            showStatus(ObeliskStatus.ERROR, Message.join(
+                    Message.translation("hexcode.obelisks.transfer.export_failed"),
+                    Message.raw("\n"),
+                    issueLine(String.valueOf(e.getMessage()))));
             return;
         }
         if (encoded == null) {
-            updateStatus("Failed to serialize hex.");
+            showStatus(ObeliskStatus.ERROR, Message.translation("hexcode.obelisks.transfer.export_failed"));
             return;
         }
 
-        UICommandBuilder cmd = new UICommandBuilder();
-        cmd.set("#DataField.Value", encoded);
-        cmd.set("#StatusLabel.Text", "Exported hex from slot " + slotKey + ".");
-        sendUpdate(cmd);
+        exportedValue = encoded;
+        statusTone = ObeliskStatus.NORMAL;
+        statusMessage = Message.translation("hexcode.obelisks.transfer.exported").param("slot", slotKey);
+        rebuild();
         SpawnParticleEffect(new Vector3d(obeliskPosition), store);
     }
 
-    private void handleImport(Ref<EntityStore> ref, Store<EntityStore> store) {
+    private void handleImport(Ref<EntityStore> ref, Store<EntityStore> store, String rawData) {
+        // pasted codes pick up trailing/wrapping whitespace that breaks base64 decode; valid codes never contain interior whitespace
+        String fieldValue = rawData != null ? rawData.replaceAll("\\s+", "") : "";
         if (fieldValue.isEmpty()) {
-            updateStatus("Paste hex data first.");
+            showStatus(ObeliskStatus.ERROR, Message.translation("hexcode.obelisks.transfer.import_empty"));
             return;
         }
 
         long t0 = System.nanoTime();
         DecodeResult result = HexUtils.deserializeWithResult(fieldValue);
         if (!result.isOk() || result.getHex() == null) {
-            updateStatus("Import failed:\n" + formatIssues(result.getIssues(), 4));
+            showStatus(ObeliskStatus.ERROR, withIssues(
+                    Message.translation("hexcode.obelisks.transfer.import_failed"), result.getIssues(), 4));
             return;
         }
         Hex hex = result.getHex();
@@ -167,38 +177,39 @@ public class ImportExportPage extends InteractiveCustomUIPage<ImportExportPage.P
 
         HexcodeSessionComponent importSession = SessionUtils.resolveSessionByPlayer(ref, store);
         if (importSession == null) {
-            updateStatus("Not in a crafting session.");
+            showStatus(ObeliskStatus.ERROR, Message.translation("hexcode.pages.obelisk.not_crafting"));
             return;
         }
 
         Ref<EntityStore> ownerRef2 = importSession.getOwnerRef();
         if (ownerRef2 == null || !ownerRef2.isValid() || !ownerRef2.equals(ref)) {
-            updateStatus("You don't own this pedestal.");
+            showStatus(ObeliskStatus.ERROR, Message.translation("hexcode.pages.obelisk.not_owner"));
             return;
         }
 
         String slotKey = importSession.getActiveSlotKey();
         if (slotKey == null) {
-            updateStatus("Select a slot first.");
+            showStatus(ObeliskStatus.ERROR, Message.translation("hexcode.pages.obelisk.no_slot"));
             return;
         }
 
         importSession.setPendingImportHex(hex);
 
-        StringBuilder msg = new StringBuilder();
-        msg.append("Imported into ").append(slotKey).append(" in ").append(elapsedMs).append("ms.");
-        String warnings = formatIssues(filterNonInfo(result.getIssues()), 3);
-        if (!warnings.isEmpty()) {
-            msg.append('\n').append(warnings);
-        }
-        updateStatus(msg.toString());
+        var warnings = filterNonInfo(result.getIssues());
+        var imported = Message.translation("hexcode.obelisks.transfer.imported")
+                .param("slot", slotKey)
+                .param("ms", elapsedMs);
+        showStatus(warnings.isEmpty() ? ObeliskStatus.NORMAL : ObeliskStatus.WARNING,
+                withIssues(imported, warnings, 3));
 
         SpawnParticleEffect(new Vector3d(obeliskPosition), store);
     }
 
-    private void updateStatus(String message) {
-        UICommandBuilder cmd = new UICommandBuilder();
-        cmd.set("#StatusLabel.Text", message);
+    private void showStatus(ObeliskStatus tone, Message message) {
+        statusTone = tone;
+        statusMessage = message;
+        var cmd = new UICommandBuilder();
+        tone.write(cmd, message);
         sendUpdate(cmd);
     }
 
@@ -214,28 +225,33 @@ public class ImportExportPage extends InteractiveCustomUIPage<ImportExportPage.P
         return out;
     }
 
-    private static String formatIssues(List<DecodeIssue> issues, int maxLines) {
+    private static Message withIssues(Message header, List<DecodeIssue> issues, int maxLines) {
         if (issues == null || issues.isEmpty())
-            return "";
+            return header;
         Set<String> seen = new LinkedHashSet<>();
         for (DecodeIssue issue : issues) {
             seen.add(truncate(issue.getMessage(), MAX_ISSUE_LINE));
         }
-        StringBuilder out = new StringBuilder();
+        var parts = new ArrayList<Message>();
+        parts.add(header);
         int rendered = 0;
         for (String line : seen) {
             if (rendered >= maxLines)
                 break;
-            if (rendered > 0)
-                out.append('\n');
-            out.append("• ").append(line);
+            parts.add(Message.raw("\n"));
+            parts.add(issueLine(line));
             rendered++;
         }
         int overflow = seen.size() - rendered;
         if (overflow > 0) {
-            out.append("\n… (").append(overflow).append(" more)");
+            parts.add(Message.raw("\n"));
+            parts.add(Message.translation("hexcode.obelisks.transfer.more_issues").param("count", overflow));
         }
-        return out.toString();
+        return Message.join(parts.toArray(Message[]::new));
+    }
+
+    private static Message issueLine(String issue) {
+        return Message.translation("hexcode.obelisks.transfer.issue").param("issue", issue);
     }
 
     private static String truncate(String s, int max) {
@@ -243,7 +259,7 @@ public class ImportExportPage extends InteractiveCustomUIPage<ImportExportPage.P
             return "";
         if (s.length() <= max)
             return s;
-        return s.substring(0, Math.max(0, max - 1)) + "…";
+        return s.substring(0, Math.max(0, max - 3)) + "...";
     }
 
     private static void SpawnParticleEffect(Vector3d position, Store<EntityStore> store) {

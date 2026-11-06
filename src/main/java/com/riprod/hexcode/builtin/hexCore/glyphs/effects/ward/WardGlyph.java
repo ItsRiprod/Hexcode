@@ -13,8 +13,9 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ward.style.WardStyle;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -91,7 +92,7 @@ public class WardGlyph extends GlyphAsset {
         TransformComponent casterTransform = accessor.getComponent(
                 casterRef, TransformComponent.getComponentType());
         if (casterTransform != null) {
-            WardStyle.renderSpawn(this, casterTransform.getPosition(), hexContext, accessor);
+            EffectRenderer.render(EffectSlot.Start, this, hexContext, casterTransform.getPosition(), accessor);
         }
     }
 }

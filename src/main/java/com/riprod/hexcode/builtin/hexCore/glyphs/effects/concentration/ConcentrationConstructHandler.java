@@ -15,10 +15,11 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.ManaSourceComponent;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
@@ -60,7 +61,6 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         }
 
         accrueVolatility(dt, glyph, status);
-        emitSecondary(dt, glyph, status, buffer, casterRef);
 
         drainSustain(dt, status);
         return false;
@@ -170,27 +170,8 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         TransformComponent casterTransform = buffer.getComponent(
                 casterRef, TransformComponent.getComponentType());
         if (casterTransform != null) {
-            ConcentrationStyle.renderEnd(glyph, casterTransform.getPosition(), heldCtx, buffer);
+            EffectRenderer.render(EffectSlot.End, glyph, heldCtx, casterTransform.getPosition(), buffer);
         }
-    }
-
-    private void emitSecondary(float dt, ConcentrationGlyph glyph, HexStatus<ConcentrationState> status,
-            CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
-        ConcentrationState state = status.getState();
-        if (state == null || glyph == null)
-            return;
-
-        float interval = (float) glyph.getSecondaryIntervalSeconds();
-        float accum = state.getTickAccum() + dt;
-        while (accum >= interval) {
-            accum -= interval;
-            TransformComponent transform = buffer.getComponent(
-                    casterRef, TransformComponent.getComponentType());
-            if (transform == null)
-                break;
-            ConcentrationStyle.renderTick(glyph, transform.getPosition(), status.getHexContext(), buffer);
-        }
-        state.setTickAccum(accum);
     }
 
     @Override

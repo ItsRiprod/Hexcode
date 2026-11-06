@@ -1,8 +1,8 @@
 {
   "Type": "OnCast",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Time",
-    "PrimaryModel": "OnCast"
+    "Model": "OnCast"
   },
   "Title": "hexcode.glyphs.OnCast.name",
   "Description": "hexcode.glyphs.OnCast.description",

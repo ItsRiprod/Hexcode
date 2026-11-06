@@ -47,7 +47,9 @@
     }
   },
   "LightRadius": 12,
-  "DefaultColor": "#00CCCC",
+  "Effects": {
+    "PrimaryColor": "#00CCCC"
+  },
   "Volatility": {
     "InstantCost": 5,
     "DrainPerSecond": 0.0

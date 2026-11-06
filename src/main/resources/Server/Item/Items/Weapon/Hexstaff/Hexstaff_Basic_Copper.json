@@ -106,7 +106,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Basic_Copper"
+            "Effects": "Hexstaff_Basic_Copper"
           }
         }
       ]
@@ -122,7 +122,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Basic_Copper"
+            "Effects": "Hexstaff_Basic_Copper"
           }
         }
       ]
@@ -138,7 +138,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Basic_Copper"
+            "Effects": "Hexstaff_Basic_Copper"
           }
         }
       ]
@@ -154,7 +154,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Basic_Copper"
+            "Effects": "Hexstaff_Basic_Copper"
           }
         }
       ]
@@ -164,24 +164,28 @@
         {
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
-          "AuraParticles": [
-            {
-              "SystemId": "Hexstaff_Generic_Mist",
-              "PositionOffset": {
-                "Y": -1.5
-              },
-              "Color": "#B87333",
-              "Scale": 1.1
-            },
-            {
-              "SystemId": "Hexstaff_Sparks_Mid",
-              "PositionOffset": {
-                "Y": 0.0
-              },
-              "Color": "#E8833A",
-              "Scale": 1.0
+          "Effects": {
+            "Sustain": {
+              "Particles": [
+                {
+                  "SystemId": "Hexstaff_Generic_Mist",
+                  "PositionOffset": {
+                    "Y": -1.5
+                  },
+                  "Color": "#B87333",
+                  "Scale": 1.1
+                },
+                {
+                  "SystemId": "Hexstaff_Sparks_Mid",
+                  "PositionOffset": {
+                    "Y": 0.0
+                  },
+                  "Color": "#E8833A",
+                  "Scale": 1.0
+                }
+              ]
             }
-          ]
+          }
         }
       ]
     }

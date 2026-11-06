@@ -1,0 +1,136 @@
+{
+  "RenderMode": "BlendAdd",
+  "EmitOffset": {
+    "X": {
+      "Min": -2.0,
+      "Max": 2.0
+    },
+    "Y": {
+      "Min": 0.0,
+      "Max": 2.5
+    },
+    "Z": {
+      "Min": -2.0,
+      "Max": 2.0
+    }
+  },
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": true,
+  "LightInfluence": 0,
+  "MaxConcurrentParticles": 40,
+  "ParticleLifeSpan": {
+    "Min": 4.166666666666667,
+    "Max": 5
+  },
+  "ParticleRotateWithSpawner": false,
+  "TrailSpawnerPositionMultiplier": 1,
+  "TrailSpawnerRotationMultiplier": 1,
+  "SpawnRate": {
+    "Min": 10.0,
+    "Max": 18.0
+  },
+  "InitialVelocity": {
+    "Yaw": {
+      "Min": 0,
+      "Max": 180
+    },
+    "Pitch": {
+      "Min": 0,
+      "Max": 180
+    },
+    "Speed": {
+      "Min": 0.06,
+      "Max": 0.18
+    }
+  },
+  "Attractors": [
+    {
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "RadialAxis": {
+        "X": 0.5,
+        "Y": 0.5,
+        "Z": 0
+      },
+      "Radius": 0,
+      "RadialAcceleration": -0.036000000000000004,
+      "RadialTangentAcceleration": 0
+    }
+  ],
+  "Particle": {
+    "Texture": "Particles/Textures/Basic/Ball3.png",
+    "FrameSize": {
+      "Width": 32,
+      "Height": 32
+    },
+    "ScaleRatioConstraint": "OneToOne",
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 1,
+            "Max": 1
+          },
+          "Y": {
+            "Min": 1,
+            "Max": 1
+          }
+        },
+        "Rotation": {
+          "X": {
+            "Min": 0,
+            "Max": 0
+          },
+          "Y": {
+            "Min": 0,
+            "Max": 0
+          },
+          "Z": {
+            "Min": 0,
+            "Max": 0
+          }
+        },
+        "Opacity": 0
+      },
+      "50": {
+        "Opacity": 1.0
+      },
+      "70": {
+        "Opacity": 0.4
+      },
+      "100": {
+        "Opacity": 0
+      }
+    },
+    "InitialAnimationFrame": {
+      "Rotation": {
+        "X": {
+          "Min": 0,
+          "Max": 360
+        },
+        "Y": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Z": {
+          "Min": 0,
+          "Max": 360
+        }
+      },
+      "Scale": {
+        "X": {
+          "Min": 0.1,
+          "Max": 0.35
+        },
+        "Y": {
+          "Min": 0.1,
+          "Max": 0.35
+        }
+      },
+      "Opacity": 1
+    }
+  }
+}

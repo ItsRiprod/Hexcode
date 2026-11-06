@@ -22,7 +22,8 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.dat
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.ProjectileGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -94,7 +95,7 @@ public class HexProjectileHitInteraction extends SimpleInteraction {
                     resultVar = new EntityVar(uuid.getUuid(), targetRef);
                 }
                 if (hitPos != null) {
-                    ProjectileStyle.renderEntityHit(asset, hitPos, hitPos, hexContext, buffer);
+                    EffectRenderer.render(EffectSlot.Entity, asset, hexContext, hitPos, buffer);
                 }
             } else if (hitPos != null) {
                 if (triggering != null) {
@@ -105,7 +106,7 @@ public class HexProjectileHitInteraction extends SimpleInteraction {
                             hexContext);
                 }
 
-                ProjectileStyle.renderBlockHit(asset, hitPos, hexContext, buffer);
+                EffectRenderer.render(EffectSlot.Block, asset, hexContext, hitPos, buffer);
             }
 
             if (triggering != null && resultVar != null) {

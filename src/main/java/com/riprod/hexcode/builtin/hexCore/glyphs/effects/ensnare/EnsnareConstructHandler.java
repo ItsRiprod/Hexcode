@@ -21,10 +21,11 @@ import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.state.NoState;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.EnsnareComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.SpikeEntry;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.style.EnsnareStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -97,7 +98,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
 
             applyDamage(buffer, targetRef, ensnare.getSpikeDamage(), casterRef);
             ensnare.recordDamage(targetId);
-            EnsnareStyle.renderSpikeDamage(glyph, nearestSpike.getPosition(), status.getHexContext(), buffer);
+            EffectRenderer.render(EffectSlot.Hit, glyph, status.getHexContext(), nearestSpike.getPosition(), buffer);
 
             fireOnHit(status, ctx, targetRef, targetId);
         }
@@ -131,12 +132,13 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
     private void removeSpikes(EnsnareComponent ensnare, HexStatus<NoState> status, CommandBuffer<EntityStore> buffer) {
         List<Ref<EntityStore>> particleRecipients = VfxUtil.collectParticleRecipients(
                 ensnare.getCenter(), ensnare.getRadius() + 25.0, buffer);
-        var asset = GlyphAsset.of(status.getTriggeringGlyph(), EnsnareGlyph.class);
+        var effects = EffectRenderer.resolve(GlyphAsset.of(status.getTriggeringGlyph(), EnsnareGlyph.class),
+                status.getHexContext());
         for (SpikeEntry spike : ensnare.getSpikes()) {
             Ref<EntityStore> spikeRef = spike.getEntityRef();
             if (spikeRef != null && spikeRef.isValid()) {
-                EnsnareStyle.renderSpikeDespawn(
-                        asset, spike.getPosition(), status.getHexContext(), buffer, particleRecipients);
+                EffectRenderer.render(EffectSlot.End, effects, spike.getPosition(), null, 1.0f,
+                        particleRecipients, buffer);
                 buffer.tryRemoveEntity(spikeRef, RemoveReason.REMOVE);
             }
         }

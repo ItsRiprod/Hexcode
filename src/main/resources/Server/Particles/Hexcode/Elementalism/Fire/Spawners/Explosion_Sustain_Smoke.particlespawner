@@ -1,0 +1,114 @@
+{
+  "Shape": "Sphere",
+  "RenderMode": "BlendLinear",
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": true,
+  "LightInfluence": 1.0,
+  "MaxConcurrentParticles": 12,
+  "ParticleLifeSpan": {
+    "Min": 0.8,
+    "Max": 1.4
+  },
+  "SpawnRate": {
+    "Min": 10.0,
+    "Max": 10.0
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -0.2,
+      "Max": 0.2
+    },
+    "Y": {
+      "Min": -0.2,
+      "Max": 0.2
+    },
+    "Z": {
+      "Min": -0.2,
+      "Max": 0.2
+    }
+  },
+  "InitialVelocity": {
+    "Yaw": {
+      "Min": -180.0,
+      "Max": 180.0
+    },
+    "Pitch": {
+      "Min": 60.0,
+      "Max": 90.0
+    },
+    "Speed": {
+      "Min": 0.2,
+      "Max": 0.6
+    }
+  },
+  "TrailSpawnerPositionMultiplier": 0.0,
+  "TrailSpawnerRotationMultiplier": 0.0,
+  "Attractors": [
+    {
+      "LinearAcceleration": {
+        "X": 0.0,
+        "Y": 0.6,
+        "Z": 0.0
+      },
+      "DampingMultiplier": {
+        "X": 0.9,
+        "Y": 0.97,
+        "Z": 0.9
+      }
+    }
+  ],
+  "Particle": {
+    "Texture": "Particles/Textures/Smoke/Smoke_Cloud_Dark.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "SoftParticles": "Require",
+    "UVOption": "RandomFlipUV",
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.4,
+          "Max": 0.6
+        }
+      },
+      "Opacity": 1.0,
+      "Color": "#3f3631",
+      "Rotation": {
+        "Z": {
+          "Min": -180.0,
+          "Max": 180.0
+        }
+      }
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#3f3631"
+      },
+      "20": {
+        "Opacity": 0.7,
+        "Color": "#2e2724"
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 3.2,
+            "Max": 3.2
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#1a1715",
+        "Rotation": {
+          "Z": {
+            "Min": -60.0,
+            "Max": 60.0
+          }
+        }
+      }
+    }
+  }
+}

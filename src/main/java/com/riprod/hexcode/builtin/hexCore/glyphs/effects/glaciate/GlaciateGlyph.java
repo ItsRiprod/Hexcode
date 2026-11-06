@@ -28,8 +28,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.component.GlaciateComponent;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.style.GlaciateStyle;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -174,6 +175,6 @@ public class GlaciateGlyph extends GlyphAsset {
 
                 hexContext.addDependency(iceRef);
 
-                GlaciateStyle.renderSpawn(this, spawnPos, hexContext, accessor);
+                EffectRenderer.render(EffectSlot.Start, this, hexContext, spawnPos, accessor);
         }
 }

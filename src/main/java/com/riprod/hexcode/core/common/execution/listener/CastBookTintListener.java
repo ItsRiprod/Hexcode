@@ -14,10 +14,9 @@ public class CastBookTintListener implements Consumer<CastEvent> {
         var ctx = event.getContext();
         var bookAsset = CasterInventory.getHexBookAsset(
                 PlayerUtils.getHandItem(ctx.getAccessor(), ctx.getRootRef(), HexSlot.OffHand));
-        if (bookAsset == null) return;
+        var book = bookAsset != null ? bookAsset.getEffects() : null;
+        if (book == null) return;
 
-        if (bookAsset.getStyle() != null && bookAsset.getStyle().getSecondaryColor() != null) {
-            ctx.mutableStyle().setSecondaryColor(bookAsset.getStyle().getSecondaryColor().clone());
-        }
+        ctx.mutableEffects().compose(book.palette());
     }
 }

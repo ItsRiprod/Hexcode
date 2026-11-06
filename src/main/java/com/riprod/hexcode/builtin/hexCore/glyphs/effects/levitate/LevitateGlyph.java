@@ -15,8 +15,9 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.levitate.style.LevitateStyle;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -36,8 +37,6 @@ public class LevitateGlyph extends GlyphAsset {
 
     private double durationFloor = 1.0;
     @Getter
-    private float tickInterval = 0.5f;
-    @Getter
     private double riseSpeedPerIntensity = 1.5;
     @Getter
     private double maxCatchAccel = 40.0;
@@ -47,9 +46,6 @@ public class LevitateGlyph extends GlyphAsset {
             .builder(LevitateGlyph.class, LevitateGlyph::new, GlyphAsset.ABSTRACT_CODEC)
             .append(new KeyedCodec<>("DurationFloor", Codec.DOUBLE, true),
                     (c, v) -> c.durationFloor = v, c -> c.durationFloor)
-            .add()
-            .append(new KeyedCodec<>("TickInterval", Codec.FLOAT, true),
-                    (c, v) -> c.tickInterval = v, c -> c.tickInterval)
             .add()
             .append(new KeyedCodec<>("RiseSpeedPerIntensity", Codec.DOUBLE, true),
                     (c, v) -> c.riseSpeedPerIntensity = v, c -> c.riseSpeedPerIntensity)
@@ -123,7 +119,7 @@ public class LevitateGlyph extends GlyphAsset {
 
             TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
             if (tc != null) {
-                LevitateStyle.renderActivation(this, tc.getPosition(), hexContext, accessor);
+                EffectRenderer.render(EffectSlot.Start, this, hexContext, tc.getPosition(), accessor);
             }
         } catch (Exception e) {
             if (constructId != null) {

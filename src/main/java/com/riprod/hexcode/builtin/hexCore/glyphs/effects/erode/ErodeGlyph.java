@@ -22,7 +22,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.erode.style.ErodeStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -148,7 +149,7 @@ public class ErodeGlyph extends GlyphAsset {
 
         TransformComponent tc = accessor.getComponent(ref, TransformComponent.getComponentType());
         if (tc != null) {
-            ErodeStyle.renderEntityHit(this, tc.getPosition(), hexContext, accessor);
+            EffectRenderer.render(EffectSlot.Entity, this, hexContext, tc.getPosition(), accessor);
         }
 
         LOGGER.atFine().log("erode: applied vulnerability effect for %.1fs to entity", durationSeconds);
@@ -183,5 +184,6 @@ public class ErodeGlyph extends GlyphAsset {
         var cursor = new BlockAccess.Cursor(world);
         cursor.set(pos);
         BlockUtils.damageBlock(cursor, hexContext.getRootRef(), accessor, damageScale);
+        EffectRenderer.render(EffectSlot.Block, this, hexContext, EffectRenderer.blockCenter(pos), accessor);
     }
 }

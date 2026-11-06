@@ -2,6 +2,8 @@ package com.riprod.hexcode.builtin.elementalism.composite;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -14,7 +16,7 @@ import com.hypixel.hytale.codec.validation.Validator;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.riprod.hexcode.builtin.elementalism.composite.action.CompositeAction;
 import com.riprod.hexcode.builtin.elementalism.composite.action.CompositeActions;
-import com.riprod.hexcode.builtin.elementalism.effects.ElementEffects;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 
 public final class CompositeOutcome {
     private static final Codec<Retention> RETENTION_CODEC = new EnumCodec<>(Retention.class);
@@ -25,7 +27,7 @@ public final class CompositeOutcome {
 
     private Retention existing = Retention.KEEP;
     private Retention incoming = Retention.KEEP;
-    private ElementEffects effects = new ElementEffects();
+    private String effectsId;
     private List<CompositeAction> actions = List.of();
 
     private CompositeOutcome() {
@@ -39,8 +41,9 @@ public final class CompositeOutcome {
         return this.incoming;
     }
 
-    public ElementEffects getEffects() {
-        return this.effects;
+    @Nullable
+    public GlyphEffects getEffects() {
+        return this.effectsId != null ? GlyphEffects.getAssetMap().getAsset(this.effectsId) : null;
     }
 
     public List<CompositeAction> getActions() {
@@ -78,9 +81,10 @@ public final class CompositeOutcome {
                 .addValidator(Validators.nonNull())
                 .documentation("Whether the incoming tier still applies or is consumed by the composite")
                 .add()
-                .append(new KeyedCodec<>("Effects", ElementEffects.CODEC),
-                        (o, v) -> o.effects = v, o -> o.effects)
-                .documentation("Overrides for the incoming tier's effects, only the slots set here")
+                .append(new KeyedCodec<>("Effects", GlyphEffects.CHILD_ASSET_CODEC),
+                        (o, v) -> o.effectsId = v, o -> o.effectsId)
+                .addValidatorLate(() -> GlyphEffects.VALIDATOR_CACHE.getValidator().late())
+                .documentation("Effects composed over the incoming tier's landing")
                 .add()
                 .append(new KeyedCodec<>("Actions", new ArrayCodec<>(CompositeActions.CODEC, CompositeAction[]::new)),
                         (o, v) -> o.actions = List.of(v), o -> o.actions.toArray(CompositeAction[]::new))

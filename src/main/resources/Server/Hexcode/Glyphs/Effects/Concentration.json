@@ -53,19 +53,39 @@
     "InstantCost": 0.1,
     "DrainPerSecond": 0.0
   },
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#00E5FF",
     "SecondaryColor": "#B2EBF2",
-    "PrimaryModel": "Concentration_Focus",
-    "PrimaryParticle": {
-      "SystemId": "Halt_Crystallize"
+    "Model": "Concentration_Focus",
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Halt_Crystallize"
+        }
+      ],
+      "Sound": "SFX_Portal_Neutral_Open"
     },
-    "SecondaryParticle": {
-      "SystemId": "Hexcode_Drain_Channel"
+    "Sustain": {
+      "Particles": [
+        {
+          "SystemId": "Spinning_Particles_Player_System"
+        }
+      ],
+      "Trail": {
+        "TrailId": "Hexcode_Conjure_Trail"
+      },
+      "Pulse": [
+        {
+          "SystemId": "Hexcode_Drain_Channel"
+        }
+      ],
+      "Interval": 1.0,
+      "Tint": "Secondary",
+      "Sound": "SFX_Concentrate_Duration"
     },
-    "PrimarySound": "SFX_Portal_Neutral_Open",
-    "TertiarySound": "SFX_Concentrate_Fail",
-    "SecondarySound": "SFX_Concentrate_Duration"
+    "End": {
+      "Sound": "SFX_Concentrate_Fail"
+    }
   },
   "SustainImpact": {
     "Type": "Constant",
@@ -92,6 +112,5 @@
     "OutputMin": 0.0,
     "OutputMax": 1.0
   },
-  "SecondaryIntervalSeconds": 1.0,
   "HealthDamageCause": "Arcane"
 }

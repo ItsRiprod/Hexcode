@@ -23,6 +23,8 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.utils.BlockAccess;
@@ -108,7 +110,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
 
                 applyCrushDamage(asset, pos, blockCenter, elapsedSeconds, world, status, ctx.getBuffer());
 
-                PhaseStyle.renderPhaseIn(asset, blockCenter, status.getHexContext(), ctx.getBuffer());
+                EffectRenderer.render(EffectSlot.End, asset, status.getHexContext(), blockCenter, ctx.getBuffer());
             }
 
             LOGGER.atFine().log("phase: restored %d blocks", phase.getPhasedBlocks().size());
@@ -159,7 +161,7 @@ public class PhaseConstructHandler implements ConstructHandler<PhaseState> {
                 }
             }
 
-            PhaseStyle.renderCrush(asset, blockCenter, status.getHexContext(), buffer);
+            EffectRenderer.render(EffectSlot.Hit, asset, status.getHexContext(), blockCenter, buffer);
         }
     }
 }

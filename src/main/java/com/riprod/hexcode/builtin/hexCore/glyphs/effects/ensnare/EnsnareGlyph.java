@@ -29,8 +29,9 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.EnsnareComponent;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.component.SpikeEntry;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.ensnare.style.EnsnareStyle;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -200,7 +201,7 @@ public class EnsnareGlyph extends GlyphAsset {
         spawnTrackerEntity(glyph, hexContext, spikes, (float) duration,
                 center, radius, accessor);
 
-        EnsnareStyle.renderSeismicBurst(this, center, hexContext, accessor);
+        EffectRenderer.render(EffectSlot.Start, this, hexContext, center, accessor);
     }
 
     /** Mutates the initialPos in-place until it finds the ground */

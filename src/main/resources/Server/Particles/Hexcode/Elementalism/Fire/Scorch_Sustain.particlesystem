@@ -1,0 +1,23 @@
+{
+  "CullDistance": 100.0,
+  "BoundingRadius": 3.0,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "Scorch_Sustain_Corona",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Scorch_Sustain_Flame",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Scorch_Sustain_Crackle",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Scorch_Heat_Haze",
+      "FixedRotation": true
+    }
+  ]
+}

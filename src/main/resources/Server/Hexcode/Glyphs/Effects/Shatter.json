@@ -1,19 +1,25 @@
 {
   "Type": "Shatter",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#99E6FF",
     "SecondaryColor": "#D6F2FF",
-    "PrimaryModel": "Shatter",
-    "PrimaryParticle": {
-      "SystemId": "Hexcode_Ice_Effect"
+    "Model": "Shatter",
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Hexcode_Ice_Effect"
+        }
+      ],
+      "Sound": "SFX_Staff_Fire_Shoot"
     },
-    "PrimarySound": "SFX_Staff_Fire_Shoot",
-    "SecondaryParticle": {
-      "SystemId": "Hexcode_Ice_Effect"
-    },
-    "SecondarySound": "SFX_Fireball_Miss",
-    "TertiaryParticle": {
-      "SystemId": "Projectile_Miss"
+    "Hit": {
+      "Particles": [
+        {
+          "SystemId": "Hexcode_Ice_Effect"
+        }
+      ],
+      "Tint": "Secondary",
+      "Sound": "SFX_Fireball_Miss"
     }
   },
   "Title": "hexcode.glyphs.Shatter.name",

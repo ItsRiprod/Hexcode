@@ -1,19 +1,33 @@
 {
   "Type": "Glaciate",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Drain",
-    "PrimaryParticle": {
-      "SystemId": "Glaciate_Spawn"
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Glaciate_Spawn"
+        }
+      ],
+      "Sound": "SFX_Ice_Build"
     },
-    "PrimarySound": "SFX_Ice_Build",
-    "SecondaryParticle": {
-      "SystemId": "Glaciate_Impact"
+    "Hit": {
+      "Particles": [
+        {
+          "SystemId": "Glaciate_Impact"
+        }
+      ],
+      "Tint": "Secondary",
+      "Sound": "SFX_Arrow_Frost_Hit"
     },
-    "SecondarySound": "SFX_Arrow_Frost_Hit",
-    "TertiaryParticle": {
-      "SystemId": "Glaciate_Melt"
-    },
-    "TertiarySound": "SFX_Ice_Break"
+    "End": {
+      "Particles": [
+        {
+          "SystemId": "Glaciate_Melt"
+        }
+      ],
+      "Tint": "Secondary",
+      "Sound": "SFX_Ice_Break"
+    }
   },
   "Title": "hexcode.glyphs.Glaciate.name",
   "Description": "hexcode.glyphs.Glaciate.description",

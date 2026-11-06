@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
-import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
@@ -14,18 +13,17 @@ import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.DebugShape;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
-import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
 import com.hypixel.hytale.server.core.modules.entity.component.PropComponent;
 import com.hypixel.hytale.server.core.modules.projectile.ProjectileModule;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.component.DomainZoneComponent;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.domain.style.DomainStyle;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.cast.component.ManaSourceComponent;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
@@ -37,8 +35,6 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
 import com.riprod.hexcode.utils.HexVarUtil;
 import com.riprod.hexcode.utils.VfxUtil;
-
-import lombok.Getter;
 
 public class DomainGlyph extends GlyphAsset {
     public static final String TYPE = "Domain";
@@ -53,37 +49,11 @@ public class DomainGlyph extends GlyphAsset {
 
     @Nullable
     private Impact triggerImpact;
-    @Nullable
-    @Getter 
-    private ModelParticle despawnParticle;
-    @Getter 
-    @Nullable
-    private String despawnSound;
-    @Getter 
-    @Nullable
-    private ModelParticle contestedParticle;
-    @Getter 
-    @Nullable
-    private String contestedSound;
 
     public static final BuilderCodec<DomainGlyph> CODEC = BuilderCodec
             .builder(DomainGlyph.class, DomainGlyph::new, GlyphAsset.ABSTRACT_CODEC)
             .append(new KeyedCodec<>("TriggerImpact", Impact.CODEC),
                     (c, v) -> c.triggerImpact = v, c -> c.triggerImpact)
-            .add()
-            .append(new KeyedCodec<>("DespawnParticle", ModelParticle.CODEC),
-                    (c, v) -> c.despawnParticle = v, c -> c.despawnParticle)
-            .add()
-            .append(new KeyedCodec<>("DespawnSound", Codec.STRING),
-                    (c, v) -> c.despawnSound = v, c -> c.despawnSound)
-            .addValidatorLate(() -> SoundEvent.VALIDATOR_CACHE.getValidator().late())
-            .add()
-            .append(new KeyedCodec<>("ContestedParticle", ModelParticle.CODEC),
-                    (c, v) -> c.contestedParticle = v, c -> c.contestedParticle)
-            .add()
-            .append(new KeyedCodec<>("ContestedSound", Codec.STRING),
-                    (c, v) -> c.contestedSound = v, c -> c.contestedSound)
-            .addValidatorLate(() -> SoundEvent.VALIDATOR_CACHE.getValidator().late())
             .add()
             .build();
 
@@ -165,9 +135,10 @@ public class DomainGlyph extends GlyphAsset {
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.ensureComponent(EffectControllerComponent.getComponentType());
 
-        float debugAlpha = VfxUtil.resolveAlpha(hexContext, this);
+        var effects = EffectRenderer.resolve(this, hexContext);
+        float debugAlpha = VfxUtil.resolveAlpha(effects);
         if (debugAlpha > 0f) {
-            Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext, this);
+            Vector3f debugColor = VfxUtil.resolvePrimaryColor(effects);
             Vector3d debugScale = new Vector3d(radius * 2, radius * 2, radius * 2);
             DebugComponent debugComp = new DebugComponent(DebugShape.Sphere, debugColor, debugScale, 0.1f);
             debugComp.setOpacity(debugAlpha * 0.15f);
@@ -187,7 +158,7 @@ public class DomainGlyph extends GlyphAsset {
             glyph.writeSelfOutput(zoneEntityVar, hexContext);
         }
 
-        DomainStyle.renderSpawn(this, anchorPos, (float) radius, hexContext, hexContext.getAccessor());
+        EffectRenderer.render(EffectSlot.Start, this, hexContext, anchorPos, hexContext.getAccessor());
 
         hexContext.addDependency(zoneRef);
     }

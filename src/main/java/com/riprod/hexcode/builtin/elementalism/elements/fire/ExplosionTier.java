@@ -17,7 +17,7 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.entity.ExplosionConfig;
 import com.hypixel.hytale.server.core.entity.ExplosionUtils;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.builtin.elementalism.effects.EffectPlayer;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.builtin.elementalism.tier.ElementalTier;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.protection.BlockAction;
@@ -42,12 +42,12 @@ public class ExplosionTier extends ElementalTier {
 
     @Override
     public boolean applyEntity(Ref<EntityStore> target, HexContext ctx, CommandBuffer<EntityStore> buffer) {
-        return explode(EffectPlayer.entityCenter(target, buffer), ctx, buffer);
+        return explode(EffectRenderer.entityCenter(target, buffer), ctx, buffer);
     }
 
     @Override
     public boolean applyBlock(Vector3i block, HexContext ctx, CommandBuffer<EntityStore> buffer) {
-        return explode(EffectPlayer.blockCenter(block), ctx, buffer);
+        return explode(EffectRenderer.blockCenter(block), ctx, buffer);
     }
 
     private boolean explode(@Nullable Vector3d center, HexContext ctx, CommandBuffer<EntityStore> buffer) {

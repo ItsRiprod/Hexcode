@@ -1,8 +1,8 @@
 {
   "Type": "OnSecondary",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Time",
-    "PrimaryModel": "OnSecondary"
+    "Model": "OnSecondary"
   },
   "Title": "hexcode.glyphs.OnSecondary.name",
   "Description": "hexcode.glyphs.OnSecondary.description",

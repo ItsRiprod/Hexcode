@@ -18,7 +18,7 @@ import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastManaComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastSlotComponent;
-import com.riprod.hexcode.core.common.execution.cast.component.CastStyleComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastEffectsComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastVariablesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.DefaultVariableComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
@@ -28,7 +28,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexColors;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 
 public class HexContext {
 
@@ -240,30 +240,26 @@ public class HexContext {
     }
 
     @Nonnull
-    public HexStyleAsset getStyle() {
-        return get(CastStyleComponent.TYPE).get();
+    public GlyphEffects getEffects() {
+        return get(CastEffectsComponent.TYPE).get();
     }
 
-    public void setStyle(@Nonnull HexStyleAsset style) {
-        get(CastStyleComponent.TYPE).set(style);
-    }
-
-    public HexStyleAsset mutableStyle() {
-        return get(CastStyleComponent.TYPE).mutable();
+    public GlyphEffects mutableEffects() {
+        return get(CastEffectsComponent.TYPE).mutable();
     }
 
     public HexColors getColors() {
         HexColors c = new HexColors();
-        var style = getStyle();
-        if (style.getPrimaryColor() != null) c.setPrimaryColor(style.getPrimaryColor().clone());
-        if (style.getSecondaryColor() != null) c.setSecondaryColor(style.getSecondaryColor().clone());
-        c.setPrimaryAlpha(style.getAlpha());
+        var effects = getEffects();
+        if (effects.getPrimaryColor() != null) c.setPrimaryColor(effects.getPrimaryColor().clone());
+        if (effects.getSecondaryColor() != null) c.setSecondaryColor(effects.getSecondaryColor().clone());
+        c.setPrimaryAlpha(effects.getAlpha());
         return c;
     }
 
     public void setColors(@Nullable HexColors colors) {
         if (colors == null) return;
-        HexStyleAsset s = mutableStyle();
+        var s = mutableEffects();
         s.setPrimaryColor(colors.getPrimaryColor() != null ? colors.getPrimaryColor().clone() : null);
         s.setSecondaryColor(colors.getSecondaryColor() != null ? colors.getSecondaryColor().clone() : null);
         if (colors.getPrimaryAlpha() != null) s.setAlpha(colors.getPrimaryAlpha());

@@ -9,15 +9,5 @@
       "Model": "NPC/Glyphs/Models/Glyph_2.blockymodel",
       "Texture": "NPC/Glyphs/Textures/Circle.png"
     }
-  ],
-  "Trails": [
-    {
-      "TrailId": "Hexcode_Conjure_Trail"
-    }
-  ],
-  "Particles": [
-    {
-      "SystemId": "Spinning_Particles_Player_System"
-    }
   ]
 }

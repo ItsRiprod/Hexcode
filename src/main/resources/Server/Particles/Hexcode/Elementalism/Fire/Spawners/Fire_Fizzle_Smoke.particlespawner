@@ -1,0 +1,119 @@
+{
+  "Shape": "Sphere",
+  "RenderMode": "BlendLinear",
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": true,
+  "LightInfluence": 1.0,
+  "MaxConcurrentParticles": 6,
+  "ParticleLifeSpan": {
+    "Min": 0.8,
+    "Max": 1.2
+  },
+  "SpawnRate": {
+    "Min": 20.0,
+    "Max": 20.0
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -0.15,
+      "Max": 0.15
+    },
+    "Y": {
+      "Min": -0.15,
+      "Max": 0.15
+    },
+    "Z": {
+      "Min": -0.15,
+      "Max": 0.15
+    }
+  },
+  "InitialVelocity": {
+    "Yaw": {
+      "Min": -180.0,
+      "Max": 180.0
+    },
+    "Pitch": {
+      "Min": 60.0,
+      "Max": 90.0
+    },
+    "Speed": {
+      "Min": 0.2,
+      "Max": 0.6
+    }
+  },
+  "TrailSpawnerPositionMultiplier": 0.0,
+  "TrailSpawnerRotationMultiplier": 0.0,
+  "Attractors": [
+    {
+      "LinearAcceleration": {
+        "X": 0.0,
+        "Y": 0.6,
+        "Z": 0.0
+      },
+      "DampingMultiplier": {
+        "X": 0.9,
+        "Y": 0.97,
+        "Z": 0.9
+      }
+    }
+  ],
+  "Particle": {
+    "Texture": "Particles/Textures/Smoke/Smoke_Cloud_Dark.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "SoftParticles": "Require",
+    "UVOption": "RandomFlipUV",
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.2,
+          "Max": 0.3
+        }
+      },
+      "Opacity": 1.0,
+      "Color": "#5a4a40",
+      "Rotation": {
+        "Z": {
+          "Min": -180.0,
+          "Max": 180.0
+        }
+      }
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#5a4a40"
+      },
+      "20": {
+        "Opacity": 0.6,
+        "Color": "#3d332d"
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 3.4,
+            "Max": 3.4
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#262220",
+        "Rotation": {
+          "Z": {
+            "Min": -60.0,
+            "Max": 60.0
+          }
+        }
+      }
+    }
+  },
+  "SpawnBurst": true,
+  "TotalParticles": {
+    "Min": 4,
+    "Max": 6
+  }
+}

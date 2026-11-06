@@ -1,0 +1,12 @@
+{
+  "LifeSpan": 1.0,
+  "CullDistance": 100.0,
+  "BoundingRadius": 2.0,
+  "IsImportant": true,
+  "Spawners": [
+    {
+      "SpawnerId": "Ignite_Start_Sparks",
+      "FixedRotation": true
+    }
+  ]
+}

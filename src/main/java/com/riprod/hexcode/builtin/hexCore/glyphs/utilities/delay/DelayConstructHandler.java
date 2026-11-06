@@ -13,7 +13,8 @@ import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.delay.style.DelayStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -69,7 +70,7 @@ public class DelayConstructHandler implements ConstructHandler<DelayState> {
                     ctx.getEntityRef(), TransformComponent.getComponentType());
             if (tc != null) {
                 var asset = GlyphAsset.of(status.getTriggeringGlyph(), DelayGlyph.class);
-                DelayStyle.renderExpiry(asset, tc.getPosition(), status.getHexContext(), buffer);
+                EffectRenderer.render(EffectSlot.End, asset, status.getHexContext(), tc.getPosition(), buffer);
             }
             status.getHexContext().updateRuntimeAccessors(buffer);
             HexExecuter.continueExecution(state.getNextGlyphIds(), status.getHexContext());

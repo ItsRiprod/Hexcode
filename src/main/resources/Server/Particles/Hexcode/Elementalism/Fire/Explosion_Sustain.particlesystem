@@ -1,0 +1,23 @@
+{
+  "CullDistance": 100.0,
+  "BoundingRadius": 4.0,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "Explosion_Sustain_Core",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Explosion_Sustain_Orbit",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Explosion_Sustain_Shed",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Explosion_Sustain_Smoke",
+      "FixedRotation": true
+    }
+  ]
+}

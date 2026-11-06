@@ -1,4 +1,15 @@
 {
   "Hidden": false,
-  "EffectId": "Fire"
+  "EffectId": "Fire",
+  "Effects": {
+    "PrimaryColor": "#FF6A1A",
+    "Sustain": {
+      "Pulse": [
+        {
+          "SystemId": "Ignite_Hit"
+        }
+      ],
+      "Interval": 1.0
+    }
+  }
 }

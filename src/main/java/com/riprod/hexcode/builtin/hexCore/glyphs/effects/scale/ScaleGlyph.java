@@ -28,10 +28,11 @@ import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.components.ScaleState;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.handler.ScaleConstructHandler;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.scale.style.ScaleStyle;
 import com.riprod.hexcode.core.common.appearance.AppearanceLayer;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceService;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -227,7 +228,7 @@ public class ScaleGlyph extends GlyphAsset {
                 HexExecuter.continueExecution(Arrays.asList(immediate.getLinks()), immediateCtx);
             }
 
-            ScaleStyle.renderApply(this, spawnPos, hexContext, accessor);
+            EffectRenderer.render(EffectSlot.Start, this, hexContext, spawnPos, accessor);
         } catch (Exception e) {
             if (spawned) {
                 LOGGER.atWarning().withCause(e).log("scale: post-spawn step failed");

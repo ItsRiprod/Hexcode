@@ -11,7 +11,8 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.resonate.style.ResonateStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utils.ConstructSplicer;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
@@ -67,7 +68,7 @@ public class ResonateGlyph extends GlyphAsset {
 
         Vector3d pos = resolvePosition(ref, accessor);
         if (pos != null)
-            ResonateStyle.renderResonate(this, pos, hexContext, accessor);
+            EffectRenderer.render(EffectSlot.Hit, this, hexContext, pos, accessor);
         HexExecuter.endBranch(hexContext);
     }
 
@@ -78,7 +79,7 @@ public class ResonateGlyph extends GlyphAsset {
         if (targetStats == null) {
             Vector3d pos = resolvePosition(ref, accessor);
             if (pos != null)
-                ResonateStyle.renderNoSignal(this, pos, hexContext, accessor);
+                EffectRenderer.render(EffectSlot.Fizzle, this, hexContext, pos, accessor);
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Resonate: target has no mana pool");
             return;
@@ -86,7 +87,7 @@ public class ResonateGlyph extends GlyphAsset {
 
         Vector3d pos = resolvePosition(ref, accessor);
         if (pos != null)
-            ResonateStyle.renderResonate(this, pos, hexContext, accessor);
+            EffectRenderer.render(EffectSlot.Hit, this, hexContext, pos, accessor);
         HexExecuter.endBranch(hexContext);
     }
 

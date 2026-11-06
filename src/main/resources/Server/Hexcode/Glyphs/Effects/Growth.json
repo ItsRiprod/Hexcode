@@ -1,15 +1,24 @@
 {
   "Type": "Growth",
-  "Style": {
+  "Effects": {
     "Parent": "Essence_Life",
-    "PrimaryParticle": {
-      "SystemId": "Hexcode_Grow_Effect"
+    "Entity": {
+      "Particles": [
+        {
+          "SystemId": "Hexcode_Grow_Effect"
+        }
+      ],
+      "Sound": "SFX_Block_Break"
     },
-    "PrimarySound": "SFX_Block_Break",
-    "SecondaryParticle": {
-      "SystemId": "Hexcode_Grow_Effect"
-    },
-    "SecondarySound": "SFX_Block_Break"
+    "Block": {
+      "Particles": [
+        {
+          "SystemId": "Hexcode_Grow_Effect"
+        }
+      ],
+      "Sound": "SFX_Block_Break",
+      "Tint": "Secondary"
+    }
   },
   "Title": "hexcode.glyphs.Growth.name",
   "Description": "hexcode.glyphs.Growth.description",

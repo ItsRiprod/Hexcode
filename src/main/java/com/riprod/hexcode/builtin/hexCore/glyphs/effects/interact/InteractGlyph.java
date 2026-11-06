@@ -2,7 +2,6 @@ package com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact;
 
 import javax.annotation.Nullable;
 
-import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 import com.hypixel.hytale.assetstore.codec.ContainedAssetCodec;
@@ -18,7 +17,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.api.imbuement.ImbuedBlockActivator;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interact.style.InteractStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -89,7 +89,7 @@ public class InteractGlyph extends GlyphAsset {
             return;
         }
 
-        InteractStyle.renderImpact(this, accessor, targetTc.getPosition(), hexContext);
+        EffectRenderer.render(EffectSlot.Entity, this, hexContext, targetTc.getPosition(), accessor);
     }
 
     private void handleBlockTarget(Glyph glyph, HexContext hexContext, BlockVar blockVar,
@@ -101,8 +101,7 @@ public class InteractGlyph extends GlyphAsset {
             return;
         }
 
-        Vector3d targetPos = new Vector3d(blockPos.x + 0.5, blockPos.y + 0.5, blockPos.z + 0.5);
-        InteractStyle.renderImpact(this, accessor, targetPos, hexContext);
+        EffectRenderer.render(EffectSlot.Block, this, hexContext, EffectRenderer.blockCenter(blockPos), accessor);
 
         ImbuedBlockActivator.ActivationOutcome outcome = ImbuedBlockActivator.tryConsume(world, blockPos,
                 hexContext.getRootRef(), accessor);

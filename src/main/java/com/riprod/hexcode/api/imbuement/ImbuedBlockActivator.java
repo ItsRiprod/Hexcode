@@ -16,7 +16,7 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastOriginComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
-import com.riprod.hexcode.core.common.execution.cast.component.CastStyleComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastEffectsComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.DefaultVariableComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.ManaSourceComponent;
 import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
@@ -24,7 +24,6 @@ import com.riprod.hexcode.core.common.execution.cast.component.VolatilityCompone
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastHolder;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 import com.riprod.hexcode.core.common.imbuement.ImbuementMetadata;
 import com.riprod.hexcode.core.common.imbuement.asset.EssenceAsset;
 import com.riprod.hexcode.core.common.imbuement.asset.ImbuementProfileAsset;
@@ -105,14 +104,9 @@ public final class ImbuedBlockActivator {
                 holder.overlay(VolatilityComponent.TYPE, target ->
                         target.setVolatilityMultiplier(target.getVolatilityMultiplier() * vm));
             }
-            HexStyleAsset colors = essence.getColors();
-            if (colors != null) {
-                holder.overlay(CastStyleComponent.TYPE, target -> {
-                    HexStyleAsset style = target.mutable();
-                    if (colors.getPrimaryColor() != null) style.setPrimaryColor(colors.getPrimaryColor().clone());
-                    if (colors.getSecondaryColor() != null) style.setSecondaryColor(colors.getSecondaryColor().clone());
-                    style.setAlpha(colors.getAlphaOrDefault());
-                });
+            var effects = essence.getEffects();
+            if (effects != null) {
+                holder.overlay(CastEffectsComponent.TYPE, target -> target.mutable().compose(effects));
             }
         }
 

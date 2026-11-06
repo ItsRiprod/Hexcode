@@ -102,7 +102,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Basic_Adamantite"
+            "Effects": "Hexstaff_Basic_Adamantite"
           }
         }
       ]
@@ -118,7 +118,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Basic_Adamantite"
+            "Effects": "Hexstaff_Basic_Adamantite"
           }
         }
       ]
@@ -134,7 +134,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Basic_Adamantite"
+            "Effects": "Hexstaff_Basic_Adamantite"
           }
         }
       ]
@@ -150,7 +150,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Basic_Adamantite"
+            "Effects": "Hexstaff_Basic_Adamantite"
           }
         }
       ]
@@ -160,32 +160,36 @@
         {
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
-          "AuraParticles": [
-            {
-              "SystemId": "Hexstaff_Smoke_Wisp",
-              "PositionOffset": {
-                "Y": 1.5
-              },
-              "Color": "#EF5350",
-              "Scale": 1.2
-            },
-            {
-              "SystemId": "Hexstaff_Sparks_Heavy",
-              "PositionOffset": {
-                "Y": 0.0
-              },
-              "Color": "#D32F2F",
-              "Scale": 1.1
-            },
-            {
-              "SystemId": "Hexstaff_Ember_Rise",
-              "PositionOffset": {
-                "Y": -1.0
-              },
-              "Color": "#EF5350",
-              "Scale": 1.2
+          "Effects": {
+            "Sustain": {
+              "Particles": [
+                {
+                  "SystemId": "Hexstaff_Smoke_Wisp",
+                  "PositionOffset": {
+                    "Y": 1.5
+                  },
+                  "Color": "#EF5350",
+                  "Scale": 1.2
+                },
+                {
+                  "SystemId": "Hexstaff_Sparks_Heavy",
+                  "PositionOffset": {
+                    "Y": 0.0
+                  },
+                  "Color": "#D32F2F",
+                  "Scale": 1.1
+                },
+                {
+                  "SystemId": "Hexstaff_Ember_Rise",
+                  "PositionOffset": {
+                    "Y": -1.0
+                  },
+                  "Color": "#EF5350",
+                  "Scale": 1.2
+                }
+              ]
             }
-          ]
+          }
         }
       ]
     }

@@ -14,12 +14,5 @@
 			"Y": 0.5,
 			"Z": 0.5
 		}
-	},
-	"Trails": [
-		{
-			"TrailId": "Hexcode_Conjure_Trail",
-			"TargetEntityPart": "Self",
-			"FixedRotation": true
-		}
-	]
+	}
 }

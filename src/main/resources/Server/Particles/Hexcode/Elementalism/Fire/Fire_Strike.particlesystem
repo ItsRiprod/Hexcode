@@ -1,0 +1,14 @@
+{
+  "LifeSpan": 1.0,
+  "CullDistance": 100.0,
+  "BoundingRadius": 3.0,
+  "IsImportant": true,
+  "Spawners": [
+    {
+      "SpawnerId": "Explosion_Small_Flash_Glow"
+    },
+    {
+      "SpawnerId": "Fire_Strike_Sparks"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "Shape": "Sphere",
+  "RenderMode": "Distortion",
+  "ParticleRotationInfluence": "Billboard",
+  "MaxConcurrentParticles": 2,
+  "ParticleLifeSpan": {
+    "Min": 0.5,
+    "Max": 0.7
+  },
+  "SpawnRate": {
+    "Min": 4.0,
+    "Max": 4.0
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -0.15,
+      "Max": 0.15
+    },
+    "Y": {
+      "Min": -0.15,
+      "Max": 0.15
+    },
+    "Z": {
+      "Min": -0.15,
+      "Max": 0.15
+    }
+  },
+  "InitialVelocity": {
+    "Yaw": {
+      "Min": -180.0,
+      "Max": 180.0
+    },
+    "Pitch": {
+      "Min": 80.0,
+      "Max": 90.0
+    },
+    "Speed": {
+      "Min": 0.2,
+      "Max": 0.5
+    }
+  },
+  "TrailSpawnerPositionMultiplier": 0.0,
+  "TrailSpawnerRotationMultiplier": 0.0,
+  "Particle": {
+    "Texture": "Particles/Textures/Normals/Spread_Normal2.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "SoftParticles": "Enable",
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.5,
+          "Max": 0.7
+        }
+      },
+      "Opacity": 1.0,
+      "Rotation": {
+        "Z": {
+          "Min": -180.0,
+          "Max": 180.0
+        }
+      }
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 0.0
+      },
+      "25": {
+        "Opacity": 0.8
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 4.0,
+            "Max": 4.0
+          }
+        },
+        "Opacity": 0.0,
+        "Rotation": {
+          "Z": {
+            "Min": -90.0,
+            "Max": 90.0
+          }
+        }
+      }
+    }
+  },
+  "SpawnBurst": true,
+  "TotalParticles": {
+    "Min": 1,
+    "Max": 2
+  }
+}

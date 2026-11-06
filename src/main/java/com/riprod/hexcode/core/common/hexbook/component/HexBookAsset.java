@@ -10,9 +10,8 @@ import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle;
 import com.riprod.hexcode.core.common.hexes.component.HexColors;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 
 import javax.annotation.Nullable;
 
@@ -25,10 +24,8 @@ public class HexBookAsset implements JsonAssetWithMap<String, DefaultAssetMap<St
     protected String id;
     protected String itemId;
     protected int slotCount = 10;
-    protected ModelParticle[] castingAuraParticles;
-    protected ModelParticle[] craftingAuraParticles;
-    protected String styleId;
     @Nullable
+    protected String effectsId;
 
     public static AssetStore<String, HexBookAsset, DefaultAssetMap<String, HexBookAsset>> getAssetStore() {
         if (ASSET_STORE == null) {
@@ -58,30 +55,19 @@ public class HexBookAsset implements JsonAssetWithMap<String, DefaultAssetMap<St
         return this.slotCount;
     }
 
-    public ModelParticle[] getCastingAuraParticles() {
-        return this.castingAuraParticles;
-    }
-
-    public ModelParticle[] getCraftingAuraParticles() {
-        return this.craftingAuraParticles;
-    }
-
-    public String getStyleId() {
-        return this.styleId;
-    }
-
-    public HexStyleAsset getStyle() {
-        if (this.styleId == null) return null;
-        return HexStyleAsset.getAssetMap().getAsset(this.styleId);
+    @Nullable
+    public GlyphEffects getEffects() {
+        if (this.effectsId == null) return null;
+        return GlyphEffects.getAssetMap().getAsset(this.effectsId);
     }
 
     public HexColors getColors() {
-        HexStyleAsset style = getStyle();
-        if (style == null) return null;
-        HexColors c = new HexColors();
-        if (style.getPrimaryColor() != null) c.setPrimaryColor(style.getPrimaryColor().clone());
-        if (style.getSecondaryColor() != null) c.setSecondaryColor(style.getSecondaryColor().clone());
-        c.setPrimaryAlpha(style.getAlpha());
+        var effects = getEffects();
+        if (effects == null) return null;
+        var c = new HexColors();
+        if (effects.getPrimaryColor() != null) c.setPrimaryColor(effects.getPrimaryColor().clone());
+        if (effects.getSecondaryColor() != null) c.setSecondaryColor(effects.getSecondaryColor().clone());
+        c.setPrimaryAlpha(effects.getAlpha());
         return c;
     }
 
@@ -98,21 +84,11 @@ public class HexBookAsset implements JsonAssetWithMap<String, DefaultAssetMap<St
                         (a, p) -> a.slotCount = p.slotCount)
                 .documentation("Number of hex pages (imbuement slots) this book exposes in Selection Mode.")
                 .add()
-                .appendInherited(new KeyedCodec<>("CastingAuraParticles", ModelParticle.ARRAY_CODEC),
-                        (a, v) -> a.castingAuraParticles = v,
-                        a -> a.castingAuraParticles,
-                        (a, p) -> a.castingAuraParticles = p.castingAuraParticles)
-                .add()
-                .appendInherited(new KeyedCodec<>("CraftingAuraParticles", ModelParticle.ARRAY_CODEC),
-                        (a, v) -> a.craftingAuraParticles = v,
-                        a -> a.craftingAuraParticles,
-                        (a, p) -> a.craftingAuraParticles = p.craftingAuraParticles)
-                .add()
-                .appendInherited(new KeyedCodec<>("Style", HexStyleAsset.CHILD_ASSET_CODEC),
-                        (a, v) -> a.styleId = v,
-                        a -> a.styleId,
-                        (a, p) -> a.styleId = p.styleId)
-                .addValidatorLate(() -> HexStyleAsset.VALIDATOR_CACHE.getValidator().late())
+                .appendInherited(new KeyedCodec<>("Effects", GlyphEffects.CHILD_ASSET_CODEC),
+                        (a, v) -> a.effectsId = v,
+                        a -> a.effectsId,
+                        (a, p) -> a.effectsId = p.effectsId)
+                .addValidatorLate(() -> GlyphEffects.VALIDATOR_CACHE.getValidator().late())
                 .add()
                 .build();
         VALIDATOR_CACHE = new ValidatorCache<>(new AssetKeyValidator<>(HexBookAsset::getAssetStore));

@@ -1,0 +1,135 @@
+{
+  "Shape": "Sphere",
+  "RenderMode": "Erosion",
+  "ParticleRotationInfluence": "BillboardY",
+  "LinearFiltering": false,
+  "LightInfluence": 0.0,
+  "MaxConcurrentParticles": 12,
+  "ParticleLifeSpan": {
+    "Min": 0.25,
+    "Max": 0.45
+  },
+  "SpawnRate": {
+    "Min": 14.0,
+    "Max": 18.0
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -0.08,
+      "Max": 0.08
+    },
+    "Y": {
+      "Min": -0.08,
+      "Max": 0.08
+    },
+    "Z": {
+      "Min": -0.08,
+      "Max": 0.08
+    }
+  },
+  "InitialVelocity": {
+    "Yaw": {
+      "Min": -180.0,
+      "Max": 180.0
+    },
+    "Pitch": {
+      "Min": 70.0,
+      "Max": 90.0
+    },
+    "Speed": {
+      "Min": 0.2,
+      "Max": 0.6
+    }
+  },
+  "TrailSpawnerPositionMultiplier": 1.0,
+  "TrailSpawnerRotationMultiplier": 1.0,
+  "Attractors": [
+    {
+      "LinearAcceleration": {
+        "X": 0.0,
+        "Y": 0.6,
+        "Z": 0.0
+      },
+      "DampingMultiplier": {
+        "X": 0.9,
+        "Y": 0.95,
+        "Z": 0.9
+      }
+    }
+  ],
+  "Particle": {
+    "Texture": "Particles/Textures/Fire/Fire_Test_GS.png",
+    "FrameSize": {
+      "Width": 32,
+      "Height": 32
+    },
+    "ScaleRatioConstraint": "None",
+    "SoftParticles": "Require",
+    "UVOption": "RandomFlipU",
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.18,
+          "Max": 0.26
+        },
+        "Y": {
+          "Min": 0.18,
+          "Max": 0.26
+        }
+      },
+      "Opacity": 1.0,
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 3
+      }
+    },
+    "Animation": {
+      "0": {
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 3
+        },
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 0.0
+      },
+      "20": {
+        "Scale": {
+          "X": {
+            "Min": 2.0,
+            "Max": 2.0
+          },
+          "Y": {
+            "Min": 2.6,
+            "Max": 2.6
+          }
+        },
+        "Opacity": 1.0
+      },
+      "60": {
+        "Opacity": 0.7
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 0.714,
+            "Max": 0.714
+          },
+          "Y": {
+            "Min": 1.429,
+            "Max": 1.429
+          }
+        },
+        "Opacity": 0.0
+      }
+    }
+  }
+}

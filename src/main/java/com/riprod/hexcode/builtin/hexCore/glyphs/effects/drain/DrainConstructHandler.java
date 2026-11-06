@@ -15,7 +15,8 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.drain.style.DrainStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.utils.LogScopes;
 import com.riprod.hexcode.utils.VfxUtil;
 
@@ -81,14 +82,7 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
 
         state.addDrained(drainAmount);
         state.tick(dt);
-        if (!drainSustain(dt, status)) return false;
-
-        TransformComponent tc = buffer.getComponent(target, TransformComponent.getComponentType());
-        if (tc != null) {
-            var asset = GlyphAsset.of(status.getTriggeringGlyph(), DrainGlyph.class);
-            DrainStyle.renderTick(asset, tc.getPosition(), status.getHexContext(), buffer);
-        }
-
+        drainSustain(dt, status);
         return false;
     }
 
@@ -106,7 +100,7 @@ public class DrainConstructHandler implements ConstructHandler<DrainState> {
                 ctx.getEntityRef(), TransformComponent.getComponentType());
         if (tc != null) {
             var asset = GlyphAsset.of(status.getTriggeringGlyph(), DrainGlyph.class);
-            DrainStyle.renderComplete(asset, tc.getPosition(), status.getHexContext(), ctx.getBuffer());
+            EffectRenderer.render(EffectSlot.End, asset, status.getHexContext(), tc.getPosition(), ctx.getBuffer());
         }
 
         status.getHexContext().updateRuntimeAccessors(ctx.getBuffer());

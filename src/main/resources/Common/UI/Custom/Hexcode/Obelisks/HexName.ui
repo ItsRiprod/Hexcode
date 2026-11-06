@@ -1,4 +1,5 @@
 $C = "../../Common.ui";
+$O = "Obelisk.ui";
 
 $C.@PageOverlay {
   LayoutMode: Middle;
@@ -8,7 +9,7 @@ $C.@PageOverlay {
 
     #Title {
       $C.@Title {
-        @Text = "Name Hex";
+        @Text = %hexcode.obelisks.name.title;
       }
     }
 
@@ -17,9 +18,10 @@ $C.@PageOverlay {
       LayoutMode: Top;
 
       $C.@TextField #NameInput {
-        @Anchor = (Height: 44);
+        Anchor: (Height: 44);
         AutoFocus: true;
-        PlaceholderText: "unnamed hex";
+        AutoSelectAll: true;
+        PlaceholderText: %hexcode.obelisks.name.placeholder;
       }
 
       Group #ButtonRow {
@@ -27,15 +29,14 @@ $C.@PageOverlay {
         Anchor: (Top: 12, Height: 36);
 
         $C.@TextButton #ConfirmButton {
-          Text: "Set Name";
+          Text: %hexcode.obelisks.name.confirm;
           FlexWeight: 1;
         }
       }
 
       Label #StatusLabel {
-        Style: (FontSize: 14, TextColor: #a0a0a0);
-        Text: "";
-        Anchor: (Top: 12, Height: 40);
+        Style: $O.@StatusStyle;
+        Anchor: (Top: 12);
       }
     }
   }

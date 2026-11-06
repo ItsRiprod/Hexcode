@@ -1,11 +1,15 @@
 {
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#B366FF",
     "SecondaryColor": "#DCB3FF",
-    "PrimaryParticle": {
-      "SystemId": "Swap_Rift"
-    },
-    "PrimarySound": "SFX_Portal_Neutral"
+    "Hit": {
+      "Particles": [
+        {
+          "SystemId": "Swap_Rift"
+        }
+      ],
+      "Sound": "SFX_Portal_Neutral"
+    }
   },
   "Title": "hexcode.glyphs.Swap.name",
   "Description": "hexcode.glyphs.Swap.description",

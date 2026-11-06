@@ -15,8 +15,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.elementalism.composite.action.CompositeContext;
-import com.riprod.hexcode.builtin.elementalism.effects.ElementEffects;
-import com.riprod.hexcode.builtin.elementalism.effects.ResolvedEffects;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 import com.riprod.hexcode.builtin.elementalism.element.ElementTierIndex;
 import com.riprod.hexcode.builtin.elementalism.status.ElementStatuses;
 import com.riprod.hexcode.builtin.elementalism.tier.ElementalTier;
@@ -30,11 +29,12 @@ public final class CompositeResolver {
     private CompositeResolver() {
     }
 
-    public record Result(List<CompositeAsset> fired, boolean incomingApplies, @Nullable ElementEffects overrides) {
-        public ResolvedEffects effects(ElementalTier incoming) {
+    public record Result(List<CompositeAsset> fired, boolean incomingApplies, @Nullable GlyphEffects overrides) {
+        public GlyphEffects landing(ElementalTier incoming) {
             var element = ElementTierIndex.getElement(incoming.getId());
-            return ElementEffects.resolve(this.overrides, incoming.getEffects(),
-                    element != null ? element.getEffects() : null);
+            var base = element != null ? element.getEffects() : null;
+            return (base != null ? base.palette() : GlyphEffects.empty()).compose(incoming.getEffects())
+                    .compose(this.overrides);
         }
     }
 
@@ -107,11 +107,11 @@ public final class CompositeResolver {
 
     private static Result result(List<CompositeAsset> fired, List<CompositeOutcome> outcomes) {
         var incomingApplies = true;
-        var layers = new ArrayList<ElementEffects>(outcomes.size());
-        for (var outcome : outcomes) {
+        var stacked = GlyphEffects.empty();
+        for (var outcome : outcomes.reversed()) {
             incomingApplies &= outcome.getIncoming() == Retention.KEEP;
-            layers.add(outcome.getEffects());
+            stacked.compose(outcome.getEffects());
         }
-        return new Result(List.copyOf(fired), incomingApplies, ElementEffects.stack(layers));
+        return new Result(List.copyOf(fired), incomingApplies, stacked);
     }
 }

@@ -1,14 +1,16 @@
 {
   "MaxGlyphs": 10,
-  "CastingAuraParticles": [
-    {
-      "SystemId": "Shock_Spawner",
-      "TargetEntityPart": "Self",
-      "TargetNodeName": "",
-      "Color": "#2E7D32"
+  "Effects": {
+    "SecondaryColor": "#81C784",
+    "Sustain": {
+      "Particles": [
+        {
+          "SystemId": "Shock_Spawner",
+          "TargetEntityPart": "Self",
+          "TargetNodeName": "",
+          "Color": "#2E7D32"
+        }
+      ]
     }
-  ],
-  "Style": {
-    "SecondaryColor": "#81C784"
   }
 }

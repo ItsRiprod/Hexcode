@@ -1,0 +1,24 @@
+{
+  "LifeSpan": 1.5,
+  "CullDistance": 100.0,
+  "BoundingRadius": 6.0,
+  "IsImportant": true,
+  "Spawners": [
+    {
+      "SpawnerId": "Explosion_Big_Star",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Explosion_Medium_Shockwave",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Explosion_Start_Recoil",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Explosion_Small_Sparks_Out",
+      "FixedRotation": true
+    }
+  ]
+}

@@ -39,7 +39,8 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.ConjureGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.ConjureGlyphSlots;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.component.ConjureZoneComponent;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.style.ConjureStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -272,8 +273,8 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
         TransformComponent transform = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), TransformComponent.getComponentType());
         if (transform != null) {
-            ConjureStyle.renderDespawn(asset, transform.getPosition(),
-                    status.getHexContext(), ctx.getBuffer());
+            EffectRenderer.render(EffectSlot.End, asset, status.getHexContext(), transform.getPosition(),
+                    ctx.getBuffer());
         }
         ctx.getBuffer().tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
     }
@@ -286,8 +287,8 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
             HexContext hexCtx = status.getHexContext().branch();
             hexCtx.updateRuntimeAccessors(ctx.getBuffer());
             if (entityTransform != null) {
-                ConjureStyle.renderTrigger(config, entityTransform.getPosition(),
-                        hexCtx, ctx.getBuffer());
+                EffectRenderer.render(EffectSlot.Hit, config, hexCtx, entityTransform.getPosition(),
+                        ctx.getBuffer());
             }
             triggering.writeDefaultOutput(
                     new EntityVar(entityUuid.getUuid(), entityRef), hexCtx);

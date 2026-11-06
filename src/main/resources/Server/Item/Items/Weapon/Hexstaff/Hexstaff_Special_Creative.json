@@ -71,7 +71,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Special_Arcane"
+            "Effects": "Hexstaff_Special_Arcane"
           }
         }
       ]
@@ -87,7 +87,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Special_Arcane"
+            "Effects": "Hexstaff_Special_Arcane"
           }
         }
       ]
@@ -103,7 +103,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Special_Arcane"
+            "Effects": "Hexstaff_Special_Arcane"
           }
         }
       ]
@@ -119,7 +119,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Special_Arcane"
+            "Effects": "Hexstaff_Special_Arcane"
           }
         }
       ]
@@ -129,39 +129,43 @@
         {
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
-          "AuraParticles": [
-            {
-              "SystemId": "Hexstaff_Generic_Rune_Alt",
-              "PositionOffset": {
-                "Y": 2.5
-              },
-              "Color": "#42A5F5"
-            },
-            {
-              "SystemId": "Hexstaff_Orbit_Spark",
-              "PositionOffset": {
-                "Y": 1.2
-              },
-              "Color": "#42A5F5",
-              "Scale": 1.2
-            },
-            {
-              "SystemId": "Hexstaff_Orbit_Spark",
-              "PositionOffset": {
-                "Y": 0.0
-              },
-              "Color": "#0D47A1",
-              "Scale": 1.0
-            },
-            {
-              "SystemId": "Hexstaff_Generic_Mist",
-              "PositionOffset": {
-                "Y": -1.5
-              },
-              "Color": "#0D47A1",
-              "Scale": 1.1
+          "Effects": {
+            "Sustain": {
+              "Particles": [
+                {
+                  "SystemId": "Hexstaff_Generic_Rune_Alt",
+                  "PositionOffset": {
+                    "Y": 2.5
+                  },
+                  "Color": "#42A5F5"
+                },
+                {
+                  "SystemId": "Hexstaff_Orbit_Spark",
+                  "PositionOffset": {
+                    "Y": 1.2
+                  },
+                  "Color": "#42A5F5",
+                  "Scale": 1.2
+                },
+                {
+                  "SystemId": "Hexstaff_Orbit_Spark",
+                  "PositionOffset": {
+                    "Y": 0.0
+                  },
+                  "Color": "#0D47A1",
+                  "Scale": 1.0
+                },
+                {
+                  "SystemId": "Hexstaff_Generic_Mist",
+                  "PositionOffset": {
+                    "Y": -1.5
+                  },
+                  "Color": "#0D47A1",
+                  "Scale": 1.1
+                }
+              ]
             }
-          ]
+          }
         }
       ]
     }

@@ -25,7 +25,8 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.ProjectileGlyph;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.ProjectileGlyphSlots;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.component.ProjectileState;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.projectile.style.ProjectileStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -95,7 +96,7 @@ public class HexProjectileBounceInteraction extends SimpleInteraction {
             hexContext.updateRuntimeAccessors(buffer);
 
             var asset = GlyphAsset.of(triggering, ProjectileGlyph.class);
-            ProjectileStyle.renderBlockHit(asset, hitPos, hexContext, buffer);
+            EffectRenderer.render(EffectSlot.Block, asset, hexContext, hitPos, buffer);
 
             var bounceCtx = hexContext.branch();
             triggering.writeOutput(resultVar, bounceCtx);

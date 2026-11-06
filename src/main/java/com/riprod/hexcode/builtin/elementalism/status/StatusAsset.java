@@ -12,9 +12,8 @@ import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
-import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
-import com.riprod.hexcode.builtin.elementalism.effects.ElementEffects;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 
 public class StatusAsset implements JsonAssetWithMap<String, DefaultAssetMap<String, StatusAsset>> {
     public static final AssetBuilderCodec<String, StatusAsset> CODEC;
@@ -25,8 +24,7 @@ public class StatusAsset implements JsonAssetWithMap<String, DefaultAssetMap<Str
     protected String id;
     protected boolean hidden;
     protected String effectId;
-    protected ElementEffects effects = new ElementEffects();
-    protected float auraInterval = 1.0f;
+    protected String effectsId;
 
     public static AssetStore<String, StatusAsset, DefaultAssetMap<String, StatusAsset>> getAssetStore() {
         if (ASSET_STORE == null) {
@@ -56,12 +54,9 @@ public class StatusAsset implements JsonAssetWithMap<String, DefaultAssetMap<Str
         return this.effectId;
     }
 
-    public ElementEffects getEffects() {
-        return this.effects;
-    }
-
-    public float getAuraInterval() {
-        return this.auraInterval;
+    @Nullable
+    public GlyphEffects getEffects() {
+        return this.effectsId != null ? GlyphEffects.getAssetMap().getAsset(this.effectsId) : null;
     }
 
     static {
@@ -82,16 +77,11 @@ public class StatusAsset implements JsonAssetWithMap<String, DefaultAssetMap<Str
                 .addValidator(EntityEffect.VALIDATOR_CACHE.getValidator())
                 .documentation("Entity effect applied while the status is on an entity")
                 .add()
-                .appendInherited(new KeyedCodec<>("Effects", ElementEffects.CODEC),
-                        (a, v) -> a.effects = v, a -> a.effects,
-                        (a, p) -> a.effects = p.effects)
-                .documentation("Particles, sounds and colors played for the status")
-                .add()
-                .<Float>appendInherited(new KeyedCodec<>("AuraInterval", Codec.FLOAT),
-                        (a, v) -> a.auraInterval = v, a -> a.auraInterval,
-                        (a, p) -> a.auraInterval = p.auraInterval)
-                .addValidator(Validators.greaterThan(0.0f))
-                .documentation("Seconds between plays of the Aura effect while the status is applied")
+                .appendInherited(new KeyedCodec<>("Effects", GlyphEffects.CHILD_ASSET_CODEC),
+                        (a, v) -> a.effectsId = v, a -> a.effectsId,
+                        (a, p) -> a.effectsId = p.effectsId)
+                .addValidatorLate(() -> GlyphEffects.VALIDATOR_CACHE.getValidator().late())
+                .documentation("Effects of the status; blocks pulse its Sustain")
                 .add()
                 .build();
         VALIDATOR_CACHE = new ValidatorCache<>(new AssetKeyValidator<>(StatusAsset::getAssetStore));

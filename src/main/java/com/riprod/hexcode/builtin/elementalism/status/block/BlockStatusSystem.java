@@ -14,7 +14,8 @@ import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
-import com.riprod.hexcode.builtin.elementalism.effects.EffectPlayer;
+import com.riprod.hexcode.builtin.elementalism.status.StatusAsset;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMaps;
 
@@ -60,13 +61,15 @@ public class BlockStatusSystem extends EntityTickingSystem<ChunkStore> {
                     statuses.remove();
                     continue;
                 }
-                var aura = status.dueAura(dt);
-                if (aura != null) {
+                var asset = StatusAsset.getAssetMap().getAsset(status.getStatusId());
+                var effects = asset != null ? asset.getEffects() : null;
+                if (effects != null) {
                     var position = new Vector3i(
                             ChunkUtil.minBlock(chunkSection.getX()) + ChunkUtil.xFromIndex(blockIndex),
                             ChunkUtil.minBlock(chunkSection.getY()) + ChunkUtil.yFromIndex(blockIndex),
                             ChunkUtil.minBlock(chunkSection.getZ()) + ChunkUtil.zFromIndex(blockIndex));
-                    EffectPlayer.play(aura, EffectPlayer.blockCenter(position), entityAccessor);
+                    EffectRenderer.pulse(status.getSustain(), effects, EffectRenderer.blockCenter(position),
+                            dt, entityAccessor);
                 }
             }
             if (cell.getValue().isEmpty()) {

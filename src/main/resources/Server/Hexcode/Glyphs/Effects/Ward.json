@@ -41,14 +41,20 @@
     "InstantCost": 1.0,
     "DrainPerSecond": 0.0
   },
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#00E5FF",
     "SecondaryColor": "#B2EBF2",
-    "PrimaryParticle": {
-      "SystemId": "Link_Flow"
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Link_Flow"
+        }
+      ],
+      "Sound": "SFX_Portal_Neutral_Open"
     },
-    "PrimarySound": "SFX_Portal_Neutral_Open",
-    "TertiarySound": "SFX_Concentrate_Fail"
+    "End": {
+      "Sound": "SFX_Concentrate_Fail"
+    }
   },
   "SustainImpact": {
     "Type": "Constant",

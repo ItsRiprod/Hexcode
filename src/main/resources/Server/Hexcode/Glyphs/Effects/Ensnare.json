@@ -1,20 +1,34 @@
 {
   "Type": "Ensnare",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#558B2F",
     "SecondaryColor": "#AED581",
-    "PrimaryModel": "Ensnare_Spike",
-    "PrimaryParticle": {
-      "SystemId": "Ensnare_Burst"
+    "Model": "Ensnare_Spike",
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Ensnare_Burst"
+        }
+      ],
+      "Sound": "SFX_Ensnare_Cast"
     },
-    "PrimarySound": "SFX_Ensnare_Cast",
-    "SecondaryParticle": {
-      "SystemId": "Ensnare_Hit"
+    "Hit": {
+      "Particles": [
+        {
+          "SystemId": "Ensnare_Hit"
+        }
+      ],
+      "Tint": "Secondary"
     },
-    "TertiaryParticle": {
-      "SystemId": "Ensnare_Crumble"
-    },
-    "TertiarySound": "SFX_Ensnare_End"
+    "End": {
+      "Particles": [
+        {
+          "SystemId": "Ensnare_Crumble"
+        }
+      ],
+      "Tint": "Secondary",
+      "Sound": "SFX_Ensnare_End"
+    }
   },
   "Title": "hexcode.glyphs.Ensnare.name",
   "Description": "hexcode.glyphs.Ensnare.description",

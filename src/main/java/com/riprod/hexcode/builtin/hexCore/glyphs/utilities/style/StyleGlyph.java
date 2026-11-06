@@ -1,7 +1,5 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.utilities.style;
 
-import javax.annotation.Nullable;
-
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -10,7 +8,6 @@ import com.riprod.hexcode.core.common.glyphs.variables.ColorVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.hexes.component.HexColors;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 public class StyleGlyph extends GlyphAsset {
     public static final String TYPE = "Style";
@@ -38,9 +35,12 @@ public class StyleGlyph extends GlyphAsset {
 
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
-        HexStyleAsset linkedStyle = resolveLinkedGlyphStyle(glyph, hexContext);
-        if (linkedStyle != null)
-            hexContext.mutableStyle().applyOverride(linkedStyle);
+        var linked = GlyphAsset.of(glyph.linkedGlyph(StyleGlyphSlots.STYLE, hexContext), GlyphAsset.class);
+        if (linked != null && linked.getEffects() != null) {
+            var look = linked.getEffects().palette();
+            look.setModel(linked.getEffects().getModel());
+            hexContext.mutableEffects().compose(look);
+        }
 
         if (hasAnyColorInput(glyph)) {
             double[] rgba = resolveRgba(glyph, hexContext);
@@ -48,11 +48,6 @@ public class StyleGlyph extends GlyphAsset {
         }
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
-    }
-
-    private static @Nullable HexStyleAsset resolveLinkedGlyphStyle(Glyph glyph, HexContext hexContext) {
-        var linkedAsset = GlyphAsset.of(glyph.linkedGlyph(StyleGlyphSlots.STYLE, hexContext), GlyphAsset.class);
-        return linkedAsset != null ? linkedAsset.getStyle() : null;
     }
 
     private static boolean hasAnyColorInput(Glyph glyph) {

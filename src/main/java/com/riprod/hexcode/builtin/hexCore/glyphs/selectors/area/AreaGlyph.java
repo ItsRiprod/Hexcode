@@ -15,9 +15,10 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.area.style.AreaStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
@@ -144,10 +145,10 @@ public class AreaGlyph extends GlyphAsset {
             return;
         }
 
-        float alpha = VfxUtil.resolveAlpha(hexContext, this);
+        float alpha = VfxUtil.resolveAlpha(EffectRenderer.resolve(this, hexContext));
         if (alpha > 0f) {
             DebugComponent debug = new DebugComponent(shape.debugShape(),
-                    VfxUtil.resolvePrimaryColor(hexContext, this), new Vector3d(), 0.1f);
+                    VfxUtil.resolvePrimaryColor(EffectRenderer.resolve(this, hexContext)), new Vector3d(), 0.1f);
             debug.setOpacity(alpha * 0.15f);
             debug.setIntervalMultiplier(0.01f);
             debug.setFadeMultiplier(2.0f);
@@ -157,6 +158,6 @@ public class AreaGlyph extends GlyphAsset {
 
         accessor.addEntity(holder, AddReason.SPAWN);
 
-        AreaStyle.renderSpawn(this, new Vector3d(center), hexContext, accessor);
+        EffectRenderer.render(EffectSlot.Start, this, hexContext, new Vector3d(center), accessor);
     }
 }

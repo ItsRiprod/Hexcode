@@ -8,6 +8,8 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import com.hypixel.hytale.math.shape.Box;
+import com.hypixel.hytale.protocol.Color;
+import com.hypixel.hytale.protocol.ColorLight;
 import com.hypixel.hytale.protocol.packets.player.AddOrUpdateTriggerVolumeDisplay;
 import com.hypixel.hytale.protocol.packets.player.RemoveTriggerVolumeDisplay;
 import com.hypixel.hytale.protocol.packets.player.TriggerVolumeDisplayEntry;
@@ -25,6 +27,20 @@ public final class GlowUtil {
     private static final AtomicLong VOLUME_COUNTER = new AtomicLong();
 
     private GlowUtil() {
+    }
+
+    public static ColorLight toColorLight(Color color, int level) {
+        int r = color.red & 0xFF;
+        int g = color.green & 0xFF;
+        int b = color.blue & 0xFF;
+        int max = Math.max(r, Math.max(g, b));
+        if (level <= 0 || max == 0) {
+            return new ColorLight((byte) level, (byte) 0, (byte) 0, (byte) 0);
+        }
+        return new ColorLight((byte) level,
+                (byte) (r * level / max),
+                (byte) (g * level / max),
+                (byte) (b * level / max));
     }
 
     public static String nextVolumeId() {

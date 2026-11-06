@@ -1,16 +1,25 @@
 {
   "Type": "Erode",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#8D6E63",
     "SecondaryColor": "#D7CCC8",
-    "PrimaryParticle": {
-      "SystemId": "Ensnare_Hit"
+    "Entity": {
+      "Particles": [
+        {
+          "SystemId": "Ensnare_Hit"
+        }
+      ],
+      "Sound": "SFX_Block_Break"
     },
-    "PrimarySound": "SFX_Block_Break",
-    "SecondaryParticle": {
-      "SystemId": "Ensnare_Crumble"
-    },
-    "SecondarySound": "SFX_Block_Break"
+    "Block": {
+      "Particles": [
+        {
+          "SystemId": "Ensnare_Crumble"
+        }
+      ],
+      "Sound": "SFX_Block_Break",
+      "Tint": "Secondary"
+    }
   },
   "Title": "hexcode.glyphs.Erode.name",
   "Description": "hexcode.glyphs.Erode.description",

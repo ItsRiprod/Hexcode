@@ -3,26 +3,28 @@ Group #HexcodeHud {
 
   Group #HexcodeInfo {
     LayoutMode: Left;
-    Anchor: (Bottom: 80, Left: 20, Height: 56);
+    Anchor: (Bottom: 80, Left: 20, Width: 380);
     Visible: false;
 
     Group #HexcodeInfoAccent {
       Background: #7b5cff;
-      Anchor: (Width: 3, Height: 56);
+      Anchor: (Width: 3);
     }
 
     Group #HexcodeInfoContent {
       Background: #0a0a14(0.85);
-      Anchor: (Left: 3, Height: 56);
+      Anchor: (Left: 3);
+      FlexWeight: 1;
       Padding: (Left: 12, Right: 16, Vertical: 6);
       LayoutMode: Top;
 
       Label #HexcodeInfoTitle {
-        Style: (FontSize: 18, TextColor: #c4b5ff);
+        Style: (FontSize: 18, TextColor: #c4b5ff, Wrap: true);
       }
 
       Label #HexcodeInfoDescription {
-        Style: (FontSize: 14, TextColor: #a0a0a0);
+        Style: (FontSize: 14, TextColor: #a0a0a0, Wrap: true);
+        Visible: false;
       }
     }
   }

@@ -1,20 +1,21 @@
 {
   "Type": "Projectile",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#FFCC4D",
     "SecondaryColor": "#FFE6A3",
-    "PrimaryParticle": {
-      "SystemId": "Projectile_Launch"
+    "Model": "Glyph_Projectile_Flight",
+    "Start": { "Particles": [{ "SystemId": "Projectile_Launch" }], "Sound": "SFX_Staff_Fire_Shoot" },
+    "Sustain": {
+      "Particles": [
+        { "SystemId": "Hexcode_Projectile_Flames", "TargetEntityPart": "Self", "Color": "#00d0ff" },
+        { "SystemId": "Sword_Charged_Trail_Praetorian", "TargetEntityPart": "Self" },
+        { "SystemId": "Cinematic_Portal_Appear_L" }
+      ],
+      "Trail": { "TrailId": "Hexcode_Conjure_Trail" },
+      "Tint": "None"
     },
-    "PrimarySound": "SFX_Staff_Fire_Shoot",
-    "SecondaryParticle": {
-      "SystemId": "Projectile_Hit"
-    },
-    "SecondarySound": "SFX_Staff_Flame_Fireball_Impact",
-    "StyleParticle": {
-      "SystemId": "Projectile_Miss"
-    },
-    "PrimaryModel": "Glyph_Projectile_Flight"
+    "Hit": { "Particles": [{ "SystemId": "Projectile_Hit" }], "Sound": "SFX_Staff_Flame_Fireball_Impact", "Tint": "Secondary" },
+    "End": { "Particles": [{ "SystemId": "Projectile_Miss" }] }
   },
   "Title": "hexcode.glyphs.Projectile.name",
   "Description": "hexcode.glyphs.Projectile.description",

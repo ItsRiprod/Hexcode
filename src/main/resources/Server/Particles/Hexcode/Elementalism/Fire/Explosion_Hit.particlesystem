@@ -1,0 +1,28 @@
+{
+  "LifeSpan": 5.0,
+  "CullDistance": 100.0,
+  "BoundingRadius": 10.0,
+  "IsImportant": true,
+  "Spawners": [
+    {
+      "SpawnerId": "Explosion_Hit_Ring",
+      "PositionOffset": {
+        "Y": -0.4
+      }
+    },
+    {
+      "SpawnerId": "Explosion_Hit_Pillar"
+    },
+    {
+      "SpawnerId": "Explosion_Hit_Haze"
+    },
+    {
+      "SpawnerId": "Explosion_Hit_Embers",
+      "StartDelay": 0.1
+    },
+    {
+      "SpawnerId": "Scorch_Hit_Char",
+      "StartDelay": 0.5
+    }
+  ]
+}

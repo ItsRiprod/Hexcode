@@ -1,6 +1,5 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure;
 
-import java.util.Map;
 import java.util.UUID;
 
 import org.joml.Vector3d;
@@ -25,10 +24,11 @@ import com.hypixel.hytale.server.core.modules.entity.component.PropComponent;
 import com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollision;
 import com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.component.ConjureZoneComponent;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.conjure.style.ConjureStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
@@ -228,9 +228,9 @@ public class ConjureGlyph extends GlyphAsset {
 
                 holder.ensureComponent(PropComponent.getComponentType());
                 holder.ensureComponent(EffectControllerComponent.getComponentType());
-                float debugAlpha = VfxUtil.resolveAlpha(hexContext, this);
+                float debugAlpha = VfxUtil.resolveAlpha(EffectRenderer.resolve(this, hexContext));
                 if (debugAlpha > 0f) {
-                        Vector3f debugColor = VfxUtil.resolvePrimaryColor(hexContext, this);
+                        Vector3f debugColor = VfxUtil.resolvePrimaryColor(EffectRenderer.resolve(this, hexContext));
                         DebugComponent debugComp = new DebugComponent(DebugShape.Cube, debugColor,
                                         zoneComp.getDebugSize(), 0.1f);
                         debugComp.setOpacity(debugAlpha * 0.5f);
@@ -259,19 +259,7 @@ public class ConjureGlyph extends GlyphAsset {
                         Box modelBox = new Box(
                                         -halfExtents.x, -halfExtents.y, -halfExtents.z,
                                         halfExtents.x, halfExtents.y, halfExtents.z);
-                        Model model = new Model(
-                                        modelAsset.getId(), 1.0f, (Map<String, String>) null,
-                                        modelAsset.getAttachments(null),
-                                        modelBox, modelAsset.getModel(), modelAsset.getTexture(),
-                                        modelAsset.getGradientSet(), modelAsset.getGradientId(),
-                                        modelAsset.getEyeHeight(),
-                                        modelAsset.getCrouchOffset(), modelAsset.getSittingOffset(),
-                                        modelAsset.getSleepingOffset(),
-                                        modelAsset.getAnimationSetMap(), modelAsset.getCamera(),
-                                        modelAsset.getLight(), modelAsset.getParticles(), modelAsset.getTrails(),
-                                        modelAsset.getPhysicsValues(),
-                                        modelAsset.getDetailBoxes(), modelAsset.getPhobia(),
-                                        modelAsset.getPhobiaModelAssetId());
+                        var model = Model.createUnitScaleModel(modelAsset, modelBox);
 
                         holder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
                         holder.addComponent(PersistentModel.getComponentType(),
@@ -281,7 +269,7 @@ public class ConjureGlyph extends GlyphAsset {
                 var zoneRef = hexContext.getAccessor().addEntity(holder, AddReason.SPAWN);
                 zoneComp.setZoneRef(zoneRef);
 
-                ConjureStyle.renderSpawn(this, center, hexContext, hexContext.getAccessor());
+                EffectRenderer.render(EffectSlot.Start, this, hexContext, center, hexContext.getAccessor());
 
                 UUIDComponent zoneUuidComp = holder.getComponent(UUIDComponent.getComponentType());
                 UUID zoneUuid = zoneUuidComp != null ? zoneUuidComp.getUuid() : UUID.randomUUID();

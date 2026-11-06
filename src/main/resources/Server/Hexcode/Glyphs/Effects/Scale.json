@@ -1,14 +1,22 @@
 {
   "Type": "Scale",
-  "Style": {
-    "PrimaryParticle": {
-      "SystemId": "Scale_Apply"
+  "Effects": {
+    "Start": {
+      "Particles": [
+        {
+          "SystemId": "Scale_Apply"
+        }
+      ],
+      "Sound": "SFX_Scale_Cast"
     },
-    "PrimarySound": "SFX_Scale_Cast",
-    "SecondaryParticle": {
-      "SystemId": "Scale_Restore"
-    },
-    "SecondarySound": "SFX_Scale_End"
+    "End": {
+      "Particles": [
+        {
+          "SystemId": "Scale_Restore"
+        }
+      ],
+      "Sound": "SFX_Scale_End"
+    }
   },
   "Title": "hexcode.glyphs.Scale.name",
   "Description": "hexcode.glyphs.Scale.description",

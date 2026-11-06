@@ -103,7 +103,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Special_Life"
+            "Effects": "Hexstaff_Special_Life"
           }
         }
       ]
@@ -119,7 +119,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Special_Life"
+            "Effects": "Hexstaff_Special_Life"
           }
         }
       ]
@@ -135,7 +135,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Special_Life"
+            "Effects": "Hexstaff_Special_Life"
           }
         }
       ]
@@ -151,7 +151,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Special_Life"
+            "Effects": "Hexstaff_Special_Life"
           }
         }
       ]
@@ -161,38 +161,42 @@
         {
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
-          "AuraParticles": [
-            {
-              "SystemId": "Hexstaff_Fire_Aura",
-              "PositionOffset": {
-                "Y": -1.5
-              }
-            },
-            {
-              "SystemId": "Hexstaff_Ember_Rise",
-              "PositionOffset": {
-                "Y": -1.3
-              },
-              "Color": "#F5D98E",
-              "Scale": 1.3
-            },
-            {
-              "SystemId": "Hexstaff_Smoke_Wisp",
-              "PositionOffset": {
-                "Y": 1.8
-              },
-              "Color": "#D4A03C",
-              "Scale": 1.1
-            },
-            {
-              "SystemId": "Hexstaff_Sparks_Heavy",
-              "PositionOffset": {
-                "Y": -0.5
-              },
-              "Color": "#D4A03C",
-              "Scale": 1.1
+          "Effects": {
+            "Sustain": {
+              "Particles": [
+                {
+                  "SystemId": "Hexstaff_Fire_Aura",
+                  "PositionOffset": {
+                    "Y": -1.5
+                  }
+                },
+                {
+                  "SystemId": "Hexstaff_Ember_Rise",
+                  "PositionOffset": {
+                    "Y": -1.3
+                  },
+                  "Color": "#F5D98E",
+                  "Scale": 1.3
+                },
+                {
+                  "SystemId": "Hexstaff_Smoke_Wisp",
+                  "PositionOffset": {
+                    "Y": 1.8
+                  },
+                  "Color": "#D4A03C",
+                  "Scale": 1.1
+                },
+                {
+                  "SystemId": "Hexstaff_Sparks_Heavy",
+                  "PositionOffset": {
+                    "Y": -0.5
+                  },
+                  "Color": "#D4A03C",
+                  "Scale": 1.1
+                }
+              ]
             }
-          ]
+          }
         }
       ]
     }

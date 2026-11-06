@@ -39,7 +39,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.registry.SlotConfig;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 
 public class VfxUtil {
   private VfxUtil() {
@@ -69,63 +69,21 @@ public class VfxUtil {
     return beams;
   }
 
-  public static @Nullable String resolveModelId(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {
-    HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-    String id = overrides != null ? overrides.getPrimaryModel() : null;
-    if (id != null)
-      return id;
-    HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
-    return glyphStyle != null ? glyphStyle.getPrimaryModel() : null;
-  }
-
   private static final Color WHITE = new Color((byte) 255, (byte) 255, (byte) 255);
 
   private static final float DEFAULT_LINE_OPACITY = 0.7f;
 
-  private static final float PARTICLE_SCALE = 1.0f;
-
-  public static Color resolvePrimaryColorRaw(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {
-    HexStyleAsset overrides = ctx != null ? ctx.getStyle() : null;
-    Color c = resolveColor(overrides != null ? overrides.getPrimaryColor() : null,
-        glyphStyleColor(glyphAsset, true));
+  public static Color resolvePrimaryColorRaw(GlyphEffects effects) {
+    var c = effects.getPrimaryColor();
     return c != null ? c : WHITE;
   }
 
-  public static Vector3f resolvePrimaryColor(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {
-    return HexColors.toVector3f(resolvePrimaryColorRaw(ctx, glyphAsset));
+  public static Vector3f resolvePrimaryColor(GlyphEffects effects) {
+    return HexColors.toVector3f(resolvePrimaryColorRaw(effects));
   }
 
-  public static float resolveAlpha(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {
-    return resolveAlpha(ctx != null ? ctx.getStyle() : null,
-        glyphAsset != null ? glyphAsset.getStyle() : null);
-  }
-
-  private static float resolveAlpha(@Nullable HexStyleAsset overrides, @Nullable HexStyleAsset glyphStyle) {
-    if (overrides != null && overrides.getAlpha() != null) {
-      return overrides.getAlpha();
-    }
-    return glyphStyle != null ? glyphStyle.getAlphaOrDefault() : 1.0f;
-  }
-
-  public static float resolveVolume(@Nullable HexContext ctx, @Nullable GlyphAsset glyphAsset) {
-    return resolveVolume(ctx != null ? ctx.getStyle() : null,
-        glyphAsset != null ? glyphAsset.getStyle() : null);
-  }
-
-  private static float resolveVolume(@Nullable HexStyleAsset overrides, @Nullable HexStyleAsset glyphStyle) {
-    if (overrides != null && overrides.getVolume() != null) {
-      float v = overrides.getVolume();
-      return v < HexStyleAsset.MIN_VOLUME ? HexStyleAsset.MIN_VOLUME
-          : Math.min(v, HexStyleAsset.MAX_VOLUME);
-    }
-    return glyphStyle != null ? glyphStyle.getVolumeOrDefault() : 1.0f;
-  }
-
-  private static @Nullable Color glyphStyleColor(@Nullable GlyphAsset glyphAsset, boolean primary) {
-    HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
-    if (glyphStyle == null)
-      return null;
-    return primary ? glyphStyle.getPrimaryColor() : glyphStyle.getSecondaryColor();
+  public static float resolveAlpha(GlyphEffects effects) {
+    return effects.getAlphaOrDefault();
   }
 
   public static boolean playersInRange(Vector3d pos, ComponentAccessor<EntityStore> accessor) {
@@ -163,111 +121,6 @@ public class VfxUtil {
     sound(soundId, pos, accessor);
   }
 
-  public static void spawnPrimary(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
-      Vector3d pos, ComponentAccessor<EntityStore> accessor) {
-    HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
-    if (glyphStyle == null)
-      return;
-    Color tint = resolveColor(overrides != null ? overrides.getPrimaryColor() : null, glyphStyle.getPrimaryColor());
-    if (resolveAlpha(overrides, glyphStyle) > 0f && playersInRange(pos, accessor))
-      spawnConfigured(glyphStyle.getPrimaryParticle(), pos, tint, PARTICLE_SCALE, accessor);
-    if (glyphStyle.getPrimarySound() != null)
-      sound(glyphStyle.getPrimarySound(), pos, resolveVolume(overrides, glyphStyle), accessor);
-  }
-
-  public static void spawnPrimaryDirected(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
-      Vector3d pos, Rotation3f rotation, ComponentAccessor<EntityStore> accessor) {
-    HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
-    if (glyphStyle == null)
-      return;
-    Color tint = resolveColor(overrides != null ? overrides.getPrimaryColor() : null, glyphStyle.getPrimaryColor());
-    if (resolveAlpha(overrides, glyphStyle) > 0f && playersInRange(pos, accessor))
-      spawnConfiguredDirected(glyphStyle.getPrimaryParticle(), pos, rotation, tint,
-          PARTICLE_SCALE, accessor);
-    if (glyphStyle.getPrimarySound() != null)
-      sound(glyphStyle.getPrimarySound(), pos, resolveVolume(overrides, glyphStyle), accessor);
-  }
-
-  public static void spawnSecondary(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
-      Vector3d pos, ComponentAccessor<EntityStore> accessor) {
-    spawnSecondary(overrides, glyphAsset, pos, accessor, null);
-  }
-
-  public static void spawnSecondary(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
-      Vector3d pos, ComponentAccessor<EntityStore> accessor, @Nullable List<Ref<EntityStore>> recipients) {
-    HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
-    if (glyphStyle == null)
-      return;
-    Color tint = resolveColor(overrides != null ? overrides.getSecondaryColor() : null, glyphStyle.getSecondaryColor());
-    if (resolveAlpha(overrides, glyphStyle) > 0f && playersInRange(pos, accessor))
-      spawnConfigured(glyphStyle.getSecondaryParticle(), pos, tint, PARTICLE_SCALE,
-          accessor, recipients);
-    if (glyphStyle.getSecondarySound() != null)
-      sound(glyphStyle.getSecondarySound(), pos, resolveVolume(overrides, glyphStyle), accessor);
-  }
-
-  public static void spawnTertiary(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
-      Vector3d pos, ComponentAccessor<EntityStore> accessor) {
-    spawnTertiary(overrides, glyphAsset, pos, accessor, null);
-  }
-
-  public static void spawnTertiary(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
-      Vector3d pos, ComponentAccessor<EntityStore> accessor, @Nullable List<Ref<EntityStore>> recipients) {
-    HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
-    if (glyphStyle == null)
-      return;
-    Color tint = resolveColor(overrides != null ? overrides.getSecondaryColor() : null, glyphStyle.getSecondaryColor());
-    if (resolveAlpha(overrides, glyphStyle) > 0f && playersInRange(pos, accessor))
-      spawnConfigured(glyphStyle.getTertiaryParticle(), pos, tint, PARTICLE_SCALE,
-          accessor, recipients);
-    if (glyphStyle.getTertiarySound() != null)
-      sound(glyphStyle.getTertiarySound(), pos, resolveVolume(overrides, glyphStyle), accessor);
-  }
-
-  public static void spawnFromConfig(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
-      @Nullable ModelParticle particle, @Nullable String soundId, Vector3d pos,
-      ComponentAccessor<EntityStore> accessor) {
-    HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
-    if (particle != null && resolveAlpha(overrides, glyphStyle) > 0f && playersInRange(pos, accessor)) {
-      Color tint = resolveColor(overrides != null ? overrides.getPrimaryColor() : null,
-          glyphStyle != null ? glyphStyle.getPrimaryColor() : null);
-      spawnConfigured(particle, pos, tint, PARTICLE_SCALE, accessor);
-    }
-    if (soundId != null)
-      sound(soundId, pos, resolveVolume(overrides, glyphStyle), accessor);
-  }
-
-  public static void spawnStyleParticle(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
-      Vector3d pos, ComponentAccessor<EntityStore> accessor) {
-    spawnStyleParticleDirected(overrides, glyphAsset, pos, accessor, new Rotation3f((float) (-Math.PI / 2), 0, 0));
-  }
-
-  public static void spawnStyleParticleDirected(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
-      Vector3d pos, ComponentAccessor<EntityStore> accessor, Vector3d direction) {
-    Rotation3f rotation = Rotation3f.lookAt(direction);
-    spawnStyleParticleDirected(overrides, glyphAsset, pos, accessor, rotation);
-  }
-
-  public static void spawnStyleParticleDirected(@Nullable HexStyleAsset overrides, @Nullable GlyphAsset glyphAsset,
-      Vector3d pos, ComponentAccessor<EntityStore> accessor, Rotation3f rotation) {
-    HexStyleAsset glyphStyle = glyphAsset != null ? glyphAsset.getStyle() : null;
-    ModelParticle particle = overrides != null && overrides.getStyleParticle() != null
-        ? overrides.getStyleParticle()
-        : (glyphStyle != null ? glyphStyle.getStyleParticle() : null);
-    if (particle == null)
-      return;
-    if (resolveAlpha(overrides, glyphStyle) <= 0f || !playersInRange(pos, accessor))
-      return;
-    Color tint = resolveColor(
-        overrides != null ? overrides.getPrimaryColor() : null,
-        glyphStyle != null ? glyphStyle.getPrimaryColor() : null);
-    spawnConfiguredDirected(particle, pos, rotation, tint, PARTICLE_SCALE, accessor);
-  }
-
-  private static @Nullable Color resolveColor(@Nullable Color override, @Nullable Color fallback) {
-    return override != null ? override : fallback;
-  }
-
   public static List<Ref<EntityStore>> collectParticleRecipients(Vector3d pos, double radius,
       ComponentAccessor<EntityStore> accessor) {
     SpatialResource<Ref<EntityStore>, EntityStore> playerSpatialResource = accessor
@@ -278,22 +131,12 @@ public class VfxUtil {
     return new ArrayList<>(playerRefs);
   }
 
-  private static void spawnConfigured(@Nullable ModelParticle particle, Vector3d pos,
-      @Nullable Color tint, float scale, ComponentAccessor<EntityStore> accessor) {
-    spawnConfigured(particle, pos, tint, scale, accessor, null);
-  }
-
-  private static void spawnConfigured(@Nullable ModelParticle particle, Vector3d pos,
+  public static void spawnConfigured(@Nullable ModelParticle particle, Vector3d pos,
       @Nullable Color tint, float scale, ComponentAccessor<EntityStore> accessor,
       @Nullable List<Ref<EntityStore>> recipients) {
     if (particle == null || particle.getSystemId() == null)
       return;
     particle(particle.getSystemId(), pos, tint != null ? tint : particle.getColor(), scale, accessor, recipients);
-  }
-
-  public static void particle(String systemId, Vector3d pos, @Nullable Color tint,
-      ComponentAccessor<EntityStore> accessor) {
-    particle(systemId, pos, tint, PARTICLE_SCALE, accessor, null);
   }
 
   private static void particle(String systemId, Vector3d pos, @Nullable Color tint, float scale,
@@ -314,15 +157,13 @@ public class VfxUtil {
     ParticleUtil.spawnParticleEffect(systemId, pos, 0.0f, 0.0f, 0.0f, scale, effective, playerRefs, accessor);
   }
 
-  private static void spawnConfiguredDirected(@Nullable ModelParticle particle, Vector3d pos,
-      Rotation3f rotation, @Nullable Color tint, float scale, ComponentAccessor<EntityStore> accessor) {
+  public static void spawnConfiguredDirected(@Nullable ModelParticle particle, Vector3d pos,
+      Rotation3f rotation, @Nullable Color tint, float scale, ComponentAccessor<EntityStore> accessor,
+      @Nullable List<Ref<EntityStore>> recipients) {
     if (particle == null || particle.getSystemId() == null)
       return;
     Color effective = tint != null ? tint : particle.getColor();
-    SpatialResource<Ref<EntityStore>, EntityStore> playerSpatialResource = accessor
-        .getResource(EntityModule.get().getPlayerSpatialResourceType());
-    List<Ref<EntityStore>> playerRefs = SpatialResource.getThreadLocalReferenceList();
-    playerSpatialResource.getSpatialStructure().collect(pos, 25.0, playerRefs);
+    var playerRefs = recipients != null ? recipients : collectParticleRecipients(pos, 25.0, accessor);
     if (effective == null) {
       if (scale == 1.0f) {
         ParticleUtil.spawnParticleEffect(particle.getSystemId(), pos, rotation, playerRefs, accessor);
@@ -332,58 +173,6 @@ public class VfxUtil {
     }
     ParticleUtil.spawnParticleEffect(particle.getSystemId(), pos,
         rotation.y, rotation.x, rotation.roll(), scale, effective, playerRefs, accessor);
-  }
-
-  private static int flowPhase = 0;
-
-  public static void advanceFlowPhase() {
-    flowPhase = (flowPhase + 1) % 4;
-  }
-
-  public static void particleAlongPath(String systemId, Vector3d source, Vector3d target,
-      int count, ComponentAccessor<EntityStore> accessor) {
-    if (!playersInRange(source, accessor) && !playersInRange(target, accessor))
-      return;
-    if (count < 1)
-      count = 1;
-    double phaseOffset = (double) flowPhase / (count * 4);
-    Vector3d point = new Vector3d();
-    for (int i = 0; i < count; i++) {
-      double t = (double) i / count + phaseOffset;
-      if (t >= 1.0)
-        t -= 1.0;
-      point.x = source.x + (target.x - source.x) * t;
-      point.y = source.y + (target.y - source.y) * t;
-      point.z = source.z + (target.z - source.z) * t;
-      ParticleUtil.spawnParticleEffect(systemId, point, accessor);
-    }
-  }
-
-  public static void particleAlongPath(String systemId, Vector3d source, Vector3d target,
-      int count, Color color, @Nullable Ref<EntityStore> playerRef,
-      ComponentAccessor<EntityStore> accessor) {
-    if (!playersInRange(source, accessor) && !playersInRange(target, accessor))
-      return;
-    if (count < 1)
-      count = 1;
-    double phaseOffset = (double) flowPhase / (count * 4);
-
-    SpatialResource<Ref<EntityStore>, EntityStore> playerSpatialResource = accessor
-        .getResource(EntityModule.get().getPlayerSpatialResourceType());
-    List<Ref<EntityStore>> playerRefs = SpatialResource.getThreadLocalReferenceList();
-    playerSpatialResource.getSpatialStructure().collect(source, (double) 25.0F, playerRefs);
-
-    Vector3d point = new Vector3d();
-    for (int i = 0; i < count; i++) {
-      double t = (double) i / count + phaseOffset;
-      if (t >= 1.0)
-        t -= 1.0;
-      point.x = source.x + (target.x - source.x) * t;
-      point.y = source.y + (target.y - source.y) * t;
-      point.z = source.z + (target.z - source.z) * t;
-
-      ParticleUtil.spawnParticleEffect(systemId, point, 0.0f, 0.0f, 0.0f, 1.0f, color, playerRefs, accessor);
-    }
   }
 
   public static void line(ComponentAccessor<EntityStore> accessor, Vector3d start, Vector3d end,

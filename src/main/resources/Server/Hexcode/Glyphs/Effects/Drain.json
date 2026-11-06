@@ -1,14 +1,23 @@
 {
   "Type": "Drain",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Drain",
-    "PrimaryParticle": {
-      "SystemId": "Hexcode_Drain_Channel"
+    "Sustain": {
+      "Pulse": [
+        {
+          "SystemId": "Hexcode_Drain_Channel"
+        }
+      ]
     },
-    "SecondaryParticle": {
-      "SystemId": "Hexcode_Drain_Complete"
-    },
-    "SecondarySound": "SFX_Drain_Complete"
+    "End": {
+      "Particles": [
+        {
+          "SystemId": "Hexcode_Drain_Complete"
+        }
+      ],
+      "Sound": "SFX_Drain_Complete",
+      "Tint": "Secondary"
+    }
   },
   "Title": "hexcode.glyphs.Drain.name",
   "Description": "hexcode.glyphs.Drain.description",

@@ -5,7 +5,6 @@ import javax.annotation.Nullable;
 import org.joml.Vector3f;
 
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
-import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.AddReason;
@@ -15,7 +14,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.MountController;
-import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
@@ -25,9 +23,10 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration.style.ConcentrationStyle;
 import com.riprod.hexcode.core.common.construct.state.ConstructStateUtil;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -57,8 +56,6 @@ public class ConcentrationGlyph extends GlyphAsset {
     @Getter
     private Impact healthImpact;
     @Getter
-    private double secondaryIntervalSeconds = 1.0;
-    @Getter
     private String healthDamageCauseId = "Arcane";
 
     public static final BuilderCodec<ConcentrationGlyph> CODEC = BuilderCodec
@@ -74,9 +71,6 @@ public class ConcentrationGlyph extends GlyphAsset {
             .add()
             .append(new KeyedCodec<>("HealthImpact", Impact.CODEC, true),
                     (c, v) -> c.healthImpact = v, c -> c.healthImpact)
-            .add()
-            .append(new KeyedCodec<>("SecondaryIntervalSeconds", Codec.DOUBLE, true),
-                    (c, v) -> c.secondaryIntervalSeconds = v, c -> c.secondaryIntervalSeconds)
             .add()
             .append(new KeyedCodec<>("HealthDamageCause", DamageCause.CHILD_ASSET_CODEC, true),
                     (c, v) -> c.healthDamageCauseId = v, c -> c.healthDamageCauseId)
@@ -145,7 +139,7 @@ public class ConcentrationGlyph extends GlyphAsset {
 
         if (casterTransform != null) {
             visualRef = spawnVisual(accessor, casterTransform, casterRef, hexContext);
-            ConcentrationStyle.renderSpawn(this, casterTransform.getPosition(), hexContext, accessor);
+            EffectRenderer.render(EffectSlot.Start, this, hexContext, casterTransform.getPosition(), accessor);
         }
 
         float manaRate = readRate(glyph, hexContext, ConcentrationGlyphSlots.MANA_PER_SECOND);
@@ -191,9 +185,12 @@ public class ConcentrationGlyph extends GlyphAsset {
                         new Vector3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z),
                         MountController.Minecart));
 
-        Model model = HexConstructSpawner.attachModel(holder, hexContext, this, 1.0f);
+        var model = HexConstructSpawner.resolveModel(hexContext, this, 1.0f);
         if (model == null) {
             LOGGER.atWarning().log("concentration: primary model not found");
+        } else {
+            HexConstructSpawner.applyModel(holder, hexContext,
+                    EffectRenderer.inject(model, EffectRenderer.resolve(this, hexContext), null));
         }
 
         return accessor.addEntity(holder, AddReason.SPAWN);

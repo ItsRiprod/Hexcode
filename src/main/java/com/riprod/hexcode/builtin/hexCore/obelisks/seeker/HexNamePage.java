@@ -13,6 +13,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -22,6 +23,7 @@ import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.modules.entity.component.DisplayNameComponent;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.named.NamedSlot;
+import com.riprod.hexcode.builtin.hexCore.obelisks.ObeliskStatus;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.slot.SlotGlyphSlots;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -73,11 +75,12 @@ public class HexNamePage extends InteractiveCustomUIPage<HexNamePage.PageEventDa
             current = hex != null && hex.getDisplayName() != null ? hex.getDisplayName() : "";
         }
         cmd.set("#NameInput.Value", current);
-        cmd.set("#StatusLabel.Text", initialStatus(ref, store));
+        cmd.set("#NameInput.MaxLength", MAX_NAME_LENGTH);
+        writeInitialStatus(cmd, ref, store);
 
-        events.addEventBinding(
-                CustomUIEventBindingType.Activating, "#ConfirmButton",
-                EventData.of("@Name", "#NameInput.Value"));
+        var submit = EventData.of("@Name", "#NameInput.Value");
+        events.addEventBinding(CustomUIEventBindingType.Activating, "#ConfirmButton", submit);
+        events.addEventBinding(CustomUIEventBindingType.Validating, "#NameInput", submit);
     }
 
     @Override
@@ -86,25 +89,25 @@ public class HexNamePage extends InteractiveCustomUIPage<HexNamePage.PageEventDa
 
         HexcodeSessionComponent session = SessionUtils.resolveSessionByPlayer(ref, store);
         if (session == null) {
-            updateStatus("No active crafting session.");
+            showError("hexcode.pages.obelisk.not_crafting");
             return;
         }
 
         Ref<EntityStore> ownerRef = session.getOwnerRef();
         if (ownerRef == null || !ownerRef.isValid() || !ownerRef.equals(ref)) {
-            updateStatus("You don't own this pedestal.");
+            showError("hexcode.pages.obelisk.not_owner");
             return;
         }
 
         String slotKey = session.getActiveSlotKey();
         if (slotKey == null) {
-            updateStatus("Select a slot first.");
+            showError("hexcode.pages.obelisk.no_slot");
             return;
         }
 
         Hex hex = resolveActiveHex(ref, store);
         if (hex == null) {
-            updateStatus("No hex is being crafted.");
+            showError("hexcode.obelisks.name.no_hex");
             return;
         }
 
@@ -116,42 +119,36 @@ public class HexNamePage extends InteractiveCustomUIPage<HexNamePage.PageEventDa
         if (targetGlyphId != null) {
             NamedSlot named = resolveNameSlot(ref, store);
             if (named == null) {
-                updateStatus("That Slot is gone.");
+                showError("hexcode.obelisks.name.slot_gone");
                 return;
             }
             named.setValue(name.isEmpty() ? null : name);
             refreshNodeLabel(store, named);
-            updateStatus(name.isEmpty() ? "Port name cleared." : "Port named \"" + name + "\".");
-        } else if (name.isEmpty()) {
-            hex.setDisplayName(null);
-            updateStatus("Name cleared.");
         } else {
-            hex.setDisplayName(name);
-            updateStatus("Named \"" + name + "\".");
+            hex.setDisplayName(name.isEmpty() ? null : name);
         }
-
-        UICommandBuilder cmd = new UICommandBuilder();
-        cmd.set("#NameInput.Value", name);
-        sendUpdate(cmd);
 
         if (obeliskPosition != null) {
             spawnParticleEffect(new Vector3d(obeliskPosition), store);
         }
+        close();
     }
 
-    private String initialStatus(Ref<EntityStore> ref, Store<EntityStore> store) {
+    private void writeInitialStatus(UICommandBuilder cmd, Ref<EntityStore> ref, Store<EntityStore> store) {
         HexcodeSessionComponent session = SessionUtils.resolveSessionByPlayer(ref, store);
         if (session == null) {
-            return "No active crafting session.";
+            ObeliskStatus.ERROR.write(cmd, Message.translation("hexcode.pages.obelisk.not_crafting"));
+            return;
         }
         String slotKey = session.getActiveSlotKey();
         if (slotKey == null) {
-            return "Select a slot first.";
+            ObeliskStatus.ERROR.write(cmd, Message.translation("hexcode.pages.obelisk.no_slot"));
+            return;
         }
-        if (targetGlyphId != null) {
-            return "Naming the hovered Slot port.";
-        }
-        return "Naming the hex in slot " + slotKey + ".";
+        var message = targetGlyphId != null
+                ? Message.translation("hexcode.obelisks.name.status_port")
+                : Message.translation("hexcode.obelisks.name.status_hex").param("slot", slotKey);
+        ObeliskStatus.NORMAL.write(cmd, message);
     }
 
     private NamedSlot resolveNameSlot(Ref<EntityStore> ref, Store<EntityStore> store) {
@@ -184,9 +181,9 @@ public class HexNamePage extends InteractiveCustomUIPage<HexNamePage.PageEventDa
         return hexComp != null ? hexComp.getHex() : null;
     }
 
-    private void updateStatus(String message) {
-        UICommandBuilder cmd = new UICommandBuilder();
-        cmd.set("#StatusLabel.Text", message);
+    private void showError(String translationKey) {
+        var cmd = new UICommandBuilder();
+        ObeliskStatus.ERROR.write(cmd, Message.translation(translationKey));
         sendUpdate(cmd);
     }
 

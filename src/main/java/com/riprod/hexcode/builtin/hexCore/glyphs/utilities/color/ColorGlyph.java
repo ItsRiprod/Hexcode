@@ -40,16 +40,16 @@ public class ColorGlyph extends GlyphAsset {
     public void execute(Glyph glyph, HexContext hexContext) {
         double[] rgba = resolveRgba(glyph, hexContext);
 
-        var style = hexContext.mutableStyle();
+        var effects = hexContext.mutableEffects();
         if (isWired(glyph, ColorGlyphSlots.R) || isWired(glyph, ColorGlyphSlots.G)
                 || isWired(glyph, ColorGlyphSlots.B)) {
-            style.setPrimaryColor(new Color(toByte(rgba[0]), toByte(rgba[1]), toByte(rgba[2])));
+            effects.setPrimaryColor(new Color(toByte(rgba[0]), toByte(rgba[1]), toByte(rgba[2])));
         }
 
         // an unwired alpha slot must not clobber an upstream Alpha 0 and re-enable its
         // particles
         if (isWired(glyph, ColorGlyphSlots.A)) {
-            style.setAlpha((float) (rgba[3] / CHANNEL_MAX));
+            effects.setAlpha((float) (rgba[3] / CHANNEL_MAX));
         }
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);

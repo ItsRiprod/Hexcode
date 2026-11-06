@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -13,6 +14,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
@@ -21,7 +23,12 @@ import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.component.CastEffectsComponent;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.utils.LogScopes;
 
 public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
@@ -118,10 +125,12 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
                 if (initial instanceof ConstructState cs) {
                     rawStatus.setState(cs);
                 }
+                startSustain(status, ctx);
                 raw.onFirstTick(rawStatus, ctx);
                 status.markImmediateFired();
                 return false;
             }
+            sustain(status, ctx, dt);
             var ended = raw.onTick(dt, rawStatus, ctx);
             if (!ended && hexContext.isAttachedTo(status.getConstructId())) {
                 HexComponentRegistry.dispatchTick(dt, ctx.getEntityRef(), hexContext, ctx.getBuffer());
@@ -140,6 +149,7 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
         var owned = status.getConstructId().equals(hexContext.getHolder());
         try {
             bindAccessor(status, ctx);
+            stopSustain(status, ctx);
             release(status, ctx);
             ConstructHandler raw = handler;
             HexStatus rawStatus = status;
@@ -158,6 +168,7 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
         var owned = status.getConstructId().equals(hexContext.getHolder());
         try {
             bindAccessor(status, ctx);
+            stopSustain(status, ctx);
             release(status, ctx);
             if (handler == null) return;
             ConstructHandler raw = handler;
@@ -170,6 +181,58 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
                 HexExecuter.endBranch(hexContext);
             }
         }
+    }
+
+    private static void startSustain(HexStatus<?> status, ConstructTickContext ctx) {
+        var center = EffectRenderer.entityCenter(ctx.getEntityRef(), ctx.getBuffer());
+        if (center != null) {
+            EffectRenderer.render(EffectSlot.Sustain, effects(status), center, null, 1.0f, null, ctx.getBuffer());
+        }
+    }
+
+    private static void sustain(HexStatus<?> status, ConstructTickContext ctx, float dt) {
+        var buffer = ctx.getBuffer();
+        var ref = ctx.getEntityRef();
+        if (!status.ownsHost()) {
+            var center = EffectRenderer.entityCenter(ref, buffer);
+            if (center != null) {
+                EffectRenderer.pulse(status.getSustain(), effects(status), center, dt, buffer);
+            }
+            return;
+        }
+        var version = status.getHexContext().get(CastEffectsComponent.TYPE).getVersion();
+        if (version == status.getSustain().getVersion()) {
+            return;
+        }
+        status.getSustain().setVersion(version);
+        var live = buffer.getComponent(ref, ModelComponent.getComponentType());
+        var rebuilt = live != null ? HexConstructSpawner.rebuildModel(status.getHexContext(), glyphOf(status),
+                live.getModel(), status.getSustain()) : null;
+        if (rebuilt != null) {
+            buffer.putComponent(ref, ModelComponent.getComponentType(), new ModelComponent(rebuilt));
+        }
+    }
+
+    private static void stopSustain(HexStatus<?> status, ConstructTickContext ctx) {
+        var buffer = ctx.getBuffer();
+        var ref = ctx.getEntityRef();
+        if (!status.ownsHost() || !status.getSustain().hasInjected() || !ref.isValid()) {
+            return;
+        }
+        var live = buffer.getComponent(ref, ModelComponent.getComponentType());
+        if (live != null) {
+            buffer.putComponent(ref, ModelComponent.getComponentType(),
+                    new ModelComponent(EffectRenderer.strip(live.getModel(), status.getSustain())));
+        }
+    }
+
+    private static GlyphEffects effects(HexStatus<?> status) {
+        return EffectRenderer.resolve(glyphOf(status), status.getHexContext());
+    }
+
+    @Nullable
+    private static GlyphAsset glyphOf(HexStatus<?> status) {
+        return GlyphAsset.of(status.getTriggeringGlyph(), GlyphAsset.class);
     }
 
     private static void release(HexStatus<?> status, ConstructTickContext ctx) {

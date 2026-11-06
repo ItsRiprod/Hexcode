@@ -9,7 +9,8 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.interfere.style.InterfereStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utils.ConstructSplicer;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
@@ -53,7 +54,7 @@ public class InterfereGlyph extends GlyphAsset {
         if (construct != null) {
             int hijacked = hijackConstruct(construct, ref, glyph, hexContext, accessor);
             if (hijacked > 0 && pos != null) {
-                InterfereStyle.renderHijack(this, pos, hexContext, accessor);
+                EffectRenderer.render(EffectSlot.Start, this, hexContext, pos, accessor);
             }
         }
         HexExecuter.endBranch(hexContext);

@@ -3,6 +3,8 @@ package com.riprod.hexcode.builtin.elementalism.charge;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.Objects;
+
 import org.joml.Vector3d;
 
 import com.hypixel.hytale.codec.Codec;
@@ -14,12 +16,12 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
-import com.riprod.hexcode.builtin.elementalism.effects.EffectPlayer;
-import com.riprod.hexcode.builtin.elementalism.effects.EffectSlot;
 import com.riprod.hexcode.builtin.elementalism.element.ElementAsset;
 import com.riprod.hexcode.builtin.elementalism.element.ElementTickInput;
+import com.riprod.hexcode.api.event.CastEvent;
 import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
 import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
+import com.riprod.hexcode.core.common.execution.cast.component.CastEffectsComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 import com.riprod.hexcode.core.common.execution.cast.ecs.ConstructCastComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.LifecycleCastComponent;
@@ -38,15 +40,37 @@ public final class ElementalComponent
     private final Object2FloatOpenHashMap<String> elapsed = new Object2FloatOpenHashMap<>();
     @Nullable private String active;
     @Nullable private Vector3d lastPos;
-    private float constructCooldown;
+    @Nullable private String vesselTier;
 
     public ElementalComponent() {
     }
 
-    public void activate(@Nonnull String elementId) {
+    public void activate(@Nonnull String elementId, @Nonnull HexContext ctx) {
+        activate(elementId);
+        vessel(ctx, true);
+    }
+
+    private void activate(@Nonnull String elementId) {
         active = elementId;
         if (!charges.containsKey(elementId)) {
             charges.put(elementId, 0f);
+        }
+    }
+
+    public static void onCast(@Nonnull CastEvent event) {
+        event.getContext().get(TYPE).vessel(event.getContext(), true);
+    }
+
+    private void vessel(@Nonnull HexContext ctx, boolean force) {
+        var element = active != null ? ElementAsset.getAssetMap().getAsset(active) : null;
+        if (element == null) {
+            return;
+        }
+        var tier = element.vesselTier(charges.getFloat(active));
+        var tierId = tier != null ? tier.getId() : null;
+        if (force || !Objects.equals(tierId, vesselTier)) {
+            vesselTier = tierId;
+            ctx.get(CastEffectsComponent.TYPE).setOverride(element.vessel(tier));
         }
     }
 
@@ -63,6 +87,7 @@ public final class ElementalComponent
         charges.clear();
         elapsed.clear();
         active = null;
+        vesselTier = null;
     }
 
     @Override
@@ -70,11 +95,6 @@ public final class ElementalComponent
             @Nonnull CommandBuffer<EntityStore> buffer) {
         var transform = buffer.getComponent(host, TransformComponent.getComponentType());
         lastPos = transform != null ? new Vector3d(transform.getPosition()) : null;
-        var element = active != null ? ElementAsset.getAssetMap().getAsset(active) : null;
-        var center = element != null ? EffectPlayer.entityCenter(host, buffer) : null;
-        if (center != null) {
-            EffectPlayer.play(element.effectsAt(charges.getFloat(active)).get(EffectSlot.LAUNCH), center, buffer);
-        }
     }
 
     @Override
@@ -91,16 +111,9 @@ public final class ElementalComponent
         var t = elapsed.getFloat(active);
         var rate = element.rate(new ElementTickInput(dt, t, speed, isLiving(host, buffer)));
         var gain = rate * dt * (1f + ctx.volatility().getSpent() / 100f);
-        var charge = charges.addTo(active, gain) + gain;
+        charges.addTo(active, gain);
         elapsed.put(active, t + dt);
-        constructCooldown -= dt;
-        if (constructCooldown <= 0f) {
-            constructCooldown = element.getConstructInterval();
-            var center = EffectPlayer.entityCenter(host, buffer);
-            if (center != null) {
-                EffectPlayer.play(element.effectsAt(charge).get(EffectSlot.CONSTRUCT), center, buffer);
-            }
-        }
+        vessel(ctx, false);
     }
 
     @Override
@@ -110,6 +123,7 @@ public final class ElementalComponent
         }
         ElementDischarge.discharge(charges, ctx, buffer);
         clear();
+        ctx.get(CastEffectsComponent.TYPE).setOverride(null);
     }
 
     private float trackSpeed(@Nonnull Ref<EntityStore> host, float dt, @Nonnull CommandBuffer<EntityStore> buffer) {
@@ -139,8 +153,8 @@ public final class ElementalComponent
         copy.charges.putAll(charges);
         copy.elapsed.putAll(elapsed);
         copy.active = active;
+        copy.vesselTier = vesselTier;
         copy.lastPos = lastPos != null ? new Vector3d(lastPos) : null;
-        copy.constructCooldown = constructCooldown;
         return copy;
     }
 
@@ -155,6 +169,7 @@ public final class ElementalComponent
         }
         child.elapsed.putAll(elapsed);
         child.active = active;
+        child.vesselTier = vesselTier;
         return child;
     }
 

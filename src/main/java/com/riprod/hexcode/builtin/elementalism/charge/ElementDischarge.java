@@ -13,8 +13,9 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.builtin.elementalism.composite.CompositeResolver;
-import com.riprod.hexcode.builtin.elementalism.effects.EffectPlayer;
 import com.riprod.hexcode.builtin.elementalism.element.ElementAsset;
 import com.riprod.hexcode.builtin.elementalism.reclaim.ElementReclaimEvent;
 import com.riprod.hexcode.builtin.elementalism.tier.ElementalTier;
@@ -62,12 +63,12 @@ public final class ElementDischarge {
         try {
             if (entity != null && tier.supportsEntity() && entity.isValid()) {
                 return land(tier, CompositeResolver.resolveEntity(entity, tier, ctx, buffer),
-                        () -> tier.applyEntity(entity, ctx, buffer), () -> EffectPlayer.entityCenter(entity, buffer),
+                        () -> tier.applyEntity(entity, ctx, buffer), () -> EffectRenderer.entityCenter(entity, buffer),
                         true, buffer);
             }
             if (block != null && tier.supportsBlock()) {
                 return land(tier, CompositeResolver.resolveBlock(block, tier, ctx, buffer),
-                        () -> tier.applyBlock(block, ctx, buffer), () -> EffectPlayer.blockCenter(block),
+                        () -> tier.applyBlock(block, ctx, buffer), () -> EffectRenderer.blockCenter(block),
                         false, buffer);
             }
             return false;
@@ -80,7 +81,6 @@ public final class ElementDischarge {
 
     private static boolean land(ElementalTier tier, CompositeResolver.Result result, BooleanSupplier apply,
             Supplier<Vector3d> center, boolean entity, CommandBuffer<EntityStore> buffer) {
-        var effects = result.effects(tier);
         var landed = !result.fired().isEmpty();
         if (result.incomingApplies()) {
             try {
@@ -91,7 +91,8 @@ public final class ElementDischarge {
         }
         var position = landed ? center.get() : null;
         if (position != null) {
-            EffectPlayer.playHit(effects, position, entity, buffer);
+            EffectRenderer.render(entity ? EffectSlot.Entity : EffectSlot.Block, result.landing(tier), position, null,
+                    1.0f, null, buffer);
         }
         return landed;
     }

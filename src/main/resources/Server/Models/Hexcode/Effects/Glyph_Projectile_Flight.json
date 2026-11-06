@@ -1,22 +1,3 @@
 {
-  "Parent": "Glyph_Template",
-  "Particles": [
-    {
-      "SystemId": "Hexcode_Projectile_Flames",
-      "TargetEntityPart": "Self",
-      "Color": "#00d0ff"
-    },
-    {
-      "SystemId": "Sword_Charged_Trail_Praetorian",
-      "TargetEntityPart": "Self"
-    },
-    {
-      "SystemId": "Cinematic_Portal_Appear_L"
-    }
-  ],
-  "Trails": [
-    {
-      "TrailId": "Hexcode_Conjure_Trail"
-    }
-  ]
+  "Parent": "Glyph_Template"
 }

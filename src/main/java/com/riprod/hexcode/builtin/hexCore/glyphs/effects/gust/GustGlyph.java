@@ -14,6 +14,8 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.ser
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -119,7 +121,8 @@ public class GustGlyph extends GlyphAsset {
                 accessor,
                 accessor.getExternalData().getWorld().getChunkStore().getStore());
 
-        GustGlyphStyle.render(this, center, radius, hexContext, accessor);
+        EffectRenderer.render(EffectSlot.Start, EffectRenderer.resolve(this, hexContext), center, null, (float) radius,
+                null, accessor);
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }

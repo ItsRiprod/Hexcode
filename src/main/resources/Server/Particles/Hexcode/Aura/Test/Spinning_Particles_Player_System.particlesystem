@@ -1,10 +1,10 @@
 {
-  "Spawners": [
-    {
-      "SpawnerId": "Spinning_Particles_Player_Spawner",
-      "PositionOffset": {
-        "Y": 0
-      }
-    }
-  ]
+	"Spawners": [
+		{
+			"SpawnerId": "Spinning_Particles_Player_Spawner",
+			"PositionOffset": {
+				"Y": 0
+			}
+		}
+	]
 }

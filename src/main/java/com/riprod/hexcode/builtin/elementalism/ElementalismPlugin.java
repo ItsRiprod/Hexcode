@@ -4,6 +4,7 @@ import com.hypixel.hytale.assetstore.AssetRegistry;
 import com.hypixel.hytale.assetstore.event.LoadedAssetsEvent;
 import com.hypixel.hytale.assetstore.event.RemovedAssetsEvent;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
+import com.hypixel.hytale.event.EventPriority;
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.fluid.Fluid;
@@ -15,6 +16,8 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+import com.riprod.hexcode.api.event.CastEvent;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 import com.riprod.hexcode.builtin.elementalism.charge.ElementalComponent;
 import com.riprod.hexcode.builtin.elementalism.composite.CompositeAsset;
 import com.riprod.hexcode.builtin.elementalism.composite.CompositeIndex;
@@ -69,7 +72,7 @@ public class ElementalismPlugin {
                         .setPath("Hexcode/Elementalism/Status")
                         .setCodec(StatusAsset.CODEC)
                         .setKeyFunction(StatusAsset::getId)
-                        .loadsAfter(EntityEffect.class, ParticleSystem.class, SoundEvent.class)
+                        .loadsAfter(EntityEffect.class, ParticleSystem.class, SoundEvent.class, GlyphEffects.class)
                         .build());
         AssetRegistry.register(
                 HytaleAssetStore
@@ -78,7 +81,7 @@ public class ElementalismPlugin {
                         .setCodec(ElementAsset.CODEC)
                         .setKeyFunction(ElementAsset::getId)
                         .loadsAfter(StatusAsset.class, ModelAsset.class, ParticleSystem.class, SoundEvent.class,
-                                Fluid.class, DamageCause.class)
+                                Fluid.class, DamageCause.class, GlyphEffects.class)
                         .loadsBefore(Interaction.class, RootInteraction.class, Item.class, HexConfigAsset.class,
                                 ImbuementProfileAsset.class)
                         .build());
@@ -88,7 +91,8 @@ public class ElementalismPlugin {
                         .setPath("Hexcode/Elementalism/Composite")
                         .setCodec(CompositeAsset.CODEC)
                         .setKeyFunction(CompositeAsset::getId)
-                        .loadsAfter(ElementAsset.class, StatusAsset.class, ParticleSystem.class, SoundEvent.class)
+                        .loadsAfter(ElementAsset.class, StatusAsset.class, ParticleSystem.class, SoundEvent.class,
+                                GlyphEffects.class)
                         .build());
     }
 
@@ -98,6 +102,7 @@ public class ElementalismPlugin {
         events.register(RemovedAssetsEvent.class, ElementAsset.class, ElementTierIndex::onRemoved);
         events.register(LoadedAssetsEvent.class, CompositeAsset.class, CompositeIndex::onLoaded);
         events.register(RemovedAssetsEvent.class, CompositeAsset.class, CompositeIndex::onRemoved);
+        CastEvent.register(events, EventPriority.LATE.getValue(), ElementalComponent::onCast);
     }
 
     private static void registerAppliedState(JavaPlugin plugin) {

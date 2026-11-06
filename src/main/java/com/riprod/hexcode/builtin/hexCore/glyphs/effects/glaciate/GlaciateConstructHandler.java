@@ -21,9 +21,10 @@ import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.component.GlaciateComponent;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.glaciate.style.GlaciateStyle;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -107,8 +108,7 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
                 applyKnockback(ref, iceVelocity, speed, config, ctx);
             }
 
-            GlaciateStyle.renderImpact(config, center,
-                    status.getHexContext(), ctx.getBuffer());
+            EffectRenderer.render(EffectSlot.Hit, config, status.getHexContext(), center, ctx.getBuffer());
 
             Glyph triggering = status.getTriggeringGlyph();
             if (triggering != null && !nextLinks.isEmpty()) {
@@ -158,9 +158,8 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
         TransformComponent transform = ctx.getBuffer().getComponent(
                 ctx.getEntityRef(), TransformComponent.getComponentType());
         if (transform != null) {
-            var asset = GlyphAsset.of(status.getTriggeringGlyph(), GlaciateGlyph.class);
-            GlaciateStyle.renderMelt(asset, transform.getPosition(),
-                    status.getHexContext(), ctx.getBuffer());
+            EffectRenderer.render(EffectSlot.End, GlyphAsset.of(status.getTriggeringGlyph(), GlaciateGlyph.class),
+                    status.getHexContext(), transform.getPosition(), ctx.getBuffer());
         }
         ctx.getBuffer().tryRemoveEntity(ctx.getEntityRef(), RemoveReason.REMOVE);
     }

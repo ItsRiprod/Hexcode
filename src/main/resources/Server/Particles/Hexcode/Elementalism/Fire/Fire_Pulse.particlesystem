@@ -1,0 +1,12 @@
+{
+  "LifeSpan": 1.5,
+  "CullDistance": 100.0,
+  "BoundingRadius": 1.5,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "Ignite_Pulse_Embers",
+      "FixedRotation": true
+    }
+  ]
+}

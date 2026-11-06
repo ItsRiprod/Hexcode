@@ -17,19 +17,21 @@
     { "DampingMultiplier": { "Y": 1.0, "X": 0.9, "Z": 0.9 }, "LinearAcceleration": { "Y": 0.1 } }
   ],
   "Particle": {
-    "Texture": "Particles/Textures/Fire/Fire_Small.png",
+    "Texture": "Particles/Textures/Fire/Fire_Test_GS.png",
     "FrameSize": { "Width": 32, "Height": 32 },
     "ScaleRatioConstraint": "None",
     "SoftParticles": "Require",
     "UVOption": "None",
     "Animation": {
-      "0": { "FrameIndex": { "Min": 0, "Max": 3 }, "Scale": { "X": { "Min": 1.0, "Max": 1.0 }, "Y": { "Min": 1.0, "Max": 1.0 } }, "Opacity": 0.0, "Color": "#ffffff" },
-      "20": { "Opacity": 1.0, "Color": "#ffffff" },
-      "50": { "Opacity": 0.6, "Color": "#ffffff" },
-      "100": { "Opacity": 0, "Scale": { "X": { "Min": 0.8, "Max": 1.5 }, "Y": { "Min": 2.5, "Max": 3.5 } }, "Color": "#ffffff" }
+      "0": { "FrameIndex": { "Min": 0, "Max": 3 }, "Scale": { "X": { "Min": 1.0, "Max": 1.0 }, "Y": { "Min": 1.0, "Max": 1.0 } }, "Opacity": 0.0, "Color": "#ff7800" },
+      "20": { "Opacity": 1.0, "Color": "#ff7800" },
+      "50": { "Opacity": 0.6, "Color": "#ffbe6f" },
+      "100": { "Opacity": 0, "Scale": { "X": { "Min": 0.8, "Max": 1.5 }, "Y": { "Min": 2.5, "Max": 3.5 } }, "Color": "#f9f06b" }
     },
     "InitialAnimationFrame": {
-      "Opacity": 1, "Color": "#ffffff", "FrameIndex": { "Min": 0, "Max": 3 },
+      "Opacity": 1,
+      "Color": "#ffffff",
+      "FrameIndex": { "Min": 0, "Max": 3 },
       "Scale": { "X": { "Min": 0.15, "Max": 0.3 }, "Y": { "Min": 0.1, "Max": 0.3 } }
     }
   },

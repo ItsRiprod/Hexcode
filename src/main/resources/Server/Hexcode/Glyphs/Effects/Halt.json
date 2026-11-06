@@ -1,11 +1,8 @@
 {
   "Type": "Halt",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Void",
-    "PrimaryParticle": {
-      "SystemId": "Halt_Crystallize"
-    },
-    "PrimarySound": "SFX_Ice_Build"
+    "Hit": { "Particles": [{ "SystemId": "Halt_Crystallize" }], "Sound": "SFX_Ice_Build" }
   },
   "Title": "hexcode.glyphs.Halt.name",
   "Description": "hexcode.glyphs.Halt.description",

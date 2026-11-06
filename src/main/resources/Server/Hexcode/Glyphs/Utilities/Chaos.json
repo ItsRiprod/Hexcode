@@ -1,6 +1,6 @@
 {
   "Type": "Chaos",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Chaos"
   },
   "Title": "hexcode.glyphs.Chaos.name",

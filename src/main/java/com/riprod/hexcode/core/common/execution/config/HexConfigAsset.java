@@ -23,12 +23,12 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
 import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
 import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
-import com.riprod.hexcode.core.common.execution.cast.component.CastStyleComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastEffectsComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastHolder;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 
 public abstract class HexConfigAsset implements JsonAssetWithMap<String, DefaultAssetMap<String, HexConfigAsset>> {
 
@@ -42,7 +42,7 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
     protected String id;
 
     @Nullable protected Map<String, CastOverlay<?>> hexStats;
-    @Nullable protected String styleId;
+    @Nullable protected String effectsId;
 
     @Nullable
     protected Hex resolveHex(@Nonnull Ref<EntityStore> root, @Nonnull ComponentAccessor<EntityStore> accessor) {
@@ -50,16 +50,16 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
     }
 
     @Nullable
-    public HexStyleAsset getStyle() {
-        if (this.styleId == null) return null;
-        return HexStyleAsset.getAssetMap().getAsset(this.styleId);
+    public GlyphEffects getEffects() {
+        if (this.effectsId == null) return null;
+        return GlyphEffects.getAssetMap().getAsset(this.effectsId);
     }
 
     public void queueOnto(@Nonnull CastHolder holder, @Nonnull ComponentAccessor<EntityStore> accessor) {
         var hex = resolveHex(holder.getRoot(), accessor);
         if (hex != null) holder.put(CastHexComponent.TYPE, new CastHexComponent(hex));
 
-        if (styleId != null) holder.overlay(CastStyleComponent.TYPE, styleOverlay());
+        if (effectsId != null) holder.overlay(CastEffectsComponent.TYPE, effectsOverlay());
 
         if (hexStats == null || hexStats.isEmpty()) return;
         for (var entry : hexStats.entrySet()) {
@@ -68,10 +68,10 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
         }
     }
 
-    private CastOverlay<CastStyleComponent> styleOverlay() {
+    private CastOverlay<CastEffectsComponent> effectsOverlay() {
         return target -> {
-            var style = getStyle();
-            if (style != null) target.set(style.clone());
+            var effects = getEffects();
+            if (effects != null) target.set(effects.clone());
         };
     }
 
@@ -111,11 +111,11 @@ public abstract class HexConfigAsset implements JsonAssetWithMap<String, Default
                         c -> c.hexStats,
                         (c, p) -> c.hexStats = p.hexStats)
                 .add()
-                .appendInherited(new KeyedCodec<>("Style", HexStyleAsset.CHILD_ASSET_CODEC),
-                        (c, v) -> c.styleId = v,
-                        c -> c.styleId,
-                        (c, p) -> c.styleId = p.styleId)
-                .addValidatorLate(() -> HexStyleAsset.VALIDATOR_CACHE.getValidator().late())
+                .appendInherited(new KeyedCodec<>("Effects", GlyphEffects.CHILD_ASSET_CODEC),
+                        (c, v) -> c.effectsId = v,
+                        c -> c.effectsId,
+                        (c, p) -> c.effectsId = p.effectsId)
+                .addValidatorLate(() -> GlyphEffects.VALIDATOR_CACHE.getValidator().late())
                 .add()
                 .build();
 

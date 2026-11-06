@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.riprod.hexcode.core.common.construct.state.ConstructState;
+import com.riprod.hexcode.core.common.effects.component.SustainState;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 
@@ -28,25 +29,23 @@ public class HexStatus<S extends ConstructState> {
     @Nullable
     private S state;
 
+    private final boolean ownsHost;
+    private final SustainState sustain = new SustainState();
+
     public HexStatus(@Nullable String handlerId,
             @Nonnull HexContext hexContext,
             @Nonnull UUID constructId,
-            @Nullable Glyph triggeringGlyph) {
+            @Nullable Glyph triggeringGlyph,
+            @Nullable S state,
+            boolean ownsHost) {
         this.handlerId = handlerId;
         this.killRequested = false;
         this.firedFirstTick = false;
         this.hexContext = hexContext;
         this.constructId = constructId;
         this.triggeringGlyph = triggeringGlyph;
-    }
-
-    public HexStatus(@Nullable String handlerId,
-            @Nonnull HexContext hexContext,
-            @Nonnull UUID constructId,
-            @Nullable Glyph triggeringGlyph,
-            @Nullable S state) {
-        this(handlerId, hexContext, constructId, triggeringGlyph);
         this.state = state;
+        this.ownsHost = ownsHost;
     }
 
     @Nullable
@@ -112,6 +111,15 @@ public class HexStatus<S extends ConstructState> {
 
     public void setState(@Nullable S state) {
         this.state = state;
+    }
+
+    public boolean ownsHost() {
+        return ownsHost;
+    }
+
+    @Nonnull
+    public SustainState getSustain() {
+        return sustain;
     }
 
 }

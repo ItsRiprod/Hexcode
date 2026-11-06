@@ -6,7 +6,6 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
 
 public class SoundGlyph extends GlyphAsset {
     public static final String TYPE = "Sound";
@@ -28,8 +27,7 @@ public class SoundGlyph extends GlyphAsset {
         double raw = input == null || input.scalar() == null ? VOLUME_UNITY : input.scalar();
         double clamped = raw < 0.0 ? 0.0 : Math.min(raw, VOLUME_INPUT_MAX);
 
-        HexStyleAsset style = hexContext.mutableStyle();
-        style.setVolume((float) (clamped / VOLUME_UNITY));
+        hexContext.mutableEffects().setVolume((float) (clamped / VOLUME_UNITY));
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
     }

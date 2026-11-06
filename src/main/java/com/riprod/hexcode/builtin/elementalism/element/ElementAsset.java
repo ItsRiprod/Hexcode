@@ -14,8 +14,9 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.codec.validation.Validators;
-import com.riprod.hexcode.builtin.elementalism.effects.ElementEffects;
-import com.riprod.hexcode.builtin.elementalism.effects.ResolvedEffects;
+import com.riprod.hexcode.builtin.elementalism.tier.ElementalTier;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 
 public abstract class ElementAsset implements JsonAssetWithMap<String, DefaultAssetMap<String, ElementAsset>> {
     public static final AssetCodecMapCodec<String, ElementAsset> CODEC;
@@ -30,8 +31,7 @@ public abstract class ElementAsset implements JsonAssetWithMap<String, DefaultAs
     protected String lore;
     protected float reclaimEfficiency = 1.0f;
     protected ElementTiers tiers = ElementTiers.EMPTY;
-    protected ElementEffects effects = new ElementEffects();
-    protected float constructInterval = 0.5f;
+    protected String effectsId;
 
     public static AssetStore<String, ElementAsset, DefaultAssetMap<String, ElementAsset>> getAssetStore() {
         if (ASSET_STORE == null) {
@@ -74,19 +74,22 @@ public abstract class ElementAsset implements JsonAssetWithMap<String, DefaultAs
         return this.tiers;
     }
 
-    public ElementEffects getEffects() {
-        return this.effects;
+    @Nullable
+    public GlyphEffects getEffects() {
+        return this.effectsId != null ? GlyphEffects.getAssetMap().getAsset(this.effectsId) : null;
     }
 
-    public float getConstructInterval() {
-        return this.constructInterval;
-    }
-
-    public ResolvedEffects effectsAt(float charge) {
+    @Nullable
+    public ElementalTier vesselTier(float charge) {
         var reached = this.tiers.tierFor(charge);
-        var entries = this.tiers.entries();
-        var tier = reached != null ? reached.tier() : entries.isEmpty() ? null : entries.getFirst().tier();
-        return ElementEffects.resolve(null, tier != null ? tier.getEffects() : null, this.effects);
+        return reached != null ? reached.tier() : null;
+    }
+
+    public GlyphEffects vessel(@Nullable ElementalTier tier) {
+        var element = getEffects();
+        var vessel = (element != null ? element.clone() : GlyphEffects.empty())
+                .compose(tier != null ? tier.getEffects() : null);
+        return vessel.put(EffectSlot.Hit, element != null ? element.get(EffectSlot.Hit) : null);
     }
 
     static {
@@ -123,16 +126,11 @@ public abstract class ElementAsset implements JsonAssetWithMap<String, DefaultAs
                 .addValidator(ElementTiers.VALIDATOR)
                 .documentation("Tiers keyed by the charge threshold at which each is reached")
                 .add()
-                .appendInherited(new KeyedCodec<>("Effects", ElementEffects.CODEC),
-                        (a, v) -> a.effects = v, a -> a.effects,
-                        (a, p) -> a.effects = p.effects)
-                .documentation("Fallback effects for every tier of the element")
-                .add()
-                .<Float>appendInherited(new KeyedCodec<>("ConstructInterval", Codec.FLOAT),
-                        (a, v) -> a.constructInterval = v, a -> a.constructInterval,
-                        (a, p) -> a.constructInterval = p.constructInterval)
-                .addValidator(Validators.greaterThan(0.0f))
-                .documentation("Seconds between plays of the Construct effect while the element charges")
+                .appendInherited(new KeyedCodec<>("Effects", GlyphEffects.CHILD_ASSET_CODEC),
+                        (a, v) -> a.effectsId = v, a -> a.effectsId,
+                        (a, p) -> a.effectsId = p.effectsId)
+                .addValidatorLate(() -> GlyphEffects.VALIDATOR_CACHE.getValidator().late())
+                .documentation("Effects the element overrides its host with; Hit is the element striking")
                 .add()
                 .build();
         VALIDATOR_CACHE = new ValidatorCache<>(new AssetKeyValidator<>(ElementAsset::getAssetStore));

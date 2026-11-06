@@ -103,7 +103,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier1",
-            "Style": "Hexstaff_Basic_Thorium"
+            "Effects": "Hexstaff_Basic_Thorium"
           }
         }
       ]
@@ -119,7 +119,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier2",
-            "Style": "Hexstaff_Basic_Thorium"
+            "Effects": "Hexstaff_Basic_Thorium"
           }
         }
       ]
@@ -135,7 +135,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier3",
-            "Style": "Hexstaff_Basic_Thorium"
+            "Effects": "Hexstaff_Basic_Thorium"
           }
         }
       ]
@@ -151,7 +151,7 @@
           "Config": {
             "HexStorageType": "ExecutionConfig",
             "Parent": "CastConfig_Tier4",
-            "Style": "Hexstaff_Basic_Thorium"
+            "Effects": "Hexstaff_Basic_Thorium"
           }
         }
       ]
@@ -161,24 +161,28 @@
         {
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
-          "AuraParticles": [
-            {
-              "SystemId": "Hexstaff_Generic_Mist",
-              "PositionOffset": {
-                "Y": -1.5
-              },
-              "Color": "#4CAF50",
-              "Scale": 1.2
-            },
-            {
-              "SystemId": "Hexstaff_Motes_Slow",
-              "PositionOffset": {
-                "Y": 0.5
-              },
-              "Color": "#A5D6A7",
-              "Scale": 1.0
+          "Effects": {
+            "Sustain": {
+              "Particles": [
+                {
+                  "SystemId": "Hexstaff_Generic_Mist",
+                  "PositionOffset": {
+                    "Y": -1.5
+                  },
+                  "Color": "#4CAF50",
+                  "Scale": 1.2
+                },
+                {
+                  "SystemId": "Hexstaff_Motes_Slow",
+                  "PositionOffset": {
+                    "Y": 0.5
+                  },
+                  "Color": "#A5D6A7",
+                  "Scale": 1.0
+                }
+              ]
             }
-          ]
+          }
         }
       ]
     }

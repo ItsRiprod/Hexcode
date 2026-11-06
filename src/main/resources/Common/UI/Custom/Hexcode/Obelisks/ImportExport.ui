@@ -1,4 +1,5 @@
 $C = "../../Common.ui";
+$O = "Obelisk.ui";
 
 $C.@PageOverlay {
   LayoutMode: Middle;
@@ -8,7 +9,7 @@ $C.@PageOverlay {
 
     #Title {
       $C.@Title {
-        @Text = "Import / Export Hex";
+        @Text = %hexcode.obelisks.transfer.title;
       }
     }
 
@@ -16,11 +17,12 @@ $C.@PageOverlay {
       Padding: (Vertical: 16, Horizontal: 24);
       LayoutMode: Top;
 
-      MultilineTextField #DataField {
-        Anchor: (Height: 120);
+      $C.@MultilineTextField #DataField {
+        @Anchor = (Height: 120);
         Style: InputFieldStyle(FontSize: 10, TextColor: #e0e0e0);
-        Background: $C.@InputBoxBackground;
-        PlaceholderText: "paste hex data here...";
+        AutoFocus: true;
+        AutoSelectAll: true;
+        PlaceholderText: %hexcode.obelisks.transfer.placeholder;
       }
 
       Group #ButtonRow {
@@ -29,21 +31,22 @@ $C.@PageOverlay {
 
         $C.@TextButton #ExportButton {
           @Anchor = (Right: 8);
-          Text: "Export Hex";
+          Text: %hexcode.obelisks.transfer.export;
           FlexWeight: 1;
         }
 
         $C.@TextButton #ImportButton {
-          Text: "Import Hex";
+          Text: %hexcode.obelisks.transfer.import;
           FlexWeight: 1;
         }
       }
 
       Label #StatusLabel {
-        Style: (FontSize: 14, TextColor: #a0a0a0);
-        Text: "";
-        Anchor: (Top: 12, Height: 96);
+        Style: $O.@StatusStyle;
+        Anchor: (Top: 12);
       }
     }
   }
 }
+
+$C.@BackButton {}

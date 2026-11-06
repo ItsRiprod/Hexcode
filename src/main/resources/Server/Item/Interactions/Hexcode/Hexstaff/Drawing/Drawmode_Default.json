@@ -12,6 +12,24 @@
     "ClearSoundEventOnFinish": true,
     "CameraEffect": "Impact_Light"
   },
+  "GlyphEffects": {
+    "Sustain": {
+      "Particles": [
+        {
+          "SystemId": "Mist_Spawner",
+          "DetachedFromModel": false,
+          "Scale": 1.5,
+          "Color": "#8ab",
+          "PositionOffset": {
+            "Y": -1.5
+          }
+        },
+        {
+          "SystemId": "Ring_Spawner"
+        }
+      ]
+    }
+  },
   "CancelOnOtherClick": false,
   "Next": {
     "0.0": {
@@ -29,20 +47,6 @@
       "ClearAnimationOnFinish": true
     }
   },
-  "AuraParticles": [
-    {
-      "SystemId": "Mist_Spawner",
-      "DetachedFromModel": false,
-      "Scale": 1.5,
-      "Color": "#8ab",
-      "PositionOffset": {
-        "Y": -1.5
-      }
-    },
-    {
-      "SystemId": "Ring_Spawner"
-    }
-  ],
   "CastStyleId": "ring",
   "OnItemChangeBehavior": "Fail"
 }

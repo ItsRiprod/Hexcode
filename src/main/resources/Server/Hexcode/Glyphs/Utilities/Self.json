@@ -1,6 +1,6 @@
 {
   "Type": "Self",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Identity"
   },
   "Title": "hexcode.glyphs.Self.name",

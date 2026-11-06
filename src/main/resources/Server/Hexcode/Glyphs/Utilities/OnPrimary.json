@@ -1,8 +1,8 @@
 {
   "Type": "OnPrimary",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Time",
-    "PrimaryModel": "OnPrimary"
+    "Model": "OnPrimary"
   },
   "Title": "hexcode.glyphs.OnPrimary.name",
   "Description": "hexcode.glyphs.OnPrimary.description",

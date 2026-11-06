@@ -41,7 +41,7 @@ import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconEditorButton;
 import com.riprod.hexcode.core.common.glyphs.icon.GlyphIconStore;
 import com.riprod.hexcode.core.common.glyphs.utils.GlyphCostUtil;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
-import com.riprod.hexcode.core.common.hexes.registry.HexStyleAsset;
+import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 import com.riprod.hexcode.core.common.node.NodeConfig;
 
 import lombok.Getter;
@@ -74,7 +74,7 @@ public abstract class GlyphAsset implements JsonAssetWithMap<String, DefaultAsse
     };
     protected ArrayList<String> shapes = new ArrayList<>();
     protected LinkedHashMap<String, String> slots = new LinkedHashMap<>();
-    protected String styleId;
+    protected String effectsId;
 
     public static AssetStore<String, GlyphAsset, DefaultAssetMap<String, GlyphAsset>> getAssetStore() {
         if (ASSET_STORE == null) {
@@ -191,14 +191,10 @@ public abstract class GlyphAsset implements JsonAssetWithMap<String, DefaultAsse
         return this.slots.containsKey(key);
     }
 
-    public String getStyleId() {
-        return this.styleId;
-    }
-
-    public HexStyleAsset getStyle() {
-        if (this.styleId == null)
+    public GlyphEffects getEffects() {
+        if (this.effectsId == null)
             return null;
-        return HexStyleAsset.getAssetMap().getAsset(this.styleId);
+        return GlyphEffects.getAssetMap().getAsset(this.effectsId);
     }
 
     public int getSlotCount() {
@@ -359,14 +355,14 @@ public abstract class GlyphAsset implements JsonAssetWithMap<String, DefaultAsse
                 .add()
 
                 // Cosmetics
-                .appendInherited(new KeyedCodec<>("Style", HexStyleAsset.CHILD_ASSET_CODEC),
-                        (a, v) -> a.styleId = v,
-                        a -> a.styleId,
-                        (a, p) -> a.styleId = p.styleId)
-                .addValidatorLate(() -> HexStyleAsset.VALIDATOR_CACHE.getValidator().late())
-                .documentation("The visual style of the glyph - particles, sounds, default colors, model")
+                .appendInherited(new KeyedCodec<>("Effects", GlyphEffects.CHILD_ASSET_CODEC),
+                        (a, v) -> a.effectsId = v,
+                        a -> a.effectsId,
+                        (a, p) -> a.effectsId = p.effectsId)
+                .addValidatorLate(() -> GlyphEffects.VALIDATOR_CACHE.getValidator().late())
+                .documentation("The effects of the glyph - palette, body model and particles and sounds per slot")
                 .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
-                .metadata(new UIEditorSectionStart("Style"))
+                .metadata(new UIEditorSectionStart("Effects"))
                 .add()
                 .build();
     }

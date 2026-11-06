@@ -1,16 +1,10 @@
 {
   "Type": "Beam",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#6633AB",
     "SecondaryColor": "#B399D6",
-    "SecondaryParticle": {
-      "SystemId": "Beam_Impact"
-    },
-    "SecondarySound": "SFX_Beam_Hit",
-    "PrimaryParticle": {
-      "SystemId": "Beam_Trail"
-    },
-    "PrimarySound": "SFX_Beam_Fire"
+    "Start": { "Particles": [{ "SystemId": "Beam_Trail" }], "Sound": "SFX_Beam_Fire" },
+    "Hit": { "Particles": [{ "SystemId": "Beam_Impact" }], "Sound": "SFX_Beam_Hit", "Tint": "Secondary" }
   },
   "Title": "hexcode.glyphs.Beam.name",
   "Description": "hexcode.glyphs.Beam.description",

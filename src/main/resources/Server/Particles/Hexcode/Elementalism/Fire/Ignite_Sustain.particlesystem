@@ -1,0 +1,15 @@
+{
+  "CullDistance": 100.0,
+  "BoundingRadius": 2.0,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "Ignite_Sustain_Flicker",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Ignite_Sustain_Embers",
+      "FixedRotation": true
+    }
+  ]
+}

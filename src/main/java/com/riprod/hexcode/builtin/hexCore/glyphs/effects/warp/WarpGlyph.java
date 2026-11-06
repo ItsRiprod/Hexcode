@@ -12,22 +12,22 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.hexCore.glyphs.effects.warp.style.WarpStyle;
+import com.riprod.hexcode.core.common.effects.component.EffectSlot;
+import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
+import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.BlockUtils;
-
-import lombok.Getter;
+import com.riprod.hexcode.utils.VfxUtil;
 
 public class WarpGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
     public static final String TYPE = "Warp";
 
-    @Getter
     private String effectId = "Teleportation";
 
     public static final BuilderCodec<WarpGlyph> CODEC = BuilderCodec
@@ -97,11 +97,20 @@ public class WarpGlyph extends GlyphAsset {
 
         Vector3d departurePos = targets.position(hexContext.getAccessor());
         BlockUtils.moveToDestination(targets, destination, world, hexContext, TYPE);
-        WarpStyle.applyEffect(this, targets, hexContext, hexContext.getAccessor());
+        applyEffect(targets, hexContext);
         if (departurePos != null) {
-            WarpStyle.render(this, departurePos, destination, hexContext, hexContext.getAccessor());
+            EffectRenderer.render(EffectSlot.Start, this, hexContext, departurePos, hexContext.getAccessor());
+            EffectRenderer.render(EffectSlot.End, this, hexContext, destination, hexContext.getAccessor());
         }
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+    }
+
+    private void applyEffect(HexVar var, HexContext hexContext) {
+        var effect = EntityEffect.getAssetMap().getAsset(effectId);
+        if (var instanceof EntityVar entityVar && effect != null) {
+            VfxUtil.applyEffect(hexContext, entityVar.getRef(hexContext.getAccessor()), effectId,
+                    effect.getDuration(), effect.getOverlapBehavior());
+        }
     }
 }

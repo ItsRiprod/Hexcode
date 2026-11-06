@@ -1,16 +1,11 @@
 {
   "Type": "Arc",
-  "Style": {
+  "Effects": {
     "PrimaryColor": "#99E6FF",
     "SecondaryColor": "#D6F2FF",
-    "PrimaryParticle": {
-      "SystemId": "Shock_Spawner_Temporary"
-    },
-    "PrimarySound": "SFX_Arc_Impact",
-    "SecondarySound": "SFX_Arc_Shock",
-    "SecondaryParticle": {
-      "SystemId": "Shock_Spawner_Temporary"
-    }
+    "Start": { "Particles": [{ "SystemId": "Shock_Spawner_Temporary" }], "Sound": "SFX_Arc_Impact" },
+    "Path": { "Particles": [{ "SystemId": "Shock_Spawner_Temporary" }] },
+    "Hit": { "Particles": [{ "SystemId": "Shock_Spawner_Temporary" }], "Sound": "SFX_Arc_Shock", "Tint": "Secondary" }
   },
   "Title": "hexcode.glyphs.Arc.name",
   "Description": "hexcode.glyphs.Arc.description",

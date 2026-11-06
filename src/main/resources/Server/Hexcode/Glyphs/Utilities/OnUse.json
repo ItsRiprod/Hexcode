@@ -1,8 +1,8 @@
 {
   "Type": "OnUse",
-  "Style": {
+  "Effects": {
     "Parent": "Element_Time",
-    "PrimaryModel": "OnUse"
+    "Model": "OnUse"
   },
   "Title": "hexcode.glyphs.OnUse.name",
   "Description": "hexcode.glyphs.OnUse.description",
