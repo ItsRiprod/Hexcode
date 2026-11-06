@@ -125,7 +125,7 @@ public class DomainConstructHandler implements ConstructHandler<NoState> {
                     }
 
                     Glyph triggering = status.getTriggeringGlyph();
-                    if (triggering != null) {
+                    if (triggering != null && triggering.hasLinks(Glyph.NEXT_SLOT)) {
                         HexContext hexCtx = status.getHexContext().branch();
                         hexCtx.updateRuntimeAccessors(ctx.getBuffer());
                         triggering.writeDefaultOutput(

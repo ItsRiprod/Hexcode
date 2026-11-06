@@ -1,5 +1,7 @@
 package com.riprod.hexcode.core.common.glyphs.component;
 
+import static com.riprod.hexcode.api.execution.IllegalOperationException.requireFinite;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -195,6 +197,16 @@ public class Glyph {
         return slots.get(key);
     }
 
+    public boolean hasLinks(String key) {
+        var slot = slots.get(key);
+        return slot != null && slot.getLinks().length > 0;
+    }
+
+    public List<String> getLinks(String key) {
+        var slot = slots.get(key);
+        return slot == null || slot.getLinks().length == 0 ? List.of() : Arrays.asList(slot.getLinks());
+    }
+
     @Nullable
     private static Function<Glyph, Map<String, SlotConfig>> portSchemaSynthesizer;
 
@@ -298,7 +310,7 @@ public class Glyph {
 
         hexContext.pushResolving(linked.getId());
         try {
-            HexVar v = linkedAsset.readValue(linked, hexContext);
+            HexVar v = requireFinite(linkedAsset.readValue(linked, hexContext));
             return v != null ? v : resolveAssetDefault(key, hexContext, defaultSupplier);
         } finally {
             hexContext.popResolving();
@@ -306,21 +318,22 @@ public class Glyph {
     }
 
     public void writeOutput(HexVar value, HexContext hexContext) {
+        requireFinite(value);
         hexContext.setDefaultVariable(value);
         hexContext.setOwnVariable(this.id, value);
     }
 
     public void writeOutput(HexVar defaultSlotValue, HexVar selfValue, HexContext hexContext) {
-        hexContext.setDefaultVariable(defaultSlotValue);
-        hexContext.setOwnVariable(this.id, selfValue);
+        hexContext.setDefaultVariable(requireFinite(defaultSlotValue));
+        hexContext.setOwnVariable(this.id, requireFinite(selfValue));
     }
 
     public void writeDefaultOutput(HexVar value, HexContext hexContext) {
-        hexContext.setDefaultVariable(value);
+        hexContext.setDefaultVariable(requireFinite(value));
     }
 
     public void writeSelfOutput(HexVar value, HexContext hexContext) {
-        hexContext.setOwnVariable(this.id, value);
+        hexContext.setOwnVariable(this.id, requireFinite(value));
     }
 
     @Nonnull
@@ -350,13 +363,7 @@ public class Glyph {
     }
 
     public List<String> getNextLinks() {
-        Slot slot = slots.get(NEXT_SLOT);
-        if (slot == null)
-            return List.of();
-        String[] links = slot.getLinks();
-        if (links.length == 0)
-            return List.of();
-        return Arrays.asList(links);
+        return getLinks(NEXT_SLOT);
     }
 
     public List<String> getFlowLinks() {
@@ -403,7 +410,7 @@ public class Glyph {
 
             hexContext.pushResolving(linked.getId());
             try {
-                HexVar value = linkedAsset.readValue(linked, hexContext);
+                HexVar value = requireFinite(linkedAsset.readValue(linked, hexContext));
                 if (value != null)
                     resolved.add(value);
             } finally {

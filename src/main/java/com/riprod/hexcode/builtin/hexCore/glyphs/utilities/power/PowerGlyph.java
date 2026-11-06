@@ -25,10 +25,8 @@ public class PowerGlyph extends GlyphAsset {
             return new NumberVar(1); // 0^0 = 1 because math ig
         if (b == null)
             return new NumberVar(1); // x^0 = 1
-        if (a == null || b.scalar() == 0 || a.scalar() == 0) // early return if a is null (0^x) or b = 0 (x^0) since
-                                                             // those are both constants
-            return b.scalar() == 0 ? new NumberVar(1) /** 0^0=1 */
-                    : new NumberVar(0); // 0^x = 0
+        if (a == null || b.scalar() == 0)
+            return b.scalar() == 0 ? new NumberVar(1) : new NumberVar(0);
 
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
 
@@ -60,13 +58,11 @@ public class PowerGlyph extends GlyphAsset {
     }
 
     private Double op(Double A, Double B) {
-        var r = Math.pow(A, B);
-        return Double.isNaN(r) || Double.isInfinite(r) ? A : r;
+        return Math.pow(A, B);
     }
 
     private float op(float A, float B) {
-        var r = (float) Math.pow(A, B);
-        return Float.isNaN(r) || Float.isInfinite(r) ? A : r;
+        return (float) Math.pow(A, B);
     }
 
     @Override

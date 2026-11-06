@@ -16,7 +16,9 @@ import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.event.BranchEndEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.api.execution.IllegalOperationException;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
@@ -67,11 +69,21 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
                     construct.removeEffect(effectId);
                     final HexStatus<?> s = status;
                     if (deferred == null) deferred = new ArrayList<>(2);
-                    deferred.add(() -> abort(null, s, ctx));
+                    deferred.add(() -> abort(null, s, ctx, BranchEndEvent.Reason.ERROR));
                     continue;
                 }
 
-                boolean ended = tickEffect(effectId, handler, status, ctx, dt);
+                boolean ended;
+                try {
+                    ended = tickEffect(effectId, handler, status, ctx, dt);
+                } catch (IllegalOperationException e) {
+                    construct.removeEffect(effectId);
+                    final ConstructHandler<?> h = handler;
+                    final HexStatus<?> s = status;
+                    if (deferred == null) deferred = new ArrayList<>(2);
+                    deferred.add(() -> abort(h, s, ctx, BranchEndEvent.Reason.ERROR));
+                    continue;
+                }
                 if (ended) {
                     construct.removeEffect(effectId);
                     final ConstructHandler<?> h = handler;
@@ -92,7 +104,8 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
                     final ConstructHandler<?> h = handler;
                     final HexStatus<?> s = status;
                     if (deferred == null) deferred = new ArrayList<>(2);
-                    deferred.add(() -> abort(h, s, ctx));
+                    var reason = killRequested ? BranchEndEvent.Reason.INTERRUPTED : BranchEndEvent.Reason.STARVED;
+                    deferred.add(() -> abort(h, s, ctx, reason));
                 }
             }
 
@@ -136,6 +149,8 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
                 HexComponentRegistry.dispatchTick(dt, ctx.getEntityRef(), hexContext, ctx.getBuffer());
             }
             return ended;
+        } catch (IllegalOperationException e) {
+            throw e;
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("error ticking construct effect %s: %s", effectId, e);
             return false;
@@ -157,13 +172,14 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
         } catch (Exception e) {
             LOGGER.atWarning().log("construct handler onEnd failed: %s", e.getMessage());
             if (owned) {
-                HexExecuter.endBranch(hexContext);
+                HexExecuter.endBranch(hexContext, BranchEndEvent.Reason.ERROR);
             }
         }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    static void abort(ConstructHandler<?> handler, HexStatus<?> status, ConstructTickContext ctx) {
+    static void abort(ConstructHandler<?> handler, HexStatus<?> status, ConstructTickContext ctx,
+            BranchEndEvent.Reason reason) {
         var hexContext = status.getHexContext();
         var owned = status.getConstructId().equals(hexContext.getHolder());
         try {
@@ -178,7 +194,7 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
             LOGGER.atWarning().log("construct handler onAbort failed: %s", e.getMessage());
         } finally {
             if (owned) {
-                HexExecuter.endBranch(hexContext);
+                HexExecuter.endBranch(hexContext, reason);
             }
         }
     }

@@ -160,7 +160,7 @@
         {
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
-          "Effects": {
+          "GlyphEffects": {
             "Sustain": {
               "Particles": [
                 {

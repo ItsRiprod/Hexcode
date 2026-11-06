@@ -37,6 +37,7 @@ import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
 import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
 import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
+import com.riprod.hexcode.core.common.glyphs.variables.VarType;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class DelayGlyph extends GlyphAsset {
@@ -110,18 +111,15 @@ public class DelayGlyph extends GlyphAsset {
 
         Vector3d spawnPos;
         Rotation3f rot;
-        switch (sourceVar) {
-            case RotationVar r -> {
-                rot = r.rotation(accessor);
+        var type = sourceVar.type();
+        switch (type) {
+            case ROTATION -> {
+                rot = sourceVar.rotation(accessor);
                 spawnPos = positionalDefault != null ? positionalDefault.position(accessor) : null;
             }
-            case PositionVar p -> {
-                spawnPos = p.position(accessor);
+            case TRANSFORM, POSITION -> {
+                spawnPos = sourceVar.position(accessor);
                 rot = incomingDefault != null ? incomingDefault.rotation(accessor) : null;
-            }
-            case BlockVar b -> {
-                spawnPos = b.position(accessor);
-                rot = b.rotation(accessor);
             }
             case null, default -> {
                 spawnPos = positionalDefault != null ? positionalDefault.position(accessor) : null;
@@ -152,7 +150,7 @@ public class DelayGlyph extends GlyphAsset {
                     new TransformComponent(spawnPos, rot));
         }
 
-        Model model = HexConstructSpawner.attachModel(holder, hexContext, this, 1.0f);
+        Model model = HexConstructSpawner.attachModel(holder, hexContext, this);
         Box box = model != null ? model.getBoundingBox() : FALLBACK_BOX;
         if (model == null) {
             LOGGER.atWarning().log("delay: no model resolved for construct");

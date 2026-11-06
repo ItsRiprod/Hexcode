@@ -24,6 +24,10 @@ public abstract class HexVar {
 
     public abstract VarType type();
 
+    public boolean isFinite() {
+        return true;
+    }
+
     @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         throw new UnsupportedOperationException(getClass().getSimpleName() + " cannot convert to Position");

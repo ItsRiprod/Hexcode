@@ -85,7 +85,6 @@
     "InstantCost": 4,
     "DrainPerSecond": 0.5
   },
-  "IceScale": 2.0,
   "MinDamageSpeed": 0.1,
   "KnockbackScale": 0.3,
   "MinVerticalKnockback": 2.0,

@@ -110,11 +110,15 @@ public class HexExecuter {
         HytaleServer.get().getEventBus().dispatchFor(GlyphFizzleEvent.class)
                 .dispatch(new GlyphFizzleEvent(glyph, reason, hexContext, detail, cause));
         if (hexContext != null) {
-            endBranch(hexContext);
+            endBranch(hexContext, reason.branchEnd());
         }
     }
 
     public static void endBranch(@Nonnull HexContext hexContext) {
+        endBranch(hexContext, BranchEndEvent.Reason.NATURAL);
+    }
+
+    public static void endBranch(@Nonnull HexContext hexContext, @Nonnull BranchEndEvent.Reason reason) {
         var buffer = hexContext.getAccessor();
         if (buffer == null) {
             LOGGER.atSevere().log("endBranch with null accessor; closing branch %d of cast %s without hooks",
@@ -123,7 +127,7 @@ public class HexExecuter {
             hexContext.cast().closeBranch(hexContext.getBranchId());
             return;
         }
-        if (!closeBranch(hexContext, buffer)) {
+        if (!closeBranch(hexContext, reason, buffer)) {
             return;
         }
         var cast = hexContext.cast();
@@ -144,7 +148,7 @@ public class HexExecuter {
         }
         try {
             for (var branch = cast.firstLiveBranch(); branch != null; branch = cast.firstLiveBranch()) {
-                closeBranch(branch, buffer);
+                closeBranch(branch, reason.branchEnd(), buffer);
             }
             HexComponentRegistry.dispatchCastEnd(cast, buffer);
             var dispatcher = HytaleServer.get().getEventBus().dispatchFor(CastEndEvent.class);
@@ -172,15 +176,16 @@ public class HexExecuter {
         }
     }
 
-    private static boolean closeBranch(@Nonnull HexContext branch, @Nonnull CommandBuffer<EntityStore> buffer) {
+    private static boolean closeBranch(@Nonnull HexContext branch, @Nonnull BranchEndEvent.Reason reason,
+            @Nonnull CommandBuffer<EntityStore> buffer) {
         release(branch, buffer);
         if (!branch.cast().closeBranch(branch.getBranchId())) {
             return false;
         }
-        HexComponentRegistry.dispatchBranchEnd(branch, buffer);
+        HexComponentRegistry.dispatchBranchEnd(branch, reason, buffer);
         var dispatcher = HytaleServer.get().getEventBus().dispatchFor(BranchEndEvent.class);
         if (dispatcher.hasListener()) {
-            dispatcher.dispatch(new BranchEndEvent(branch, buffer));
+            dispatcher.dispatch(new BranchEndEvent(branch, reason, buffer));
         }
         return true;
     }

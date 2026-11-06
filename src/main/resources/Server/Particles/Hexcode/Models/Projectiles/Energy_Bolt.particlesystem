@@ -1,35 +1,15 @@
 {
+  "CullDistance": 64.0,
+  "BoundingRadius": 1.0,
+  "IsImportant": false,
   "Spawners": [
     {
-      "SpawnerId": "Energy_Aura_Poof",
-      "PositionOffset": {
-        "X": 0,
-        "Z": 0
-      }
-    },
-    {
-      "SpawnerId": "Energy_Aura_Smoke",
-      "PositionOffset": {
-        "X": 0,
-        "Y": 0,
-        "Z": 0
-      }
-    },
-    {
       "SpawnerId": "Energy_Aura_Trail",
-      "PositionOffset": {
-        "X": 0,
-        "Y": -3,
-        "Z": 0
-      }
+      "FixedRotation": true
     },
     {
       "SpawnerId": "Energy_Aura_Sparks",
-      "PositionOffset": {
-        "X": 0,
-        "Y": 0.5,
-        "Z": 0
-      }
+      "FixedRotation": true
     }
   ]
 }

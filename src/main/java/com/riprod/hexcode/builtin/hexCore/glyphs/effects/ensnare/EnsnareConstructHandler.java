@@ -107,7 +107,7 @@ public class EnsnareConstructHandler implements ConstructHandler<NoState> {
     private void fireOnHit(HexStatus<NoState> status, ConstructTickContext ctx,
             Ref<EntityStore> targetRef, UUID targetId) {
         Glyph triggering = status.getTriggeringGlyph();
-        if (triggering == null) return;
+        if (triggering == null || !triggering.hasLinks(Glyph.NEXT_SLOT)) return;
         HexContext hc = status.getHexContext().branch();
         hc.updateRuntimeAccessors(ctx.getBuffer());
         triggering.writeDefaultOutput(new EntityVar(targetId, targetRef), hc);

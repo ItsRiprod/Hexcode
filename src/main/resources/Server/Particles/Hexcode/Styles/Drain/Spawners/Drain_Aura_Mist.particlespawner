@@ -1,129 +1,142 @@
 {
+  "Shape": "Sphere",
   "RenderMode": "BlendAdd",
-  "EmitOffset": {
-    "X": {
-      "Min": 0,
-      "Max": 1
-    },
-    "Y": {
-      "Min": 0,
-      "Max": 1
-    },
-    "Z": {
-      "Min": 0,
-      "Max": 0.1
-    }
-  },
   "ParticleRotationInfluence": "Billboard",
-  "LinearFiltering": false,
-  "LightInfluence": 0,
-  "ParticleRotateWithSpawner": true,
-  "TrailSpawnerPositionMultiplier": 1,
-  "TrailSpawnerRotationMultiplier": 1,
-  "MaxConcurrentParticles": 150,
+  "LightInfluence": 0.0,
+  "MaxConcurrentParticles": 8,
   "ParticleLifeSpan": {
-    "Min": 0.3333333333333333,
-    "Max": 0.4166666666666667
+    "Min": 0.5,
+    "Max": 0.7
   },
   "SpawnRate": {
-    "Min": 480,
-    "Max": 600
+    "Min": 8.0,
+    "Max": 10.0
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -0.35,
+      "Max": 0.35
+    },
+    "Y": {
+      "Min": -0.35,
+      "Max": 0.35
+    },
+    "Z": {
+      "Min": -0.35,
+      "Max": 0.35
+    }
   },
   "InitialVelocity": {
-    "Speed": {
-      "Min": 0.1,
-      "Max": 0.2
-    },
     "Yaw": {
-      "Min": 0,
-      "Max": 0
+      "Min": -180.0,
+      "Max": 180.0
     },
     "Pitch": {
-      "Min": -90,
-      "Max": -90
+      "Min": -90.0,
+      "Max": 90.0
+    },
+    "Speed": {
+      "Min": 0.0,
+      "Max": 0.0
     }
   },
   "Particle": {
     "Texture": "Particles/Textures/Smoke/Smoke_Smooth.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "SoftParticles": "Disable",
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.07,
+          "Max": 0.1
+        },
+        "Y": {
+          "Min": 0.07,
+          "Max": 0.1
+        }
+      },
+      "Rotation": {
+        "Z": {
+          "Min": -180.0,
+          "Max": 180.0
+        }
+      },
+      "Opacity": 1.0,
+      "Color": "#8FDBFF"
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#8FDBFF"
+      },
+      "30": {
+        "Scale": {
+          "X": {
+            "Min": 0.9,
+            "Max": 0.9
+          },
+          "Y": {
+            "Min": 0.9,
+            "Max": 0.9
+          }
+        },
+        "Opacity": 0.4,
+        "Color": "#8FDBFF"
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 0.3,
+            "Max": 0.3
+          },
+          "Y": {
+            "Min": 0.3,
+            "Max": 0.3
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#4095E5"
+      }
+    },
     "FrameSize": {
       "Width": 64,
       "Height": 64
-    },
-    "ScaleRatioConstraint": "OneToOne",
-    "UVOption": "RandomFlipU",
-    "Animation": {
-      "0": {
-        "FrameIndex": {
-          "Min": 0,
-          "Max": 0
-        },
-        "Opacity": 1,
-        "Scale": {
-          "X": {
-            "Min": 1,
-            "Max": 1
-          }
-        },
-        "Rotation": {
-          "X": {
-            "Min": 0,
-            "Max": 0
-          },
-          "Y": {
-            "Min": 0,
-            "Max": 0
-          },
-          "Z": {
-            "Min": 0,
-            "Max": 0
-          }
-        }
+    }
+  },
+  "Attractors": [
+    {
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
       },
-      "50": {
-        "Opacity": 0.4,
-        "Scale": {
-          "X": {
-            "Min": 3,
-            "Max": 1.5
-          }
-        }
+      "RadialAxis": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
       },
-      "100": {
-        "Opacity": 0,
-        "Scale": {
-          "X": {
-            "Min": 5,
-            "Max": 2.5
-          }
-        }
-      }
-    },
-    "InitialAnimationFrame": {
-      "Rotation": {
-        "X": {
-          "Min": 0,
-          "Max": 0
-        },
-        "Y": {
-          "Min": 0,
-          "Max": 0
-        },
-        "Z": {
-          "Min": 0,
-          "Max": 90
-        }
+      "RadialAcceleration": -2.5,
+      "RadialTangentAcceleration": 0.0,
+      "LinearAcceleration": {
+        "X": 0,
+        "Y": 0.0,
+        "Z": 0
       },
-      "Scale": {
-        "X": {
-          "Min": 0.1,
-          "Max": 0.2
-        }
-      },
-      "Opacity": 0.5,
-      "FrameIndex": {
-        "Min": 0,
-        "Max": 0
+      "DampingMultiplier": {
+        "X": 0.9,
+        "Y": 0.9,
+        "Z": 0.9
       }
     }
-  }
+  ]
 }

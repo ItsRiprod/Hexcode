@@ -44,6 +44,11 @@ public final class TransformVar extends HexVar {
     }
 
     @Override
+    public boolean isFinite() {
+        return transform == null || transform.getPosition().isFinite() && transform.getRotation().isFinite();
+    }
+
+    @Override
     @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         return new Vector3d(transform.getPosition());

@@ -14,6 +14,7 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.event.BranchEndEvent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 import com.riprod.hexcode.core.common.execution.cast.ecs.ConstructCastComponent;
@@ -196,11 +197,24 @@ public final class HexComponentRegistry {
         }
     }
 
-    public static void dispatchBranchEnd(@Nonnull HexContext ctx, @Nonnull CommandBuffer<EntityStore> buffer) {
+    public static void dispatchBranchOpen(@Nonnull HexContext ctx, @Nonnull CommandBuffer<EntityStore> buffer) {
         for (var index : lifecycle) {
             if (ctx.get(TYPES.get(index)) instanceof LifecycleCastComponent component) {
                 try {
-                    component.onBranchEnd(ctx, buffer);
+                    component.onBranchOpen(ctx, buffer);
+                } catch (Exception e) {
+                    logHookFailure(index, "onBranchOpen", e);
+                }
+            }
+        }
+    }
+
+    public static void dispatchBranchEnd(@Nonnull HexContext ctx, @Nonnull BranchEndEvent.Reason reason,
+            @Nonnull CommandBuffer<EntityStore> buffer) {
+        for (var index : lifecycle) {
+            if (ctx.get(TYPES.get(index)) instanceof LifecycleCastComponent component) {
+                try {
+                    component.onBranchEnd(ctx, reason, buffer);
                 } catch (Exception e) {
                     logHookFailure(index, "onBranchEnd", e);
                 }

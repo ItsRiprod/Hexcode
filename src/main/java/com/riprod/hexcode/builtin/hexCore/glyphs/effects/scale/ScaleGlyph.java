@@ -267,7 +267,7 @@ public class ScaleGlyph extends GlyphAsset {
                         new Vector3f(0f, mountOffsetY, 0f),
                         MountController.Minecart));
 
-        HexConstructSpawner.attachModel(holder, hexContext, this, 1.0f);
+        HexConstructSpawner.attachModel(holder, hexContext, this);
 
         return accessor.addEntity(holder, AddReason.SPAWN);
     }

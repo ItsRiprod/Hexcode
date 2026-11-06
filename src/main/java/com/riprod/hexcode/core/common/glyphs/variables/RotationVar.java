@@ -46,6 +46,11 @@ public final class RotationVar extends HexVar {
     }
 
     @Override
+    public boolean isFinite() {
+        return rotation == null || rotation.isFinite();
+    }
+
+    @Override
     @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         return forward();

@@ -167,7 +167,7 @@
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
           "CastStyleId": "sphere",
-          "Effects": {
+          "GlyphEffects": {
             "Sustain": {
               "Particles": [
                 {

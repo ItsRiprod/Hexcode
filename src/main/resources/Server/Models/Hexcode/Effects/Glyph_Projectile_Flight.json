@@ -1,3 +1,5 @@
 {
-  "Parent": "Glyph_Template"
+  "Parent": "Glyph_Template",
+  "MinScale": 0.5,
+  "MaxScale": 0.5
 }

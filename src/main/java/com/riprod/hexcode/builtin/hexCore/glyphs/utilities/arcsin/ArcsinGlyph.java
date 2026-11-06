@@ -17,10 +17,7 @@ public class ArcsinGlyph extends GlyphAsset {
         var s = a.scalar();
         if (s == null)
             return null;
-        var result = Math.asin(s);
-        if (Double.isNaN(result))
-            return null;
-        return new NumberVar(result);
+        return new NumberVar(Math.asin(s));
     }
 
     @Override

@@ -14,5 +14,11 @@
     }
   },
   "MinScale": 1,
-  "MaxScale": 1
+  "MaxScale": 1,
+  "Particles": [
+    {
+      "SystemId": "Fire_Bolt",
+      "TargetEntityPart": "Self"
+    }
+  ]
 }

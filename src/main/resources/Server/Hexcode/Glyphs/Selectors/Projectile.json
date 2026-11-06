@@ -87,7 +87,6 @@
     "InstantCost": 1.0,
     "DrainPerSecond": 0.0
   },
-  "ProjectileScale": 0.5,
   "TtlSeconds": 600,
   "SpawnOffset": 1.1,
   "HitRootInteraction": "Hex_Projectile_Hit",

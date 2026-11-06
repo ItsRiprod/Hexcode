@@ -14,6 +14,7 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.event.BranchEndEvent;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
@@ -57,7 +58,8 @@ public class HexConstructTeardownSystem extends RefSystem<EntityStore> {
                     if (status == null) {
                         continue;
                     }
-                    HexConstructSystem.abort(ConstructRegistry.get(status.getHandlerId()), status, ctx);
+                    HexConstructSystem.abort(ConstructRegistry.get(status.getHandlerId()), status, ctx,
+                            BranchEndEvent.Reason.INTERRUPTED);
                 }
             }
 

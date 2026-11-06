@@ -45,7 +45,6 @@ public class ProjectileGlyph extends GlyphAsset {
 
     public static final String TYPE = "Projectile";
 
-    private float projectileScale = 0.5f;
     private double ttlSeconds = 600.0;
     private double spawnOffset = 1.1;
     private String hitRootInteraction = "Hex_Projectile_Hit";
@@ -54,9 +53,6 @@ public class ProjectileGlyph extends GlyphAsset {
 
     public static final BuilderCodec<ProjectileGlyph> CODEC = BuilderCodec
             .builder(ProjectileGlyph.class, ProjectileGlyph::new, GlyphAsset.ABSTRACT_CODEC)
-            .append(new KeyedCodec<>("ProjectileScale", Codec.FLOAT, true),
-                    (c, v) -> c.projectileScale = v, c -> c.projectileScale)
-            .add()
             .append(new KeyedCodec<>("TtlSeconds", Codec.DOUBLE, true),
                     (c, v) -> c.ttlSeconds = v, c -> c.ttlSeconds)
             .add()
@@ -172,7 +168,7 @@ public class ProjectileGlyph extends GlyphAsset {
                 new TransformComponent(new Vector3d(spawnPos), rotation));
         holder.addComponent(HeadRotation.getComponentType(), new HeadRotation(rotation));
 
-        Model model = HexConstructSpawner.attachModel(holder, hexContext, this, projectileScale);
+        Model model = HexConstructSpawner.attachModel(holder, hexContext, this);
         if (model == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "model asset not found");

@@ -48,6 +48,11 @@ public final class PositionVar extends HexVar {
     }
 
     @Override
+    public boolean isFinite() {
+        return position == null || position.isFinite();
+    }
+
+    @Override
     @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         return new Vector3d(position);

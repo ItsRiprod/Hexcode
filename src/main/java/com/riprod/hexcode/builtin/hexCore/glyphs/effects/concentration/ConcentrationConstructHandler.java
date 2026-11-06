@@ -148,39 +148,38 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         }
     }
 
-    private void fireRelease(ConcentrationGlyph glyph, HexStatus<ConcentrationState> status,
+    private boolean fireRelease(ConcentrationGlyph glyph, HexStatus<ConcentrationState> status,
             CommandBuffer<EntityStore> buffer, Ref<EntityStore> casterRef) {
         Glyph trigger = status.getTriggeringGlyph();
         HexContext heldCtx = status.getHexContext();
         if (trigger == null || heldCtx == null)
-            return;
+            return false;
 
         VolatilityComponent heldTracker = heldCtx.volatility();
         if (heldTracker.getCurrent() <= 0f)
-            return;
+            return false;
 
         heldCtx.updateRuntimeAccessors(buffer);
-
-        try {
-            HexExecuter.branchFromSlot(trigger, ConcentrationGlyphSlots.RELEASE, heldCtx);
-        } catch (Exception e) {
-            LOGGER.atWarning().log("concentration: release fire failed: %s", e.getMessage());
-        }
 
         TransformComponent casterTransform = buffer.getComponent(
                 casterRef, TransformComponent.getComponentType());
         if (casterTransform != null) {
             EffectRenderer.render(EffectSlot.End, glyph, heldCtx, casterTransform.getPosition(), buffer);
         }
+
+        HexExecuter.continueFromSlot(trigger, ConcentrationGlyphSlots.RELEASE, heldCtx);
+        return true;
     }
 
     @Override
     public void onEnd(HexStatus<ConcentrationState> status, ConstructTickContext ctx) {
         var state = status.getState();
         var casterRef = ctx.getEntityRef();
-        if (state != null && state.isReleasing() && casterRef != null && casterRef.isValid()) {
-            fireRelease(GlyphAsset.of(status.getTriggeringGlyph(), ConcentrationGlyph.class), status,
-                    ctx.getBuffer(), casterRef);
+        var released = state != null && state.isReleasing() && casterRef != null && casterRef.isValid()
+                && fireRelease(GlyphAsset.of(status.getTriggeringGlyph(), ConcentrationGlyph.class), status,
+                        ctx.getBuffer(), casterRef);
+        if (!released) {
+            HexExecuter.endBranch(status.getHexContext());
         }
         onCleanup(status, ctx);
     }
@@ -194,7 +193,5 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
                 ctx.getBuffer().tryRemoveEntity(visualRef, RemoveReason.REMOVE);
             }
         }
-
-        HexExecuter.endBranch(status.getHexContext());
     }
 }

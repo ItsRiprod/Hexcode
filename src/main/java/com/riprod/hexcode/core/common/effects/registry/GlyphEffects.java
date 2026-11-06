@@ -151,16 +151,24 @@ public class GlyphEffects implements JsonAssetWithMap<String, DefaultAssetMap<St
         return new GlyphEffects().compose(this);
     }
 
+    public boolean hasBody() {
+        return model != null || resolvedModel != null;
+    }
+
     public GlyphEffects compose(@Nullable GlyphEffects other) {
+        return compose(other, true);
+    }
+
+    public GlyphEffects compose(@Nullable GlyphEffects other, boolean withBody) {
         if (other == null) return this;
         if (other.primaryColor != null) this.primaryColor = other.primaryColor.clone();
         if (other.secondaryColor != null) this.secondaryColor = other.secondaryColor.clone();
         if (other.alpha != null) this.alpha = other.alpha;
         if (other.volume != null) this.volume = other.volume;
-        if (other.model != null) {
+        if (withBody && other.model != null) {
             this.model = other.model;
             this.resolvedModel = other.resolvedModel;
-        } else if (other.resolvedModel != null) {
+        } else if (withBody && other.resolvedModel != null) {
             this.resolvedModel = other.resolvedModel;
         }
         this.slots.putAll(other.slots);

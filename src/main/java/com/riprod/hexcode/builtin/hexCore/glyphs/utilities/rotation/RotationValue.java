@@ -95,7 +95,9 @@ public class RotationValue extends GlyphAsset {
             }
         }
 
-        HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+        if (!hexContext.isHeld()) {
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+        }
     }
 
     private void applyToEntity(EntityVar entityVar, Rotation3f rotation, Glyph glyph,
@@ -155,7 +157,8 @@ public class RotationValue extends GlyphAsset {
         if (HexConstructSpawner.hasPendingApply(accessor, ref, TYPE))
             return;
 
-        HexConstructSpawner.applyWithState(accessor, ref, hexContext.branch(), glyph, TYPE,
+        var holder = glyph.hasLinks(Glyph.NEXT_SLOT) ? hexContext.branch() : hexContext;
+        HexConstructSpawner.applyWithState(accessor, ref, holder, glyph, TYPE,
                 new RotationState(priorRoll, rollHoldSeconds));
     }
 

@@ -4,9 +4,14 @@
   "Description": "server.hexcode.elementalism.fire.description",
   "Lore": "server.hexcode.elementalism.fire.lore",
   "ReclaimEfficiency": 0.75,
-  "Start": 10,
-  "Slope": 0.25,
-  "Floor": 9,
+  "Start": 30,
+  "Slope": 4.5,
+  "BranchEfficiency": {
+    "Type": "Asymptotic",
+    "Base": 1.0,
+    "Limit": 0.2,
+    "Rate": 0.625
+  },
   "Effects": {
     "PrimaryColor": "#FF6A1A",
     "SecondaryColor": "#FFD54F",
@@ -47,7 +52,7 @@
     }
   },
   "Tiers": {
-    "20": {
+    "5": {
       "Type": "Ignite",
       "Id": "Ignite",
       "Name": "server.hexcode.elementalism.ignite.name",
@@ -142,7 +147,7 @@
         }
       }
     },
-    "100": {
+    "80": {
       "Type": "Explosion",
       "Id": "Explosion",
       "Name": "server.hexcode.elementalism.explosion.name",
@@ -152,7 +157,7 @@
         "DamageEntities": true,
         "DamageBlocks": true,
         "DetonateExplosiveBlocks": true,
-        "EntityDamage": 30,
+        "EntityDamage": 60,
         "EntityDamageRadius": 4,
         "EntityDamageCause": "Fire",
         "EntityDamageFalloff": 1.0,
@@ -194,8 +199,8 @@
         }
       },
       "Effects": {
-        "PrimaryColor": "#FF3A1F",
-        "SecondaryColor": "#FFE0B0",
+        "PrimaryColor": "#802012",
+        "SecondaryColor": "#7e7058",
         "Start": {
           "Particles": [
             {
@@ -212,9 +217,9 @@
             }
           ],
           "Trail": {
-            "TrailId": "Large_Flame"
+            "TrailId": "Fire_Trail_Large"
           },
-          "Light": 10,
+          "Light": 8.64,
           "Pulse": [
             {
               "SystemId": "Explosion_Pulse"
@@ -233,7 +238,8 @@
           ],
           "Sound": "SFX_Goblin_Lobber_Bomb_Death",
           "Tint": "None"
-        }
+        },
+        "Model": "Fireball"
       }
     }
   }

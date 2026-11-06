@@ -1,46 +1,102 @@
 {
-  "RenderMode": "BlendLinear",
-  "EmitOffset": {
-    "X": {
-      "Min": 0,
-      "Max": 0.1
-    },
-    "Y": {
-      "Min": 0,
-      "Max": 0.1
-    },
-    "Z": {
-      "Min": 0,
-      "Max": 0.1
-    }
-  },
+  "Shape": "Sphere",
+  "RenderMode": "BlendAdd",
   "ParticleRotationInfluence": "Billboard",
-  "LinearFiltering": true,
-  "LightInfluence": 0,
-  "ParticleRotateWithSpawner": false,
-  "TrailSpawnerPositionMultiplier": 1,
-  "TrailSpawnerRotationMultiplier": 1,
-  "MaxConcurrentParticles": 500,
+  "LightInfluence": 0.0,
+  "MaxConcurrentParticles": 6,
   "ParticleLifeSpan": {
-    "Min": 0.8333333333333334,
-    "Max": 1.1666666666666667
+    "Min": 0.3,
+    "Max": 0.5
   },
   "SpawnRate": {
-    "Min": 480,
-    "Max": 600
+    "Min": 5.0,
+    "Max": 7.0
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -0.08,
+      "Max": 0.08
+    },
+    "Y": {
+      "Min": -0.08,
+      "Max": 0.08
+    },
+    "Z": {
+      "Min": -0.08,
+      "Max": 0.08
+    }
   },
   "InitialVelocity": {
-    "Speed": {
-      "Min": 5.3999999999999995,
-      "Max": 10.799999999999999
-    },
     "Yaw": {
-      "Min": 0,
-      "Max": 360
+      "Min": -180.0,
+      "Max": 180.0
     },
     "Pitch": {
-      "Min": 30,
-      "Max": 150
+      "Min": -90.0,
+      "Max": 90.0
+    },
+    "Speed": {
+      "Min": 0.6,
+      "Max": 1.2
+    }
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Fire/Ember.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "SoftParticles": "Disable",
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.07,
+          "Max": 0.1
+        },
+        "Y": {
+          "Min": 0.07,
+          "Max": 0.1
+        }
+      },
+      "Rotation": {
+        "Z": {
+          "Min": -180.0,
+          "Max": 180.0
+        }
+      },
+      "Opacity": 1.0,
+      "Color": "#FFF454"
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 1.0,
+        "Color": "#FFF454"
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 0.5,
+            "Max": 0.5
+          },
+          "Y": {
+            "Min": 0.5,
+            "Max": 0.5
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#FFC13B"
+      }
+    },
+    "FrameSize": {
+      "Width": 32,
+      "Height": 32
     }
   },
   "Attractors": [
@@ -55,102 +111,18 @@
         "Y": 0,
         "Z": 0
       },
-      "Radius": 0,
-      "RadialAcceleration": 0,
-      "RadialTangentAcceleration": 0,
+      "RadialAcceleration": 0.0,
+      "RadialTangentAcceleration": 0.0,
       "LinearAcceleration": {
         "X": 0,
-        "Y": -18,
+        "Y": -2.0,
         "Z": 0
+      },
+      "DampingMultiplier": {
+        "X": 0.9,
+        "Y": 0.9,
+        "Z": 0.9
       }
     }
-  ],
-  "Particle": {
-    "Texture": "Particles/Textures/Fire/Ember.png",
-    "FrameSize": {
-      "Width": 32,
-      "Height": 32
-    },
-    "ScaleRatioConstraint": "OneToOne",
-    "Animation": {
-      "0": {
-        "FrameIndex": {
-          "Min": 0,
-          "Max": 0
-        },
-        "Scale": {
-          "X": {
-            "Min": 1,
-            "Max": 1
-          },
-          "Y": {
-            "Min": 1,
-            "Max": 1
-          }
-        },
-        "Rotation": {
-          "X": {
-            "Min": 0,
-            "Max": 0
-          },
-          "Y": {
-            "Min": 0,
-            "Max": 0
-          },
-          "Z": {
-            "Min": 0,
-            "Max": 0
-          }
-        },
-        "Color": "#ffec97",
-        "Opacity": 0
-      },
-      "10": {
-        "Opacity": 1
-      },
-      "90": {
-        "Opacity": 1
-      },
-      "100": {
-        "Color": "#dc6464",
-        "Opacity": 0
-      }
-    },
-    "InitialAnimationFrame": {
-      "Rotation": {
-        "X": {
-          "Min": 0,
-          "Max": 360
-        },
-        "Y": {
-          "Min": 0,
-          "Max": 0
-        },
-        "Z": {
-          "Min": 0,
-          "Max": 360
-        }
-      },
-      "Scale": {
-        "X": {
-          "Min": 0.1,
-          "Max": 0.5
-        },
-        "Y": {
-          "Min": 0.1,
-          "Max": 0.5
-        }
-      },
-      "Opacity": 1,
-      "Color": "#ffec97",
-      "FrameIndex": {
-        "Min": 0,
-        "Max": 0
-      }
-    }
-  },
-  "TotalParticles": {
-    "Min": 40,
-    "Max": 40
-  }
+  ]
 }

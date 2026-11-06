@@ -23,6 +23,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.event.BranchEndEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.utils.GlyphModelUtil;
@@ -96,23 +97,22 @@ public class HexConstructSpawner {
     @Nullable
     public static Model resolveModel(
             @Nonnull HexContext hexContext,
-            @Nullable GlyphAsset glyphAsset,
-            float defaultScale) {
+            @Nullable GlyphAsset glyphAsset) {
 
-        var own = ownBody(glyphAsset, defaultScale);
-        var body = swappedBody(EffectRenderer.resolve(glyphAsset, hexContext), glyphAsset, defaultScale);
+        var own = ownBody(glyphAsset);
+        var body = swappedBody(EffectRenderer.resolve(glyphAsset, hexContext), glyphAsset);
         return body != null ? GlyphModelUtil.withDefaultBox(body, own) : own;
     }
 
     @Nullable
-    private static Model swappedBody(@Nonnull GlyphEffects effects, @Nullable GlyphAsset glyphAsset, float scale) {
+    private static Model swappedBody(@Nonnull GlyphEffects effects, @Nullable GlyphAsset glyphAsset) {
         if (effects.getResolvedModel() != null) {
             return effects.getResolvedModel();
         }
         var id = effects.getModel();
         var own = glyphAsset != null && glyphAsset.getEffects() != null ? glyphAsset.getEffects().getModel() : null;
         var asset = id != null && !id.equals(own) ? ModelAsset.getAssetMap().getAsset(id) : null;
-        return asset != null ? Model.createScaledModel(asset, scale) : null;
+        return asset != null ? Model.createRandomScaleModel(asset) : null;
     }
 
     @Nullable
@@ -123,8 +123,8 @@ public class HexConstructSpawner {
             @Nonnull SustainState sustain) {
 
         var effects = EffectRenderer.resolve(glyphAsset, hexContext);
-        var body = swappedBody(effects, glyphAsset, live.getScale());
-        var own = ownBody(glyphAsset, live.getScale());
+        var body = swappedBody(effects, glyphAsset);
+        var own = ownBody(glyphAsset);
         var installed = sustain.getBody() != null && sustain.getBody().equals(live.getModelAssetId());
         var target = !installed ? null : body != null ? body : own;
         var swap = target != null && !target.getModelAssetId().equals(live.getModelAssetId());
@@ -138,8 +138,8 @@ public class HexConstructSpawner {
     }
 
     @Nullable
-    private static Model ownBody(@Nullable GlyphAsset glyphAsset, float scale) {
-        return glyphAsset != null ? GlyphModelUtil.assemble(glyphAsset, glyphAsset.getEffects(), scale) : null;
+    private static Model ownBody(@Nullable GlyphAsset glyphAsset) {
+        return glyphAsset != null ? GlyphModelUtil.assemble(glyphAsset, glyphAsset.getEffects()) : null;
     }
 
     public static void applyModel(
@@ -160,10 +160,9 @@ public class HexConstructSpawner {
     public static Model attachModel(
             @Nonnull Holder<EntityStore> holder,
             @Nonnull HexContext hexContext,
-            @Nullable GlyphAsset glyphAsset,
-            float defaultScale) {
+            @Nullable GlyphAsset glyphAsset) {
 
-        var model = resolveModel(hexContext, glyphAsset, defaultScale);
+        var model = resolveModel(hexContext, glyphAsset);
         if (model == null) {
             return null;
         }
@@ -279,7 +278,7 @@ public class HexConstructSpawner {
         var handler = ConstructRegistry.get(handlerId);
         var ctx = new ConstructTickContext(buffer, targetRef);
         for (var status : aborted) {
-            HexConstructSystem.abort(handler, status, ctx);
+            HexConstructSystem.abort(handler, status, ctx, BranchEndEvent.Reason.INTERRUPTED);
         }
         return aborted.size();
     }

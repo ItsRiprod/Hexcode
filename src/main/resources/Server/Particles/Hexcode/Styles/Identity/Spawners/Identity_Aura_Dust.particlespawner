@@ -1,126 +1,142 @@
 {
+  "Shape": "Sphere",
   "RenderMode": "BlendAdd",
-  "EmitOffset": {
-    "X": {
-      "Min": 0.2,
-      "Max": 0.5
-    },
-    "Y": {
-      "Min": 0.2,
-      "Max": 0.5
-    },
-    "Z": {
-      "Min": 0.2,
-      "Max": 0.5
-    }
-  },
   "ParticleRotationInfluence": "Billboard",
-  "LinearFiltering": false,
-  "LightInfluence": 0,
-  "ParticleRotateWithSpawner": false,
-  "TrailSpawnerPositionMultiplier": 1,
-  "TrailSpawnerRotationMultiplier": 1,
-  "MaxConcurrentParticles": 90,
+  "LightInfluence": 0.0,
+  "MaxConcurrentParticles": 10,
   "ParticleLifeSpan": {
-    "Min": 0.3333333333333333,
-    "Max": 0.8333333333333334
+    "Min": 0.8,
+    "Max": 1.2
   },
   "SpawnRate": {
-    "Min": 60,
-    "Max": 60
+    "Min": 6.0,
+    "Max": 8.0
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -0.3,
+      "Max": 0.3
+    },
+    "Y": {
+      "Min": -0.3,
+      "Max": 0.3
+    },
+    "Z": {
+      "Min": -0.3,
+      "Max": 0.3
+    }
   },
   "InitialVelocity": {
-    "Speed": {
-      "Min": 0.6,
-      "Max": 1.7999999999999998
-    },
     "Yaw": {
-      "Min": 0,
-      "Max": 360
+      "Min": -180.0,
+      "Max": 180.0
     },
     "Pitch": {
-      "Min": 0,
-      "Max": 30
+      "Min": -90.0,
+      "Max": 90.0
+    },
+    "Speed": {
+      "Min": 0.0,
+      "Max": 0.0
+    }
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Basic/Spark2.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "SoftParticles": "Disable",
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.1,
+          "Max": 0.14
+        },
+        "Y": {
+          "Min": 0.1,
+          "Max": 0.14
+        }
+      },
+      "Rotation": {
+        "Z": {
+          "Min": -180.0,
+          "Max": 180.0
+        }
+      },
+      "Opacity": 1.0,
+      "Color": "#82FFA2"
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#82FFA2"
+      },
+      "20": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 1.0,
+        "Color": "#82FFA2"
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 0.5,
+            "Max": 0.5
+          },
+          "Y": {
+            "Min": 0.5,
+            "Max": 0.5
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#6CB839"
+      }
+    },
+    "FrameSize": {
+      "Width": 32,
+      "Height": 32
     }
   },
   "Attractors": [
     {
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "RadialAxis": {
+        "X": 0,
+        "Y": 1,
+        "Z": 0
+      },
+      "RadialAcceleration": -1.5,
+      "RadialTangentAcceleration": 3.0,
       "LinearAcceleration": {
         "X": 0,
-        "Y": -3.5999999999999996,
+        "Y": 0.25,
         "Z": 0
+      },
+      "DampingMultiplier": {
+        "X": 0.95,
+        "Y": 0.95,
+        "Z": 0.95
       }
     }
-  ],
-  "Particle": {
-    "Texture": "Particles/Textures/Basic/Spark2.png",
-    "FrameSize": {
-      "Width": 32,
-      "Height": 32
-    },
-    "ScaleRatioConstraint": "OneToOne",
-    "Animation": {
-      "0": {
-        "FrameIndex": {
-          "Min": 0,
-          "Max": 0
-        },
-        "Scale": {
-          "X": {
-            "Min": 1,
-            "Max": 1
-          }
-        },
-        "Rotation": {
-          "X": {
-            "Min": 0,
-            "Max": 0
-          },
-          "Y": {
-            "Min": 0,
-            "Max": 0
-          },
-          "Z": {
-            "Min": 0,
-            "Max": 0
-          }
-        },
-        "Opacity": 1
-      },
-      "70": {
-        "Opacity": 1
-      },
-      "100": {
-        "Opacity": 0
-      }
-    },
-    "InitialAnimationFrame": {
-      "Rotation": {
-        "X": {
-          "Min": 0,
-          "Max": 360
-        },
-        "Y": {
-          "Min": 0,
-          "Max": 360
-        },
-        "Z": {
-          "Min": 0,
-          "Max": 360
-        }
-      },
-      "Scale": {
-        "X": {
-          "Min": 0.1,
-          "Max": 0.2
-        }
-      },
-      "Opacity": 1,
-      "FrameIndex": {
-        "Min": 0,
-        "Max": 0
-      },
-      "Color": "#5bff57"
-    }
-  }
+  ]
 }

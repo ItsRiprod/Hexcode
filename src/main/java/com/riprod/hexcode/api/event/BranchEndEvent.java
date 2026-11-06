@@ -12,16 +12,29 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 
 public class BranchEndEvent implements IEvent<Void> {
 
+    public enum Reason {
+        NATURAL,
+        STARVED,
+        INTERRUPTED,
+        ERROR
+    }
+
     private final HexContext context;
+    private final Reason reason;
     private final CommandBuffer<EntityStore> buffer;
 
-    public BranchEndEvent(HexContext context, CommandBuffer<EntityStore> buffer) {
+    public BranchEndEvent(HexContext context, Reason reason, CommandBuffer<EntityStore> buffer) {
         this.context = context;
+        this.reason = reason;
         this.buffer = buffer;
     }
 
     public HexContext getContext() {
         return context;
+    }
+
+    public Reason getReason() {
+        return reason;
     }
 
     public CommandBuffer<EntityStore> getBuffer() {

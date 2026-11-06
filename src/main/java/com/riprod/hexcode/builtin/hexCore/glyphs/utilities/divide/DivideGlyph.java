@@ -19,18 +19,18 @@ public class DivideGlyph extends GlyphAsset {
     public static final String TYPE = "Divide";
 
     private Double op(Double A, Double B) {
-        return B != 0 ? A / B : A;
+        return A / B;
     }
 
     private float op(float A, float B) {
-        return B != 0 ? A / B : A;
+        return A / B;
     }
 
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(DivideGlyphSlots.A, hexContext);
         HexVar b = glyph.readSlot(DivideGlyphSlots.B, hexContext);
-        if (a == null || b == null || a.scalar() == 0 || b.scalar() == 0)
-            return new NumberVar(0); // X/0 = 0 (assertion) and 0/X = 0
+        if (a == null || b == null)
+            return new NumberVar(0);
 
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
 

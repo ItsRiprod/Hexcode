@@ -1,8 +1,8 @@
 {
   "Model": "VFX/Glyphs/Effects/Glaciate/Block.blockymodel",
   "Texture": "VFX/Glyphs/Effects/Glaciate/Ice_Texture.png",
-  "MinScale": 1,
-  "MaxScale": 1,
+  "MinScale": 2,
+  "MaxScale": 2,
   "HitBox": {
     "Min": {
       "X": -0.25,

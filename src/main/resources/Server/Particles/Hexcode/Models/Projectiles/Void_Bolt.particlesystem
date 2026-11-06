@@ -1,12 +1,15 @@
 {
+  "CullDistance": 64.0,
+  "BoundingRadius": 1.0,
+  "IsImportant": false,
   "Spawners": [
     {
       "SpawnerId": "Void_Aura_Sparks",
-      "RotationOffset": {
-        "Yaw": 90,
-        "Pitch": 90,
-        "Roll": 90
-      }
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Void_Aura_Motes",
+      "FixedRotation": true
     }
   ]
 }

@@ -12,6 +12,7 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.execution.cast.HexCast;
+import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
 import com.riprod.hexcode.core.common.execution.cast.component.BranchVariablesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastDependenciesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
@@ -47,6 +48,7 @@ public class HexContext {
         this.components = components;
         this.accessor = accessor;
         this.branchId = cast.openBranch(this);
+        opened();
     }
 
     private HexContext(@Nonnull HexContext parent) {
@@ -58,6 +60,13 @@ public class HexContext {
             components[i] = component != null ? component.branch() : null;
         }
         this.branchId = parent.cast.openBranch(this);
+        opened();
+    }
+
+    private void opened() {
+        if (accessor != null && isLive()) {
+            HexComponentRegistry.dispatchBranchOpen(this, accessor);
+        }
     }
 
     public HexContext branch() {

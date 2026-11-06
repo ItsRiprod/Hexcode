@@ -1,5 +1,7 @@
 package com.riprod.hexcode.builtin.hexCore.glyphs.effects.concentration;
 
+import java.util.ArrayList;
+
 import javax.annotation.Nullable;
 
 import org.joml.Vector3f;
@@ -128,8 +130,9 @@ public class ConcentrationGlyph extends GlyphAsset {
                 ? statMap.get(HexcodeEntityStatTypes.getIsHolding())
                 : null;
         if (holdStat == null || holdStat.get() < 1f) {
-            HexExecuter.branchFromSlot(glyph, ConcentrationGlyphSlots.RELEASE, hexContext);
-            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+            var flow = new ArrayList<>(glyph.getLinks(ConcentrationGlyphSlots.RELEASE));
+            flow.addAll(glyph.getNextLinks());
+            HexExecuter.continueExecution(flow, hexContext);
             return;
         }
 
@@ -154,10 +157,13 @@ public class ConcentrationGlyph extends GlyphAsset {
                 convert(manaRate, getManaImpact())
                         + convert(staminaRate, getStaminaImpact())
                         + convert(healthRate, getHealthImpact()));
+        var holder = glyph.hasLinks(Glyph.NEXT_SLOT) ? hexContext.branch() : hexContext;
         HexConstructSpawner.applyWithState(
-                accessor, casterRef, hexContext.branch(), glyph, ConcentrationGlyph.TYPE, state);
+                accessor, casterRef, holder, glyph, ConcentrationGlyph.TYPE, state);
 
-        HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+        if (holder != hexContext) {
+            HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
+        }
     }
 
     private float readRate(Glyph glyph, HexContext hexContext, String slotKey) {
@@ -185,7 +191,7 @@ public class ConcentrationGlyph extends GlyphAsset {
                         new Vector3f(MOUNT_OFFSET.x, MOUNT_OFFSET.y, MOUNT_OFFSET.z),
                         MountController.Minecart));
 
-        var model = HexConstructSpawner.resolveModel(hexContext, this, 1.0f);
+        var model = HexConstructSpawner.resolveModel(hexContext, this);
         if (model == null) {
             LOGGER.atWarning().log("concentration: primary model not found");
         } else {

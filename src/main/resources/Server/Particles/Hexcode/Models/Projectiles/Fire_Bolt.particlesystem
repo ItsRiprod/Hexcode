@@ -1,0 +1,15 @@
+{
+  "CullDistance": 64.0,
+  "BoundingRadius": 1.0,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "Fire_Bolt_Glow",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Fire_Bolt_Lick",
+      "FixedRotation": true
+    }
+  ]
+}

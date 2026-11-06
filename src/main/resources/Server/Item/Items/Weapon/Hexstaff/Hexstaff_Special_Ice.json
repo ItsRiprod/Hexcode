@@ -164,7 +164,7 @@
           "Type": "HexDrawMode",
           "Parent": "Drawmode_Default",
           "CastStyleId": "arc",
-          "Effects": {
+          "GlyphEffects": {
             "Sustain": {
               "Particles": [
                 {

@@ -161,7 +161,7 @@ public class ShatterGlyph extends GlyphAsset {
 
         List<Vector3d> shardDirections = computeConeDirections(centralDir, count, spread);
 
-        Model model = HexConstructSpawner.resolveModel(hexContext, this, 1.0f);
+        Model model = HexConstructSpawner.resolveModel(hexContext, this);
         if (model == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "model asset not found");

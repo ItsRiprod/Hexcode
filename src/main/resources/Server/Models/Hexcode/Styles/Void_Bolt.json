@@ -10,10 +10,6 @@
     {
       "SystemId": "Void_Bolt",
       "TargetEntityPart": "Self"
-    },
-    {
-      "SystemId": "Hexcode_Projectile_Flames",
-      "Color": "#8319B6"
     }
   ]
 }

@@ -6,6 +6,7 @@ import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.api.execution.IllegalOperationException;
 import com.riprod.hexcode.builtin.hexCore.glyphs.utilities.power.PowerGlyphSlots;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
@@ -22,7 +23,7 @@ public class RootGlyph extends GlyphAsset {
     private HexVar compute(Glyph glyph, HexContext hexContext) {
         HexVar a = glyph.readSlot(PowerGlyphSlots.A, hexContext);
         HexVar b = glyph.readSlot(PowerGlyphSlots.B, hexContext);
-        if (a == null || b == null || a.scalar() == 0 || b.scalar() == 0)
+        if (a == null || b == null)
             return new NumberVar(0);
 
         ComponentAccessor<EntityStore> buf = hexContext.getAccessor();
@@ -55,13 +56,15 @@ public class RootGlyph extends GlyphAsset {
     }
 
     private Double op(Double A, Double B) {
-        var r = Math.pow(A, 1.0 / B);
-        return Double.isNaN(r) || Double.isInfinite(r) ? A : r;
+        if (B == 0)
+            throw new IllegalOperationException("zeroth root");
+        if (A < 0 && B == Math.rint(B) && Math.abs(B % 2) == 1)
+            return -Math.pow(-A, 1.0 / B);
+        return Math.pow(A, 1.0 / B);
     }
 
     private float op(float A, float B) {
-        var r = (float) Math.pow(A, B);
-        return Float.isNaN(r) || Float.isInfinite(r) ? A : r;
+        return op((double) A, (double) B).floatValue();
     }
 
     @Override

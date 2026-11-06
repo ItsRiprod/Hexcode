@@ -18,11 +18,14 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Roo
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.riprod.hexcode.api.event.CastEvent;
 import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
+import com.riprod.hexcode.builtin.elementalism.charge.ElementThreads;
 import com.riprod.hexcode.builtin.elementalism.charge.ElementalComponent;
 import com.riprod.hexcode.builtin.elementalism.composite.CompositeAsset;
 import com.riprod.hexcode.builtin.elementalism.composite.CompositeIndex;
 import com.riprod.hexcode.builtin.elementalism.element.ElementAsset;
 import com.riprod.hexcode.builtin.elementalism.element.ElementTierIndex;
+import com.riprod.hexcode.builtin.elementalism.element.efficiency.AsymptoticBranchEfficiency;
+import com.riprod.hexcode.builtin.elementalism.element.efficiency.BranchEfficiency;
 import com.riprod.hexcode.builtin.elementalism.elements.fire.ExplosionTier;
 import com.riprod.hexcode.builtin.elementalism.elements.fire.FireElement;
 import com.riprod.hexcode.builtin.elementalism.elements.fire.IgniteTier;
@@ -51,7 +54,7 @@ public class ElementalismPlugin {
     }
 
     private static void registerCastComponents() {
-        HexComponentRegistry.requireLoaded(ElementalComponent.TYPE);
+        HexComponentRegistry.requireLoaded(ElementalComponent.TYPE, ElementThreads.TYPE);
     }
 
     private static void registerGlyphs() {
@@ -59,6 +62,8 @@ public class ElementalismPlugin {
     }
 
     private static void registerElements() {
+        BranchEfficiency.CODEC.register(AsymptoticBranchEfficiency.TYPE, AsymptoticBranchEfficiency.class,
+                AsymptoticBranchEfficiency.CODEC);
         ElementAsset.CODEC.register(FireElement.TYPE, FireElement.class, FireElement.CODEC);
         ElementalTier.CODEC.register(IgniteTier.TYPE, IgniteTier.class, IgniteTier.CODEC);
         ElementalTier.CODEC.register(ScorchTier.TYPE, ScorchTier.class, ScorchTier.CODEC);

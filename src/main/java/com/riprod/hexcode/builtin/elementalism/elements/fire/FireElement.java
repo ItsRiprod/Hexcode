@@ -13,11 +13,10 @@ public class FireElement extends ElementAsset {
 
     protected float start;
     protected float slope;
-    protected float floor;
 
     @Override
     public float rate(ElementTickInput input) {
-        return Math.max(this.floor, this.start - this.slope * input.elapsedActive());
+        return this.start - this.slope * input.elapsedActive();
     }
 
     static {
@@ -32,13 +31,7 @@ public class FireElement extends ElementAsset {
                         (a, v) -> a.slope = v, a -> a.slope,
                         (a, p) -> a.slope = p.slope)
                 .addValidator(Validators.min(0.0f))
-                .documentation("Charge per second lost from the rate for every second the element stays active")
-                .add()
-                .appendInherited(new KeyedCodec<>("Floor", Codec.FLOAT),
-                        (a, v) -> a.floor = v, a -> a.floor,
-                        (a, p) -> a.floor = p.floor)
-                .addValidator(Validators.min(0.0f))
-                .documentation("Lowest charge per second the rate decays to")
+                .documentation("Charge per second lost from the rate for every second the element stays active. Past Start / Slope seconds the rate turns negative and the charge burns out.")
                 .add()
                 .build();
     }

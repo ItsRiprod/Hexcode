@@ -18,6 +18,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import com.riprod.hexcode.builtin.elementalism.element.ElementAsset;
 import com.riprod.hexcode.builtin.elementalism.element.ElementTickInput;
+import com.riprod.hexcode.api.event.BranchEndEvent;
 import com.riprod.hexcode.api.event.CastEvent;
 import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
 import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
@@ -41,13 +42,38 @@ public final class ElementalComponent
     @Nullable private String active;
     @Nullable private Vector3d lastPos;
     @Nullable private String vesselTier;
+    @Nullable private String counted;
+    private boolean open;
 
     public ElementalComponent() {
     }
 
     public void activate(@Nonnull String elementId, @Nonnull HexContext ctx) {
         activate(elementId);
+        track(ctx);
         vessel(ctx, true);
+    }
+
+    private void track(@Nonnull HexContext ctx) {
+        if (!open || Objects.equals(counted, active)) {
+            return;
+        }
+        var threads = ctx.get(ElementThreads.TYPE);
+        if (counted != null) {
+            threads.remove(counted);
+        }
+        if (active != null) {
+            threads.add(active);
+        }
+        counted = active;
+    }
+
+    private void untrack(@Nonnull HexContext ctx) {
+        if (counted != null) {
+            ctx.get(ElementThreads.TYPE).remove(counted);
+            counted = null;
+        }
+        open = false;
     }
 
     private void activate(@Nonnull String elementId) {
@@ -109,19 +135,31 @@ public final class ElementalComponent
             return;
         }
         var t = elapsed.getFloat(active);
-        var rate = element.rate(new ElementTickInput(dt, t, speed, isLiving(host, buffer)));
-        var gain = rate * dt * (1f + ctx.volatility().getSpent() / 100f);
-        charges.addTo(active, gain);
+        var input = new ElementTickInput(dt, t, speed, isLiving(host, buffer),
+                ctx.get(ElementThreads.TYPE).count(active));
+        var gain = element.rate(input) * element.efficiency(input) * dt
+                * (1f + ctx.volatility().getSpent() / 100f);
+        charges.put(active, Math.max(0f, charges.getFloat(active) + gain));
         elapsed.put(active, t + dt);
         vessel(ctx, false);
     }
 
     @Override
-    public void onBranchEnd(@Nonnull HexContext ctx, @Nonnull CommandBuffer<EntityStore> buffer) {
+    public void onBranchOpen(@Nonnull HexContext ctx, @Nonnull CommandBuffer<EntityStore> buffer) {
+        open = true;
+        track(ctx);
+    }
+
+    @Override
+    public void onBranchEnd(@Nonnull HexContext ctx, @Nonnull BranchEndEvent.Reason reason,
+            @Nonnull CommandBuffer<EntityStore> buffer) {
+        untrack(ctx);
         if (charges.isEmpty()) {
             return;
         }
-        ElementDischarge.discharge(charges, ctx, buffer);
+        if (reason != BranchEndEvent.Reason.ERROR) {
+            ElementDischarge.discharge(charges, ctx, buffer);
+        }
         clear();
         ctx.get(CastEffectsComponent.TYPE).setOverride(null);
     }
@@ -154,6 +192,8 @@ public final class ElementalComponent
         copy.elapsed.putAll(elapsed);
         copy.active = active;
         copy.vesselTier = vesselTier;
+        copy.counted = counted;
+        copy.open = open;
         copy.lastPos = lastPos != null ? new Vector3d(lastPos) : null;
         return copy;
     }

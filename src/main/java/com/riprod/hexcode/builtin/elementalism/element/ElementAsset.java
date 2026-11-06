@@ -14,6 +14,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.codec.validation.Validators;
+import com.riprod.hexcode.builtin.elementalism.element.efficiency.BranchEfficiency;
 import com.riprod.hexcode.builtin.elementalism.tier.ElementalTier;
 import com.riprod.hexcode.core.common.effects.component.EffectSlot;
 import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
@@ -32,6 +33,7 @@ public abstract class ElementAsset implements JsonAssetWithMap<String, DefaultAs
     protected float reclaimEfficiency = 1.0f;
     protected ElementTiers tiers = ElementTiers.EMPTY;
     protected String effectsId;
+    @Nullable protected BranchEfficiency branchEfficiency;
 
     public static AssetStore<String, ElementAsset, DefaultAssetMap<String, ElementAsset>> getAssetStore() {
         if (ASSET_STORE == null) {
@@ -45,6 +47,10 @@ public abstract class ElementAsset implements JsonAssetWithMap<String, DefaultAs
     }
 
     public abstract float rate(ElementTickInput input);
+
+    public float efficiency(ElementTickInput input) {
+        return this.branchEfficiency != null ? this.branchEfficiency.efficiency(input) : 1.0f;
+    }
 
     @Override
     public final String getId() {
@@ -125,6 +131,11 @@ public abstract class ElementAsset implements JsonAssetWithMap<String, DefaultAs
                         (a, p) -> a.tiers = p.tiers)
                 .addValidator(ElementTiers.VALIDATOR)
                 .documentation("Tiers keyed by the charge threshold at which each is reached")
+                .add()
+                .appendInherited(new KeyedCodec<>("BranchEfficiency", BranchEfficiency.CODEC),
+                        (a, v) -> a.branchEfficiency = v, a -> a.branchEfficiency,
+                        (a, p) -> a.branchEfficiency = p.branchEfficiency)
+                .documentation("Scales the charge rate by the live branches charging this element. Absent leaves the rate unscaled")
                 .add()
                 .appendInherited(new KeyedCodec<>("Effects", GlyphEffects.CHILD_ASSET_CODEC),
                         (a, v) -> a.effectsId = v, a -> a.effectsId,

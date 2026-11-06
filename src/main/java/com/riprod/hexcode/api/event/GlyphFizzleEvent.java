@@ -7,13 +7,23 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 public class GlyphFizzleEvent implements IEvent<Void> {
 
     public enum Reason {
-        VOLATILITY_DEPLETED,
-        INSUFFICIENT_MANA,
-        HANDLER_FAILED,
-        NOT_IMPLEMENTED,
-        MANUALLY_CANCELLED,
-        ERROR,
-        GLYPH_DISABLED
+        VOLATILITY_DEPLETED(BranchEndEvent.Reason.STARVED),
+        INSUFFICIENT_MANA(BranchEndEvent.Reason.STARVED),
+        HANDLER_FAILED(BranchEndEvent.Reason.ERROR),
+        NOT_IMPLEMENTED(BranchEndEvent.Reason.ERROR),
+        MANUALLY_CANCELLED(BranchEndEvent.Reason.NATURAL),
+        ERROR(BranchEndEvent.Reason.ERROR),
+        GLYPH_DISABLED(BranchEndEvent.Reason.ERROR);
+
+        private final BranchEndEvent.Reason branchEnd;
+
+        Reason(BranchEndEvent.Reason branchEnd) {
+            this.branchEnd = branchEnd;
+        }
+
+        public BranchEndEvent.Reason branchEnd() {
+            return branchEnd;
+        }
     }
 
     private final Glyph glyph;

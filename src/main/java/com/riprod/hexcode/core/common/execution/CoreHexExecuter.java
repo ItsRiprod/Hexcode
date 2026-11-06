@@ -1,20 +1,20 @@
 package com.riprod.hexcode.core.common.execution;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.api.event.BranchEndEvent;
 import com.riprod.hexcode.api.event.GlyphEvent;
 import com.riprod.hexcode.api.event.GlyphFizzleEvent;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.api.execution.IllegalOperationException;
 import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.resource.HexExecutionQueue;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
 public class CoreHexExecuter {
@@ -30,9 +30,7 @@ public class CoreHexExecuter {
      * Ends branch if list is empty.
      */
     public static boolean continueFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {
-        Slot slot = glyph.getSlot(slotKey);
-        List<String> links = slot != null ? Arrays.asList(slot.getLinks()) : List.of();
-        return continueExecution(links, hexContext);
+        return continueExecution(glyph.getLinks(slotKey), hexContext);
     }
 
     /**
@@ -42,10 +40,7 @@ public class CoreHexExecuter {
      * false otherwise.
      */
     public static boolean branchFromSlot(Glyph glyph, String slotKey, HexContext hexContext) {
-        Slot slot = glyph.getSlot(slotKey);
-        if (slot == null)
-            return false;
-        return branchExecution(Arrays.asList(slot.getLinks()), hexContext);
+        return branchExecution(glyph.getLinks(slotKey), hexContext);
     }
 
     /**
@@ -140,6 +135,8 @@ public class CoreHexExecuter {
         }
         try {
             asset.execute(nextNode, hexContext);
+        } catch (IllegalOperationException e) {
+            HexExecuter.endBranch(hexContext, BranchEndEvent.Reason.ERROR);
         } catch (Exception e) {
             HexExecuter.fail(nextNode, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED, e);
         }

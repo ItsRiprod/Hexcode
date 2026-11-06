@@ -64,7 +64,9 @@ public final class CastEffectsComponent implements CastComponent {
             return cached;
         }
         var own = glyph != null ? glyph.getEffects() : null;
-        var composed = (own != null ? own.clone() : GlyphEffects.empty()).compose(effects).compose(override);
+        var composed = (own != null ? own.clone() : GlyphEffects.empty())
+                .compose(effects)
+                .compose(override, !effects.hasBody());
         resolved.put(key, composed);
         return composed;
     }

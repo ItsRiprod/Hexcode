@@ -13,12 +13,22 @@ import com.riprod.hexcode.core.common.execution.cast.HexCast;
 public class CastEndEvent implements IEvent<Void> {
 
     public enum Reason {
-        COMPLETED,
-        DEPLETED,
-        EVICTED,
-        CANCELLED,
-        DISPELLED,
-        CASTER_REMOVED
+        COMPLETED(BranchEndEvent.Reason.NATURAL),
+        DEPLETED(BranchEndEvent.Reason.STARVED),
+        EVICTED(BranchEndEvent.Reason.INTERRUPTED),
+        CANCELLED(BranchEndEvent.Reason.NATURAL),
+        DISPELLED(BranchEndEvent.Reason.INTERRUPTED),
+        CASTER_REMOVED(BranchEndEvent.Reason.INTERRUPTED);
+
+        private final BranchEndEvent.Reason branchEnd;
+
+        Reason(BranchEndEvent.Reason branchEnd) {
+            this.branchEnd = branchEnd;
+        }
+
+        public BranchEndEvent.Reason branchEnd() {
+            return branchEnd;
+        }
     }
 
     private final HexCast cast;

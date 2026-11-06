@@ -1,21 +1,15 @@
 {
+  "CullDistance": 64.0,
+  "BoundingRadius": 1.0,
+  "IsImportant": false,
   "Spawners": [
     {
-      "SpawnerId": "Identity_Aura_Dust",
-      "PositionOffset": {
-        "X": 0,
-        "Y": 0,
-        "Z": 0
-      }
+      "SpawnerId": "Identity_Aura_Sparks",
+      "FixedRotation": true
     },
     {
-      "SpawnerId": "Identity_Aura_Sparks",
-      "FixedRotation": true,
-      "PositionOffset": {
-        "X": 0,
-        "Y": 0,
-        "Z": 0
-      }
+      "SpawnerId": "Identity_Aura_Dust",
+      "FixedRotation": true
     }
   ]
 }

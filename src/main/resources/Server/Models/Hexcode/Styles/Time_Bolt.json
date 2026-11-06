@@ -12,8 +12,7 @@
   "Particles": [
     {
       "SystemId": "Time_Bolt",
-      "TargetEntityPart": "Self",
-      "Color": "#00f2ff"
+      "TargetEntityPart": "Self"
     }
   ],
   "Model": "Items/Projectiles/Iceball.blockymodel"

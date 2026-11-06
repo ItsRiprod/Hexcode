@@ -9,8 +9,7 @@
   "Particles": [
     {
       "SystemId": "Energy_Bolt",
-      "TargetEntityPart": "Self",
-      "Color": "#ffa100"
+      "TargetEntityPart": "Self"
     }
   ],
   "Model": "Items/Projectiles/Projectile.blockymodel"

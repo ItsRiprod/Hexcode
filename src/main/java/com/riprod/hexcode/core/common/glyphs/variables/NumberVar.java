@@ -50,6 +50,11 @@ public final class NumberVar extends HexVar {
     }
 
     @Override
+    public boolean isFinite() {
+        return number == null || Double.isFinite(number);
+    }
+
+    @Override
     @Nonnull
     public Vector3d position(ComponentAccessor<EntityStore> accessor) {
         double n = number == null ? 0.0 : number;

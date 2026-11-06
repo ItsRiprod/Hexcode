@@ -39,11 +39,22 @@ public final class GlyphModelUtil {
     }
 
     @Nullable
+    public static Model assemble(@Nonnull GlyphAsset shapeSource, @Nullable GlyphEffects shapeStyle) {
+        return assemble(shapeSource, shapeStyle, (Float) null);
+    }
+
+    @Nullable
     public static Model assemble(@Nonnull GlyphAsset shapeSource, @Nullable GlyphEffects shapeStyle,
             float scale) {
+        return assemble(shapeSource, shapeStyle, Float.valueOf(scale));
+    }
+
+    @Nullable
+    private static Model assemble(@Nonnull GlyphAsset shapeSource, @Nullable GlyphEffects shapeStyle,
+            @Nullable Float scale) {
         ModelAsset override = overrideModel(shapeStyle);
         if (override != null) {
-            return Model.createScaledModel(override, scale);
+            return scaled(override, scale);
         }
 
         String basePath = shapeSource.getModelPath();
@@ -57,8 +68,13 @@ public final class GlyphModelUtil {
             return null;
         }
 
-        Model scaled = Model.createScaledModel(base, scale);
+        Model scaled = scaled(base, scale);
         return rebuild(scaled, attachments, scaled.getBoundingBox());
+    }
+
+    @Nonnull
+    private static Model scaled(@Nonnull ModelAsset asset, @Nullable Float scale) {
+        return scale != null ? Model.createScaledModel(asset, scale) : Model.createRandomScaleModel(asset);
     }
 
     @Nullable

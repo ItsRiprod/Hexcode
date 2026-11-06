@@ -47,7 +47,6 @@ public class EnsnareGlyph extends GlyphAsset {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     public static final String TYPE = "Ensnare";
 
-    private float spikeScale = 0.5f;
     private float damageCooldownSeconds = 1.0f;
     private int maxSpikes = 64;
     private int groundScanRange = 3;
@@ -67,9 +66,6 @@ public class EnsnareGlyph extends GlyphAsset {
 
     public static final BuilderCodec<EnsnareGlyph> CODEC = BuilderCodec
             .builder(EnsnareGlyph.class, EnsnareGlyph::new, GlyphAsset.ABSTRACT_CODEC)
-            .append(new KeyedCodec<>("SpikeScale", Codec.FLOAT, true),
-                    (c, v) -> c.spikeScale = v, c -> c.spikeScale)
-            .add()
             .append(new KeyedCodec<>("DamageCooldownSeconds", Codec.FLOAT, true),
                     (c, v) -> c.damageCooldownSeconds = v, c -> c.damageCooldownSeconds)
             .add()
@@ -146,7 +142,7 @@ public class EnsnareGlyph extends GlyphAsset {
         int centerBlockY = (int) Math.floor(center.y);
         int centerBlockZ = (int) Math.floor(center.z);
 
-        Model spikeModel = HexConstructSpawner.resolveModel(hexContext, this, spikeScale);
+        Model spikeModel = HexConstructSpawner.resolveModel(hexContext, this);
         if (spikeModel == null) {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Missing model asset");

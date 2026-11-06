@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.riprod.hexcode.api.execution.HexExecuter;
+import com.riprod.hexcode.api.execution.IllegalOperationException;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -45,6 +46,8 @@ public class DotGlyph extends GlyphAsset {
             }
 
             return compute(glyph, hexContext);
+        } catch (IllegalOperationException e) {
+            throw e;
         } catch (Exception e) {
             LOGGER.atSevere().withCause(e).log("Error occurred while computing dot product");
             return null;

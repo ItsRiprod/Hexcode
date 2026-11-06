@@ -1,0 +1,142 @@
+{
+  "Shape": "Sphere",
+  "RenderMode": "BlendAdd",
+  "ParticleRotationInfluence": "Billboard",
+  "LightInfluence": 0.0,
+  "MaxConcurrentParticles": 6,
+  "ParticleLifeSpan": {
+    "Min": 0.3,
+    "Max": 0.45
+  },
+  "SpawnRate": {
+    "Min": 8.0,
+    "Max": 10.0
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -0.45,
+      "Max": 0.45
+    },
+    "Y": {
+      "Min": -0.45,
+      "Max": 0.45
+    },
+    "Z": {
+      "Min": -0.45,
+      "Max": 0.45
+    }
+  },
+  "InitialVelocity": {
+    "Yaw": {
+      "Min": -180.0,
+      "Max": 180.0
+    },
+    "Pitch": {
+      "Min": -90.0,
+      "Max": 90.0
+    },
+    "Speed": {
+      "Min": 0.0,
+      "Max": 0.0
+    }
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Basic/Spark2.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "SoftParticles": "Disable",
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.1,
+          "Max": 0.14
+        },
+        "Y": {
+          "Min": 0.1,
+          "Max": 0.14
+        }
+      },
+      "Rotation": {
+        "Z": {
+          "Min": -180.0,
+          "Max": 180.0
+        }
+      },
+      "Opacity": 1.0,
+      "Color": "#CB6EF5"
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#CB6EF5"
+      },
+      "30": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 1.0,
+        "Color": "#CB6EF5"
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 0.3,
+            "Max": 0.3
+          },
+          "Y": {
+            "Min": 0.3,
+            "Max": 0.3
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#8319B6"
+      }
+    },
+    "FrameSize": {
+      "Width": 32,
+      "Height": 32
+    }
+  },
+  "Attractors": [
+    {
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "RadialAxis": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "RadialAcceleration": -7.0,
+      "RadialTangentAcceleration": 0.0,
+      "LinearAcceleration": {
+        "X": 0,
+        "Y": 0.0,
+        "Z": 0
+      },
+      "DampingMultiplier": {
+        "X": 0.9,
+        "Y": 0.9,
+        "Z": 0.9
+      }
+    }
+  ]
+}

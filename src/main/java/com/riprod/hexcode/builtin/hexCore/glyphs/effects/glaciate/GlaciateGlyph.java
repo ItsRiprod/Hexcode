@@ -43,7 +43,6 @@ import lombok.Getter;
 public class GlaciateGlyph extends GlyphAsset {
         public static final String TYPE = "Glaciate";
 
-        private float iceScale = 2.0f;
         @Getter
         private double minDamageSpeed = 0.1;
         @Getter
@@ -57,9 +56,6 @@ public class GlaciateGlyph extends GlyphAsset {
 
         public static final BuilderCodec<GlaciateGlyph> CODEC = BuilderCodec
                         .builder(GlaciateGlyph.class, GlaciateGlyph::new, GlyphAsset.ABSTRACT_CODEC)
-                        .append(new KeyedCodec<>("IceScale", Codec.FLOAT, true),
-                                        (c, v) -> c.iceScale = v, c -> c.iceScale)
-                        .add()
                         .append(new KeyedCodec<>("MinDamageSpeed", Codec.DOUBLE, true),
                                         (c, v) -> c.minDamageSpeed = v, c -> c.minDamageSpeed)
                         .add()
@@ -131,7 +127,7 @@ public class GlaciateGlyph extends GlyphAsset {
         private void spawnIceBlock(Glyph glyph, HexContext hexContext, Vector3d spawnPos,
                         float duration,
                         ModelAsset modelAsset, HitboxCollisionConfig collisionConfig) {
-                Model model = Model.createScaledModel(modelAsset, iceScale);
+                Model model = Model.createRandomScaleModel(modelAsset);
 
                 var accessor = hexContext.getAccessor();
 

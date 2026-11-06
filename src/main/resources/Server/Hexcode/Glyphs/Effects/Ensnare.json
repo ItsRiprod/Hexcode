@@ -92,7 +92,6 @@
     "InstantCost": 3,
     "DrainPerSecond": 0.15
   },
-  "SpikeScale": 0.5,
   "DamageCooldownSeconds": 1.0,
   "MaxSpikes": 64,
   "GroundScanRange": 3,
