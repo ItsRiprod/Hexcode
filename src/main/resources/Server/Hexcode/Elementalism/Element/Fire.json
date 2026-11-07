@@ -104,7 +104,7 @@
       "Name": "server.hexcode.elementalism.scorch.name",
       "Description": "server.hexcode.elementalism.scorch.description",
       "Lore": "server.hexcode.elementalism.scorch.lore",
-      "Damage": 16,
+      "Damage": 18,
       "DamageCause": "Fire",
       "BlockDamage": 0.5,
       "Effects": {

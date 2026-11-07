@@ -5,7 +5,7 @@
   "Lore": "server.hexcode.elementalism.water.lore",
   "ReclaimEfficiency": 0.75,
   "Base": 2,
-  "Fall": 4,
+  "Fall": 8,
   "Rise": 5,
   "BranchEfficiency": {
     "Type": "Asymptotic",
