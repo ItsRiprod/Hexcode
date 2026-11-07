@@ -29,5 +29,39 @@
       }
     ]
   },
+  "ApplyConditions": [
+    {
+      "Id": "InFluid",
+      "Tags": [
+        "Water"
+      ],
+      "Inverse": true
+    },
+    {
+      "Id": "HasEffect",
+      "EffectId": "Immunity_Fire",
+      "Inverse": true
+    },
+    {
+      "Id": "HasEffect",
+      "EffectId": "Water",
+      "Inverse": true
+    },
+    {
+      "Id": "LogicCondition",
+      "Conditions": [
+        {
+          "Id": "IsPlayer",
+          "Inverse": true
+        },
+        {
+          "Id": "CheckPlayerGameMode",
+          "GameMode": "Adventure",
+          "Inverse": false
+        }
+      ],
+      "Operator": "Or"
+    }
+  ],
   "Parent": "Burn"
 }

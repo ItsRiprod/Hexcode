@@ -2,6 +2,8 @@ package com.riprod.hexcode.builtin.elementalism.element;
 
 import javax.annotation.Nullable;
 
+import org.joml.Vector3dc;
+
 import com.hypixel.hytale.assetstore.AssetExtraInfo;
 import com.hypixel.hytale.assetstore.AssetKeyValidator;
 import com.hypixel.hytale.assetstore.AssetRegistry;
@@ -14,6 +16,9 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.codec.validation.Validators;
+import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.elementalism.element.efficiency.BranchEfficiency;
 import com.riprod.hexcode.builtin.elementalism.tier.ElementalTier;
 import com.riprod.hexcode.core.common.effects.component.EffectSlot;
@@ -46,10 +51,14 @@ public abstract class ElementAsset implements JsonAssetWithMap<String, DefaultAs
         return getAssetStore().getAssetMap();
     }
 
-    public abstract float rate(ElementTickInput input);
+    public abstract float rate(float elapsedActive, int branches, Vector3dc velocity,
+            Ref<EntityStore> host, ComponentAccessor<EntityStore> accessor);
 
-    public float efficiency(ElementTickInput input) {
-        return this.branchEfficiency != null ? this.branchEfficiency.efficiency(input) : 1.0f;
+    public float efficiency(float elapsedActive, int branches, Vector3dc velocity,
+            Ref<EntityStore> host, ComponentAccessor<EntityStore> accessor) {
+        return this.branchEfficiency != null
+                ? this.branchEfficiency.efficiency(elapsedActive, branches, velocity, host, accessor)
+                : 1.0f;
     }
 
     @Override

@@ -1,0 +1,111 @@
+{
+  "Shape": "Sphere",
+  "RenderMode": "BlendLinear",
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": true,
+  "LightInfluence": 0.0,
+  "LifeSpan": 0.6,
+  "ParticleLifeSpan": {
+    "Min": 0.5,
+    "Max": 0.7
+  },
+  "SpawnRate": {
+    "Min": 40.0,
+    "Max": 50.0
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -1.8,
+      "Max": 1.8
+    },
+    "Y": {
+      "Min": -0.3,
+      "Max": 0.3
+    },
+    "Z": {
+      "Min": -1.8,
+      "Max": 1.8
+    }
+  },
+  "InitialVelocity": {
+    "Yaw": {
+      "Min": -180.0,
+      "Max": 180.0
+    },
+    "Pitch": {
+      "Min": -90.0,
+      "Max": -80.0
+    },
+    "Speed": {
+      "Min": 1.0,
+      "Max": 2.0
+    }
+  },
+  "TrailSpawnerPositionMultiplier": 0.0,
+  "TrailSpawnerRotationMultiplier": 0.0,
+  "Attractors": [
+    {
+      "LinearAcceleration": {
+        "X": 0.0,
+        "Y": -12.0,
+        "Z": 0.0
+      },
+      "DampingMultiplier": {
+        "X": 0.95,
+        "Y": 0.95,
+        "Z": 0.95
+      }
+    }
+  ],
+  "Particle": {
+    "Texture": "Particles/Textures/Rnd/Drops_Color.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "UVOption": "RandomFlipU",
+    "FrameSize": {
+      "Width": 64,
+      "Height": 64
+    },
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.07,
+          "Max": 0.11
+        }
+      },
+      "Opacity": 1.0,
+      "Rotation": {
+        "Z": {
+          "Min": -180.0,
+          "Max": 180.0
+        }
+      },
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 3
+      }
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 0.0
+      },
+      "15": {
+        "Opacity": 1.0
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 0.7,
+            "Max": 0.7
+          }
+        },
+        "Opacity": 0.2
+      }
+    }
+  }
+}

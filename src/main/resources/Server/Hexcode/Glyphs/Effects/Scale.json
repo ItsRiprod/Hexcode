@@ -7,7 +7,7 @@
           "SystemId": "Scale_Apply"
         }
       ],
-      "Sound": "SFX_Scale_Cast"
+      "Sound": "SFX_Skeleton_Mage_Spellbook_Charge"
     },
     "End": {
       "Particles": [
@@ -15,7 +15,7 @@
           "SystemId": "Scale_Restore"
         }
       ],
-      "Sound": "SFX_Scale_End"
+      "Sound": "SFX_Skeleton_Mage_Spellbook_Impact"
     }
   },
   "Title": "hexcode.glyphs.Scale.name",

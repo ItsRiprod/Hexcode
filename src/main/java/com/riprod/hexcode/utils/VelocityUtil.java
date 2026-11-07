@@ -1,11 +1,14 @@
 package com.riprod.hexcode.utils;
 
+import javax.annotation.Nullable;
+
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.knockback.KnockbackComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider;
@@ -48,5 +51,15 @@ public class VelocityUtil {
         if (vel != null) {
             vel.addInstruction(new Vector3d(velocity), config, type);
         }
+    }
+
+    public static void knockback(Ref<EntityStore> ref, Vector3d velocity, ChangeVelocityType type,
+            @Nullable VelocityConfig config, float duration, CommandBuffer<EntityStore> buffer) {
+        var knockback = new KnockbackComponent();
+        knockback.setVelocity(velocity);
+        knockback.setVelocityType(type);
+        knockback.setVelocityConfig(config);
+        knockback.setDuration(duration);
+        buffer.putComponent(ref, KnockbackComponent.getComponentType(), knockback);
     }
 }

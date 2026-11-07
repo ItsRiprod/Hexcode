@@ -1,0 +1,23 @@
+{
+  "CullDistance": 100.0,
+  "BoundingRadius": 2.0,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "Geyser_Sustain_Orb",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Geyser_Sustain_Mist",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Geyser_Sustain_Drip",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Water_Sustain_Gather",
+      "FixedRotation": true
+    }
+  ]
+}

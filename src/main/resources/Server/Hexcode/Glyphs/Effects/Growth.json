@@ -8,7 +8,7 @@
           "SystemId": "Hexcode_Grow_Effect"
         }
       ],
-      "Sound": "SFX_Block_Break"
+      "Sound": "SFX_Crops_Grow"
     },
     "Block": {
       "Particles": [
@@ -16,7 +16,7 @@
           "SystemId": "Hexcode_Grow_Effect"
         }
       ],
-      "Sound": "SFX_Block_Break",
+      "Sound": "SFX_Crops_Grow_Stage_Complete",
       "Tint": "Secondary"
     }
   },

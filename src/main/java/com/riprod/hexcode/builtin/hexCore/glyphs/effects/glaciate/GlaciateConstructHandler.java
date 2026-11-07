@@ -9,7 +9,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
-import com.hypixel.hytale.server.core.entity.knockback.KnockbackComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
@@ -30,6 +29,7 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
+import com.riprod.hexcode.utils.VelocityUtil;
 
 public class GlaciateConstructHandler implements ConstructHandler<GlaciateState> {
 
@@ -184,10 +184,6 @@ public class GlaciateConstructHandler implements ConstructHandler<GlaciateState>
             GlaciateGlyph config, ConstructTickContext ctx) {
         Vector3d kbVelocity = new Vector3d(iceVelocity).normalize().mul(speed * config.getKnockbackScale());
         kbVelocity.y = Math.max(kbVelocity.y, config.getMinVerticalKnockback());
-        KnockbackComponent kb = new KnockbackComponent();
-        kb.setVelocity(kbVelocity);
-        kb.setVelocityType(ChangeVelocityType.Add);
-        kb.setDuration(0.0f);
-        ctx.getBuffer().putComponent(ref, KnockbackComponent.getComponentType(), kb);
+        VelocityUtil.knockback(ref, kbVelocity, ChangeVelocityType.Add, null, 0.0f, ctx.getBuffer());
     }
 }

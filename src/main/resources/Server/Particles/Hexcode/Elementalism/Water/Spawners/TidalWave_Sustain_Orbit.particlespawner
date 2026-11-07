@@ -1,0 +1,134 @@
+{
+  "Shape": "Sphere",
+  "RenderMode": "Erosion",
+  "ParticleRotationInfluence": "BillboardVelocity",
+  "LinearFiltering": false,
+  "LightInfluence": 0.0,
+  "MaxConcurrentParticles": 24,
+  "ParticleLifeSpan": {
+    "Min": 0.5,
+    "Max": 0.7
+  },
+  "SpawnRate": {
+    "Min": 30.0,
+    "Max": 36.0
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -0.7,
+      "Max": 0.7
+    },
+    "Y": {
+      "Min": -0.15,
+      "Max": 0.15
+    },
+    "Z": {
+      "Min": -0.7,
+      "Max": 0.7
+    }
+  },
+  "InitialVelocity": {
+    "Yaw": {
+      "Min": -180.0,
+      "Max": 180.0
+    },
+    "Pitch": {
+      "Min": -5.0,
+      "Max": 5.0
+    },
+    "Speed": {
+      "Min": 0.4,
+      "Max": 0.8
+    }
+  },
+  "TrailSpawnerPositionMultiplier": 0.0,
+  "TrailSpawnerRotationMultiplier": 0.0,
+  "Attractors": [
+    {
+      "LinearAcceleration": {
+        "X": 0.0,
+        "Y": 0.0,
+        "Z": 0.0
+      },
+      "DampingMultiplier": {
+        "X": 0.9,
+        "Y": 0.9,
+        "Z": 0.9
+      },
+      "RadialAxis": {
+        "X": 0.0,
+        "Y": 1.0,
+        "Z": 0.0
+      },
+      "RadialTangentAcceleration": 30.0,
+      "RadialAcceleration": -9.0
+    }
+  ],
+  "Particle": {
+    "Texture": "Particles/Textures/Rnd/Water_Splash2.png",
+    "ScaleRatioConstraint": "None",
+    "UVOption": "RandomFlipU",
+    "FrameSize": {
+      "Width": 64,
+      "Height": 64
+    },
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.2,
+          "Max": 0.28
+        },
+        "Y": {
+          "Min": 0.2,
+          "Max": 0.28
+        }
+      },
+      "Opacity": 1.0,
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 3
+      }
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 0.6,
+            "Max": 0.6
+          },
+          "Y": {
+            "Min": 0.6,
+            "Max": 0.6
+          }
+        },
+        "Opacity": 0.0
+      },
+      "20": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 1.4,
+            "Max": 1.4
+          }
+        },
+        "Opacity": 1.0
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 0.8,
+            "Max": 0.8
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 0.0
+      }
+    }
+  }
+}

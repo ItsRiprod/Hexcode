@@ -1,0 +1,30 @@
+{
+  "LifeSpan": 3.0,
+  "CullDistance": 100.0,
+  "BoundingRadius": 10.0,
+  "IsImportant": true,
+  "Spawners": [
+    {
+      "SpawnerId": "TidalWave_Hit_Ring",
+      "PositionOffset": {
+        "Y": -0.4
+      }
+    },
+    {
+      "SpawnerId": "TidalWave_Hit_Ring",
+      "PositionOffset": {
+        "Y": -0.3
+      },
+      "StartDelay": 0.25
+    },
+    {
+      "SpawnerId": "TidalWave_Hit_Wall"
+    },
+    {
+      "SpawnerId": "TidalWave_Hit_Surge"
+    },
+    {
+      "SpawnerId": "TidalWave_Hit_Foam"
+    }
+  ]
+}

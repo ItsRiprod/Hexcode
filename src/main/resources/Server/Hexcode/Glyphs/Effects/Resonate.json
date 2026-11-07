@@ -3,8 +3,8 @@
   "Effects": {
     "PrimaryColor": "#26C6DA",
     "SecondaryColor": "#B2EBF2",
-    "Hit": { "Particles": [{ "SystemId": "Link_Flow" }], "Sound": "SFX_Block_Break" },
-    "Fizzle": { "Particles": [{ "SystemId": "Beam_Impact" }], "Sound": "SFX_Block_Break", "Tint": "Secondary" }
+    "Hit": { "Particles": [{ "SystemId": "Link_Flow" }], "Sound": "SFX_Arc_Impact" },
+    "Fizzle": { "Particles": [{ "SystemId": "Beam_Impact" }], "Sound": "SFX_Concentrate_Fail", "Tint": "Secondary" }
   },
   "Title": "hexcode.glyphs.Resonate.name",
   "Description": "hexcode.glyphs.Resonate.description",

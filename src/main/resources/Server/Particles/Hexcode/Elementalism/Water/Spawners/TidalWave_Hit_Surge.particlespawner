@@ -1,0 +1,147 @@
+{
+  "Shape": "Sphere",
+  "RenderMode": "Erosion",
+  "ParticleRotationInfluence": "BillboardVelocity",
+  "LinearFiltering": false,
+  "LightInfluence": 0.0,
+  "ParticleLifeSpan": {
+    "Min": 0.5,
+    "Max": 0.7
+  },
+  "SpawnBurst": true,
+  "TotalParticles": {
+    "Min": 24,
+    "Max": 28
+  },
+  "SpawnRate": {
+    "Min": 1000.0,
+    "Max": 1000.0
+  },
+  "EmitOffset": {
+    "X": {
+      "Min": -0.4,
+      "Max": 0.4
+    },
+    "Y": {
+      "Min": -0.2,
+      "Max": 0.0
+    },
+    "Z": {
+      "Min": -0.4,
+      "Max": 0.4
+    }
+  },
+  "InitialVelocity": {
+    "Yaw": {
+      "Min": -180.0,
+      "Max": 180.0
+    },
+    "Pitch": {
+      "Min": 70.0,
+      "Max": 90.0
+    },
+    "Speed": {
+      "Min": 5.0,
+      "Max": 7.0
+    }
+  },
+  "TrailSpawnerPositionMultiplier": 0.0,
+  "TrailSpawnerRotationMultiplier": 0.0,
+  "Attractors": [
+    {
+      "LinearAcceleration": {
+        "X": 0.0,
+        "Y": -14.0,
+        "Z": 0.0
+      },
+      "DampingMultiplier": {
+        "X": 0.92,
+        "Y": 0.92,
+        "Z": 0.92
+      }
+    }
+  ],
+  "Particle": {
+    "Texture": "Particles/Textures/Rnd/Water_Splash2.png",
+    "ScaleRatioConstraint": "None",
+    "UVOption": "RandomFlipU",
+    "FrameSize": {
+      "Width": 64,
+      "Height": 64
+    },
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.25,
+          "Max": 0.35
+        },
+        "Y": {
+          "Min": 0.25,
+          "Max": 0.35
+        }
+      },
+      "Opacity": 1.0,
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 3
+      },
+      "Color": "#e8f7ff"
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 0.6,
+            "Max": 0.6
+          },
+          "Y": {
+            "Min": 0.6,
+            "Max": 0.6
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#e8f7ff"
+      },
+      "15": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 1.0
+      },
+      "60": {
+        "Scale": {
+          "X": {
+            "Min": 1.2,
+            "Max": 1.2
+          },
+          "Y": {
+            "Min": 1.8,
+            "Max": 1.8
+          }
+        },
+        "Color": "#7cc4f0"
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 2.4,
+            "Max": 2.4
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#3c8cdc"
+      }
+    }
+  }
+}

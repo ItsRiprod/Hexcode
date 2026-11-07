@@ -1,0 +1,15 @@
+{
+  "Hidden": false,
+  "EffectId": "Water",
+  "Effects": {
+    "PrimaryColor": "#3C8CDC",
+    "Sustain": {
+      "Pulse": [
+        {
+          "SystemId": "Wet_Pulse"
+        }
+      ],
+      "Interval": 1.0
+    }
+  }
+}

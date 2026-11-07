@@ -15,7 +15,7 @@
           "SystemId": "Hexcode_Drain_Complete"
         }
       ],
-      "Sound": "SFX_Drain_Complete",
+      "Sound": "SFX_Skeleton_Mage_Spellbook_Impact",
       "Tint": "Secondary"
     }
   },

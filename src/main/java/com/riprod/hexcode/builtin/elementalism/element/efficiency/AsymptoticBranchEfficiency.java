@@ -1,10 +1,14 @@
 package com.riprod.hexcode.builtin.elementalism.element.efficiency;
 
+import org.joml.Vector3dc;
+
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.validation.Validators;
-import com.riprod.hexcode.builtin.elementalism.element.ElementTickInput;
+import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 public class AsymptoticBranchEfficiency extends BranchEfficiency {
     public static final String TYPE = "Asymptotic";
@@ -15,8 +19,9 @@ public class AsymptoticBranchEfficiency extends BranchEfficiency {
     protected float rate = 0.5f;
 
     @Override
-    public float efficiency(ElementTickInput input) {
-        var extra = Math.max(0, input.branches() - 1);
+    public float efficiency(float elapsedActive, int branches, Vector3dc velocity,
+            Ref<EntityStore> host, ComponentAccessor<EntityStore> accessor) {
+        var extra = Math.max(0, branches - 1);
         return this.limit + (this.base - this.limit) * (float) Math.pow(this.rate, extra);
     }
 

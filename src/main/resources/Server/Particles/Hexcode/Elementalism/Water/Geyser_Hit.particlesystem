@@ -1,0 +1,34 @@
+{
+  "LifeSpan": 3.0,
+  "CullDistance": 100.0,
+  "BoundingRadius": 6.0,
+  "IsImportant": true,
+  "Spawners": [
+    {
+      "SpawnerId": "Geyser_Hit_Ring",
+      "PositionOffset": {
+        "Y": -0.4
+      }
+    },
+    {
+      "SpawnerId": "Geyser_Hit_Column"
+    },
+    {
+      "SpawnerId": "Geyser_Hit_Crown",
+      "StartDelay": 0.3,
+      "PositionOffset": {
+        "Y": 4.0
+      }
+    },
+    {
+      "SpawnerId": "Geyser_Hit_Mist"
+    },
+    {
+      "SpawnerId": "Geyser_Hit_Rain",
+      "StartDelay": 0.8,
+      "PositionOffset": {
+        "Y": 4.0
+      }
+    }
+  ]
+}

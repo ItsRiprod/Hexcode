@@ -1,0 +1,222 @@
+{
+  "Type": "Water",
+  "Name": "server.hexcode.elementalism.water.name",
+  "Description": "server.hexcode.elementalism.water.description",
+  "Lore": "server.hexcode.elementalism.water.lore",
+  "ReclaimEfficiency": 0.75,
+  "Base": 2,
+  "Fall": 4,
+  "Rise": 5,
+  "BranchEfficiency": {
+    "Type": "Asymptotic",
+    "Base": 1.0,
+    "Limit": 0.8,
+    "Rate": 0.8
+  },
+  "Effects": {
+    "PrimaryColor": "#3C8CDC",
+    "SecondaryColor": "#BFE6FF",
+    "Model": "Water_Bolt",
+    "Start": {
+      "Sound": "SFX_Water_MoveIn"
+    },
+    "Sustain": {
+      "Particles": [
+        {
+          "SystemId": "Water_Sustain"
+        }
+      ],
+      "Light": 2,
+      "Pulse": [
+        {
+          "SystemId": "Water_Pulse"
+        }
+      ],
+      "Interval": 1.0
+    },
+    "Hit": {
+      "Particles": [
+        {
+          "SystemId": "Water_Strike"
+        }
+      ],
+      "Sound": "SFX_Water_MoveOut",
+      "Tint": "None"
+    },
+    "End": {
+      "Particles": [
+        {
+          "SystemId": "Water_Fizzle"
+        }
+      ],
+      "Tint": "None"
+    }
+  },
+  "Tiers": {
+    "10": {
+      "Type": "Douse",
+      "Id": "Douse",
+      "Name": "server.hexcode.elementalism.douse.name",
+      "Description": "server.hexcode.elementalism.douse.description",
+      "Lore": "server.hexcode.elementalism.douse.lore",
+      "Status": "Wet",
+      "Duration": 10,
+      "Radius": 2,
+      "HydrateDuration": 300,
+      "Effects": {
+        "Start": {
+          "Particles": [
+            {
+              "SystemId": "Douse_Start"
+            }
+          ],
+          "Sound": "SFX_Water_MoveIn",
+          "Tint": "None"
+        },
+        "Sustain": {
+          "Particles": [
+            {
+              "SystemId": "Douse_Sustain"
+            }
+          ],
+          "Light": 3,
+          "Pulse": [
+            {
+              "SystemId": "Douse_Pulse"
+            }
+          ],
+          "Interval": 0.8
+        },
+        "Hit": {
+          "Particles": [
+            {
+              "SystemId": "Douse_Hit"
+            }
+          ],
+          "Sound": "SFX_Tool_Watering_Can_Water",
+          "Tint": "None"
+        }
+      }
+    },
+    "50": {
+      "Type": "Geyser",
+      "Id": "Geyser",
+      "Name": "server.hexcode.elementalism.geyser.name",
+      "Description": "server.hexcode.elementalism.geyser.description",
+      "Lore": "server.hexcode.elementalism.geyser.lore",
+      "Radius": 1.5,
+      "Height": 4,
+      "Knockback": {
+        "Type": "Point",
+        "Force": 0,
+        "VelocityY": 28,
+        "VelocityType": "Set"
+      },
+      "Effects": {
+        "PrimaryColor": "#2FA8D8",
+        "SecondaryColor": "#C9F2FF",
+        "Start": {
+          "Particles": [
+            {
+              "SystemId": "Geyser_Start"
+            }
+          ],
+          "Sound": "SFX_Water_MoveIn",
+          "Tint": "None"
+        },
+        "Sustain": {
+          "Particles": [
+            {
+              "SystemId": "Geyser_Sustain"
+            }
+          ],
+          "Trail": {
+            "TrailId": "Water_Trail"
+          },
+          "Light": 5,
+          "Pulse": [
+            {
+              "SystemId": "Geyser_Pulse"
+            }
+          ],
+          "Interval": 0.5
+        },
+        "Hit": {
+          "Particles": [
+            {
+              "SystemId": "Geyser_Hit"
+            }
+          ],
+          "Sound": "SFX_Water_MoveIn",
+          "Tint": "None"
+        }
+      }
+    },
+    "100": {
+      "Type": "TidalWave",
+      "Id": "TidalWave",
+      "Name": "server.hexcode.elementalism.tidalwave.name",
+      "Description": "server.hexcode.elementalism.tidalwave.description",
+      "Lore": "server.hexcode.elementalism.tidalwave.lore",
+      "Radius": 4,
+      "Wave": {
+        "DamageEntities": true,
+        "EntityDamage": 0,
+        "EntityDamageRadius": 10,
+        "EntityDamageFalloff": 1.0,
+        "Knockback": {
+          "Type": "Point",
+          "VelocityConfig": {
+            "AirResistance": 0.97,
+            "AirResistanceMax": 0.96,
+            "GroundResistance": 0.94,
+            "GroundResistanceMax": 0.3,
+            "Threshold": 3.0
+          },
+          "Force": 12,
+          "VelocityY": 3,
+          "VelocityType": "Set"
+        }
+      },
+      "Effects": {
+        "PrimaryColor": "#1E5FA8",
+        "SecondaryColor": "#E8F7FF",
+        "Start": {
+          "Particles": [
+            {
+              "SystemId": "TidalWave_Start"
+            }
+          ],
+          "Sound": "SFX_Water_MoveIn",
+          "Tint": "None"
+        },
+        "Sustain": {
+          "Particles": [
+            {
+              "SystemId": "TidalWave_Sustain"
+            }
+          ],
+          "Trail": {
+            "TrailId": "Water_Trail_Large"
+          },
+          "Light": 7,
+          "Pulse": [
+            {
+              "SystemId": "TidalWave_Pulse"
+            }
+          ],
+          "Interval": 0.35
+        },
+        "Hit": {
+          "Particles": [
+            {
+              "SystemId": "TidalWave_Hit"
+            }
+          ],
+          "Sound": "SFX_Water_MoveOut",
+          "Tint": "None"
+        }
+      }
+    }
+  }
+}

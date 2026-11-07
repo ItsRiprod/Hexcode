@@ -1,0 +1,24 @@
+{
+  "LifeSpan": 2.5,
+  "CullDistance": 100.0,
+  "BoundingRadius": 4.0,
+  "IsImportant": true,
+  "Spawners": [
+    {
+      "SpawnerId": "Douse_Hit_Crown"
+    },
+    {
+      "SpawnerId": "Douse_Hit_Ring",
+      "PositionOffset": {
+        "Y": -0.4
+      }
+    },
+    {
+      "SpawnerId": "Douse_Hit_Rain",
+      "StartDelay": 0.25
+    },
+    {
+      "SpawnerId": "Douse_Hit_Mist"
+    }
+  ]
+}

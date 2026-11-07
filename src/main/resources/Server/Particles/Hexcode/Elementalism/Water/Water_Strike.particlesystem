@@ -1,0 +1,11 @@
+{
+  "LifeSpan": 1.0,
+  "CullDistance": 100.0,
+  "BoundingRadius": 1.5,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "Water_Strike_Splash"
+    }
+  ]
+}

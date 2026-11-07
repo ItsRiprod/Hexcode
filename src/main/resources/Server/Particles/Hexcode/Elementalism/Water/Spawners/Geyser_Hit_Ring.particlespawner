@@ -1,0 +1,73 @@
+{
+  "Shape": "Sphere",
+  "RenderMode": "BlendLinear",
+  "ParticleRotationInfluence": "None",
+  "LinearFiltering": true,
+  "LightInfluence": 0.0,
+  "ParticleLifeSpan": {
+    "Min": 0.9,
+    "Max": 0.9
+  },
+  "SpawnBurst": true,
+  "TotalParticles": {
+    "Min": 1,
+    "Max": 1
+  },
+  "SpawnRate": {
+    "Min": 1000.0,
+    "Max": 1000.0
+  },
+  "TrailSpawnerPositionMultiplier": 0.0,
+  "TrailSpawnerRotationMultiplier": 0.0,
+  "Particle": {
+    "Texture": "Particles/Textures/Circles/Water_Trail.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "UVOption": "RandomFlipU",
+    "SoftParticles": "Enable",
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.5,
+          "Max": 0.5
+        }
+      },
+      "Opacity": 1.0,
+      "Rotation": {
+        "X": {
+          "Min": 90.0,
+          "Max": 90.0
+        },
+        "Z": {
+          "Min": 0.0,
+          "Max": 360.0
+        }
+      },
+      "Color": "#e8f7ff"
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#e8f7ff"
+      },
+      "10": {
+        "Opacity": 0.9
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 2.4,
+            "Max": 2.4
+          }
+        },
+        "Opacity": 0.0,
+        "Color": "#3c8cdc"
+      }
+    }
+  }
+}

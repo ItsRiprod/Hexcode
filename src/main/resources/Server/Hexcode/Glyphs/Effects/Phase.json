@@ -3,9 +3,9 @@
   "Effects": {
     "PrimaryColor": "#3F51B5",
     "SecondaryColor": "#9FA8DA",
-    "Start": { "Particles": [{ "SystemId": "Phase_Out" }], "Sound": "SFX_Phase_Out" },
-    "Hit": { "Particles": [{ "SystemId": "Phase_Crush" }], "Sound": "SFX_Phase_Crush", "Tint": "Secondary" },
-    "End": { "Particles": [{ "SystemId": "Phase_In" }], "Sound": "SFX_Phase_In", "Tint": "Secondary" }
+    "Start": { "Particles": [{ "SystemId": "Phase_Out" }], "Sound": "SFX_Portal_Neutral_Open" },
+    "Hit": { "Particles": [{ "SystemId": "Phase_Crush" }], "Sound": "SFX_Crystal_Break", "Tint": "Secondary" },
+    "End": { "Particles": [{ "SystemId": "Phase_In" }], "Sound": "SFX_Portal_Neutral_Open", "Tint": "Secondary" }
   },
   "Title": "hexcode.glyphs.Phase.name",
   "Description": "hexcode.glyphs.Phase.description",

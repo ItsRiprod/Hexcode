@@ -1,0 +1,19 @@
+{
+  "CullDistance": 100.0,
+  "BoundingRadius": 3.0,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "TidalWave_Sustain_Core",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "TidalWave_Sustain_Orbit",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "TidalWave_Sustain_Foam",
+      "FixedRotation": true
+    }
+  ]
+}

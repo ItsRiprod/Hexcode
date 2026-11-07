@@ -1,11 +1,15 @@
 package com.riprod.hexcode.builtin.elementalism.elements.fire;
 
+import org.joml.Vector3dc;
+
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.validation.Validators;
+import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.builtin.elementalism.element.ElementAsset;
-import com.riprod.hexcode.builtin.elementalism.element.ElementTickInput;
 
 public class FireElement extends ElementAsset {
     public static final String TYPE = "Fire";
@@ -15,8 +19,9 @@ public class FireElement extends ElementAsset {
     protected float slope;
 
     @Override
-    public float rate(ElementTickInput input) {
-        return this.start - this.slope * input.elapsedActive();
+    public float rate(float elapsedActive, int branches, Vector3dc velocity,
+            Ref<EntityStore> host, ComponentAccessor<EntityStore> accessor) {
+        return this.start - this.slope * elapsedActive;
     }
 
     static {

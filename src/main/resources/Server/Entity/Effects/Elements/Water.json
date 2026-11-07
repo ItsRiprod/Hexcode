@@ -1,0 +1,23 @@
+{
+  "Duration": 10,
+  "Infinite": false,
+  "Debuff": false,
+  "OverlapBehavior": "Extend",
+  "ApplicationEffects": {
+    "EntityBottomTint": "#0B2A4A",
+    "EntityTopTint": "#3C8CDC",
+    "Particles": [
+      {
+        "SystemId": "Wet_Pulse"
+      }
+    ]
+  },
+  "DamageResistance": {
+    "Fire": [
+      {
+        "Amount": 0.5,
+        "CalculationType": "Percent"
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "Model": "Items/Projectiles/Acid.blockymodel",
+  "Texture": "Items/Projectiles/Water_Glob_Texture.png",
+  "HitBox": {
+    "Max": {
+      "X": 0.1,
+      "Y": 0.1,
+      "Z": 0.1
+    },
+    "Min": {
+      "X": -0.1,
+      "Y": -0.1,
+      "Z": -0.1
+    }
+  },
+  "MinScale": 1,
+  "MaxScale": 1,
+  "Particles": [
+    {
+      "SystemId": "Water_Bolt",
+      "TargetEntityPart": "Self"
+    }
+  ]
+}

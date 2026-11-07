@@ -1,0 +1,15 @@
+{
+  "CullDistance": 100.0,
+  "BoundingRadius": 1.5,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "Water_Sustain_Core",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Water_Sustain_Gather",
+      "FixedRotation": true
+    }
+  ]
+}

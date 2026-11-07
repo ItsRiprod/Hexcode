@@ -30,6 +30,10 @@ import com.riprod.hexcode.builtin.elementalism.elements.fire.ExplosionTier;
 import com.riprod.hexcode.builtin.elementalism.elements.fire.FireElement;
 import com.riprod.hexcode.builtin.elementalism.elements.fire.IgniteTier;
 import com.riprod.hexcode.builtin.elementalism.elements.fire.ScorchTier;
+import com.riprod.hexcode.builtin.elementalism.elements.water.DouseTier;
+import com.riprod.hexcode.builtin.elementalism.elements.water.GeyserTier;
+import com.riprod.hexcode.builtin.elementalism.elements.water.TidalWaveTier;
+import com.riprod.hexcode.builtin.elementalism.elements.water.WaterElement;
 import com.riprod.hexcode.builtin.elementalism.glyphs.catalyst.CatalystGlyph;
 import com.riprod.hexcode.builtin.elementalism.status.StatusAsset;
 import com.riprod.hexcode.builtin.elementalism.status.block.BlockStatusSection;
@@ -68,6 +72,10 @@ public class ElementalismPlugin {
         ElementalTier.CODEC.register(IgniteTier.TYPE, IgniteTier.class, IgniteTier.CODEC);
         ElementalTier.CODEC.register(ScorchTier.TYPE, ScorchTier.class, ScorchTier.CODEC);
         ElementalTier.CODEC.register(ExplosionTier.TYPE, ExplosionTier.class, ExplosionTier.CODEC);
+        ElementAsset.CODEC.register(WaterElement.TYPE, WaterElement.class, WaterElement.CODEC);
+        ElementalTier.CODEC.register(DouseTier.TYPE, DouseTier.class, DouseTier.CODEC);
+        ElementalTier.CODEC.register(GeyserTier.TYPE, GeyserTier.class, GeyserTier.CODEC);
+        ElementalTier.CODEC.register(TidalWaveTier.TYPE, TidalWaveTier.class, TidalWaveTier.CODEC);
     }
 
     private static void registerAssets() {

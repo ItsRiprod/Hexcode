@@ -10,7 +10,7 @@
           "SystemId": "Ensnare_Burst"
         }
       ],
-      "Sound": "SFX_Ensnare_Cast"
+      "Sound": "SFX_Spirit_Root_Spawn"
     },
     "Hit": {
       "Particles": [
@@ -27,7 +27,7 @@
         }
       ],
       "Tint": "Secondary",
-      "Sound": "SFX_Ensnare_End"
+      "Sound": "SFX_Spirit_Root_Death_01"
     }
   },
   "Title": "hexcode.glyphs.Ensnare.name",

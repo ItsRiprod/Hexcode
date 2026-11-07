@@ -9,7 +9,7 @@
           "SystemId": "Ensnare_Hit"
         }
       ],
-      "Sound": "SFX_Block_Break"
+      "Sound": "SFX_Stone_Break"
     },
     "Block": {
       "Particles": [
@@ -17,7 +17,7 @@
           "SystemId": "Ensnare_Crumble"
         }
       ],
-      "Sound": "SFX_Block_Break",
+      "Sound": "SFX_Stone_Break",
       "Tint": "Secondary"
     }
   },

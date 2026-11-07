@@ -12,12 +12,9 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import com.riprod.hexcode.builtin.elementalism.element.ElementAsset;
-import com.riprod.hexcode.builtin.elementalism.element.ElementTickInput;
 import com.riprod.hexcode.api.event.BranchEndEvent;
 import com.riprod.hexcode.api.event.CastEvent;
 import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
@@ -41,6 +38,7 @@ public final class ElementalComponent
     private final Object2FloatOpenHashMap<String> elapsed = new Object2FloatOpenHashMap<>();
     @Nullable private String active;
     @Nullable private Vector3d lastPos;
+    private final Vector3d velocity = new Vector3d();
     @Nullable private String vesselTier;
     @Nullable private String counted;
     private boolean open;
@@ -129,15 +127,15 @@ public final class ElementalComponent
         if (active == null) {
             return;
         }
-        var speed = trackSpeed(host, dt, buffer);
+        trackVelocity(host, dt, buffer);
         var element = ElementAsset.getAssetMap().getAsset(active);
         if (element == null) {
             return;
         }
         var t = elapsed.getFloat(active);
-        var input = new ElementTickInput(dt, t, speed, isLiving(host, buffer),
-                ctx.get(ElementThreads.TYPE).count(active));
-        var gain = element.rate(input) * element.efficiency(input) * dt
+        var branches = ctx.get(ElementThreads.TYPE).count(active);
+        var gain = element.rate(t, branches, velocity, host, buffer)
+                * element.efficiency(t, branches, velocity, host, buffer) * dt
                 * (1f + ctx.volatility().getSpent() / 100f);
         charges.put(active, Math.max(0f, charges.getFloat(active) + gain));
         elapsed.put(active, t + dt);
@@ -164,24 +162,20 @@ public final class ElementalComponent
         ctx.get(CastEffectsComponent.TYPE).setOverride(null);
     }
 
-    private float trackSpeed(@Nonnull Ref<EntityStore> host, float dt, @Nonnull CommandBuffer<EntityStore> buffer) {
+    private void trackVelocity(@Nonnull Ref<EntityStore> host, float dt, @Nonnull CommandBuffer<EntityStore> buffer) {
         var transform = buffer.getComponent(host, TransformComponent.getComponentType());
         if (transform == null) {
-            return 0f;
+            velocity.zero();
+            return;
         }
         var pos = transform.getPosition();
-        var speed = lastPos != null && dt > 0f ? (float) (lastPos.distance(pos) / dt) : 0f;
-        if (lastPos == null) {
-            lastPos = new Vector3d(pos);
-        } else {
+        if (lastPos != null && dt > 0f) {
+            pos.sub(lastPos, velocity).div(dt);
             lastPos.set(pos);
+        } else {
+            velocity.zero();
+            lastPos = new Vector3d(pos);
         }
-        return speed;
-    }
-
-    private static boolean isLiving(@Nonnull Ref<EntityStore> host, @Nonnull CommandBuffer<EntityStore> buffer) {
-        return buffer.getComponent(host, Player.getComponentType()) != null
-                || buffer.getComponent(host, NPCEntity.getComponentType()) != null;
     }
 
     @Nonnull

@@ -1,0 +1,75 @@
+{
+  "Shape": "Sphere",
+  "RenderMode": "BlendAdd",
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": true,
+  "LightInfluence": 0.0,
+  "MaxConcurrentParticles": 2,
+  "ParticleLifeSpan": {
+    "Min": 0.7,
+    "Max": 0.7
+  },
+  "SpawnRate": {
+    "Min": 2.0,
+    "Max": 2.0
+  },
+  "TrailSpawnerPositionMultiplier": 0.0,
+  "TrailSpawnerRotationMultiplier": 0.0,
+  "Particle": {
+    "Texture": "Particles/Textures/Circles/Circle_Glow.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.4,
+          "Max": 0.4
+        }
+      },
+      "Opacity": 1.0,
+      "Rotation": {
+        "Z": {
+          "Min": -180.0,
+          "Max": 180.0
+        }
+      }
+    },
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 0.5,
+            "Max": 0.5
+          }
+        },
+        "Opacity": 0.0
+      },
+      "15": {
+        "Scale": {
+          "X": {
+            "Min": 0.9,
+            "Max": 0.9
+          }
+        },
+        "Opacity": 0.6
+      },
+      "60": {
+        "Scale": {
+          "X": {
+            "Min": 1.9,
+            "Max": 1.9
+          }
+        },
+        "Opacity": 0.35
+      },
+      "100": {
+        "Scale": {
+          "X": {
+            "Min": 2.7,
+            "Max": 2.7
+          }
+        },
+        "Opacity": 0.0
+      }
+    }
+  }
+}

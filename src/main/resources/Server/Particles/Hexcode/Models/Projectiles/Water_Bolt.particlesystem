@@ -1,0 +1,15 @@
+{
+  "CullDistance": 64.0,
+  "BoundingRadius": 1.0,
+  "IsImportant": false,
+  "Spawners": [
+    {
+      "SpawnerId": "Water_Bolt_Glow",
+      "FixedRotation": true
+    },
+    {
+      "SpawnerId": "Water_Bolt_Bead",
+      "FixedRotation": true
+    }
+  ]
+}
