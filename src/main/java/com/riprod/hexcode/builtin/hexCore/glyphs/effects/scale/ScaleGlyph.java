@@ -51,8 +51,8 @@ public class ScaleGlyph extends GlyphAsset {
 
     public static final String TYPE = "Scale";
 
-    private double minMagnitude = 0.01;
-    private double maxMagnitude = 32.0;
+    private double minMagnitude = 0.001;
+    private double maxMagnitude = 100.0;
     private double minDuration = 0.1;
     private float mountOffsetY = 2.5f;
     private String scaleEffectId;
@@ -88,13 +88,18 @@ public class ScaleGlyph extends GlyphAsset {
                 asset != null ? asset.getSlot(ScaleGlyphSlots.MAGNITUDE) : null),
                 minMagnitude, maxMagnitude);
 
-        float currentScale = readCurrentScale(glyph, hexContext);
-        double resultScale = clamp(currentScale * magnitude, minMagnitude, maxMagnitude);
+        var contribution = contribution(readCurrentScale(glyph, hexContext), magnitude);
 
         var impact = asset == null
                 ? null
                 : asset.getVolatilityImpact();
-        return baseCost * Impact.scale(impact, resultScale);
+        return baseCost * Impact.scale(impact, Math.max(contribution, 1.0 / contribution));
+    }
+
+    private static float contribution(float currentScale, double magnitude) {
+        if (currentScale <= 0f)
+            return (float) magnitude;
+        return (float) (HexAppearanceService.clampScale(currentScale * magnitude) / currentScale);
     }
 
     private float readCurrentScale(Glyph glyph, HexContext hexContext) {
@@ -175,12 +180,7 @@ public class ScaleGlyph extends GlyphAsset {
         var layerApplied = false;
         var spawned = false;
         try {
-            float currentScale = readRenderedScale(accessor, targetRef);
-            double desiredScale = clamp(currentScale * magnitude,
-                    minMagnitude, maxMagnitude);
-            float contribution = currentScale > 0
-                    ? (float) (desiredScale / currentScale)
-                    : (float) magnitude;
+            var contribution = contribution(readRenderedScale(accessor, targetRef), magnitude);
 
             state = new ScaleState();
             state.setAppliedMagnitude((float) magnitude);

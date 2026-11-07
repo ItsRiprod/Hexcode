@@ -77,6 +77,14 @@ public final class HexAppearanceService {
         buffer.tryRemoveComponent(ref, HexAppearanceComponent.getComponentType());
     }
 
+    public static float clampScale(double scale) {
+        var config = HexcodeConfig.get();
+        if (!Double.isFinite(scale)) {
+            return scale > 0 ? config.getMaxEntityScale() : config.getMinEntityScale();
+        }
+        return (float) Math.clamp(scale, config.getMinEntityScale(), config.getMaxEntityScale());
+    }
+
     @Nullable
     private static HexAppearanceComponent capture(@Nonnull ComponentAccessor<EntityStore> buffer,
             @Nonnull Ref<EntityStore> ref) {
@@ -146,10 +154,7 @@ public final class HexAppearanceService {
         if (base <= 0f) {
             base = 1.0f;
         }
-        float scale = base * scaleProduct;
-        if (scale <= 0f) {
-            scale = 1.0f;
-        }
+        var scale = clampScale(base * scaleProduct);
 
         Model model = overridden
                 ? Model.createScaledModel(asset, scale, null)

@@ -3,6 +3,8 @@
   "RespectPvp": true,
   "RespectClaims": true,
   "AllowNametagOverrides": true,
+  "MinEntityScale": 0.001,
+  "MaxEntityScale": 100,
   "MaxGlyphsPerTick": 1024,
   "MaxGlyphNanosPerTick": 5000000,
   "MaxGlyphsPerCast": 128

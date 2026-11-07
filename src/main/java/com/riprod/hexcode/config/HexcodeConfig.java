@@ -36,6 +36,20 @@ public final class HexcodeConfig extends Config {
                     config -> config.allowNametagOverrides)
             .documentation("Whether or not glyphs can modify player's nametags")
             .add()
+            .append(new KeyedCodec<>("MinEntityScale", Codec.FLOAT),
+                    (config, f) -> config.minEntityScale = f,
+                    config -> config.minEntityScale)
+            .documentation("Smallest size any glyph can leave an entity at, after every Scale and "
+                    + "Disguise layer on it is combined")
+            .addValidator(Validators.greaterThan(0f))
+            .add()
+            .append(new KeyedCodec<>("MaxEntityScale", Codec.FLOAT),
+                    (config, f) -> config.maxEntityScale = f,
+                    config -> config.maxEntityScale)
+            .documentation("Largest size any glyph can leave an entity at, after every Scale and "
+                    + "Disguise layer on it is combined")
+            .addValidator(Validators.greaterThan(0f))
+            .add()
             .append(new KeyedCodec<>("MaxGlyphsPerTick", Codec.INTEGER),
                     (config, i) -> config.maxGlyphsPerTick = i,
                     config -> config.maxGlyphsPerTick)
@@ -71,12 +85,20 @@ public final class HexcodeConfig extends Config {
                             + "); clamping MaxGlyphsPerCast to MaxGlyphsPerTick");
                     config.maxGlyphsPerCast = config.maxGlyphsPerTick;
                 }
+                if (config.minEntityScale > config.maxEntityScale) {
+                    extraInfo.getValidationResults().warn("MinEntityScale (" + config.minEntityScale
+                            + ") exceeds MaxEntityScale (" + config.maxEntityScale
+                            + "); clamping MinEntityScale to MaxEntityScale");
+                    config.minEntityScale = config.maxEntityScale;
+                }
             })
             .build();
 
     private boolean respectPvp = true;
     private boolean respectClaims = true;
     private boolean allowNametagOverrides = true;
+    private float minEntityScale = 0.001f;
+    private float maxEntityScale = 100f;
     private int maxGlyphsPerTick = 1024;
     private long maxGlyphNanosPerTick = 5_000_000L;
     private int maxGlyphsPerCast = 128;
@@ -101,6 +123,14 @@ public final class HexcodeConfig extends Config {
 
     public boolean allowsNametagOverrides() {
         return allowNametagOverrides;
+    }
+
+    public float getMinEntityScale() {
+        return minEntityScale;
+    }
+
+    public float getMaxEntityScale() {
+        return maxEntityScale;
     }
 
     public int getMaxGlyphsPerTick() {
