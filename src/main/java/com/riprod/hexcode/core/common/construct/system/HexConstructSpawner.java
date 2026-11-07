@@ -133,7 +133,9 @@ public class HexConstructSpawner {
         }
         var stripped = EffectRenderer.strip(live, sustain);
         var base = !swap ? stripped : body != null ? GlyphModelUtil.withDefaultBox(body, own) : own;
-        sustain.setBody(base.getModelAssetId());
+        if (installed) {
+            sustain.setBody(base.getModelAssetId());
+        }
         return EffectRenderer.inject(base, effects, sustain);
     }
 
