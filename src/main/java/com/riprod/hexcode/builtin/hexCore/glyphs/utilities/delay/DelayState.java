@@ -29,6 +29,14 @@ public class DelayState implements ConstructState {
         return remainingSeconds;
     }
 
+    public boolean isAwaitingDuration() {
+        return remainingSeconds < 0f;
+    }
+
+    public void setRemainingSeconds(float remainingSeconds) {
+        this.remainingSeconds = remainingSeconds;
+    }
+
     public void tick(float dt) {
         if (remainingSeconds > 0f) {
             remainingSeconds = Math.max(0f, remainingSeconds - dt);

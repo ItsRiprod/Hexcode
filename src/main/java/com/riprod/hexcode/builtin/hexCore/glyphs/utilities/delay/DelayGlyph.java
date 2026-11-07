@@ -56,11 +56,15 @@ public class DelayGlyph extends GlyphAsset {
             .add()
             .build();
 
-    @Override
-    public void execute(Glyph glyph, HexContext hexContext) {
-        float seconds = HexVarUtil.numberOrSlotDefault(
+    public float readDuration(Glyph glyph, HexContext hexContext) {
+        return HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(DelayGlyphSlots.DURATION, hexContext),
                 getSlot(DelayGlyphSlots.DURATION)).floatValue();
+    }
+
+    @Override
+    public void execute(Glyph glyph, HexContext hexContext) {
+        float seconds = readDuration(glyph, hexContext);
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 

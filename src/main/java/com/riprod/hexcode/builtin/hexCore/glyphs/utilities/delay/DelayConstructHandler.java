@@ -54,10 +54,26 @@ public class DelayConstructHandler implements ConstructHandler<DelayState> {
     public boolean onTick(float dt, HexStatus<DelayState> status, ConstructTickContext ctx) {
         DelayState state = status.getState();
         if (state == null) return true;
+        if (state.isAwaitingDuration()) {
+            rereadDuration(state, status, ctx);
+        }
         if (state.isExpired()) return true;
         state.tick(dt);
         drainSustain(dt, status);
         return false;
+    }
+
+    private void rereadDuration(DelayState state, HexStatus<DelayState> status, ConstructTickContext ctx) {
+        Glyph triggering = status.getTriggeringGlyph();
+        var asset = GlyphAsset.of(triggering, DelayGlyph.class);
+        if (asset == null)
+            return;
+        HexContext hexContext = status.getHexContext();
+        hexContext.updateRuntimeAccessors(ctx.getBuffer());
+        float seconds = asset.readDuration(triggering, hexContext);
+        if (seconds >= 0f) {
+            state.setRemainingSeconds(seconds);
+        }
     }
 
     @Override

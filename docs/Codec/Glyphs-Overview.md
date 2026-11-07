@@ -72,6 +72,8 @@ Applies directional force to the target. Does not deal damage directly. Directio
 
 Delays execution of child glyphs. Everything after this glyph in the chain waits the specified time before continuing.
 
+Putting a Negative number for duration will trigger a re-read of the duration until it is positive. Allows for conditional continues (i.e. when this entity is within X blocks)
+
 <div style="clear:both"></div>
 
 ---
