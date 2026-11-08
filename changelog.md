@@ -1,4 +1,47 @@
-# [v0.11.3]
+# [v0.12.0]
+
+## Elementalism Is Here
+
+6 new ways of generating elemental stats
+
+**FIRE**
+- Charges over time - extinguishes if charged too long
+- Deals
+1. Catches on fire
+2. Scorches
+3. Explodes
+**ICE**
+- Charges over time, charges faster when moving slower
+- Deals
+1. A
+2. B
+3. C
+**WATER**
+- Charges over time, charges faster when moving down
+- Deals
+1. A
+2. B
+3. C
+**LIGHTNING**
+- Charges over time, charges faster when moving faster
+- Deals
+1. A
+2. B
+3. C
+**LIFE**
+- Charges over time, charges faster when on an entity
+- Deals
+1. A
+2. B
+3. C
+**VOID**
+- Charges over time, charges faster when there are more branches
+- Deals
+1. A
+2. B
+3. C
+
+## Bugfixes / changes
 
 Lots of very low technical changes. Things nobody will see nor notice but increases reliability and maintainability.
 

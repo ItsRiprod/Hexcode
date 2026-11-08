@@ -875,7 +875,7 @@ Subtracts one value from another. For entity and block lists, removes matching e
 
 <figure style="position:relative;float:left;width:96px;margin:0.9rem 1.4rem 0.6rem 0">
 <img src="https://raw.githubusercontent.com/ItsRiprod/Hexcode/main/src/main/resources/Common/UI/Custom/Pages/Memories/glyphs/Multiply.png" alt="Multiply glyph" width="96" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:12px;padding:10px" />
-<figcaption style="position:absolute;right:-9px;bottom:-9px;min-width:26px;padding:2px 7px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.85rem;line-height:1.4;text-align:center;opacity:0.85">  / </figcaption>
+<figcaption style="position:absolute;right:-9px;bottom:-9px;min-width:26px;padding:2px 7px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.85rem;line-height:1.4;text-align:center;opacity:0.85"> \\/ </figcaption>
 </figure>
 
 ### Multiply
@@ -979,7 +979,7 @@ Constructs a rotation from pitch, yaw, roll components. Wire number glyphs into 
 
 <figure style="position:relative;float:left;width:96px;margin:0.9rem 1.4rem 0.6rem 0">
 <img src="https://raw.githubusercontent.com/ItsRiprod/Hexcode/main/src/main/resources/Common/UI/Custom/Pages/Memories/glyphs/Query.png" alt="Query glyph" width="96" style="display:block;box-sizing:border-box;background:#15151c;border:1px solid #33334a;border-radius:12px;padding:10px" />
-<figcaption style="position:absolute;right:-9px;bottom:-9px;min-width:26px;padding:2px 7px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.85rem;line-height:1.4;text-align:center;opacity:0.85">Λ|V</figcaption>
+<figcaption style="position:absolute;right:-9px;bottom:-9px;min-width:26px;padding:2px 7px;background:#15151c;border:1px solid #33334a;border-radius:999px;font-size:0.85rem;line-height:1.4;text-align:center;opacity:0.85">Λ-V</figcaption>
 </figure>
 
 ### Query
