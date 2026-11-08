@@ -1,5 +1,11 @@
 {
-  "Duration": 10,
+  "DamageCalculatorCooldown": 2,
+  "DamageCalculator": {
+    "BaseDamage": {
+      "Water": 2
+    }
+  },
+  "Duration": 11,
   "Infinite": false,
   "Debuff": false,
   "OverlapBehavior": "Extend",

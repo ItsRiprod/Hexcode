@@ -60,7 +60,7 @@
       "Description": "server.hexcode.elementalism.douse.description",
       "Lore": "server.hexcode.elementalism.douse.lore",
       "Status": "Wet",
-      "Duration": 10,
+      "Duration": 11,
       "Radius": 2,
       "HydrateDuration": 300,
       "Effects": {
@@ -159,11 +159,14 @@
       "Description": "server.hexcode.elementalism.tidalwave.description",
       "Lore": "server.hexcode.elementalism.tidalwave.lore",
       "Radius": 4,
+      "Damage": 20,
+      "DamageCause": "Water",
       "Wave": {
         "DamageEntities": true,
-        "EntityDamage": 0,
+        "EntityDamage": 20,
+        "EntityDamageCause": "Water",
         "EntityDamageRadius": 10,
-        "EntityDamageFalloff": 1.0,
+        "EntityDamageFalloff": 0.25,
         "Knockback": {
           "Type": "Point",
           "VelocityConfig": {
