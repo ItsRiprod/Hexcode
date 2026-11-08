@@ -36,7 +36,6 @@ import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.utils.HexVarUtil;
@@ -73,17 +72,11 @@ public class ProjectileGlyph extends GlyphAsset {
             .add()
             .build();
 
-    private static final float PASSIVE_FLOOR = 0.1f;
-
-    private static boolean hasLinks(Glyph glyph, String slotKey) {
-        Slot s = glyph.getSlot(slotKey);
-        return s != null && s.getLinks().length > 0;
-    }
-
-    private boolean isPassive(Glyph glyph) {
-        return glyph.getNextLinks().isEmpty()
-                && !hasLinks(glyph, ProjectileGlyphSlots.IMMEDIATE)
-                && !hasLinks(glyph, ProjectileGlyphSlots.BOUNCE);
+    @Override
+    public boolean isPassive(Glyph glyph) {
+        return !glyph.hasLinks(Glyph.NEXT_SLOT)
+                && !glyph.hasLinks(ProjectileGlyphSlots.IMMEDIATE)
+                && !glyph.hasLinks(ProjectileGlyphSlots.BOUNCE);
     }
 
     @Override

@@ -63,6 +63,7 @@ import com.riprod.hexcode.core.common.effect.GlyphEffectSystem;
 import com.riprod.hexcode.core.common.execution.cast.component.CastDependenciesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastManaComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastRatesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastVariablesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.GlyphBudgetComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
@@ -146,6 +147,7 @@ public class HexCore {
                 VolatilityComponent.TYPE,
                 CastPolicyComponent.TYPE,
                 CastManaComponent.TYPE,
+                CastRatesComponent.TYPE,
                 GlyphBudgetComponent.TYPE,
                 CastDependenciesComponent.TYPE,
                 CastVariablesComponent.TYPE,

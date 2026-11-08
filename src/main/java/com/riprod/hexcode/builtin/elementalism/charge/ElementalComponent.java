@@ -20,11 +20,14 @@ import com.riprod.hexcode.api.event.CastEvent;
 import com.riprod.hexcode.core.common.execution.cast.CastOverlay;
 import com.riprod.hexcode.core.common.execution.cast.HexComponentRegistry;
 import com.riprod.hexcode.core.common.execution.cast.component.CastEffectsComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastRate;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastComponentType;
 import com.riprod.hexcode.core.common.execution.cast.ecs.ConstructCastComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.LifecycleCastComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.TickingCastComponent;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.glyphs.component.Glyph;
+import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 
 import it.unimi.dsi.fastutil.objects.Object2FloatLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
@@ -53,17 +56,21 @@ public final class ElementalComponent
     }
 
     private void track(@Nonnull HexContext ctx) {
-        if (!open || Objects.equals(counted, active)) {
+        if (!open) {
+            return;
+        }
+        var charging = active != null && ctx.rates().get(CHARGE, active) > 0f ? active : null;
+        if (Objects.equals(counted, charging)) {
             return;
         }
         var threads = ctx.get(ElementThreads.TYPE);
         if (counted != null) {
             threads.remove(counted);
         }
-        if (active != null) {
-            threads.add(active);
+        if (charging != null) {
+            threads.add(charging);
         }
-        counted = active;
+        counted = charging;
     }
 
     private void untrack(@Nonnull HexContext ctx) {
@@ -115,10 +122,15 @@ public final class ElementalComponent
     }
 
     @Override
-    public void onAttach(@Nonnull Ref<EntityStore> host, @Nonnull HexContext ctx,
+    public void onAttach(@Nonnull Ref<EntityStore> host, @Nullable Glyph holder, @Nonnull HexContext ctx,
             @Nonnull CommandBuffer<EntityStore> buffer) {
         var transform = buffer.getComponent(host, TransformComponent.getComponentType());
         lastPos = transform != null ? new Vector3d(transform.getPosition()) : null;
+        var asset = GlyphAsset.of(holder, GlyphAsset.class);
+        if (asset != null && asset.isPassive(holder)) {
+            ctx.rates().multiply(CHARGE, 0f);
+            track(ctx);
+        }
     }
 
     @Override
@@ -136,7 +148,8 @@ public final class ElementalComponent
         var branches = ctx.get(ElementThreads.TYPE).count(active);
         var gain = element.rate(t, branches, velocity, host, buffer)
                 * element.efficiency(t, branches, velocity, host, buffer) * dt
-                * (1f + ctx.volatility().getSpent() / 100f);
+                * (1f + ctx.volatility().getSpent() / 100f)
+                * ctx.rates().get(CHARGE, active);
         charges.put(active, Math.max(0f, charges.getFloat(active) + gain));
         elapsed.put(active, t + dt);
         vessel(ctx, false);
@@ -241,6 +254,8 @@ public final class ElementalComponent
                 .add()
                 .build();
     }
+
+    public static final CastRate CHARGE = CastRate.register("Charge", ElementAsset.VALIDATOR_CACHE.getValidator());
 
     public static final CastComponentType<ElementalComponent> TYPE = HexComponentRegistry.register(
             ElementalComponent.class, "Elemental", Overlay.CODEC, a -> new ElementalComponent());

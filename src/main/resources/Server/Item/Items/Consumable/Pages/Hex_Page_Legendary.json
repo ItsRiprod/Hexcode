@@ -11,8 +11,7 @@
             "HexStorageType": "PageConfig",
             "HexStats": {
               "Volatility": {
-                "Initial": 79,
-                "Multiplier": 1.0
+                "Initial": 79
               },
               "Policy": {
                 "RequireMagicCharges": false,

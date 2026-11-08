@@ -51,6 +51,7 @@ public abstract class GlyphAsset implements JsonAssetWithMap<String, DefaultAsse
     public static final BuilderCodec<GlyphAsset> ABSTRACT_CODEC;
     private static AssetStore<String, GlyphAsset, DefaultAssetMap<String, GlyphAsset>> ASSET_STORE;
     public static final ValidatorCache<String> VALIDATOR_CACHE;
+    protected static final float PASSIVE_FLOOR = 0.1f;
 
     protected AssetExtraInfo.Data data;
     protected String id;
@@ -211,6 +212,10 @@ public abstract class GlyphAsset implements JsonAssetWithMap<String, DefaultAsse
 
     public String getVerboseDescription() {
         return this.verboseDescription;
+    }
+
+    public boolean isPassive(Glyph glyph) {
+        return false;
     }
 
     public float collectMana(Glyph glyph, GlyphAsset asset) {

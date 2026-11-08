@@ -4,8 +4,7 @@
     "HexStorageType": "ExecutionConfig",
     "HexStats": {
       "Volatility": {
-        "Initial": 0,
-        "Multiplier": 1.0
+        "Initial": 0
       }
     }
   },

@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -32,7 +32,7 @@ public final class HexComponentRegistry {
     private static final HytaleLogger LOGGER = HytaleLogger.get(LogScopes.CAST);
 
     private static final List<CastComponentType<?>> TYPES = new ArrayList<>();
-    private static final List<BuilderCodec<?>> OVERLAY_CODECS = new ArrayList<>();
+    private static final List<Codec<?>> OVERLAY_CODECS = new ArrayList<>();
     private static final List<CastHydrator<?>> HYDRATORS = new ArrayList<>();
     private static final Map<String, CastComponentType<?>> BY_ID = new HashMap<>();
     private static final Object2ObjectLinkedOpenHashMap<String, CastComponentType<?>> OVERLAY_IDS =
@@ -57,7 +57,7 @@ public final class HexComponentRegistry {
     @Nonnull
     public static <T extends CastComponent> CastComponentType<T> register(
             @Nonnull Class<? super T> typeClass, @Nonnull String id,
-            @Nonnull BuilderCodec<? extends CastOverlay<T>> overlayCodec) {
+            @Nonnull Codec<? extends CastOverlay<T>> overlayCodec) {
         return add(typeClass, id, overlayCodec, null);
     }
 
@@ -70,14 +70,14 @@ public final class HexComponentRegistry {
     @Nonnull
     public static <T extends CastComponent> CastComponentType<T> register(
             @Nonnull Class<? super T> typeClass, @Nonnull String id,
-            @Nonnull BuilderCodec<? extends CastOverlay<T>> overlayCodec, @Nonnull CastHydrator<T> hydrator) {
+            @Nonnull Codec<? extends CastOverlay<T>> overlayCodec, @Nonnull CastHydrator<T> hydrator) {
         return add(typeClass, id, overlayCodec, hydrator);
     }
 
     @Nonnull
     private static <T extends CastComponent> CastComponentType<T> add(
             @Nonnull Class<? super T> typeClass, @Nonnull String id,
-            @Nullable BuilderCodec<? extends CastOverlay<T>> overlayCodec,
+            @Nullable Codec<? extends CastOverlay<T>> overlayCodec,
             @Nullable CastHydrator<T> hydrator) {
         if (frozen) {
             throw new IllegalStateException("cast component " + typeClass.getName()
@@ -112,7 +112,7 @@ public final class HexComponentRegistry {
     }
 
     @Nullable
-    public static BuilderCodec<?> getOverlayCodec(@Nonnull CastComponentType<?> type) {
+    public static Codec<?> getOverlayCodec(@Nonnull CastComponentType<?> type) {
         return OVERLAY_CODECS.get(type.getIndex());
     }
 
@@ -171,12 +171,12 @@ public final class HexComponentRegistry {
         }
     }
 
-    public static void dispatchAttach(@Nonnull Ref<EntityStore> host, @Nonnull HexContext ctx,
-            @Nonnull CommandBuffer<EntityStore> buffer) {
+    public static void dispatchAttach(@Nonnull Ref<EntityStore> host, @Nullable Glyph holder,
+            @Nonnull HexContext ctx, @Nonnull CommandBuffer<EntityStore> buffer) {
         for (var index : construct) {
             if (ctx.get(TYPES.get(index)) instanceof ConstructCastComponent component) {
                 try {
-                    component.onAttach(host, ctx, buffer);
+                    component.onAttach(host, holder, ctx, buffer);
                 } catch (Exception e) {
                     logHookFailure(index, "onAttach", e);
                 }

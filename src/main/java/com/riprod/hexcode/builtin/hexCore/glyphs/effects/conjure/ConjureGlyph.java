@@ -33,7 +33,6 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
-import com.riprod.hexcode.core.common.glyphs.component.Slot;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
@@ -97,25 +96,14 @@ public class ConjureGlyph extends GlyphAsset {
                         .add()
                         .build();
 
-        private static final float PASSIVE_FLOOR = 0.1f;
-
-        private static boolean hasLinks(Glyph glyph, String slotKey) {
-                Slot s = glyph.getSlot(slotKey);
-                return s != null && s.getLinks().length > 0;
-        }
-
-        private boolean isPassive(Glyph glyph) {
-                return glyph.getNextLinks().isEmpty() && !hasLinks(glyph, ConjureGlyphSlots.IMMEDIATE);
+        @Override
+        public boolean isPassive(Glyph glyph) {
+                return !glyph.hasLinks(Glyph.NEXT_SLOT) && !glyph.hasLinks(ConjureGlyphSlots.IMMEDIATE);
         }
 
         @Override
         public float collectMana(Glyph glyph, GlyphAsset asset) {
-                if (isPassive(glyph))
-                        return PASSIVE_FLOOR;
-                if (asset == null)
-                        return 0f;
-                return asset.getManaConsumption()
-                                * ((1 - glyph.getEfficiency()) * 0.25f + 0.75f);
+                return isPassive(glyph) ? PASSIVE_FLOOR : super.collectMana(glyph, asset);
         }
 
         @Override

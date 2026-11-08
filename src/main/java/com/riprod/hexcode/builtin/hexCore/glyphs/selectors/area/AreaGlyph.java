@@ -34,8 +34,6 @@ public class AreaGlyph extends GlyphAsset {
 
     public static final String TYPE = "Area";
 
-    private static final float PASSIVE_FLOOR = 0.1f;
-
     private double minAxisSize = 1.0;
     private double perBlockPrice = 0.002;
     private double displayPriceMultiplier = 0.1;
@@ -64,14 +62,14 @@ public class AreaGlyph extends GlyphAsset {
         return links == null || links.length == 0 ? List.of() : Arrays.asList(links);
     }
 
-    private static boolean isDisplayOnly(Glyph glyph) {
-        return linksOf(glyph, AreaGlyphSlots.ENTITIES).isEmpty()
-                && linksOf(glyph, AreaGlyphSlots.BLOCKS).isEmpty();
+    @Override
+    public boolean isPassive(Glyph glyph) {
+        return !glyph.hasLinks(AreaGlyphSlots.ENTITIES) && !glyph.hasLinks(AreaGlyphSlots.BLOCKS);
     }
 
     @Override
     public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
-        return isDisplayOnly(glyph) ? PASSIVE_FLOOR : glyph.computeBaseCost(asset);
+        return isPassive(glyph) ? PASSIVE_FLOOR : glyph.computeBaseCost(asset);
     }
 
     @Override
@@ -132,7 +130,7 @@ public class AreaGlyph extends GlyphAsset {
         double price = perBlockPrice
                 * Impact.scale(ratePriceImpact, blocksPerSecond)
                 * glyph.computeDrawQuality();
-        if (isDisplayOnly(glyph))
+        if (isPassive(glyph))
             price *= displayPriceMultiplier;
 
         AreaState state = new AreaState(center, half, shape, blocksPerSecond, totalBlocks,

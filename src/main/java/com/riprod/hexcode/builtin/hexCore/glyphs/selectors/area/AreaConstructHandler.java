@@ -20,7 +20,6 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.construct.component.ConstructTickContext;
 import com.riprod.hexcode.core.common.construct.component.HexStatus;
 import com.riprod.hexcode.core.common.construct.handler.ConstructHandler;
-import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
@@ -40,10 +39,10 @@ public class AreaConstructHandler implements ConstructHandler<AreaState> {
         double newBlocks = state.advanceScale(dt);
         Vector3d halfCurrent = state.scaledExtents(state.getScale());
 
-        VolatilityComponent volatility = status.getHexContext().volatility();
+        var hexContext = status.getHexContext();
         if (newBlocks > 0)
-            volatility.consume((float) (newBlocks * state.getCostPerBlock()));
-        if (volatility.getCurrent() <= 0f)
+            hexContext.consumeVolatility((float) (newBlocks * state.getCostPerBlock()));
+        if (hexContext.volatility().getCurrent() <= 0f)
             return false;
 
         DebugComponent debug = ctx.getBuffer().getComponent(

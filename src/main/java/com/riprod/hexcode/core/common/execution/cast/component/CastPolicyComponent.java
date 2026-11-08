@@ -17,7 +17,6 @@ public final class CastPolicyComponent implements CastComponent {
     private boolean consumeMana = true;
     private boolean applyVolatilityDecay = true;
     private boolean bypassVolatilityDepletion = false;
-    private float tierScale = 1.0f;
 
     public CastPolicyComponent() {
     }
@@ -54,14 +53,6 @@ public final class CastPolicyComponent implements CastComponent {
         this.bypassVolatilityDepletion = bypassVolatilityDepletion;
     }
 
-    public float getTierScale() {
-        return tierScale;
-    }
-
-    public void setTierScale(float tierScale) {
-        this.tierScale = tierScale;
-    }
-
     @Nonnull
     @Override
     public CastPolicyComponent copy() {
@@ -70,7 +61,6 @@ public final class CastPolicyComponent implements CastComponent {
         copy.consumeMana = this.consumeMana;
         copy.applyVolatilityDecay = this.applyVolatilityDecay;
         copy.bypassVolatilityDepletion = this.bypassVolatilityDepletion;
-        copy.tierScale = this.tierScale;
         return copy;
     }
 
@@ -86,7 +76,6 @@ public final class CastPolicyComponent implements CastComponent {
         @Nullable private Boolean consumeMana;
         @Nullable private Boolean applyVolatilityDecay;
         @Nullable private Boolean bypassVolatilityDepletion;
-        @Nullable private Float tierScale;
 
         public Overlay() {
         }
@@ -99,7 +88,6 @@ public final class CastPolicyComponent implements CastComponent {
             if (bypassVolatilityDepletion != null) {
                 target.setBypassVolatilityDepletion(bypassVolatilityDepletion);
             }
-            if (tierScale != null) target.setTierScale(tierScale);
         }
 
         public static final BuilderCodec<Overlay> CODEC = BuilderCodec
@@ -123,12 +111,6 @@ public final class CastPolicyComponent implements CastComponent {
                         (c, v) -> c.bypassVolatilityDepletion = v,
                         c -> c.bypassVolatilityDepletion,
                         (c, p) -> c.bypassVolatilityDepletion = p.bypassVolatilityDepletion)
-                .add()
-                .<Float>appendInherited(new KeyedCodec<>("TierScale", Codec.FLOAT),
-                        (c, v) -> c.tierScale = v,
-                        c -> c.tierScale,
-                        (c, p) -> c.tierScale = p.tierScale)
-                .documentation("Scales the volatility budget granted by the caster's stats.")
                 .add()
                 .build();
     }

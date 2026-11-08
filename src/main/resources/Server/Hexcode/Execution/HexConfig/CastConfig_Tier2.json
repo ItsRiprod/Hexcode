@@ -1,8 +1,8 @@
 {
   "HexStorageType": "ExecutionConfig",
   "HexStats": {
-    "Policy": {
-      "TierScale": 1.0
+    "Rates": {
+      "Budget": 1.0
     }
   }
 }

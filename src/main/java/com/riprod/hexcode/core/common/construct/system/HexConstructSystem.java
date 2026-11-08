@@ -132,7 +132,8 @@ public class HexConstructSystem extends EntityTickingSystem<EntityStore> {
 
             if (!status.hasFiredImmediate()) {
                 if (hexContext.attach(status.getConstructId(), ctx.getEntityRef())) {
-                    HexComponentRegistry.dispatchAttach(ctx.getEntityRef(), hexContext, ctx.getBuffer());
+                    HexComponentRegistry.dispatchAttach(ctx.getEntityRef(), status.getTriggeringGlyph(),
+                            hexContext, ctx.getBuffer());
                 }
                 Object initial = raw.createInitialState(rawStatus, ctx);
                 if (initial instanceof ConstructState cs) {

@@ -16,7 +16,6 @@ public final class CastManaComponent implements CastComponent, CastOverlay<CastM
     private static final float UNSET = -1f;
 
     private float cost = UNSET;
-    private float multiplier = 1.0f;
 
     public CastManaComponent() {
     }
@@ -26,7 +25,6 @@ public final class CastManaComponent implements CastComponent, CastOverlay<CastM
         if (this.cost >= 0f) {
             target.setCost(this.cost);
         }
-        target.setMultiplier(target.getMultiplier() * this.multiplier);
     }
 
     public float getCost() {
@@ -37,24 +35,11 @@ public final class CastManaComponent implements CastComponent, CastOverlay<CastM
         this.cost = cost;
     }
 
-    public float getMultiplier() {
-        return multiplier;
-    }
-
-    public void setMultiplier(float multiplier) {
-        this.multiplier = multiplier;
-    }
-
-    public float getTotal() {
-        return getCost() * multiplier;
-    }
-
     @Nonnull
     @Override
     public CastManaComponent copy() {
         CastManaComponent copy = new CastManaComponent();
         copy.cost = this.cost;
-        copy.multiplier = this.multiplier;
         return copy;
     }
 
@@ -71,12 +56,6 @@ public final class CastManaComponent implements CastComponent, CastOverlay<CastM
                     c -> c.cost < 0f ? null : c.cost,
                     (c, p) -> c.cost = p.cost)
             .documentation("Replaces the mana cost computed from the hex.")
-            .add()
-            .<Float>appendInherited(new KeyedCodec<>("Multiplier", Codec.FLOAT),
-                    (c, v) -> c.multiplier = v,
-                    c -> c.multiplier,
-                    (c, p) -> c.multiplier = p.multiplier)
-            .documentation("Scales the mana cost. Compounds with earlier layers.")
             .add()
             .build();
 

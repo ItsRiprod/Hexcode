@@ -18,7 +18,6 @@ import com.riprod.hexcode.core.common.effects.component.EffectSlot;
 import com.riprod.hexcode.core.common.effects.utils.EffectRenderer;
 import com.riprod.hexcode.builtin.hexCore.glyphs.selectors.arc.utils.ArcUtils;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
-import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.execution.impact.Impact;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
@@ -128,14 +127,12 @@ public class ArcConstructHandler implements ConstructHandler<ArcState> {
         var asset = GlyphAsset.of(arcGlyph, ArcGlyph.class);
         if (asset == null) return true;
 
-        VolatilityComponent tracker = hexContext.volatility();
-
         var impact = asset.getVolatilityImpact();
         float intervalFactor = (float) (asset.getReferenceInterval()
                 / Math.max(0.01f, state.getInterval()));
         float cost = arcGlyph.computeBaseCost(asset) * Impact.scale(impact, distance) * intervalFactor;
 
-        return tracker.consume(cost) > 0f;
+        return hexContext.consumeVolatility(cost) > 0f;
     }
 
     private Vector3d originPosition(ConstructTickContext ctx) {

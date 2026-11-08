@@ -18,6 +18,8 @@ import com.riprod.hexcode.core.common.execution.cast.component.CastDependenciesC
 import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastManaComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastRate;
+import com.riprod.hexcode.core.common.execution.cast.component.CastRatesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastSlotComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastEffectsComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastVariablesComponent;
@@ -227,21 +229,22 @@ public class HexContext {
         return get(VolatilityComponent.TYPE);
     }
 
+    public float consumeVolatility(float cost) {
+        return volatility().consume(cost * rates().get(CastRate.VOLATILITY));
+    }
+
+    @Nonnull
+    public CastRatesComponent rates() {
+        return get(CastRatesComponent.TYPE);
+    }
+
     @Nonnull
     private CastManaComponent mana() {
         return get(CastManaComponent.TYPE);
     }
 
-    public float getManaMultiplier() {
-        return mana().getMultiplier();
-    }
-
-    public void setManaMultiplier(float manaCostMultiplier) {
-        mana().setMultiplier(manaCostMultiplier);
-    }
-
     public float getManaCost() {
-        return mana().getTotal();
+        return mana().getCost() * rates().get(CastRate.MANA);
     }
 
     public void setManaCost(float manaCost) {

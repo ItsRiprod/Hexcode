@@ -147,7 +147,7 @@
         }
       }
     },
-    "80": {
+    "90": {
       "Type": "Explosion",
       "Id": "Explosion",
       "Name": "server.hexcode.elementalism.explosion.name",

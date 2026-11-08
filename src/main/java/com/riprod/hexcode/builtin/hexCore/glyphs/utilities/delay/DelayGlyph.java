@@ -56,6 +56,21 @@ public class DelayGlyph extends GlyphAsset {
             .add()
             .build();
 
+    @Override
+    public boolean isPassive(Glyph glyph) {
+        return !glyph.hasLinks(Glyph.NEXT_SLOT) && !glyph.hasLinks(DelayGlyphSlots.IMMEDIATE);
+    }
+
+    @Override
+    public float collectMana(Glyph glyph, GlyphAsset asset) {
+        return isPassive(glyph) ? PASSIVE_FLOOR : super.collectMana(glyph, asset);
+    }
+
+    @Override
+    public float getVolatilityCost(Glyph glyph, HexContext hexContext, GlyphAsset asset) {
+        return isPassive(glyph) ? PASSIVE_FLOOR : super.getVolatilityCost(glyph, hexContext, asset);
+    }
+
     public float readDuration(Glyph glyph, HexContext hexContext) {
         return HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(DelayGlyphSlots.DURATION, hexContext),

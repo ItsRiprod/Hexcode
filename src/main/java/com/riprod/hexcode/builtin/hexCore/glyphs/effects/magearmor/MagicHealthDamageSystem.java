@@ -54,8 +54,7 @@ public class MagicHealthDamageSystem extends DamageEventSystem {
             if (available <= 0f) return;
 
             float absorbed = Math.min(incoming, available);
-            float multiplier = stats.getVolatilityMultiplier();
-            stats.consume(multiplier > 0f ? absorbed / multiplier : absorbed);
+            stats.consume(absorbed);
             damage.setAmount(incoming - absorbed);
             if (stats.getCurrent() <= 0f && armor.getState() instanceof MageArmorState state) {
                 state.markPoolBroken();

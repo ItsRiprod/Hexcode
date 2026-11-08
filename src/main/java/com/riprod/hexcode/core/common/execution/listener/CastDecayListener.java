@@ -3,6 +3,7 @@ package com.riprod.hexcode.core.common.execution.listener;
 import java.util.function.Consumer;
 
 import com.riprod.hexcode.api.event.CastEvent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastRate;
 import com.riprod.hexcode.core.common.execution.component.ExecutionComponent;
 
 public class CastDecayListener implements Consumer<CastEvent> {
@@ -21,7 +22,7 @@ public class CastDecayListener implements Consumer<CastEvent> {
         float stability = Math.max(0f, Math.min(100f, CasterStats.stability(rootRef, accessor)));
         float retention = (float) Math.pow(stability / 100f, exec.getCastCount());
         float volMax = (tracker.getInitial() + CasterStats.volatility(rootRef, accessor))
-                * ctx.policy().getTierScale();
+                * ctx.rates().get(CastRate.BUDGET);
         float startingBudget = Math.max(0f, volMax * retention);
         tracker.setCurrent(startingBudget);
         tracker.setInitial(startingBudget);

@@ -16,6 +16,8 @@ import com.riprod.hexcode.api.execution.HexExecuter;
 import com.riprod.hexcode.core.common.execution.cast.component.CastHexComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastOriginComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastPolicyComponent;
+import com.riprod.hexcode.core.common.execution.cast.component.CastRate;
+import com.riprod.hexcode.core.common.execution.cast.component.CastRatesComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.CastEffectsComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.DefaultVariableComponent;
 import com.riprod.hexcode.core.common.execution.cast.component.ManaSourceComponent;
@@ -101,8 +103,7 @@ public final class ImbuedBlockActivator {
         if (essence != null) {
             float vm = essence.getVolatilityMultiplier();
             if (vm != 1.0f) {
-                holder.overlay(VolatilityComponent.TYPE, target ->
-                        target.setVolatilityMultiplier(target.getVolatilityMultiplier() * vm));
+                holder.overlay(CastRatesComponent.TYPE, target -> target.multiply(CastRate.VOLATILITY, vm));
             }
             var effects = essence.getEffects();
             if (effects != null) {

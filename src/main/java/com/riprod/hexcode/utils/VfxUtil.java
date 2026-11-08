@@ -33,6 +33,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.hexes.component.HexColors;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
+import com.riprod.hexcode.core.common.execution.cast.component.CastRate;
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.Slot;
@@ -283,7 +284,7 @@ public class VfxUtil {
     VolatilityComponent stats = hexContext != null ? hexContext.volatility() : null;
     if (stats == null)
       return requestedDuration;
-    float multiplier = stats.getVolatilityMultiplier();
+    float multiplier = hexContext.rates().get(CastRate.VOLATILITY);
     float effectiveRate = rate * (multiplier > 0f ? multiplier : 1f);
     if (effectiveRate <= 0f)
       return requestedDuration;

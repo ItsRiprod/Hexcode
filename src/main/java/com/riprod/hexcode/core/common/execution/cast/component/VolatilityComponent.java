@@ -14,16 +14,14 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
 
     private float initial = -1f;
     private float current;
-    private float volatilityMultiplier = 1.0f;
     private float spent;
 
     public VolatilityComponent() {
     }
 
-    public void init(float initial, float volatilityMultiplier) {
+    public void init(float initial) {
         this.initial = initial;
         this.current = initial;
-        this.volatilityMultiplier = volatilityMultiplier;
     }
 
     @Override
@@ -32,7 +30,6 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
             target.setInitial(this.initial);
             target.setCurrent(this.initial);
         }
-        target.setVolatilityMultiplier(target.getVolatilityMultiplier() * this.volatilityMultiplier);
     }
 
     public float getInitial() {
@@ -55,8 +52,8 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
         this.current = Math.max(0f, this.current + amount);
     }
 
-    public float consume(float cost) {
-        var remaining = Math.max(0f, this.current - cost * volatilityMultiplier);
+    public float consume(float amount) {
+        var remaining = Math.max(0f, this.current - amount);
         this.spent += Math.max(0f, this.current - remaining);
         this.current = remaining;
         return this.current;
@@ -66,21 +63,12 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
         return spent;
     }
 
-    public float getVolatilityMultiplier() {
-        return volatilityMultiplier;
-    }
-
-    public void setVolatilityMultiplier(float volatilityMultiplier) {
-        this.volatilityMultiplier = volatilityMultiplier;
-    }
-
     @Nonnull
     @Override
     public VolatilityComponent copy() {
         VolatilityComponent copy = new VolatilityComponent();
         copy.initial = this.initial;
         copy.current = this.current;
-        copy.volatilityMultiplier = this.volatilityMultiplier;
         copy.spent = this.spent;
         return copy;
     }
@@ -98,12 +86,6 @@ public final class VolatilityComponent implements CastComponent, CastOverlay<Vol
                     c -> c.initial < 0f ? null : c.initial,
                     (c, p) -> c.initial = p.initial)
             .documentation("Volatility budget the cast starts with. Assigns, replacing any earlier layer.")
-            .add()
-            .<Float>appendInherited(new KeyedCodec<>("Multiplier", Codec.FLOAT),
-                    (c, v) -> c.volatilityMultiplier = v,
-                    c -> c.volatilityMultiplier,
-                    (c, p) -> c.volatilityMultiplier = p.volatilityMultiplier)
-            .documentation("Scales volatility consumed per glyph. Compounds with earlier layers.")
             .add()
             .build();
 

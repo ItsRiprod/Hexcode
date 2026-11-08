@@ -137,7 +137,7 @@ public class RotationValue extends GlyphAsset {
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
         if (accessor.getComponent(ref, Player.getComponentType()) == null)
             return;
-        hexContext.volatility().consume(playerVolatilityCost);
+        hexContext.consumeVolatility(playerVolatilityCost);
     }
 
     private void trackRollRestore(Ref<EntityStore> ref, Rotation3f applied, float priorRoll,

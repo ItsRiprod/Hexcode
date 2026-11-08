@@ -46,12 +46,12 @@ public class BeamGlyph extends GlyphAsset {
             .add()
             .build();
 
-    private static final float PASSIVE_FLOOR = 0.1f;
     private static final double LINE_THICKNESS = 0.02;
     private static final float LINE_DURATION = 0.4f;
 
-    private boolean isPassive(Glyph glyph) {
-        return glyph.getNextLinks().isEmpty();
+    @Override
+    public boolean isPassive(Glyph glyph) {
+        return !glyph.hasLinks(Glyph.NEXT_SLOT);
     }
 
     @Override
@@ -185,6 +185,6 @@ public class BeamGlyph extends GlyphAsset {
     }
 
     private void chargeReach(HexContext hexContext, double reach) {
-        hexContext.volatility().consume(Impact.scale(volatilityImpact, reach));
+        hexContext.consumeVolatility(Impact.scale(volatilityImpact, reach));
     }
 }
