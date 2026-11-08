@@ -160,6 +160,8 @@ public class ConjureConstructHandler implements ConstructHandler<NoState> {
                         continue;
                     if (ctx.getBuffer().getComponent(ref, ConjureZoneComponent.getComponentType()) != null)
                         continue;
+                    if (ctx.getBuffer().getComponent(ref, Intangible.getComponentType()) != null)
+                        continue;
 
                     UUIDComponent uuid = ctx.getBuffer().getComponent(ref, UUIDComponent.getComponentType());
                     if (uuid == null)

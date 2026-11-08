@@ -15,3 +15,4 @@ Lots of very low technical changes. Things nobody will see nor notice but increa
 - Improved interaction lookup logic to utilize existing block logic
 - Removed auto-air routing so glyphs like Erode work consistently (no longer auto-finding solid blocks to erode, now will do nothing if the block is already broken)
 - Improved overhead for Growth's bonemeal functionality
+- Conjure no longer triggers on intangible entities (decorations)
