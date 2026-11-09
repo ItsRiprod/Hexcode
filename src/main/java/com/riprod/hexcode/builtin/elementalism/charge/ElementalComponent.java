@@ -126,11 +126,6 @@ public final class ElementalComponent
             @Nonnull CommandBuffer<EntityStore> buffer) {
         var transform = buffer.getComponent(host, TransformComponent.getComponentType());
         lastPos = transform != null ? new Vector3d(transform.getPosition()) : null;
-        var asset = GlyphAsset.of(holder, GlyphAsset.class);
-        if (asset != null && asset.isPassive(holder)) {
-            ctx.rates().multiply(CHARGE, 0f);
-            track(ctx);
-        }
     }
 
     @Override

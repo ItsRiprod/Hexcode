@@ -33,6 +33,7 @@ public class IgniteTier extends EffectElement {
     private String fluid;
     private byte fluidLevel = 1;
     private String unlitState;
+    private boolean catchStuffOnFire = false;
 
     @Override
     public boolean supportsEntity() {
@@ -94,6 +95,9 @@ public class IgniteTier extends EffectElement {
     }
 
     private boolean placeFire(World world, Vector3i position, Fluid fire) {
+        if (!catchStuffOnFire)
+            return false;
+
         var sectionRef = BlockAccess.sectionRef(world, position);
         if (sectionRef == null) {
             return false;
@@ -121,7 +125,8 @@ public class IgniteTier extends EffectElement {
                         (t, v) -> t.fluid = v, t -> t.fluid)
                 .addValidator(Validators.nonNull())
                 .addValidator(Fluid.VALIDATOR_CACHE.getValidator())
-                .documentation("Fire fluid placed on a flammable block. Its fire ticker decides which blocks are flammable")
+                .documentation(
+                        "Fire fluid placed on a flammable block. Its fire ticker decides which blocks are flammable")
                 .add()
                 .<Byte>append(new KeyedCodec<>("FluidLevel", Codec.BYTE),
                         (t, v) -> t.fluidLevel = v, t -> t.fluidLevel)
@@ -132,7 +137,13 @@ public class IgniteTier extends EffectElement {
                         (t, v) -> t.unlitState = v, t -> t.unlitState)
                 .addValidator(Validators.nonNull())
                 .addValidator(Validators.nonEmptyString())
-                .documentation("Block state of an unlit candle, torch or lantern. A block in this state runs its Use interaction to light")
+                .documentation(
+                        "Block state of an unlit candle, torch or lantern. A block in this state runs its Use interaction to light")
+                .add()
+                .append(new KeyedCodec<>("CatchStuffOnFire", Codec.BOOLEAN),
+                        (t, v) -> t.catchStuffOnFire = v, t -> t.catchStuffOnFire)
+                .documentation(
+                        "Whether or not the block actually catches on fire")
                 .add()
                 .build();
     }

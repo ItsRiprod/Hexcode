@@ -31,13 +31,9 @@ import com.riprod.hexcode.core.common.construct.system.HexConstructSpawner;
 import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.variables.BlockVar;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.glyphs.variables.NumberVar;
-import com.riprod.hexcode.core.common.glyphs.variables.PositionVar;
-import com.riprod.hexcode.core.common.glyphs.variables.RotationVar;
-import com.riprod.hexcode.core.common.glyphs.variables.VarType;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class DelayGlyph extends GlyphAsset {
