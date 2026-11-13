@@ -56,20 +56,6 @@ final class WaterSweep {
         return fluids.setFluid(pos.x, pos.y, pos.z, Fluid.EMPTY_ID, (byte) 0);
     }
 
-    static boolean washAway(BlockAccess.Cursor cursor, Vector3i pos, Ref<EntityStore> caster,
-            CommandBuffer<EntityStore> buffer) {
-        var blockType = cursor.blockType(pos);
-        var sectionRef = cursor.sectionRef();
-        if (blockType == null || sectionRef == null || blockType.getGathering() == null
-                || !blockType.getGathering().isSoft()
-                || !HexProtection.canModifyBlock(cursor.world(), caster, buffer, new Vector3i(pos), BlockAction.BREAK)) {
-            return false;
-        }
-        BlockHarvestUtils.performBlockBreak(caster.isValid() ? caster : null, null, new Vector3i(pos),
-                SetBlockSettings.NONE, sectionRef, buffer, cursor.chunkStore().getStore());
-        return true;
-    }
-
     static boolean hydrate(BlockAccess.Cursor cursor, Vector3i pos, Instant wateredUntil, Ref<EntityStore> caster,
             CommandBuffer<EntityStore> buffer) {
         var blockType = cursor.blockType(pos);

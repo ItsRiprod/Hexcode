@@ -90,8 +90,8 @@ public abstract class AbstractTriggerGlyph extends GlyphAsset {
             return;
         }
 
-        TriggerCallback callback = HexResumeCallback.build(hexContext, effectId, nextLinks, state, payloadProjection());
-        TriggerSubscription sub = new TriggerSubscription(
+        var callback = HexResumeCallback.build(hexContext, effectId, nextLinks, state, payloadProjection());
+        var sub = new TriggerSubscription(
                 subscriptionId, triggerKey(), subjectUuid, subject, caster, null, callback, true);
         registry.subscribe(sub);
 

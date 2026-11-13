@@ -70,7 +70,6 @@ public class TidalWaveTier extends ElementalTier {
         var cursor = new BlockAccess.Cursor(world);
         for (var cell : WaterSweep.cells(origin, this.radius)) {
             WaterSweep.extinguish(cursor, cell, caster, buffer);
-            WaterSweep.washAway(cursor, cell, caster, buffer);
         }
         ExplosionUtils.performExplosion(damageSource(ctx), center, new Rotation3f(), this.wave, null, buffer,
                 world.getChunkStore().getStore());

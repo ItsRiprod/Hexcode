@@ -170,7 +170,7 @@ public class BeamGlyph extends GlyphAsset {
         }
 
         if (!passive)
-            chargeReach(hexContext, new Vector3d(origin).sub(endPoint).length());
+            hexContext.consumeVolatility(Impact.scale(volatilityImpact, new Vector3d(origin).sub(endPoint).length()));
 
         var accessor = hexContext.getAccessor();
         var effects = EffectRenderer.resolve(this, hexContext);
@@ -182,9 +182,5 @@ public class BeamGlyph extends GlyphAsset {
         }
 
         HexExecuter.continueFromSlot(glyph, Glyph.NEXT_SLOT, hexContext);
-    }
-
-    private void chargeReach(HexContext hexContext, double reach) {
-        hexContext.consumeVolatility(Impact.scale(volatilityImpact, reach));
     }
 }
