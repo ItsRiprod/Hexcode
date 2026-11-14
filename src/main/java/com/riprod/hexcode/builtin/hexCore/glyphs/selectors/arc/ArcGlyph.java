@@ -73,8 +73,9 @@ public class ArcGlyph extends GlyphAsset {
 
         CommandBuffer<EntityStore> accessor = hexContext.getAccessor();
 
-        int iterations = (int) Math.round(HexVarUtil.numberOrSlotDefault(
-                glyph.readSlot(ArcGlyphSlots.ITERATIONS, hexContext), getSlot(ArcGlyphSlots.ITERATIONS)));
+        // Clamp before narrowing: (int) of a long past int range wraps (2^32 + 2 -> 2).
+        int iterations = (int) Math.max(0L, Math.min(Integer.MAX_VALUE, Math.round(HexVarUtil.numberOrSlotDefault(
+                glyph.readSlot(ArcGlyphSlots.ITERATIONS, hexContext), getSlot(ArcGlyphSlots.ITERATIONS)))));
         float interval = HexVarUtil.numberOrSlotDefault(
                 glyph.readSlot(ArcGlyphSlots.INTERVAL, hexContext), getSlot(ArcGlyphSlots.INTERVAL)).floatValue();
         float range = HexVarUtil.numberOrSlotDefault(

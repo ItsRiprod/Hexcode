@@ -46,7 +46,7 @@ public final class FlycastingCommit {
                 return null;
             }
             emitGlyphDrawn(player, resolution.glyph(), structure.getShapes(), resolution.asset());
-            return InAirHexFactory.wrap(resolution.glyph());
+            return resolution.glyph() != null ? new Hex(resolution.glyph()) : null;
         } catch (Exception e) {
             LOGGER.atWarning().withCause(e).log("Failed to finalize draft on flycasting exit");
             return null;
@@ -60,13 +60,13 @@ public final class FlycastingCommit {
             return;
         }
 
-        Hex hex = InAirHexFactory.wrap(glyph);
+        Hex hex = glyph != null ? new Hex(glyph) : null;
         if (hex == null) {
             DraftFeedback.playFailFeedback(buffer, player);
             return;
         }
 
-        Ref<EntityStore> hexRef = HexSpawner.spawnSingleHex(buffer, player, castingRootRef, hex);
+        Ref<EntityStore> hexRef = HexSpawner.spawnSingleHex(buffer, player, castingRootRef, hex, state.getLayoutId());
         if (hexRef == null) {
             DraftFeedback.playFailFeedback(buffer, player);
             return;

@@ -10,6 +10,7 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.api.context.DrawModeExitEvent;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.component.FlycastingState;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils.FlycastingCommit;
@@ -49,8 +50,12 @@ public class FlycastingExitSystem extends EntityEventSystem<EntityStore, DrawMod
             DrawCaptureComponent capture = event.getCapture();
 
             Hex queued = FlycastingCommit.finalizeDraft(buffer, player, capture);
-            if (queued == null && state.getLastHoveredHex() != null) {
-                queued = state.getLastHoveredHex().getHex();
+            var lastHovered = state.getLastHoveredHex();
+            var lastHoveredHex = queued == null && lastHovered != null && lastHovered.isValid()
+                    ? buffer.getComponent(lastHovered, HexComponent.getComponentType())
+                    : null;
+            if (lastHoveredHex != null) {
+                queued = lastHoveredHex.getHex();
             }
             if (queued != null) {
                 ExecutionComponent execution = buffer.ensureAndGetComponent(player,

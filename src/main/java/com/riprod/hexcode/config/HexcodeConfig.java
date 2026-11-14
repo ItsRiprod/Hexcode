@@ -3,8 +3,12 @@ package com.riprod.hexcode.config;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIEditorSectionStart;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.riprod.configly.Configly;
+
+import lombok.Getter;
+
 import com.riprod.configly.Config;
 import javax.annotation.Nonnull;
 
@@ -22,6 +26,7 @@ public final class HexcodeConfig extends Config {
             .append(new KeyedCodec<>("RespectPvp", Codec.BOOLEAN),
                     (config, b) -> config.respectPvp = b,
                     config -> config.respectPvp)
+            .metadata(new UIEditorSectionStart("Gameplay"))
             .documentation("Whether Hexcode utility/status spells honour the server PVP setting - damage spells will always respect the PVP config.")
             .add()
             .append(new KeyedCodec<>("RespectClaims", Codec.BOOLEAN),
@@ -53,6 +58,7 @@ public final class HexcodeConfig extends Config {
             .append(new KeyedCodec<>("MaxGlyphsPerTick", Codec.INTEGER),
                     (config, i) -> config.maxGlyphsPerTick = i,
                     config -> config.maxGlyphsPerTick)
+            .metadata(new UIEditorSectionStart("Performance"))
             .documentation("Maximum glyphs every spell in a world may execute together in one tick. "
                     + "Work above this is deferred to a later tick, never dropped.")
             .addValidator(Validators.min(1))
@@ -78,6 +84,55 @@ public final class HexcodeConfig extends Config {
                     + "ended first, so no single world can accumulate spells without bound.")
             .addValidator(Validators.min(1))
             .add()
+            .append(new KeyedCodec<>("RootScalePerGlyph", Codec.FLOAT),
+                    (config, f) -> config.rootScalePerGlyph = f,
+                    config -> config.rootScalePerGlyph)
+            .metadata(new UIEditorSectionStart("Advanced"))
+            .documentation("Displayed hexes: how much the root glyph grows per glyph in the hex while the hex is small")
+            .addValidator(Validators.min(0f))
+            .add()
+            .append(new KeyedCodec<>("RootScaleMaxGrowth", Codec.FLOAT),
+                    (config, f) -> config.rootScaleMaxGrowth = f,
+                    config -> config.rootScaleMaxGrowth)
+            .documentation("Displayed hexes: the root glyph never grows past 1 + this, however many glyphs the hex has")
+            .addValidator(Validators.min(0f))
+            .add()
+            .append(new KeyedCodec<>("ChildScale", Codec.FLOAT),
+                    (config, f) -> config.childScale = f,
+                    config -> config.childScale)
+            .documentation("Radial layout: size of each of several child glyphs, relative to their parent")
+            .addValidator(Validators.greaterThan(0f))
+            .add()
+            .append(new KeyedCodec<>("OnlyChildScale", Codec.FLOAT),
+                    (config, f) -> config.onlyChildScale = f,
+                    config -> config.onlyChildScale)
+            .documentation("Radial layout: size of an only child glyph (stacked on its parent), relative to the parent")
+            .addValidator(Validators.greaterThan(0f))
+            .add()
+            .append(new KeyedCodec<>("ChildSpread", Codec.FLOAT),
+                    (config, f) -> config.childSpread = f,
+                    config -> config.childSpread)
+            .documentation("Radial layout: how far children sit from their parent, in multiples of the parent's hover radius")
+            .addValidator(Validators.min(0f))
+            .add()
+            .append(new KeyedCodec<>("AuthoredRadius", Codec.FLOAT),
+                    (config, f) -> config.authoredRadius = f,
+                    config -> config.authoredRadius)
+            .documentation("Authored layout: the crafted arrangement is scaled to this radius (blocks) times the root glyph's size")
+            .addValidator(Validators.greaterThan(0f))
+            .add()
+            .append(new KeyedCodec<>("AuthoredDepthFalloff", Codec.FLOAT),
+                    (config, f) -> config.authoredDepthFalloff = f,
+                    config -> config.authoredDepthFalloff)
+            .documentation("Authored layout: each step along the flow from the first glyph multiplies glyph size by this")
+            .addValidator(Validators.greaterThan(0f))
+            .add()
+            .append(new KeyedCodec<>("AuthoredLayerSpacing", Codec.FLOAT),
+                    (config, f) -> config.authoredLayerSpacing = f,
+                    config -> config.authoredLayerSpacing)
+            .documentation("Authored layout: gap between crafted heights, used only to decide which overlapping glyph draws on top")
+            .addValidator(Validators.min(0f))
+            .add()
             .afterDecode((config, extraInfo) -> {
                 if (config.maxGlyphsPerCast > config.maxGlyphsPerTick) {
                     extraInfo.getValidationResults().warn("MaxGlyphsPerCast (" + config.maxGlyphsPerCast
@@ -97,13 +152,36 @@ public final class HexcodeConfig extends Config {
     private boolean respectPvp = true;
     private boolean respectClaims = true;
     private boolean allowNametagOverrides = true;
+    @Getter 
     private float minEntityScale = 0.001f;
+    @Getter 
     private float maxEntityScale = 100f;
+    @Getter 
     private int maxGlyphsPerTick = 1024;
+    @Getter 
     private long maxGlyphNanosPerTick = 5_000_000L;
+    @Getter 
     private int maxGlyphsPerCast = 128;
+    @Getter 
     private int maxCastLifetimeTicks = 12000;
+    @Getter 
     private int maxActiveCastsPerWorld = 512;
+    @Getter 
+    private float rootScalePerGlyph = 0.05f;
+    @Getter 
+    private float rootScaleMaxGrowth = 1.0f;
+    @Getter 
+    private float childScale = 0.2f;
+    @Getter 
+    private float onlyChildScale = 0.45f;
+    @Getter 
+    private float childSpread = 1.2f;
+    @Getter 
+    private float authoredRadius = 0.6f;
+    @Getter 
+    private float authoredDepthFalloff = 0.7f;
+    @Getter 
+    private float authoredLayerSpacing = 0.02f;
 
     private HexcodeConfig() {
     }
@@ -123,29 +201,5 @@ public final class HexcodeConfig extends Config {
 
     public boolean allowsNametagOverrides() {
         return allowNametagOverrides;
-    }
-
-    public float getMinEntityScale() {
-        return minEntityScale;
-    }
-
-    public float getMaxEntityScale() {
-        return maxEntityScale;
-    }
-
-    public int getMaxGlyphsPerTick() {
-        return maxGlyphsPerTick;
-    }
-
-    public long getMaxGlyphNanosPerTick() {
-        return maxGlyphNanosPerTick;
-    }
-
-    public int getMaxGlyphsPerCast() {
-        return maxGlyphsPerCast;
-    }
-
-    public int getMaxActiveCastsPerWorld() {
-        return maxActiveCastsPerWorld;
     }
 }

@@ -85,7 +85,11 @@ public class RotationValue extends GlyphAsset {
             glyph.writeOutput(result, hexContext);
         }
 
-        if (result instanceof RotationVar rotVar && rotVar.getValue() != null) {
+        // Only an explicitly wired Target is rotated. Unlinked, readSlot would fall back to the default
+        // variable, which writeOutput just set to this RotationVar: its forward vector then picked a block
+        // near the world origin to rotate.
+        if (glyph.hasLinks(RotationValueSlots.TARGET)
+                && result instanceof RotationVar rotVar && rotVar.getValue() != null) {
             HexVar target = glyph.readSlot(RotationValueSlots.TARGET, hexContext);
             if (target instanceof EntityVar entityVar) {
                 applyToEntity(entityVar, rotVar.getValue(), glyph, hexContext);

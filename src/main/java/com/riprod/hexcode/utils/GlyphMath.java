@@ -1,7 +1,5 @@
 package com.riprod.hexcode.utils;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -48,39 +46,5 @@ public class GlyphMath {
     public static float getSelectionRadius(float scale) {
         float baseRadius = 0.12f;
         return baseRadius * scale;
-    }
-
-    public static List<Rotation3f> getChildRotations(int childrenCount,
-            float parentScale, float distance) {
-        if (childrenCount <= 0) {
-            return null;
-        }
-
-        if (childrenCount == 1) {
-            return List.of(new Rotation3f(0, 0, 0));
-        }
-
-        float angleIncrement = (float) (2 * Math.PI / childrenCount);
-        float angularRadius = getSelectionRadius(parentScale) * 1.2f; // scales with the parent scale
-
-        List<Rotation3f> childAngles = new ArrayList<>();
-        for (int i = 0; i < childrenCount; i++) {
-            float theta = i * angleIncrement;
-            Rotation3f childPos = new Rotation3f(
-                    angularRadius * (float) Math.cos(theta),
-                    angularRadius * (float) Math.sin(theta),
-                    distance);
-            childAngles.add(childPos);
-        }
-        return childAngles;
-    }
-
-    public static Vector3f toMountOffset(Rotation3f childRotation, Rotation3f parentRotation) {
-        float dpitch = childRotation.x;
-        float dyaw = childRotation.y;
-        return new Vector3f(
-                -dyaw * parentRotation.z(),
-                dpitch * parentRotation.z(),
-                0);
     }
 }

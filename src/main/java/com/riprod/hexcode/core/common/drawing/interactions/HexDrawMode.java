@@ -19,6 +19,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHa
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.client.ChargingInteraction;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.casting.registry.CastingStyleValidator;
+import com.riprod.hexcode.core.common.positioning.registry.HexLayoutValidator;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 
@@ -41,12 +42,22 @@ public class HexDrawMode extends ChargingInteraction {
             .metadata(new UIEditor(new UIEditor.Dropdown("HexcodeCastingStyles")))
             .addValidatorLate(() -> CastingStyleValidator.INSTANCE.late())
             .add()
+            .appendInherited(new KeyedCodec<>("HexLayoutId", Codec.STRING),
+                    (i, v) -> i.layoutId = v,
+                    i -> i.layoutId,
+                    (i, p) -> i.layoutId = p.layoutId)
+            .metadata(new UIEditor(new UIEditor.Dropdown("HexcodeHexLayouts")))
+            .documentation("How the glyphs of each hex are arranged while flycasting. Empty = the default layout.")
+            .addValidatorLate(() -> HexLayoutValidator.INSTANCE.late())
+            .add()
             .build();
 
     @Nullable
     private String effectsId;
     @Nullable
     private String castStyleId;
+    @Nullable
+    private String layoutId;
 
     public HexDrawMode() {
     }
@@ -71,7 +82,7 @@ public class HexDrawMode extends ChargingInteraction {
             if (firstRun && buffer.getComponent(player, DrawCaptureComponent.getComponentType()) == null) {
                 String castStyle = this.castStyleId != null ? this.castStyleId : "ring";
                 buffer.putComponent(player, DrawCaptureComponent.getComponentType(),
-                        new DrawCaptureComponent(this.effectsId, castStyle));
+                        new DrawCaptureComponent(this.effectsId, castStyle, this.layoutId));
             }
 
             super.tick0(firstRun, time, type, ctx, cooldown);

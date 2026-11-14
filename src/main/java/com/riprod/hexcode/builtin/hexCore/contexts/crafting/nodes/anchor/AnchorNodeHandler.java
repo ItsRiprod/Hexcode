@@ -1,9 +1,9 @@
 package com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.anchor;
 
+import com.riprod.hexcode.core.common.positioning.utils.HexEntities;
 import com.riprod.hexcode.core.common.node.BaseNodeHandler;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import com.hypixel.hytale.builtin.beam.AttachedBeam;
@@ -12,7 +12,6 @@ import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.math.shape.Box;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -40,7 +39,6 @@ import com.riprod.hexcode.core.common.node.NodeConfig;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.CraftingColors;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
-import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.SlotNodeHandler;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.glyph.GlyphNodeHandler;
 
 /**
@@ -266,16 +264,7 @@ public class AnchorNodeHandler extends BaseNodeHandler {
         Hex storedHex = session.getHexAt(slotKey, accessor);
 
         if (hexComp != null) {
-            Map<String, Ref<EntityStore>> oldChildren = hexComp.getChildGlyphRefs();
-            if (oldChildren != null) {
-                for (Ref<EntityStore> childRef : oldChildren.values()) {
-                    if (childRef == null || !childRef.isValid())
-                        continue;
-                    SlotNodeHandler.INSTANCE.despawnSlotsForGlyph(accessor, childRef);
-                    accessor.tryRemoveEntity(childRef, RemoveReason.REMOVE);
-                }
-                oldChildren.clear();
-            }
+            HexEntities.despawnTree(accessor, hexComp);
         }
 
         Hex originalHex = storedHex != null ? storedHex.clone() : new Hex();

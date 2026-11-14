@@ -2,9 +2,9 @@ package com.riprod.hexcode.builtin.hexCore.contexts.selecting.nodes.preview;
 
 import com.riprod.hexcode.core.common.node.BaseNodeHandler;
 
-import java.util.List;
 import java.util.UUID;
 
+import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
@@ -28,10 +28,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.api.dispatch.SlotSelectedEvent;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
-import com.riprod.hexcode.core.common.glyphs.utils.CreateGlyph;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
-import com.riprod.hexcode.core.common.hexes.utils.CreateHex;
+import com.riprod.hexcode.core.common.positioning.utils.HexEntityFactory;
 import com.riprod.hexcode.core.common.hover.component.HoverableComponent;
 import com.riprod.hexcode.core.common.hover.component.HoverableType;
 import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
@@ -40,8 +39,10 @@ import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.common.utilities.component.DebugComponent;
-import com.riprod.hexcode.utils.GlyphMath;
-import com.riprod.hexcode.builtin.hexCore.scene.GlyphStyler;
+import com.riprod.hexcode.builtin.hexCore.layouts.RadialTreeLayout;
+import com.riprod.hexcode.core.common.positioning.layout.LayoutParams;
+import com.riprod.hexcode.core.common.positioning.registry.HexLayoutRegistry;
+import com.riprod.hexcode.core.common.positioning.utils.HexEntities;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.CraftingColors;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
@@ -94,7 +95,7 @@ public class PreviewNodeHandler extends BaseNodeHandler {
             hexComponent.setParentRef(null);
             hexComponent.setOffset(offset);
 
-            holder = CreateHex.createHexHolder(accessor, hexComponent, globalPos);
+            holder = HexEntityFactory.createHexHolder(accessor, hexComponent, globalPos);
         } else {
             holder = EntityStore.REGISTRY.newHolder();
             holder.addComponent(TransformComponent.getComponentType(),
@@ -135,34 +136,27 @@ public class PreviewNodeHandler extends BaseNodeHandler {
                 new DebugComponent(DebugShape.Sphere, isEmpty ? CraftingColors.EMPTY_SLOT : CraftingColors.FILLED_SLOT,
                         0.5, 2.0f));
 
-        Ref<EntityStore> hexRef = CreateHex.createEntity(accessor, holder);
+        Ref<EntityStore> hexRef = accessor.addEntity(holder, AddReason.SPAWN);
         if (isEmpty || hex == null) {
             return hexRef;
         }
 
         hexComponent.setSelfRef(hexRef);
 
-        int numGlyphs = (int) hex.getGlyphs().stream()
-                .filter(glyph -> glyph != null)
-                .count();
-
-        float scaleMultiplier = 1 + (numGlyphs * GlyphStyler.SCALE_PER_GLYPH);
-
         String firstGlyphId = hex.getFirstGlyphId();
         Glyph firstGlyph = firstGlyphId != null ? hex.get(firstGlyphId) : null;
         if (firstGlyph == null)
             return hexRef;
-        GlyphComponent firstGlyphComponent = new GlyphComponent(firstGlyph.clone());
+        var layout = HexLayoutRegistry.getOrDefault(RadialTreeLayout.ID);
+        var rootScale = layout.rootScale(hex);
+        hexComponent.setScale(rootScale);
+        var root = new GlyphComponent(firstGlyph.clone());
+        root.setHexRef(hexRef);
+        root.setParentRef(hexRef);
 
-        Rotation3f glyphRot = new Rotation3f(PEDESTAL_GLYPH_PITCH, 0, GLYPH_DISPLAY_DISTANCE);
-        firstGlyphComponent.setHexRef(hexRef);
-        firstGlyphComponent.setParentRef(hexRef);
-        firstGlyphComponent.setOffset(new Vector3f());
-        firstGlyphComponent.setRotation(glyphRot);
-        firstGlyphComponent.setScale(scaleMultiplier);
-        hexComponent.setScale(scaleMultiplier);
-
-        spawnGlyphs(accessor, hexComponent, firstGlyphComponent, globalPos, glyphRot, playerRef);
+        HexEntities.spawnTree(accessor, hexComponent, root, layout,
+                new LayoutParams(rootScale, GLYPH_DISPLAY_DISTANCE, GLYPH_HEIGHT_MULTIPLIER), globalPos,
+                new Rotation3f(PEDESTAL_GLYPH_PITCH, 0f, 0f), true);
         accessor.putComponent(hexRef, HexComponent.getComponentType(), hexComponent);
         return hexRef;
     }
@@ -209,45 +203,5 @@ public class PreviewNodeHandler extends BaseNodeHandler {
     @Override
     public void despawn(CommandBuffer<EntityStore> accessor, Ref<EntityStore> nodeRef, Ref<EntityStore> playerRef) {
         throw new UnsupportedOperationException("Unimplemented method 'despawn'");
-    }
-
-    private static void spawnGlyphs(CommandBuffer<EntityStore> accessor, HexComponent hex, GlyphComponent glyph,
-            Vector3d parentPos, Rotation3f parentRot, Ref<EntityStore> playerRef) {
-
-        Ref<EntityStore> glyphRef = CreateGlyph.createGlyph(accessor, glyph, parentPos, parentRot, playerRef);
-        glyph.setSelfRef(glyphRef);
-        hex.addChildGlyphRef(glyph.getId(), glyphRef);
-
-        List<Glyph> children = hex.getGlyphs(glyph.getFlowLinks());
-
-        List<Rotation3f> childRotations = GlyphMath.getChildRotations(children.size(), glyph.getScale(),
-                glyph.getRotation().z());
-
-        for (int i = 0; i < children.size(); i++) {
-            Glyph childGlyph = children.get(i);
-            Rotation3f childRotation = childRotations.get(i);
-            if (hex.getChildGlyphRef(childGlyph.getId()) != null) {
-                continue;
-            }
-
-            GlyphComponent childGlyphComponent = new GlyphComponent(childGlyph.clone());
-
-            if (children.size() == 1) {
-                childGlyphComponent.setScale(glyph.getScale() * GlyphStyler.SCALE_SINGLE_GLYPH);
-            } else {
-                childGlyphComponent.setScale(glyph.getScale() * GlyphStyler.SCALE_MULTIPLIER);
-            }
-
-            childGlyphComponent.setRotation(childRotation);
-            Vector3f offset = GlyphMath.toMountOffset(childRotation, childGlyph.getRotation());
-            float yOffset = childGlyphComponent.getScale() * GLYPH_HEIGHT_MULTIPLIER;
-            Vector3f scaledOffset = offset.add(0, 0, yOffset);
-            childGlyphComponent.setVisualOffset(scaledOffset);
-
-            childGlyphComponent.setParentRef(glyph.getSelfRef());
-            childGlyphComponent.setHexRef(hex.getSelfRef());
-
-            spawnGlyphs(accessor, hex, childGlyphComponent, parentPos, parentRot, playerRef);
-        }
     }
 }

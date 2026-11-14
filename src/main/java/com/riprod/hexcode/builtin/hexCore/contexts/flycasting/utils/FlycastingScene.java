@@ -11,6 +11,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.positioning.utils.HexEntities;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.component.FlycastingState;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
 import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
@@ -18,7 +19,6 @@ import com.riprod.hexcode.core.common.hexbook.component.HexBookAsset;
 import com.riprod.hexcode.core.common.hexcaster.utils.CasterInventory;
 import com.riprod.hexcode.core.common.hexcaster.utils.PlayerUtils;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.utils.CleanupUtils;
 import com.riprod.hexcode.utils.HexSlot;
 
@@ -48,7 +48,9 @@ public final class FlycastingScene {
         String castStyleId = capture != null ? capture.getCastStyleId() : "ring";
         FlycastingState state = new FlycastingState();
         state.setCastingRootRef(castingRootRef);
-        state.setActiveHexes(HexSpawner.spawnHexes(buffer, player, castingRootRef, hexes, castStyleId));
+        state.setLayoutId(capture != null ? capture.getLayoutId() : null);
+        state.setActiveHexes(HexSpawner.spawnHexes(buffer, player, castingRootRef, hexes, castStyleId,
+                state.getLayoutId()));
         return state;
     }
 
@@ -59,11 +61,7 @@ public final class FlycastingScene {
                 if (hexRef == null || !hexRef.isValid()) {
                     continue;
                 }
-                HexComponent hexComp = buffer.getComponent(hexRef, HexComponent.getComponentType());
-                if (hexComp != null) {
-                    CleanupUtils.safeRemoveEntities(buffer, hexComp.getChildGlyphRefsList());
-                }
-                CleanupUtils.safeRemoveMountParent(buffer, hexRef);
+                HexEntities.despawnHex(buffer, hexRef);
             }
             activeHexes.clear();
 

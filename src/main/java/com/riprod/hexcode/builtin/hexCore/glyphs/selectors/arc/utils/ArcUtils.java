@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.selector.Selector;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.utils.TargetFilter;
 
 public class ArcUtils {
 
@@ -24,6 +25,7 @@ public class ArcUtils {
         List<Ref<EntityStore>> candidates = new ArrayList<>();
 
         Selector.selectNearbyEntities(buffer, fromPosition, maxDistance, candidates::add, ref -> {
+            if (!TargetFilter.isSelectable(ref, buffer)) return false;
             UUIDComponent uuid = buffer.getComponent(ref, UUIDComponent.getComponentType());
             if (uuid == null) return false;
             if (visited.contains(uuid.getUuid())) return false;

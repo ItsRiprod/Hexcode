@@ -274,7 +274,11 @@ public class HexConstructSpawner {
 
     public static int abortExisting(@Nonnull CommandBuffer<EntityStore> buffer,
             @Nonnull Ref<EntityStore> targetRef, @Nonnull String handlerId) {
-        var aborted = detachExisting(buffer, targetRef, handlerId);
+        // Detach WITHOUT releasing: abort() must still see the construct as the branch holder,
+        // otherwise it never ends the replaced cast's branch and that cast stays live forever.
+        var aborted = new ArrayList<HexStatus<?>>();
+        detach(buffer.getComponent(targetRef, HexEffectsComponent.getComponentType()), handlerId, aborted);
+        detach(pendingOf(buffer, targetRef), handlerId, aborted);
         if (aborted.isEmpty()) return 0;
 
         var handler = ConstructRegistry.get(handlerId);

@@ -42,7 +42,7 @@ import com.riprod.hexcode.core.common.node.component.SlotComponent;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlot;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.trilean.TrileanSlotHandler;
-import com.riprod.hexcode.builtin.hexCore.scene.RadialPositionUtil;
+import com.riprod.hexcode.builtin.hexCore.contexts.utils.RadialPositionUtil;
 
 public class SlotNodeHandler extends BaseSlotHandler {
     public static final SlotNodeHandler INSTANCE = new SlotNodeHandler();

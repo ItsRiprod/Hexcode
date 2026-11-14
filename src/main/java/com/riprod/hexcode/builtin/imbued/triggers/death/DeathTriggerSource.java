@@ -38,7 +38,7 @@ public class DeathTriggerSource extends DeathSystems.OnDeathSystem {
             Ref<EntityStore> k = es.getRef();
             if (k != null && k.isValid()) killer = k;
         }
-        DeathPayload payload = new DeathPayload(ref, killer);
+        DeathPayload payload = new DeathPayload(killer);
         registry.fire(buffer, new TriggerEvent(TriggerKey.DEATH, uuidComp.getUuid(), ref, payload));
     }
 }

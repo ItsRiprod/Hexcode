@@ -43,16 +43,12 @@ public final class InteractionTriggerSource {
         World world = Universe.get().getWorld(playerRef.getWorldUuid());
         if (world == null) return;
 
-        int hotbarSlot = chain.activeHotbarSlot;
-        InteractionType type = chain.interactionType;
-
         world.execute(() -> {
             Store<EntityStore> store = playerEntityRef.getStore();
             if (store.getComponent(playerEntityRef, ImbuedHotbarMarker.getComponentType()) == null) return;
             UUIDComponent uuidComp = store.getComponent(playerEntityRef, UUIDComponent.getComponentType());
             if (uuidComp == null) return;
-            InteractionPayload payload = new InteractionPayload(playerEntityRef, type, null, hotbarSlot);
-            store.invoke(new FireTriggerEvent(new TriggerEvent(key, uuidComp.getUuid(), playerEntityRef, payload)));
+            store.invoke(new FireTriggerEvent(new TriggerEvent(key, uuidComp.getUuid(), playerEntityRef)));
         });
     }
 

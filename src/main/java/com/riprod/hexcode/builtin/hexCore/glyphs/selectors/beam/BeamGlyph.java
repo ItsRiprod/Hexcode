@@ -127,7 +127,8 @@ public class BeamGlyph extends GlyphAsset {
             if (sourceRef != null && sourceRef.isValid()) {
                 List<Ref<EntityStore>> candidates = new ArrayList<>(
                         TargetUtil.getAllEntitiesInSphere(origin, beamLength, hexContext.getAccessor()));
-                candidates.removeIf(ref -> ref == null || ref.equals(sourceRef));
+                candidates.removeIf(ref -> ref == null || ref.equals(sourceRef)
+                        || !TargetFilter.isSelectable(ref, hexContext.getAccessor()));
                 entityHit = TargetFilter.getSmallestTarget(origin, new Vector3d(direction).normalize(),
                         candidates, hexContext.getAccessor(), beamLength);
                 if (entityHit != null) {

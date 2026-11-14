@@ -1,10 +1,9 @@
-package com.riprod.hexcode.core.common.glyphs.utils;
+package com.riprod.hexcode.core.common.positioning.utils;
 
 import java.util.UUID;
 
 import com.hypixel.hytale.builtin.mounts.MountedComponent;
 import com.hypixel.hytale.component.AddReason;
-import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
@@ -29,8 +28,11 @@ import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
+import com.riprod.hexcode.core.common.hexes.component.HexComponent;
+import com.riprod.hexcode.core.common.glyphs.utils.GlyphModelUtil;
 
-public class CreateGlyph {
+/** Builds the entities a displayed hex is made of: hex entity, glyph entities, the head anchor. */
+public final class HexEntityFactory {
   private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
   // compensates for the eliminated graph node debug sphere visual after the merge
@@ -139,18 +141,27 @@ public class CreateGlyph {
     return GlyphModelUtil.rebuild(scaled, derived, scaled.getBoundingBox());
   }
 
-  public static Ref<EntityStore> createGlyph(CommandBuffer<EntityStore> accessor, GlyphComponent glyph,
-      Vector3d parentPos, Rotation3f parentRot, Ref<EntityStore> playerRef) {
+  public static Holder<EntityStore> createHexHolder(ComponentAccessor<EntityStore> accessor, HexComponent hex,
+      Vector3d parentPos) {
+    Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
+    holder.addComponent(HexComponent.getComponentType(), hex);
+    holder.addComponent(TransformComponent.getComponentType(),
+        new TransformComponent(parentPos, new Rotation3f(hex.getRotation().x, hex.getRotation().y, 0)));
+    holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
+    holder.addComponent(UUIDComponent.getComponentType(), new UUIDComponent(UUID.randomUUID()));
+    holder.addComponent(NetworkId.getComponentType(), new NetworkId(accessor.getExternalData().takeNextNetworkId()));
 
-    Holder<EntityStore> holder = createGlyphHolder(accessor, glyph, parentPos, parentRot);
-    Ref<EntityStore> ref = createEntity(accessor, holder);
-    glyph.setSelfRef(ref);
-
-    return ref;
+    Ref<EntityStore> hexParent = hex.getParentRef();
+    if (hexParent != null) {
+      Vector3f hoff = hex.getOffset();
+      holder.addComponent(MountedComponent.getComponentType(),
+          new MountedComponent(hexParent, new Vector3f(hoff.x, hoff.y, hoff.z), MountController.Minecart));
+    }
+    return holder;
   }
 
-  public static Ref<EntityStore> createEntity(ComponentAccessor<EntityStore> buffer, Holder<EntityStore> holder) {
-    Ref<EntityStore> ref = buffer.addEntity(holder, AddReason.SPAWN);
-    return ref;
+  public static Ref<EntityStore> createHex(ComponentAccessor<EntityStore> accessor, HexComponent hex,
+      Vector3d parentPos) {
+    return accessor.addEntity(createHexHolder(accessor, hex, parentPos), AddReason.SPAWN);
   }
 }

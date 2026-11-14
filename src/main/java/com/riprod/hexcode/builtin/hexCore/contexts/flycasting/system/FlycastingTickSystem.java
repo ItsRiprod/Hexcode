@@ -16,7 +16,6 @@ import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils.FlycastingDragHandler;
 import com.riprod.hexcode.builtin.hexCore.contexts.flycasting.utils.FlycastingHover;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
-import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.riprod.hexcode.core.common.positioning.GlyphPositioner;
 import com.riprod.hexcode.core.common.positioning.GlyphSelector;
 
@@ -63,8 +62,8 @@ public class FlycastingTickSystem extends EntityTickingSystem<EntityStore> {
             if (state.getDraggingHex() != null) {
                 FlycastingDragHandler.tickDrag(buffer, player, state, headRotation);
             } else {
-                HexComponent hovered = GlyphSelector.findHoveredHex(buffer,
-                        headRotation.getRotation(), state.getActiveHexes());
+                var hovered = GlyphSelector.findHoveredHex(buffer, headRotation.getRotation(),
+                        state.getActiveHexes(), null);
                 FlycastingHover.applyHexHover(buffer, player, state, hovered);
                 if (capture != null) {
                     capture.setHoveredHex(state.getHoveredHex());

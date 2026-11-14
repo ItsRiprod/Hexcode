@@ -8,7 +8,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.drawing.component.DrawCaptureComponent;
-import com.riprod.hexcode.core.common.glyphs.utils.CreateGlyph;
+import com.riprod.hexcode.core.common.positioning.utils.HexEntityFactory;
 import com.riprod.hexcode.utils.CleanupUtils;
 
 public final class DrawAnchorUtils {
@@ -24,7 +24,7 @@ public final class DrawAnchorUtils {
         if (existing != null && existing.isValid()) {
             return existing;
         }
-        Ref<EntityStore> anchor = CreateGlyph.createHeadAnchor(buffer, player, resolveEyeHeight(buffer, player));
+        Ref<EntityStore> anchor = HexEntityFactory.createHeadAnchor(buffer, player, resolveEyeHeight(buffer, player));
         capture.setHeadAnchorRef(anchor);
         return anchor;
     }

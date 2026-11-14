@@ -14,7 +14,6 @@ import com.riprod.hexcode.core.common.execution.cast.component.DefaultVariableCo
 import com.riprod.hexcode.core.common.execution.cast.component.VolatilityComponent;
 import com.riprod.hexcode.core.common.execution.cast.ecs.CastHolder;
 import com.riprod.hexcode.api.execution.HexExecuter;
-import com.riprod.hexcode.builtin.imbued.triggers.InteractionPayload;
 import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
@@ -36,7 +35,7 @@ public final class ItemHeldCastDispatcher implements CastRootDispatcher {
         Ref<EntityStore> player = event.subjectRef();
         if (player == null || !player.isValid()) return;
 
-        ItemStack heldItem = resolveHeldItem(event, buffer, player);
+        ItemStack heldItem = InventoryComponent.getItemInHand(buffer, player);
         if (heldItem == null || heldItem.isEmpty()) return;
         if (ImbuementUtils.readAll(heldItem).isEmpty()) return;
 
@@ -68,13 +67,5 @@ public final class ItemHeldCastDispatcher implements CastRootDispatcher {
         } catch (Exception e) {
             LOGGER.atSevere().log("%s imbuement dispatch failed: %s", trigger.getId(), e.getMessage());
         }
-    }
-
-    private static ItemStack resolveHeldItem(TriggerEvent event,
-            CommandBuffer<EntityStore> buffer, Ref<EntityStore> player) {
-        if (event.payload() instanceof InteractionPayload ip && ip.itemInHand() != null) {
-            return ip.itemInHand();
-        }
-        return InventoryComponent.getItemInHand(buffer, player);
     }
 }

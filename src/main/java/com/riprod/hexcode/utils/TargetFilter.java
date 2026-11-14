@@ -12,11 +12,27 @@ import org.joml.Vector2d;
 import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.modules.collision.CollisionMath;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
+import com.hypixel.hytale.server.core.modules.entity.component.Intangible;
+import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.protection.HexcodeComponent;
 
 public class TargetFilter {
+
+    /**
+     * Whether a selector (Area, Arc, Beam) may pick this entity: it must be valid, alive (no DeathComponent),
+     * tangible (no Intangible) and not one of Hexcode's own construct / marker entities (HexcodeComponent).
+     */
+    public static boolean isSelectable(@Nullable Ref<EntityStore> ref, ComponentAccessor<EntityStore> accessor) {
+        if (ref == null || !ref.isValid()) {
+            return false;
+        }
+        return accessor.getComponent(ref, Intangible.getComponentType()) == null
+                && accessor.getComponent(ref, DeathComponent.getComponentType()) == null
+                && accessor.getComponent(ref, HexcodeComponent.getComponentType()) == null;
+    }
 
     @Nullable
     public static Ref<EntityStore> getSmallestTarget(Ref<EntityStore> looker,

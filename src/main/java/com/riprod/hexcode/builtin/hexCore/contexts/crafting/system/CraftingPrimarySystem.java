@@ -18,7 +18,7 @@ import com.riprod.hexcode.core.common.pedestal.component.PedestalBlockComponent;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalBlockUtil;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
-import com.riprod.hexcode.builtin.hexCore.scene.CraftingDragHandler;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.utils.CraftingDragHandler;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 

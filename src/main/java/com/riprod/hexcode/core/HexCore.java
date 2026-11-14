@@ -45,6 +45,7 @@ import com.riprod.hexcode.core.common.execution.listener.CastDecayListener;
 import com.riprod.hexcode.core.common.execution.listener.CastManaListener;
 import com.riprod.hexcode.core.common.execution.listener.GlyphCostListener;
 import com.riprod.hexcode.core.common.casting.registry.CastingStyleRegistry;
+import com.riprod.hexcode.core.common.positioning.registry.HexLayoutRegistry;
 import com.riprod.hexcode.core.common.construct.system.HexConstructSystem;
 import com.riprod.hexcode.core.common.construct.system.HexConstructTeardownSystem;
 import com.riprod.hexcode.core.common.construct.system.MountOrphanReaperSystem;
@@ -478,5 +479,8 @@ public class HexCore {
         events.register(AssetEditorRequestDataSetEvent.class, "HexcodeCastingStyles",
                 (Consumer<AssetEditorRequestDataSetEvent>) e -> e
                         .setResults(CastingStyleRegistry.keys().toArray(String[]::new)));
+        events.register(AssetEditorRequestDataSetEvent.class, "HexcodeHexLayouts",
+                (Consumer<AssetEditorRequestDataSetEvent>) e -> e
+                        .setResults(HexLayoutRegistry.keys().toArray(String[]::new)));
     }
 }

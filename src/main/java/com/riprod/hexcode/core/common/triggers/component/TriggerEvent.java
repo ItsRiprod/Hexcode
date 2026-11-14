@@ -12,4 +12,8 @@ public record TriggerEvent(@Nonnull String key,
                            @Nullable UUID subjectUuid,
                            @Nullable Ref<EntityStore> subjectRef,
                            @Nullable Object payload) {
+
+    public TriggerEvent(@Nonnull String key, @Nullable UUID subjectUuid, @Nullable Ref<EntityStore> subjectRef) {
+        this(key, subjectUuid, subjectRef, null);
+    }
 }

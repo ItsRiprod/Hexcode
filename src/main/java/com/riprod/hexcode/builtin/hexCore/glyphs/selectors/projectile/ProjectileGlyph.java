@@ -38,6 +38,7 @@ import com.riprod.hexcode.core.common.execution.context.HexContext;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
 import com.riprod.hexcode.core.common.glyphs.variables.EntityVar;
+import com.riprod.hexcode.core.common.glyphs.variables.HexVar;
 import com.riprod.hexcode.utils.HexVarUtil;
 
 public class ProjectileGlyph extends GlyphAsset {
@@ -93,7 +94,6 @@ public class ProjectileGlyph extends GlyphAsset {
     @Override
     public void execute(Glyph glyph, HexContext hexContext) {
         var sourceVar = glyph.readSlot(ProjectileGlyphSlots.SOURCE, hexContext);
-        var directionVar = glyph.readSlot(ProjectileGlyphSlots.DIRECTION, hexContext);
         var speedVar = glyph.readSlot(ProjectileGlyphSlots.SPEED, hexContext);
         var gravityVar = glyph.readSlot(ProjectileGlyphSlots.GRAVITY, hexContext);
         var bouncesVar = glyph.readSlot(ProjectileGlyphSlots.BOUNCES, hexContext);
@@ -112,6 +112,16 @@ public class ProjectileGlyph extends GlyphAsset {
             HexExecuter.fail(glyph, hexContext, GlyphFizzleEvent.Reason.HANDLER_FAILED,
                     "Cannot determine where to spawn");
             return;
+        }
+
+        // Direction unlinked: the Source entity's look direction. When Source is unlinked too it already
+        // resolved to the default variable, so that entity's look is used. A non-entity Source (a position)
+        // has no look: fall back to the default variable as before.
+        HexVar directionVar;
+        if (glyph.hasLinks(ProjectileGlyphSlots.DIRECTION) || !(sourceVar instanceof EntityVar)) {
+            directionVar = glyph.readSlot(ProjectileGlyphSlots.DIRECTION, hexContext);
+        } else {
+            directionVar = sourceVar;
         }
 
         if (directionVar == null) {

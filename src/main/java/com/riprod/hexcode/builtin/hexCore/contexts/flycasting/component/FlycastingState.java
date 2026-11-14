@@ -10,8 +10,6 @@ import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
-import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 
 public class FlycastingState implements Component<EntityStore> {
 
@@ -30,10 +28,11 @@ public class FlycastingState implements Component<EntityStore> {
 
     private Ref<EntityStore> castingRootRef;
     private List<Ref<EntityStore>> activeHexes = new ArrayList<>();
-    private HexComponent hoveredHex;
-    private GlyphComponent hoveredGlyph;
-    private HexComponent lastHoveredHex;
-    private HexComponent draggingHex;
+    private Ref<EntityStore> hoveredHex;
+    private Ref<EntityStore> hoveredGlyph;
+    private Ref<EntityStore> lastHoveredHex;
+    private Ref<EntityStore> draggingHex;
+    private String layoutId;
 
     public FlycastingState() {
     }
@@ -56,45 +55,47 @@ public class FlycastingState implements Component<EntityStore> {
     }
 
     @Nullable
-    public HexComponent getHoveredHex() {
+    public Ref<EntityStore> getHoveredHex() {
         return hoveredHex;
     }
 
-    public void setHoveredHex(@Nullable HexComponent hoveredHex) {
+    public void setHoveredHex(@Nullable Ref<EntityStore> hoveredHex) {
         this.hoveredHex = hoveredHex;
     }
 
     @Nullable
-    public GlyphComponent getHoveredGlyph() {
+    public Ref<EntityStore> getHoveredGlyph() {
         return hoveredGlyph;
     }
 
-    public void setHoveredGlyph(@Nullable GlyphComponent hoveredGlyph) {
+    public void setHoveredGlyph(@Nullable Ref<EntityStore> hoveredGlyph) {
         this.hoveredGlyph = hoveredGlyph;
     }
 
     @Nullable
-    public HexComponent getLastHoveredHex() {
+    public Ref<EntityStore> getLastHoveredHex() {
         return lastHoveredHex;
     }
 
-    public void setLastHoveredHex(@Nullable HexComponent lastHoveredHex) {
+    public void setLastHoveredHex(@Nullable Ref<EntityStore> lastHoveredHex) {
         this.lastHoveredHex = lastHoveredHex;
     }
 
     @Nullable
-    public HexComponent getDraggingHex() {
+    public Ref<EntityStore> getDraggingHex() {
         return draggingHex;
     }
 
-    public void setDraggingHex(@Nullable HexComponent draggingHex) {
-        if (this.draggingHex != null) {
-            this.draggingHex.setDragState(false);
-        }
+    public void setDraggingHex(@Nullable Ref<EntityStore> draggingHex) {
         this.draggingHex = draggingHex;
-        if (draggingHex != null) {
-            draggingHex.setDragState(true);
-        }
+    }
+
+    public String getLayoutId() {
+        return layoutId;
+    }
+
+    public void setLayoutId(String layoutId) {
+        this.layoutId = layoutId;
     }
 
     @Nonnull
@@ -107,6 +108,7 @@ public class FlycastingState implements Component<EntityStore> {
         copy.hoveredGlyph = this.hoveredGlyph;
         copy.lastHoveredHex = this.lastHoveredHex;
         copy.draggingHex = this.draggingHex;
+        copy.layoutId = this.layoutId;
         return copy;
     }
 }

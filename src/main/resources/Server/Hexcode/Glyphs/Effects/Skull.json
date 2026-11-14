@@ -20,7 +20,7 @@
       "Description": "hexcode.glyphs.Skull.Next.description"
     }
   },
-  "RootInteraction": "Flamethrower_Goblin_Primary",
+  "RootInteraction": "Root_Weapon_Flamethrower_Primary",
   "ManaConsumption": 80,
   "Volatility": {
     "InstantCost": 0.1,

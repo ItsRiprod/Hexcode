@@ -17,6 +17,8 @@ import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3f;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.riprod.hexcode.core.common.positioning.layout.HexLayoutState;
+import com.riprod.hexcode.core.common.positioning.utils.HexHoverCache;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.hexes.codec.HexFieldCodec;
 
@@ -52,6 +54,10 @@ public class HexComponent implements Component<EntityStore> {
     private Ref<EntityStore> selfRef;
     private Ref<EntityStore> rootRef;
     private Set<HexFlags> flags = EnumSet.noneOf(HexFlags.class);
+    @Nullable
+    private HexLayoutState layoutState;
+    @Nullable
+    private HexHoverCache hoverCache;
 
     // for the codec - do not use
     public HexComponent() {
@@ -227,6 +233,24 @@ public class HexComponent implements Component<EntityStore> {
         return this.flags.contains(HexFlags.Dragging);
     }
 
+    @Nullable
+    public HexLayoutState getLayoutState() {
+        return layoutState;
+    }
+
+    public void setLayoutState(@Nullable HexLayoutState layoutState) {
+        this.layoutState = layoutState;
+    }
+
+    @Nullable
+    public HexHoverCache getHoverCache() {
+        return hoverCache;
+    }
+
+    public void setHoverCache(@Nullable HexHoverCache hoverCache) {
+        this.hoverCache = hoverCache;
+    }
+
     @Nonnull
     @Override
     public HexComponent clone() {
@@ -239,6 +263,7 @@ public class HexComponent implements Component<EntityStore> {
         copy.selfRef = this.selfRef;
         copy.rootRef = this.rootRef;
         copy.childGlyphRefs = new HashMap<>(this.childGlyphRefs);
+        copy.layoutState = this.layoutState;
         copy.flags = this.flags.isEmpty() ? EnumSet.noneOf(HexFlags.class) : EnumSet.copyOf(this.flags);
         return copy;
     }

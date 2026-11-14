@@ -216,6 +216,9 @@ import com.riprod.hexcode.builtin.hexCore.staffStyles.SphereStyle;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceComponent;
 import com.riprod.hexcode.core.common.appearance.HexAppearanceRevertSystem;
 import com.riprod.hexcode.core.common.casting.registry.CastingStyleRegistry;
+import com.riprod.hexcode.core.common.positioning.registry.HexLayoutRegistry;
+import com.riprod.hexcode.builtin.hexCore.layouts.AuthoredFlatLayout;
+import com.riprod.hexcode.builtin.hexCore.layouts.RadialTreeLayout;
 import com.riprod.hexcode.core.common.construct.component.HexEffectsComponent;
 import com.riprod.hexcode.core.common.construct.registry.ConstructRegistry;
 import com.riprod.hexcode.core.common.execution.config.HexConfigAsset;
@@ -371,6 +374,9 @@ public class HexCorePlugin {
                 CastingStyleRegistry.register(new RingStyle());
                 CastingStyleRegistry.register(new SphereStyle());
                 CastingStyleRegistry.setDefault(RingStyle.ID);
+                HexLayoutRegistry.register(new RadialTreeLayout());
+                HexLayoutRegistry.register(new AuthoredFlatLayout());
+                HexLayoutRegistry.setDefault(RadialTreeLayout.ID);
         }
 
         private static void RegisterNodes(JavaPlugin plugin) {

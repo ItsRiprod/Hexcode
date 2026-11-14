@@ -8,11 +8,8 @@ import java.util.List;
 
 import com.hypixel.hytale.builtin.beam.AttachedBeam;
 import com.hypixel.hytale.builtin.beam.BeamComponent;
-import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
@@ -26,7 +23,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.glyphs.component.Glyph;
 import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.glyphs.registry.GlyphAsset;
-import com.riprod.hexcode.core.common.glyphs.utils.CreateGlyph;
+import com.riprod.hexcode.core.common.positioning.utils.HexEntities;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.modules.entity.component.DisplayNameComponent;
@@ -39,8 +36,8 @@ import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingCompon
 import com.riprod.hexcode.core.common.node.BaseNodeHandler;
 import com.riprod.hexcode.core.common.node.component.NodeComponent;
 import com.riprod.hexcode.builtin.hexCore.contexts.crafting.nodes.slot.SlotNodeHandler;
-import com.riprod.hexcode.builtin.hexCore.scene.CraftingDragHandler;
-import com.riprod.hexcode.builtin.hexCore.scene.GlyphStyler;
+import com.riprod.hexcode.builtin.hexCore.contexts.crafting.utils.CraftingDragHandler;
+import com.riprod.hexcode.core.common.hover.utils.GlyphStyler;
 import com.riprod.hexcode.core.common.pedestal.session.HexcodeSessionComponent;
 import com.riprod.hexcode.core.common.pedestal.session.SessionUtils;
 import com.riprod.hexcode.utils.LogScopes;
@@ -275,7 +272,7 @@ public class GlyphNodeHandler extends BaseNodeHandler {
     }
 
     clearExpandedIfMatches(accessor, playerRef, nodeRef);
-    accessor.tryRemoveEntity(nodeRef, RemoveReason.REMOVE);
+    HexEntities.despawnGlyph(accessor, nodeRef);
     LOGGER.atFine().log("glyph node: deleted glyph %s", glyphId);
     return InteractionState.Finished;
   }
@@ -302,8 +299,6 @@ public class GlyphNodeHandler extends BaseNodeHandler {
       HexComponent hexComp, Ref<EntityStore> hexEntityRef, Ref<EntityStore> glyphNodeRef) {
     Glyph glyph = glyphComp.getGlyph();
     Rotation3f glyphRot = new Rotation3f(glyph.getRotation().x, glyph.getRotation().y, 0);
-    Holder<EntityStore> glyphHolder = CreateGlyph.createGlyphHolder(accessor, glyphComp, position, glyphRot);
-
     HoverableComponent hoverComp = new HoverableComponent(HoverableType.NODE);
     Message displayName = null;
     try {
@@ -319,19 +314,17 @@ public class GlyphNodeHandler extends BaseNodeHandler {
       LOGGER.atWarning().log("glyph node: failed to set hover hints: %s", e.getMessage());
     }
 
-    glyphHolder.addComponent(HoverableComponent.getComponentType(), hoverComp);
-    if (displayName != null) {
-      glyphHolder.addComponent(DisplayNameComponent.getComponentType(), new DisplayNameComponent(displayName));
-    }
-    glyphHolder.addComponent(NodeComponent.getComponentType(),
-        new NodeComponent(hexEntityRef, GlyphNodeConfig.TYPE));
-
+    var title = displayName;
     List<AttachedBeam> beams = hexComp != null ? VfxUtil.glyphLinkBeams(hexComp, glyph) : List.of();
-    glyphHolder.addComponent(BeamComponent.getComponentType(),
-        new BeamComponent(beams.toArray(AttachedBeam[]::new)));
-
-    accessor.addEntity(glyphHolder, glyphNodeRef, AddReason.SPAWN);
-    glyphComp.setSelfRef(glyphNodeRef);
+    // crafting nodes are free-standing (not mounted): the parent ref is set only after the entity exists
+    HexEntities.spawnGlyph(accessor, glyphComp, position, glyphRot, glyphNodeRef, holder -> {
+      holder.addComponent(HoverableComponent.getComponentType(), hoverComp);
+      if (title != null) {
+        holder.addComponent(DisplayNameComponent.getComponentType(), new DisplayNameComponent(title));
+      }
+      holder.addComponent(NodeComponent.getComponentType(), new NodeComponent(hexEntityRef, GlyphNodeConfig.TYPE));
+      holder.addComponent(BeamComponent.getComponentType(), new BeamComponent(beams.toArray(AttachedBeam[]::new)));
+    });
     glyphComp.setHexRef(hexEntityRef);
     glyphComp.setParentRef(hexEntityRef);
 
@@ -351,7 +344,7 @@ public class GlyphNodeHandler extends BaseNodeHandler {
     }
 
     clearExpandedIfMatches(accessor, playerRef, nodeRef);
-    accessor.tryRemoveEntity(nodeRef, RemoveReason.REMOVE);
+    HexEntities.despawnGlyph(accessor, nodeRef);
   }
 
   private static Vector3f lookToHexOffset(ComponentAccessor<EntityStore> accessor,

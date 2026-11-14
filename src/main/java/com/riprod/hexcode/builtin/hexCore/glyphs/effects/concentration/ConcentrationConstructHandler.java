@@ -83,7 +83,10 @@ public class ConcentrationConstructHandler implements ConstructHandler<Concentra
         float elapsed = state.getElapsedSeconds() + dt;
         state.setElapsedSeconds(elapsed);
 
-        float basePerSecond = glyph != null ? glyph.getVolatilityImpact().compute(elapsed) : 1.0f;
+        float basePerSecond = ConcentrationGlyph.DEFAULT_SUSTAIN_PER_SECOND;
+        if (glyph instanceof ConcentrationGlyph concentration && concentration.getSustainImpact() != null) {
+            basePerSecond = concentration.getSustainImpact().compute(elapsed);
+        }
         tracker.add((basePerSecond + state.getBonusVolatilityPerSecond()) * dt);
     }
 

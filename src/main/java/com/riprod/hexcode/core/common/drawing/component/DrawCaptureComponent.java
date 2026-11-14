@@ -12,7 +12,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.effects.registry.GlyphEffects;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
-import com.riprod.hexcode.core.common.hexes.component.HexComponent;
 
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 
@@ -43,19 +42,23 @@ public class DrawCaptureComponent implements Component<EntityStore> {
 
     private List<Hex> palette = new ArrayList<>();
 
-    private HexComponent hoveredHex;
-    private HexComponent draggingHex;
+    private Ref<EntityStore> hoveredHex;
+    private Ref<EntityStore> draggingHex;
     private boolean dragReleaseRequested;
 
     private String effectsId;
     private String castStyleId = "ring";
+    @Nullable
+    private String layoutId;
 
     public DrawCaptureComponent() {
     }
 
-    public DrawCaptureComponent(@Nullable String effectsId, @Nonnull String castStyleId) {
+    public DrawCaptureComponent(@Nullable String effectsId, @Nonnull String castStyleId,
+            @Nullable String layoutId) {
         this.effectsId = effectsId;
         this.castStyleId = castStyleId;
+        this.layoutId = layoutId;
     }
 
     public FloatArrayList getStrokePoints() {
@@ -137,20 +140,20 @@ public class DrawCaptureComponent implements Component<EntityStore> {
     }
 
     @Nullable
-    public HexComponent getHoveredHex() {
+    public Ref<EntityStore> getHoveredHex() {
         return hoveredHex;
     }
 
-    public void setHoveredHex(@Nullable HexComponent hoveredHex) {
+    public void setHoveredHex(@Nullable Ref<EntityStore> hoveredHex) {
         this.hoveredHex = hoveredHex;
     }
 
     @Nullable
-    public HexComponent getDraggingHex() {
+    public Ref<EntityStore> getDraggingHex() {
         return draggingHex;
     }
 
-    public void setDraggingHex(@Nullable HexComponent draggingHex) {
+    public void setDraggingHex(@Nullable Ref<EntityStore> draggingHex) {
         this.draggingHex = draggingHex;
     }
 
@@ -174,6 +177,11 @@ public class DrawCaptureComponent implements Component<EntityStore> {
         return castStyleId;
     }
 
+    @Nullable
+    public String getLayoutId() {
+        return layoutId;
+    }
+
     @Nonnull
     @Override
     public DrawCaptureComponent clone() {
@@ -194,6 +202,7 @@ public class DrawCaptureComponent implements Component<EntityStore> {
         copy.dragReleaseRequested = this.dragReleaseRequested;
         copy.effectsId = this.effectsId;
         copy.castStyleId = this.castStyleId;
+        copy.layoutId = this.layoutId;
         return copy;
     }
 }

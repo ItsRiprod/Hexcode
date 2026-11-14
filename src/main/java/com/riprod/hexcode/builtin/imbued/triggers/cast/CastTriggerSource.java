@@ -22,7 +22,6 @@ public class CastTriggerSource implements Consumer<CastEvent> {
         UUIDComponent uuidComp = buffer.getComponent(caster, UUIDComponent.getComponentType());
         if (uuidComp == null) return;
 
-        CastPayload payload = new CastPayload(caster);
-        registry.fire(buffer, new TriggerEvent(TriggerKey.CAST, uuidComp.getUuid(), caster, payload));
+        registry.fire(buffer, new TriggerEvent(TriggerKey.CAST, uuidComp.getUuid(), caster));
     }
 }

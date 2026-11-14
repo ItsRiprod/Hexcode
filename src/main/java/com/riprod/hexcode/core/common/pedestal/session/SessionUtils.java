@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.hypixel.hytale.builtin.mounts.MountedComponent;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
@@ -21,7 +20,6 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.riprod.hexcode.core.common.context.CasterComponent;
 import com.riprod.hexcode.core.common.context.ContextTransitionService;
-import com.riprod.hexcode.core.common.glyphs.component.GlyphComponent;
 import com.riprod.hexcode.core.common.pedestal.PedestalSlot;
 import com.riprod.hexcode.core.common.hexes.component.Hex;
 import com.riprod.hexcode.core.common.hexes.component.HexComponent;
@@ -33,6 +31,7 @@ import com.riprod.hexcode.core.common.pedestal.events.PedestalSystem;
 import com.riprod.hexcode.core.common.pedestal.component.HexcasterCraftingComponent;
 import com.riprod.hexcode.core.common.pedestal.constants.PedestalState;
 import com.riprod.hexcode.core.common.pedestal.utils.PedestalItemUtil;
+import com.riprod.hexcode.core.common.positioning.utils.HexEntities;
 import com.riprod.hexcode.utils.CleanupUtils;
 import com.riprod.hexcode.utils.LogScopes;
 
@@ -143,27 +142,7 @@ public class SessionUtils {
 
     public static void despawnPreviewScene(CommandBuffer<EntityStore> buffer, HexcodeSessionComponent session) {
         for (Ref<EntityStore> hexRef : session.getHexPreviewRefs()) {
-            if (hexRef == null || !hexRef.isValid()) continue;
-
-            HexComponent hexComp = buffer.getComponent(hexRef, HexComponent.getComponentType());
-            if (hexComp != null) {
-                Map<String, Ref<EntityStore>> childRefs = hexComp.getChildGlyphRefs();
-                if (childRefs != null) {
-                    for (Ref<EntityStore> glyphRef : childRefs.values()) {
-                        if (glyphRef == null || !glyphRef.isValid()) continue;
-                        GlyphComponent glyphComp = buffer.getComponent(glyphRef, GlyphComponent.getComponentType());
-                        if (glyphComp != null) {
-                            CleanupUtils.safeRemoveEntities(buffer, glyphComp.getSlotEntityRefs());
-                            glyphComp.getSlotEntityRefs().clear();
-                        }
-                        buffer.tryRemoveComponent(glyphRef, MountedComponent.getComponentType());
-                        CleanupUtils.safeRemoveMountParent(buffer, glyphRef);
-                    }
-                }
-            }
-
-            buffer.tryRemoveComponent(hexRef, MountedComponent.getComponentType());
-            CleanupUtils.safeRemoveMountParent(buffer, hexRef);
+            HexEntities.despawnHex(buffer, hexRef);
         }
         session.clearHexPreviewRefs();
 
